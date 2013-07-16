@@ -1,0 +1,5 @@
+oleg_orderform:
+    resource: "@OlegOrderformBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

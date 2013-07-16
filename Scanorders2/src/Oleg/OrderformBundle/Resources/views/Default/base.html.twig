@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+            
+            {% stylesheets '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' %}
+                <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+            {% endstylesheets %}
+
+            {% javascripts 
+                '@OlegOrderformBundle/Resources/public/jquery/jquery-1.9.1.js'
+                '@OlegOrderformBundle/Resources/public/bootstrap/js/*'   
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}                        
+            
+                       
+            <style type="text/css">
+                body {
+                    padding-left: 5%;
+                    padding-right: 5%;
+                    padding-top: 5%;
+                    padding-bottom: 5%;
+                }
+
+                .sidebar-nav {
+                    padding: 9px 0;
+                }
+            </style>    
+                
+            <title>{% block title %}{% endblock %} - Scan Order</title>                   
+            
+        {% endblock %}
+    </head>
+    <body>
+        
+        <div id="header">{% block header %}
+            <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">
+        {% endblock %}</div>
+         
+        <div id="content">{% block content %}{% endblock %}</div>
+        
+        <div id="footer" style="margin-top: 5%">
+            {% block footer %}
+                &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
+            {% endblock %}
+        </div>
+    </body>
+</html>
