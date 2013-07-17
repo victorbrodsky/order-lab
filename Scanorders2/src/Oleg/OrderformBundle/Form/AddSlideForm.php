@@ -3,8 +3,9 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
+
+use Oleg\OrderformBundle\Helper as Helper;
 
 class AddSlideForm extends AbstractType {
     /**
@@ -15,11 +16,18 @@ class AddSlideForm extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $helper = new Helper\FormHelper();
+        
         $builder->add('id', 'hidden');
-        $builder->add('accession');
-        $builder->add('stain');
-        $builder->add('mag');
-        //$builder->add('diagnosis');
+        $builder->add('accession', 'text', array('required'=>true));
+        //$builder->add('stain', 'text', array('required'=>false));
+        $builder->add('stain', 'choice', array(                 
+                'choices' => $helper->getStains()        
+        ));
+        $builder->add('mag', 'choice', array(        
+            'choices' => $helper->getMags()
+        ));       
+        $builder->add('diagnosis', 'textarea', array('max_length'=>10000,'required'=>false));
     }
 
     /**

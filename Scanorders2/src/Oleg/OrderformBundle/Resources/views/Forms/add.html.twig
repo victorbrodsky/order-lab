@@ -1,0 +1,66 @@
+{% extends "OlegOrderformBundle::Forms/base.html.twig" %} 
+
+{% form_theme form 'OlegOrderformBundle:Forms:fields.html.twig' %}
+
+{% block content %} 
+
+    <h3>One Slide</h3>
+   
+    <form action="{{ path('oleg_orderform_slide_add') }}" method="post" {{ form_enctype(form) }} class="AddSlideForm">
+    
+{#    <form method="post" {{ form_enctype(form) }} class="AddSlideForm">#}
+        
+        {{ form_errors(form.id) }}
+        {{ form_errors(form.accession) }}
+        {{ form_errors(form.stain) }}
+        {{ form_errors(form.mag) }}
+        {{ form_errors(form.diagnosis) }}
+        {{ form_errors(form) }}
+
+        {#{{ form_label(form.id, 'id:') }}#}
+        {{ form_widget(form.id) }}
+
+        {{ form_label(form.accession, '*Accession #:') }}
+        {{ form_widget(form.accession) }}
+
+        {{ form_label(form.stain, 'Stain:' ) }}
+        {{ form_widget(form.stain) }}
+{#        {{ form_widget(form.stain, {'attr': {'editable': 'true'}}) }}#}
+        
+{#        <div>
+            <label for="stain">Stain:</label> 
+            <input type="text" name="product" list="stain"/>
+            <datalist id="stain">
+                <option value="Pen">Pen</option>
+                <option value="Pencil">Pencil</option>
+                <option value="Paper">Paper</option>
+            </datalist>
+        </div>       
+#}        
+        
+        {{ form_label(form.mag, 'Mag:') }}
+        {{ form_widget(form.mag) }}       
+        
+        {{ form_label(form.diagnosis, 'Diagnosis / Reason for scans:') }}
+        {{ form_widget(form.diagnosis) }}
+
+        
+        {{ form_rest(form) }}
+
+{#      
+        <input type="text" name="product" list="productName"/>
+        <datalist id="productName">
+            <option value="Pen">Pen</option>
+            <option value="Pencil">Pencil</option>
+            <option value="Paper">Paper</option>
+        </datalist>
+#}     
+        
+{#        <input type="submit" value="Add Slide!"/>#}
+        <p>
+            <button class="btn btn-primary" type="submit">Next</button>        
+        </p>
+        
+    </form>
+
+{% endblock %}
