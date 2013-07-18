@@ -1,9 +1,9 @@
-{#custom choice_widget#}
+{#custom choice_widget with bootsrtap combobox#}
 
+           
 {% block choice_widget_collapsed %}
 {% spaceless %}
-    <input type="text" name="product" list="{{ id }}" data-provide="typeahead"/>
-    <datalist id='{{ id }}' {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+    <select class="combobox" {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
         {% if empty_value is not none %}
             <option value=""{% if required %} disabled="disabled"{% if value is empty %} selected="selected"{% endif %}{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
         {% endif %}
@@ -16,6 +16,6 @@
         {% endif %}
         {% set options = choices %}
         {{ block('choice_widget_options') }}
-    </datalist>
+    </select>
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}

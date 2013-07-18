@@ -22,10 +22,12 @@ class AddSlideForm extends AbstractType {
         $builder->add('accession', 'text', array('required'=>true));
         //$builder->add('stain', 'text', array('required'=>false));
         $builder->add('stain', 'choice', array(                 
-                'choices' => $helper->getStains()        
+                'choices' => $helper->getStains(),
+                'required'=>false
         ));
         $builder->add('mag', 'choice', array(        
-            'choices' => $helper->getMags()
+            'choices' => $helper->getMags(),
+            'required'=>false
         ));       
         $builder->add('diagnosis', 'textarea', array('max_length'=>10000,'required'=>false));
     }

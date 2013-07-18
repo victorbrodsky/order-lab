@@ -1,0 +1,21 @@
+/* 
+    Created on : Jul 17, 2013, 1:12:10 PM
+    Author     : oli2002
+*/
+
+.flash-notice {
+  color: #0081c2;
+  font-size: 200%;
+  margin-top: 3%
+}
+
+.order-content {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+.footer {
+    margin-top: 5%
+}
