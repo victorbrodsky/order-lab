@@ -1,0 +1,54 @@
+{#{% extends '::base.html.twig' %}#}
+
+{#use accession and orderinfo views for this slide#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+    
+{#    <h1>Slide list</h1>#}
+
+    <div class="btn_margin_top">
+        <form method="get" action="{{ path('order_new') }}">
+            <button type="submit" class="btn btn-primary btn-success">New Order</button>
+        </form>
+    </div>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+{#                <th>Accession</th>#}
+                <th>Stain</th>
+                <th>Mag</th>
+                <th>Diagnosis</th>
+{#                <th>Order Date</th>#}
+{#                <th>Status</th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for slide in slides %}
+            <tr>
+                <td><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>
+{#                <td>{{ accession.number }}</td>#}
+                <td>{{ slide.stain }}</td>
+                <td>{{ slide.mag }}</td>
+                <td>{{ slide.diagnosis }}</td>
+                              
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('order_show', { 'id': slide.id }) }}">show</a>
+                    </li>
+{#                    <li>
+                        <a href="{{ path('orderinfo_edit', { 'id': slide.id }) }}">edit</a>
+                    </li>
+#}                    
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

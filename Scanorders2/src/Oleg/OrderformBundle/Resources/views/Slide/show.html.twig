@@ -1,0 +1,50 @@
+{#{% extends '::base.html.twig' %}#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+{% block body -%}
+    <h1>Slide</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Stain</th>
+                <td>{{ entity.stain }}</td>
+            </tr>
+            <tr>
+                <th>Mag</th>
+                <td>{{ entity.mag }}</td>
+            </tr>
+            <tr>
+                <th>diagnosis</th>
+                <td>{{ entity.diagnosis }}</td>
+            </tr>
+        </tbody>
+    </table>   
+    
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('order') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('order_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>       
+    </ul>
+    
+    <form action="{{ path('order_delete', { 'id': entity.id }) }}" method="post">
+        <input type="hidden" name="_method" value="DELETE" />
+        {{ form_widget(delete_form) }}
+        <button type="submit" class="btn btn-primary btn-danger">Delete</button>            
+    </form>
+    
+{% endblock %}
+{% endblock %}

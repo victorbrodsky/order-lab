@@ -35,3 +35,7 @@ php app/console cache:clear --env=prod --no-debug
 6) git push -u origin master
 7) repeat 3-5 for development
 
+# To get changes on your local machine:
+1) cd to dir created by clone
+2) git remote update
+3) git pull

@@ -1,0 +1,63 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}
+
+{% block content %} 
+
+    <h3>One Slide</h3>
+   
+    <form action="{{ path('order_create') }}" method="post" {{ form_enctype(form) }} class="SlideType">
+        
+        {{ form_errors(form.id) }}
+        {{ form_errors(form.accession) }}
+        {{ form_errors(form.stain) }}
+        {{ form_errors(form.mag) }}
+        {{ form_errors(form.diagnosis) }}
+        {{ form_errors(form) }}
+
+        {{ form_widget(form.id) }}
+
+        {{ form_label(form.accession, '*Accession #:') }}
+        {{ form_widget(form.accession) }}
+
+        {{ form_label(form.stain, 'Stain:' ) }}
+        {{ form_widget(form.stain) }} 
+        
+        {{ form_label(form.mag, 'Mag:') }}
+        {{ form_widget(form.mag) }}       
+        
+        {{ form_label(form.diagnosis, 'Diagnosis / Reason for scans:') }}
+        {{ form_widget(form.diagnosis) }}  
+        
+        <div id="optional">
+            
+            <hr>
+            <h4>Optional Parameters:</h4>
+            
+            {{ form_rest(form) }} 
+            
+            <p>
+                <button class="btn btn-primary" type="submit">Submit</button>        
+            </p>
+            
+        </div>    
+        
+        
+        <p>
+            <input type='button' id='show' value='Next' class="btn btn-primary">       
+        </p>
+
+        
+{#        <input type='button' id='hideshow' value='hide/show'> #}
+        
+        <ul class="record_actions">
+            <li>
+                <a href="{{ path('order') }}">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+        
+    </form>
+
+{% endblock %}

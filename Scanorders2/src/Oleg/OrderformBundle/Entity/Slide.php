@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\SlideRepository")
  * @ORM\Table(name="slide")
  */
 class Slide
@@ -25,25 +25,25 @@ class Slide
     //*******************************//
     
     /**
-     * @ORM\Column(type="string", length=127)
+     * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      */
     protected $accession;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=127)   
+     * @ORM\Column(type="string", nullable=true, length=100)   
      */
     protected $stain;   
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=127)
+     * @ORM\Column(type="string", nullable=true, length=100)
      */
     protected $mag;
     
     /**
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
-    protected $diagnosis;   //couple pages (2^n)-1, n=13 16383 8191 or use just 10000
+    protected $diagnosis; 
     
     
     //*********************************************// 
@@ -56,17 +56,17 @@ class Slide
     protected $microscopicdescr;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=127)
+     * @ORM\Column(type="string", nullable=true, length=100)
      */
     protected $specialstain;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=127)
+     * @ORM\Column(type="string", nullable=true, length=100)
      */
     protected $relevantscan;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=127)
+     * @ORM\Column(type="string", nullable=true, length=100)
      */
     protected $scanregion;
      

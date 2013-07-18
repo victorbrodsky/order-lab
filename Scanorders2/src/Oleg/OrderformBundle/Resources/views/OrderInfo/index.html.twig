@@ -1,0 +1,55 @@
+{#{% extends '::base.html.twig' %}#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+{% block body -%}
+    <h1>OrderInfo list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Orderdate</th>
+                <th>Pathologyservice</th>
+                <th>Priority</th>
+                <th>Slidedelivery</th>
+                <th>Returnslide</th>
+                <th>Provider</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('orderinfo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.pathologyService }}</td>
+                <td>{{ entity.priority }}</td>
+                <td>{{ entity.slideDelivery }}</td>
+                <td>{{ entity.returnSlide }}</td>
+                <td>{{ entity.provider }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('orderinfo_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('orderinfo_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('orderinfo_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
+{% endblock %}

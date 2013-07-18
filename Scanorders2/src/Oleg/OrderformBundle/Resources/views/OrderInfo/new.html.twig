@@ -1,0 +1,24 @@
+{#{% extends '::base.html.twig' %}#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+{% block body -%}
+    <h1>OrderInfo creation</h1>
+
+    <form action="{{ path('orderinfo_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('orderinfo') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
+{% endblock %} 

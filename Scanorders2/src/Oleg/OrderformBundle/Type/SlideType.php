@@ -1,15 +1,15 @@
 <?php
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\OrderformBundle\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 use Oleg\OrderformBundle\Helper as Helper;
 
-class AddSlideForm extends AbstractType {
+class SlideType extends AbstractType {
     /**
-     * Builds the AddSlideForm form
+     * Builds the SlideType form
      * @param  \Symfony\Component\Form\FormBuilder $builder
      * @param  array $options
      * @return void
@@ -19,8 +19,7 @@ class AddSlideForm extends AbstractType {
         $helper = new Helper\FormHelper();
         
         $builder->add('id', 'hidden');
-        $builder->add('accession', 'text', array('required'=>true));
-        //$builder->add('stain', 'text', array('required'=>false));
+        $builder->add('accession', 'text', array('max_length'=>100,'required'=>true));       
         $builder->add('stain', 'choice', array(                 
                 'choices' => $helper->getStains(),
                 'required'=>false
@@ -30,6 +29,11 @@ class AddSlideForm extends AbstractType {
             'required'=>false
         ));       
         $builder->add('diagnosis', 'textarea', array('max_length'=>10000,'required'=>false));
+        $builder->add('microscopicdescr', 'textarea', array('max_length'=>10000,'required'=>false));
+        $builder->add('specialstain', 'text', array('max_length'=>100,'required'=>false));
+        $builder->add('relevantscan', 'text', array('max_length'=>100,'required'=>false));
+        $builder->add('scanregion', 'text', array('max_length'=>100,'required'=>false));       
+        $builder->add('note', 'textarea', array('max_length'=>10000,'required'=>false));
     }
 
     /**
