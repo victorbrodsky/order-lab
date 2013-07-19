@@ -6,8 +6,15 @@ $(document).ready(function() {
        jQuery('#optional').toggle('show');
        $("#show").hide();
     });
-      
+     
+    //TODO: fix it
+    $('.navbar li a').on('click', function() {
+        $(this).parent().parent().find('.active').removeClass('active');
+        $(this).parent().addClass('active').css('font-weight', 'bold');
+    });
+          
 });
+
 
 
 

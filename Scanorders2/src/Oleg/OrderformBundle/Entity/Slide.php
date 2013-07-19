@@ -21,11 +21,13 @@ class Slide
     
     
     //*******************************// 
-    // fillable fields 
+    // first step fields 
     //*******************************//
     
+    //, cascade={"persist"}
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
+     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
     protected $accession;
@@ -82,14 +84,6 @@ class Slide
 
     public function setId($id) {
         $this->id = $id;
-    }
-
-    public function getAccession() {
-        return $this->accession;
-    }
-
-    public function setAccession($accession) {
-        $this->accession = $accession;
     }
 
     public function getStain() {
@@ -156,6 +150,32 @@ class Slide
         $this->note = $note;
     }
        
-}
 
-?>
+    /**
+     * Set accession
+     *
+     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @return Slide
+     */
+    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
+    {
+        $this->accession = $accession;
+    
+        return $this;
+    }
+
+    /**
+     * Get accession
+     *
+     * @return \Oleg\OrderformBundle\Entity\Accession 
+     */
+    public function getAccession()
+    {
+        return $this->accession;
+    }
+    
+    public function __toString() {
+        return "id=".$this->getId().", mag=".$this->getMag().", accession=".$this->getAccession(); 
+    }
+    
+}

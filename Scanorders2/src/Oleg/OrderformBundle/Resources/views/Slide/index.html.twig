@@ -14,11 +14,11 @@
         </form>
     </div>
 
-    <table class="records_list">
+    <table class="table table-hover table-condensed">
         <thead>
             <tr>
                 <th>Id</th>
-{#                <th>Accession</th>#}
+                <th>Accession</th>
                 <th>Stain</th>
                 <th>Mag</th>
                 <th>Diagnosis</th>
@@ -30,21 +30,15 @@
         {% for slide in slides %}
             <tr>
                 <td><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>
-{#                <td>{{ accession.number }}</td>#}
+                <td>{{ slide.accession }}</td>
                 <td>{{ slide.stain }}</td>
                 <td>{{ slide.mag }}</td>
                 <td>{{ slide.diagnosis }}</td>
                               
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('order_show', { 'id': slide.id }) }}">show</a>
-                    </li>
-{#                    <li>
-                        <a href="{{ path('orderinfo_edit', { 'id': slide.id }) }}">edit</a>
-                    </li>
-#}                    
-                </ul>
+                    <form method="get" action="{{ path('order_show', { 'id': slide.id }) }}">
+                        <button type="submit" class="btn btn-small btn-info">Show</button>
+                    </form>              
                 </td>
             </tr>
         {% endfor %}

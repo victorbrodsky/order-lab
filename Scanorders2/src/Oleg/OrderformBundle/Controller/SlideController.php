@@ -181,20 +181,26 @@ class SlideController extends Controller {
      * @Template("OlegOrderformBundle:Slide:new.html.twig")
      */
     public function createAction(Request $request) {
-        $entity  = new Slide();
-        $form = $this->createForm(new SlideType(), $entity);
+        $entity  = new Slide();             
+        $form = $this->createForm(new SlideType(), $entity);                      
         $form->bind($request);    
-        
+            
         if ($form->isValid()) {
 //            echo "stain=".$entity->getStain();
 //            echo ", mag=".$entity->getMag();
 //            echo "<br>";         
 //            exit();
-            
+                      
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            
+            //process accession. If not exists - create and return new object, if exists - return object
+            $accession_number = $form["accession"]->getData();
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession_number );                         
+            $entity->setAccession($accession);
+            $em->persist($entity);             
+            
             $em->flush();
-
+            
             return $this->redirect($this->generateUrl('order_show', array('id' => $entity->getId())));
         }
 

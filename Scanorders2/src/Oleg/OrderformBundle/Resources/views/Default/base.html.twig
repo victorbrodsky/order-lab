@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+      
     <head>
         
-    <div class="order-content">
+    <div class="order-content">            
         
         {% block head %}
             {% stylesheets 
@@ -33,7 +34,7 @@
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}                    
-            {# Bootstrap Combobox #}                            
+            {# Bootstrap Combobox #}                                           
                 
             <title>{% block title %}{% endblock %} - Scan Order</title>                   
             
@@ -45,33 +46,11 @@
             {% block header %}
                 <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">
             {% endblock %}
-                
-            <div class="tabbable"> <!-- Only required for left/right tabs -->
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">One Slide</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Clinical Multi-Slide</a></li>
-                    <li><a href="#tab3" data-toggle="tab">Educational Multi-Slide</a></li>
-                    <li><a href="#tab4" data-toggle="tab">Research Multi-Slide</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-                        <p>Use this order to submit a single slide to be scanned. 
-                           To submit multiple slides, select a different form above.
-                        </p>
-                    </div>
-                    <div class="tab-pane" id="tab2">
-                        <p>Use this form to submit clinical multi slides.</p>
-                    </div>
-                    <div class="tab-pane" id="tab3">
-                        <p>Use this form to submit slides of educational value.</p>
-                    </div>
-                    <div class="tab-pane" id="tab4">
-                        <p>Use this form to submit slides for research purposes.</p>
-                    </div>
-                </div>
-            </div>    
+                           
+            {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}             
                 
         </div>
+        {#   div header   #}
              
         {% for flashMessage in app.session.flashbag.get('notice') %}
             <div class="flash-notice">
@@ -85,7 +64,9 @@
             {% block footer %}
                 &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
             {% endblock %}
-        </div>
+        </div>                   
+        
+        
     </body>
     
     </div>

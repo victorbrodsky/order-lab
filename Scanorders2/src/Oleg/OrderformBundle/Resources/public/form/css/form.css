@@ -2,7 +2,6 @@
     Created on : Jul 17, 2013, 1:12:10 PM
     Author     : oli2002
 */
-
 .flash-notice {
   color: #0081c2;
   font-size: 200%;
@@ -14,12 +13,31 @@
     padding-right: 5%;
     padding-top: 5%;
     padding-bottom: 5%;
+    float: left;
+    width: 100%;
+}
+
+.header {
+    float: left;
+    width: 100%;
 }
 
 .footer {
-    margin-top: 5%
+    margin-top: 5%;
+    float: left;
+    width: 100%;
 }
 
 .btn_margin_top {
-    margin-top: 2%
+    margin-top: 2%;
+}
+
+.slide_new {
+    float:left; 
+    width: 30%;
+}
+
+#form_menu {
+    float: left;
+    width: 100%;
 }

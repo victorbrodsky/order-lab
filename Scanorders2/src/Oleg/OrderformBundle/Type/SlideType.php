@@ -19,7 +19,12 @@ class SlideType extends AbstractType {
         $helper = new Helper\FormHelper();
         
         $builder->add('id', 'hidden');
-        $builder->add('accession', 'text', array('max_length'=>100,'required'=>true));       
+        
+//        $builder->add('accession', 'text', array('max_length'=>100,'required'=>true));
+        
+        $builder->add('accession', new AccessionType());       
+        
+        
         $builder->add('stain', 'choice', array(                 
                 'choices' => $helper->getStains(),
                 'required'=>false
@@ -57,6 +62,7 @@ class SlideType extends AbstractType {
     {
         return 'add_slide';
     }
+    
 }
 
 ?>
