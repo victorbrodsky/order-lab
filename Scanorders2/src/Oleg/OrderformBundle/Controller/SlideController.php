@@ -243,9 +243,9 @@ class SlideController extends Controller {
     
     
     /**
-     * Finds and displays a Slide entity.
+     * Finds and displays a Slide entity. //Option defaults={"id" = 1} does not work: it does order/1 => order/
      *
-     * @Route("/{id}", name="order_show", requirements={"id" = "\d+"}, defaults={"id" = 1})
+     * @Route("/{id}", name="order_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */

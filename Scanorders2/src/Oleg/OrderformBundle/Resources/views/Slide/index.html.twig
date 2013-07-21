@@ -29,16 +29,14 @@
         <tbody>
         {% for slide in slides %}
             <tr>
-                <td><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>
+                <td><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>               
                 <td>{{ slide.accession }}</td>
                 <td>{{ slide.stain }}</td>
                 <td>{{ slide.mag }}</td>
                 <td>{{ slide.diagnosis }}</td>
                               
                 <td>
-                    <form method="get" action="{{ path('order_show', { 'id': slide.id }) }}">
-                        <button type="submit" class="btn btn-small btn-info">Show</button>
-                    </form>              
+                    <a class="btn btn-small btn-info" href="{{ path('order_show', { 'id': slide.id }) }}">Show</a>
                 </td>
             </tr>
         {% endfor %}

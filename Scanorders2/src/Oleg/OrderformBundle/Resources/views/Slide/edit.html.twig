@@ -10,26 +10,23 @@
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
         <p>
-            <button type="submit">Edit</button>
+            <button class="btn btn-primary btn-warning" type="submit">Update</button>
         </p>
     </form>
+     
+    
+    <a href="{{ path('order') }}">
+        Back to the list
+    </a>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('order') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('order_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
+    <form action="{{ path('order_delete', { 'id': entity.id }) }}" method="post">
+        <input type="hidden" name="_method" value="DELETE" />
+        {{ form_widget(delete_form) }}
 {#            <button type="submit">Delete</button>#}
-            <p>
-                <button class="btn btn-primary" type="submit">Edit</button>        
-            </p>
-        </form>
-    </li>
-</ul>
+        <p>
+            <button class="btn btn-primary btn-danger" type="submit">Delete</button>        
+        </p>
+    </form>
+    
 {% endblock %}
 {% endblock %}
