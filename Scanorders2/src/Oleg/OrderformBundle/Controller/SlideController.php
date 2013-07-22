@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Type\SlideType;
+use Oleg\OrderformBundle\Form\SlideType;
 
 /**
  * @Route("/order")
@@ -140,10 +140,11 @@ class SlideController extends Controller {
      * @Template()
      */
     public function newAction(){//Request $request) {
-        
-        $entity  = new Slide();
-        $form = $this->createForm(new SlideType(), $entity);       
+              
+        $form = $this->createForm(new SlideType(), new Slide());       
 
+        //$order_form = $this->createForm(new OrderInfoType(), new OrderInfo());        
+        
         return $this->render('OlegOrderformBundle:Slide:new.html.twig',
             array(
                 'form' => $form->createView()

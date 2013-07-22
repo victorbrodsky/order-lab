@@ -8,43 +8,45 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Form\PartType;
 
 /**
- * OrderInfo controller.
+ * Part controller.
  *
- * @Route("/orderinfo")
+ * @Route("/part")
  */
-class OrderInfoController extends Controller {
+class PartController extends Controller
+{
 
     /**
-     * Lists all OrderInfo entities.
+     * Lists all Part entities.
      *
-     * @Route("/", name="orderinfo")
+     * @Route("/", name="part")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:Part')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new OrderInfo entity.
+     * Creates a new Part entity.
      *
-     * @Route("/", name="orderinfo_create")
+     * @Route("/", name="part_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
+     * @Template("OlegOrderformBundle:Part:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType(), $entity);
+        $entity  = new Part();
+        $form = $this->createForm(new PartType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -52,7 +54,7 @@ class OrderInfoController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('part_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -62,16 +64,16 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo entity.
+     * Displays a form to create a new Part entity.
      *
-     * @Route("/new", name="orderinfo_new")
+     * @Route("/new", name="part_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new OrderInfo();
-        $form   = $this->createForm(new OrderInfoType(), $entity);
+        $entity = new Part();
+        $form   = $this->createForm(new PartType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -80,9 +82,9 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Finds and displays a OrderInfo entity.
+     * Finds and displays a Part entity.
      *
-     * @Route("/{id}", name="orderinfo_show")
+     * @Route("/{id}", name="part_show")
      * @Method("GET")
      * @Template()
      */
@@ -90,10 +92,10 @@ class OrderInfoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Part')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Part entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -105,9 +107,9 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to edit an existing OrderInfo entity.
+     * Displays a form to edit an existing Part entity.
      *
-     * @Route("/{id}/edit", name="orderinfo_edit")
+     * @Route("/{id}/edit", name="part_edit")
      * @Method("GET")
      * @Template()
      */
@@ -115,13 +117,13 @@ class OrderInfoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Part')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Part entity.');
         }
 
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new PartType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -132,31 +134,31 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Edits an existing OrderInfo entity.
+     * Edits an existing Part entity.
      *
-     * @Route("/{id}", name="orderinfo_update")
+     * @Route("/{id}", name="part_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
+     * @Template("OlegOrderformBundle:Part:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Part')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Part entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new PartType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('part_edit', array('id' => $id)));
         }
 
         return array(
@@ -166,9 +168,9 @@ class OrderInfoController extends Controller {
         );
     }
     /**
-     * Deletes a OrderInfo entity.
+     * Deletes a Part entity.
      *
-     * @Route("/{id}", name="orderinfo_delete")
+     * @Route("/{id}", name="part_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -178,21 +180,21 @@ class OrderInfoController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:Part')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+                throw $this->createNotFoundException('Unable to find Part entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('orderinfo'));
+        return $this->redirect($this->generateUrl('part'));
     }
 
     /**
-     * Creates a form to delete a OrderInfo entity by id.
+     * Creates a form to delete a Part entity by id.
      *
      * @param mixed $id The entity id
      *

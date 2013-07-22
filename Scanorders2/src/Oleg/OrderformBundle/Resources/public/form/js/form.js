@@ -1,10 +1,18 @@
 $(document).ready(function() {
     $('.combobox').combobox();
+    $("#orderinfo").hide();
+    $("#optional_button").hide();
     $("#optional").hide();
 
-    $('#show').on('click', function(event) {        
-       jQuery('#optional').toggle('show');
-       $("#show").hide();
+    $('#next').on('click', function(event) {        
+       $('#orderinfo').toggle('next');
+       $("#next").hide();
+       $("#optional_button").show();
+    });
+    
+    
+    $('#optional_button').on('click', function(event) {        
+         $('#optional').toggle('show');
     });
      
     //TODO: fix it
@@ -14,7 +22,7 @@ $(document).ready(function() {
 //    });
 //   
     //Note: index 5 can be changed according to url structure
-    var index = window.location.pathname.split('/')[5];
+    var index = window.location.pathname.split('/')[6];
     //alert(index);
     $('ul.li').removeClass('active');
     $('li.' + index).addClass('active');

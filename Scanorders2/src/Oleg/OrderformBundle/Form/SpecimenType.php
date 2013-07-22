@@ -1,30 +1,31 @@
 <?php
 
-namespace Oleg\OrderformBundle\Type;
+namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AccessionType extends AbstractType
+class SpecimenType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {  
-        
-        $builder->add( 'accession', 'text', array('max_length'=>100,'required'=>true) );
-        //$builder->add( 'date', null ,array('max_length'=>100,'required'=>false) );
-        
+    {
+        $builder
+            ->add('proceduretype')
+            ->add('paper')
+            ->add('mrn')
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Accession'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Specimen'
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_accessiontype';
+        return 'oleg_orderformbundle_specimentype';
     }
 }

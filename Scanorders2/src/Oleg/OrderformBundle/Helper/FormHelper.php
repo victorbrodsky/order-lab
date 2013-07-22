@@ -18,5 +18,17 @@ class FormHelper {
         return $arr;
     }
     
+    public function getPriority() {        
+        $arr = array( 'Routine'=>'Routine', 'Stat'=>'Stat' );
+        
+        return $arr;
+    }
+    
+    public function getSlideDelivery() {        
+        $arr = array( 'I will drop ...'=>'I will drop ...', "I'll give slides to .."=>"I'll give slides to .." );
+        
+        return $arr;
+    }
+    
 }
 ?>

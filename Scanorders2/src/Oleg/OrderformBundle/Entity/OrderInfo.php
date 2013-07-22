@@ -3,12 +3,14 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * OrderInfo
- *
- * @ORM\Table()
- * @ORM\Entity
+ * OrderInfo might have many slides
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
+ * @ORM\Table(name="orderinfo")
+ * @ORM\HasLifecycleCallbacks
  */
 class OrderInfo
 {
@@ -25,44 +27,85 @@ class OrderInfo
      * @var \DateTime
      *
      * @ORM\Column(name="orderdate", type="datetime")
+     * @Assert\NotBlank
      */
     private $orderdate;
-
+    
     /**
      * @var string
      *
-     * @ORM\Column(name="pathologyService", type="string", length=255)
+     * @ORM\Column(name="pathologyService", nullable=true, type="string", length=200)
      */
     private $pathologyService;
 
     /**
+     * status - status of the order i.e. complete, in process, returned ...
      * @var string
      *
-     * @ORM\Column(name="priority", type="string", length=255)
+     * @ORM\Column(name="status", nullable=true, type="string", length=100)
+     */
+    private $status;
+    
+    /**
+     * type - type of the order: single, multi, edu, res
+     * @var string
+     *
+     * @ORM\Column(name="type", nullable=true, type="string", length=100)
+     */
+    private $type;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="priority", type="string", length=200)
+     * @Assert\NotBlank
      */
     private $priority;
+    
+    /**
+     * @ORM\Column(name="scandeadline", type="datetime")
+     */
+    private $scandeadline;
+    
+    /**
+     * @ORM\Column(name="returnoption", type="datetime")
+     */
+    private $returnoption;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slideDelivery", type="string", length=255)
+     * @ORM\Column(name="slideDelivery", type="string", length=200)
+     * @Assert\NotBlank
      */
     private $slideDelivery;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="returnSlide", type="string", length=255)
+     * @ORM\Column(name="returnSlide", type="string", length=200)
+     * @Assert\NotBlank
      */
     private $returnSlide;
 
     /**
+     * provider is a string with logged user name
      * @var \stdClass
      *
-     * @ORM\Column(name="provider", type="object")
+     * @ORM\Column(name="provider", type="string", length=200)
+     * @Assert\NotBlank
      */
     private $provider;
 
+    /**
+     * OrderInfo might have many slides (1..n)
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo")
+     */
+    protected $slides;
+
+    public function __construct() {
+        $this->slides = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -75,16 +118,10 @@ class OrderInfo
     }
 
     /**
-     * Set orderdate
-     *
-     * @param \DateTime $orderdate
-     * @return OrderInfo
-     */
-    public function setOrderdate($orderdate)
-    {
-        $this->orderdate = $orderdate;
-    
-        return $this;
+    * @ORM\PrePersist
+    */
+    public function setOrderdate() {
+        $this->orderdate = new \DateTime();
     }
 
     /**
@@ -141,6 +178,22 @@ class OrderInfo
     public function getPriority()
     {
         return $this->priority;
+    }
+    
+    public function getScandeadline() {
+        return $this->scandeadline;
+    }
+
+    public function getReturnoption() {
+        return $this->returnoption;
+    }
+
+    public function setScandeadline($scandeadline) {
+        $this->scandeadline = $scandeadline;
+    }
+
+    public function setReturnoption($returnoption) {
+        $this->returnoption = $returnoption;
     }
 
     /**
@@ -211,4 +264,54 @@ class OrderInfo
     {
         return $this->provider;
     }
+    
+    public function getStatus() {
+        return $this->status;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getSlides() {
+        return $this->slides;
+    }
+
+    public function setStatus($status) {
+        $this->status = $status;
+    }
+
+    public function setType($type) {
+        $this->type = $type;
+    }
+
+    public function setSlides(\Oleg\OrderformBundle\Entity\Slide $slides = null) {
+        $this->slides = $slides;
+    }
+
+
+
+    /**
+     * Add slides
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slides
+     * @return OrderInfo
+     */
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slides)
+    {
+        $this->slides[] = $slides;
+    
+        return $this;
+    }
+
+    /**
+     * Remove slides
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slides
+     */
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slides)
+    {
+        $this->slides->removeElement($slides);
+    }
+    
 }

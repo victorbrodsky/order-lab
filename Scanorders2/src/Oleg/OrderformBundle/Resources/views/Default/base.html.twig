@@ -6,13 +6,14 @@
     <div class="order-content">            
         
         {% block head %}
+                      
             {% stylesheets 
                 '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
                 '@OlegOrderformBundle/Resources/public/form/css/*'
             %}
                 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-            {% endstylesheets %}
-
+            {% endstylesheets %}                                
+                
             {% javascripts 
                 '@OlegOrderformBundle/Resources/public/jquery/jquery-1.9.1.js'
                 '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  

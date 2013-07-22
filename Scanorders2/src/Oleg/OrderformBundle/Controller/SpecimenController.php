@@ -7,44 +7,45 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Specimen;
+use Oleg\OrderformBundle\Form\SpecimenType;
 
 /**
- * OrderInfo controller.
+ * Specimen controller.
  *
- * @Route("/orderinfo")
+ * @Route("/specimen")
  */
-class OrderInfoController extends Controller {
+class SpecimenController extends Controller
+{
 
     /**
-     * Lists all OrderInfo entities.
+     * Lists all Specimen entities.
      *
-     * @Route("/", name="orderinfo")
+     * @Route("/", name="specimen")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:Specimen')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new OrderInfo entity.
+     * Creates a new Specimen entity.
      *
-     * @Route("/", name="orderinfo_create")
+     * @Route("/", name="specimen_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
+     * @Template("OlegOrderformBundle:Specimen:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType(), $entity);
+        $entity  = new Specimen();
+        $form = $this->createForm(new SpecimenType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -52,7 +53,7 @@ class OrderInfoController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('specimen_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -62,16 +63,16 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo entity.
+     * Displays a form to create a new Specimen entity.
      *
-     * @Route("/new", name="orderinfo_new")
+     * @Route("/new", name="specimen_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new OrderInfo();
-        $form   = $this->createForm(new OrderInfoType(), $entity);
+        $entity = new Specimen();
+        $form   = $this->createForm(new SpecimenType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -80,9 +81,9 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Finds and displays a OrderInfo entity.
+     * Finds and displays a Specimen entity.
      *
-     * @Route("/{id}", name="orderinfo_show")
+     * @Route("/{id}", name="specimen_show")
      * @Method("GET")
      * @Template()
      */
@@ -90,10 +91,10 @@ class OrderInfoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Specimen')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Specimen entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -105,9 +106,9 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to edit an existing OrderInfo entity.
+     * Displays a form to edit an existing Specimen entity.
      *
-     * @Route("/{id}/edit", name="orderinfo_edit")
+     * @Route("/{id}/edit", name="specimen_edit")
      * @Method("GET")
      * @Template()
      */
@@ -115,13 +116,13 @@ class OrderInfoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Specimen')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Specimen entity.');
         }
 
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new SpecimenType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -132,31 +133,31 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Edits an existing OrderInfo entity.
+     * Edits an existing Specimen entity.
      *
-     * @Route("/{id}", name="orderinfo_update")
+     * @Route("/{id}", name="specimen_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
+     * @Template("OlegOrderformBundle:Specimen:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Specimen')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Specimen entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new SpecimenType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('specimen_edit', array('id' => $id)));
         }
 
         return array(
@@ -166,9 +167,9 @@ class OrderInfoController extends Controller {
         );
     }
     /**
-     * Deletes a OrderInfo entity.
+     * Deletes a Specimen entity.
      *
-     * @Route("/{id}", name="orderinfo_delete")
+     * @Route("/{id}", name="specimen_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -178,21 +179,21 @@ class OrderInfoController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:Specimen')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+                throw $this->createNotFoundException('Unable to find Specimen entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('orderinfo'));
+        return $this->redirect($this->generateUrl('specimen'));
     }
 
     /**
-     * Creates a form to delete a OrderInfo entity by id.
+     * Creates a form to delete a Specimen entity by id.
      *
      * @param mixed $id The entity id
      *

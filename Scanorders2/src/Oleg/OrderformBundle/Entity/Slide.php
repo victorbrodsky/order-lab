@@ -24,13 +24,23 @@ class Slide
     // first step fields 
     //*******************************//
     
-    //, cascade={"persist"}
+    //Slide belongs to exactly one Accession => 
+    //Slide has only one Accession, Accession might have many Slides (1..n)
+    //Note: Unique slide accession number is combination of Accession+Part+Block (S12-99997 A2)
     /**
      * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
     protected $accession;
+    
+    /**
+     * Slide belongs to exactly one OrderInfo => Slide has only one OrderInfo
+     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide")
+     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
+     * @Assert\NotBlank
+     */
+    protected $orderinfo;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=100)   
@@ -174,8 +184,15 @@ class Slide
         return $this->accession;
     }
     
+    public function getOrderinfo() {
+        return $this->orderinfo;
+    }
+
+    public function setOrderinfo( \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null ) {
+        $this->orderinfo = $orderinfo;
+    }
+
     public function __toString() {
         return "id=".$this->getId().", mag=".$this->getMag().", accession=".$this->getAccession(); 
     }
-    
 }

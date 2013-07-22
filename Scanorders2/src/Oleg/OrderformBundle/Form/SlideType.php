@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Type;
+namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +24,7 @@ class SlideType extends AbstractType {
         
         $builder->add( 'accession', new AccessionType(), array('label'=>' ') );       
         
+        $builder->add( 'orderinfo', new OrderInfoType(), array('label'=>' ') );
         
         $builder->add('stain', 'choice', array(                 
                 'choices' => $helper->getStains(),

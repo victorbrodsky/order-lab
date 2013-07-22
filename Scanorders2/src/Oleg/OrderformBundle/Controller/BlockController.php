@@ -7,44 +7,45 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Form\BlockType;
 
 /**
- * OrderInfo controller.
+ * Block controller.
  *
- * @Route("/orderinfo")
+ * @Route("/block")
  */
-class OrderInfoController extends Controller {
+class BlockController extends Controller
+{
 
     /**
-     * Lists all OrderInfo entities.
+     * Lists all Block entities.
      *
-     * @Route("/", name="orderinfo")
+     * @Route("/", name="block")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:Block')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new OrderInfo entity.
+     * Creates a new Block entity.
      *
-     * @Route("/", name="orderinfo_create")
+     * @Route("/", name="block_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
+     * @Template("OlegOrderformBundle:Block:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType(), $entity);
+        $entity  = new Block();
+        $form = $this->createForm(new BlockType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -52,7 +53,7 @@ class OrderInfoController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('block_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -62,16 +63,16 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo entity.
+     * Displays a form to create a new Block entity.
      *
-     * @Route("/new", name="orderinfo_new")
+     * @Route("/new", name="block_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new OrderInfo();
-        $form   = $this->createForm(new OrderInfoType(), $entity);
+        $entity = new Block();
+        $form   = $this->createForm(new BlockType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -80,9 +81,9 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Finds and displays a OrderInfo entity.
+     * Finds and displays a Block entity.
      *
-     * @Route("/{id}", name="orderinfo_show")
+     * @Route("/{id}", name="block_show")
      * @Method("GET")
      * @Template()
      */
@@ -90,10 +91,10 @@ class OrderInfoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Block')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Block entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -105,9 +106,9 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to edit an existing OrderInfo entity.
+     * Displays a form to edit an existing Block entity.
      *
-     * @Route("/{id}/edit", name="orderinfo_edit")
+     * @Route("/{id}/edit", name="block_edit")
      * @Method("GET")
      * @Template()
      */
@@ -115,13 +116,13 @@ class OrderInfoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Block')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Block entity.');
         }
 
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new BlockType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -132,31 +133,31 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Edits an existing OrderInfo entity.
+     * Edits an existing Block entity.
      *
-     * @Route("/{id}", name="orderinfo_update")
+     * @Route("/{id}", name="block_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
+     * @Template("OlegOrderformBundle:Block:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Block')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find Block entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new BlockType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('block_edit', array('id' => $id)));
         }
 
         return array(
@@ -166,9 +167,9 @@ class OrderInfoController extends Controller {
         );
     }
     /**
-     * Deletes a OrderInfo entity.
+     * Deletes a Block entity.
      *
-     * @Route("/{id}", name="orderinfo_delete")
+     * @Route("/{id}", name="block_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -178,21 +179,21 @@ class OrderInfoController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:Block')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+                throw $this->createNotFoundException('Unable to find Block entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('orderinfo'));
+        return $this->redirect($this->generateUrl('block'));
     }
 
     /**
-     * Creates a form to delete a OrderInfo entity by id.
+     * Creates a form to delete a Block entity by id.
      *
      * @param mixed $id The entity id
      *

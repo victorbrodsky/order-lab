@@ -1,34 +1,35 @@
 <?php
 
-namespace Oleg\OrderformBundle\Type;
+namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class OrderInfoType extends AbstractType
+class PartType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('orderdate')
-            ->add('pathologyService')
-            ->add('priority')
-            ->add('slideDelivery')
-            ->add('returnSlide')
-            ->add('provider')
+            ->add('name')
+            ->add('sourceOrgan')
+            ->add('description')
+            ->add('diagnosis')
+            ->add('diffDiagnosis')
+            ->add('diseaseType')
+            ->add('accession')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\OrderInfo'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Part'
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_orderinfotype';
+        return 'oleg_orderformbundle_parttype';
     }
 }

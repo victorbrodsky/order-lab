@@ -18,7 +18,7 @@
 
         {{ form_widget(form.id) }}
 
-        {{ form_label(form.accession, '*Accession #:') }}
+        {{ form_label(form.accession) }}
         {{ form_widget(form.accession) }}
 
         {{ form_label(form.stain, 'Stain:' ) }}
@@ -31,22 +31,41 @@
         {{ form_widget(form.diagnosis) }}  
         
         <p>
-            <input type='button' id='show' value='Next' class="btn btn-primary">       
+            <input type='button' id='next' value='Next' class="btn btn-primary">       
         </p>
         <a href="{{ path('order') }}">Back to the list</a>
     
     </div>        
     <div class="slide_new">  
                 
-        <div id="optional">
+        <div id="orderinfo">
                        
-            <h4>Optional Parameters:</h4>
+            <h4>Order Info</h4>
             
-            {{ form_rest(form) }} 
+            {{ form_errors(form.orderinfo) }}
+            
+            {{ form_label(form.orderinfo) }}
+            {{ form_widget(form.orderinfo) }}
+            
+{#            {{ form_rest(form) }} #}
             
             <p>
                 <button class="btn btn-primary" type="submit">Submit</button>        
             </p>
+            
+        </div>    
+        
+    </div>
+        
+    <div class="slide_new">  
+        
+        <a id="optional_button" class="btn btn-mini" href="#">options</a>
+        
+        <div id="optional">
+                       
+            <h4>Optional Parameters</h4>
+            
+            {{ form_rest(form) }}                   
             
         </div>    
         
