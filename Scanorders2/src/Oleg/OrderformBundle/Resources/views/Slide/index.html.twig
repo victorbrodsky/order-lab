@@ -33,7 +33,16 @@
                 <td>{{ slide.accession }}</td>
                 <td>{{ slide.stain }}</td>
                 <td>{{ slide.mag }}</td>
-                <td>{{ slide.diagnosis }}</td>
+{#                <td>{{ slide.diagnosis }}</td>#}
+                <td>
+                {% block textarea_widget %}
+                {% spaceless %}
+                    <div class="textarea_widget">
+                        <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
+                    </div>
+                {% endspaceless %}
+                {% endblock textarea_widget %}
+                </td>
                               
                 <td>
                     <a class="btn btn-small btn-info" href="{{ path('order_show', { 'id': slide.id }) }}">Show</a>

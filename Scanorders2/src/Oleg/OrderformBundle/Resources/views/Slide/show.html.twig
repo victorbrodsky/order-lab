@@ -4,51 +4,27 @@
 
 {% block content %} 
 {% block body -%}
-    <h1>Slide</h1>
+    <h3>Slide show</h3>
+    
+    <div class="buttons-full-bar">     
+        <div class="action-button">
+            <a class="btn btn-primary span2" href="{{ path('order') }}">Back to list</a>
+        </div>             
+        <div class="action-button">
+            <a class="btn btn-primary btn-warning span2" 
+               href="{{ path('order_edit', { 'id': entity.id }) }}">Edit
+            </a> 
+        </div>       
+        <div class="action-button">
+            <form action="{{ path('order_delete', { 'id': entity.id }) }}" method="post">
+                <input type="hidden" name="_method" value="DELETE" />
+                {{ form_widget(delete_form) }}
+                <button type="submit" class="btn btn-primary btn-danger span2">Delete</button>            
+            </form>
+        </div>
+    </div>
+     
+    {{ form_rest(form) }}
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Accession</th>
-                <td>{{ entity.accession }}</td>
-            </tr>
-            <tr>
-                <th>Stain</th>
-                <td>{{ entity.stain }}</td>
-            </tr>
-            <tr>
-                <th>Mag</th>
-                <td>{{ entity.mag }}</td>
-            </tr>
-            <tr>
-                <th>diagnosis</th>
-                <td>{{ entity.diagnosis }}</td>
-            </tr>
-        </tbody>
-    </table>   
-    
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('order') }}">
-                Back to the list
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('order_edit', { 'id': entity.id }) }}">
-                Edit
-            </a>
-        </li>       
-    </ul>
-    
-    <form action="{{ path('order_delete', { 'id': entity.id }) }}" method="post">
-        <input type="hidden" name="_method" value="DELETE" />
-        {{ form_widget(delete_form) }}
-        <button type="submit" class="btn btn-primary btn-danger">Delete</button>            
-    </form>
-    
 {% endblock %}
 {% endblock %}

@@ -95,7 +95,7 @@ class SlideController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('order_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('order_show', array('id' => $id)));        
         }
 
         return array(
@@ -142,30 +142,7 @@ class SlideController extends Controller {
     public function newAction(){//Request $request) {
         
         $entity  = new Slide();
-        $form = $this->createForm(new SlideType(), $entity);
-        //$form->bind($request);
-        
-
-//        if ($request->getMethod() == 'POST') {
-//            $form->bind($request);
-//            if ($form->isValid()) {            
-//                $em = $this->getDoctrine()->getManager();              
-//                $em->persist($slide);
-//                $em->flush();
-                
-//                $this->get('session')->getFlashBag()->add(
-//                    'notice',
-//                    'You have successfully added slide# '.$slide->getAccession().' to the scan order!'
-//                );
-                //Note for generateUrl oleg_orderform_slide_add: 
-                //A route defined with the @Route annotation is given a default name 
-                //composed of the bundle name, the controller name and the action name.
-                //return $this->redirect( $this->generateUrl('oleg_orderform_slide_verify') );
-//                $response = $this->forward('OlegOrderformBundle:Slide:verify', array(
-//                    'form'  => $form              
-//                ));
-//            }           
-//        }                    
+        $form = $this->createForm(new SlideType(), $entity);       
 
         return $this->render('OlegOrderformBundle:Slide:new.html.twig',
             array(
@@ -259,11 +236,16 @@ class SlideController extends Controller {
             throw $this->createNotFoundException('Unable to find Slide entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm( $id );
 
+        ////
+        $form = $this->createForm( new SlideType(), $entity, array('disabled' => true) );
+        ///
+        
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'form'   => $form->createView(),
         );
     }
     

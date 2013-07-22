@@ -9,11 +9,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class AccessionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('accession')
-            //->add('date')
-        ;
+    {  
+        
+        $builder->add( 'accession', 'text', array('max_length'=>100,'required'=>true) );
+        //$builder->add( 'date', null ,array('max_length'=>100,'required'=>false) );
+        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

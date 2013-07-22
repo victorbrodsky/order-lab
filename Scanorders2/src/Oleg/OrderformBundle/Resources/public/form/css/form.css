@@ -41,3 +41,19 @@
     float: left;
     width: 100%;
 }
+
+.action-button {
+    float: left;
+}
+
+.buttons-full-bar {
+    margin-bottom: 2%;
+    margin-top: 2%;
+    float: left;
+    width: 100%;
+}
+
+.form_edit {
+    float: left;
+    width: 100%;
+}

@@ -22,7 +22,7 @@ class SlideType extends AbstractType {
         
 //        $builder->add('accession', 'text', array('max_length'=>100,'required'=>true));
         
-        $builder->add('accession', new AccessionType());       
+        $builder->add( 'accession', new AccessionType(), array('label'=>' ') );       
         
         
         $builder->add('stain', 'choice', array(                 
