@@ -28,7 +28,7 @@ class Slide
     //Slide has only one Accession, Accession might have many Slides (1..n)
     //Note: Unique slide accession number is combination of Accession+Part+Block (S12-99997 A2)
     /**
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
+     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide", cascade={"persist"})
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -36,7 +36,7 @@ class Slide
     
     /**
      * Slide belongs to exactly one OrderInfo => Slide has only one OrderInfo
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide")
+     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide", cascade={"persist"})
      * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -48,7 +48,7 @@ class Slide
     protected $stain;   
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)
+     * @ORM\Column(type="string", length=100)
      */
     protected $mag;
     

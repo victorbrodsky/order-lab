@@ -57,3 +57,8 @@
     float: left;
     width: 100%;
 }
+
+#acc_part_block {
+    float: left;
+    //width: 150px;
+}

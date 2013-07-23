@@ -14,11 +14,18 @@ class OrderInfoType extends AbstractType
     {
         $helper = new Helper\FormHelper();
         
-        $builder->add( 'provider', 'text', array('label'=>'Ordering Provider', 'max_length'=>'200', 'required'=>true) );
-        $builder->add( 'pathologyService', 'text', array('label'=>'Pathology Service', 'max_length'=>200,'required'=>false) );
+        $builder->add( 'provider', 'text', array(
+                'label'=>'* Ordering Provider:', 
+                'max_length'=>'200', 
+                'required'=>true
+        ));
+        $builder->add( 'pathologyService', 'text', array(
+                'label'=>'Pathology Service:', 
+                'max_length'=>200,'required'=>false
+        ));
         
         $builder->add( 'priority', 'choice', array(
-                'label'=>'Priority', 
+                'label'=>'* Priority:', 
                 'max_length'=>200,
                 'required'=>true,
                 'choices' => $helper->getPriority(),
@@ -26,13 +33,17 @@ class OrderInfoType extends AbstractType
         
         $builder->add( 'slideDelivery', 
                 'choice', array(  
-                'label'=>'Slide Delivery',
+                'label'=>'* Slide Delivery:',
                 'max_length'=>200,
                 'choices' => $helper->getSlideDelivery(),
-                'required'=>false
+                'required'=>true
         ));
                 
-        $builder->add( 'returnSlide', 'text', array('label'=>'Return Slides to', 'max_length'=>200,'required'=>true) );
+        $builder->add( 'returnSlide', 'text', array(
+                'label'=>'* Return Slides to:', 
+                'max_length'=>200,
+                'required'=>true
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

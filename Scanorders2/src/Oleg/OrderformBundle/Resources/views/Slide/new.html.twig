@@ -6,30 +6,43 @@
 
 {#    <h3>One Slide</h3>#}
    
-    <form action="{{ path('order_create') }}" method="post" {{ form_enctype(form) }} class="SlideType">
+    <form action="{{ path('order_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         
-    <div class="slide_new">
+    <div class="slide_new"> 
         {{ form_errors(form.id) }}
         {{ form_errors(form.accession) }}
         {{ form_errors(form.stain) }}
         {{ form_errors(form.mag) }}
         {{ form_errors(form.diagnosis) }}
         {{ form_errors(form) }}
+        
+        {{ form_errors(part_form) }}
+        {{ form_errors(block_form) }}
 
         {{ form_widget(form.id) }}
-
+        
+{#        <div id="acc_part_block">#}
         {{ form_label(form.accession) }}
         {{ form_widget(form.accession) }}
-
-        {{ form_label(form.stain, 'Stain:' ) }}
+{#        </div>#}
+{#        <div id="acc_part_block">#}
+        {{ form_label(part_form.name) }}
+        {{ form_widget(part_form.name) }}
+{#        </div>#}
+{#        <div id="acc_part_block">#}
+        {{ form_label(block_form.name) }}
+        {{ form_widget(block_form.name) }}
+{#        </div>#}
+   
+        {{ form_label(form.stain) }}
         {{ form_widget(form.stain) }} 
         
-        {{ form_label(form.mag, 'Mag:') }}
+        {{ form_label(form.mag) }}
         {{ form_widget(form.mag) }}       
         
-        {{ form_label(form.diagnosis, 'Diagnosis / Reason for scans:') }}
+        {{ form_label(form.diagnosis) }}
         {{ form_widget(form.diagnosis) }}  
-        
+       
         <p>
             <input type='button' id='next' value='Next' class="btn btn-primary">       
         </p>

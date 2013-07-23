@@ -22,7 +22,11 @@ class SlideType extends AbstractType {
         
 //        $builder->add('accession', 'text', array('max_length'=>100,'required'=>true));
         
-        $builder->add( 'accession', new AccessionType(), array('label'=>' ') );       
+        $builder->add( 'accession', new AccessionType(), array('label'=>' ') );
+        
+        //$builder->add( 'part', new PartType(), array('label'=>' ') );
+        
+        //$builder->add( 'block', new BlockType(), array('label'=>' ') );
         
         $builder->add( 'orderinfo', new OrderInfoType(), array('label'=>' ') );
         
@@ -32,9 +36,14 @@ class SlideType extends AbstractType {
         ));
         $builder->add('mag', 'choice', array(        
             'choices' => $helper->getMags(),
-            'required'=>false
+            'required'=>true,
+            'label'=>'* Magnification:',
         ));       
-        $builder->add('diagnosis', 'textarea', array('max_length'=>10000,'required'=>false));
+        $builder->add('diagnosis', 'textarea', array(
+                'max_length'=>10000,
+                'required'=>false,
+                'label'=>'Diagnosis / Reason for scans:'
+        ));
         $builder->add('microscopicdescr', 'textarea', array('max_length'=>10000,'required'=>false));
         $builder->add('specialstain', 'text', array('max_length'=>100,'required'=>false));
         $builder->add('relevantscan', 'text', array('max_length'=>100,'required'=>false));

@@ -11,6 +11,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
 
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Form\PartType;
+
+use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Form\BlockType;
+
 /**
  * @Route("/order")
  */
@@ -143,11 +149,15 @@ class SlideController extends Controller {
               
         $form = $this->createForm(new SlideType(), new Slide());       
 
-        //$order_form = $this->createForm(new OrderInfoType(), new OrderInfo());        
+        //$order_form = $this->createForm(new OrderInfoType(), new OrderInfo());  
+        $part_form = $this->createForm(new PartType(), new Part()); 
+        $block_form = $this->createForm(new BlockType(), new Block()); 
         
         return $this->render('OlegOrderformBundle:Slide:new.html.twig',
             array(
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'part_form' => $part_form->createView(),
+                'block_form' => $block_form->createView()
             ));
     }
     
@@ -171,10 +181,16 @@ class SlideController extends Controller {
                       
             $em = $this->getDoctrine()->getManager();
             
-            //process accession. If not exists - create and return new object, if exists - return object
-            $accession_number = $form["accession"]->getData();
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession_number );                         
-            $entity->setAccession($accession);
+            /*
+             * Process accession number. 
+             * If not exists - create and return new accession object, 
+             * if exists - return existing accession object.
+             * However, unique Accession nubmer is combination of Accession + Part + Block (i.e. "S12-99998 B1")
+             */
+//            $accession_number = $form["accession"]->getData();
+//            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession_number );                         
+//            $entity->setAccession($accession);
+            
             $em->persist($entity);             
             
             $em->flush();

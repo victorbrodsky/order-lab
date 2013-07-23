@@ -10,10 +10,16 @@ class BlockType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name')
-            ->add('accession')
-        ;
+//        $builder
+//            ->add('name')
+//            ->add('accession')
+//        ;
+        
+        $builder->add( 'name', 'text', array(
+                'label'=>'* Block:', 
+                'max_length'=>'3', 
+                'required'=>true
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -63,6 +63,7 @@ class Part
      */
     protected $diseaseType; 
     
+    
     public function getId() {
         return $this->id;
     }

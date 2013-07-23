@@ -63,12 +63,12 @@ class OrderInfo
     private $priority;
     
     /**
-     * @ORM\Column(name="scandeadline", type="datetime")
+     * @ORM\Column(name="scandeadline", nullable=true, type="datetime")
      */
     private $scandeadline;
     
     /**
-     * @ORM\Column(name="returnoption", type="datetime")
+     * @ORM\Column(name="returnoption", nullable=true, type="datetime")
      */
     private $returnoption;
 
@@ -99,7 +99,7 @@ class OrderInfo
 
     /**
      * OrderInfo might have many slides (1..n)
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo")
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo", cascade={"persist"})
      */
     protected $slides;
 
