@@ -24,25 +24,33 @@ class SlideType extends AbstractType {
         
         $builder->add( 'accession', new AccessionType(), array('label'=>' ') );
         
-        //$builder->add( 'part', new PartType(), array('label'=>' ') );
+        $builder->add( 'part', new PartType(), array('label'=>' ') );
         
-        //$builder->add( 'block', new BlockType(), array('label'=>' ') );
+        $builder->add( 'block', new BlockType(), array('label'=>' ') );
         
-        $builder->add( 'orderinfo', new OrderInfoType(), array('label'=>' ') );
+        $builder->add( 'orderinfo', new OrderInfoType(), array('label'=>' ') );              
         
         $builder->add('stain', 'choice', array(                 
                 'choices' => $helper->getStains(),
-                'required'=>false
+                'required'=>false,
+                'label'=>'Stain:',
+                //'empty_value'=>'H&E',
+                //'attr' => array('id' => 'stain_label_div'),
         ));
         $builder->add('mag', 'choice', array(        
             'choices' => $helper->getMags(),
             'required'=>true,
             'label'=>'* Magnification:',
+            //'empty_value'=>'20X',
+            //'expanded'=>true,
+            //'multiple'=>false,
+            //'extra_fields_message'=>'true',
         ));       
         $builder->add('diagnosis', 'textarea', array(
                 'max_length'=>10000,
                 'required'=>false,
-                'label'=>'Diagnosis / Reason for scans:'
+                'label'=>'Diagnosis / Reason for scans:',
+                //'attr'=>array('readonly'=>true)
         ));
         $builder->add('microscopicdescr', 'textarea', array('max_length'=>10000,'required'=>false));
         $builder->add('specialstain', 'text', array('max_length'=>100,'required'=>false));

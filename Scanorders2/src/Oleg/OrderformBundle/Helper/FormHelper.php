@@ -30,5 +30,40 @@ class FormHelper {
         return $arr;
     }
     
+    public function getReturnSlide() {        
+        $arr = array( 'Filing Room'=>'Filing Room', "Me"=>"Me" );
+        
+        return $arr;
+    }
+    
+    public function getBlock() {        
+        $arr = array();
+        
+        for( $i=0; $i<=100; $i++ ) {
+            array_push($arr, $i);
+        }
+        
+        return $arr;
+    }
+
+    public function getPart() {        
+        $arr = array();
+        $letters = array();
+        $letters = range('A', 'Z');
+        $count = 0;
+        for( $i=0; $i<=100; $i++ ) {               
+            if( $count == 0 ) {
+                array_push( $arr, $letters[$i%26] );
+                //$arr[$letters[$i%26]]  = $letters[$i%26];
+            } else {
+                array_push( $arr, $arr[$count-1].$letters[$i%26] );
+                //$arr[$letters[$i%26]]  = $arr[$count-1].$letters[$i%26];
+            }       
+            if(  ($i % 26) == 25 ) $count++; //1,2,3,4...26
+        }          
+        
+        return $arr;
+    }
+    
 }
 ?>

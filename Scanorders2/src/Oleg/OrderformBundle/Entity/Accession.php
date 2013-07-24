@@ -22,7 +22,7 @@ class Accession {
     protected $id;
     
     /**
-     * Accession string i.e. S12-99998
+     * Accession string i.e. S12-99998. Must be unique.
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      */
@@ -35,6 +35,8 @@ class Accession {
      * @ORM\Column(name="date", type="datetime", nullable=true)
      */
     protected $date;
+    
+    ///////////////////////////////////////////
     
     //Accession belongs to exactly one Specimen => Accession has only one Specimen
     /**

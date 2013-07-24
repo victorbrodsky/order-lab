@@ -17,6 +17,9 @@ use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
 
+use Oleg\OrderformBundle\Entity\OrderInfo;
+use Oleg\OrderformBundle\Helper as Helper;
+
 /**
  * @Route("/order")
  */
@@ -38,14 +41,15 @@ class SlideController extends Controller {
         //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAllOrderedByName(); 
         $slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
         
-        $accession = null;
-        $orderinfo = null;
+        //get part, block by accession
+        //$part = null;
+        //$block = null;
         
         return $this->render('OlegOrderformBundle:Slide:index.html.twig',
             array(
                 'slides' => $slides,
-                'accession' => $accession,
-                'orderinfo' => $orderinfo
+                //'part' => $part,
+                //'block' => $block
             ));
         
     }
@@ -146,18 +150,38 @@ class SlideController extends Controller {
      * @Template()
      */
     public function newAction(){//Request $request) {
-              
-        $form = $this->createForm(new SlideType(), new Slide());       
-
-        //$order_form = $this->createForm(new OrderInfoType(), new OrderInfo());  
-        $part_form = $this->createForm(new PartType(), new Part()); 
-        $block_form = $this->createForm(new BlockType(), new Block()); 
+        
+        $helper = new Helper\FormHelper(); 
+        
+        $entity = new Slide();          
+        //initialize default values in the form
+        $entity->setMag( key($helper->getMags()) );
+        $entity->setStain( key($helper->getStains()) );
+        $orderInfo = new OrderInfo();
+        $orderInfo->setPriority( key($helper->getPriority()) );
+        $orderInfo->setSlideDelivery( key($helper->getSlideDelivery()) );
+        $orderInfo->setReturnSlide( key($helper->getReturnSlide()) );
+        $entity->setOrderinfo($orderInfo);
+                         
+        //$order_form = $this->createForm(new OrderInfoType(), new OrderInfo());
+        $block_entity = new Block();
+        $block_entity->setName(1);
+        $entity->setBlock($block_entity);
+        
+        $part_entity = new Part();
+        $part_entity->setName(0);
+        $entity->setPart($part_entity);
+        
+        //$part_form = $this->createForm(new PartType(), $part_entity); 
+        //$block_form = $this->createForm(new BlockType(), $block_entity); 
+        
+        $form = $this->createForm(new SlideType(), $entity); 
         
         return $this->render('OlegOrderformBundle:Slide:new.html.twig',
             array(
                 'form' => $form->createView(),
-                'part_form' => $part_form->createView(),
-                'block_form' => $block_form->createView()
+                //'part_form' => $part_form->createView(),
+                //'block_form' => $block_form->createView()
             ));
     }
     
@@ -172,13 +196,25 @@ class SlideController extends Controller {
         $entity  = new Slide();             
         $form = $this->createForm(new SlideType(), $entity);                      
         $form->bind($request);    
-            
-        if ($form->isValid()) {
+        
+        //$part_entity  = new Part();
+        //$part_form = $this->createForm(new PartType(), $part_entity);
+        //$part_form->bind($request);
+        
+        //$block_entity  = new Block();
+        //$block_form = $this->createForm(new BlockType(), $block_entity);
+        //$block_form->bind($request); 
+        
+        //$accession_number_form = $form["accession"]->getData();
+        //$part_form["accession"]->setData($accession_number_form);
+        //$block_form["accession"]->setData($accession_number_form);
+        
+        if( $form->isValid() ) { //&& $part_form->isValid() && $block_form->isValid() ) {
 //            echo "stain=".$entity->getStain();
 //            echo ", mag=".$entity->getMag();
 //            echo "<br>";         
 //            exit();
-                      
+                          
             $em = $this->getDoctrine()->getManager();
             
             /*
@@ -191,51 +227,32 @@ class SlideController extends Controller {
 //            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession_number );                         
 //            $entity->setAccession($accession);
             
-            $em->persist($entity);             
+            $accession_number = $entity->getAccession();          
+            //$part_entity->setAccession($accession_number);
+            //$block_entity->setAccession($accession_number);
+            
+            $entity->getOrderinfo()->setStatus("Submitted");
+            
+            $em->persist($entity);  
+            //$em->persist($part_entity);
+            //$em->persist($block_entity);
             
             $em->flush();
             
-            return $this->redirect($this->generateUrl('order_show', array('id' => $entity->getId())));
+            return $this->redirect(
+                    $this->generateUrl('order' 
+                            //array(
+                            //    'id' => $entity->getId()                              
+                            //)
+                    ));
         }
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),         
         );
     }
-    
-    //TODO: remove it?
-    //Display order information for modification and verification. 
-    //Display all fields
-    /**
-     * @Route("/verify/")
-     * @Method({"POST"})
-     */
-    public function verifyAction( $form ) {
-        
-        $request = $this->get('request');
-        
-        $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    'Please verify/correct your order information'
-                );
-        
-        $form->bind($request);
-        if ($form->isValid()) { 
-            $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    'You have successfully added slide# '.$slide->getAccession().' to the scan order!'
-                );
-        }
-        
-        return $this->render('OlegOrderformBundle:Slide:add.html.twig',
-            array(
-                'form' => $form->createView(),
-                'verify' => true
-            ));
-    }
-    
-    
+      
     /**
      * Finds and displays a Slide entity. //Option defaults={"id" = 1} does not work: it does order/1 => order/
      *

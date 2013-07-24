@@ -12,7 +12,7 @@ class AccessionType extends AbstractType
     {  
         
         $builder->add( 'accession', 'text', array(
-                'label'=>'* Accession:', 
+                'label'=>' ', 
                 'max_length'=>100,
                 'required'=>true
         ));

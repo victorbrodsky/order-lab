@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,14 +23,14 @@ class Part
     /**
      * Part belongs to exactly one Accession => Part has only one Accession
      * @ORM\ManyToOne(targetEntity="Accession", inversedBy="part")
-     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
-     * @Assert\NotBlank
+     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)
      */
     protected $accession;
 
     /**
      * Name is a letter
-     * @ORM\Column(type="string", length=1)   
+     * @ORM\Column(type="string", length=3) 
+     * @Assert\NotBlank  
      */
     protected $name;  
     
@@ -63,6 +64,24 @@ class Part
      */
     protected $diseaseType; 
     
+    /**
+     * One Part has Many slides
+     * Accession might have many slide s
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="part")
+     */
+    protected $slide;
+    
+    /**
+     * One Part has Many blocks
+     * Accession might have many slide s
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="part")
+     */
+    protected $block;
+    
+    public function __construct() {
+        $this->slide = new ArrayCollection();
+        $this->block = new ArrayCollection();
+    }
     
     public function getId() {
         return $this->id;
@@ -129,4 +148,70 @@ class Part
     }
 
 
+
+    /**
+     * Add slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return Part
+     */
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $this->slide[] = $slide;
+    
+        return $this;
+    }
+
+    /**
+     * Remove slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     */
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $this->slide->removeElement($slide);
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSlide()
+    {
+        return $this->slide;
+    }
+
+    /**
+     * Add block
+     *
+     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @return Part
+     */
+    public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    {
+        $this->block[] = $block;
+    
+        return $this;
+    }
+
+    /**
+     * Remove block
+     *
+     * @param \Oleg\OrderformBundle\Entity\Block $block
+     */
+    public function removeBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    {
+        $this->block->removeElement($block);
+    }
+
+    /**
+     * Get block
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBlock()
+    {
+        return $this->block;
+    }
 }

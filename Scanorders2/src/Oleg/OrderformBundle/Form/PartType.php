@@ -6,25 +6,19 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use Oleg\OrderformBundle\Helper\FormHelper;
+
 class PartType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $builder
-//            ->add('name')
-//            ->add('sourceOrgan')
-//            ->add('description')
-//            ->add('diagnosis')
-//            ->add('diffDiagnosis')
-//            ->add('diseaseType')
-//            ->add('accession')
-//        ;
+        $helper = new FormHelper();  
         
-        $builder->add( 'name', 'text', array(
-                'label'=>'* Part:', 
-                'max_length'=>'3', 
-                'required'=>true
-        ));
+        $builder->add('name', 'choice', array(        
+            'choices' => $helper->getPart(),
+            'required'=>true,
+            'label'=>'* Part:',        
+        ));      
         
         $builder->add( 'sourceOrgan', 'text', array(
                 'label'=>'Source Organ:', 
@@ -56,6 +50,11 @@ class PartType extends AbstractType
                 'required'=>false
         ));
         
+//        $builder->add( 'accession', new AccessionType(), array(
+//            'label'=>' ',
+//            'required'=>false,
+//            //'hidden'=>true,
+//        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -17,35 +17,40 @@
     <table class="table table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Accession</th>
-                <th>Stain</th>
-                <th>Mag</th>
-                <th>Diagnosis</th>
-{#                <th>Order Date</th>#}
-{#                <th>Status</th>#}
+                <th class='olspan1'>Id</th>
+                <th class='olspan1'>Accession#</th>
+                <th class='olspan1'>Stain</th>
+                <th class='olspan1'>Mag</th>
+                <th class='olspan1'>Diagnosis</th>            
+                <th class='olspan1'>Status</th>
+                <th class='olspan1'>Submit Date(Y-m-d)</th>
+                <th class='olspan1'>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for slide in slides %}
             <tr>
-                <td><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>               
-                <td>{{ slide.accession }}</td>
-                <td>{{ slide.stain }}</td>
-                <td>{{ slide.mag }}</td>
-{#                <td>{{ slide.diagnosis }}</td>#}
-                <td>
-                {% block textarea_widget %}
-                {% spaceless %}
-                    <div class="textarea_widget">
-                        <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
-                    </div>
-                {% endspaceless %}
-                {% endblock textarea_widget %}
+                <td class='olspan1'><a href="{{ path('order_show', { 'id': slide.id }) }}">{{ slide.id }}</a></td>               
+                <td class='olspan1'>{{ slide.accession }} {{ slide.part.name }}{{ slide.block.name }}</td>
+{#                {{ slide.part.name }}{{ slide.block.name }}#}
+                <td class='olspan1'>{{ slide.stain }}</td>
+                <td class='olspan1'>{{ slide.mag }}</td>
+                <td class='olspan1'>                 
+{#                    {% block textarea_widget %}              #}
+{#                    {% spaceless %}#}
+{#                        <div class="textarea_widget">#}
+                            <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
+{#                        </div>#}
+{#                    {% endspaceless %}    #}
+{#                    {% endblock textarea_widget %}               #}
                 </td>
+                <td class='olspan1'>{{ slide.orderinfo.status }}</td>
+                <td class='olspan1'>{{ slide.orderinfo.orderdate|date('H:i:s, Y-m-d')  }}</td>                                
                               
-                <td>
+                <td class='olspan1'>
                     <a class="btn btn-small btn-info" href="{{ path('order_show', { 'id': slide.id }) }}">Show</a>
+                    <a class="btn btn-small btn-warning" href="{{ path('order_edit', { 'id': slide.id }) }}">Edit</a>
+                    <a class="btn btn-small btn-danger" href="{{ path('order_delete', { 'id': slide.id }) }}">Delete</a>                   
                 </td>
             </tr>
         {% endfor %}

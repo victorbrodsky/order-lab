@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class BlockRepository extends EntityRepository
 {
+    
+//    public function getByAccession( $accession_number ) { 
+//        
+//        $entity = $this->findBy(
+//            array('accession' => $accession_number),
+//            array('id' => 'ASC')
+//        );
+//              
+//        return $entity;
+//    }
+    
 }

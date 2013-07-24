@@ -11,7 +11,7 @@
 .order-content {
     padding-left: 5%;
     padding-right: 5%;
-    padding-top: 5%;
+    padding-top: 0%;
     padding-bottom: 5%;
     float: left;
     width: 100%;
@@ -20,6 +20,10 @@
 .header {
     float: left;
     width: 100%;
+}
+
+.page-content {
+    margin-top: 5%;
 }
 
 .footer {
@@ -62,3 +66,16 @@
     float: left;
     //width: 150px;
 }
+
+.olspan1 {
+    //margin: 0 auto; // !important;
+    //padding: 0; // !important;
+    width: auto;
+}
+.olspanmin {
+    float: left;
+    //margin: 0 auto; // !important;
+    //padding: 0; // !important;
+    //width: auto;
+}
+

@@ -41,6 +41,22 @@ class Slide
      * @Assert\NotBlank
      */
     protected $orderinfo;
+    
+    //add manytoone for block and part?
+    /**
+     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
+     * @Assert\NotBlank
+     */
+    protected $part;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="block_id", referencedColumnName="id")
+     * @Assert\NotBlank
+     */
+    protected $block;
+    
 
     /**
      * @ORM\Column(type="string", nullable=true, length=100)   
@@ -192,6 +208,52 @@ class Slide
         $this->orderinfo = $orderinfo;
     }
 
+    /**
+     * Set part
+     *
+     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @return Slide
+     */
+    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    {
+        $this->part = $part;
+    
+        return $this;
+    }
+
+    /**
+     * Get part
+     *
+     * @return \Oleg\OrderformBundle\Entity\Part 
+     */
+    public function getPart()
+    {
+        return $this->part;
+    }
+
+    /**
+     * Set block
+     *
+     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @return Slide
+     */
+    public function setBlock(\Oleg\OrderformBundle\Entity\Block $block = null)
+    {
+        $this->block = $block;
+    
+        return $this;
+    }
+
+    /**
+     * Get block
+     *
+     * @return \Oleg\OrderformBundle\Entity\Block 
+     */
+    public function getBlock()
+    {
+        return $this->block;
+    }
+    
     public function __toString() {
         return "id=".$this->getId().", mag=".$this->getMag().", accession=".$this->getAccession(); 
     }

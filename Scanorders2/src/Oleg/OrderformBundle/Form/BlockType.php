@@ -6,18 +6,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use Oleg\OrderformBundle\Helper\FormHelper;
+
 class BlockType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-//        $builder
-//            ->add('name')
-//            ->add('accession')
-//        ;
+    {     
+        $helper = new FormHelper();
         
-        $builder->add( 'name', 'text', array(
-                'label'=>'* Block:', 
+        $builder->add( 'name', 'choice', array(
+                'label'=>' ', 
                 'max_length'=>'3', 
+                'choices' => $helper->getBlock(),
                 'required'=>true
         ));
     }
