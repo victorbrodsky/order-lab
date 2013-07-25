@@ -7,21 +7,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\SlideType;
+use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 /**
- * Slide controller.
+ * Scan controller.
  *
- * @Route("/slide")
+ * @Route("/scan")
  */
-class SlideController extends Controller
+class ScanController extends Controller
 {
 
     /**
-     * Lists all Slide entities.
+     * Lists all Scan entities.
      *
-     * @Route("/", name="slide")
+     * @Route("/", name="scan")
      * @Method("GET")
      * @Template()
      */
@@ -29,23 +32,23 @@ class SlideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:Scan')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new Slide entity.
+     * Creates a new Scan entity.
      *
-     * @Route("/", name="slide_create")
+     * @Route("/", name="scan_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Slide:new.html.twig")
+     * @Template("OlegOrderformBundle:Scan:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Slide();
-        $form = $this->createForm(new SlideType(), $entity);
+        $entity  = new Scan();
+        $form = $this->createForm(new ScanType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -53,7 +56,7 @@ class SlideController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('slide_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('scan_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -63,18 +66,23 @@ class SlideController extends Controller
     }
 
     /**
-     * Displays a form to create a new Slide entity.
+     * Displays a form to create a new Scan entity.
      *
-     * @Route("/new", name="slide_new")
+     * @Route("/new", name="scan_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
+        $helper = new FormHelper();
+        $entity = new Scan();
         
-        $entity = new Slide();
-                   
-        $form   = $this->createForm(new SlideType(), $entity);
+        //$slide= new Slide(); 
+        //$entity->setSlide($slide);
+                
+        $entity->setMag( key($helper->getMags()) );       
+        
+        $form   = $this->createForm(new ScanType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -83,9 +91,9 @@ class SlideController extends Controller
     }
 
     /**
-     * Finds and displays a Slide entity.
+     * Finds and displays a Scan entity.
      *
-     * @Route("/{id}", name="slide_show")
+     * @Route("/{id}", name="scan_show")
      * @Method("GET")
      * @Template()
      */
@@ -93,10 +101,10 @@ class SlideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Slide entity.');
+            throw $this->createNotFoundException('Unable to find Scan entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -108,9 +116,9 @@ class SlideController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Slide entity.
+     * Displays a form to edit an existing Scan entity.
      *
-     * @Route("/{id}/edit", name="slide_edit")
+     * @Route("/{id}/edit", name="scan_edit")
      * @Method("GET")
      * @Template()
      */
@@ -118,13 +126,13 @@ class SlideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Slide entity.');
+            throw $this->createNotFoundException('Unable to find Scan entity.');
         }
 
-        $editForm = $this->createForm(new SlideType(), $entity);
+        $editForm = $this->createForm(new ScanType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -135,31 +143,31 @@ class SlideController extends Controller
     }
 
     /**
-     * Edits an existing Slide entity.
+     * Edits an existing Scan entity.
      *
-     * @Route("/{id}", name="slide_update")
+     * @Route("/{id}", name="scan_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Slide:edit.html.twig")
+     * @Template("OlegOrderformBundle:Scan:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Slide entity.');
+            throw $this->createNotFoundException('Unable to find Scan entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new SlideType(), $entity);
+        $editForm = $this->createForm(new ScanType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('slide_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('scan_edit', array('id' => $id)));
         }
 
         return array(
@@ -169,9 +177,9 @@ class SlideController extends Controller
         );
     }
     /**
-     * Deletes a Slide entity.
+     * Deletes a Scan entity.
      *
-     * @Route("/{id}", name="slide_delete")
+     * @Route("/{id}", name="scan_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -181,21 +189,21 @@ class SlideController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:Scan')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Slide entity.');
+                throw $this->createNotFoundException('Unable to find Scan entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('slide'));
+        return $this->redirect($this->generateUrl('scan'));
     }
 
     /**
-     * Creates a form to delete a Slide entity by id.
+     * Creates a form to delete a Scan entity by id.
      *
      * @param mixed $id The entity id
      *

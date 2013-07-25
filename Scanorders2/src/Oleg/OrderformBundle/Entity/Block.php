@@ -36,7 +36,7 @@ class Block
     /**
      * One Block has Many slides
      * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="block")
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="block", cascade={"persist"})
      */
     protected $slide;
     
@@ -129,5 +129,9 @@ class Block
     public function getSlide()
     {
         return $this->slide;
+    }
+    
+    public function __toString() {
+        return $this->name;
     }
 }

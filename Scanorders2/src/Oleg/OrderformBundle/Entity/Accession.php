@@ -59,7 +59,7 @@ class Accession {
     
      /**
      * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession")
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession", cascade={"persist"})
      */
     protected $slide;
 

@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Slide creation</h1>
+    <h1>Stain creation</h1>
 
-    <form action="{{ path('slide_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('stain_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
         <p>
             <button type="submit">Create</button>
@@ -12,7 +12,7 @@
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('slide') }}">
+        <a href="{{ path('stain') }}">
             Back to the list
         </a>
     </li>

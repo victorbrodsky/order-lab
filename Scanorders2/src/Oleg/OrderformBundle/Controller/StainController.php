@@ -7,21 +7,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\SlideType;
+use Oleg\OrderformBundle\Entity\Stain;
+use Oleg\OrderformBundle\Form\StainType;
 
 /**
- * Slide controller.
+ * Stain controller.
  *
- * @Route("/slide")
+ * @Route("/stain")
  */
-class SlideController extends Controller
+class StainController extends Controller
 {
 
     /**
-     * Lists all Slide entities.
+     * Lists all Stain entities.
      *
-     * @Route("/", name="slide")
+     * @Route("/", name="stain")
      * @Method("GET")
      * @Template()
      */
@@ -29,23 +29,23 @@ class SlideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:Stain')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new Slide entity.
+     * Creates a new Stain entity.
      *
-     * @Route("/", name="slide_create")
+     * @Route("/", name="stain_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Slide:new.html.twig")
+     * @Template("OlegOrderformBundle:Stain:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Slide();
-        $form = $this->createForm(new SlideType(), $entity);
+        $entity  = new Stain();
+        $form = $this->createForm(new StainType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -53,7 +53,7 @@ class SlideController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('slide_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('stain_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -63,18 +63,16 @@ class SlideController extends Controller
     }
 
     /**
-     * Displays a form to create a new Slide entity.
+     * Displays a form to create a new Stain entity.
      *
-     * @Route("/new", name="slide_new")
+     * @Route("/new", name="stain_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        
-        $entity = new Slide();
-                   
-        $form   = $this->createForm(new SlideType(), $entity);
+        $entity = new Stain();
+        $form   = $this->createForm(new StainType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -83,9 +81,9 @@ class SlideController extends Controller
     }
 
     /**
-     * Finds and displays a Slide entity.
+     * Finds and displays a Stain entity.
      *
-     * @Route("/{id}", name="slide_show")
+     * @Route("/{id}", name="stain_show")
      * @Method("GET")
      * @Template()
      */
@@ -93,10 +91,10 @@ class SlideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Stain')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Slide entity.');
+            throw $this->createNotFoundException('Unable to find Stain entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -108,9 +106,9 @@ class SlideController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Slide entity.
+     * Displays a form to edit an existing Stain entity.
      *
-     * @Route("/{id}/edit", name="slide_edit")
+     * @Route("/{id}/edit", name="stain_edit")
      * @Method("GET")
      * @Template()
      */
@@ -118,13 +116,13 @@ class SlideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Stain')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Slide entity.');
+            throw $this->createNotFoundException('Unable to find Stain entity.');
         }
 
-        $editForm = $this->createForm(new SlideType(), $entity);
+        $editForm = $this->createForm(new StainType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -135,31 +133,31 @@ class SlideController extends Controller
     }
 
     /**
-     * Edits an existing Slide entity.
+     * Edits an existing Stain entity.
      *
-     * @Route("/{id}", name="slide_update")
+     * @Route("/{id}", name="stain_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Slide:edit.html.twig")
+     * @Template("OlegOrderformBundle:Stain:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:Stain')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Slide entity.');
+            throw $this->createNotFoundException('Unable to find Stain entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new SlideType(), $entity);
+        $editForm = $this->createForm(new StainType(), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('slide_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('stain_edit', array('id' => $id)));
         }
 
         return array(
@@ -169,9 +167,9 @@ class SlideController extends Controller
         );
     }
     /**
-     * Deletes a Slide entity.
+     * Deletes a Stain entity.
      *
-     * @Route("/{id}", name="slide_delete")
+     * @Route("/{id}", name="stain_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -181,21 +179,21 @@ class SlideController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Slide')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:Stain')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Slide entity.');
+                throw $this->createNotFoundException('Unable to find Stain entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('slide'));
+        return $this->redirect($this->generateUrl('stain'));
     }
 
     /**
-     * Creates a form to delete a Slide entity by id.
+     * Creates a form to delete a Stain entity by id.
      *
      * @param mixed $id The entity id
      *

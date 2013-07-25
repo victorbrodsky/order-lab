@@ -7,7 +7,44 @@
     <h1>OrderInfo creation</h1>
 
     <form action="{{ path('orderinfo_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
+        
+        <div class="slide_new"> 
+            {{ form_errors(form) }}
+            {{ form_errors(form_scan) }}
+            
+            {{ form_widget(form.type, {value : 'single'}) }}
+            
+            {{ form_label(form_scan.slide.accession, '* Accession + Part + Block (i.e. S12-99998 B1)') }} 
+            {{ form_widget(form_scan.slide.accession) }}   
+            
+            {{ form_widget(form_scan.slide.part.name) }}        
+            {{ form_widget(form_scan.slide.block.name) }}
+            
+            <div id="stain_label_div">
+            {{ form_label(form_scan.slide.stain.name) }}
+            </div>
+            {{ form_widget(form_scan.slide.stain.name) }}
+                      
+            {{ form_label(form_scan.mag) }}
+            {{ form_widget(form_scan.mag) }} 
+            
+            {{ form_label(form_scan.slide.part.diagnosis) }}
+            {{ form_widget(form_scan.slide.part.diagnosis) }} 
+            
+            {{ form_label(form_scan.note) }}
+            {{ form_widget(form_scan.note) }} 
+            
+        </div>
+
+        <div class="slide_new"> 
+        </div>
+        
+        <div class="slide_new"> 
+            {{ form_rest(form) }} 
+            {{ form_rest(form_scan) }}
+        </div>
+
+{#        {{ form_widget(form) }}#}
         <p>
             <button type="submit">Create</button>
         </p>

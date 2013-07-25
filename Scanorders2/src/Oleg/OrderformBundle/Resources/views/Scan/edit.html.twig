@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Slide edit</h1>
+    <h1>Scan edit</h1>
 
-    <form action="{{ path('slide_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    <form action="{{ path('scan_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
         <p>
@@ -13,12 +13,12 @@
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('slide') }}">
+        <a href="{{ path('scan') }}">
             Back to the list
         </a>
     </li>
     <li>
-        <form action="{{ path('slide_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('scan_delete', { 'id': entity.id }) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
             <button type="submit">Delete</button>

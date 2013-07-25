@@ -14,6 +14,8 @@ class OrderInfoType extends AbstractType
     {
         $helper = new Helper\FormHelper();
         
+        $builder->add( 'type', 'hidden' ); 
+        
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 
                 'max_length'=>'200', 
@@ -49,6 +51,13 @@ class OrderInfoType extends AbstractType
                 'required'=>true,
                 //'empty_value'=>'Filing Room',
         ));
+        
+//        $builder->add( 'scan', new ScanType(), array(
+//            'label'=>' ',
+//            'data_class' => null,
+//        ));
+        
+        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

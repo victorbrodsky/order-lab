@@ -18,10 +18,14 @@ php app/console assetic:dump --env=prod --no-debug
 php app/console cache:clear --env=prod --no-debug
 
 # Doctrine:
-	create database according to Entity:
-	php app/console doctrine:database:create
-	create tables:
-	php app/console doctrine:schema:update --force
+1) Generate only getters/setters:
+php app/console doctrine:generate:entities Oleg/OrderformBundle/Entity/Slide
+2) Generate CRUD:
+php app/console generate:doctrine:crud --entity=OlegOrderformBundle:Accession --format=annotation --with-write
+3) Create database according to Entity
+php app/console doctrine:database:create
+4) Create tables:
+php app/console doctrine:schema:update --force
 
 # Create Symfony project (cd to htdocs/order)
 1) create git repository from remote server (bitbucket):

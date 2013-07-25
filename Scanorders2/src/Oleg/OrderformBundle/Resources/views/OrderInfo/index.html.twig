@@ -6,15 +6,16 @@
 {% block body -%}
     <h1>OrderInfo list</h1>
 
-    <table class="records_list">
+    <table class="table table-hover table-condensed">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Orderdate</th>
-                <th>Pathologyservice</th>
+{#                <th>Scans</th>#}
+                <th>Order Date</th>
+                <th>Path Service</th>
                 <th>Priority</th>
-                <th>Slidedelivery</th>
-                <th>Returnslide</th>
+                <th>Slide Delivery</th>
+                <th>Return Slide</th>
                 <th>Provider</th>
                 <th>Actions</th>
             </tr>
@@ -23,21 +24,17 @@
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('orderinfo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+{#                <td>{{ entity.scan }}</td>#}
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ entity.pathologyService }}</td>
                 <td>{{ entity.priority }}</td>
                 <td>{{ entity.slideDelivery }}</td>
                 <td>{{ entity.returnSlide }}</td>
                 <td>{{ entity.provider }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('orderinfo_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('orderinfo_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                <td>                
+                    <a class="btn btn-small btn-info" href="{{ path('orderinfo_show', { 'id': entity.id }) }}">Show</a>
+                    <a class="btn btn-small btn-warning" href="{{ path('orderinfo_edit', { 'id': entity.id }) }}">Edit</a>    
+                    <a class="btn btn-small btn-danger" href="{{ path('orderinfo_delete', { 'id': entity.id }) }}">Delete</a>
                 </td>
             </tr>
         {% endfor %}

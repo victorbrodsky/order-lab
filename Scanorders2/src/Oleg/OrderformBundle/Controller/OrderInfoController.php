@@ -10,6 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
+use Oleg\OrderformBundle\Entity\Scan;
+use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 /**
  * OrderInfo controller.
@@ -29,9 +32,15 @@ class OrderInfoController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findAll();
-
+        
+        //echo "count=".count($entities);
+        //$scan = $entities->getScan()->getSlide();
+        //$scan = $entities[0]->getScan();
+        //echo "scan mag=".$scan->getMag();
+        //$slide = $scan->getSlide();
         return array(
             'entities' => $entities,
+            //'num_slides' => count($slide)
         );
     }
     /**
@@ -43,13 +52,25 @@ class OrderInfoController extends Controller {
      */
     public function createAction(Request $request)
     {
+        //echo "orderinfo createAction";
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(), $entity);
         $form->bind($request);
+        
+        $scan_entity = new Scan();
+        $scan_form = $this->createForm(new ScanType(), $scan_entity);
+        $scan_form->bind($request);
 
-        if ($form->isValid()) {
+        if( $form->isValid() && $scan_form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            
+            $em->persist($entity);       
+            $em->persist($scan_entity);
+            
+            $entity->setStatus("submitted");
+                    
+            $scan_entity->setOrderinfo($entity);
+            
             $em->flush();
 
             return $this->redirect($this->generateUrl('orderinfo_show', array('id' => $entity->getId())));
@@ -70,12 +91,20 @@ class OrderInfoController extends Controller {
      */
     public function newAction()
     {
-        $entity = new OrderInfo();
+        $helper = new FormHelper();
+        
+        $entity = new OrderInfo();      
         $form   = $this->createForm(new OrderInfoType(), $entity);
 
+        $scan_entity = new Scan();
+        $scan_entity->setMag( key($helper->getMags()) );
+        //$entity->addScan($scan_entity);
+        $form_scan   = $this->createForm(new ScanType(), $scan_entity);
+        
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'form_scan'   => $form_scan->createView(),
         );
     }
 

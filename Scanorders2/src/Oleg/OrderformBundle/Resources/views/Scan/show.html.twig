@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Slide</h1>
+    <h1>Scan</h1>
 
     <table class="record_properties">
         <tbody>
@@ -10,41 +10,37 @@
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
-                <th>Diagnosis</th>
-                <td>{{ entity.diagnosis }}</td>
-            </tr>
-            <tr>
-                <th>Microscopicdescr</th>
-                <td>{{ entity.microscopicdescr }}</td>
-            </tr>
-            <tr>
-                <th>Specialstain</th>
-                <td>{{ entity.specialstain }}</td>
-            </tr>
-            <tr>
-                <th>Relevantscan</th>
-                <td>{{ entity.relevantscan }}</td>
+                <th>Mag</th>
+                <td>{{ entity.mag }}</td>
             </tr>
             <tr>
                 <th>Scanregion</th>
                 <td>{{ entity.scanregion }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ entity.note }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ entity.status }}</td>
             </tr>
         </tbody>
     </table>
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('slide') }}">
+        <a href="{{ path('scan') }}">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('slide_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('scan_edit', { 'id': entity.id }) }}">
             Edit
         </a>
     </li>
     <li>
-        <form action="{{ path('slide_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('scan_delete', { 'id': entity.id }) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
             <button type="submit">Delete</button>

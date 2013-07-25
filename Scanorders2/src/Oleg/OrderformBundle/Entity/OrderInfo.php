@@ -26,8 +26,8 @@ class OrderInfo
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="orderdate", type="datetime")
-     * @Assert\NotBlank
+     * @ORM\Column(name="orderdate", type="datetime", nullable=true)
+     *
      */
     private $orderdate;
     
@@ -98,15 +98,19 @@ class OrderInfo
     private $provider;
 
     /**
-     * OrderInfo might have many slides (1..n)
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo", cascade={"persist"})
+     * One OrderInfo can have many Scans (Scan has Slide)
+     * @ORM\OneToMany(targetEntity="Scan", mappedBy="orderinfo", cascade={"persist"})
      */
-    protected $slides;
+    protected $scan;
 
-    public function __construct() {
-        $this->slides = new ArrayCollection();
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->scan = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Get id
      *
@@ -273,10 +277,6 @@ class OrderInfo
         return $this->type;
     }
 
-    public function getSlides() {
-        return $this->slides;
-    }
-
     public function setStatus($status) {
         $this->status = $status;
     }
@@ -284,34 +284,37 @@ class OrderInfo
     public function setType($type) {
         $this->type = $type;
     }
-
-    public function setSlides(\Oleg\OrderformBundle\Entity\Slide $slides = null) {
-        $this->slides = $slides;
-    }
-
-
-
+    
     /**
-     * Add slides
+     * Add scan
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slides
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
      * @return OrderInfo
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slides)
+    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
     {
-        $this->slides[] = $slides;
+        $this->scan[] = $scan;
     
         return $this;
     }
 
     /**
-     * Remove slides
+     * Remove scan
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slides
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slides)
+    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
     {
-        $this->slides->removeElement($slides);
+        $this->scan->removeElement($scan);
     }
-    
+
+    /**
+     * Get scan
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getScan()
+    {
+        return $this->scan;
+    }
 }

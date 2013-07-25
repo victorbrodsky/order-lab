@@ -34,14 +34,6 @@ class Slide
      */
     protected $accession;
     
-    /**
-     * Slide belongs to exactly one OrderInfo => Slide has only one OrderInfo
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
-     * @Assert\NotBlank
-     */
-    protected $orderinfo;
-    
     //add manytoone for block and part?
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide", cascade={"persist"})
@@ -55,18 +47,7 @@ class Slide
      * @ORM\JoinColumn(name="block_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    protected $block;
-    
-
-    /**
-     * @ORM\Column(type="string", nullable=true, length=100)   
-     */
-    protected $stain;   
-    
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $mag;
+    protected $block;  
     
     /**
      * @ORM\Column(type="text", nullable=true, length=10000)
@@ -97,12 +78,29 @@ class Slide
      * @ORM\Column(type="string", nullable=true, length=100)
      */
     protected $scanregion;
-     
-    /**
-     * @ORM\Column(type="text", nullable=true, length=10000)    
-     */
-    protected $note;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Stain", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="stain_id", referencedColumnName="id") 
+     * @Assert\NotBlank   
+     */
+    protected $stain;
+      
+//     One Slide can have many Scans
+//     ORM\OneToMany(targetEntity="Scan", mappedBy="part")   
+    /**
+     * @ORM\OneToOne(targetEntity="Scan", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="scan_id", referencedColumnName="id", nullable=true)    
+     */
+    protected $scan;
+    
+    /**
+     * Constructor
+     */
+//    public function __construct()
+//    {
+//        $this->scan = new \Doctrine\Common\Collections\ArrayCollection();
+//    }
     
     public function getId() {
         return $this->id;
@@ -110,22 +108,6 @@ class Slide
 
     public function setId($id) {
         $this->id = $id;
-    }
-
-    public function getStain() {
-        return $this->stain;
-    }
-
-    public function setStain($stain) {
-        $this->stain = $stain;
-    }
-
-    public function getMag() {
-        return $this->mag;
-    }
-
-    public function setMag($mag) {
-        $this->mag = $mag;
     }
 
     public function getDiagnosis() {
@@ -166,16 +148,7 @@ class Slide
 
     public function setScanregion($scanregion) {
         $this->scanregion = $scanregion;
-    }
-
-    public function getNote() {
-        return $this->note;
-    }
-
-    public function setNote($note) {
-        $this->note = $note;
-    }
-       
+    }     
 
     /**
      * Set accession
@@ -198,14 +171,6 @@ class Slide
     public function getAccession()
     {
         return $this->accession;
-    }
-    
-    public function getOrderinfo() {
-        return $this->orderinfo;
-    }
-
-    public function setOrderinfo( \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null ) {
-        $this->orderinfo = $orderinfo;
     }
 
     /**
@@ -254,7 +219,87 @@ class Slide
         return $this->block;
     }
     
-    public function __toString() {
-        return "id=".$this->getId().", mag=".$this->getMag().", accession=".$this->getAccession(); 
+    /**
+     * Add scan
+     *
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     * @return Slide
+     */
+//    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+//    {
+//        $this->scan[] = $scan;
+//    
+//        return $this;
+//    }
+
+    /**
+     * Remove scan
+     *
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     */
+//    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+//    {
+//        $this->scan->removeElement($scan);
+//    }
+
+    /**
+     * Get scan
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+//    public function getScan()
+//    {
+//        return $this->scan;
+//    }
+
+    /**
+     * Set stain
+     *
+     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     * @return Slide
+     */
+    public function setStain(\Oleg\OrderformBundle\Entity\Stain $stain = null)
+    {
+        $this->stain = $stain;
+    
+        return $this;
+    }
+
+    /**
+     * Get stain
+     *
+     * @return \Oleg\OrderformBundle\Entity\Stain 
+     */
+    public function getStain()
+    {
+        return $this->stain;
+    }
+    
+     public function __toString() {
+        return "id=".$this->getId().", accession=".$this->getAccession(); 
+    }
+    
+
+    /**
+     * Set scan
+     *
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     * @return Slide
+     */
+    public function setScan(\Oleg\OrderformBundle\Entity\Scan $scan = null)
+    {
+        $this->scan = $scan;
+    
+        return $this;
+    }
+
+    /**
+     * Get scan
+     *
+     * @return \Oleg\OrderformBundle\Entity\Scan 
+     */
+    public function getScan()
+    {
+        return $this->scan;
     }
 }

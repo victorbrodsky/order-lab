@@ -1,0 +1,30 @@
+{#{% extends '::base.html.twig' %}#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+{% block body -%}
+    <h3>Slide show</h3>
+    
+    <div class="buttons-full-bar">     
+        <div class="action-button">
+            <a class="btn btn-primary span2" href="{{ path('slide') }}">Back to list</a>
+        </div>             
+        <div class="action-button">
+            <a class="btn btn-primary btn-warning span2" 
+               href="{{ path('slide_edit', { 'id': entity.id }) }}">Edit
+            </a> 
+        </div>       
+        <div class="action-button">
+            <form action="{{ path('slide_delete', { 'id': entity.id }) }}" method="post">
+                <input type="hidden" name="_method" value="DELETE" />
+                {{ form_widget(delete_form) }}
+                <button type="submit" class="btn btn-primary btn-danger span2">Delete</button>            
+            </form>
+        </div>
+    </div>
+     
+    {{ form_rest(form) }}
+
+{% endblock %}
+{% endblock %}
