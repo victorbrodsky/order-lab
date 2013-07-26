@@ -99,7 +99,12 @@ class OrderInfo
 
     /**
      * One OrderInfo can have many Scans (Scan has Slide)
-     * @ORM\OneToMany(targetEntity="Scan", mappedBy="orderinfo", cascade={"persist"})
+     * @ORM\OneToMany(
+     *      targetEntity="Scan", 
+     *      mappedBy="orderinfo", 
+     *      orphanRemoval=true, 
+     *      cascade={"persist"}
+     * )
      */
     protected $scan;
 
@@ -283,6 +288,12 @@ class OrderInfo
 
     public function setType($type) {
         $this->type = $type;
+    }
+    
+    
+    
+    public function removeAllChildren() {
+        $this->scan->clear();
     }
     
     /**

@@ -23,13 +23,23 @@ class Scan {
 //    ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
 //    ORM\JoinColumn(name="slide_id", referencedColumnName="id", nullable=true) 
     /**
-     * @ORM\OneToOne(targetEntity="Slide", inversedBy="scan", cascade={"persist"})
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")  
+     * @ORM\OneToOne(
+     *      targetEntity="Slide", 
+     *      inversedBy="scan", 
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="slide_id", 
+     *      referencedColumnName="id", 
+     *      nullable=true, 
+     *      onDelete="CASCADE"
+     * )  
      */
     protected $slide;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
      */
     protected $mag;
@@ -51,6 +61,12 @@ class Scan {
      */
     protected $status;
 
+    /**
+     * date of scan performed
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $scandate;
+    
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="scan", cascade={"persist"})
      * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)    
@@ -203,5 +219,28 @@ class Scan {
     public function getOrderinfo()
     {
         return $this->orderinfo;
+    }
+
+    /**
+     * Set scandate
+     *
+     * @param \DateTime $scandate
+     * @return Scan
+     */
+    public function setScandate($scandate)
+    {
+        $this->scandate = $scandate;
+    
+        return $this;
+    }
+
+    /**
+     * Get scandate
+     *
+     * @return \DateTime 
+     */
+    public function getScandate()
+    {
+        return $this->scandate;
     }
 }

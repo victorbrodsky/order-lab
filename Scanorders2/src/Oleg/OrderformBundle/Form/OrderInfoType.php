@@ -31,6 +31,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'required'=>true,
                 'choices' => $helper->getPriority(),
+                'data' => 'Routine',
                 //'empty_value'=>'Routine',
         ));
         
@@ -40,7 +41,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getSlideDelivery(),
                 'required'=>true,
-                //'empty_value'=>'I will drop ...',
+                'data' => 'I will drop ...',              
         ));
                 
         $builder->add( 'returnSlide', 
@@ -49,7 +50,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
-                //'empty_value'=>'Filing Room',
+                'data' => 'Me',              
         ));
         
 //        $builder->add( 'scan', new ScanType(), array(

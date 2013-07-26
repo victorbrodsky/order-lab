@@ -12,6 +12,8 @@ use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Entity\Slide;
+use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
 /**
@@ -24,23 +26,77 @@ class OrderInfoController extends Controller {
     /**
      * Lists all OrderInfo entities.
      *
+     * @Route("/test", name="test")
+     * @Method("GET")
+     * @Template()
+     */
+    public function testAction() {
+    
+//        $scan = new Scan();
+//        $scan->setMag('20X');
+//
+//        $order = new OrderInfo();
+//        $order->setStatus('test');
+//        $order->setPriority('test priority');
+//        $order->setSlideDelivery('test priority');
+//        $order->setReturnSlide('test ret');
+//        $order->setProvider('test prov');
+//        // relate this product(scan) to the category(order)
+//        $scan->setOrderInfo($order);
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $em->persist($order);
+//        $em->persist($scan);
+//        $em->flush();
+
+//        echo 'Created scan id: '.$scan->getId().' and order id: '.$order->getId();
+        
+        $scan2 = $this->getDoctrine()
+        ->getRepository('OlegOrderformBundle:Scan')
+        ->find(5);
+
+        $order_status = $scan2->getOrderinfo()->getStatus();
+        echo "order status=".$order_status."<br>";
+        
+        $order2 = $this->getDoctrine()
+        ->getRepository('OlegOrderformBundle:OrderInfo')
+        ->find(6);
+
+        $scans = $order2->getScan();
+        
+        foreach( $scans as $scan3 ) {
+            echo "scan mag=".$scan3->getMag()."<br>";
+        }
+        
+        exit();
+//        return new Response(
+//            'Created product id: '.$product->getId().' and category id: '.$category->getId()
+//        );
+        
+    }
+    /**
+     * Lists all OrderInfo entities.
+     *
      * @Route("/", name="orderinfo")
      * @Method("GET")
      * @Template()
      */
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findAll();
         
-        //echo "count=".count($entities);
-        //$scan = $entities->getScan()->getSlide();
-        //$scan = $entities[0]->getScan();
-        //echo "scan mag=".$scan->getMag();
-        //$slide = $scan->getSlide();
+        //findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->
+                    findBy(array(), array('orderdate'=>'desc')); 
+        
+//        echo "count=".count($entities);     
+//        $entity = $entities[0];
+//        echo "<br>entity id=".$entity->getId();
+//        $scans = $entity->getScan();
+//        $scan = $scans[0];
+//        echo "scan mag=".$scan->getMag();
+        
         return array(
-            'entities' => $entities,
-            //'num_slides' => count($slide)
+            'entities' => $entities,          
         );
     }
     /**
@@ -61,19 +117,32 @@ class OrderInfoController extends Controller {
         $scan_form = $this->createForm(new ScanType(), $scan_entity);
         $scan_form->bind($request);
 
+//        $slide_entity = new Slide();
+//        $slide_form = $this->createForm(new SlideType(), $slide_entity);
+//        $slide_form->bind($request);
+        
+        //$barcode = $slide_entity->getBarcode();
+        //echo "slide barcode=".$barcode;
+        
         if( $form->isValid() && $scan_form->isValid() ) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();                  
+                      
+            $entity->setStatus("submitted");            
+                      
+            $scan_entity->setStatus("submitted");
+            $scan_entity->setOrderinfo($entity);                 
             
             $em->persist($entity);       
-            $em->persist($scan_entity);
-            
-            $entity->setStatus("submitted");
-                    
-            $scan_entity->setOrderinfo($entity);
+            $em->persist($scan_entity);           
             
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_show', array('id' => $entity->getId())));
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You successfully submit a scan request! Confirmation email sent!'
+            );
+            
+            return $this->redirect( $this->generateUrl('orderinfo') );
         }
 
         return array(
@@ -97,14 +166,14 @@ class OrderInfoController extends Controller {
         $form   = $this->createForm(new OrderInfoType(), $entity);
 
         $scan_entity = new Scan();
-        $scan_entity->setMag( key($helper->getMags()) );
+        //$scan_entity->setMag( key($helper->getMags()) );
         //$entity->addScan($scan_entity);
         $form_scan   = $this->createForm(new ScanType(), $scan_entity);
         
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
-            'form_scan'   => $form_scan->createView(),
+            'form' => $form->createView(),
+            'form_scan' => $form_scan->createView(),
         );
     }
 
@@ -212,7 +281,15 @@ class OrderInfoController extends Controller {
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find OrderInfo entity.');
             }
-
+            
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->
+//                    findBy(array('orderinfo_id'=>$id));
+            
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->findBy(
+//                array('orderinfo' => $id)            
+//            );
+            $entity->removeAllChildren();          
+            
             $em->remove($entity);
             $em->flush();
         }

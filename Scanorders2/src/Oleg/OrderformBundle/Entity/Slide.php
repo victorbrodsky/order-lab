@@ -80,14 +80,26 @@ class Slide
     protected $scanregion;
     
     /**
-     * @ORM\OneToOne(targetEntity="Stain", inversedBy="slide", cascade={"persist"})
-     * @ORM\JoinColumn(name="stain_id", referencedColumnName="id") 
+     * @ORM\Column(type="string", nullable=true, length=200)
+     */
+    protected $barcode;
+    
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Stain", 
+     *      inversedBy="slide", 
+     *      cascade={"persist"}, 
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="stain_id", 
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * ) 
      * @Assert\NotBlank   
      */
     protected $stain;
-      
-//     One Slide can have many Scans
-//     ORM\OneToMany(targetEntity="Scan", mappedBy="part")   
+        
     /**
      * @ORM\OneToOne(targetEntity="Scan", inversedBy="slide", cascade={"persist"})
      * @ORM\JoinColumn(name="scan_id", referencedColumnName="id", nullable=true)    
@@ -218,39 +230,6 @@ class Slide
     {
         return $this->block;
     }
-    
-    /**
-     * Add scan
-     *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-     * @return Slide
-     */
-//    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
-//    {
-//        $this->scan[] = $scan;
-//    
-//        return $this;
-//    }
-
-    /**
-     * Remove scan
-     *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-     */
-//    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
-//    {
-//        $this->scan->removeElement($scan);
-//    }
-
-    /**
-     * Get scan
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-//    public function getScan()
-//    {
-//        return $this->scan;
-//    }
 
     /**
      * Set stain
@@ -301,5 +280,28 @@ class Slide
     public function getScan()
     {
         return $this->scan;
+    }
+
+    /**
+     * Set barcode
+     *
+     * @param string $barcode
+     * @return Slide
+     */
+    public function setBarcode($barcode)
+    {
+        $this->barcode = $barcode;
+    
+        return $this;
+    }
+
+    /**
+     * Get barcode
+     *
+     * @return string 
+     */
+    public function getBarcode()
+    {
+        return $this->barcode;
     }
 }

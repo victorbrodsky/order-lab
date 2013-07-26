@@ -42,7 +42,8 @@ class SlideType extends AbstractType
         $builder->add('microscopicdescr', 'textarea', array('max_length'=>10000,'required'=>false));
         $builder->add('specialstain', 'text', array('max_length'=>100,'required'=>false));
         $builder->add('relevantscan', 'text', array('max_length'=>100,'required'=>false));
-        $builder->add('scanregion', 'text', array('max_length'=>100,'required'=>false));  
+        $builder->add('scanregion', 'text', array('max_length'=>100,'required'=>false)); 
+        $builder->add('barcode', 'text', array('max_length'=>200,'required'=>false)); 
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

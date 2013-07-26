@@ -12,14 +12,7 @@ class StainType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $helper = new FormHelper();
-        
-//        $builder->add('name', 'text', array(
-//            'label'=>'Stain:',
-//            'max_length'=>200,
-//            'required'=>true,
-//            'data' => 'Default value'
-//        ));
+        $helper = new FormHelper();      
         
         $builder->add('name', 'choice', array(                 
                 'choices' => $helper->getStains(),
