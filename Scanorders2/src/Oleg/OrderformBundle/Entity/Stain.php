@@ -2,7 +2,7 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+//use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,7 +40,7 @@ class Stain
      * @ORM\OneToOne(targetEntity="Slide", inversedBy="stain", cascade={"persist"})
      * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")   
      */
-    protected $slide;
+    //protected $slide;
 
     /**
      * Get id
@@ -127,24 +127,24 @@ class Stain
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Stain
      */
-    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
-    {
-        $this->slide = $slide;
-    
-        return $this;
-    }
+//    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+//    {
+//        $this->slide = $slide;
+//    
+//        return $this;
+//    }
 
     /**
      * Get slide
      *
      * @return \Oleg\OrderformBundle\Entity\Slide 
      */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
-    
-    public function __toString() {
-        return $this->name;
-    }
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
+//    
+//    public function __toString() {
+//        return $this->name;
+//    }
 }

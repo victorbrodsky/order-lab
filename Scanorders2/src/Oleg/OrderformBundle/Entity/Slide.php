@@ -28,7 +28,7 @@ class Slide
     //Slide has only one Accession, Accession might have many Slides (1..n)
     //Note: Unique slide accession number is combination of Accession+Part+Block (S12-99997 A2)
     /**
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -86,8 +86,7 @@ class Slide
     
     /**
      * @ORM\OneToOne(
-     *      targetEntity="Stain", 
-     *      inversedBy="slide", 
+     *      targetEntity="Stain",  
      *      cascade={"persist"}, 
      *      orphanRemoval=true
      * )
@@ -99,20 +98,13 @@ class Slide
      * @Assert\NotBlank   
      */
     protected $stain;
-        
+    
+    //ORM\JoinColumn(name="scan_id", referencedColumnName="id", nullable=true)
     /**
      * @ORM\OneToOne(targetEntity="Scan", inversedBy="slide", cascade={"persist"})
-     * @ORM\JoinColumn(name="scan_id", referencedColumnName="id", nullable=true)    
+     *     
      */
-    protected $scan;
-    
-    /**
-     * Constructor
-     */
-//    public function __construct()
-//    {
-//        $this->scan = new \Doctrine\Common\Collections\ArrayCollection();
-//    }
+//    protected $scan;
     
     public function getId() {
         return $this->id;

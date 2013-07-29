@@ -13,6 +13,28 @@ use Doctrine\ORM\EntityRepository;
 class BlockRepository extends EntityRepository
 {
     
+    //this function will create an entity if it doesn't exist or return the existing entity object
+    public function processBlock( $block ) {  
+        
+        $entity = $this->findOneBy( array(
+            'name' => $block->getName(),
+            'part' => $block->getPart(),
+            'accession' => $block->getAccession()
+        ));
+        
+        if (!$entity) {        
+            //create new entity           
+            $em = $this->_em;
+            $em->persist($block);
+            $em->flush();
+            
+            return $block;
+        } 
+        
+        
+        return $entity;
+    }
+    
 //    public function getByAccession( $accession_number ) { 
 //        
 //        $entity = $this->findBy(

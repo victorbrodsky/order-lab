@@ -1,41 +1,27 @@
 <!DOCTYPE html>
 <html>
-      
+    
+    {% stylesheets 
+        '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
+        '@OlegOrderformBundle/Resources/public/form/css/form.css'
+    %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}   
+        
+    {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
+    {# TODO: use 'bundles/acme_foo/css/*' #}
+    {% stylesheets 
+        '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
+    %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}    
+    
     <head>
         
     <div class="order-content">            
         
         {% block head %}
-                      
-            {% stylesheets 
-                '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
-                '@OlegOrderformBundle/Resources/public/form/css/form.css'
-            %}
-                <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-            {% endstylesheets %}                                
-                
-            {% javascripts 
-                '@OlegOrderformBundle/Resources/public/jquery/jquery-1.9.1.js'
-                '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
-                '@OlegOrderformBundle/Resources/public/form/js/*'    
-            %}
-                <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}                                                                   
-                
-            {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
-            {# TODO: use 'bundles/acme_foo/css/*' #}
-            {% stylesheets 
-                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
-            %}
-                <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-            {% endstylesheets %}
-
-            {% javascripts                   
-                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
-            %}
-                <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}                    
-            {# Bootstrap Combobox #}                                           
+                                                                
                 
             <title>{% block title %}{% endblock %} - Scan Order</title>                   
             
@@ -67,6 +53,28 @@
             {% endblock %}
         </div>                   
         
+    
+     
+        
+                                 
+    {% javascripts 
+        '@OlegOrderformBundle/Resources/public/jquery/jquery-1.9.1.js'
+        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
+        '@OlegOrderformBundle/Resources/public/form/js/*'    
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}     
+
+    
+        {# Bootstrap Combobox #} 
+        {% javascripts                   
+            '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}                    
+        {# Bootstrap Combobox #}             
+        
+         
         
     </body>
     

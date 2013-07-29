@@ -51,12 +51,40 @@ class ScanController extends Controller
         $form = $this->createForm(new ScanType(), $entity);
         $form->bind($request);
 
-        if ($form->isValid()) {
+        $mag = $form["mag"]->getData();
+        echo "mag=".$mag."<br>";
+        
+        $errors = $this->getErrorMessages($form);
+        print_r($errors);            
+        
+        if( $form->isValid() ) {
+            
             $em = $this->getDoctrine()->getManager();
+            
+            $entity->setStatus("submitted");
+            
+            //TODO: i.e. if part's field is updated then add options to detect and update it.
+            //get Accession, Part and Block. Create if they are not exist, or return them if they are exist.
+            //process accession. If not exists - create and return new object, if exists - return object          
+            $accession = $entity->getSlide()->getAccession();
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession );                         
+            $entity->getSlide()->setAccession($accession);          
+            
+            $part = $entity->getSlide()->getPart();
+            $part->setAccession($accession);
+            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
+            $entity->getSlide()->setPart($part);         
+            
+            $block = $entity->getSlide()->getBlock();
+            $block->setAccession($accession);
+            $block->setPart($part);
+            $block = $em->getRepository('OlegOrderformBundle:Block')->processBlock( $block );                         
+            $entity->getSlide()->setBlock($block);    
+                    
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('scan_show', array('id' => $entity->getId())));
+            return $this->redirect( $this->generateUrl('scan') );
         }
 
         return array(
@@ -216,4 +244,30 @@ class ScanController extends Controller
             ->getForm()
         ;
     }
+    
+    private function getErrorMessages(\Symfony\Component\Form\Form $form)
+    {
+        $errors = array();
+
+        if ($form->count() > 0) {
+            foreach ($form->all() as $child) {
+                /**
+                 * @var \Symfony\Component\Form\Form $child
+                 */
+                if (!$child->isValid()) {
+                    $errors[$child->getName()] = $this->getErrorMessages($child);
+                }
+            }
+        } else {
+            /**
+             * @var \Symfony\Component\Form\FormError $error
+             */
+            foreach ($form->getErrors() as $key => $error) {
+                $errors[] = $error->getMessage();
+            }
+        }
+
+        return $errors;
+    }
+    
 }

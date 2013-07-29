@@ -16,9 +16,9 @@ class StainType extends AbstractType
         
         $builder->add('name', 'choice', array(                 
                 'choices' => $helper->getStains(),
-                'data' => 'H&E',
+                'data' => 0,
                 'max_length' => 200,
-                'required' => false,
+                'required' => true,
                 'label' => '* Stain:',
         ));
         

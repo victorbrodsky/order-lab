@@ -9,20 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SlideType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-//        $builder
-//            ->add('diagnosis')
-//            ->add('microscopicdescr')
-//            ->add('specialstain')
-//            ->add('relevantscan')
-//            ->add('scanregion')
-//            ->add('accession')
-//            ->add('part')
-//            ->add('block')
-//            ->add('stain')
-//            ->add('scan')
-//        ;
-        
+    {      
         $builder->add( 'id', 'hidden' );       
         
         $builder->add( 'accession', new AccessionType(), array('label'=>' ') );

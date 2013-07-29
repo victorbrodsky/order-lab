@@ -1,5 +1,10 @@
-{% extends '::base.html.twig' %}
+{#{% extends '::base.html.twig' %}#}
 
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{#{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}#}
+
+{% block content %}
 {% block body -%}
     <h1>Part creation</h1>
 
@@ -17,4 +22,5 @@
         </a>
     </li>
 </ul>
+{% endblock %}
 {% endblock %}

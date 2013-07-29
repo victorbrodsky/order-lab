@@ -63,17 +63,17 @@
 }
 
 #acc_part_block {
-    float: left;
+    //float: left;
     //width: 150px;
 }
 
 .olspan1 {
     //margin: 0 auto; // !important;
     //padding: 0; // !important;
-    width: auto;
+    //width: auto;
 }
 .olspanmin {
-    float: left;
+    //float: left;
     //margin: 0 auto; // !important;
     //padding: 0; // !important;
     //width: auto;

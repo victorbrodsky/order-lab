@@ -7,9 +7,21 @@
 {% block content %} 
 {% block body -%}
 
-    <h1>Single Scan Order Creation Form</h1>
+    <h1>Multi-Scan Order Form</h1>
 
+{#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
+{#    <iframe src="http://www.w3schools.com"></iframe>#}
+    
+    
+    
+    
+    
+    
+    
+    
     <form action="{{ path('orderinfo_create') }}" method="post" {{ form_enctype(form) }}>
+                     
+        
         
         <div class="slide_new"> 
             {{ form_errors(form) }}

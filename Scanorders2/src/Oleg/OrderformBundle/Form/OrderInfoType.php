@@ -6,15 +6,21 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Oleg\OrderformBundle\Helper as Helper;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 class OrderInfoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $helper = new Helper\FormHelper();
+        $helper = new FormHelper();
         
         $builder->add( 'type', 'hidden' ); 
+        
+//        $builder->add( 'scan', new ScanType(), array(
+//                'label'=>' ',
+//                //'data_class' => null,
+//        ));
+        //$builder->add('scan', 'collection', array('type' => new ScanType()));
         
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 
@@ -31,8 +37,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'required'=>true,
                 'choices' => $helper->getPriority(),
-                'data' => 'Routine',
-                //'empty_value'=>'Routine',
+                'data' => 'Routine',             
         ));
         
         $builder->add( 'slideDelivery', 

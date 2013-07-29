@@ -12,4 +12,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class PartRepository extends EntityRepository
 {
+    
+    //this function will create an entity if it doesn't exist or return the existing entity object
+    public function processPart( $part ) {  
+        
+        $entity = $this->findOneBy( array(
+            'name' => $part->getName(),
+            'accession' => $part->getAccession()
+        ));
+        
+        if (!$entity) {        
+            //create new entity           
+            $em = $this->_em;
+            $em->persist($part);
+            $em->flush();
+            
+            return $part;
+        } 
+        
+        return $entity;
+    }
+    
 }

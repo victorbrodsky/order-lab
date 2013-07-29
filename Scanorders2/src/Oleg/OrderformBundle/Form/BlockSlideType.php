@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
-class BlockType extends AbstractType
+class BlockSlideType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {     
@@ -20,6 +20,15 @@ class BlockType extends AbstractType
                 'choices' => $helper->getBlock(),
                 'required'=> true,
                 'data' => 0,
+        ));
+        
+        $builder->add('slide', 'collection', array(
+            'type' => new SlideType(),
+            'allow_add' => true,
+            'label' => "Slide Entity:",
+            //'by_reference' => false,
+            //'prototype' => true,
+            //'prototype_name' => '__name__',
         ));
     }
 

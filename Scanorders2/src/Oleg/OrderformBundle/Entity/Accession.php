@@ -6,6 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+//* @UniqueEntity(
+// *     fields={"accession"},
+// *     errorPath="accession",
+// *     message="This accession is already in use."
+// * )
+         
 //Accession is a key for all other tables such as Patient, Case, Part, Block, Slide (?) 
 //All of them have accession object (?)
 /**
@@ -23,7 +30,7 @@ class Accession {
     
     /**
      * Accession string i.e. S12-99998. Must be unique.
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique=true)
      * @Assert\NotBlank
      */
     protected $accession;
@@ -59,7 +66,7 @@ class Accession {
     
      /**
      * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession")
      */
     protected $slide;
 

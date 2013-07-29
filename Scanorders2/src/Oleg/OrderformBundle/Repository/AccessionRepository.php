@@ -12,18 +12,18 @@ use Oleg\OrderformBundle\Entity\Accession;
  */
 class AccessionRepository extends EntityRepository {
     
-    //this function will add if accession doesn't exist or return id of existing accession
-    //return accession object
-    public function processAccession( $accession_number ) {     
-        $entity = $this->findOneBy(array('accession' => $accession_number));
-        if (!$entity) {        
-            //create new accession
-            $entity = new Accession();
-            $entity->setAccession( $accession_number );         
-            //$em = $this->getDoctrine()->getManager();  
+    //this function will create an accession if it doesn't exist or return the existing accession object
+    public function processAccession( $accession ) { 
+        
+        $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
+        
+        if( !$entity ) {        
+            //create new accession           
             $em = $this->_em;
-            $em->persist($entity);
+            $em->persist($accession);
             $em->flush();
+            
+            return $accession;
         } 
         
         return $entity;

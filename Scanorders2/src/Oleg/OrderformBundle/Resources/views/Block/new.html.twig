@@ -1,20 +1,36 @@
-{% extends '::base.html.twig' %}
+{#{% extends "::base.html.twig" %}#}
 
-{% block body -%}
-    <h1>Block creation</h1>
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
-    <form action="{{ path('block_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
+{% block content %} 
+{#{% block body -%}#}
+    
+<h1>Block creation</h1>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('block') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
-{% endblock %}
+<form action="{{ path('block_create') }}" method="post" {{ form_enctype(form) }}>
+
+{#{{ form_start(form) }}#}
+    {{ form_errors(form) }}
+    {{ form_row(form.name) }}
+
+    <h3>Tags</h3>
+    <ul class="tags" data-prototype="{{ form_widget(form.slide.vars.prototype)|e }}">
+        {# iterate over each existing tag and render its only field: name #}
+        {% for slide in form.slide %}
+            <li>{{ form_row(slide) }}</li>
+        {% endfor %}
+    </ul>
+{#{{ form_end(form) }}#}
+    
+    <p>
+        <button type="submit">Create Block</button>
+    </p>
+</form>
+
+    
+<a href="{{ path('block') }}">Back to the list</a>
+  
+
+{% endblock %}    
+{#{% endblock %}#}
+  

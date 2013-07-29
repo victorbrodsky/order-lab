@@ -17,7 +17,9 @@ class PartType extends AbstractType
         $builder->add('name', 'choice', array(        
             'choices' => $helper->getPart(),
             'required'=>true,
-            'label'=>'* Part:',        
+            'label'=>' ',
+            'max_length'=>'3',
+            'data' => 0,
         ));      
         
         $builder->add( 'sourceOrgan', 'text', array(

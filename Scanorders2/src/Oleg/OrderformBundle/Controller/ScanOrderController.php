@@ -12,82 +12,20 @@ use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Form\ScanType;
-//use Oleg\OrderformBundle\Entity\Slide;
-//use Oleg\OrderformBundle\Form\SlideType;
-use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Entity\Block;
-//use Oleg\OrderformBundle\Form\BlockType;
 
+//ScanOrder joins OrderInfo + Scan
 /**
  * OrderInfo controller.
  *
- * @Route("/orderinfo")
+ * @Route("/scanorder")
  */
-class OrderInfoController extends Controller {
-
+class ScanOrderController extends Controller {
+   
     /**
      * Lists all OrderInfo entities.
      *
-     * @Route("/test", name="test")
-     * @Method("GET")
-     * @Template()
-     */
-    public function testAction() {
-    
-//        $scan = new Scan();
-//        $scan->setMag('20X');
-//
-//        $order = new OrderInfo();
-//        $order->setStatus('test');
-//        $order->setPriority('test priority');
-//        $order->setSlideDelivery('test priority');
-//        $order->setReturnSlide('test ret');
-//        $order->setProvider('test prov');
-//        // relate this product(scan) to the category(order)
-//        $scan->setOrderInfo($order);
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $em->persist($order);
-//        $em->persist($scan);
-//        $em->flush();
-
-//        echo 'Created scan id: '.$scan->getId().' and order id: '.$order->getId();
-        
-        $scan2 = $this->getDoctrine()
-        ->getRepository('OlegOrderformBundle:Scan')
-        ->findAll();
-
-        $order_status = $scan2[0]->getOrderinfo()->getStatus();
-        echo "order status=".$order_status."<br>";
-        
-        $order2 = $this->getDoctrine()
-        ->getRepository('OlegOrderformBundle:OrderInfo')
-        ->findAll();
-
-        $scans = $order2[0]->getScan();
-        
-        foreach( $scans as $scan3 ) {
-            echo "scan mag=".$scan3->getMag()."<br>";
-        }
-        
-        
-        $block = new Block();
-        $slides = $block->getSlide();
-        echo "count of slides=".count($slides)."<br>";
-        foreach( $slides as $slide ) {
-            echo "slide barcode = ".$slide->getBarcode()."<br>";
-        }
-        
-        exit();
-//        return new Response(
-//            'Created product id: '.$product->getId().' and category id: '.$category->getId()
-//        );
-        
-    }
-    /**
-     * Lists all OrderInfo entities.
-     *
-     * @Route("/", name="orderinfo")
+     * @Route("/", name="scanorder")
      * @Method("GET")
      * @Template()
      */
@@ -97,14 +35,7 @@ class OrderInfoController extends Controller {
         //findAll();
         $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
                     findBy(array(), array('orderdate'=>'desc')); 
-        
-//        echo "count=".count($entities);     
-//        $entity = $entities[0];
-//        echo "<br>entity id=".$entity->getId();
-//        $scans = $entity->getScan();
-//        $scan = $scans[0];
-//        echo "scan mag=".$scan->getMag();
-        
+               
         return array(
             'entities' => $entities,          
         );
@@ -113,13 +44,13 @@ class OrderInfoController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/", name="orderinfo_create")
+     * @Route("/", name="scanorder_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        //echo "orderinfo createAction";
+        //echo "scanorder createAction";
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(), $entity);
         $form->bind($request);
@@ -165,7 +96,7 @@ class OrderInfoController extends Controller {
                 'You successfully submit a scan request! Confirmation email sent!'
             );
             
-            return $this->redirect( $this->generateUrl('orderinfo') );
+            return $this->redirect( $this->generateUrl('scanorder') );
         }
 
         return array(
@@ -176,11 +107,11 @@ class OrderInfoController extends Controller {
     }
 
     /**
-     * Displays a form to create a new OrderInfo entity.
+     * Displays a form to create a new OrderInfo + Scan entities.
      *
-     * @Route("/new", name="orderinfo_new")
+     * @Route("/new", name="scanorder_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
+     * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
      */
     public function newAction()
     {         
@@ -190,8 +121,7 @@ class OrderInfoController extends Controller {
         $scan_entity = new Scan();      
         $form_scan   = $this->createForm(new ScanType(), $scan_entity);
         
-        return array(
-            //'entity' => $entity,
+        return array(          
             'form' => $form->createView(),
             'form_scan' => $form_scan->createView(),
         );
@@ -200,7 +130,7 @@ class OrderInfoController extends Controller {
     /**
      * Finds and displays a OrderInfo entity.
      *
-     * @Route("/{id}", name="orderinfo_show")
+     * @Route("/{id}", name="scanorder_show")
      * @Method("GET")
      * @Template()
      */
@@ -225,7 +155,7 @@ class OrderInfoController extends Controller {
     /**
      * Displays a form to edit an existing OrderInfo entity.
      *
-     * @Route("/{id}/edit", name="orderinfo_edit")
+     * @Route("/{id}/edit", name="scanorder_edit")
      * @Method("GET")
      * @Template()
      */
@@ -252,7 +182,7 @@ class OrderInfoController extends Controller {
     /**
      * Edits an existing OrderInfo entity.
      *
-     * @Route("/{id}", name="orderinfo_update")
+     * @Route("/{id}", name="scanorder_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
      */
@@ -274,7 +204,7 @@ class OrderInfoController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('orderinfo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('scanorder_edit', array('id' => $id)));
         }
 
         return array(
@@ -286,7 +216,7 @@ class OrderInfoController extends Controller {
     /**
      * Deletes a OrderInfo entity.
      *
-     * @Route("/{id}", name="orderinfo_delete")
+     * @Route("/{id}", name="scanorder_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -303,10 +233,10 @@ class OrderInfoController extends Controller {
             }
             
 //            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->
-//                    findBy(array('orderinfo_id'=>$id));
+//                    findBy(array('scanorder_id'=>$id));
             
 //            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->findBy(
-//                array('orderinfo' => $id)            
+//                array('scanorder' => $id)            
 //            );
             $entity->removeAllChildren();          
             
@@ -314,7 +244,7 @@ class OrderInfoController extends Controller {
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('orderinfo'));
+        return $this->redirect($this->generateUrl('scanorder'));
     }
 
     /**

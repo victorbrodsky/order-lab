@@ -12,27 +12,20 @@ class ScanType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $helper = new FormHelper();
         
-        //$builder->add('mag', 'text', array('max_length'=>100,'required'=>true));
-//        $builder->add('mag', 'choice', array(                 
-//                'choices' => $helper->getMags(),
-//                'data' => '20X',
-//                'max_length' => 50,
-//                'required' => true,
-//                'label' => '* Magnification:',
-//        ));
+        //$builder->add( 'status', 'hidden', array('data' => 'submitted') ); 
+        
+        $builder->add('scanregion', 'text', array('max_length'=>200,'required'=>false));
+        
         $builder->add( 'mag', 
                 'choice', array(  
                 'label'=>'* Magnification:',
-                'max_length'=>200,
+                'max_length'=>50,
                 'choices' => $helper->getMags(),
                 'required'=>true,
-                'data' => '20X',              
-        ));
-        
-        $builder->add('scanregion', 'text', array('max_length'=>200,'required'=>false));
+                'data' => 0,              
+        ));        
         
         $builder->add( 'slide', new SlideType(), array(
                 //'data_class' => null,

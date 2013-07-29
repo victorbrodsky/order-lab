@@ -6,9 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
  * @ORM\Table(name="block")
+ * @UniqueEntity({"accession", "part", "name"})
  */
 class Block
 {
@@ -31,7 +34,7 @@ class Block
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)    
      */
-    protected $Part;
+    protected $part;
     
     /**
      * One Block has Many slides
@@ -46,6 +49,7 @@ class Block
      * @Assert\NotBlank   
      */
     protected $name;  
+    
     
     public function __construct() {
         $this->slide = new ArrayCollection();
@@ -73,29 +77,6 @@ class Block
 
     public function setName($name) {
         $this->name = $name;
-    }
-    
-    /**
-     * Set Part
-     *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
-     * @return Block
-     */
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
-    {
-        $this->Part = $part;
-    
-        return $this;
-    }
-
-    /**
-     * Get Part
-     *
-     * @return \Oleg\OrderformBundle\Entity\Part 
-     */
-    public function getPart()
-    {
-        return $this->Part;
     }
 
     /**
@@ -131,7 +112,37 @@ class Block
         return $this->slide;
     }
     
+    public function setSlide($slide){
+        $this->slide = $slide;
+        foreach ($slide as $slide_single){
+            $slide_single->setBlock($this);
+        }
+    }
+    
     public function __toString() {
         return $this->name;
+    }
+
+    /**
+     * Set part
+     *
+     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @return Block
+     */
+    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    {
+        $this->part = $part;
+    
+        return $this;
+    }
+
+    /**
+     * Get part
+     *
+     * @return \Oleg\OrderformBundle\Entity\Part 
+     */
+    public function getPart()
+    {
+        return $this->part;
     }
 }

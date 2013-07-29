@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     $('.combobox').combobox();
     $("#orderinfo").hide();
@@ -26,11 +27,6 @@ $(document).ready(function() {
     //alert(index);
     $('ul.li').removeClass('active');
     $('li.' + index).addClass('active');
-          
+        
+    
 });
-
-
-
-
-
-

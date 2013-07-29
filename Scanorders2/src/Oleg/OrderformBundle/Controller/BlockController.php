@@ -10,6 +10,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
 
+use Oleg\OrderformBundle\Entity\Slide;
+use Oleg\OrderformBundle\Form\BlockSlideType;
+use Oleg\OrderformBundle\Helper\ErrorHelper;
+
 /**
  * Block controller.
  *
@@ -48,12 +52,32 @@ class BlockController extends Controller
         $form = $this->createForm(new BlockType(), $entity);
         $form->bind($request);
 
-        if ($form->isValid()) {
+        $errorHelper = new ErrorHelper();
+        $errors = $errorHelper->getErrorMessages($form);
+        print_r($errors);            
+        
+        if( 1 ) {//$form->isValid() ) {
+            
+            echo "form is valid <br>";
+            
+//            $slide = $entity->getSlide()->getPart();
+//            $slide->setAccession($accession);
+//            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
+//            $scan_entity->getSlide()->setPart($part);         
+            
+            $slide = $entity->getSlide();                      
+            
             $em = $this->getDoctrine()->getManager();
+                       
             $em->persist($entity);
             $em->flush();
-
-            return $this->redirect($this->generateUrl('block_show', array('id' => $entity->getId())));
+        
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You successfully submit a scan request! Confirmation email sent!'
+            );
+            
+            return $this->redirect( $this->generateUrl('block') );
         }
 
         return array(
@@ -72,8 +96,22 @@ class BlockController extends Controller
     public function newAction()
     {
         $entity = new Block();
-        $form   = $this->createForm(new BlockType(), $entity);
-
+        
+            
+        // dummy code - this is here just so that the Task has some tags
+        // otherwise, this isn't an interesting example
+//        $slide1 = new Slide();
+//        $slide1->setBarcode('slide1');
+//        $entity->getSlide()->add($slide1);
+//        $slide2 = new Slide();
+//        $slide2->setBarcode('tag2');
+//        $entity->getSlide()->add($slide2);
+        // end dummy code
+   
+        
+        $form   = $this->createForm(new BlockSlideType(), $entity);
+//        $form   = $this->createForm(new BlockType(), $entity);
+        
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),

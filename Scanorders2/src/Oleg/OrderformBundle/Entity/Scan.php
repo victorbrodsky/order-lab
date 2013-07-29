@@ -2,7 +2,6 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
-//use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,26 +19,15 @@ class Scan {
     protected $id;
     
     //Scan belongs to exactly one Slide => Scan has only one Slide, but Slide can have many Scans
-//    ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
-//    ORM\JoinColumn(name="slide_id", referencedColumnName="id", nullable=true) 
     /**
-     * @ORM\OneToOne(
-     *      targetEntity="Slide", 
-     *      inversedBy="scan", 
-     *      cascade={"persist"},
-     *      orphanRemoval=true
-     * )
-     * @ORM\JoinColumn(
-     *      name="slide_id", 
-     *      referencedColumnName="id", 
-     *      nullable=true, 
-     *      onDelete="CASCADE"
-     * )  
+     * @ORM\OneToOne(targetEntity="Slide", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
+     * @Assert\NotBlank
      */
     protected $slide;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(name="mag", type="string", length=50)
      * @Assert\NotBlank
      */
     protected $mag;
