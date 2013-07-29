@@ -11,7 +11,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
  * @ORM\Table(name="block")
- * @UniqueEntity({"accession", "part", "name"})
  */
 class Block
 {
@@ -28,7 +27,7 @@ class Block
      * @ORM\ManyToOne(targetEntity="Accession", inversedBy="block")
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)    
      */
-    protected $accession;
+    //protected $accession;
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")

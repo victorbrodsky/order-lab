@@ -32,7 +32,7 @@ class Slide
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    protected $accession;
+    //protected $accession;
     
     //add manytoone for block and part?
     /**
@@ -40,7 +40,7 @@ class Slide
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    protected $part;
+    //protected $part;
     
     /**
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide", cascade={"persist"})
@@ -75,11 +75,6 @@ class Slide
     protected $relevantscan;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)
-     */
-    protected $scanregion;
-    
-    /**
      * @ORM\Column(type="string", nullable=true, length=200)
      */
     protected $barcode;
@@ -99,12 +94,20 @@ class Slide
      */
     protected $stain;
     
-    //ORM\JoinColumn(name="scan_id", referencedColumnName="id", nullable=true)
     /**
-     * @ORM\OneToOne(targetEntity="Scan", inversedBy="slide", cascade={"persist"})
-     *     
+     * @ORM\OneToOne(
+     *      targetEntity="Scan",  
+     *      cascade={"persist"}, 
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="scan_id", 
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * ) 
+     * @Assert\NotBlank   
      */
-//    protected $scan;
+    protected $scan;
     
     public function getId() {
         return $this->id;
@@ -144,60 +147,6 @@ class Slide
 
     public function setRelevantscan($relevantscan) {
         $this->relevantscan = $relevantscan;
-    }
-
-    public function getScanregion() {
-        return $this->scanregion;
-    }
-
-    public function setScanregion($scanregion) {
-        $this->scanregion = $scanregion;
-    }     
-
-    /**
-     * Set accession
-     *
-     * @param \Oleg\OrderformBundle\Entity\Accession $accession
-     * @return Slide
-     */
-    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
-    {
-        $this->accession = $accession;
-    
-        return $this;
-    }
-
-    /**
-     * Get accession
-     *
-     * @return \Oleg\OrderformBundle\Entity\Accession 
-     */
-    public function getAccession()
-    {
-        return $this->accession;
-    }
-
-    /**
-     * Set part
-     *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
-     * @return Slide
-     */
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
-    {
-        $this->part = $part;
-    
-        return $this;
-    }
-
-    /**
-     * Get part
-     *
-     * @return \Oleg\OrderformBundle\Entity\Part 
-     */
-    public function getPart()
-    {
-        return $this->part;
     }
 
     /**

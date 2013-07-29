@@ -16,15 +16,11 @@ class OrderInfoType extends AbstractType
         
         $builder->add( 'type', 'hidden' ); 
         
-        $builder->add('patient', 'collection', array(
-            'type' => new PatientType(),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => "Patient Entity:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => 'tag__name__',
-        ));                  
+//        $builder->add( 'scan', new ScanType(), array(
+//                'label'=>' ',
+//                //'data_class' => null,
+//        ));
+        //$builder->add('scan', 'collection', array('type' => new ScanType()));
         
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 

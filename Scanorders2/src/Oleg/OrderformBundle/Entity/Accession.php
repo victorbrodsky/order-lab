@@ -62,18 +62,18 @@ class Accession {
      * Accession might have many parts
      * @ORM\OneToMany(targetEntity="Block", mappedBy="accession")
      */
-    protected $block;
+    //protected $block;
     
      /**
      * Accession might have many slide s
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession")
      */
-    protected $slide;
+    //protected $slide;
 
     public function __construct() {
         $this->part = new ArrayCollection();
-        $this->block = new ArrayCollection();
-        $this->slide = new ArrayCollection();
+        //$this->block = new ArrayCollection();
+        //$this->slide = new ArrayCollection();
     }
     
     

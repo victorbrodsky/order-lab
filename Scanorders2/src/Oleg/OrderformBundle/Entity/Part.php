@@ -72,7 +72,7 @@ class Part
      * Accession might have many slide s
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="part", cascade={"persist"})
      */
-    protected $slide;
+    //protected $slide;
     
     /**
      * One Part has Many blocks
@@ -82,7 +82,7 @@ class Part
     protected $block;
     
     public function __construct() {
-        $this->slide = new ArrayCollection();
+        //$this->slide = new ArrayCollection();
         $this->block = new ArrayCollection();
     }
     

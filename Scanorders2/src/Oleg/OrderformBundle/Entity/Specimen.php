@@ -3,7 +3,6 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -30,14 +29,13 @@ class Specimen
      * Link to a paper or abstract file
      * @ORM\Column(name="paper", type="string", nullable=true, length=300)
      */
-    protected $paper;
+    protected $paper;   
     
     /**
-     * mrn - unique patient number which link to external copath db. 
-     * 
-     * @ORM\Column(name="mrn", type="string", nullable=true, length=100)
+     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="specimen")
+     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id")
      */
-    protected $mrn;
+    protected $patient; 
     
     /**
      * Specimen might have many Accession
@@ -92,29 +90,6 @@ class Specimen
     }
 
     /**
-     * Set mrn
-     *
-     * @param string $mrn
-     * @return Specimen
-     */
-    public function setMrn($mrn)
-    {
-        $this->mrn = $mrn;
-    
-        return $this;
-    }
-
-    /**
-     * Get mrn
-     *
-     * @return string 
-     */
-    public function getMrn()
-    {
-        return $this->mrn;
-    }
-
-    /**
      * Add accession
      *
      * @param \Oleg\OrderformBundle\Entity\Accession $accession
@@ -145,5 +120,28 @@ class Specimen
     public function getAccession()
     {
         return $this->accession;
+    }
+
+    /**
+     * Set patient
+     *
+     * @param \Oleg\OrderformBundle\Entity\Patient $patient
+     * @return Specimen
+     */
+    public function setPatient(\Oleg\OrderformBundle\Entity\Patient $patient = null)
+    {
+        $this->patient = $patient;
+    
+        return $this;
+    }
+
+    /**
+     * Get patient
+     *
+     * @return \Oleg\OrderformBundle\Entity\Patient 
+     */
+    public function getPatient()
+    {
+        return $this->patient;
     }
 }
