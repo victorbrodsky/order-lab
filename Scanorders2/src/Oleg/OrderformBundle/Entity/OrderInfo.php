@@ -97,22 +97,16 @@ class OrderInfo
     private $provider;
 
     /**
-     * One OrderInfo can have many Scans (Scan has Slide)
-     * @ORM\OneToMany(
-     *      targetEntity="Scan", 
-     *      mappedBy="orderinfo", 
-     *      orphanRemoval=true, 
-     *      cascade={"persist"}
-     * )
+     * @ORM\OneToMany(targetEntity="Patient", mappedBy="orderinfo", cascade={"persist"})
      */
-    protected $scan;
+    protected $patient;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->scan = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->patient = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -288,43 +282,50 @@ class OrderInfo
     public function setType($type) {
         $this->type = $type;
     }
+      
+//    public function removeAllChildren() {
+//        $this->patient->clear();
+//    }
     
-    
-    
-    public function removeAllChildren() {
-        $this->scan->clear();
-    }
-    
+
     /**
-     * Add scan
+     * Add patient
      *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     * @param \Oleg\OrderformBundle\Entity\Patient $patient
      * @return OrderInfo
      */
-    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+    public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {
-        $this->scan[] = $scan;
-    
+        //$this->patient[] = $patient;
+        //return $this;
+        
+        $patient->setOrderinfo($this);
+        //$this->patient->add($patient);
+        $this->patient[] = $patient;
         return $this;
     }
 
     /**
-     * Remove scan
+     * Remove patient
      *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     * @param \Oleg\OrderformBundle\Entity\Patient $patient
      */
-    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+    public function removePatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {
-        $this->scan->removeElement($scan);
+        $this->patient->removeElement($patient);
     }
 
     /**
-     * Get scan
+     * Get patient
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getScan()
+    public function getPatient()
     {
-        return $this->scan;
+        return $this->patient;
+    }
+    
+    public function setPatient($patient) {
+        $this->patient = $patient;
     }
 }

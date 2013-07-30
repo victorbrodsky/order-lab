@@ -21,6 +21,16 @@ class BlockType extends AbstractType
                 'required'=> true,
                 'data' => 0,
         ));
+        
+        $builder->add('slide', 'collection', array(
+            'type' => new SlideType(),
+            'allow_add' => true,
+            'label' => "Slide Entity:",
+            //'by_reference' => false,
+            //'prototype' => true,
+            //'prototype_name' => '__name__',
+        ));
+        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

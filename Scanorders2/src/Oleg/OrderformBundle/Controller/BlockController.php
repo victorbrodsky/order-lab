@@ -56,7 +56,7 @@ class BlockController extends Controller
         $errors = $errorHelper->getErrorMessages($form);
         print_r($errors);            
         
-        if( 1 ) {//$form->isValid() ) {
+        if( $form->isValid() ) {
             
             echo "form is valid <br>";
             
@@ -109,7 +109,7 @@ class BlockController extends Controller
         // end dummy code
    
         
-        $form   = $this->createForm(new BlockSlideType(), $entity);
+        $form   = $this->createForm(new BlockType(), $entity);
 //        $form   = $this->createForm(new BlockType(), $entity);
         
         return array(

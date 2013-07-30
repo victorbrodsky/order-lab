@@ -25,7 +25,7 @@ class PartType extends AbstractType
         $builder->add( 'sourceOrgan', 'text', array(
                 'label'=>'Source Organ:', 
                 'max_length'=>'100', 
-                'required'=>false
+                'required'=>true
         ));
         
         $builder->add( 'description', 'textarea', array(

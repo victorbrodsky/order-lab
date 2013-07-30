@@ -27,9 +27,9 @@ class ScanType extends AbstractType
                 'data' => 0,              
         ));        
         
-        $builder->add( 'slide', new SlideType(), array(
+        //$builder->add( 'slide', new SlideType(), array(
                 //'data_class' => null,
-        ));
+        //));
         
         $builder->add('note', 'textarea', array(
                 'max_length'=>5000,

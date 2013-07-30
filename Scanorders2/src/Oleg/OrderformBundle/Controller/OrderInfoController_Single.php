@@ -12,15 +12,11 @@ use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Form\ScanType;
-
+//use Oleg\OrderformBundle\Entity\Slide;
+//use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Entity\Block;
 //use Oleg\OrderformBundle\Form\BlockType;
-
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Form\PartType;
-
-use Oleg\OrderformBundle\Entity\Patient;
 
 /**
  * OrderInfo controller.
@@ -29,6 +25,65 @@ use Oleg\OrderformBundle\Entity\Patient;
  */
 class OrderInfoController extends Controller {
 
+    /**
+     * Lists all OrderInfo entities.
+     *
+     * @Route("/test", name="test")
+     * @Method("GET")
+     * @Template()
+     */
+    public function testAction() {
+    
+//        $scan = new Scan();
+//        $scan->setMag('20X');
+//
+//        $order = new OrderInfo();
+//        $order->setStatus('test');
+//        $order->setPriority('test priority');
+//        $order->setSlideDelivery('test priority');
+//        $order->setReturnSlide('test ret');
+//        $order->setProvider('test prov');
+//        // relate this product(scan) to the category(order)
+//        $scan->setOrderInfo($order);
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $em->persist($order);
+//        $em->persist($scan);
+//        $em->flush();
+
+//        echo 'Created scan id: '.$scan->getId().' and order id: '.$order->getId();
+        
+        $scan2 = $this->getDoctrine()
+        ->getRepository('OlegOrderformBundle:Scan')
+        ->findAll();
+
+        $order_status = $scan2[0]->getOrderinfo()->getStatus();
+        echo "order status=".$order_status."<br>";
+        
+        $order2 = $this->getDoctrine()
+        ->getRepository('OlegOrderformBundle:OrderInfo')
+        ->findAll();
+
+        $scans = $order2[0]->getScan();
+        
+        foreach( $scans as $scan3 ) {
+            echo "scan mag=".$scan3->getMag()."<br>";
+        }
+        
+        
+        $block = new Block();
+        $slides = $block->getSlide();
+        echo "count of slides=".count($slides)."<br>";
+        foreach( $slides as $slide ) {
+            echo "slide barcode = ".$slide->getBarcode()."<br>";
+        }
+        
+        exit();
+//        return new Response(
+//            'Created product id: '.$product->getId().' and category id: '.$category->getId()
+//        );
+        
+    }
     /**
      * Lists all OrderInfo entities.
      *
@@ -63,31 +118,46 @@ class OrderInfoController extends Controller {
      * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
      */
     public function createAction(Request $request)
-    {       
+    {
+        //echo "orderinfo createAction";
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(), $entity);
         $form->bind($request);
-          
-//        it works!
-//        $part_entity  = new Part();
-//        $part_form = $this->createForm(new PartType(), $part_entity);
-//        $part_form->bind($request);
-//        echo "entity provider=".$entity->getProvider()."<br>";
-//        echo "part name=".$part_entity->getName()." part description".$part_entity->getDescription()."<br>";
-//        exit();
         
-        if( $form->isValid() ) {
+        $scan_entity = new Scan();
+        $scan_form = $this->createForm(new ScanType(), $scan_entity);
+        $scan_form->bind($request);
+        
+        if( $form->isValid() && $scan_form->isValid() ) {
             $em = $this->getDoctrine()->getManager();                  
                       
             $entity->setStatus("submitted");            
                       
-//            foreach( $entity->getPatient() as $patient ) {
-//                echo "patient mrn=".$patient->getMrn()."<br>";           
-//            }          
-            //exit();
+            $scan_entity->setStatus("submitted");
+            $scan_entity->setOrderinfo($entity); 
             
-            //$em->persist($part_entity);
-            $em->persist($entity);                               
+            //get Accession, Part and Block. Create if they are not exist, or return them if they are exist.
+            //process accession. If not exists - create and return new object, if exists - return object          
+            $accession = $scan_entity->getSlide()->getAccession();
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession );                         
+            $scan_entity->getSlide()->setAccession($accession);          
+            
+            $part = $scan_entity->getSlide()->getPart();
+            $part->setAccession($accession);
+            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
+            $scan_entity->getSlide()->setPart($part);         
+            
+            $block = $scan_entity->getSlide()->getBlock();
+            $block->setAccession($accession);
+            $block->setPart($part);
+            $block = $em->getRepository('OlegOrderformBundle:Block')->processBlock( $block );                         
+            $scan_entity->getSlide()->setBlock($block);        
+
+            //TODO: i.e. if part's field is updated then add options to detect and update it.
+            
+            $em->persist($entity);       
+            $em->persist($scan_entity);           
+            
             $em->flush();
 
             $this->get('session')->getFlashBag()->add(
@@ -100,7 +170,8 @@ class OrderInfoController extends Controller {
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),           
+            'form'   => $form->createView(),
+            'form_scan'   => $scan_form->createView(),
         );
     }
 
@@ -114,20 +185,15 @@ class OrderInfoController extends Controller {
     public function newAction()
     {         
         $entity = new OrderInfo();      
-        
-
-        $patient1 = new Patient();
-        $patient1->setMrn('mrn1');
-        $entity->addPatient($patient1);
-        $patient2 = new Patient();
-        $patient2->setMrn('mrn2');
-        $entity->addPatient($patient2);
-        
         $form   = $this->createForm(new OrderInfoType(), $entity);
+
+        $scan_entity = new Scan();      
+        $form_scan   = $this->createForm(new ScanType(), $scan_entity);
         
         return array(
-            'entity' => $entity,
-            'form' => $form->createView(),           
+            //'entity' => $entity,
+            'form' => $form->createView(),
+            'form_scan' => $form_scan->createView(),
         );
     }
 
@@ -236,7 +302,13 @@ class OrderInfoController extends Controller {
                 throw $this->createNotFoundException('Unable to find OrderInfo entity.');
             }
             
-            //$entity->removeAllChildren();          
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->
+//                    findBy(array('orderinfo_id'=>$id));
+            
+//            $scan_entities = $em->getRepository('OlegOrderformBundle:Scan')->findBy(
+//                array('orderinfo' => $id)            
+//            );
+            $entity->removeAllChildren();          
             
             $em->remove($entity);
             $em->flush();

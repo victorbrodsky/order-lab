@@ -24,7 +24,7 @@ class Scan {
      * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    protected $slide;
+    //protected $slide;
 
     /**
      * @ORM\Column(name="mag", type="string", length=50)
@@ -59,7 +59,7 @@ class Scan {
      * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="scan", cascade={"persist"})
      * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)    
      */
-    protected $orderinfo;
+    //protected $orderinfo;
 
     /**
      * Get id
@@ -169,22 +169,22 @@ class Scan {
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Scan
      */
-    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
-    {
-        $this->slide = $slide;
-    
-        return $this;
-    }
+//    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+//    {
+//        $this->slide = $slide;
+//    
+//        return $this;
+//    }
 
     /**
      * Get slide
      *
      * @return \Oleg\OrderformBundle\Entity\Slide 
      */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
 
     /**
      * Set orderinfo
