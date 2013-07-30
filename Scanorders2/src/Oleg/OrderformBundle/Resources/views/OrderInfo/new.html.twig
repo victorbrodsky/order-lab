@@ -16,23 +16,31 @@
     {{ form_row(form.priority) }}
     {{ form_row(form.slideDelivery) }}
     {{ form_row(form.returnSlide) }}
+
     
     <h3>Patient:</h3>
-    <ul class="tags" data-prototype="{{ form_widget(form.patient.vars.prototype)|e }}">
-        {# iterate over each existing tag and render its only field: name #}
+    <ul class="tags" 
+{#                    data-prototype-patient="{{ form_widget(form.patient.vars.prototype)|e }}" #}
+{#                    data-prototype-specimen="{{ form_widget(form.patient.specimen.vars.prototype)|e }}"      #}
+        
+                    data-prototype-patient="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype) | e }}"
+                    data-prototype-specimen="{{ form_widget(form.patient.vars.prototype) | e }}"
+     >  
+        
         {% for patient in form.patient %}
             <li>
-                {{ form_row(patient) }}
+                Patient!!!!!!!!{{ form_row(patient) }}
             </li>
             
-{#            
-            <h3>Specimen:</h3>
-            <div class="specimen" data-prototype_spec="{{ form_widget(form.patient.specimen.vars.prototype)|e }}">              
-                {% for specimen in form.patient.specimen %}
-                    <li>{{ form_row(specimen) }}</li>
-                {% endfor %}
-            </div>
- #}           
+            {% if patient.specimen is not empty %}
+                <h3>Specimen:</h3>
+            {% endif %}
+            {% for specimen in patient.specimen %}
+                <li>
+                Specimen!!!!!!!{{ form_row(specimen) }}
+                </li>
+            {% endfor %}
+           
         {% endfor %}                           
     </ul>
     

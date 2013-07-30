@@ -18,6 +18,17 @@ class PatientType extends AbstractType
             ->add('dob')
             ->add('clinicalHistory')
         ;
+        
+        $builder->add('specimen', 'collection', array(
+            'type' => new SpecimenType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => "Specimen Entity:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__specimen__',
+        ));          
+        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

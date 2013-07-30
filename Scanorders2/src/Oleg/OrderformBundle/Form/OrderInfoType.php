@@ -23,7 +23,7 @@ class OrderInfoType extends AbstractType
             'label' => "Patient Entity:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => 'tag__name__',
+            'prototype_name' => '__patient__',
         ));                  
         
         $builder->add( 'provider', 'text', array(
