@@ -9,7 +9,7 @@ framework:
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
-    form:            ~
+    form: 
     csrf_protection: ~
     validation:      { enable_annotations: true }
     templating:
@@ -24,6 +24,8 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
+    form: 
+      resources: ['form_table_layout.html.twig']
 
 # Assetic Configuration
 assetic:
