@@ -115,13 +115,13 @@ class OrderInfoController extends Controller {
     {         
         $entity = new OrderInfo();      
         
-
-        $patient1 = new Patient();
-        $patient1->setMrn('mrn1');
-        $entity->addPatient($patient1);
-        $patient2 = new Patient();
-        $patient2->setMrn('mrn2');
-        $entity->addPatient($patient2);
+        //sample data
+//        $patient1 = new Patient();
+//        $patient1->setMrn('mrn1');
+//        $entity->addPatient($patient1);
+//        $patient2 = new Patient();
+//        $patient2->setMrn('mrn2');
+//        $entity->addPatient($patient2);
         
         $form   = $this->createForm(new OrderInfoType(), $entity);
         

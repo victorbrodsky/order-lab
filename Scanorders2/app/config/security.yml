@@ -1,12 +1,15 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+#        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
+#        webservice:
+#            id: webservice_user_provider
         in_memory:
             memory:
                 users:
@@ -22,14 +25,28 @@ security:
             pattern:  ^/demo/secured/login$
             security: false
 
+        login_firewall:
+            pattern:    ^/login$
+            anonymous:  ~
+
         secured_area:
-            pattern:    ^/demo/secured/
+#            pattern:    ^/
+            anonymous: ~
             form_login:
-                check_path: _security_check
-                login_path: _demo_login
+                login_path:  login
+                check_path:  login_check
             logout:
-                path:   _demo_logout
-                target: _demo
+                path:   logout
+                target: login
+
+#        secured_area:
+#            pattern:    ^/demo/secured/
+#            form_login:
+#                check_path: _security_check
+#                login_path: _demo_login
+#            logout:
+#                path:   _demo_logout
+#                target: _demo
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
