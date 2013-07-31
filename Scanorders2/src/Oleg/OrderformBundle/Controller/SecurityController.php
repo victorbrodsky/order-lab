@@ -39,6 +39,16 @@ class SecurityController extends Controller
         );
     }
     
+    /**   
+     * @Route("/login_check", name="login_check")
+     * @Method("GET")
+     * @Template()
+     */
+//    public function loginCheckAction()
+//    {      
+//        return $this->render('OlegOrderformBundle:Controller:indexAction');
+//    }
+    
 }
 
 ?>

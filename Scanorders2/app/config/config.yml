@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
 #    - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
+    
     - { resource: "@DapsLdapBundle/Resources/config/services.yml"}
 
 framework:

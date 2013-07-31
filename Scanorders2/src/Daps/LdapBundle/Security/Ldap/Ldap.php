@@ -47,7 +47,7 @@ class Ldap implements LdapInterface
     public function __construct($host = null, $port = 389, $dn = null, $usernameSuffix = null, $enableAdmin = false, $adminDn = null, $adminPassword = null, $version = 3, $useSsl = false, $useStartTls = false, $optReferrals = false )
     {
         if (!extension_loaded('ldap')) {
-            throw new LdapException('Ldap module is needed. ');
+//            throw new LdapException('Ldap module is needed. ');
         }
 
         $this->host             = $host;

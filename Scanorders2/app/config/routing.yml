@@ -8,6 +8,9 @@ login:
     defaults:  { _controller: OlegOrderformBundle:Security:login }
 login_check:
     pattern:   /login_check
+    defaults:  { _controller: OlegOrderformBundle:Security:loginCheck }
+logout:
+    pattern: /logout/
     
 #imag_ldap:
 #  resource: "@IMAGLdapBundle/Resources/config/routing.yml"

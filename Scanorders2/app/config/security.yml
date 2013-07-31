@@ -2,6 +2,7 @@ security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
 #        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
+#        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
         Daps\LdapBundle\Security\User\LdapUser: plaintext
 
     role_hierarchy:
@@ -9,6 +10,7 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
+#        Oleg: custom user
 #        webservice:
 #            id: webservice_user_provider
         daps_ldap:
@@ -27,22 +29,32 @@ security:
         login:
             pattern:  ^/demo/secured/login$
             security: false
+#            pattern:  ^/login$
+#            security: true
 
         login_firewall:
             pattern:    ^/login$
             anonymous:  ~
 
+        #Oleg: custom auth provider
+#        wsse_secured:
+#            pattern:   ^/
+#            stateless: true
+#            wsse:      true            
+#            form_login:              
+#                login_path:  login
+#                check_path:  login_check
+
         secured_area:
             pattern:    ^/
-#            anonymous: ~
-            pattern:    ^/
-            form-login-ldap: true
+#            anonymous: ~           
+            form-login-ldap: true           
             form_login:
                 login_path:  login
                 check_path:  login_check
             logout:
-                path:   logout
-                target: login
+                path:   /logout/
+                target: orderinfo
 
 #        secured_area:
 #            pattern:    ^/demo/secured/

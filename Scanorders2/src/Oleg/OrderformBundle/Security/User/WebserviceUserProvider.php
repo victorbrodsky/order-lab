@@ -12,29 +12,14 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 class WebserviceUserProvider implements UserProviderInterface
 {
     public function loadUserByUsername($username)
-    {    
-        
-        echo "!!!Username=".$username."<br>";
-        //echo "password=".$password;
-        //exit();
-        
-        // make a call to your webservice here
-        $password = "111";
+    {                  
+        // make a call to your webservice here     
         //$userData = ADB_Authenticate($username, $password);                       
-        // pretend it returns an array on success, false if there is no user
-        //$userData = null;
-        
-        //echo "userData=".$userData;
-        
-        if( 1 ) {//$userData ) {
-            $password = '111';
-            $username = "Oleg";
-            // ...
-            $salt = '';
-            $roles = array('ROLE_USER');
-
-            return new WebserviceUser($username, $password, $salt, $roles);
-        }
+        // pretend it returns an array on success, false if there is no user    
+        $password = null;
+        $salt = null;     
+        $roles = array();//array('ROLE_USER');
+        return new WebserviceUser($username, $password, $salt, $roles);
 
         throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }
