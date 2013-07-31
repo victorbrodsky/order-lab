@@ -2,6 +2,7 @@ security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
 #        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
+        Daps\LdapBundle\Security\User\LdapUser: plaintext
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -10,6 +11,8 @@ security:
     providers:
 #        webservice:
 #            id: webservice_user_provider
+        daps_ldap:
+            id: daps_ldap_user_provider
         in_memory:
             memory:
                 users:
@@ -30,8 +33,10 @@ security:
             anonymous:  ~
 
         secured_area:
-#            pattern:    ^/
-            anonymous: ~
+            pattern:    ^/
+#            anonymous: ~
+            pattern:    ^/
+            form-login-ldap: true
             form_login:
                 login_path:  login
                 check_path:  login_check

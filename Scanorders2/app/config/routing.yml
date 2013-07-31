@@ -3,11 +3,11 @@ oleg_orderform:
     type:     annotation
     prefix:   /
     
-#login:
-#    pattern:   /login
-#    defaults:  { _controller: OlegOrderformBundle:Security:login }
-#login_check:
-#    pattern:   /login_check
+login:
+    pattern:   /login
+    defaults:  { _controller: OlegOrderformBundle:Security:login }
+login_check:
+    pattern:   /login_check
     
 #imag_ldap:
 #  resource: "@IMAGLdapBundle/Resources/config/routing.yml"
