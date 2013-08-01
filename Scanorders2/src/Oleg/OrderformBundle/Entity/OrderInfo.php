@@ -295,12 +295,8 @@ class OrderInfo
      * @return OrderInfo
      */
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
-    {
-        //$this->patient[] = $patient;
-        //return $this;
-        
-        $patient->setOrderinfo($this);
-        //$this->patient->add($patient);
+    {       
+        $patient->setOrderinfo($this);       
         $this->patient[] = $patient;
         return $this;
     }

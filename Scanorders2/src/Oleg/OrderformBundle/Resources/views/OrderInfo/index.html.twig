@@ -7,6 +7,17 @@
 
     <h2>Scan Order List</h2>
 
+<a class="btn btn-primary btn-default" data-toggle="modal" href="{{ path('login') }}" data-target="#myModelLogin">Login</a>
+<div class="modal hide fade" id="myModelLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Please Login</h3>
+</div>
+<div class="modal-body"></div>
+<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button></div>    
+</div>
+{#<div id="myModel"></div>#}
+    
     <div class="btn_margin_top">
         <form method="get" action="{{ path('orderinfo_new') }}">
             <button type="submit" class="btn btn-primary btn-success">New Order</button>

@@ -13,8 +13,8 @@ security:
 #        Oleg: custom user
 #        webservice:
 #            id: webservice_user_provider
-        daps_ldap:
-            id: daps_ldap_user_provider
+#        daps_ldap:
+#            id: daps_ldap_user_provider
         in_memory:
             memory:
                 users:
@@ -26,15 +26,15 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        login:
-            pattern:  ^/demo/secured/login$
-            security: false
+#        login:
+#            pattern:  ^/demo/secured/login$
+#            security: false
 #            pattern:  ^/login$
-#            security: true
+#            security: true           
 
         login_firewall:
             pattern:    ^/login$
-            anonymous:  ~
+            anonymous:  ~          
 
         #Oleg: custom auth provider
 #        wsse_secured:
@@ -44,17 +44,21 @@ security:
 #            form_login:              
 #                login_path:  login
 #                check_path:  login_check
-
+#        public:
+#            pattern: /order/          
+#            anonymous:  ~
+    
         secured_area:
             pattern:    ^/
 #            anonymous: ~           
-            form-login-ldap: true           
+#            form-login-ldap: true           
             form_login:
                 login_path:  login
                 check_path:  login_check
+#                always_use_default_target_path: true           
             logout:
                 path:   /logout/
-                target: orderinfo
+                target: order
 
 #        secured_area:
 #            pattern:    ^/demo/secured/

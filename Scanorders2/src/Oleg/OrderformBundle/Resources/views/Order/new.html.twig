@@ -7,42 +7,38 @@
 {% block content %} 
 {% block body -%}
 
-    <h1>New Single-Scan Order Form</h1>
+    <h1>Multi-Scan Order Form</h1>
 
 {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
+{#    <iframe src="http://www.w3schools.com"></iframe>#}
     
-    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
+    
+    
+    
+    
+    
+    
+    
+    <form action="{{ path('orderinfo_create') }}" method="post" {{ form_enctype(form) }}>
                      
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
         
-        {{ form_errors(form_patient) }}
-        {{ form_widget(form_patient) }}
         
-        {{ form_errors(form_procedure) }}
-        {{ form_widget(form_procedure) }}
-        
-        <p>
-            <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
-        </p>
-
-        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>
-
-        
-{#       
         <div class="slide_new"> 
             {{ form_errors(form) }}
+            {{ form_errors(form_scan) }}                      
             
             {{ form_widget(form.type, {value : 'single'}) }}
             
-            {{ form_label(form.accession.accession, '* Accession + Part + Block (i.e. S12-99998 B1)') }} 
-            {{ form_widget(form.accession.slide.accession) }}   
+            {{ form_label(form_scan.slide.accession, '* Accession + Part + Block (i.e. S12-99998 B1)') }} 
+            {{ form_widget(form_scan.slide.accession) }}   
             
             {{ form_label(form_scan.slide.part.name) }}
             {{ form_widget(form_scan.slide.part.name) }}        
             {{ form_widget(form_scan.slide.block.name) }}          
             
+{#            <div id="stain_label_div">#}
             {{ form_label(form_scan.slide.stain.name) }}
+{#            </div>#}
             {{ form_widget(form_scan.slide.stain.name) }}
                       
             {{ form_label(form_scan.mag) }}
@@ -90,6 +86,7 @@
                     {{ form_rest(form_scan.slide.accession) }} 
                 {% endif %}
                  
+{#                <h4>Optional Parameters for Part</h4>#}
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_part">
                     Optional Parameters for Part
                 </button>
@@ -102,6 +99,7 @@
                     {{ form_rest(form_scan.slide.block) }} 
                 {% endif %}
 
+{#                <h4>Optional Parameters for Stain</h4> #}
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_stain">
                     Optional Parameters for Stain
                 </button>
@@ -116,6 +114,7 @@
                     {{ form_rest(form_scan.slide) }} 
                 </div>
                     
+{#                <h4>Optional Parameters for Scan</h4>#}
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_scan">
                     Optional Parameters for Scan
                 </button>
@@ -132,7 +131,5 @@
             
         </div>
 
-  #}      
-    </form>        
 {% endblock %}
 {% endblock %} 

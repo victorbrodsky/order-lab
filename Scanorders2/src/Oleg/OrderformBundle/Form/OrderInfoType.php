@@ -14,23 +14,28 @@ class OrderInfoType extends AbstractType
     {
         $helper = new FormHelper();
         
+        $multi = false;
+        
         $builder->add( 'type', 'hidden' ); 
         
-        $builder->add('patient', 'collection', array(
-            'type' => new PatientType(),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => "Patient Entity:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patient__',
-        ));                  
+        if( $multi ) {          
+            $builder->add('patient', 'collection', array(
+                'type' => new PatientType(),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => "Patient Entity:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patient__',
+            ));                  
+        }
         
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 
                 'max_length'=>'200', 
                 'required'=>true
         ));
+        
         $builder->add( 'pathologyService', 'text', array(
                 'label'=>'Pathology Service:', 
                 'max_length'=>200,'required'=>false
@@ -61,12 +66,6 @@ class OrderInfoType extends AbstractType
                 'required'=>true,
                 'data' => 'Me',              
         ));
-        
-//        $builder->add( 'scan', new ScanType(), array(
-//            'label'=>' ',
-//            'data_class' => null,
-//        ));
-        
         
     }
 

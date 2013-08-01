@@ -9,7 +9,7 @@
     {% endstylesheets %}   
         
     {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
-    {# TODO: use 'bundles/acme_foo/css/*' #}
+    {# TODO: use 'bundles/acme_foo/css/*' style#}
     {% stylesheets 
         '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
     %}
@@ -24,6 +24,12 @@
                                                                 
                 
             <title>{% block title %}{% endblock %} - Scan Order</title>                   
+           
+            {% if app.user %}        
+                <div class="alert alert-info span2 text-center">Welcome {{ app.user.username }} !</div>
+            {% else %}                           
+{#                {% include 'OlegOrderformBundle:Security:login_modal.html.twig' %} #}
+            {% endif %}
             
         {% endblock %}
     </head>
@@ -54,13 +60,11 @@
         </div>                   
         
     
-     
-        
-                                 
+                                                
     {% javascripts 
-        '@OlegOrderformBundle/Resources/public/jquery/jquery-1.9.1.js'
+        '@OlegOrderformBundle/Resources/public/jquery/*'
         '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
-        '@OlegOrderformBundle/Resources/public/form/js/*'    
+        '@OlegOrderformBundle/Resources/public/form/js/*'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}     

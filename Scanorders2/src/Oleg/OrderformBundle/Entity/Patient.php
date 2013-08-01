@@ -256,8 +256,8 @@ class Patient
      */
     public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
     {
-        $this->specimen[] = $specimen;
-    
+        $specimen->setPatient($this);
+        $this->specimen[] = $specimen;   
         return $this;
     }
 

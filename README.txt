@@ -7,12 +7,12 @@ Web-based order form using Symfony2, Doctrine2 and Twitter Bootstrap
 http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php
 
 # Development mode:
-http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/orderinfo/
+http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/
 
 # Production mode:
-http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app.php/orderinfo/
+http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app.php/
 
-# For production mode execute the following command to clean cache and fix assetic links to js and css
+# Note: For production mode execute the following command to clean cache and fix assetic links to js and css
 (read: Dumping Asset Files in the dev environment http://symfony.com/doc/current/cookbook/assetic/asset_management.html):
 php app/console assetic:dump --env=prod --no-debug
 php app/console cache:clear --env=prod --no-debug

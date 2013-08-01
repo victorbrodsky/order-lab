@@ -1,0 +1,81 @@
+/* 
+    Created on : Jul 17, 2013, 1:12:10 PM
+    Author     : oli2002
+*/
+.flash-notice {
+  color: #0081c2;
+  font-size: 200%;
+  margin-top: 3%
+}
+
+.order-content {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 0%;
+    padding-bottom: 5%;
+    float: left;
+    width: 100%;
+}
+
+.header {
+    float: left;
+    width: 100%;
+}
+
+.page-content {
+    margin-top: 5%;
+}
+
+.footer {
+    margin-top: 5%;
+    float: left;
+    width: 100%;
+}
+
+.btn_margin_top {
+    margin-top: 2%;
+}
+
+.slide_new {
+    float:left; 
+    width: 30%;
+}
+
+#form_menu {
+    float: left;
+    width: 100%;
+}
+
+.action-button {
+    float: left;
+}
+
+.buttons-full-bar {
+    margin-bottom: 2%;
+    margin-top: 2%;
+    float: left;
+    width: 100%;
+}
+
+.form_edit {
+    float: left;
+    width: 100%;
+}
+
+#acc_part_block {
+    //float: left;
+    //width: 150px;
+}
+
+.olspan1 {
+    //margin: 0 auto; // !important;
+    //padding: 0; // !important;
+    //width: auto;
+}
+.olspanmin {
+    //float: left;
+    //margin: 0 auto; // !important;
+    //padding: 0; // !important;
+    //width: auto;
+}
+

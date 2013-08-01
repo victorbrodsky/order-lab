@@ -11,7 +11,12 @@
             <li class="divider-vertical orderinfo"><a href="{{ path('orderinfo_new') }}">Clinical Multi-Slide</a></li>                       
             <li class="divider-vertical accession"><a href="{{ path('orderinfo') }}">Educational Multi-Slide</a></li>
             <li class="divider-vertical order1"><a href="{{ path('orderinfo') }}">Research Multi-Slide</a></li>
-            <li class="divider-vertical order1"><a href="{{ path('logout') }}">Logout</a></li>
+            
+            {% if app.user %}
+                <li class="divider-vertical order1"><a href="{{ path('logout') }}">Logout</a></li>
+            {% else %}
+                <li class="divider-vertical order1"><a href="{{ path('login') }}">Login</a></li>
+            {% endif %}
         </ul>
     </div>  
 </div>

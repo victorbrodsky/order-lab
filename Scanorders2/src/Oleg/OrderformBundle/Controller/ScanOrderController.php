@@ -10,22 +10,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
-use Oleg\OrderformBundle\Entity\Scan;
-use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\Specimen;
+use Oleg\OrderformBundle\Form\SpecimenType;
+use Oleg\OrderformBundle\Entity\Accession;
+use Oleg\OrderformBundle\Form\AccessionType;
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Form\BlockType;
+use Oleg\OrderformBundle\Entity\Slide;
+use Oleg\OrderformBundle\Form\SlideType;
+
+use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 //ScanOrder joins OrderInfo + Scan
 /**
  * OrderInfo controller.
  *
- * @Route("/scanorder")
+ * @Route("/")
  */
 class ScanOrderController extends Controller {
    
     /**
      * Lists all OrderInfo entities.
      *
-     * @Route("/", name="scanorder")
+     * @Route("/index", name="show")
      * @Method("GET")
      * @Template()
      */
@@ -44,50 +55,77 @@ class ScanOrderController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/", name="scanorder_create")
+     * @Route("/", name="singleorder_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
      */
     public function createAction(Request $request)
     {
+        
         //echo "scanorder createAction";
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(), $entity);
         $form->bind($request);
+              
+        $patient = new Patient();      
+        $form_patient = $this->createForm(new PatientType(), $patient);
+        $form_patient->bind($request);     
         
-        $scan_entity = new Scan();
-        $scan_form = $this->createForm(new ScanType(), $scan_entity);
-        $scan_form->bind($request);
+        $procedure = new Specimen();
+        $form_procedure = $this->createForm(new SpecimenType(), $procedure);
+        $form_procedure->bind($request);            
         
-        if( $form->isValid() && $scan_form->isValid() ) {
-            $em = $this->getDoctrine()->getManager();                  
-                      
-            $entity->setStatus("submitted");            
-                      
-            $scan_entity->setStatus("submitted");
-            $scan_entity->setOrderinfo($entity); 
+//        $errorHelper = new ErrorHelper();
+//        $errors = $errorHelper->getErrorMessages($form_patient);
+//        echo "<br>patient errors:<br>";
+//        print_r($errors); 
+//        $errors = $errorHelper->getErrorMessages($form_procedure);
+//        echo "<br>procedure errors:<br>";
+//        print_r($errors); 
+            
+        
+        if( $form->isValid() && $form_procedure->isValid() ) {
+            $em = $this->getDoctrine()->getManager();                            
+            
+            //procedure/specimen: none
+            //$procedure->addProcedure($accession);
+            
+            //patient: mrn
+            if( $patient->getMrn() == "" || $patient->getMrn() == null ) {
+                $patient->setMrn('000');
+            }
+            $patient->addSpecimen($procedure);
+   
+            //orderinfo: status, type, priority, slideDelivery, returnSlide, provider
+            $entity->setStatus("submitted"); 
+            $entity->setType("single");   
+            $entity->addPatient($patient);
+                           
+            //$scan_entity->setStatus("submitted");
+            //$scan_entity->setOrderinfo($entity); 
             
             //get Accession, Part and Block. Create if they are not exist, or return them if they are exist.
             //process accession. If not exists - create and return new object, if exists - return object          
-            $accession = $scan_entity->getSlide()->getAccession();
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession );                         
-            $scan_entity->getSlide()->setAccession($accession);          
+//            $accession = $scan_entity->getSlide()->getAccession();
+//            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processAccession( $accession );                         
+//            $scan_entity->getSlide()->setAccession($accession);          
             
-            $part = $scan_entity->getSlide()->getPart();
-            $part->setAccession($accession);
-            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
-            $scan_entity->getSlide()->setPart($part);         
+//            $part = $scan_entity->getSlide()->getPart();
+//            $part->setAccession($accession);
+//            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
+//            $scan_entity->getSlide()->setPart($part);         
             
-            $block = $scan_entity->getSlide()->getBlock();
-            $block->setAccession($accession);
-            $block->setPart($part);
-            $block = $em->getRepository('OlegOrderformBundle:Block')->processBlock( $block );                         
-            $scan_entity->getSlide()->setBlock($block);        
+//            $block = $scan_entity->getSlide()->getBlock();
+//            $block->setAccession($accession);
+//            $block->setPart($part);
+//            $block = $em->getRepository('OlegOrderformBundle:Block')->processBlock( $block );                         
+//            $scan_entity->getSlide()->setBlock($block);        
 
             //TODO: i.e. if part's field is updated then add options to detect and update it.
-            
-            $em->persist($entity);       
-            $em->persist($scan_entity);           
+          
+            $em->persist($entity);
+            $em->persist($patient);
+            $em->persist($procedure);
             
             $em->flush();
 
@@ -96,34 +134,55 @@ class ScanOrderController extends Controller {
                 'You successfully submit a scan request! Confirmation email sent!'
             );
             
-            return $this->redirect( $this->generateUrl('scanorder') );
+            return $this->redirect( $this->generateUrl('scanorder_new') );
         }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'form_scan'   => $scan_form->createView(),
+            'form_patient'   => $form_patient->createView(),
+            'form_procedure'   => $form_procedure->createView(),
         );
     }
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
-     * @Route("/new", name="scanorder_new")
+     * @Route("/", name="scanorder_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
      */
     public function newAction()
     {         
         $entity = new OrderInfo();      
-        $form   = $this->createForm(new OrderInfoType(), $entity);
+        $form   = $this->createForm( new OrderInfoType(), $entity );
 
-        $scan_entity = new Scan();      
-        $form_scan   = $this->createForm(new ScanType(), $scan_entity);
+        $patient = new Patient();      
+        $form_patient   = $this->createForm(new PatientType(), $patient);
+        
+        $procedure = new Specimen();  //TODO: rename specimen to procedure    
+        $form_procedure = $this->createForm(new SpecimenType(), $procedure);
+//        
+//        $accession = new Accession();      
+//        $form_accession   = $this->createForm(new AccessionType(), $accession);
+//         
+//        $part = new Part();      
+//        $form_part   = $this->createForm(new PartType(), $part);
+//            
+//        $block = new Block();      
+//        $form_block   = $this->createForm(new BlockType(), $block);
+//        
+//        $slide = new Slide();      
+//        $form_slide   = $this->createForm(new SlideType(), $slide);
         
         return array(          
             'form' => $form->createView(),
-            'form_scan' => $form_scan->createView(),
+            'form_patient' => $form_patient->createView(),
+            'form_procedure' => $form_procedure->createView(),
+//            '$form_accession' => $form_accession->createView(),
+//            '$form_part' => $form_part->createView(),
+//            '$form_block' => $form_block->createView(),
+//            '$form_slide' => $form_slide->createView(),
         );
     }
 

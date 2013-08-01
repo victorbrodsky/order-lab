@@ -10,24 +10,55 @@ class PatientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('mrn','text',array('label'=>'* MRN:'))
-            ->add('name')
-            ->add('age')
-            ->add('sex')
-            ->add('dob')
-            ->add('clinicalHistory')
-        ;
         
-        $builder->add('specimen', 'collection', array(
-            'type' => new SpecimenType(),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => "Specimen Entity:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__specimen__',
-        ));          
+        $multi = false;
+        
+        $builder->add( 'mrn', 'text', array(
+                'label'=>'MRN:', 
+                'max_length'=>100,'required'=>false
+        ));
+        
+        $builder->add( 'name', 'text', array(
+                'label'=>'Name:', 
+                'max_length'=>500,'required'=>false
+        ));
+        
+        
+        $builder->add( 'age', 'text', array(
+                'label'=>'Age:', 
+                'max_length'=>3,'required'=>false
+        ));               
+        
+        $builder->add( 'sex', 'choice', array(
+                'label'=>'Sex:', 
+                'max_length'=>20,
+                'required'=>false,
+                'choices' => array("Male"=>"Male", "Female"=>"Female"),
+                //'data' => 'Male',             
+        ));
+             
+        $builder->add( 'dob', 'date', array(
+                'label'=>'DOB:', 
+                'required'=>false
+        ));
+        
+        $builder->add( 'clinicalHistory', 'textarea', array(
+                'label'=>'Clinical History:', 
+                'max_length'=>10000,
+                'required'=>false
+        )); 
+           
+        if( $multi ) {         
+            $builder->add('specimen', 'collection', array(
+                'type' => new SpecimenType(),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => "Specimen:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__specimen__',
+            ));  
+        }
         
     }
 

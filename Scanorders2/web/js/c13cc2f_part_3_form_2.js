@@ -28,8 +28,5 @@ $(document).ready(function() {
     $('ul.li').removeClass('active');
     $('li.' + index).addClass('active');
         
-//    load login form in main page
-    $('#modelPlainLogin').modal('show');
-//    $('#modelPlainLogin').modal();
     
 });
