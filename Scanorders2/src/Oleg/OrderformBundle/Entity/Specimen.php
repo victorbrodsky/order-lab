@@ -97,6 +97,7 @@ class Specimen
      */
     public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
     {
+        $accession->setSpecimen($this);
         $this->accession[] = $accession;
     
         return $this;

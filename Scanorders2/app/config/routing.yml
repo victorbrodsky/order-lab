@@ -13,5 +13,5 @@ logout:
     pattern: /logout/
     
 #imag_ldap:
-#  resource: "@IMAGLdapBundle/Resources/config/routing.yml"
+#    resource: "@IMAGLdapBundle/Resources/config/routing.yml"
 

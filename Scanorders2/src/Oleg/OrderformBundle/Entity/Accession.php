@@ -7,11 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-//* @UniqueEntity(
-// *     fields={"accession"},
-// *     errorPath="accession",
-// *     message="This accession is already in use."
-// * )
+//@UniqueEntity({"accession"})
          
 //Accession is a key for all other tables such as Patient, Case, Part, Block, Slide (?) 
 //All of them have accession object (?)
@@ -57,27 +53,11 @@ class Accession {
      * @ORM\OneToMany(targetEntity="Part", mappedBy="accession")
      */
     protected $part;
-    
-     /**
-     * Accession might have many parts
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="accession")
-     */
-    //protected $block;
-    
-     /**
-     * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession")
-     */
-    //protected $slide;
-
+      
     public function __construct() {
-        $this->part = new ArrayCollection();
-        //$this->block = new ArrayCollection();
-        //$this->slide = new ArrayCollection();
+        $this->part = new ArrayCollection();       
     }
-    
-    
-    
+      
     public function __toString()
     {
         return $this->accession;
@@ -170,6 +150,7 @@ class Accession {
      */
     public function addPart(\Oleg\OrderformBundle\Entity\Part $part)
     {
+        $part->setAccession($this);
         $this->part[] = $part;
     
         return $this;
@@ -195,69 +176,4 @@ class Accession {
         return $this->part;
     }
 
-    /**
-     * Add block
-     *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
-     * @return Accession
-     */
-    public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
-    {
-        $this->block[] = $block;
-    
-        return $this;
-    }
-
-    /**
-     * Remove block
-     *
-     * @param \Oleg\OrderformBundle\Entity\Block $block
-     */
-    public function removeBlock(\Oleg\OrderformBundle\Entity\Block $block)
-    {
-        $this->block->removeElement($block);
-    }
-
-    /**
-     * Get block
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getBlock()
-    {
-        return $this->block;
-    }
-
-    /**
-     * Add slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return Accession
-     */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide[] = $slide;
-    
-        return $this;
-    }
-
-    /**
-     * Remove slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide->removeElement($slide);
-    }
-
-    /**
-     * Get slide
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
 }

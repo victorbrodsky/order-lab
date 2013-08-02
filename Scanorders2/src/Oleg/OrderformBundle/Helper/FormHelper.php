@@ -5,10 +5,10 @@ namespace Oleg\OrderformBundle\Helper;
 class FormHelper {
     
     public function getStains() {
-        $arr1 = array(
+        $arr = array(
             'H&E'=>'H&E','2-Oct'=>'2-Oct','4-Oct'=>'4-Oct','A103 (Melan-A)'=>'A103 (Melan-A)'
         );
-        $arr = array(
+        $arr1 = array(
             'H&E','2-Oct','4-Oct','A103 (Melan-A)'
         );
         
@@ -16,8 +16,8 @@ class FormHelper {
     }
     
     public function getMags() {        
-        $arr1 = array( '20X'=>'20X', '40X'=>'40X' );
-        $arr = array( '20X', '40X' );
+        $arr = array( '20X'=>'20X', '40X'=>'40X' );
+        $arr1 = array( '20X', '40X' );
         
         return $arr;
     }

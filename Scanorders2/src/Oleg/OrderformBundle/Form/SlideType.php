@@ -18,11 +18,9 @@ class SlideType extends AbstractType
         
         //$builder->add( 'block', new BlockType(), array('label'=>' ') );             
         
-        $builder->add( 'stain', new StainType(), array('label'=>' ') ); 
+        $builder->add( 'stain', new StainType(), array('label'=>'Stain:') ); 
         
-        $builder->add( 'scan', new ScanType(), array(
-                    //'label'=>' '
-        )); 
+        $builder->add( 'scan', new ScanType(), array('label'=>'Scan:') ); 
                     
         $builder->add('diagnosis', 'textarea', array(
                 'max_length'=>10000,

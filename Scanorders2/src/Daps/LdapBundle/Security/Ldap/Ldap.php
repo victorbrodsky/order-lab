@@ -280,6 +280,7 @@ class Ldap implements LdapInterface
             if ($this->getUseSsl()) {
                 $host = 'ldaps://' . $host;
             }
+            //echo "host=".$host."<br>";
             $this->connection = ldap_connect($host, $this->getPort());
             
             ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, $this->getVersion());
@@ -293,6 +294,9 @@ class Ldap implements LdapInterface
                 if ( ($this->adminDn === null) || ($this->adminPassword === null) ) {
                     throw new ConnectionException('Admin bind required but credentials not provided. Please see ldapcredentials.yml.');
                 }
+//                echo "conn=".$this->connection."<br>";
+//                echo "adminDn=".$this->adminDn."<br>";
+//                echo "adminPassword=".$this->adminPassword."<br>";
                 if (false === @ldap_bind($this->connection, $this->adminDn, $this->adminPassword)) {
                     throw new ConnectionException('Admin bind credentials incorrect. Please see ldapcredentials.yml or review your LDAP configurations.');
                 }

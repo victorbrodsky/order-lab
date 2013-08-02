@@ -14,14 +14,23 @@ class PartRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processPart( $part ) {  
+    public function processEntity( $part ) {  
         
         $entity = $this->findOneBy( array(
-            'name' => $part->getName(),
-            'accession' => $part->getAccession()
+            'name' => $part->getName()
+            //'accession' => $part->getAccession()
         ));
         
-        if (!$entity) {        
+        //check if accession is the same or new
+//        $accNum = $part->getAccession()->getAccession();
+//        $accession = $em->getRepository('Accession')->findOneBy( array(          
+//            'accession' => $accNum
+//        ));
+        
+        
+        
+        //if( $accession->getPart()->getName() != $part->getName() ) { 
+        if( !entity ) {
             //create new entity           
             $em = $this->_em;
             $em->persist($part);

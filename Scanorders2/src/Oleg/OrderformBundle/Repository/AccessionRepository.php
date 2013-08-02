@@ -3,7 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Entity\Accession;
+//use Oleg\OrderformBundle\Entity\Accession;
 
 /**
  * AccessionRepository
@@ -13,7 +13,7 @@ use Oleg\OrderformBundle\Entity\Accession;
 class AccessionRepository extends EntityRepository {
     
     //this function will create an accession if it doesn't exist or return the existing accession object
-    public function processAccession( $accession ) { 
+    public function processEntity( $accession ) { 
         
         $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
         

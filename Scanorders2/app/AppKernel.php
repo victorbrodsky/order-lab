@@ -17,8 +17,10 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
+            //LDAPs
 //            new IMAG\LdapBundle\IMAGLdapBundle(),
             new Daps\LdapBundle\DapsLdapBundle(),
+//            new Ztec\Security\ActiveDirectoryBundle\ZtecSecurityActiveDirectoryBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

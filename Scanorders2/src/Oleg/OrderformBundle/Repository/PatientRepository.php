@@ -12,4 +12,26 @@ use Doctrine\ORM\EntityRepository;
  */
 class PatientRepository extends EntityRepository
 {
+    //make sure the uniqueness entity. Make new or return id of existing.
+    public function processEntity( $in_entity ) { 
+        
+        //set up unknown patient
+        if( $in_entity->getMrn() == "" || $in_entity->getMrn() == null ) {
+            $in_entity->setMrn('000');
+        }
+        
+        $entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
+        
+        if( !$entity ) {        
+            //create new                                      
+            $em = $this->_em;
+            $em->persist($in_entity);
+            $em->flush();
+            
+            return $in_entity;
+        } 
+        
+        return $entity;
+    }
+    
 }

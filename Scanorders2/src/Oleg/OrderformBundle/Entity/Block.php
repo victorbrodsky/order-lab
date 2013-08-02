@@ -58,20 +58,12 @@ class Block
         return $this->id;
     }
 
-    public function getAccession() {
-        return $this->accession;
-    }
-
     public function getName() {
         return $this->name;
     }
 
     public function setId($id) {
         $this->id = $id;
-    }
-
-    public function setAccession($accession) {
-        $this->accession = $accession;
     }
 
     public function setName($name) {
@@ -86,6 +78,7 @@ class Block
      */
     public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
+        $slide->setBlock($this);
         $this->slide[] = $slide;
     
         return $this;

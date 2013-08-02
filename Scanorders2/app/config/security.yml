@@ -4,6 +4,7 @@ security:
 #        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
 #        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
         Daps\LdapBundle\Security\User\LdapUser: plaintext
+#        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -14,7 +15,12 @@ security:
 #        webservice:
 #            id: webservice_user_provider
 #        daps_ldap:
-#            id: daps_ldap_user_provider
+#            id: daps_ldap_user_provider   
+#        ldap:
+#            id: imag_ldap.security.user.provider
+#        my_active_directory_provider:
+#            id: ztec.security.active.directory.user.provider
+            
         in_memory:
             memory:
                 users:
@@ -49,16 +55,20 @@ security:
 #            anonymous:  ~
     
         secured_area:
+#            active_directory: #Sames parameters as form_login
+#                check_path: login_check
+#                login_path: login
+          
             pattern:    ^/
 #            anonymous: ~           
-#            form-login-ldap: true           
+#            form-login-ldap: true             
             form_login:
                 login_path:  login
                 check_path:  login_check
 #                always_use_default_target_path: true           
             logout:
                 path:   /logout/
-                target: order
+                target: /
 
 #        secured_area:
 #            pattern:    ^/demo/secured/

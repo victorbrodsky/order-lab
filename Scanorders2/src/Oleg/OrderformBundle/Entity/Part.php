@@ -158,32 +158,32 @@ class Part
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Part
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide[] = $slide;
-    
-        return $this;
-    }
+//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        $this->slide[] = $slide;
+//    
+//        return $this;
+//    }
 
     /**
      * Remove slide
      *
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide->removeElement($slide);
-    }
+//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        $this->slide->removeElement($slide);
+//    }
 
     /**
      * Get slide
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
 
     /**
      * Add block
@@ -193,6 +193,7 @@ class Part
      */
     public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
     {
+        $block->setPart($this);
         $this->block[] = $block;
     
         return $this;

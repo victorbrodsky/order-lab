@@ -55,9 +55,12 @@ class Patient
     protected $clinicalHistory;
     
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="patient", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
+     * ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="patient", cascade={"persist"})
+     * ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
      */
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
+     **/
     protected $orderinfo; 
     
     /**
@@ -74,6 +77,7 @@ class Patient
      */
     public function __construct()
     {
+        $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -223,30 +227,7 @@ class Patient
     public function getClinicalHistory()
     {
         return $this->clinicalHistory;
-    }
-
-    /**
-     * Set orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Patient
-     */
-    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
-    {
-        $this->orderinfo = $orderinfo;
-    
-        return $this;
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Oleg\OrderformBundle\Entity\OrderInfo 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+    } 
 
     /**
      * Add specimen
@@ -279,5 +260,38 @@ class Patient
     public function getSpecimen()
     {
         return $this->specimen;
+    }
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Patient
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo[] = $orderinfo;
+    
+        return $this;
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
     }
 }

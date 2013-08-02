@@ -25,11 +25,7 @@ class ScanType extends AbstractType
                 'choices' => $helper->getMags(),
                 'required'=>true,
                 'data' => 0,              
-        ));        
-        
-        //$builder->add( 'slide', new SlideType(), array(
-                //'data_class' => null,
-        //));
+        ));                      
         
         $builder->add('note', 'textarea', array(
                 'max_length'=>5000,

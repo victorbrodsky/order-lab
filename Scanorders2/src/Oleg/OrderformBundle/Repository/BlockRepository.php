@@ -14,12 +14,12 @@ class BlockRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processBlock( $block ) {  
+    public function processEntity( $block ) {  
         
         $entity = $this->findOneBy( array(
             'name' => $block->getName(),
-            'part' => $block->getPart(),
-            'accession' => $block->getAccession()
+            'part' => $block->getPart()
+            //'accession' => $block->getPart()->getAccession()
         ));
         
         if (!$entity) {        

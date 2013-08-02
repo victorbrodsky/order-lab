@@ -3,8 +3,50 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3000c6ef216fd6b2065e52b425f46d1d",
+    "hash": "dea02c8fe7de9173f554ecb66e80d38f",
     "packages": [
+        {
+            "name": "adldap/adldap",
+            "version": "v4.0-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ztec/adLDAP.git",
+                "reference": "v4.0-stable"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ztec/adLDAP/zipball/v4.0-stable",
+                "reference": "v4.0-stable",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ldap": "*",
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "adLDAP": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU"
+            ],
+            "authors": [
+                {
+                    "name": "Richard Hyland"
+                }
+            ],
+            "description": "adLDAP, low-level library to query Active directory",
+            "homepage": "http://adldap.sourceforge.net",
+            "keywords": [
+                "active directory",
+                "ldap",
+                "windows"
+            ],
+            "time": "2012-11-02 02:12:46"
+        },
         {
             "name": "doctrine/common",
             "version": "2.3.0",
@@ -276,64 +318,6 @@
                 "orm"
             ],
             "time": "2013-05-11 07:51:12"
-        },
-        {
-            "name": "imag/ldap-bundle",
-            "version": "dev-master",
-            "target-dir": "IMAG/LdapBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/BorisMorel/LdapBundle.git",
-                "reference": "4557b9d24632d8690e36b7be880eb19071ff932f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/BorisMorel/LdapBundle/zipball/4557b9d24632d8690e36b7be880eb19071ff932f",
-                "reference": "4557b9d24632d8690e36b7be880eb19071ff932f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/symfony": ">2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "IMAG\\LdapBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "CeCILL"
-            ],
-            "authors": [
-                {
-                    "name": "Juti Noppornpitak",
-                    "email": "jutin@nationalfibre.net",
-                    "homepage": "https://github.com/instaclick",
-                    "role": "Fork Maintainer"
-                },
-                {
-                    "name": "Boris Morel",
-                    "email": "boris.morel@imag.fr",
-                    "homepage": "https://github.com/BorisMorel",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Shiroyuki",
-                    "homepage": "https://github.com/shiroyuki",
-                    "role": "Fork Maintainer"
-                },
-                {
-                    "name": "John Kary",
-                    "email": "john@johnkary.net",
-                    "homepage": "https://github.com/johnkary",
-                    "role": "Fork Maintainer"
-                }
-            ],
-            "description": "LDAP Bundle for Symfony 2",
-            "homepage": "http://github.com/BorisMorel/LdapBundle",
-            "time": "2013-06-27 15:17:58"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -1222,6 +1206,51 @@
                 "templating"
             ],
             "time": "2013-06-06 06:06:01"
+        },
+        {
+            "name": "ztec/security-active_directory",
+            "version": "dev-master",
+            "target-dir": "Ztec/Security/ActiveDirectoryBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ztec/ZtecSecurityActiveDirectoryBundle.git",
+                "reference": "ceddd7869f6704acd74e99cd255a1789e1f1bedf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ztec/ZtecSecurityActiveDirectoryBundle/zipball/ceddd7869f6704acd74e99cd255a1789e1f1bedf",
+                "reference": "ceddd7869f6704acd74e99cd255a1789e1f1bedf",
+                "shasum": ""
+            },
+            "require": {
+                "adldap/adldap": "v4.0-stable",
+                "php": ">=5.2.4"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Ztec\\Security\\ActiveDirectoryBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY"
+            ],
+            "authors": [
+                {
+                    "name": "Loïc Doubinine",
+                    "email": "ztec@riper.fr"
+                }
+            ],
+            "description": "This is a bundle to allow authentication into symfony >= 2.1 by an Active directory",
+            "homepage": "https://github.com/ztec/security-active_directory",
+            "keywords": [
+                "active directory",
+                "bundle",
+                "ldap",
+                "symfony"
+            ],
+            "time": "2013-07-23 15:55:36"
         }
     ],
     "packages-dev": [
@@ -1232,7 +1261,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "imag/ldap-bundle": 20
+        "ztec/security-active_directory": 20
     },
     "platform": {
         "php": ">=5.3.3"

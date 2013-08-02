@@ -97,8 +97,12 @@ class OrderInfo
     private $provider;
 
     /**
-     * @ORM\OneToMany(targetEntity="Patient", mappedBy="orderinfo", cascade={"persist"})
+     * ORM\OneToMany(targetEntity="Patient", mappedBy="orderinfo", cascade={"persist"})
      */
+    /**
+     * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="patient_orderinfo")
+     **/
     protected $patient;
 
     /**
@@ -296,7 +300,7 @@ class OrderInfo
      */
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {       
-        $patient->setOrderinfo($this);       
+        //$patient->setOrderinfo($this);       
         $this->patient[] = $patient;
         return $this;
     }
