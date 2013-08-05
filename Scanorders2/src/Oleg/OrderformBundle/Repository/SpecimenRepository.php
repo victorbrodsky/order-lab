@@ -13,15 +13,31 @@ use Doctrine\ORM\EntityRepository;
 class SpecimenRepository extends EntityRepository
 {
     
-    //Make new - no requirements for uniqueness.
-    public function processEntity( $in_entity ) { 
-                     
-        //create new           
+    //Accession number is the key to check uniqueness 
+    public function processEntity( $in_entity, $accession=null ) { 
+        
         $em = $this->_em;
-        $em->persist($in_entity);
-        $em->flush();
+        
+        if( $accession == null ) {         
+            $em->persist($in_entity);
+            $em->flush();
+            
+            return $in_entity;
+        }
+        
+        //if accession exists then return prcedure for this accession; otherwise, create a new
+        $accession_found = $em->getRepository('OlegOrderformBundle:Accession')->findOneBy( array(                    
+            'accession' => $accession->getAccession()                
+        ));
+        
+        if( $accession_found == null || $accession_found->getSpecimen() == null ) {
+            $em->persist($in_entity);
+            $em->flush();
+            
+            return $in_entity;
+        }           
 
-        return $in_entity;
+        return $accession_found->getSpecimen();
         
     }
     

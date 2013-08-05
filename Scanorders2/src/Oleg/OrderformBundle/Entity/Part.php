@@ -76,7 +76,7 @@ class Part
     
     /**
      * One Part has Many blocks
-     * Accession might have many slide s
+     * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="Block", mappedBy="part")
      */
     protected $block;

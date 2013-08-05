@@ -20,6 +20,7 @@ class BlockSlideType extends AbstractType
                 'choices' => $helper->getBlock(),
                 'required'=> true,
                 'data' => 0,
+                //'attr' => array('style' => 'width:20px'),
         ));
         
         $builder->add('slide', 'collection', array(

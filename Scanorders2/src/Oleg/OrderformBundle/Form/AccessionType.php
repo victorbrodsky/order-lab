@@ -14,9 +14,18 @@ class AccessionType extends AbstractType
         $builder->add( 'accession', 'text', array(
                 'label'=>'Accession#:', 
                 'max_length'=>100,
-                'required'=>true
+                'required'=>true,
+                'attr' => array('style' => 'width:100px'),
+        ));      
+        
+        $builder->add('date','date',array(
+            'widget' => 'single_text',
+            'format' => 'MM-dd-yyyy',
+            'attr' => array('class' => 'datepicker'),
+            'required' => false,
+            //'data' => new \DateTime(),
+            'label'=>'Accession Date:',
         ));
-        //$builder->add( 'date', null ,array('max_length'=>100,'required'=>false) );
         
     }
 

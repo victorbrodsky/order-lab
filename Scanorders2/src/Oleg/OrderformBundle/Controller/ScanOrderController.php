@@ -23,6 +23,8 @@ use Oleg\OrderformBundle\Form\BlockType;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
 
+use Oleg\OrderformBundle\Form\SlideMultiType;
+
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 //ScanOrder joins OrderInfo + Scan
@@ -46,9 +48,12 @@ class ScanOrderController extends Controller {
         //findAll();
         $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
                     findBy(array(), array('orderdate'=>'desc')); 
-               
+       
+        //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
+        
         return array(
-            'entities' => $entities,          
+            'entities' => $entities,  
+            //'slides' => $slides
         );
     }
     
@@ -91,28 +96,28 @@ class ScanOrderController extends Controller {
         $form_slide = $this->createForm(new SlideType(), $slide);
         $form_slide->bind($request);               
         
-//        $errorHelper = new ErrorHelper();
-//        $errors = $errorHelper->getErrorMessages($form);
-//        echo "<br>form errors:<br>";
-//        print_r($errors); 
-//        $errors = $errorHelper->getErrorMessages($form_patient);
-//        echo "<br>patient errors:<br>";
-//        print_r($errors); 
-//        $errors = $errorHelper->getErrorMessages($form_procedure);
-//        echo "<br>procedure errors:<br>";
-//        print_r($errors); 
-//        $errors = $errorHelper->getErrorMessages($form_accession);
-//        echo "<br>accession errors:<br>";
-//        print_r($errors);
-//        $errors = $errorHelper->getErrorMessages($form_part);
-//        echo "<br>part errors:<br>";
-//        print_r($errors);
-//        $errors = $errorHelper->getErrorMessages($form_block);
-//        echo "<br>block errors:<br>";
-//        print_r($errors);
-//        $errors = $errorHelper->getErrorMessages($form_slide);
-//        echo "<br>slide errors:<br>";
-//        print_r($errors);
+        $errorHelper = new ErrorHelper();
+        $errors = $errorHelper->getErrorMessages($form);
+        echo "<br>form errors:<br>";
+        print_r($errors); 
+        $errors = $errorHelper->getErrorMessages($form_patient);
+        echo "<br>patient errors:<br>";
+        print_r($errors); 
+        $errors = $errorHelper->getErrorMessages($form_procedure);
+        echo "<br>procedure errors:<br>";
+        print_r($errors); 
+        $errors = $errorHelper->getErrorMessages($form_accession);
+        echo "<br>accession errors:<br>";
+        print_r($errors);
+        $errors = $errorHelper->getErrorMessages($form_part);
+        echo "<br>part errors:<br>";
+        print_r($errors);
+        $errors = $errorHelper->getErrorMessages($form_block);
+        echo "<br>block errors:<br>";
+        print_r($errors);
+        $errors = $errorHelper->getErrorMessages($form_slide);
+        echo "<br>slide errors:<br>";
+        print_r($errors);
 //            
 //        echo "<br>stain type=".$slide->getStain()->getName()."<br>";
 //        echo "scan mag=".$slide->getScan()->getMag()."<br>";        
@@ -127,33 +132,50 @@ class ScanOrderController extends Controller {
         ) {
             $em = $this->getDoctrine()->getManager();                            
             
+            $entity->setStatus("submitted"); 
+            $entity->setType("single");   
+            
             //procedure/specimen: none
             //$procedure->addProcedure($accession);
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
             $entity->addPatient($patient);
+            //$em->persist($entity);          
+            //$em->flush();
             
-            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure );
+            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, $accession );
             $patient->addSpecimen($procedure);
+            //$em->persist($patient); 
+            //$em->persist($procedure);
+            //$em->flush();
             
             $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
-            $procedure->addAccession($accession);
+            $procedure->addAccession($accession); 
+            //$em->persist($accession);          
+            //$em->flush();
             
-            $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part );
+            $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession );
             $accession->addPart($part);
+            //$em->persist($part);          
+            //$em->flush();
             
-            $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block );
+            $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part );
             $part->addBlock($block);
+            //$em->persist($block);          
+            //$em->flush();
             
             $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
             $block->addSlide($slide);
-                      
+            $entity->addSlide($slide);
+            $accession->addSlide($slide);
+            //$em->persist($slide);          
+            //$em->flush();          
             
             //patient: mrn           
             //$patient->addSpecimen($procedure);
    
             //orderinfo: status, type, priority, slideDelivery, returnSlide, provider
-            $entity->setStatus("submitted"); 
-            $entity->setType("single");   
+            //$entity->setStatus("submitted"); 
+            //$entity->setType("single");   
             
                            
             //$scan_entity->setStatus("submitted");
@@ -179,11 +201,11 @@ class ScanOrderController extends Controller {
 //            $scan_entity->getSlide()->setBlock($block);        
 
             //TODO: i.e. if part's field is updated then add options to detect and update it.
-          
-            $em->persist($entity);
+                    
             //$em->persist($patient);
             //$em->persist($procedure);
             
+            $em->persist($entity);
             $em->flush();
 
             $this->get('session')->getFlashBag()->add(
@@ -206,6 +228,76 @@ class ScanOrderController extends Controller {
         );
     }
 
+    //////////// test slide multi
+    /**
+     * Creates a new OrderInfo entity.
+     *
+     * @Route("/multy", name="multy_create")
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
+     */
+    public function multyCreateAction(Request $request)
+    { 
+        //echo "scanorder createAction";
+        $entity  = new OrderInfo();
+        $form = $this->createForm(new SlideMultiType(), $entity);
+        $form->bind($request);
+        
+//        $patient  = new Patient();
+//        $form_patient = $this->createForm(new PatientType(), $patient);
+//        $form_patient->bind($request);
+    
+        if( $form->isValid() ) {
+            
+            $em = $this->getDoctrine()->getManager();                            
+            
+            $entity->setStatus("submitted"); 
+            $entity->setType("single");   
+            
+            //procedure/specimen: none
+            //$procedure->addProcedure($accession);
+            foreach( $entity->getPatient() as $patient ) { 
+                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
+                //$entity->addPatient($patient);
+            }
+            
+            $em->persist($entity);         
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You successfully submit a scan request! Confirmation email sent!'
+            );
+            
+            return $this->redirect( $this->generateUrl('multy_new') );
+        }
+        
+        
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+        );    
+    }    
+    
+    /**
+     * Displays a form to create a new OrderInfo + Scan entities.
+     *
+     * @Route("/multy", name="multy_new")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
+     */
+    public function newMultiAction()
+    {         
+        $entity = new OrderInfo();      
+        $form   = $this->createForm( new SlideMultiType(), $entity );  
+        
+        return array(          
+            'form' => $form->createView(),          
+        );
+    }
+    
+    //////////////
+    
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *

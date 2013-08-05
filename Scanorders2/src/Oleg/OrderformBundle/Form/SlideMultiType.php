@@ -8,29 +8,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
-class OrderInfoType extends AbstractType
+class SlideMultiType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    {      
         $helper = new FormHelper();
         
-        $multi = false;
-        
-        $builder->add( 'type', 'hidden' ); 
-        
-        if( $multi ) {          
-            $builder->add('patient', 'collection', array(
-                'type' => new PatientType(),
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'label' => "Patient Entity:",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__patient__',
-            ));                  
-        }
-        
+        //usual orderinfo
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 
                 'max_length'=>'200', 
@@ -79,7 +63,28 @@ class OrderInfoType extends AbstractType
             'data' => new \DateTime(),
             'label'=>'Scan Deadline:',
         ));
+        ////////
         
+        
+//        $builder->add( 'accession', new AccessionType(), array('label'=>'Accession:') );
+//        $builder->add('name', 'text', array(
+//            'max_length'=>3,
+//            'required'=>true,
+//            'label'=>'Block'
+//        ));
+        //$builder->add( 'scan', new ScanType(), array('label'=>'Scan:') );
+        //$builder->add( 'stain', new StainType(), array('label'=>'Stain:') );
+        
+        $builder->add('patient', 'collection', array(
+            'type' => new PatientType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__slide__',
+        ));
         
     }
 
@@ -92,6 +97,6 @@ class OrderInfoType extends AbstractType
 
     public function getName()
     {
-        return 'oleg_orderformbundle_orderinfotype';
+        return 'multislide';
     }
 }

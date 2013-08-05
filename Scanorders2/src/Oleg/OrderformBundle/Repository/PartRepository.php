@@ -14,32 +14,44 @@ class PartRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $part ) {  
+    public function processEntity( $part, $accession=null ) {  
         
-        $entity = $this->findOneBy( array(
-            'name' => $part->getName()
-            //'accession' => $part->getAccession()
-        ));
+        $em = $this->_em;
         
-        //check if accession is the same or new
-//        $accNum = $part->getAccession()->getAccession();
-//        $accession = $em->getRepository('Accession')->findOneBy( array(          
-//            'accession' => $accNum
-//        ));
-        
-        
-        
-        //if( $accession->getPart()->getName() != $part->getName() ) { 
-        if( !entity ) {
-            //create new entity           
-            $em = $this->_em;
+        if( $accession == null ) {      
             $em->persist($part);
             $em->flush();
             
             return $part;
-        } 
+        }
         
-        return $entity;
+        //check if accession already has part with the same name. TODO: is it correct to find by part as an object
+//        $accession_found = $em->getRepository('OlegOrderformBundle:Accession')->findOneBy( array(
+//            'accession' => $accession->getAccession(),
+//            'part' => $part
+//        ));
+        $part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneBy( array(
+            'accession' => $accession,
+            'name' => $part->getName()
+        ));
+        
+        
+        if( $part_found == null ) {
+            $em->persist($part);
+            $em->flush();
+            
+            return $part;
+        }
+        
+        if( $part_found->getName() != $part->getName() ) {
+            $em->persist($part);
+            $em->flush();
+            
+            return $part;
+        }
+        
+        
+        return $part_found; 
     }
     
 }

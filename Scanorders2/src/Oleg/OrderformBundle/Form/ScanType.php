@@ -20,12 +20,15 @@ class ScanType extends AbstractType
         
         $builder->add( 'mag', 
                 'choice', array(  
-                'label'=>'* Magnification:',
-                'max_length'=>50,
+                'label' => '* Magnification:',
+                //'max_length'=>50,
                 'choices' => $helper->getMags(),
-                'required'=>true,
-                'data' => 0,              
-        ));                      
+                'required' => false,
+                'data' => '20X',
+                'multiple' => false,
+                'expanded' => true,
+                'attr' => array('class' => 'horizontal_type')              
+        ));                       
         
         $builder->add('note', 'textarea', array(
                 'max_length'=>5000,

@@ -2,149 +2,254 @@
 
 {% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
-{#{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}#}
+{#{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}    #}
+{#{% form_theme form 'OlegOrderformBundle:Default:form_table_layout.html.twig' %}#}
+
 
 {% block content %} 
-{% block body -%}
-
-    <h1>New Single-Scan Order Form</h1>
+{#{% block body -%}#}
+    <div class="row">
+    <div class="span12">
+    <h3>New Single-Scan Order Form</h3>
+    </div>
+    </div>
 
 {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
     
+    
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
                      
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
-        
+        {{ form_errors(form) }} 
         {{ form_errors(form_patient) }}
-        {{ form_widget(form_patient) }}
-        
         {{ form_errors(form_procedure) }}
-        {{ form_widget(form_procedure) }}
-        
         {{ form_errors(form_accession) }}
-        {{ form_widget(form_accession) }}
-        
         {{ form_errors(form_part) }}
-        {{ form_widget(form_part) }}
-        
         {{ form_errors(form_block) }}
-        {{ form_widget(form_block) }}
-        
         {{ form_errors(form_slide) }}
-        {{ form_widget(form_slide) }}
+     
+      
+        <div class="row">
+{#        <div class="col-lg-6">#}
+        <div class="span4">
+        {{ form_label(form_accession.accession, '* Accession + Part + Block') }} 
+        </div>
+{#        <div class="col-lg-6">#}
+        <div class="span4">
+        {{ form_widget(form_accession.accession) }}             
+        {{ form_widget(form_part.name) }}                   
+        {{ form_widget(form_block.name) }}
+        </div>
+        </div>
         
-        <p>
-            <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
-        </p>
+        <div class="row">
+{#        <div class="col-lg-3">#}
+        <div class="span4">
 
-        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>
-
+        {{ form_label(form_slide.stain.name) }}
+        </div>
+        <div class="span4">
+{#        <div class="col-lg-3">#}
+        {{ form_widget(form_slide.stain.name) }}
+        </div>    
+        </div>      
         
-{#       
-        <div class="slide_new"> 
-            {{ form_errors(form) }}
+        <div class="row">
+        <div class="span4">
+{#        <div class="col-lg-12">#}
+        {{ form_label(form_slide.scan.mag) }}
+        </div>
+        <div class="span4">
+{#        <div class="col-lg-12">#}
+        {{ form_widget(form_slide.scan.mag) }} 
+        </div>
+        </div>
+        
+        <div class="row">
+        <div class="span4">
+{#        <div class="col-lg-12">#}
+        {{ form_label(form_part.diagnosis) }}
+        </div>
+        <div class="span4">
+{#        <div class="col-lg-12">#}
+        {{ form_widget(form_part.diagnosis) }} 
+        </div>
+        </div>
             
-            {{ form_widget(form.type, {value : 'single'}) }}
-            
-            {{ form_label(form.accession.accession, '* Accession + Part + Block (i.e. S12-99998 B1)') }} 
-            {{ form_widget(form.accession.slide.accession) }}   
-            
-            {{ form_label(form_scan.slide.part.name) }}
-            {{ form_widget(form_scan.slide.part.name) }}        
-            {{ form_widget(form_scan.slide.block.name) }}          
-            
-            {{ form_label(form_scan.slide.stain.name) }}
-            {{ form_widget(form_scan.slide.stain.name) }}
-                      
-            {{ form_label(form_scan.mag) }}
-            {{ form_widget(form_scan.mag) }} 
-            
-            {{ form_label(form_scan.slide.part.diagnosis) }}
-            {{ form_widget(form_scan.slide.part.diagnosis) }} 
-            
-            {{ form_label(form_scan.note) }}
-            {{ form_widget(form_scan.note) }} 
-            
-            <div class="btn_margin_top">
-                <input type='button' id='next' value='Next' class="btn btn-primary btn-success">       
+        <div class="row">
+        <div class="span4">
+{#        <div class="col-lg-12">#}
+        {{ form_label(form_slide.scan.note) }}
+        </div>
+        <div class="span4">
+{#        <div class="col-lg-12">#}
+        {{ form_widget(form_slide.scan.note) }} 
+        </div>  
+        </div>
+    
+{#        <div class="btn_margin_top">#}
+{#            <input type='button' id='next' value='Next' class="btn btn-primary btn-success">       #}
+{#        </div>#}
+{#        <div class="buttons-full-bar"></div>#}
+        <div class="row">
+        <div class="span12">    
+            <button id="next_button" type="button" class="btn btn-success" 
+                    data-toggle="collapse" data-target="#orderinfo_param">
+                Next
+            </button>
+        </div>
+        </div>
+        
+        <div id="orderinfo_param" class="collapse">
+            <div class="row">
+            <div class="span12">
+            <h4>Scan Order Info</h4>   
+            </div>
+            </div>
+            <div class="row">
+            <div class="span4">
+            {{ form_label(form.provider) }}
+            </div>
+            <div class="span4">
+            {{ form_widget(form.provider) }} 
+            </div>
+            </div>
+            <div class="row">
+            <div class="span4">
+            {{ form_label(form.pathologyService) }}
+            </div>
+            <div class="span4">
+            {{ form_widget(form.pathologyService) }}
+            </div>
+            </div>
+                   
+            <div class="row">
+            <div class="span4">
+            {{ form_label(form.priority) }}
+            </div>
+            <div class="span4">
+            {{ form_widget(form.priority) }}
+            </div>
+            </div>
+{#            optional for priority#}
+            <div id="priority_option" class="collapse"> 
+                <div class="row">              
+                <div class="span4">
+                {{ form_label(form.scandeadline) }}
+                </div>            
+                <div class="span4">
+                {{ form_widget(form.scandeadline) }} 
+                </div>   
+                </div>    
+            </div>  
+                
+            <div class="row">
+            <div class="span4">
+            {{ form_label(form.slideDelivery) }}
+            </div>
+            <div class="span4">
+            {{ form_widget(form.slideDelivery) }}
+            </div>
+            </div>
+            <div class="row">
+            <div class="span4">
+            {{ form_label(form.returnSlide) }}
+            </div>
+            <div class="span4">
+            {{ form_widget(form.returnSlide) }}
+            </div>
+            </div>
+            <div class="row">
+            <div class="span12">
+                <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
+            </div>
+            </div> 
+        
+      
+        {#        The optional parameter    #}
+        <div class="row">
+        <div class="span12">
+        <button id="optional_button" type="button" class="btn btn_margin" data-toggle="collapse" data-target="#optional_param">
+            Options
+        </button>
+        </div>
+        </div>
+        
+        <div id="optional_param" class="collapse">
+                                           
+            <button type="button" class="btn" data-toggle="collapse" data-target="#patient">
+                Optional Parameters for Patient
+            </button>
+            <div id="patient" class="collapse">
+                {{ form_rest(form_patient) }}
             </div>
             
-            <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>
-            
-        </div>
+            <button type="button" class="btn" data-toggle="collapse" data-target="#procedure">
+                Optional Parameters for Procedure
+            </button>
+            <div id="procedure" class="collapse">
+                {{ form_rest(form_procedure) }}
+            </div>
+                        
+{#            {% if form_rest(form_accession) is not empty %}#}
+            <button type="button" class="btn" data-toggle="collapse" data-target="#accession">
+                Optional Parameters for Accession
+            </button>
+            <div id="accession" class="collapse">
+                {{ form_rest(form_accession) }}
+            </div>
+{#            {% endif %}#}
 
-        <div class="slide_new"> 
+            <button type="button" class="btn" data-toggle="collapse" data-target="#part">
+                Optional Parameters for Part
+            </button>
+            <div id="part" class="collapse">
+                {{ form_rest(form_part) }}
+            </div>
+{#           
+            {% if form_rest(form_block) is not empty %}
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#block">
+                Optional Parameters for Block
+            </button>
+            <div id="block" class="collapse">
+                {{ form_rest(form_block) }}
+            </div>
+            {% endif %}
+ #}                   
+            <button type="button" class="btn" data-toggle="collapse" data-target="#scan">
+                Optional Parameters for Scan
+            </button>
+            <div id="scan" class="collapse">
+                {{ form_rest(form_slide.scan) }}
+            </div>
             
-            <div id="orderinfo">
-                       
-            <h4>Scan Order Info</h4>           
-            {{ form_errors(form) }}           
-            {{ form_label(form) }}
-            {{ form_widget(form) }}
-                   
-            <p>
-                <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
-            </p>
+            <button type="button" class="btn" data-toggle="collapse" data-target="#stain">
+                Optional Parameters for Stain
+            </button>
+            <div id="stain" class="collapse">
+                {{ form_rest(form_slide.stain) }}
+            </div>
             
-        </div> 
+            <button type="button" class="btn" data-toggle="collapse" data-target="#slide">
+                Optional Parameters for Slide
+            </button>
+            <div id="slide" class="collapse">
+                {{ form_rest(form_slide) }}
+            </div>        
             
-        </div>    
-        
-        <div class="slide_new">                     
+            {# Just in case display rest of the form to prevent CRF error #}
+            {{ form_rest(form) }}
+            {{ form_rest(form_patient) }}
+            {{ form_rest(form_procedure) }}
+            {{ form_rest(form_accession) }}
+            {{ form_rest(form_part) }}
+            {{ form_rest(form_block) }}
+            {{ form_rest(form_slide) }}
             
-            <a id="optional_button" class="btn btn-mini" href="#">options</a>
-        
-            <div id="optional">
-            
-                {% if form_rest(form_scan.slide.accession) is not empty %}
-                    <h4>Optional Parameters for Accession</h4>
-                    {{ form_rest(form_scan.slide.accession) }} 
-                {% endif %}
-                 
-                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_part">
-                    Optional Parameters for Part
-                </button>
-                <div id="slide_part" class="collapse">
-                    {{ form_rest(form_scan.slide.part) }}
-                </div>
-
-                {% if form_rest(form_scan.slide.block) is not empty %}
-                    <h4>Optional Parameters for Block</h4>
-                    {{ form_rest(form_scan.slide.block) }} 
-                {% endif %}
-
-                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_stain">
-                    Optional Parameters for Stain
-                </button>
-                <div id="slide_stain" class="collapse">
-                    {{ form_rest(form_scan.slide.stain) }} 
-                </div>
-
-                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_slide">
-                    Optional Parameters for Slide
-                </button>
-                <div id="slide_slide" class="collapse">
-                    {{ form_rest(form_scan.slide) }} 
-                </div>
-                    
-                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#slide_scan">
-                    Optional Parameters for Scan
-                </button>
-                <div id="slide_scan" class="collapse">
-                    {{ form_rest(form_scan) }} 
-                </div>                               
-                    
-                {% if form_rest(form_scan) is not empty and form_rest(form) is not empty%}
-                    <h4>All Other Parameters</h4> 
-                    {{ form_rest(form) }} 
-                    {{ form_rest(form_scan) }}
-                {% endif %}
-            </div> 
-            
-        </div>
-
-  #}      
-    </form>        
-{% endblock %}
+        </div>     
+       </div>      
+{#        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>#}
+           
+    </form>
+    
+{#{% endblock %}#}
 {% endblock %} 

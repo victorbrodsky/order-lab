@@ -17,7 +17,7 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>#Scans</th>
+                <th>#Slides</th>
                 <th>Order Date</th>
                 <th>Status</th>              
                 <th>Priority</th>               
@@ -31,7 +31,18 @@
             <tr>
                 <td><a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>
-                    {{ entity.scan.count }}
+                    {{ entity.slide.count }}:
+{#                    {% for patient in entity.patient %}#}
+{#                        {{ patient.specimen }}#}
+{#                        {% for specimen in patient.specimen %}#}
+{#                            {{ specimen.proceduretype }}#}
+{#                        {%endfor%}#}
+{#                    {% endfor %}#}
+                    {% for slide in entity.slide %}
+                        acc:{{ slide.accession }}
+                        part:{{ slide.block.part }}
+                        block:{{ slide.block }}                    
+                    {% endfor %}
                 </td>
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ entity.status }}</td>

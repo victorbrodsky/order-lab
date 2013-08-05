@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * OrderInfo might have many slides
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
@@ -106,11 +108,19 @@ class OrderInfo
     protected $patient;
 
     /**
+     * Order is about the slides, so include slides. 
+     * By this, we can get fast how many slides in this order
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo")
+     */
+    protected $slide;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->patient = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->patient = new ArrayCollection();
+        $this->slide = new ArrayCollection();
     }
     
     /**
@@ -327,5 +337,39 @@ class OrderInfo
     
     public function setPatient($patient) {
         $this->patient = $patient;
+    }
+
+    /**
+     * Add slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return OrderInfo
+     */
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $slide->setOrderinfo($this);
+        $this->slide[] = $slide;
+    
+        return $this;
+    }
+
+    /**
+     * Remove slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     */
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $this->slide->removeElement($slide);
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSlide()
+    {
+        return $this->slide;
     }
 }

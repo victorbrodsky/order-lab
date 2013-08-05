@@ -20,16 +20,21 @@ class BlockType extends AbstractType
                 'choices' => $helper->getBlock(),
                 'required'=> true,
                 'data' => 0,
+                'attr' => array('style' => 'width:70px'),
         ));
         
         $builder->add('slide', 'collection', array(
             'type' => new SlideType(),
             'allow_add' => true,
-            'label' => "Slide Entity:",
-            //'by_reference' => false,
-            //'prototype' => true,
-            //'prototype_name' => '__name__',
+            'allow_delete' => true,
+            'required' => false,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__slide__',
         ));
+        
+        
         
     }
 

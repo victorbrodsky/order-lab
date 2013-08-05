@@ -2,19 +2,34 @@
     Created on : Jul 17, 2013, 1:12:10 PM
     Author     : oli2002
 */
+//input, label {
+    //display: inline;
+    //display: inline-block;
+    //width: 50px;
+//}
+
+.horizontal_type {
+    padding-bottom: 5%;
+}
+.horizontal_type LABEL, .horizontal_type INPUT {
+    display: inline;
+    padding-right: 5%;
+}
+
 .flash-notice {
   color: #0081c2;
   font-size: 200%;
-  margin-top: 3%
+  margin-top: 3%;
 }
 
-.order-content {
+.page-content {
     padding-left: 5%;
     padding-right: 5%;
     padding-top: 0%;
     padding-bottom: 5%;
     float: left;
-    width: 100%;
+    width: 90%;
+    text-align: center;
 }
 
 .header {
@@ -22,8 +37,10 @@
     width: 100%;
 }
 
-.page-content {
-    margin-top: 5%;
+.order-content {
+    margin-top: 10%;
+    /*float: left;*/
+    /*width: 100%;*/
 }
 
 .footer {
@@ -32,8 +49,15 @@
     width: 100%;
 }
 
-.btn_margin_top {
+.form_label_input {
+    float: left;
+    width: 100%;
     margin-top: 2%;
+}
+
+.btn_margin {
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .slide_new {
@@ -46,8 +70,12 @@
     width: 100%;
 }
 
-.action-button {
+/*.action-button {
     float: left;
+}*/
+
+#next_button {
+    margin-top: 2%; 
 }
 
 .buttons-full-bar {

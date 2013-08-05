@@ -20,6 +20,7 @@ class PartType extends AbstractType
             'label'=>' ',
             'max_length'=>'3',
             'data' => 0,
+            'attr' => array('style' => 'width:70px'),
         ));      
         
         $builder->add( 'sourceOrgan', 'text', array(

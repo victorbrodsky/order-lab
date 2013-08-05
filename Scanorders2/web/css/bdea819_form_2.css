@@ -2,6 +2,15 @@
     Created on : Jul 17, 2013, 1:12:10 PM
     Author     : oli2002
 */
+//input, label {
+    //display: inline;
+    //display: inline-block;
+    //width: 50px;
+//}
+input[type=radio] {
+    display: inline;
+}
+
 .flash-notice {
   color: #0081c2;
   font-size: 200%;
@@ -35,10 +44,10 @@
     width: 100%;
 }
 
-.horizontal_type {
-   display: inline;
-   text-align: center;
-   margin: 0 500px;
+.form_label_input {
+    float: left;
+    width: 100%;
+    margin-top: 2%;
 }
 
 .btn_margin_top {
@@ -58,6 +67,10 @@
 /*.action-button {
     float: left;
 }*/
+
+#next_button {
+    margin-top: 2%; 
+}
 
 .buttons-full-bar {
     margin-bottom: 2%;

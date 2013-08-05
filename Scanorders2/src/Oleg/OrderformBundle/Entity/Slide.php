@@ -50,6 +50,21 @@ class Slide
     protected $block;  
     
     /**
+     * Keep info about orderinfo, so we can get quickly how many slides in this orderinfo
+     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
+     */
+    protected $orderinfo; 
+    
+    /**
+     * Keep info about accession, so we can get quickly how many slides in this accession
+     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
+     * @Assert\NotBlank
+     */
+    protected $accession;  
+    
+    /**
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
     protected $diagnosis; 
@@ -244,5 +259,51 @@ class Slide
     public function getBarcode()
     {
         return $this->barcode;
+    }
+    
+    /**
+     * Set orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Slide
+     */
+    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
+    {
+        $this->orderinfo = $orderinfo;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Oleg\OrderformBundle\Entity\OrderInfo 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
+
+    /**
+     * Set accession
+     *
+     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @return Slide
+     */
+    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
+    {
+        $this->accession = $accession;
+    
+        return $this;
+    }
+
+    /**
+     * Get accession
+     *
+     * @return \Oleg\OrderformBundle\Entity\Accession 
+     */
+    public function getAccession()
+    {
+        return $this->accession;
     }
 }

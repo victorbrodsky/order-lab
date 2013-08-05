@@ -53,9 +53,16 @@ class Accession {
      * @ORM\OneToMany(targetEntity="Part", mappedBy="accession")
      */
     protected $part;
+    
+    /**
+     * Accession might have many slides
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession", cascade={"persist"})
+     */
+    protected $slide;
       
     public function __construct() {
-        $this->part = new ArrayCollection();       
+        $this->part = new ArrayCollection(); 
+        $this->slide = new ArrayCollection();
     }
       
     public function __toString()
@@ -176,4 +183,38 @@ class Accession {
         return $this->part;
     }
 
+
+    /**
+     * Add slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return Accession
+     */
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $slide->setAccession($this);
+        $this->slide[] = $slide;
+    
+        return $this;
+    }
+
+    /**
+     * Remove slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     */
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $this->slide->removeElement($slide);
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSlide()
+    {
+        return $this->slide;
+    }
 }

@@ -4,6 +4,7 @@
     {% stylesheets 
         '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
         '@OlegOrderformBundle/Resources/public/form/css/form.css'
+        '@OlegOrderformBundle/Resources/public/datepicker/css/*'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}   
@@ -16,72 +17,74 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}    
     
-    <head>
-        
-    <div class="order-content">            
-        
-        {% block head %}
-                                                                
-                
-            <title>{% block title %}{% endblock %} - Scan Order</title>                   
-           
-            {% if app.user %}        
-                <div class="alert alert-info span2 text-center">Welcome {{ app.user.username }} !</div>
-            {% else %}                           
-{#                {% include 'OlegOrderformBundle:Security:login_modal.html.twig' %} #}
-            {% endif %}
-            
-        {% endblock %}
-    </head>
-    <body>
-        
-        <div id="header">
-            {% block header %}
-{#                <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
-            {% endblock %}
-                           
-            {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}             
-                
-        </div>
-        {#   div header   #}
+<head>
+   {% block head %}                                                                       
+        <title>{% block title %}{% endblock %} - Scan Order</title>                                              
+    {% endblock %}
+</head> 
              
+<body>
+
+    <div class="page-content"> 
+
+    {% if app.user %}        
+        <div class="alert alert-info span2 text-center">
+            Welcome {{ app.user.username }} !
+        </div>
+    {% else %}                           
+        {#  {% include 'OlegOrderformBundle:Security:login_modal.html.twig' %} #}
+    {% endif %}
+
+    <div id="header">
+        {% block header %}
+{#                <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+        {% endblock %}
+
+        {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}             
+
+    </div>
+    {#   div header   #}
+
+    <div class="order-content">
+        
         {% for flashMessage in app.session.flashbag.get('notice') %}
             <div class="flash-notice">
                 {{ flashMessage }}
             </div>
         {% endfor %}
         
-        <div class="page-content">{% block content %}{% endblock %}</div>
+        {% block content %}{% endblock %}
         
-        <div id="footer" class="footer">
-            {% block footer %}
-                &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
-            {% endblock %}
-        </div>                   
-        
-    
-                                                
-    {% javascripts 
-        '@OlegOrderformBundle/Resources/public/jquery/*'
-        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
-        '@OlegOrderformBundle/Resources/public/form/js/*'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}     
-
-    
-        {# Bootstrap Combobox #} 
-        {% javascripts                   
-            '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}                    
-        {# Bootstrap Combobox #}             
-        
-         
-        
-    </body>
-    
     </div>
-    
+
+    <div id="footer" class="footer">
+        {% block footer %}
+            &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
+        {% endblock %}
+    </div>                   
+
+
+
+{% javascripts 
+    '@OlegOrderformBundle/Resources/public/jquery/*'
+    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
+    '@OlegOrderformBundle/Resources/public/form/js/*'
+    '@OlegOrderformBundle/Resources/public/datepicker/js/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}     
+
+
+    {# Bootstrap Combobox #} 
+    {% javascripts                   
+        '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}                    
+    {# Bootstrap Combobox #}             
+
+    </div>
+
+</body>
+         
 </html>

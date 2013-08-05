@@ -7,10 +7,11 @@
     <a class="brand" href="#">Scan Orders</a>
     <div class="nav-collapse">
         <ul class="nav">
-            <li class="divider-vertical order"><a href="{{ path('orderinfo_new') }}">One Slide</a></li>
+            <li class="divider-vertical order"><a href="{{ path('scanorder_new') }}">One Slide</a></li>
             <li class="divider-vertical orderinfo"><a href="{{ path('orderinfo_new') }}">Clinical Multi-Slide</a></li>                       
             <li class="divider-vertical accession"><a href="{{ path('orderinfo') }}">Educational Multi-Slide</a></li>
             <li class="divider-vertical order1"><a href="{{ path('orderinfo') }}">Research Multi-Slide</a></li>
+            <li class="divider-vertical order1"><a href="{{ path('show') }}">My Orders</a></li>
             
             {% if app.user %}
                 <li class="divider-vertical order1"><a href="{{ path('logout') }}">Logout</a></li>

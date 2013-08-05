@@ -15,18 +15,21 @@ class PatientType extends AbstractType
         
         $builder->add( 'mrn', 'text', array(
                 'label'=>'MRN:', 
-                'max_length'=>100,'required'=>false
+                'max_length'=>100,
+                'required'=>false
         ));
         
         $builder->add( 'name', 'text', array(
                 'label'=>'Name:', 
-                'max_length'=>500,'required'=>false
+                'max_length'=>500,
+                'required'=>false
         ));
         
         
         $builder->add( 'age', 'text', array(
                 'label'=>'Age:', 
-                'max_length'=>3,'required'=>false
+                'max_length'=>3,
+                'required'=>false
         ));               
         
         $builder->add( 'sex', 'choice', array(
@@ -38,8 +41,11 @@ class PatientType extends AbstractType
         ));
              
         $builder->add( 'dob', 'date', array(
-                'label'=>'DOB:', 
-                'required'=>false
+                'label'=>'DOB:',
+                'widget' => 'single_text',
+                'required'=>false,
+                'format' => 'MM-dd-yyyy',
+                'attr' => array('class' => 'datepicker'),
         ));
         
         $builder->add( 'clinicalHistory', 'textarea', array(
@@ -51,6 +57,7 @@ class PatientType extends AbstractType
         if( $multi ) {         
             $builder->add('specimen', 'collection', array(
                 'type' => new SpecimenType(),
+                'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'label' => "Specimen:",

@@ -2,20 +2,13 @@
 $(document).ready(function() {
     $('.combobox').combobox();
     $("#orderinfo").hide();
-    $("#optional_button").hide();
-    $("#optional").hide();
+    $("#optional_button").hide();   
 
-    $('#next').on('click', function(event) {        
-       $('#orderinfo').toggle('next');
-       $("#next").hide();
+    $('#next_button').on('click', function(event) {        
+       $("#next_button").hide();
        $("#optional_button").show();
     });
-    
-    
-    $('#optional_button').on('click', function(event) {        
-         $('#optional').toggle('show');
-    });
-     
+        
     //TODO: fix it
 //    $('.navbar li a').on('click', function() {
 //        $(this).parent().parent().find('.active').removeClass('active');

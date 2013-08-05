@@ -25,11 +25,11 @@ framework:
 # Twig Configuration
 twig:
     form:
-      resources: ['form_table_layout.html.twig']
+      resources: ['form_div_layout.html.twig']
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    form: 
-      resources: ['form_table_layout.html.twig']
+#    form: 
+#      resources: ['form_table_layout.html.twig']
 
 # Assetic Configuration
 assetic:

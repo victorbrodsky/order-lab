@@ -14,25 +14,54 @@ class BlockRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $block ) {  
+    public function processEntity( $block, $part=null ) {  
         
-        $entity = $this->findOneBy( array(
-            'name' => $block->getName(),
-            'part' => $block->getPart()
-            //'accession' => $block->getPart()->getAccession()
-        ));
+        $em = $this->_em;
         
-        if (!$entity) {        
-            //create new entity           
-            $em = $this->_em;
+        if( $part == null ) {         
             $em->persist($block);
             $em->flush();
             
             return $block;
-        } 
+        }
         
+        //Check if the part has the block with the same name    
+        $query = $em->createQuery(
+            'SELECT b FROM OlegOrderformBundle:Block b
+            JOIN b.part p
+            JOIN p.accession a
+            WHERE p = :part AND b.name = :bname AND a = :acc'
+        )->setParameters( array(
+            'part' => $part,
+            'bname' => $block->getName(),
+            'acc' => $part->getAccession()
+        ));
         
-        return $entity;
+        //Check if the part has the block with the same name    
+//        $query = $em->createQuery(
+//            'SELECT b FROM OlegOrderformBundle:Block b
+//            JOIN b.part p
+//            WHERE p = :part AND b.name = :bname'
+//        )->setParameters( array(
+//            'part' => $part,
+//            'bname' => $block->getName()
+//        ));
+
+        $block_found =  $query->getResult();
+                  
+        if( $block_found == null ) {
+            $em->persist($block);
+            $em->flush();
+            
+            return $block;
+        }
+        
+//        echo "block found ".count($block_found).":<br>";
+//        echo "id=".$block_found->getId()." name=".$block_found->getName();
+//        exit();
+        
+       //anyway we should get only one block found 
+       return $block_found[0];     
     }
     
 //    public function getByAccession( $accession_number ) { 

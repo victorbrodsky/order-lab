@@ -26,6 +26,9 @@ php app/console generate:doctrine:crud --entity=OlegOrderformBundle:Accession --
 php app/console doctrine:database:create
 4) Create tables:
 php app/console doctrine:schema:update --force
+5) Recreate DB:
+php app/console doctrine:database:drop --force
+php app/console doctrine:database:create
 
 # Create Symfony project (cd to htdocs/order)
 1) create git repository from remote server (bitbucket):
