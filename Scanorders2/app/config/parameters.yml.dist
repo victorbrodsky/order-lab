@@ -7,9 +7,9 @@ parameters:
     database_password: ~
 
     mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    mailer_host:       outlook.med.cornell.edu
+    mailer_user:       oli2002@med.cornell.edu
+    mailer_password:   Cinava1210
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt

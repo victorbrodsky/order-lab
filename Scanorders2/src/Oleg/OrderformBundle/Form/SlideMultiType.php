@@ -83,7 +83,7 @@ class SlideMultiType extends AbstractType
             'label' => " ",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__slide__',
+            'prototype_name' => '__patient__',
         ));
         
     }

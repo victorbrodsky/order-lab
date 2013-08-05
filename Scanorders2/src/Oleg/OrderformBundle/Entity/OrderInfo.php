@@ -69,7 +69,8 @@ class OrderInfo
     private $scandeadline;
     
     /**
-     * @ORM\Column(name="returnoption", nullable=true, type="datetime")
+     * Return slide(s) by this date even if not scanned
+     * @ORM\Column(name="returnoption", type="boolean")
      */
     private $returnoption;
 

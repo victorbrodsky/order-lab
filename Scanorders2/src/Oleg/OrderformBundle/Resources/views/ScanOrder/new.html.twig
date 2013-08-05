@@ -132,14 +132,27 @@
             </div>
 {#            optional for priority#}
             <div id="priority_option" class="collapse"> 
+{#            <div class="oleg_padding_top_bottom text-info">#}
+            <div class="well">
+                
                 <div class="row">              
-                <div class="span4">
+                <div class="span4">              
                 {{ form_label(form.scandeadline) }}
                 </div>            
                 <div class="span4">
                 {{ form_widget(form.scandeadline) }} 
                 </div>   
                 </div>    
+                
+                <div class="row">              
+                <div class="span4">
+                {{ form_label(form.returnoption) }}
+                </div>            
+                <div class="span4">
+                {{ form_widget(form.returnoption) }} 
+                </div>   
+                </div>    
+            </div>    
             </div>  
                 
             <div class="row">

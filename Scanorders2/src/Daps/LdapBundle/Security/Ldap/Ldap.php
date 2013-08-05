@@ -290,6 +290,9 @@ class Ldap implements LdapInterface
                 ldap_start_tls($this->connection);
             }
             
+            //Oleg
+            //return $this;
+            
             if ($this->enableAdmin) {
                 if ( ($this->adminDn === null) || ($this->adminPassword === null) ) {
                     throw new ConnectionException('Admin bind required but credentials not provided. Please see ldapcredentials.yml.');

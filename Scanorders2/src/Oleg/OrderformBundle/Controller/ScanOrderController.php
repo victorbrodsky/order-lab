@@ -38,7 +38,7 @@ class ScanOrderController extends Controller {
     /**
      * Lists all OrderInfo entities.
      *
-     * @Route("/index", name="show")
+     * @Route("/index", name="index")
      * @Method("GET")
      * @Template()
      */
@@ -137,7 +137,7 @@ class ScanOrderController extends Controller {
             
             //procedure/specimen: none
             //$procedure->addProcedure($accession);
-            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
+            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );                       
             $entity->addPatient($patient);
             //$em->persist($entity);          
             //$em->flush();
@@ -164,50 +164,31 @@ class ScanOrderController extends Controller {
             //$em->flush();
             
             $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
+            $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
+            $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );        
             $block->addSlide($slide);
             $entity->addSlide($slide);
-            $accession->addSlide($slide);
-            //$em->persist($slide);          
-            //$em->flush();          
-            
-            //patient: mrn           
-            //$patient->addSpecimen($procedure);
-   
-            //orderinfo: status, type, priority, slideDelivery, returnSlide, provider
-            //$entity->setStatus("submitted"); 
-            //$entity->setType("single");   
-            
-                           
-            //$scan_entity->setStatus("submitted");
-            //$scan_entity->setOrderinfo($entity); 
-            
-            //get Accession, Part and Block. Create if they are not exist, or return them if they are exist.
-            //process accession. If not exists - create and return new object, if exists - return object                 
-//            $accession = $em->getRepository('OlegOrderformBundle:Accession')->
-//                            processEntity( $scan_entity->getSlide()->getAccession() );                         
-            //$scan_entity->getSlide()->setAccession($accession);          
-            
-            
-            
-//            $part = $scan_entity->getSlide()->getPart();
-//            $part->setAccession($accession);
-//            $part = $em->getRepository('OlegOrderformBundle:Part')->processPart( $part ); 
-//            $scan_entity->getSlide()->setPart($part);         
-            
-//            $block = $scan_entity->getSlide()->getBlock();
-//            $block->setAccession($accession);
-//            $block->setPart($part);
-//            $block = $em->getRepository('OlegOrderformBundle:Block')->processBlock( $block );                         
-//            $scan_entity->getSlide()->setBlock($block);        
-
-            //TODO: i.e. if part's field is updated then add options to detect and update it.
-                    
-            //$em->persist($patient);
-            //$em->persist($procedure);
+            $accession->addSlide($slide);          
             
             $em->persist($entity);
             $em->flush();
 
+            
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Hello Email')
+                ->setFrom('oli2002@med.cornell.edu')
+                ->setTo('oli2002@med.cornell.edu')
+                ->setBody(
+                    $this->renderView(
+                        'OlegOrderformBundle:ScanOrder:email.html.twig',
+                        array( 
+                            'order_id' => $entity->getId() 
+                        )
+                    )
+                )
+            ;
+            $this->get('mailer')->send($message);
+            
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You successfully submit a scan request! Confirmation email sent!'
@@ -238,29 +219,40 @@ class ScanOrderController extends Controller {
      */
     public function multyCreateAction(Request $request)
     { 
+        echo " controller multy1";
+//        exit();
         //echo "scanorder createAction";
         $entity  = new OrderInfo();
+        echo " new";
         $form = $this->createForm(new SlideMultiType(), $entity);
+        echo " form";
         $form->bind($request);
         
 //        $patient  = new Patient();
 //        $form_patient = $this->createForm(new PatientType(), $patient);
 //        $form_patient->bind($request);
-    
+        echo " controller multy2";
+        //exit();
         if( $form->isValid() ) {
             
             $em = $this->getDoctrine()->getManager();                            
             
             $entity->setStatus("submitted"); 
-            $entity->setType("single");   
-            
+            $entity->setType("single");             
             //procedure/specimen: none
             //$procedure->addProcedure($accession);
             foreach( $entity->getPatient() as $patient ) { 
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
-                //$entity->addPatient($patient);
+                $entity->addPatient($patient);
+                $patient->addOrderInfo($entity);
+                echo " pat mrn=".$patient->getMrn();
+                $em->persist($patient); 
+                //exit();
             }
             
+            
+            echo "<br>111";
+            //exit();
             $em->persist($entity);         
             $em->flush();
 

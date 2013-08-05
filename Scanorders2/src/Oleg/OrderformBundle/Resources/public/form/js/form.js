@@ -21,9 +21,13 @@ $(document).ready(function() {
 //   
     //Note: index 5 can be changed according to url structure
     var index = window.location.pathname.split('/')[6];
-    //alert(index);
+    //alert('index=('+index+')');
     $('ul.li').removeClass('active');
-    $('li.' + index).addClass('active');
+    if( index ) {      
+        $('li.' + index).addClass('active');
+    } else {
+        $('li.' + 'new').addClass('active');
+    }
         
 //    load login form in main page
 //    $('#modelPlainLogin').modal('show');

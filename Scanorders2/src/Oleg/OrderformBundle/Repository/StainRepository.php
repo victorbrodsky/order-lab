@@ -4,6 +4,8 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+use Oleg\OrderformBundle\Helper\FormHelper;
+
 /**
  * StainRepository
  *
@@ -12,4 +14,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class StainRepository extends EntityRepository
 {
+    
+    //Make changes: 0 to H&E.
+    public function processEntity( $in_entity ) { 
+        
+        $helper = new FormHelper();
+        $stains = $helper->getStains();
+        $key = $in_entity->getName();    
+        $in_entity->setName( $stains[$key] );
+                  
+        return;
+    }
+    
 }

@@ -80,6 +80,11 @@ class OrderInfoType extends AbstractType
             'label'=>'Scan Deadline:',
         ));
         
+        $builder->add('returnoption', 'checkbox', array(
+            'label'     => 'Return slide(s) by this date even if not scanned',
+            'required'  => false,
+        ));
+        
         
     }
 

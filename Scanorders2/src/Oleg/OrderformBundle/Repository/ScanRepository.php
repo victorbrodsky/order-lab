@@ -4,6 +4,8 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+use Oleg\OrderformBundle\Helper\FormHelper;
+
 /**
  * ScanRepository
  *
@@ -13,16 +15,16 @@ use Doctrine\ORM\EntityRepository;
 class ScanRepository extends EntityRepository
 {
     
-    //Make new - no requirements for uniqueness.
+    //Make changes.
     public function processEntity( $in_entity ) { 
-                     
-        //create new           
-        $em = $this->_em;
-        $em->persist($in_entity);
-        $em->flush();
-
-        return $in_entity;
         
+        $helper = new FormHelper();
+        $mags = $helper->getMags();
+        $key = $in_entity->getMag();
+        //echo " value=".$mags[$key]."<br>";      
+        $in_entity->setMag( $mags[$key] );
+                  
+        return;
     }
     
 }
