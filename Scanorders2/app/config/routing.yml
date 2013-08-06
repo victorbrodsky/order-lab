@@ -3,15 +3,34 @@ oleg_orderform:
     type:     annotation
     prefix:   /
     
-login:
-    pattern:   /login
-    defaults:  { _controller: OlegOrderformBundle:Security:login }
-login_check:
-    pattern:   /login_check
-    defaults:  { _controller: OlegOrderformBundle:Security:loginCheck }
+#login:
+#    pattern:   login
+#    defaults:  { _controller: OlegOrderformBundle:Security:login }
+#login_check:
+#    pattern:   /login_check
+#    defaults:  { _controller: OlegOrderformBundle:Security:loginCheck }
 logout:
     pattern: /logout/
     
 #imag_ldap:
 #    resource: "@IMAGLdapBundle/Resources/config/routing.yml"
 
+#fos user bundle
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile

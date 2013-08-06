@@ -3,50 +3,8 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "dea02c8fe7de9173f554ecb66e80d38f",
+    "hash": "02b0fd201729c23248ee1c6e19258a18",
     "packages": [
-        {
-            "name": "adldap/adldap",
-            "version": "v4.0-stable",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ztec/adLDAP.git",
-                "reference": "v4.0-stable"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ztec/adLDAP/zipball/v4.0-stable",
-                "reference": "v4.0-stable",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ldap": "*",
-                "php": ">=5.2.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "adLDAP": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GNU"
-            ],
-            "authors": [
-                {
-                    "name": "Richard Hyland"
-                }
-            ],
-            "description": "adLDAP, low-level library to query Active directory",
-            "homepage": "http://adldap.sourceforge.net",
-            "keywords": [
-                "active directory",
-                "ldap",
-                "windows"
-            ],
-            "time": "2012-11-02 02:12:46"
-        },
         {
             "name": "doctrine/common",
             "version": "2.3.0",
@@ -318,6 +276,75 @@
                 "orm"
             ],
             "time": "2013-05-11 07:51:12"
+        },
+        {
+            "name": "friendsofsymfony/user-bundle",
+            "version": "dev-master",
+            "target-dir": "FOS/UserBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
+                "reference": "f82149141bedbb966ae409e54f4c6fdeaaab2080"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/f82149141bedbb966ae409e54f4c6fdeaaab2080",
+                "reference": "f82149141bedbb966ae409e54f4c6fdeaaab2080",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/form": "~2.1",
+                "symfony/framework-bundle": "~2.1",
+                "symfony/security-bundle": "~2.1"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "*",
+                "swiftmailer/swiftmailer": ">=4.3, <6.0",
+                "symfony/validator": "~2.1",
+                "symfony/yaml": "~2.1",
+                "twig/twig": "~1.5",
+                "willdurand/propel-typehintable-behavior": "dev-master"
+            },
+            "suggest": {
+                "willdurand/propel-typehintable-behavior": "Needed when using the propel implementation"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "FOS\\UserBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
+                },
+                {
+                    "name": "Thibault Duplessis",
+                    "email": "thibault.duplessis@gmail.com",
+                    "homepage": "http://ornicar.github.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSUserBundle/contributors"
+                }
+            ],
+            "description": "Symfony FOSUserBundle",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "User management"
+            ],
+            "time": "2013-07-31 06:42:13"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -1160,16 +1187,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.13.1",
+            "version": "v1.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "v1.13.1"
+                "reference": "v1.13.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.1",
-                "reference": "v1.13.1",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.2",
+                "reference": "v1.13.2",
                 "shasum": ""
             },
             "require": {
@@ -1188,7 +1215,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -1205,52 +1232,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-06-06 06:06:01"
-        },
-        {
-            "name": "ztec/security-active_directory",
-            "version": "dev-master",
-            "target-dir": "Ztec/Security/ActiveDirectoryBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ztec/ZtecSecurityActiveDirectoryBundle.git",
-                "reference": "ceddd7869f6704acd74e99cd255a1789e1f1bedf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ztec/ZtecSecurityActiveDirectoryBundle/zipball/ceddd7869f6704acd74e99cd255a1789e1f1bedf",
-                "reference": "ceddd7869f6704acd74e99cd255a1789e1f1bedf",
-                "shasum": ""
-            },
-            "require": {
-                "adldap/adldap": "v4.0-stable",
-                "php": ">=5.2.4"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "Ztec\\Security\\ActiveDirectoryBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "CC-BY"
-            ],
-            "authors": [
-                {
-                    "name": "Loïc Doubinine",
-                    "email": "ztec@riper.fr"
-                }
-            ],
-            "description": "This is a bundle to allow authentication into symfony >= 2.1 by an Active directory",
-            "homepage": "https://github.com/ztec/security-active_directory",
-            "keywords": [
-                "active directory",
-                "bundle",
-                "ldap",
-                "symfony"
-            ],
-            "time": "2013-07-23 15:55:36"
+            "time": "2013-08-03 15:35:31"
         }
     ],
     "packages-dev": [
@@ -1261,7 +1243,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ztec/security-active_directory": 20
+        "friendsofsymfony/user-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"

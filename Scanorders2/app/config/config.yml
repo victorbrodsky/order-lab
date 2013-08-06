@@ -4,9 +4,16 @@ imports:
 #    - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }   
 #    - { resource: "@DapsLdapBundle/Resources/config/services.yml"}
 
+#fos user bundle
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Oleg\OrderformBundle\Entity\User
+
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
+    translator: ~
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"

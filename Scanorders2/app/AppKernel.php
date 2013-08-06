@@ -20,7 +20,7 @@ class AppKernel extends Kernel
             //LDAPs
 //            new IMAG\LdapBundle\IMAGLdapBundle(),
             new Daps\LdapBundle\DapsLdapBundle(),
-//            new Ztec\Security\ActiveDirectoryBundle\ZtecSecurityActiveDirectoryBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
