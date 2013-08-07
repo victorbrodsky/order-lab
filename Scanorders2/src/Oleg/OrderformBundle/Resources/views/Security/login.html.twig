@@ -1,9 +1,49 @@
-{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+<!DOCTYPE html>
+<html>
 
-{% block content %} 
-{% block body -%}
+{#{% extends "OlegOrderformBundle::Default/base.html.twig" %} #}
 
-    {% include 'OlegOrderformBundle::Security/login_content.html.twig' %}
-    
+{#    filter='cssrewrite' #}
+{% stylesheets 
+    '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
+    '@OlegOrderformBundle/Resources/public/form/css/form.css'  
+%}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+{% endstylesheets %}  
+
+<head>
+{% block head %}                                                                       
+    <title>{% block title %}{% endblock %} - Order Login</title>                                              
 {% endblock %}
-{% endblock %}    
+</head> 
+
+<body>
+
+    <div class="page-content page-content-top"> 
+    
+        {% block content %} 
+        {% block body -%}
+
+            {% include 'OlegOrderformBundle::Security/login_content.html.twig' %}
+
+        {% endblock %}
+        {% endblock %}    
+
+
+        <div id="footer" class="footer">
+            {% block footer %}
+                &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
+            {% endblock %}
+        </div>    
+{#
+            {% javascripts        
+                '@OlegOrderformBundle/Resources/public/bootstrap/js/*'       
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}    
+ #}       
+        
+    </div>    
+</body>
+         
+</html>

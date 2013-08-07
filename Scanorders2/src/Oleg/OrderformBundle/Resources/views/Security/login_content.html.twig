@@ -1,11 +1,9 @@
 
 {% if error %}
-    <div>{{ error.message }}</div>
+{#    <div>{{ error.message }}</div>#}
+    <div>{{ error }}</div>
 {% endif %}
 
-    Test Login:
-    user
-    userpass
     
 <form action="{{ path('login_check') }}" method="post">
     <label for="username">Username:</label>
@@ -20,7 +18,7 @@
         <input type="hidden" name="_target_path" value="/account" />
     #}
     <p>
-    <button class="btn-primary" type="submit">login</button>
+    <button class="btn-primary" type="submit">Login</button>
     </p>
 </form>
       

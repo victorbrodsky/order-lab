@@ -7,10 +7,18 @@ use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+
 use Daps\LdapBundle\Security\User\LdapUserProviderInterface;
+//use Symfony\Component\Security\Core\User\UserProviderInterface;
+
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
+use Oleg\OrderformBundle\Security\User\WebserviceUser;
+use Oleg\OrderformBundle\Security\Authentication\Provider\WsseProvider;
+use Oleg\OrderformBundle\Security\User\WebserviceUserProvider;
+
 
 /**
  * LdapAuthenticationProvider uses a LdapUserProviderInterface to retrieve the user
@@ -22,6 +30,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @author Grégoire Pineau <lyrixx@lyrixx.info>
  */
 class LdapAuthenticationProvider extends UserAuthenticationProvider
+//class LdapAuthenticationProvider extends WsseProvider
 {
     private $userProvider;
     private $ldap;
@@ -39,14 +48,21 @@ class LdapAuthenticationProvider extends UserAuthenticationProvider
         parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
 
         $this->userProvider = $userProvider;
-    }
-
+    } 
+//    public function __construct(WebserviceUserProvider $userProvider, UserCheckerInterface $userChecker, $providerKey, $hideUserNotFoundExceptions = true)
+//    {      
+//        parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
+//
+//        $this->userProvider = $userProvider;
+//    } 
+    
     /**
      * {@inheritdoc}
      */
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
-       
+        echo "LDAP check auth";
+        exit();
         if ("" === ($presentedPassword = $token->getCredentials())) {
             throw new BadCredentialsException('The presented password cannot be empty.');
         }
@@ -59,14 +75,18 @@ class LdapAuthenticationProvider extends UserAuthenticationProvider
      */
     protected function retrieveUser($username, UsernamePasswordToken $token)
     {
+        echo "ldap retrieveUser";
+        //exit();
         $user = $token->getUser();
         if ($user instanceof UserInterface) {
             return $user;
         }
 
         try {
+//            $user = $this->userProvider->loadUserByUsernameAndPassword($username, $token->getCredentials());
+            //$user = $this->getMyUser($username, $token->getCredentials());
             $user = $this->userProvider->loadUserByUsernameAndPassword($username, $token->getCredentials());
-
+            
             if (!$user instanceof UserInterface) {
                 throw new AuthenticationServiceException('The user provider must return a UserInterface object.');
             }
@@ -75,5 +95,14 @@ class LdapAuthenticationProvider extends UserAuthenticationProvider
         } catch (UsernameNotFoundException $notFound) {
             throw $notFound;
         }
+        
+        
     }
+    
+//    function getMyUser($username, $password) {
+//        $password = null;
+//        $salt = null;     
+//        $roles = array('ROLE_USER');
+//        return new WebserviceUser($username, $password, $salt, $roles);   
+//    } 
 }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Oleg\OrderformBundle\Security\Firewall;
+namespace Symfony\Component\Security\Http\Firewall;
 
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -29,11 +29,6 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 use Symfony\Component\Security\Http\HttpUtils;
 
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
-
-use Oleg\OrderformBundle\Security\Authentication\Token\WsseUserToken;
-use Oleg\OrderformBundle\Security\User\WebserviceUser;
-
 /**
  * The AbstractAuthenticationListener is the preferred base class for all
  * browser-/HTTP-based authentication requests.
@@ -51,7 +46,7 @@ use Oleg\OrderformBundle\Security\User\WebserviceUser;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class WsseListener implements ListenerInterface
+abstract class AbstractAuthenticationListener implements ListenerInterface
 {
     protected $options;
     protected $logger;
@@ -83,28 +78,18 @@ class WsseListener implements ListenerInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(             
-            SecurityContextInterface $securityContext, 
-            AuthenticationManagerInterface $authenticationManager, 
-            //SessionAuthenticationStrategyInterface $sessionStrategy, 
-            //HttpUtils $httpUtils, 
-            $providerKey = 'keyOleg', 
-            //AuthenticationSuccessHandlerInterface $successHandler, 
-            //AuthenticationFailureHandlerInterface $failureHandler, 
-            array $options = array(), 
-            LoggerInterface $logger = null, 
-            EventDispatcherInterface $dispatcher = null)
-    {       
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options = array(), LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
+    {
         if (empty($providerKey)) {
             throw new \InvalidArgumentException('$providerKey must not be empty.');
         }
 
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
-        //$this->sessionStrategy = $sessionStrategy;
-        //$this->providerKey = $providerKey;
-        //$this->successHandler = new AuthenticationSuccessHandlerInterface();    //$successHandler;
-        //$this->failureHandler = $failureHandler;
+        $this->sessionStrategy = $sessionStrategy;
+        $this->providerKey = $providerKey;
+        $this->successHandler = $successHandler;
+        $this->failureHandler = $failureHandler;
         $this->options = array_merge(array(
             'check_path'                     => '/login_check',
             'login_path'                     => '/login',
@@ -118,7 +103,7 @@ class WsseListener implements ListenerInterface
         ), $options);
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
-        //$this->httpUtils = $httpUtils;
+        $this->httpUtils = $httpUtils;
     }
 
     /**
@@ -156,26 +141,15 @@ class WsseListener implements ListenerInterface
                 throw new SessionUnavailableException('Your session has timed out, or you have disabled cookies.');
             }
 
-            //if (null === $returnValue = $this->attemptAuthentication($request)) {
-            //    return;
-            //}
+            if (null === $returnValue = $this->attemptAuthentication($request)) {
+                return;
+            }
 
-            
-            $request = $event->getRequest();               
-            $username = $request->request->get('_username');
-            $password = $request->request->get('_password');
-            $token = new WsseUserToken();
-            $user = new WebserviceUser($username, $password, '', array());
-            $token->setUser($user);
-            $token->digest   = $password;
-            
-            $returnValue = $token;
-            
-            if( $returnValue instanceof TokenInterface ) {
-                //$this->sessionStrategy->onAuthentication($request, $returnValue);
+            if ($returnValue instanceof TokenInterface) {
+                $this->sessionStrategy->onAuthentication($request, $returnValue);
 
                 $response = $this->onSuccess($event, $request, $returnValue);
-            } elseif( $returnValue instanceof Response ) {
+            } elseif ($returnValue instanceof Response) {
                 $response = $returnValue;
             } else {
                 throw new \RuntimeException('attemptAuthentication() must either return a Response, an implementation of TokenInterface, or null.');
@@ -200,8 +174,7 @@ class WsseListener implements ListenerInterface
      */
     protected function requiresAuthentication(Request $request)
     {
-        //return $this->httpUtils->checkRequestPath($request, $this->options['check_path']);
-        return true;
+        return $this->httpUtils->checkRequestPath($request, $this->options['check_path']);
     }
 
     /**
@@ -213,7 +186,7 @@ class WsseListener implements ListenerInterface
      *
      * @throws AuthenticationException if the authentication fails
      */
-    //abstract protected function attemptAuthentication(Request $request);
+    abstract protected function attemptAuthentication(Request $request);
 
     private function onFailure(GetResponseEvent $event, Request $request, AuthenticationException $failed)
     {
@@ -223,10 +196,8 @@ class WsseListener implements ListenerInterface
 
         $this->securityContext->setToken(null);
 
-        //$response = $this->failureHandler->onAuthenticationFailure($request, $failed);
-        $response = new Response();
-        $response->setStatusCode(403);
-        
+        $response = $this->failureHandler->onAuthenticationFailure($request, $failed);
+
         if (!$response instanceof Response) {
             throw new \RuntimeException('Authentication Failure Handler did not return a Response.');
         }
@@ -251,12 +222,7 @@ class WsseListener implements ListenerInterface
             $this->dispatcher->dispatch(SecurityEvents::INTERACTIVE_LOGIN, $loginEvent);
         }
 
-        $authToken = $this->authenticationManager->authenticate($token);
-        $this->securityContext->setToken($authToken);
-        $response = new Response();
-        $response->setStatusCode(403);
-        $event->setResponse($response);   ;
-        //$response = $this->successHandler->onAuthenticationSuccess($request, $token);
+        $response = $this->successHandler->onAuthenticationSuccess($request, $token);
 
         if (!$response instanceof Response) {
             throw new \RuntimeException('Authentication Success Handler did not return a Response.');

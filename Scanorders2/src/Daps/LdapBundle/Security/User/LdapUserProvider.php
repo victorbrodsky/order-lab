@@ -20,6 +20,7 @@ use Daps\LdapBundle\Security\Ldap\LdapInterface;
 use Daps\LdapBundle\Security\User\LdapUser;
 use Daps\LdapBundle\Security\User\LdapUserInterface;
 
+//use Oleg\OrderformBundle\Security\User\WebserviceUser;
 
 /**
  * LdapUserProvider is a simple user provider on top of ldap.
@@ -47,8 +48,15 @@ class LdapUserProvider implements LdapUserProviderInterface
      * Call loadUserByUsernameAndPassword instead.
      */
     public function loadUserByUsername($username)
-    {
-        throw new \BadMethodCallException(sprintf('You should not call the method "%s"', __METHOD__));
+    {     
+        
+        //throw new \BadMethodCallException(sprintf('You should not call the method "%s"', __METHOD__));
+        
+        //Oleg
+//        $password = null;
+//        $salt = null;     
+//        $roles = array('ROLE_USER');
+//        return new WebserviceUser($username, $password, $salt, $roles);  
     }
 
     /**

@@ -1,0 +1,3 @@
+[submodule "vendor/bundles/FR3D/LdapBundle"]
+	path = vendor/bundles/FR3D/LdapBundle
+	url = git://github.com/Maks3w/FR3DLdapBundle.git

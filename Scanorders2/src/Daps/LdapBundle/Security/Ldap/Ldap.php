@@ -46,6 +46,8 @@ class Ldap implements LdapInterface
      */
     public function __construct($host = null, $port = 389, $dn = null, $usernameSuffix = null, $enableAdmin = false, $adminDn = null, $adminPassword = null, $version = 3, $useSsl = false, $useStartTls = false, $optReferrals = false )
     {
+//        echo "LDAP check auth";
+//        exit();
         if (!extension_loaded('ldap')) {
 //            throw new LdapException('Ldap module is needed. ');
         }
@@ -300,7 +302,7 @@ class Ldap implements LdapInterface
 //                echo "conn=".$this->connection."<br>";
 //                echo "adminDn=".$this->adminDn."<br>";
 //                echo "adminPassword=".$this->adminPassword."<br>";
-                if (false === @ldap_bind($this->connection, $this->adminDn, $this->adminPassword)) {
+                if( false === @ldap_bind($this->connection, $this->adminDn, $this->adminPassword)) {
                     throw new ConnectionException('Admin bind credentials incorrect. Please see ldapcredentials.yml or review your LDAP configurations.');
                 }
             }

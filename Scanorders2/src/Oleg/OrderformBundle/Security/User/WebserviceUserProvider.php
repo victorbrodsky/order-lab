@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 class WebserviceUserProvider implements UserProviderInterface
 {
     public function loadUserByUsername($username)
-    {                  
+    {           
         // make a call to your webservice here     
         //$userData = ADB_Authenticate($username, $password);                       
         // pretend it returns an array on success, false if there is no user    

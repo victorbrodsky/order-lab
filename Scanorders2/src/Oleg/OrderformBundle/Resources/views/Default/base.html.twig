@@ -1,6 +1,26 @@
+{#{% set user = app.session.get('user') %}#}
+
+{#{% if user and user['username'] %}#}
+{#{% if app.user %}  #}
+{% if is_granted('ROLE_USER') %}
+{#{% if session.username %}#}
+{#{% if app.session.username %}#}
+        <div class="alert alert-info span2 text-center">
+{#            Welcome {{ app.user.username }} !#}
+            Welcome {{ app.security.getToken().getUser() }}!
+{#            Welcome {{ user['username'] }} ! #}
+{#            app.user:{{ app.user.username }}#}
+        </div>
+    {% else %}                           
+{#          {% include 'OlegOrderformBundle:Security:login_modal.html.twig' with {'error':'', 'last_username':''} %}#}
+{#            {% render url('login') %} #}
+{#            {{ render( controller('OlegOrderformBundle:Security:login') ) }}#}
+        <meta http-equiv="refresh" content="0; {{ path('login') }}">
+{% endif %}
+        
 <!DOCTYPE html>
 <html>
-    
+       
     {% stylesheets 
         '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
         '@OlegOrderformBundle/Resources/public/form/css/form.css'
@@ -26,14 +46,6 @@
 <body>
 
     <div class="page-content"> 
-
-    {% if app.user %}        
-        <div class="alert alert-info span2 text-center">
-            Welcome {{ app.user.username }} !
-        </div>
-    {% else %}                           
-        {#  {% include 'OlegOrderformBundle:Security:login_modal.html.twig' %} #}
-    {% endif %}
 
     <div id="header">
         {% block header %}
@@ -65,13 +77,13 @@
 
 
 
-{% javascripts 
-    '@OlegOrderformBundle/Resources/public/jquery/*'
-    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
-    '@OlegOrderformBundle/Resources/public/form/js/*'
-    '@OlegOrderformBundle/Resources/public/datepicker/js/*'
+    {% javascripts 
+        '@OlegOrderformBundle/Resources/public/jquery/*'
+        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
+        '@OlegOrderformBundle/Resources/public/form/js/*'
+        '@OlegOrderformBundle/Resources/public/datepicker/js/*'
     %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
+        <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}     
 
 

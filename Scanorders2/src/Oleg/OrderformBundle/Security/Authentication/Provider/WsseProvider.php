@@ -18,15 +18,17 @@ class WsseProvider implements AuthenticationProviderInterface
     private $cacheDir;
 
     public function __construct(UserProviderInterface $userProvider, $cacheDir)
-    {      
+    {     
+//        echo "Custom Authentication<br>";
+//        exit();
         $this->userProvider = $userProvider;
         $this->cacheDir     = $cacheDir;            
     }
 
     public function authenticate(TokenInterface $token)
     {
-        echo "Custom Authentication<br>";
-        //exit();
+        echo "WSSE Custom Authentication<br>";
+        exit();
         
         //make my user provider to work
         //$webServiceUserProvider = new WebserviceUserProvider();
@@ -55,6 +57,8 @@ class WsseProvider implements AuthenticationProviderInterface
 
     protected function validateDigest($username, $digest, $nonce, $created, $secret)
     {
+        echo "Custom Authentication<br>";
+        exit();
         echo "validateDigest<br>";
         //echo "username=".$username.", digest=".$digest.", secret=".$secret."<br>";
         

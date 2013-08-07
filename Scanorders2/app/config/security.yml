@@ -1,30 +1,87 @@
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
+        Symfony\Component\Security\Core\User\User: plaintext
+#        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
+#        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
+#        Daps\LdapBundle\Security\User\LdapUser: plaintext
+#        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+#        Oleg: custom user
+#        webservice:
+#            id: webservice_user_provider
+#        daps_ldap:
+#            id: daps_ldap_user_provider   
+#        ldap:
+#            id: imag_ldap.security.user.provider
+#        my_active_directory_provider:
+#            id: ztec.security.active.directory.user.provider
+            
+        in_memory:
+            memory:
+                users:
+                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
-        main:
-            pattern: ^/
-            form_login:
-                provider: fos_userbundle
-                csrf_provider: form.csrf_provider
-#                login_path:  login
-                
-            logout:      
-                path:   /logout/
-                target: /
-            anonymous:    true
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
 
-    access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
+#        login:
+#            pattern:  ^/demo/secured/login$
+#            security: false
+#            pattern:  ^/login$
+#            security: true           
+
+        login_firewall:
+            pattern:    ^/login$
+            anonymous:  ~          
+
+        #Oleg: custom auth provider
+#        wsse_secured:
+#            pattern:   ^/
+#            stateless: true
+#            wsse:      true            
+#            form_login:              
+#                login_path:  login
+#                check_path:  login_check
+#        public:
+#            pattern: /order/          
+#            anonymous:  ~
+    
+        secured_area:
+#            active_directory: #Sames parameters as form_login
+#                check_path: login_check
+#                login_path: login
+          
+            pattern:    ^/
+            anonymous: ~           
+#            form-login-ldap: true             
+#            form_login:
+#                login_path:  login
+#                check_path:  login_check
+##                always_use_default_target_path: true           
+            logout:
+                path:   logout
+                target: /
+
+#        secured_area:
+#            pattern:    ^/demo/secured/
+#            form_login:
+#                check_path: _security_check
+#                login_path: _demo_login
+#            logout:
+#                path:   _demo_logout
+#                target: _demo
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+#    access_control:
+#        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

@@ -21,6 +21,7 @@ class AppKernel extends Kernel
 //            new IMAG\LdapBundle\IMAGLdapBundle(),
             new Daps\LdapBundle\DapsLdapBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            //new FR3D\LdapBundle\FR3DLdapBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
