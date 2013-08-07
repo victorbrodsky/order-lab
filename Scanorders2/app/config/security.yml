@@ -2,9 +2,10 @@ security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
 #        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
-#        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
+        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
 #        Daps\LdapBundle\Security\User\LdapUser: plaintext
 #        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext
+#        FOS\UserBundle\Model\UserInterface: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -20,6 +21,8 @@ security:
 #            id: imag_ldap.security.user.provider
 #        my_active_directory_provider:
 #            id: ztec.security.active.directory.user.provider
+#        fos_userbundle:
+#            id: fos_user.user_provider.username
             
         in_memory:
             memory:
@@ -45,15 +48,10 @@ security:
         #Oleg: custom auth provider
 #        wsse_secured:
 #            pattern:   ^/
-#            stateless: true
-#            wsse:      true            
-#            form_login:              
-#                login_path:  login
-#                check_path:  login_check
-#        public:
-#            pattern: /order/          
-#            anonymous:  ~
-    
+##            wsse:      true            
+#            form_login: 
+#                provider: webservice
+            
         secured_area:
 #            active_directory: #Sames parameters as form_login
 #                check_path: login_check
@@ -63,6 +61,7 @@ security:
             anonymous: ~           
 #            form-login-ldap: true             
 #            form_login:
+#              provider: webservice
 #                login_path:  login
 #                check_path:  login_check
 ##                always_use_default_target_path: true           

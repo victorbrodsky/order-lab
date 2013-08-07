@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 /**
  * PartRepository
@@ -17,6 +18,13 @@ class PartRepository extends EntityRepository
     public function processEntity( $part, $accession=null ) {  
         
         $em = $this->_em;
+        
+        $helper = new FormHelper();        
+        $key = $part->getSourceOrgan();   
+        if( $key ) {
+            $sourceOrgan = $helper->getSourceOrgan();
+            $part->setSourceOrgan( $sourceOrgan[$key] );
+        }
         
         if( $accession == null ) {      
             $em->persist($part);

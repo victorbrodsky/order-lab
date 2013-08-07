@@ -4,6 +4,8 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+use Oleg\OrderformBundle\Helper\FormHelper;
+
 /**
  * OrderInfoRepository
  *
@@ -12,4 +14,31 @@ use Doctrine\ORM\EntityRepository;
  */
 class OrderInfoRepository extends EntityRepository
 {
+    
+    //make correct object
+    public function processEntity( $entity, $type ) {  
+        
+        
+        $entity->setStatus("submitted"); 
+        $entity->setType($type);  
+        
+        $helper = new FormHelper();
+        
+        $slideDelivery = $helper->getSlideDelivery();
+        $key = $entity->getSlideDelivery();     
+        $entity->setSlideDelivery( $slideDelivery[$key] );
+        
+        $returnSlide = $helper->getReturnSlide();
+        $key = $entity->getReturnSlide();           
+        $entity->setReturnSlide( $returnSlide[$key] );
+             
+        $key = $entity->getPathologyService();   
+        if( $key ) {
+            $pathologyService = $helper->getPathologyService();
+            $entity->setPathologyService( $pathologyService[$key] );
+        }
+        
+        return $entity; 
+    }
+    
 }

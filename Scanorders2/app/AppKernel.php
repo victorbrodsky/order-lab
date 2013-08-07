@@ -19,8 +19,8 @@ class AppKernel extends Kernel
             new Oleg\OrderformBundle\OlegOrderformBundle(),
             //LDAPs
 //            new IMAG\LdapBundle\IMAGLdapBundle(),
-            new Daps\LdapBundle\DapsLdapBundle(),
-            new FOS\UserBundle\FOSUserBundle(),
+//            new Daps\LdapBundle\DapsLdapBundle(),
+//            new FOS\UserBundle\FOSUserBundle(),
             //new FR3D\LdapBundle\FR3DLdapBundle(),
         );
 

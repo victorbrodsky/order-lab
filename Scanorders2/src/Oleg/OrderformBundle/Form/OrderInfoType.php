@@ -36,10 +36,13 @@ class OrderInfoType extends AbstractType
                 'max_length'=>'200', 
                 'required'=>true
         ));
-        
-        $builder->add( 'pathologyService', 'text', array(
-                'label'=>'Pathology Service:', 
-                'max_length'=>200,'required'=>false
+               
+        $builder->add( 'pathologyService', 'choice', array(
+                'label' => 'Pathology Service:', 
+                'max_length'=>200,
+                'choices' => $helper->getPathologyService(),
+                'required'=>false,
+                //'data' => 0, 
         ));
         
         $builder->add( 'priority', 'choice', array(
@@ -59,7 +62,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getSlideDelivery(),
                 'required'=>true,
-                'data' => 'I will drop ...',              
+                'data' => 0,              
         ));
                 
         $builder->add( 'returnSlide', 
@@ -68,7 +71,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
-                'data' => 'Me',              
+                'data' => 'Filing Room',              
         ));
         
         $builder->add('scandeadline','date',array(

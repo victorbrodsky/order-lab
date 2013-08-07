@@ -96,6 +96,7 @@ class ScanOrderController extends Controller {
         $form_slide = $this->createForm(new SlideType(), $slide);
         $form_slide->bind($request);               
         
+        if(0) {
         $errorHelper = new ErrorHelper();
         $errors = $errorHelper->getErrorMessages($form);
         echo "<br>form errors:<br>";
@@ -118,6 +119,7 @@ class ScanOrderController extends Controller {
         $errors = $errorHelper->getErrorMessages($form_slide);
         echo "<br>slide errors:<br>";
         print_r($errors);
+        }
 //            
 //        echo "<br>stain type=".$slide->getStain()->getName()."<br>";
 //        echo "scan mag=".$slide->getScan()->getMag()."<br>";        
@@ -131,9 +133,8 @@ class ScanOrderController extends Controller {
             //$form_slide->isValid()
         ) {
             $em = $this->getDoctrine()->getManager();                            
-            
-            $entity->setStatus("submitted"); 
-            $entity->setType("single");   
+                        
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "single" );
             
             //procedure/specimen: none
             //$procedure->addProcedure($accession);
@@ -174,27 +175,35 @@ class ScanOrderController extends Controller {
             $em->flush();
 
             
+            $email = $this->get('security.context')->getToken()->getAttribute('email');
+            
+            $thanks_txt = "<p><h1>Thank You For Your Order !</h1></p>
+        <p><h3>Order #{{ orderid }} Successfully Submitted.</h3></p>
+        <p><h3>Confirmation Email was sent to {{ app.security.getToken().getAttribute('email') }}</h3></p>";
+            
             $message = \Swift_Message::newInstance()
-                ->setSubject('Hello Email')
-                ->setFrom('oli2002@med.cornell.edu')
-                ->setTo('oli2002@med.cornell.edu')
+                ->setSubject('Scan Order Confirmation')
+                ->setFrom('slidescan@med.cornell.edu')
+                ->setTo($email)
                 ->setBody(
                     $this->renderView(
                         'OlegOrderformBundle:ScanOrder:email.html.twig',
                         array( 
-                            'order_id' => $entity->getId() 
+                            'orderid' => $entity->getId() 
                         )
                     )
                 )
             ;
             $this->get('mailer')->send($message);
             
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You successfully submit a scan request! Confirmation email sent!'
-            );
-            
-            return $this->redirect( $this->generateUrl('scanorder_new') );
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'You successfully submit a scan request! Confirmation email sent!'
+//            );
+                      
+            return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+                'orderid' => $entity->getId(),
+            ));
         }
 
         return array(
@@ -208,87 +217,6 @@ class ScanOrderController extends Controller {
             'form_slide'   => $form_slide->createView(),           
         );
     }
-
-    //////////// test slide multi
-    /**
-     * Creates a new OrderInfo entity.
-     *
-     * @Route("/multy", name="multy_create")
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
-     */
-    public function multyCreateAction(Request $request)
-    { 
-        echo " controller multy1";
-//        exit();
-        //echo "scanorder createAction";
-        $entity  = new OrderInfo();
-        echo " new";
-        $form = $this->createForm(new SlideMultiType(), $entity);
-        echo " form";
-        $form->bind($request);
-        
-//        $patient  = new Patient();
-//        $form_patient = $this->createForm(new PatientType(), $patient);
-//        $form_patient->bind($request);
-        echo " controller multy2";
-        //exit();
-        if( $form->isValid() ) {
-            
-            $em = $this->getDoctrine()->getManager();                            
-            
-            $entity->setStatus("submitted"); 
-            $entity->setType("single");             
-            //procedure/specimen: none
-            //$procedure->addProcedure($accession);
-            foreach( $entity->getPatient() as $patient ) { 
-                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
-                $entity->addPatient($patient);
-                $patient->addOrderInfo($entity);
-                echo " pat mrn=".$patient->getMrn();
-                $em->persist($patient); 
-                //exit();
-            }
-            
-            
-            echo "<br>111";
-            //exit();
-            $em->persist($entity);         
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You successfully submit a scan request! Confirmation email sent!'
-            );
-            
-            return $this->redirect( $this->generateUrl('multy_new') );
-        }
-        
-        
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView()
-        );    
-    }    
-    
-    /**
-     * Displays a form to create a new OrderInfo + Scan entities.
-     *
-     * @Route("/multy", name="multy_new")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
-     */
-    public function newMultiAction()
-    {         
-        $entity = new OrderInfo();      
-        $form   = $this->createForm( new SlideMultiType(), $entity );  
-        
-        return array(          
-            'form' => $form->createView(),          
-        );
-    }
-    
-    //////////////
     
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
@@ -298,8 +226,11 @@ class ScanOrderController extends Controller {
      * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
      */
     public function newAction()
-    {         
-        $entity = new OrderInfo();      
+    {            
+        
+        $entity = new OrderInfo();
+        $username = $this->get('security.context')->getToken()->getUser();
+        $entity->setProvider($username);
         $form   = $this->createForm( new OrderInfoType(), $entity );
 
         $patient = new Patient();      
@@ -465,4 +396,20 @@ class ScanOrderController extends Controller {
             ->getForm()
         ;
     }
+    
+    
+    /**   
+     * @Route("/thanks", name="thanks")
+     * 
+     * @Template("OlegOrderformBundle:ScanOrder:thanks.html.twig")
+     */
+    public function thanksAction( $orderid = '' )
+    {    
+        
+        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig',
+            array(
+                'orderid' => $orderid            
+            ));
+    }
+    
 }

@@ -32,6 +32,10 @@
     text-align: center;
 }
 
+.page-content-top {
+   padding-top: 10%; 
+}
+
 .header {
     float: left;
     width: 100%;
@@ -89,6 +93,16 @@
     float: left;
     width: 100%;
 }
+
+//.oleg_padding_top_bottom {
+    //marging-top: 2%;
+    //margin-bottom: 2%;
+    //border:2px solid #a1a1a1;
+    //padding:10px 40px; 
+    //background:#dddddd;
+    //width:700px;
+    //border-radius:25px;
+//}
 
 #acc_part_block {
     //float: left;

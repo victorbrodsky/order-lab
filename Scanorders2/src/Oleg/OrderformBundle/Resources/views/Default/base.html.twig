@@ -1,26 +1,6 @@
-{#{% set user = app.session.get('user') %}#}
-
-{#{% if user and user['username'] %}#}
-{#{% if app.user %}  #}
-{% if is_granted('ROLE_USER') %}
-{#{% if session.username %}#}
-{#{% if app.session.username %}#}
-        <div class="alert alert-info span2 text-center">
-{#            Welcome {{ app.user.username }} !#}
-            Welcome {{ app.security.getToken().getUser() }}!
-{#            Welcome {{ user['username'] }} ! #}
-{#            app.user:{{ app.user.username }}#}
-        </div>
-    {% else %}                           
-{#          {% include 'OlegOrderformBundle:Security:login_modal.html.twig' with {'error':'', 'last_username':''} %}#}
-{#            {% render url('login') %} #}
-{#            {{ render( controller('OlegOrderformBundle:Security:login') ) }}#}
-        <meta http-equiv="refresh" content="0; {{ path('login') }}">
-{% endif %}
-        
 <!DOCTYPE html>
 <html>
-       
+    
     {% stylesheets 
         '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
         '@OlegOrderformBundle/Resources/public/form/css/form.css'
@@ -38,6 +18,20 @@
     {% endstylesheets %}    
     
 <head>
+    
+    {% if is_granted('ROLE_USER') %}
+
+{#        <div class="alert alert-info span2 text-center">#}
+{#            Welcome {{ app.security.getToken().getUser() }}!#}
+{#        </div>#}
+    {% else %}                           
+{#          {% include 'OlegOrderformBundle:Security:login_modal.html.twig' with {'error':'', 'last_username':''} %}#}
+{#            {% render url('login') %} #}
+{#            {{ render( controller('OlegOrderformBundle:Security:login') ) }}#}
+        <meta http-equiv="refresh" content="0; {{ path('login') }}">
+    {% endif %}
+    
+    
    {% block head %}                                                                       
         <title>{% block title %}{% endblock %} - Scan Order</title>                                              
     {% endblock %}
@@ -69,12 +63,15 @@
         
     </div>
 
+    <div class="row">
+    <div class="span12">
     <div id="footer" class="footer">
         {% block footer %}
             &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
         {% endblock %}
     </div>                   
-
+    </div>
+    </div>
 
 
     {% javascripts 

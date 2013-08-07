@@ -8,7 +8,8 @@ services:
     wsse.security.authentication.provider:
             class:  Oleg\OrderformBundle\Security\Authentication\Provider\WsseProvider
             arguments: ["", "%kernel.cache_dir%/security/nonces"]
-
+#
     wsse.security.authentication.listener:
         class:  Oleg\OrderformBundle\Security\Firewall\WsseListener
         arguments: ["@security.context", "@security.authentication.manager"]
+        

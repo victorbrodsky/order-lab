@@ -1,18 +1,15 @@
-{#{% extends '::base.html.twig' %}#}
-
-{#{% extends "OlegOrderformBundle::Default/base.html.twig" %} #}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
 {% block content %} 
 {% block body -%}
 
-    <h2>Order Confirmation</h2>
 
-    <p>
-    You successfully submit a scan request!
-    </p>
-    <p>
-    Your order ID:{{order_id}} 
-    </p>   
-    
+    <div class="jumbotron alert-info well">
+        <p><h1>Thank You For Your Order !</h1></p>
+        <p><h3>Order #{{ orderid }} Successfully Submitted.</h3></p>
+        <p><h3>Confirmation Email was sent to {{ app.security.getToken().getAttribute('email') }}</h3></p>      
+    </div>
+
+      
 {% endblock %}
 {% endblock %}

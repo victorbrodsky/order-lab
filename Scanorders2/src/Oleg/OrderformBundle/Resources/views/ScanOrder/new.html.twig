@@ -10,12 +10,12 @@
 {#{% block body -%}#}
     <div class="row">
     <div class="span12">
-    <h3>New Single-Scan Order Form</h3>
+    <h3 class="text-info">Slide Scan Order</h3>
     </div>
     </div>
 
 {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
-    
+{#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
                      
@@ -188,67 +188,40 @@
         </div>
         
         <div id="optional_param" class="collapse">
-                                           
-            <button type="button" class="btn" data-toggle="collapse" data-target="#patient">
-                Optional Parameters for Patient
-            </button>
-            <div id="patient" class="collapse">
-                {{ form_rest(form_patient) }}
-            </div>
-            
-            <button type="button" class="btn" data-toggle="collapse" data-target="#procedure">
-                Optional Parameters for Procedure
-            </button>
-            <div id="procedure" class="collapse">
-                {{ form_rest(form_procedure) }}
-            </div>
-                        
-{#            {% if form_rest(form_accession) is not empty %}#}
-            <button type="button" class="btn" data-toggle="collapse" data-target="#accession">
-                Optional Parameters for Accession
-            </button>
-            <div id="accession" class="collapse">
-                {{ form_rest(form_accession) }}
-            </div>
-{#            {% endif %}#}
+              
+            <div class="row">
+            <div class="span12">
+            <ul class="nav nav-tabs" id="optional_param_tab">
+                <li class="active"><a href="#patient">Patient</a></li>
+                <li><a href="#procedure">Procedure</a></li>
+                <li><a href="#accession">Accession</a></li>
+                <li><a href="#part">Part</a></li>
+                <li><a href="#block">Block</a></li>             
+                <li><a href="#stain">Stain</a></li>
+                <li><a href="#scan">Scan</a></li> 
+                <li><a href="#slide">Slide</a></li>
+            </ul>
 
-            <button type="button" class="btn" data-toggle="collapse" data-target="#part">
-                Optional Parameters for Part
-            </button>
-            <div id="part" class="collapse">
-                {{ form_rest(form_part) }}
+            <div class="tab-content">
+              <div class="tab-pane active" id="patient"> {{ form_rest(form_patient) }} </div>
+              <div class="tab-pane" id="procedure"> {{ form_rest(form_procedure) }} </div>
+              <div class="tab-pane" id="accession"> {{ form_rest(form_accession) }} </div>
+              <div class="tab-pane" id="part"> {{ form_rest(form_part) }} </div>
+              <div class="tab-pane" id="block"> 
+{#                  {% if form_rest(form_block) %}#}
+                    {{ form_rest(form_block) }} 
+{#                  {% else %}#}
+                    No additional options for Block
+{#                  {% endif %}#}
+              </div>           
+              <div class="tab-pane" id="stain"> {{ form_rest(form_slide.stain) }} </div>
+              <div class="tab-pane" id="scan"> {{ form_rest(form_slide.scan) }} </div>
+              <div class="tab-pane" id="slide"> {{ form_rest(form_slide) }} </div>
             </div>
-{#           
-            {% if form_rest(form_block) is not empty %}
-            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#block">
-                Optional Parameters for Block
-            </button>
-            <div id="block" class="collapse">
-                {{ form_rest(form_block) }}
+                
             </div>
-            {% endif %}
- #}                   
-            <button type="button" class="btn" data-toggle="collapse" data-target="#scan">
-                Optional Parameters for Scan
-            </button>
-            <div id="scan" class="collapse">
-                {{ form_rest(form_slide.scan) }}
             </div>
-            
-            <button type="button" class="btn" data-toggle="collapse" data-target="#stain">
-                Optional Parameters for Stain
-            </button>
-            <div id="stain" class="collapse">
-                {{ form_rest(form_slide.stain) }}
-            </div>
-            
-            <button type="button" class="btn" data-toggle="collapse" data-target="#slide">
-                Optional Parameters for Slide
-            </button>
-            <div id="slide" class="collapse">
-                {{ form_rest(form_slide) }}
-            </div>        
-            
+                 
             {# Just in case display rest of the form to prevent CRF error #}
             {{ form_rest(form) }}
             {{ form_rest(form_patient) }}

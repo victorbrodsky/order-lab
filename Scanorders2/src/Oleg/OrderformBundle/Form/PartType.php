@@ -23,10 +23,18 @@ class PartType extends AbstractType
             'attr' => array('style' => 'width:70px'),
         ));      
         
-        $builder->add( 'sourceOrgan', 'text', array(
-                'label'=>'Source Organ:', 
-                'max_length'=>'100', 
-                'required'=>false
+//        $builder->add( 'sourceOrgan', 'text', array(
+//                'label'=>'Source Organ:', 
+//                'max_length'=>'100', 
+//                'required'=>false
+//        ));
+        $builder->add( 'sourceOrgan', 
+                'choice', array(  
+                'label'=>'Source Organ:',
+                'max_length'=>'100',
+                'choices' => $helper->getSourceOrgan(),
+                'required'=>false,
+                //'data' => 0,              
         ));
         
         $builder->add( 'description', 'textarea', array(

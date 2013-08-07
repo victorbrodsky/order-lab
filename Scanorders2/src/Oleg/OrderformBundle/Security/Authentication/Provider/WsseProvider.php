@@ -27,8 +27,8 @@ class WsseProvider implements AuthenticationProviderInterface
 
     public function authenticate(TokenInterface $token)
     {
-        echo "WSSE Custom Authentication<br>";
-        exit();
+//        echo "WSSE Custom Authentication<br>";
+//        exit();          
         
         //make my user provider to work
         //$webServiceUserProvider = new WebserviceUserProvider();

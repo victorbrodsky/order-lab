@@ -4,11 +4,11 @@
 
 <div id="form_menu">
 <div class="navbar">    
-    <a class="brand" href="#">Scan Orders</a>
+{#    <a class="brand" href="#">{{ app.security.getToken().getUser() }}</a>#}
     <div class="nav-collapse">
         <ul class="nav">
             <li class="divider-vertical new"><a href="{{ path('scanorder_new') }}">One Slide</a></li>
-            <li class="divider-vertical orderinfo"><a href="{{ path('orderinfo_new') }}">Clinical Multi-Slide</a></li>                       
+            <li class="divider-vertical orderinfo"><a href="{{ path('multy_new') }}">Clinical Multi-Slide</a></li>                       
             <li class="divider-vertical accession"><a href="{{ path('orderinfo') }}">Educational Multi-Slide</a></li>
             <li class="divider-vertical order1"><a href="{{ path('orderinfo') }}">Research Multi-Slide</a></li>
             <li class="divider-vertical index"><a href="{{ path('index') }}">My Orders</a></li>
@@ -16,7 +16,7 @@
 {#            {% if app.user %}#}
 {#            {% if user and user['username'] %}#}
             {% if is_granted('ROLE_USER') %}
-                <li class="divider-vertical order1"><a href="{{ path('logout') }}">Logout</a></li>
+                <li class="divider-vertical order1"><a href="{{ path('logout') }}">Logout | {{ app.security.getToken().getUser() }}</a></li>
             {% else %}
                 <li class="divider-vertical order1"><a href="{{ path('login') }}">Login</a></li>
             {% endif %}

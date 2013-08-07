@@ -32,6 +32,10 @@
     text-align: center;
 }
 
+.page-content-top {
+   padding-top: 10%; 
+}
+
 .header {
     float: left;
     width: 100%;
