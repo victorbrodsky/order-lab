@@ -87,7 +87,7 @@ class SlideController extends Controller
      *
      * @Route("/{id}", name="slide_show")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:Slide:edit.html.twig")
      */
     public function showAction($id)
     {
@@ -99,11 +99,13 @@ class SlideController extends Controller
             throw $this->createNotFoundException('Unable to find Slide entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-
+//        $deleteForm = $this->createDeleteForm($id);
+        $form = $this->createForm(new SlideType(), $entity, array('disabled' => true));
+            
         return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'form' => $form->createView()
+//            'delete_form' => $deleteForm->createView(),
         );
     }
 

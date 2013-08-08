@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+//use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
@@ -22,8 +23,7 @@ use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
-
-use Oleg\OrderformBundle\Form\SlideMultiType;
+use Oleg\OrderformBundle\Form\FilterType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 
@@ -43,17 +43,83 @@ class ScanOrderController extends Controller {
      * @Template()
      */
     public function indexAction() {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            //throw new AccessDeniedException();
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
         
+        
+        
+        $form = $this->createForm(new FilterType(), null);
+              
+//        $form->bind($request);
+//        $data = $form->getData();
+        
+//        $filter_crit = array();
+//        if( $this->get('request')->request->get('filter')  ) {
+//            $filter = $this->get('request')->request->get('filter');
+//            //echo $filter;
+//            //exit();
+//            $filter_crit = array('status'=>$filter);
+//        }
+
+        if( $this->get('request')->request->get('search') ) {
+            
+        }
+        
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+        
+        $pre_query = $repository->createQueryBuilder('o')
+                    ->orderBy('o.orderdate', 'DESC');
+
+        //by user
+        $user = $this->get('security.context')->getToken()->getUser();
+              
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {    
+            //$user_criter = array('provider'=>$user);
+            $pre_query->where('p.provider = :provider');
+            $pre_query->setParameter('provider', $user);
+        } 
+        ////else {
+            //$user_criter = array();
+        //}
+        
+//        $filter = $this->get('request')->request->get('search');
+//            echo $filter;
+//            exit();
+        
+        //filter     
+        $filter_crit = array();
+        if( $this->get('request')->request->get('filter')  ) {
+        //if( $form["filter"]->getData() != '' ) {
+            $filter = $this->get('request')->request->get('filter');
+//            echo $filter;
+//            exit();
+            //$filter_crit = array('status'=>$filter);
+            $pre_query->where('p.status = :status');
+            $pre_query->setParameter('status', $filter);
+        }
+        
+        $query = $pre_query->getQuery();
+        
+        $entities = $query->getResult();
+        
         //findAll();
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
-                    findBy(array(), array('orderdate'=>'desc')); 
+//        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
+//                    findBy(
+//                            $user_criter,
+//                            //$filter_crit,
+//                            array('orderdate'=>'desc')
+//                    ); 
        
         //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
         
         return array(
             'entities' => $entities,  
-            //'slides' => $slides
+            'form' => $form->createView()
         );
     }
     
@@ -66,6 +132,9 @@ class ScanOrderController extends Controller {
      */
     public function createAction(Request $request)
     {
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
         
         //echo "scanorder createAction";
         $entity  = new OrderInfo();
@@ -178,8 +247,10 @@ class ScanOrderController extends Controller {
             $email = $this->get('security.context')->getToken()->getAttribute('email');
             
             $thanks_txt = "<p><h1>Thank You For Your Order !</h1></p>
-        <p><h3>Order #{{ orderid }} Successfully Submitted.</h3></p>
-        <p><h3>Confirmation Email was sent to {{ app.security.getToken().getAttribute('email') }}</h3></p>";
+        <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
+        <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
+            
+           if( 0 ) { 
             
             $message = \Swift_Message::newInstance()
                 ->setSubject('Scan Order Confirmation')
@@ -195,7 +266,22 @@ class ScanOrderController extends Controller {
                 )
             ;
             $this->get('mailer')->send($message);
-            
+           } else {
+                ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
+                ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
+                //ini_set( 'smtp_port', 25 );
+               
+                $thanks_txt = 
+                        "Thank You For Your Order !\r\n"
+                        . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
+                        . "Confirmation Email was sent to " . $email . "\r\n";
+                
+                $message = $thanks_txt;
+                // In case any of our lines are larger than 70 characters, we should use wordwrap()
+                $message = wordwrap($message, 70, "\r\n");
+                // Send
+                mail($email, 'Scan Order Confirmation', $message);
+           } 
 //            $this->get('session')->getFlashBag()->add(
 //                'notice',
 //                'You successfully submit a scan request! Confirmation email sent!'
@@ -227,6 +313,10 @@ class ScanOrderController extends Controller {
      */
     public function newAction()
     {            
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
         
         $entity = new OrderInfo();
         $username = $this->get('security.context')->getToken()->getUser();
@@ -267,10 +357,15 @@ class ScanOrderController extends Controller {
      *
      * @Route("/{id}", name="scanorder_show", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:ScanOrder:show.html.twig")
      */
     public function showAction($id)
     {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
@@ -279,10 +374,12 @@ class ScanOrderController extends Controller {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         }
 
+        $showForm = $this->createForm(new OrderInfoType(), $entity, array('disabled' => true));
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
+            'edit_form'   => $showForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -296,6 +393,11 @@ class ScanOrderController extends Controller {
      */
     public function editAction($id)
     {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
@@ -323,6 +425,11 @@ class ScanOrderController extends Controller {
      */
     public function updateAction(Request $request, $id)
     {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
@@ -356,6 +463,11 @@ class ScanOrderController extends Controller {
      */
     public function deleteAction(Request $request, $id)
     {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 
@@ -380,6 +492,40 @@ class ScanOrderController extends Controller {
         }
 
         return $this->redirect($this->generateUrl('scanorder'));
+    }
+    
+    /**
+     * @Route("/{id}/{status}/status", name="scanorder_status")
+     * @Method("GET")
+     * @Template()
+     */
+    public function statusAction($id, $status)
+    {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+        }
+
+        //check if user permission
+        
+        //$editForm = $this->createForm(new OrderInfoType(), $entity);
+        //$deleteForm = $this->createDeleteForm($id);
+        
+        $entity->setStatus($status);
+        $em->persist($entity);
+        $em->flush();
+        
+        
+        return $this->redirect($this->generateUrl('index'));
+            
     }
 
     /**

@@ -28,7 +28,7 @@
 {#          {% include 'OlegOrderformBundle:Security:login_modal.html.twig' with {'error':'', 'last_username':''} %}#}
 {#            {% render url('login') %} #}
 {#            {{ render( controller('OlegOrderformBundle:Security:login') ) }}#}
-        <meta http-equiv="refresh" content="0; {{ path('login') }}">
+        <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
     {% endif %}
     
     

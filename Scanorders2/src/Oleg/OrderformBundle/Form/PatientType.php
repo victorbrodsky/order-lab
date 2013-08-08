@@ -8,10 +8,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PatientType extends AbstractType
 {
+    protected $multy;
+    
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
-        $multi = false;
+        //$multi = false;
         
         $builder->add( 'mrn', 'text', array(
                 'label'=>'MRN:', 
@@ -54,7 +61,7 @@ class PatientType extends AbstractType
                 'required'=>false
         )); 
            
-        if( $multi ) {         
+        if( $this->multy ) {         
             $builder->add('specimen', 'collection', array(
                 'type' => new SpecimenType(),
                 'required' => false,

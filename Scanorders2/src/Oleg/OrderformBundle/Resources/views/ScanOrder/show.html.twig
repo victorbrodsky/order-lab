@@ -1,62 +1,18 @@
-{#{% extends '::base.html.twig' %}#}
-
 {% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
 {% block content %} 
 {% block body -%}
-    <h1>OrderInfo</h1>
+    <h1>Order Info</h1>
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Orderdate</th>
-                <td>{{ entity.orderdate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Pathologyservice</th>
-                <td>{{ entity.pathologyService }}</td>
-            </tr>
-            <tr>
-                <th>Priority</th>
-                <td>{{ entity.priority }}</td>
-            </tr>
-            <tr>
-                <th>Slidedelivery</th>
-                <td>{{ entity.slideDelivery }}</td>
-            </tr>
-            <tr>
-                <th>Returnslide</th>
-                <td>{{ entity.returnSlide }}</td>
-            </tr>
-            <tr>
-                <th>Provider</th>
-                <td>{{ entity.provider }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('orderinfo') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('orderinfo_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('orderinfo_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+    <form action="{{ path('scanorder_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        {{ form_widget(edit_form) }}
+        
+    </form>
+        
+    {% if is_granted('ROLE_ADMIN') %}  
+      <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a> 
+    {% endif %}   
+      
 {% endblock %}
 {% endblock %}

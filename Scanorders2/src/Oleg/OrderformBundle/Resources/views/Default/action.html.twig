@@ -1,0 +1,69 @@
+
+
+{% block action %}
+    
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          Action <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            
+            <li><a href="{{ path('scanorder_show', { 'id': entity.id }) }}">Show</a></li>
+
+            <li class="divider"></li>
+            
+            {% if entity.status != 'cancel' %}
+                <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
+                       href="{{ path('scanorder_status', { 'id': entity.id, 'status': 'cancel' }) }}">Cancel</a>
+                </li>                  
+            {% endif %}    
+            
+            {% if is_granted('ROLE_ADMIN') %} 
+                <li>
+                    <a class="btn-warning" 
+                       href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a> 
+                </li>             
+                
+                {% if entity.status != 'active' %}
+                    <li><a onclick="return confirm('Are you sure?');" 
+                           href="{{ path('scanorder_status', { 'id': entity.id, 'status': 'active' }) }}">Active</a>
+                    </li>                  
+                {% endif %}
+                
+                {% if entity.status != 'completed' %}
+                    <li><a onclick="return confirm('Are you sure?');" 
+                           href="{{ path('scanorder_status', { 'id': entity.id, 'status': 'completed' }) }}">Completed</a>
+                    </li>                  
+                {% endif %}
+                
+                {% if entity.status != 'uncompleted' %}
+                    <li><a onclick="return confirm('Are you sure?');" 
+                           href="{{ path('scanorder_status', { 'id': entity.id, 'status': 'uncompleted' }) }}">Un-Completed</a>
+                    </li>                  
+                {% endif %} 
+                    
+                {#                    
+                {% if entity.status != 'amend' %}
+                    <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
+                           href="{{ path('scanorder_status', { 'id': entity.id, 'status': 'amend' }) }}">Amend</a>
+                    </li>                  
+                {% endif %}     
+                #}          
+           {% endif %}
+          
+        </ul>
+      </div>
+
+
+{#
+        <a class="btn btn-small btn-info" href="{{ path('scanorder_show', { 'id': entity.id }) }}">Show</a>
+                    
+        {% if entity.status != 'canceled' %}
+        <a onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" href="{{ path('scanorder_cancel', { 'id': entity.id }) }}">Cancel</a>
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}  
+        <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a>    
+        {% endif %}
+#}
+{#                    <a onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" href="{{ path('scanorder_delete', { 'id': entity.id }) }}">Delete</a>#}
+{% endblock %}

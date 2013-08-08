@@ -7,9 +7,13 @@ parameters:
     database_password: ~
 
     mailer_transport:  smtp
-    mailer_host:       smtp.med.cornell.edu
+    mailer_host:       smtp.med.cornell.edu 
     mailer_user:       slidescan@med.cornell.edu
-    mailer_password:
+    mailer_password:   
+    delivery_strategy: realtime
+
+<!--slidescan@med.cornell.edu-->
+<!--smtp.med.cornell.edu-->
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt

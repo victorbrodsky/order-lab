@@ -94,6 +94,23 @@
     width: 100%;
 }
 
+.activetr {
+    background-color: rgb(217, 237, 247);
+}
+
+.canceltr {
+    background-color: rgb(242, 222, 222);
+}
+
+.completedtr {
+    background-color: rgb(223, 240, 216);
+}
+
+.uncompletedtr {
+    /*background-color: rgb(252, 248, 227);*/
+    background-color: white;
+}
+
 //.oleg_padding_top_bottom {
     //marging-top: 2%;
     //margin-bottom: 2%;

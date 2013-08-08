@@ -124,7 +124,7 @@ class MultyScanOrderController extends Controller {
      *
      * @Route("/new", name="multy_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
+     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
     public function newMultyAction()
     {         

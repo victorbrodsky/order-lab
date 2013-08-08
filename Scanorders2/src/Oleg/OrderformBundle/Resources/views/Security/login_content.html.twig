@@ -1,3 +1,10 @@
+{% if error is not defined %}
+    {% set error = '' %}
+{% endif %}
+
+{% if last_username is not defined %}
+    {% set last_username = '' %}
+{% endif %}
 
 {% if error %}
 {#    <div>{{ error.message }}</div>#}

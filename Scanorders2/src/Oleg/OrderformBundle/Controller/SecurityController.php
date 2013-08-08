@@ -74,7 +74,15 @@ class SecurityController extends Controller
     
         if( $user ) {
             
-            $token = new UsernamePasswordToken($user->getUsername(), '', 'secured_area', array('ROLE_USER'));
+            if( $user == 'oli2002' ) {
+                $role = array('ROLE_ADMIN');
+            } else {
+                $role = array('ROLE_USER');
+            }
+            //testing ROLES
+            //$role = array('ROLE_USER');
+            
+            $token = new UsernamePasswordToken($user->getUsername(), '', 'secured_area', $role);
             $token->setAttribute('email', $user->getEmail());
 //            $token->setAttributes( array(
 //                'email'=>$user->getEmail()

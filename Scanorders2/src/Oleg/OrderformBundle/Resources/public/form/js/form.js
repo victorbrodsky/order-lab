@@ -54,6 +54,10 @@ $(document).ready(function() {
         $(this).tab('show');
     })
     
-
+//    $('#deleteButton').click(function (e) {
+//        bootbox.confirm("Are you sure?", function(result) {
+//            Example.show("Confirm result: "+result);
+//        }); 
+//    }
     
 });

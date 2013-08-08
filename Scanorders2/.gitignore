@@ -4,7 +4,8 @@
 /app/config/parameters.yml
 /app/logs/*
 /build/
-/vendor/
+/vendor/*
+!/vendor/aperio
 /bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~

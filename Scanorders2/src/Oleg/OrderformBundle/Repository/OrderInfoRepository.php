@@ -19,7 +19,7 @@ class OrderInfoRepository extends EntityRepository
     public function processEntity( $entity, $type ) {  
         
         
-        $entity->setStatus("submitted"); 
+        $entity->setStatus("active"); 
         $entity->setType($type);  
         
         $helper = new FormHelper();

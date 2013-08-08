@@ -76,7 +76,7 @@ class SlideMultiType extends AbstractType
         //$builder->add( 'stain', new StainType(), array('label'=>'Stain:') );
         
         $builder->add('patient', 'collection', array(
-            'type' => new PatientType(),
+            'type' => new PatientType(true),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

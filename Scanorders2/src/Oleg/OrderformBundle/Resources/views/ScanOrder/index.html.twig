@@ -14,10 +14,35 @@
     </div>
 #} 
 
+    <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }}>                  
+        {{ form_errors(form) }} 
+        
+        <div class="row">
+            <div class="span5">
+{#            {{ form_label(form.filter) }}#}
+{#            </div>#}
+{#            <div class="span4" align="left">#}
+            {{ form_widget(form.filter) }}
+            <button class="btn " type="submit">Filter</button>     
+            </div>
+{#        </div>#}
+{#        <div class="row">#}
+            <div class="span5">
+{#            {{ form_label(form.search) }}#}           
+{#            </div>#}
+{#            <div class="span4" align="left">#}
+            {{ form_widget(form.search) }}   
+            <button class="btn" type="submit">Search</button>
+            </div>
+        </div>
+        
+        {{ form_rest(form) }}
+    </form>
+
     <table class="table table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Order#</th>
                 <th>#Slides</th>
                 <th>Order Date</th>
                 <th>Status</th>              
@@ -29,7 +54,19 @@
         </thead>
         <tbody>
         {% for entity in entities %}
-            <tr>
+            
+            {% if entity.status == 'active' %}
+                <tr class="activetr" >
+            {% elseif entity.status == 'cancel' %}
+                <tr class="canceltr" >
+            {% elseif entity.status == 'completed' %}
+                <tr class="completedtr" >
+            {% elseif entity.status == 'uncompleted' %}
+                <tr class="uncompletedtr" >
+            {% else %}
+                <tr>
+            {% endif %}
+
                 <td><a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>
                     {{ entity.slide.count }}:
@@ -40,20 +77,31 @@
 {#                        {%endfor%}#}
 {#                    {% endfor %}#}
                     {% for slide in entity.slide %}
-                        acc:{{ slide.accession }}
-                        part:{{ slide.block.part }}
-                        block:{{ slide.block }}                    
+                        <a href="{{ path('slide_show', { 'id': slide.id }) }}">
+                            acc:{{ slide.accession }}&nbsp;
+                            {{ slide.block.part }}
+                            {{ slide.block }} 
+                        </a>
                     {% endfor %}
                 </td>
-                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H') }}h{% endif %}</td>
                 <td>{{ entity.status }}</td>
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>
                 <td>{{ entity.provider }}</td>
-                <td>                
+                <td>  
+                    
+                    {{ include('OlegOrderformBundle::Default/action.html.twig') }}
+{#             
                     <a class="btn btn-small btn-info" href="{{ path('scanorder_show', { 'id': entity.id }) }}">Show</a>
+                    
+                    {% if entity.status != 'canceled' %}
+                    <a onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" href="{{ path('scanorder_cancel', { 'id': entity.id }) }}">Cancel</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}  
                     <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a>    
-                    <a class="btn btn-small btn-danger" href="{{ path('scanorder_delete', { 'id': entity.id }) }}">Delete</a>
+                    {% endif %}
+ #}                   
                 </td>
             </tr>
         {% endfor %}

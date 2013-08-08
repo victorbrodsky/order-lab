@@ -26,6 +26,10 @@ class PartRepository extends EntityRepository
             $part->setSourceOrgan( $sourceOrgan[$key] );
         }
         
+        $key = $part->getName();   
+        $name = $helper->getPart();
+        $part->setName( $name[$key] );
+        
         if( $accession == null ) {      
             $em->persist($part);
             $em->flush();
