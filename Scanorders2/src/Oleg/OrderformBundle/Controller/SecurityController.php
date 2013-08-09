@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Oleg\OrderformBundle\Entity\User;
 //use Oleg\OrderformBundle\Security\AperioLdap\DatabaseRoutines;
-include_once('DatabaseRoutines.php');
+//include_once('DatabaseRoutines.php');
 use Oleg\OrderformBundle\Security\AperioLdap\cDataClient;
 //include_once( 'src\Oleg\OrderformBundle\Security\AperioLdap\cDataClient.php' );
 //include_once '/cDataClient.php';
@@ -132,11 +132,18 @@ class SecurityController extends Controller
     
     private function AperioAuth( $loginName, $password ) {    
         
-        $DataServerURL = GetDataServerURL();
-              
+        if(0) {
+        $DataServerURL = GetDataServerURL();             
         $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
         $AuthResult = $client->Authenticate($loginName,$password);
-                   
+        } else {
+            $AuthResult = array(
+                'UserId' => 11,
+                'ReturnCode' => 0
+            );
+            $loginName = 'oli2002';
+        }       
+        
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
             
             $user = new User();

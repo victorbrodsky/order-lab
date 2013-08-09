@@ -42,7 +42,7 @@ class ScanOrderController extends Controller {
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction( Request $request ) {
         
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             //throw new AccessDeniedException();
@@ -53,18 +53,8 @@ class ScanOrderController extends Controller {
         
         
         
-        $form = $this->createForm(new FilterType(), null);
-              
-//        $form->bind($request);
-//        $data = $form->getData();
-        
-//        $filter_crit = array();
-//        if( $this->get('request')->request->get('filter')  ) {
-//            $filter = $this->get('request')->request->get('filter');
-//            //echo $filter;
-//            //exit();
-//            $filter_crit = array('status'=>$filter);
-//        }
+        $form = $this->createForm(new FilterType(), null);         
+        $form->bind($request);
 
         if( $this->get('request')->request->get('search') ) {
             
@@ -72,48 +62,39 @@ class ScanOrderController extends Controller {
         
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         
-        $pre_query = $repository->createQueryBuilder('o')
-                    ->orderBy('o.orderdate', 'DESC');
+        $pre_query = $repository->createQueryBuilder('order')
+                    ->orderBy('or.orderdate', 'DESC');
 
         //by user
         $user = $this->get('security.context')->getToken()->getUser();
-              
+          
+        $criteria = array();
         if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {    
-            //$user_criter = array('provider'=>$user);
-            $pre_query->where('p.provider = :provider');
-            $pre_query->setParameter('provider', $user);
+            $criteria['provider'] = $user;
+        }            
+        
+        $search = $form->get('search')->getData();
+        $filter = $form->get('filter')->getData();
+        
+        //filter           
+        if( $filter && $filter != 'all'  ) {     
+            $criteria['status']= $filter;
         } 
-        ////else {
-            //$user_criter = array();
-        //}
         
-//        $filter = $this->get('request')->request->get('search');
-//            echo $filter;
-//            exit();
+        //search           
+        if( $search && $search != ''  ) {            
+            $criteria['pathologyService']= $search;
+        } 
         
-        //filter     
-        $filter_crit = array();
-        if( $this->get('request')->request->get('filter')  ) {
-        //if( $form["filter"]->getData() != '' ) {
-            $filter = $this->get('request')->request->get('filter');
-//            echo $filter;
-//            exit();
-            //$filter_crit = array('status'=>$filter);
-            $pre_query->where('p.status = :status');
-            $pre_query->setParameter('status', $filter);
-        }
-        
-        $query = $pre_query->getQuery();
-        
-        $entities = $query->getResult();
+//        $query = $pre_query->getQuery();     
+//        $entities = $query->getResult();
         
         //findAll();
-//        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
-//                    findBy(
-//                            $user_criter,
-//                            //$filter_crit,
-//                            array('orderdate'=>'desc')
-//                    ); 
+        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
+                    findBy(
+                            $criteria,                           
+                            array('orderdate'=>'desc')
+                    ); 
        
         //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
         

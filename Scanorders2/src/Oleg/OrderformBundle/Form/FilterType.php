@@ -12,7 +12,7 @@ class FilterType extends AbstractType
     {                              
         
         $search = array(
-            //'all' => 'All',
+            'all' => 'All',
             'active' => 'Active',
             'completed' => 'Completed',
             'uncompleted' => 'Uncompleted',
@@ -24,7 +24,7 @@ class FilterType extends AbstractType
                 'label' => 'Filter:',
                 'max_length'=>50,
                 'choices' => $search,
-                'required' => false,             
+                'required' => true,             
                 //'multiple' => true,
                 //'expanded' => true,
                 //'attr' => array('class' => 'horizontal_type')              
@@ -33,7 +33,7 @@ class FilterType extends AbstractType
         $builder->add('search', 'text', array(
                 'max_length'=>200,
                 'required'=>false,
-                'label'=>'Search:',           
+                'label'=>'Search:',            
         ));
     }
 
