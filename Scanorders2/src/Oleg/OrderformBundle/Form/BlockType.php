@@ -10,6 +10,14 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class BlockType extends AbstractType
 {
+    
+    protected $multy;
+    
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {     
         $helper = new FormHelper();
@@ -23,17 +31,18 @@ class BlockType extends AbstractType
                 'attr' => array('style' => 'width:70px'),
         ));
         
-        $builder->add('slide', 'collection', array(
-            'type' => new SlideType(),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => " ",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__slide__',
-        ));
-        
+        if( $this->multy ) { 
+            $builder->add('slide', 'collection', array(
+                'type' => new SlideType($this->multy),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => "Slide:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__slide__',
+            ));
+        }
         
         
     }

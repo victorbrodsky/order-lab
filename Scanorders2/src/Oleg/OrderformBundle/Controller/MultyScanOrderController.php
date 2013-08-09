@@ -56,8 +56,7 @@ class MultyScanOrderController extends Controller {
             //'slides' => $slides
         );
     }
-      
-    //////////// test slide multi
+     
     /**
      * Creates a new OrderInfo entity.
      *
@@ -72,7 +71,7 @@ class MultyScanOrderController extends Controller {
         //echo "scanorder createAction";
         $entity  = new OrderInfo();
         echo " new";
-        $form = $this->createForm(new SlideMultiType(), $entity);
+        $form = $this->createForm(new OrderInfoType(true), $entity);
         echo " form";
         $form->bind($request);
         
@@ -84,18 +83,38 @@ class MultyScanOrderController extends Controller {
         if( $form->isValid() ) {
             
             $em = $this->getDoctrine()->getManager();                            
-            
-            $entity->setStatus("submitted"); 
-            $entity->setType("single");             
+                       
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );
+                 
+            //$patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );                       
+            //$entity->addPatient($patient);
+           
+            //$procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, $accession );
+            //$patient->addSpecimen($procedure);
+                                
             //procedure/specimen: none
             //$procedure->addProcedure($accession);
-            foreach( $entity->getPatient() as $patient ) { 
+            foreach( $entity->getPatient() as $patient ) {
+                echo " before process ";
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
-                $entity->addPatient($patient);
-                $patient->addOrderInfo($entity);
+                echo " after process ";
+                $em->persist($patient);
+//                
+//                $entity->addPatient($patient);    //This was caused the problem of adding existing key pair in orderinfo-patient table!? But it works without this "add".
+                
+//                $patient->addOrderInfo($entity);
                 echo " pat mrn=".$patient->getMrn();
-                $em->persist($patient); 
+                //$em->persist($patient); 
                 //exit();
+//                foreach( $patient->getSpecimen() as $procedure ) {
+//                    //$em->persist($procedure);
+//                    echo " before process procedure ";
+//                    $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure );//, $accession );
+//                    echo " after process procedure ";
+//                    $em->persist($procedure);
+//                    $patient->addSpecimen($procedure);
+//                }              
+                
             }
             
             
@@ -128,8 +147,10 @@ class MultyScanOrderController extends Controller {
      */
     public function newMultyAction()
     {         
-        $entity = new OrderInfo();      
-        $form   = $this->createForm( new SlideMultiType(), $entity );  
+        $entity = new OrderInfo();   
+        $username = $this->get('security.context')->getToken()->getUser();
+        $entity->setProvider($username);
+        $form   = $this->createForm( new OrderInfoType(true), $entity );  
         
         return array(          
             'form' => $form->createView(),          

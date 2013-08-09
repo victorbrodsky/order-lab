@@ -665,7 +665,7 @@ Translational Research"
     public function getBlock() {        
         $arr = array();
         
-        for( $i=0; $i<=100; $i++ ) {
+        for( $i=1; $i<=100; $i++ ) {
             array_push($arr, $i);
         }
         

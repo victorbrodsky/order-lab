@@ -20,14 +20,15 @@ class StainType extends AbstractType
                 'max_length' => 200,
                 'required' => true,
                 'label' => '* Stain:',
+                'attr' => array('class' => 'combobox')
                 //'attr' => array('class' => 'horizontal_type') 
         ));
         
-        $builder->add('stainer', 'text', array(
-            'label'=>'Stainer:',
-            'max_length'=>200,
-            'required'=>false
-        ));
+//        $builder->add('stainer', 'text', array(
+//            'label'=>'Stainer:',
+//            'max_length'=>200,
+//            'required'=>false
+//        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

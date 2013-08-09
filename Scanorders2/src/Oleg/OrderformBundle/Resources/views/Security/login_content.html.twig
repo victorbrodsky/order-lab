@@ -1,3 +1,7 @@
+<h2 class="jumbotron alert-info well">Scan Order Submission</h2>
+
+<br><br>
+
 {% if error is not defined %}
     {% set error = '' %}
 {% endif %}
@@ -6,11 +10,11 @@
     {% set last_username = '' %}
 {% endif %}
 
-{% if error %}
-{#    <div>{{ error.message }}</div>#}
-    <div>{{ error }}</div>
+{% if error %} 
+    <p class="alert alert-danger">{{ error }}</p>
 {% endif %}
-
+ 
+<br><br>    
     
 <form action="{{ path('login_check') }}" method="post">
     <label for="username">Username:</label>

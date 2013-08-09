@@ -147,28 +147,28 @@ class ScanOrderController extends Controller {
         $form_slide->bind($request);               
         
         if(0) {
-        $errorHelper = new ErrorHelper();
-        $errors = $errorHelper->getErrorMessages($form);
-        echo "<br>form errors:<br>";
-        print_r($errors); 
-        $errors = $errorHelper->getErrorMessages($form_patient);
-        echo "<br>patient errors:<br>";
-        print_r($errors); 
-        $errors = $errorHelper->getErrorMessages($form_procedure);
-        echo "<br>procedure errors:<br>";
-        print_r($errors); 
-        $errors = $errorHelper->getErrorMessages($form_accession);
-        echo "<br>accession errors:<br>";
-        print_r($errors);
-        $errors = $errorHelper->getErrorMessages($form_part);
-        echo "<br>part errors:<br>";
-        print_r($errors);
-        $errors = $errorHelper->getErrorMessages($form_block);
-        echo "<br>block errors:<br>";
-        print_r($errors);
-        $errors = $errorHelper->getErrorMessages($form_slide);
-        echo "<br>slide errors:<br>";
-        print_r($errors);
+            $errorHelper = new ErrorHelper();
+            $errors = $errorHelper->getErrorMessages($form);
+            echo "<br>form errors:<br>";
+            print_r($errors); 
+            $errors = $errorHelper->getErrorMessages($form_patient);
+            echo "<br>patient errors:<br>";
+            print_r($errors); 
+            $errors = $errorHelper->getErrorMessages($form_procedure);
+            echo "<br>procedure errors:<br>";
+            print_r($errors); 
+            $errors = $errorHelper->getErrorMessages($form_accession);
+            echo "<br>accession errors:<br>";
+            print_r($errors);
+            $errors = $errorHelper->getErrorMessages($form_part);
+            echo "<br>part errors:<br>";
+            print_r($errors);
+            $errors = $errorHelper->getErrorMessages($form_block);
+            echo "<br>block errors:<br>";
+            print_r($errors);
+            $errors = $errorHelper->getErrorMessages($form_slide);
+            echo "<br>slide errors:<br>";
+            print_r($errors);
         }
 //            
 //        echo "<br>stain type=".$slide->getStain()->getName()."<br>";

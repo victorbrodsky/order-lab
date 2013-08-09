@@ -8,9 +8,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SpecimenType extends AbstractType
 {
+    
+    protected $multy;
+    
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $multi = false;
         
         $builder
             ->add('proceduretype')
@@ -26,11 +33,12 @@ class SpecimenType extends AbstractType
                 'max_length'=>300,'required'=>false
         ));
         
-        if( $multi ) {          
+        if( $this->multy ) {          
             $builder->add('accession', 'collection', array(
-                'type' => new AccessionType(),
+                'type' => new AccessionType($this->multy),
                 'allow_add' => true,
                 'allow_delete' => true,
+                'required' => false,
                 'label' => "Accession:",
                 'by_reference' => false,
                 'prototype' => true,

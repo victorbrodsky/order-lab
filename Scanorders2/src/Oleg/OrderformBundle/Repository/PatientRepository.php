@@ -26,10 +26,14 @@ class PatientRepository extends EntityRepository
             //create new                                      
             $em = $this->_em;
             $em->persist($in_entity);
-            $em->flush();
+//            $em->flush();
             
             return $in_entity;
         } 
+        
+        $em = $this->_em;
+        $em->persist($entity);
+        
         
         return $entity;
     }

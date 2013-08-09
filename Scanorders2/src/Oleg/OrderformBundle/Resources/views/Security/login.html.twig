@@ -10,7 +10,8 @@
 
 <head>
 {% block head %}                                                                       
-    <title>{% block title %}{% endblock %} - Order Login</title>                                              
+    <title>{% block title %}{% endblock %} Scan Order Submission</title> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% endblock %}
 </head> 
 
@@ -18,8 +19,7 @@
 
 {#    {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}#}
     
-    <div class="page-content page-content-top"> 
-    
+    <div class="page-content">          
         {% block content %} 
         {% block body -%}
 
@@ -29,18 +29,11 @@
         {% endblock %}    
 
 
-        <div id="footer" class="footer">
-            {% block footer %}
-                &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
-            {% endblock %}
-        </div>    
-{#
-            {% javascripts        
-                '@OlegOrderformBundle/Resources/public/bootstrap/js/*'       
-            %}
-                <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}    
- #}       
+    <div class="footer">
+        {% block footer %}
+            &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
+        {% endblock %}
+    </div>     
         
     </div>    
 </body>

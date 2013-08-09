@@ -54,8 +54,9 @@ class Patient
      */
     protected $clinicalHistory;
     
+    //, cascade={"persist"}
     /**
-     * ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="patient", cascade={"persist"})
+     * ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="patient")
      * ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
      */
     /**
@@ -63,6 +64,7 @@ class Patient
      **/
     protected $orderinfo; 
     
+    //, cascade={"persist"}
     /**
      * Patient might have many Specimens or Procedures
      * 

@@ -8,6 +8,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class AccessionType extends AbstractType
 {
+    
+    protected $multy;
+    
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {  
         
@@ -26,6 +34,22 @@ class AccessionType extends AbstractType
             //'data' => new \DateTime(),
             'label'=>'Accession Date:',
         ));
+        
+        if( $this->multy ) {   
+            
+            $builder->add('part', 'collection', array(
+                'type' => new PartType($this->multy),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => "Part:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__part__',
+            )); 
+            
+        }
+        
         
     }
 

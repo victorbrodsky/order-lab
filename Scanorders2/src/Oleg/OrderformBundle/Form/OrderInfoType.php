@@ -10,21 +10,29 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class OrderInfoType extends AbstractType
 {
+    
+    protected $multy;
+    
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+        
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        
         $helper = new FormHelper();
-        
-        $multi = false;
-        
+                   
         $builder->add( 'type', 'hidden' ); 
         
-        if( $multi ) {          
+        if( $this->multy ) {          
             $builder->add('patient', 'collection', array(
-                'type' => new PatientType(),
+                'type' => new PatientType($this->multy),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'label' => "Patient Entity:",
+                'label' => " ",
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__patient__',
@@ -42,6 +50,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getPathologyService(),
                 'required'=>false,
+                'attr' => array('class' => 'combobox')
                 //'data' => 0, 
         ));
         
@@ -62,7 +71,8 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getSlideDelivery(),
                 'required'=>true,
-                'data' => 0,              
+                'data' => 0,     
+                'attr' => array('class' => 'combobox')    
         ));
                 
         $builder->add( 'returnSlide', 
@@ -71,7 +81,8 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
-                'data' => 'Filing Room',              
+                'data' => 'Filing Room',
+                'attr' => array('class' => 'combobox')    
         ));
         
         $builder->add('scandeadline','date',array(

@@ -1,55 +1,48 @@
 <!DOCTYPE html>
 <html>
+
+<head>
     
+    {% if not is_granted('ROLE_USER') %}                        
+        <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
+    {% endif %}
+        
     {% stylesheets 
-        '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
+        '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
         '@OlegOrderformBundle/Resources/public/form/css/form.css'
         '@OlegOrderformBundle/Resources/public/datepicker/css/*'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}   
+        
+    {% endstylesheets %}        
         
     {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
-    {# TODO: use 'bundles/acme_foo/css/*' style#}
+    {# TODO: use 'bundles/acme_foo/css/*' style#}    
     {% stylesheets 
         '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}    
-    
-<head>
-    
-    {% if is_granted('ROLE_USER') %}
-
-{#        <div class="alert alert-info span2 text-center">#}
-{#            Welcome {{ app.security.getToken().getUser() }}!#}
-{#        </div>#}
-    {% else %}                           
-{#          {% include 'OlegOrderformBundle:Security:login_modal.html.twig' with {'error':'', 'last_username':''} %}#}
-{#            {% render url('login') %} #}
-{#            {{ render( controller('OlegOrderformBundle:Security:login') ) }}#}
-        <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
-    {% endif %}
-    
-    
+    {% endstylesheets %}         
+       
    {% block head %}                                                                       
-        <title>{% block title %}{% endblock %} - Scan Order</title>                                              
+        <title>{% block title %}{% endblock %} - Scan Order</title>   
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% endblock %}
+        
 </head> 
              
 <body>
 
-    <div class="page-content"> 
+    <div class="container page-content"> 
 
-    <div id="header">
+    <div class="header">
+        
         {% block header %}
 {#                <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+            {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
         {% endblock %}
-
-        {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}             
-
-    </div>
-    {#   div header   #}
+                    
+    </div>   
 
     <div class="order-content">
         
@@ -63,33 +56,27 @@
         
     </div>
 
-    <div class="row">
-    <div class="span12">
-    <div id="footer" class="footer">
+    <div class="footer">
         {% block footer %}
             &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
         {% endblock %}
     </div>                   
-    </div>
-    </div>
-
-
+ 
     {% javascripts 
         '@OlegOrderformBundle/Resources/public/jquery/*'
-        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
+        '@OlegOrderformBundle/Resources/public/bootstrap/js/*' 
         '@OlegOrderformBundle/Resources/public/form/js/*'
         '@OlegOrderformBundle/Resources/public/datepicker/js/*'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}     
 
-
-    {# Bootstrap Combobox #} 
+    {# Bootstrap Combobox #}        
     {% javascripts                   
         '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}                    
+    {% endjavascripts %}         
     {# Bootstrap Combobox #}             
 
     </div>

@@ -7,13 +7,9 @@
 
 
 {% block content %} 
-{#{% block body -%}#}
-    <div class="row">
-    <div class="span12">
+    
     <h3 class="text-info">Slide Scan Order</h3>
-    </div>
-    </div>
-
+    
 {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
@@ -28,105 +24,86 @@
         {{ form_errors(form_slide) }}
      
       
-        <div class="row">
-{#        <div class="col-lg-6">#}
-        <div class="span4" align="right">
-        {{ form_label(form_accession.accession, '* Accession + Part + Block') }} 
+        <div class="row-fluid">
+        <div class="span6" align="right">      
+        {{ form_label(form_accession.accession, '* Accession+Part+Block') }} 
         </div>
-{#        <div class="col-lg-6">#}
-        <div class="span4" align="left">
+        <div class="span6" align="left">
         {{ form_widget(form_accession.accession) }}             
         {{ form_widget(form_part.name) }}                   
         {{ form_widget(form_block.name) }}
         </div>
         </div>
         
-        <div class="row">
-{#        <div class="col-lg-3">#}
-        <div class="span4" align="right">
-
+        <div class="row-fluid">
+        <div class="span6" align="right">
         {{ form_label(form_slide.stain.name) }}
         </div>
-        <div class="span4" align="left">
-{#        <div class="col-lg-3">#}
+        <div class="span6" align="left">
         {{ form_widget(form_slide.stain.name) }}
         </div>    
         </div>      
         
-        <div class="row">
-        <div class="span4" align="right">
-{#        <div class="col-lg-12">#}
+        <div class="row-fluid">
+        <div class="span6" align="right">
         {{ form_label(form_slide.scan.mag) }}
         </div>
-        <div class="span4" align="left">
-{#        <div class="col-lg-12">#}
+        <div class="span6" align="left">
         {{ form_widget(form_slide.scan.mag) }} 
         </div>
         </div>
         
-        <div class="row">
-        <div class="span4" align="right">
-{#        <div class="col-lg-12">#}
+        <div class="row-fluid">
+        <div class="span6" align="right">
         {{ form_label(form_part.diagnosis) }}
         </div>
-        <div class="span4" align="left">
-{#        <div class="col-lg-12">#}
+        <div class="span6" align="left">
         {{ form_widget(form_part.diagnosis) }} 
         </div>
         </div>
             
-        <div class="row" align="right">
-        <div class="span4">
-{#        <div class="col-lg-12">#}
+        <div class="row-fluid" align="right">
+        <div class="span6">
         {{ form_label(form_slide.scan.note) }}
         </div>
-        <div class="span4" align="left">
-{#        <div class="col-lg-12">#}
+        <div class="span6" align="left">
         {{ form_widget(form_slide.scan.note) }} 
         </div>  
-        </div>
-    
-{#        <div class="btn_margin_top">#}
-{#            <input type='button' id='next' value='Next' class="btn btn-primary btn-success">       #}
-{#        </div>#}
-{#        <div class="buttons-full-bar"></div>#}
-        <div class="row">
-        <div class="span12">    
-            <button id="next_button" type="button" class="btn btn-success" 
-                    data-toggle="collapse" data-target="#orderinfo_param">
-                Next
-            </button>
-        </div>
-        </div>
+        </div>   
+         
+        <button id="next_button" type="button" class="btn btn-success" 
+                data-toggle="collapse" data-target="#orderinfo_param">Next
+        </button>
+        
         
         <div id="orderinfo_param" class="collapse">
-            <div class="row">
+            <div class="row-fluid">
             <div class="span12">
             <h4>Scan Order Info</h4>   
             </div>
             </div>
-            <div class="row">
-            <div class="span4" align="right">
+            <div class="row-fluid">
+            <div class="span6" align="right">
             {{ form_label(form.provider) }}
             </div>
-            <div class="span4" align="left">
+            <div class="span6" align="left">
             {{ form_widget(form.provider) }} 
             </div>
             </div>
-            <div class="row">
-            <div class="span4" align="right">
+            <div class="row-fluid">
+            <div class="span6" align="right">
             {{ form_label(form.pathologyService) }}
             </div>
-            <div class="span4" align="left">
+            <div class="span6" align="left">
             {{ form_widget(form.pathologyService) }}
             </div>
             </div>
                    
-            <div class="row">
-            <div class="span4" align="right">
+            <div class="row-fluid">
+            <div class="span6" align="right">
             {{ form_label(form.priority) }}
             </div>
-            <div class="span4" align="left">
+            <div class="span6" align="left">
             {{ form_widget(form.priority) }}
             </div>
             </div>
@@ -135,43 +112,43 @@
 {#            <div class="oleg_padding_top_bottom text-info">#}
             <div class="well">
                 
-                <div class="row">              
-                <div class="span4" align="right">              
+                <div class="row-fluid">              
+                <div class="span6" align="right">              
                 {{ form_label(form.scandeadline) }}
                 </div>            
-                <div class="span4" align="left">
+                <div class="span6" align="left">
                 {{ form_widget(form.scandeadline) }} 
                 </div>   
                 </div>    
                 
-                <div class="row">              
-                <div class="span4" align="right">
+                <div class="row-fluid">              
+                <div class="span6" align="right">
                 {{ form_label(form.returnoption) }}
                 </div>            
-                <div class="span4" align="left">
+                <div class="span6" align="left">
                 {{ form_widget(form.returnoption) }} 
                 </div>   
                 </div>    
             </div>    
             </div>  
                 
-            <div class="row">
-            <div class="span4" align="right">
+            <div class="row-fluid">
+            <div class="span6" align="right">
             {{ form_label(form.slideDelivery) }}
             </div>
-            <div class="span4" align="left">
+            <div class="span6" align="left">
             {{ form_widget(form.slideDelivery) }}
             </div>
             </div>
-            <div class="row">
-            <div class="span4" align="right">
+            <div class="row-fluid">
+            <div class="span6" align="right">
             {{ form_label(form.returnSlide) }}
             </div>
-            <div class="span4" align="left">
+            <div class="span6" align="left">
             {{ form_widget(form.returnSlide) }}
             </div>
             </div>
-            <div class="row">
+            <div class="row-fluid">
             <div class="span12">
                 <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
             </div>
@@ -179,7 +156,7 @@
         
       
         {#        The optional parameter    #}
-        <div class="row">
+        <div class="row-fluid">
         <div class="span12">
         <button id="optional_button" type="button" class="btn btn_margin" data-toggle="collapse" data-target="#optional_param">
             Options
@@ -189,15 +166,15 @@
         
         <div id="optional_param" class="collapse">
               
-            <div class="row">
+            <div class="row-fluid">
             <div class="span12">
             <ul class="nav nav-tabs" id="optional_param_tab">
                 <li class="active"><a href="#patient">Patient</a></li>
                 <li><a href="#procedure">Procedure</a></li>
                 <li><a href="#accession">Accession</a></li>
                 <li><a href="#part">Part</a></li>
-                <li><a href="#block">Block</a></li>             
-                <li><a href="#stain">Stain</a></li>
+{#                <li><a href="#block">Block</a></li>             #}
+{#                <li><a href="#stain">Stain</a></li>#}
                 <li><a href="#scan">Scan</a></li> 
                 <li><a href="#slide">Slide</a></li>
             </ul>
@@ -207,14 +184,8 @@
               <div class="tab-pane" id="procedure"> {{ form_rest(form_procedure) }} </div>
               <div class="tab-pane" id="accession"> {{ form_rest(form_accession) }} </div>
               <div class="tab-pane" id="part"> {{ form_rest(form_part) }} </div>
-              <div class="tab-pane" id="block"> 
-{#                  {% if form_rest(form_block) %}#}
-                    {{ form_rest(form_block) }} 
-{#                  {% else %}#}
-                    No additional options for Block
-{#                  {% endif %}#}
-              </div>           
-              <div class="tab-pane" id="stain"> {{ form_rest(form_slide.stain) }} </div>
+{#              <div class="tab-pane" id="block"> {{ form_rest(form_block) }}</div>           #}
+{#              <div class="tab-pane" id="stain"> {{ form_rest(form_slide.stain) }} </div>#}
               <div class="tab-pane" id="scan"> {{ form_rest(form_slide.scan) }} </div>
               <div class="tab-pane" id="slide"> {{ form_rest(form_slide) }} </div>
             </div>
@@ -237,5 +208,4 @@
            
     </form>
     
-{#{% endblock %}#}
 {% endblock %} 

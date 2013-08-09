@@ -16,11 +16,15 @@ class ScanType extends AbstractType
         
         //$builder->add( 'status', 'hidden', array('data' => 'submitted') ); 
         
-        $builder->add('scanregion', 'text', array('max_length'=>200,'required'=>false));
+        $builder->add('scanregion', 'text', array(
+                'max_length'=>200,
+                'required'=>false,
+                'label' => 'Region to scan'
+        ));
         
         $builder->add( 'mag', 
                 'choice', array(  
-                'label' => '* Magnification:',
+                'label' => 'Magnification:',
                 'max_length'=>50,
                 'choices' => $helper->getMags(),
                 'required' => true,

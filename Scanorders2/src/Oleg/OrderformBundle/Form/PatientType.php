@@ -44,6 +44,9 @@ class PatientType extends AbstractType
                 'max_length'=>20,
                 'required'=>false,
                 'choices' => array("Male"=>"Male", "Female"=>"Female"),
+                'multiple' => false,
+                'expanded' => true,
+                'attr' => array('class' => 'horizontal_type')  
                 //'data' => 'Male',             
         ));
              
@@ -61,9 +64,9 @@ class PatientType extends AbstractType
                 'required'=>false
         )); 
            
-        if( $this->multy ) {         
+        if( 0 ) {//$this->multy ) {         
             $builder->add('specimen', 'collection', array(
-                'type' => new SpecimenType(),
+                'type' => new SpecimenType(),   //$this->multy), //testing only up to specimen
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

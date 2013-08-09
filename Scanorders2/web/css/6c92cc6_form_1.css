@@ -9,11 +9,11 @@
 //}
 
 .horizontal_type {
-    padding-bottom: 5%;
+    padding-bottom: 4%;
 }
 .horizontal_type LABEL, .horizontal_type INPUT {
     display: inline;
-    //padding-right: 5%;
+    padding-right: 5%;
 }
 
 .flash-notice {
@@ -42,7 +42,7 @@
 }
 
 .order-content {
-    margin-top: 5%;
+    margin-top: 10%;
     /*float: left;*/
     /*width: 100%;*/
 }
@@ -62,6 +62,11 @@
 .btn_margin {
     margin-top: 2%;
     margin-bottom: 2%;
+}
+
+.slide_new {
+    float:left; 
+    width: 30%;
 }
 
 #form_menu {
@@ -106,16 +111,6 @@
     background-color: white;
 }
 
-/*align tabs to center*/
-.nav-tabs > li, .nav-pills > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-     zoom:1; /* hasLayout ie7 trigger */
-}
-.nav-tabs, .nav-pills {
-    text-align:center;
-}
 
 //.oleg_padding_top_bottom {
     //marging-top: 2%;

@@ -10,9 +10,30 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class PartType extends AbstractType
 {
+    
+    protected $multy;
+    
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $helper = new FormHelper();  
+        
+        if( $this->multy ) {          
+            $builder->add('block', 'collection', array(
+                'type' => new BlockType($this->multy),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => "Block:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__block__',
+            )); 
+        }      
         
         $builder->add('name', 'choice', array(        
             'choices' => $helper->getPart(),
@@ -20,7 +41,7 @@ class PartType extends AbstractType
             'label'=>' ',
             'max_length'=>'3',
             'data' => 0,
-            'attr' => array('style' => 'width:70px'),
+            'attr' => array('style' => 'width:70px'),          
         ));      
         
 //        $builder->add( 'sourceOrgan', 'text', array(
@@ -34,6 +55,7 @@ class PartType extends AbstractType
                 'max_length'=>'100',
                 'choices' => $helper->getSourceOrgan(),
                 'required'=>false,
+//                'attr' => array('class' => 'combobox'),    
                 //'data' => 0,              
         ));
         
@@ -50,7 +72,7 @@ class PartType extends AbstractType
         ));
         
         $builder->add( 'diffDiagnosis', 'textarea', array(
-                'label'=>'Different Diagnosis:', 
+                'label'=>'Differential Diagnoses:', 
                 'max_length'=>'10000', 
                 'required'=>false
         ));

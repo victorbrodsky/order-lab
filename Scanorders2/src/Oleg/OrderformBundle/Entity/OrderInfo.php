@@ -99,8 +99,9 @@ class OrderInfo
      */
     private $provider;
 
+    //cascade={"persist"}
     /**
-     * ORM\OneToMany(targetEntity="Patient", mappedBy="orderinfo", cascade={"persist"})
+     * ORM\OneToMany(targetEntity="Patient", mappedBy="orderinfo")
      */
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo")
@@ -311,7 +312,8 @@ class OrderInfo
      */
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {       
-        //$patient->setOrderinfo($this);       
+        //$patient->setOrderinfo($this); 
+        //Do I need to check if patient is already exists?
         $this->patient[] = $patient;
         return $this;
     }

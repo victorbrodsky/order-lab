@@ -15,10 +15,10 @@
 #} 
 
     <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }}>                  
-        {{ form_errors(form) }} 
+{#        {{ form_errors(form) }} #}
         
-        <div class="row">
-            <div class="span5">
+        <div class="row-fluid">
+            <div class="span4">
 {#            {{ form_label(form.filter) }}#}
 {#            </div>#}
 {#            <div class="span4" align="left">#}
@@ -27,7 +27,7 @@
             </div>
 {#        </div>#}
 {#        <div class="row">#}
-            <div class="span5">
+            <div class="span4">
 {#            {{ form_label(form.search) }}#}           
 {#            </div>#}
 {#            <div class="span4" align="left">#}
@@ -36,7 +36,7 @@
             </div>
         </div>
               
-        {{ form_rest(form) }}
+{#        {{ form_rest(form) }}#}
         
     </form>
 

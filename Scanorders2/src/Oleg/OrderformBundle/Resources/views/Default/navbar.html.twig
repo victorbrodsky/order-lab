@@ -2,11 +2,11 @@
 
 {% block navbar %}
 
-<div id="form_menu">
+{#<div id="form_menu">#}
 <div class="navbar">    
 {#    <a class="brand" href="#">{{ app.security.getToken().getUser() }}</a>#}
-    <div class="nav-collapse">
-        <ul class="nav">
+{#    <div class="nav-collapse">#}
+        <ul class="nav navbar-nav">
             <li class="divider-vertical new"><a href="{{ path('scanorder_new') }}">One Slide</a></li>
             <li class="divider-vertical orderinfo"><a href="{{ path('multy_new') }}">Clinical Multi-Slide</a></li>                       
             <li class="divider-vertical accession"><a href="{{ path('index') }}">Educational Multi-Slide</a></li>
@@ -22,9 +22,9 @@
             {% endif %}
                 
         </ul>
-    </div>  
+{#    </div>  #}
 </div>
-</div>   
+{#</div>   #}
     
 {% endblock %} 
     

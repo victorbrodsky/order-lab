@@ -5,7 +5,7 @@
 {% block content %} 
 {#{% block body -%}#}
     
-<h2>Order Creation</h2>
+<h3 class="text-info">Clinical Multy Lise Scan Order </h3>
 
 <form action="{{ path('multy_create') }}" method="post" {{ form_enctype(form) }}>
 
@@ -15,80 +15,18 @@
     <ul class="tags" data-prototype="{{ form_widget(form.patient.vars.prototype)|e }}" >  
         
         {# order info staff #}
-        <div class="row">
-            <div class="span12">
-            <h4>Scan Order Info</h4>   
-            </div>
-            </div>
-            <div class="row">
-            <div class="span4">
-            {{ form_label(form.provider) }}
-            </div>
-            <div class="span4">
-            {{ form_widget(form.provider) }} 
-            </div>
-            </div>
-            <div class="row">
-            <div class="span4">
-            {{ form_label(form.pathologyService) }}
-            </div>
-            <div class="span4">
-            {{ form_widget(form.pathologyService) }}
-            </div>
-            </div>
-                   
-            <div class="row">
-            <div class="span4">
-            {{ form_label(form.priority) }}
-            </div>
-            <div class="span4">
-            {{ form_widget(form.priority) }}
-            </div>
-            </div>
-{#            optional for priority#}
-            <div id="priority_option" class="collapse"> 
-                <div class="row">              
-                <div class="span4">
-                {{ form_label(form.scandeadline) }}
-                </div>            
-                <div class="span4">
-                {{ form_widget(form.scandeadline) }} 
-                </div>   
-                </div>    
-            </div>  
-                
-            <div class="row">
-            <div class="span4">
-            {{ form_label(form.slideDelivery) }}
-            </div>
-            <div class="span4">
-            {{ form_widget(form.slideDelivery) }}
-            </div>
-            </div>
-            <div class="row">
-            <div class="span4">
-            {{ form_label(form.returnSlide) }}
-            </div>
-            <div class="span4">
-            {{ form_widget(form.returnSlide) }}
-            </div>
-            </div>
-            <div class="row">
-            <div class="span12">
-                <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
-            </div>
-            </div> 
-        
+                        
         {% for patient in form.patient %}
             <li>
                 {{ form_widget(patient) }}
-                
+                {{ form_rest(patient) }}
                 {# do the same for specimen #}
                 <h3>Specimen:</h3>              
                 <ul class="tags" data-prototype="{{ form_widget(patient.specimen.vars.prototype)|e }}" >                  
                 {% for specimen in patient.specimen %}
                     <li>
                         {{ form_widget(specimen) }}
+                        {{ form_rest(specimen) }}
                     </li>       
                 {% endfor %}   
                 </ul>
@@ -97,15 +35,97 @@
         {% endfor %}                           
     </ul>
     
-    {{ form_rest(form) }}
-
-
 {#    Test cal controller: it works!#}
 {#    {% render url('part_new') %}#}
     
-    <p>
-        <button type="submit">Create Order</button>
-    </p>
+    
+    
+    <button id="next_button" type="button" class="btn" 
+            data-toggle="collapse" data-target="#orderinfo_param">Next
+    </button>
+
+
+    <div id="orderinfo_param" class="collapse">
+        <div class="row-fluid">
+        <div class="span12">
+        <h4>Scan Order Info</h4>   
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.provider) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.provider) }} 
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.pathologyService) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.pathologyService) }}
+        </div>
+        </div>
+
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.priority) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.priority) }}
+        </div>
+        </div>
+{#            optional for priority#}
+        <div id="priority_option" class="collapse"> 
+{#            <div class="oleg_padding_top_bottom text-info">#}
+        <div class="well">
+
+            <div class="row-fluid">              
+            <div class="span6" align="right">              
+            {{ form_label(form.scandeadline) }}
+            </div>            
+            <div class="span6" align="left">
+            {{ form_widget(form.scandeadline) }} 
+            </div>   
+            </div>    
+
+            <div class="row-fluid">              
+            <div class="span6" align="right">
+            {{ form_label(form.returnoption) }}
+            </div>            
+            <div class="span6" align="left">
+            {{ form_widget(form.returnoption) }} 
+            </div>   
+            </div>    
+        </div>    
+        </div>  
+
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.slideDelivery) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.slideDelivery) }}
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.returnSlide) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.returnSlide) }}
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span12">
+            <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
+        </div>
+        </div> 
+    </div>
+   
+     {{ form_rest(form) }}
+    
 </form>
     
 {% endblock %}    
