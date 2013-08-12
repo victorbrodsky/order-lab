@@ -99,10 +99,7 @@ class OrderInfo
      */
     private $provider;
 
-    //cascade={"persist"}
-    /**
-     * ORM\OneToMany(targetEntity="Patient", mappedBy="orderinfo")
-     */
+    //cascade={"persist"}   
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo")
      * @ORM\JoinTable(name="patient_orderinfo")
@@ -313,9 +310,20 @@ class OrderInfo
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {       
         //$patient->setOrderinfo($this); 
-        //Do I need to check if patient is already exists?
-        $this->patient[] = $patient;
-        return $this;
+//        Do I need to check if patient is already exists?
+//        $this->patient[] = $patient;
+//        return $this;
+        
+        //$patient->addOrderinfo($this);
+        
+//        //$this->patient->add($patient);
+        if( !$this->patient->contains($patient) ) {  
+            echo "<br>patient not exists: add!:".$patient;                
+            $this->patient->add($patient);
+        } else {
+            "<br>patient exists! <br>";
+        }  
+           
     }
 
     /**
@@ -324,7 +332,7 @@ class OrderInfo
      * @param \Oleg\OrderformBundle\Entity\Patient $patient
      */
     public function removePatient(\Oleg\OrderformBundle\Entity\Patient $patient)
-    {
+    {      
         $this->patient->removeElement($patient);
     }
 
@@ -338,10 +346,6 @@ class OrderInfo
         return $this->patient;
     }
     
-    public function setPatient($patient) {
-        $this->patient = $patient;
-    }
-
     /**
      * Add slide
      *
@@ -375,4 +379,16 @@ class OrderInfo
     {
         return $this->slide;
     }
+    
+    public function __toString(){
+        
+        $patient_info = "(";
+        foreach( $this->patient as $patient ) {
+            $patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+        }
+        $patient_info .= ")";
+        
+        return "OrderInfo: id=".$this->id.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
+    }
+    
 }

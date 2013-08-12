@@ -8,10 +8,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+//UniqueEntity({"mrn"})
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PatientRepository")
  * @ORM\Table(name="patient")
- * @UniqueEntity({"mrn"})
+ * 
  */
 class Patient
 {
@@ -81,6 +83,7 @@ class Patient
     {
         $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();
+   
     }
     
     /**
@@ -263,6 +266,11 @@ class Patient
     {
         return $this->specimen;
     }
+    
+//    public function setSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+//    {
+//        $this->specimen = $specimen;      
+//    }
 
     /**
      * Add orderinfo
@@ -272,9 +280,12 @@ class Patient
      */
     public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
     {
-        $this->orderinfo[] = $orderinfo;
-    
-        return $this;
+//        $this->orderinfo[] = $orderinfo;
+//        return $this;
+        
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }    
     }
 
     /**
@@ -296,4 +307,9 @@ class Patient
     {
         return $this->orderinfo;
     }
+    
+    public function __toString(){
+        return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)."<br>";
+    }
+    
 }

@@ -60,68 +60,59 @@ class MultyScanOrderController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/multy", name="multy_create")
+     * @Route("/new", name="multy_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
      */
     public function multyCreateAction(Request $request)
     { 
         echo " controller multy1";
-//        exit();
-        //echo "scanorder createAction";
+
         $entity  = new OrderInfo();
-        echo " new";
-        $form = $this->createForm(new OrderInfoType(true), $entity);
-        echo " form";
+        $form = $this->createForm(new OrderInfoType(true), $entity);  
         $form->bind($request);
+        //$form->handleRequest($request);
         
-//        $patient  = new Patient();
-//        $form_patient = $this->createForm(new PatientType(), $patient);
-//        $form_patient->bind($request);
-        echo " controller multy2";
-        //exit();
+        echo $entity;
+        echo " valid?: <br>";
+        
         if( $form->isValid() ) {
             
             $em = $this->getDoctrine()->getManager();                            
                        
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );
-                 
-            //$patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );                       
-            //$entity->addPatient($patient);
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );                   
            
-            //$procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, $accession );
-            //$patient->addSpecimen($procedure);
-                                
-            //procedure/specimen: none
-            //$procedure->addProcedure($accession);
+            echo $entity;
+            $count = 0;
             foreach( $entity->getPatient() as $patient ) {
-                echo " before process ";
-                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient ); 
-                echo " after process ";
-                $em->persist($patient);
-//                
-//                $entity->addPatient($patient);    //This was caused the problem of adding existing key pair in orderinfo-patient table!? But it works without this "add".
                 
-//                $patient->addOrderInfo($entity);
-                echo " pat mrn=".$patient->getMrn();
-                //$em->persist($patient); 
-                //exit();
-//                foreach( $patient->getSpecimen() as $procedure ) {
-//                    //$em->persist($procedure);
-//                    echo " before process procedure ";
-//                    $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure );//, $accession );
-//                    echo " after process procedure ";
-//                    $em->persist($procedure);
-//                    $patient->addSpecimen($procedure);
-//                }              
+                echo $patient;              
+                echo " before_process ";
+                $patient_processed = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );  //$entity->getPatient()[$count] );           
+                //remove old and attach new patient. This requires only for multyple order with data_prototype                                                            
+                $entity->removePatient( $patient ); 
+                //$patient_processed->addOrderinfo($entity);
+                $entity->addPatient($patient_processed);             
                 
-            }
+                //$entity->addPatient($patient);
+                echo " after processing: <br>";
+                echo $entity; 
+                
+            } //foreach
+                  
+            echo "<br>End of loop<br>";
+            echo $entity;
+//            exit();
             
+//            $count = 0;
+//            foreach( $entity->getPatient() as $patient ) {              
+//                $entity->removePatient($entity->getPatient()[$count++]);             
+//            }
+//            echo "<br>after removal directly<br>";
+//            echo $entity; 
             
-            echo "<br>111";
-            //exit();
             $em->persist($entity);         
-            $em->flush();
+            $em->flush($entity);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',

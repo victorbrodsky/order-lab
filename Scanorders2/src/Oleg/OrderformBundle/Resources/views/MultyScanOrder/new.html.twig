@@ -5,22 +5,26 @@
 {% block content %} 
 {#{% block body -%}#}
     
-<h3 class="text-info">Clinical Multy Lise Scan Order </h3>
+<h3 class="text-info">Clinical Multy Slide Scan Order </h3>
 
-<form action="{{ path('multy_create') }}" method="post" {{ form_enctype(form) }}>
+{#<form action="{{ path('multy_create') }}" method="post">#}
 
-    {{ form_errors(form) }}
+{{ form_start(form) }}
+{#    {{ form_errors(form) }}#}
    
-    <h3>Slide:</h3>
+    <h3>Patient:</h3>
     <ul class="tags" data-prototype="{{ form_widget(form.patient.vars.prototype)|e }}" >  
         
         {# order info staff #}
                         
         {% for patient in form.patient %}
             <li>
-                {{ form_widget(patient) }}
-                {{ form_rest(patient) }}
+{#                {{ form_widget(patient) }}#}
+{#                {{ form_rest(patient) }}#}
+                {{ form_row(patient.mrn) }}
+                
                 {# do the same for specimen #}
+{#                
                 <h3>Specimen:</h3>              
                 <ul class="tags" data-prototype="{{ form_widget(patient.specimen.vars.prototype)|e }}" >                  
                 {% for specimen in patient.specimen %}
@@ -30,7 +34,7 @@
                     </li>       
                 {% endfor %}   
                 </ul>
-                
+#}                
             </li>       
         {% endfor %}                           
     </ul>
@@ -124,9 +128,11 @@
         </div> 
     </div>
    
-     {{ form_rest(form) }}
+{#     {{ form_rest(form) }}#}
+  
     
-</form>
+{{ form_end(form) }}    
+{#</form>#}
     
 {% endblock %}    
 {#{% endblock %}#}

@@ -21,20 +21,15 @@ class PatientRepository extends EntityRepository
         }
         
         $entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
+        $em = $this->_em;
         
-        if( !$entity ) {        
-            //create new                                      
-            $em = $this->_em;
-            $em->persist($in_entity);
-//            $em->flush();
-            
+        if( null === $entity ) {        
+            //create new                                                
+            $em->persist($in_entity);                            
             return $in_entity;
         } 
-        
-        $em = $this->_em;
-        $em->persist($entity);
-        
-        
+              
+        $em->persist($entity);          
         return $entity;
     }
     

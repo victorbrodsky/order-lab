@@ -9647,7 +9647,7 @@ function addTagForm(collectionHolder, $newLinkLi) {
     // Replace '__name__' in the prototype's HTML to
     // instead be a number based on how many items we have
     //var newForm = prototype.replace(/__name__/g, index);
-    var newForm = prototype.replace(/__slide__/g, index);
+    var newForm = prototype.replace(/__mrn__/g, index);
 
     // increase the index with one for the next item
     collectionHolder.data('index', index + 1);
