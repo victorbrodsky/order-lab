@@ -145,4 +145,9 @@ class Specimen
     {
         return $this->patient;
     }
+
+    public function __toString() {
+        return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype();
+    }
+
 }

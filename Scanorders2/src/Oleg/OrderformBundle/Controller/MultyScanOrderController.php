@@ -40,9 +40,15 @@ class MultyScanOrderController extends Controller {
      *
      * @Route("/index", name="multyIndex")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:MultyScanOrder:index.html.twig")
      */
     public function multyIndexAction() {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            //throw new AccessDeniedException();
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
         
         //findAll();
@@ -66,12 +72,18 @@ class MultyScanOrderController extends Controller {
      */
     public function multyCreateAction(Request $request)
     { 
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            //throw new AccessDeniedException();
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         echo " controller multy1";
 
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(true), $entity);  
-        $form->bind($request);
-        //$form->handleRequest($request);
+//        $form->bind($request);
+        $form->handleRequest($request);
         
         echo $entity;
         echo " valid?: <br>";
@@ -82,6 +94,7 @@ class MultyScanOrderController extends Controller {
                        
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );                   
            
+            echo "before loop:<br>";
             echo $entity;
             $count = 0;
             foreach( $entity->getPatient() as $patient ) {
@@ -92,8 +105,14 @@ class MultyScanOrderController extends Controller {
                 //remove old and attach new patient. This requires only for multyple order with data_prototype                                                            
                 $entity->removePatient( $patient ); 
                 //$patient_processed->addOrderinfo($entity);
-                $entity->addPatient($patient_processed);             
-                
+                $entity->addPatient($patient_processed);
+
+                foreach( $patient->getSpecimen() as $specimen ) {
+                    $specimen_processed = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen );
+                    $patient->removeSpecimen( $specimen );
+                    $patient->addSpecimen($specimen_processed);
+                }
+
                 //$entity->addPatient($patient);
                 echo " after processing: <br>";
                 echo $entity; 
@@ -102,7 +121,7 @@ class MultyScanOrderController extends Controller {
                   
             echo "<br>End of loop<br>";
             echo $entity;
-//            exit();
+            //exit();
             
 //            $count = 0;
 //            foreach( $entity->getPatient() as $patient ) {              
@@ -137,7 +156,13 @@ class MultyScanOrderController extends Controller {
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
     public function newMultyAction()
-    {         
+    {     
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            //throw new AccessDeniedException();
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $entity = new OrderInfo();   
         $username = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($username);

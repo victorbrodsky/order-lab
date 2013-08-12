@@ -13,30 +13,31 @@
 {#    {{ form_errors(form) }}#}
    
     <h3>Patient:</h3>
-    <div class="patient" data-prototype="{{ form_widget(form.patient.vars.prototype)|e }}" >
+    <ul class="tags" data-prototype="{{ form_widget(form.patient.vars.prototype)|e }}" >  
         
         {# order info staff #}
                         
         {% for patient in form.patient %}
-            <div class="patient-data">
+            <li>
 {#                {{ form_widget(patient) }}#}
 {#                {{ form_rest(patient) }}#}
                 {{ form_row(patient.mrn) }}
                 
                 {# do the same for specimen #}
+{#                
                 <h3>Specimen:</h3>              
-                <div class="specimen" data-prototype-specimen="{{ form_widget(patient.specimen.vars.prototype)|e }}" >
-                    {% for specimen in patient.specimen %}
-                        <div class="specimen-data">
-                            {{ form_widget(specimen) }}
-                            {{ form_rest(specimen) }}
-                        </div>
-                    {% endfor %}
-                </div>
-
-            </div>
+                <ul class="tags" data-prototype="{{ form_widget(patient.specimen.vars.prototype)|e }}" >                  
+                {% for specimen in patient.specimen %}
+                    <li>
+                        {{ form_widget(specimen) }}
+                        {{ form_rest(specimen) }}
+                    </li>       
+                {% endfor %}   
+                </ul>
+#}                
+            </li>       
         {% endfor %}                           
-    </div>
+    </ul>
     
 {#    Test cal controller: it works!#}
 {#    {% render url('part_new') %}#}

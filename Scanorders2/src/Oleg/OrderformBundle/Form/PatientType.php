@@ -64,9 +64,9 @@ class PatientType extends AbstractType
                 'required'=>false
         )); 
            
-        if( 0 ) {//$this->multy ) {         
+        if( $this->multy ) {
             $builder->add('specimen', 'collection', array(
-                'type' => new SpecimenType(),   //$this->multy), //testing only up to specimen
+                'type' => new SpecimenType($this->multy), //testing only up to specimen
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

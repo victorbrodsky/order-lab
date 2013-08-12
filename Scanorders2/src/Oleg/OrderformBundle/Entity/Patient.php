@@ -246,6 +246,11 @@ class Patient
         $this->specimen[] = $specimen;   
         return $this;
     }
+    public function addSpeciman(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    {
+        $this->addSpecimen($specimen);
+        return $this;
+    }
 
     /**
      * Remove specimen
@@ -255,6 +260,10 @@ class Patient
     public function removeSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
     {
         $this->specimen->removeElement($specimen);
+    }
+    public function removeSpeciman(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    {
+        $this->removeSpecimen($specimen);
     }
 
     /**
@@ -269,7 +278,7 @@ class Patient
     
 //    public function setSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
 //    {
-//        $this->specimen = $specimen;      
+//        $this->specimen = $specimen;
 //    }
 
     /**

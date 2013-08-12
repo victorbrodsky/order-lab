@@ -1,9 +1,9 @@
-{% extends '::base.html.twig' %}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% block body -%}
+{% block content %}
     <h1>Patient</h1>
 
-    <table class="record_properties">
+    <table class="record_properties table table-hover table-condensed">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -16,6 +16,17 @@
             <tr>
                 <th>Name</th>
                 <td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Procedures</th>
+                <td>
+                    {#{{ entity.specimen }}#}
+                    {% for specimen in entity.specimen %}
+                        <a href="{{ path('specimen_show', { 'id': specimen.id }) }}">
+                            Patient: (ID={{ specimen.id }}, MRN={{ specimen.proceduretype }})<br>
+                        </a>
+                    {% endfor %}
+                </td>
             </tr>
         </tbody>
     </table>
