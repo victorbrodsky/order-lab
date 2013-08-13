@@ -11,28 +11,33 @@
 
 {{ form_start(form) }}
 {#    {{ form_errors(form) }}#}
-   
-    <h3>Patient:</h3>
-    <div class="patient" data-prototype="{{ form_widget(form.patient.vars.prototype)|e }}" >
-        
-        {# order info staff #}
-                        
+
+    {#data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype)|e }}"#}
+    <div class="patient"
+        data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype)|e }}"
+        data-prototype-patient="{{ form_widget(form.patient.vars.prototype)|e }}"
+    >
         {% for patient in form.patient %}
             <div class="patient-data">
+                <h3>Patient:</h3>
 {#                {{ form_widget(patient) }}#}
 {#                {{ form_rest(patient) }}#}
-                {{ form_row(patient.mrn) }}
+                {{ form_row(patient) }}
                 
                 {# do the same for specimen #}
-                <h3>Specimen:</h3>              
-                <div class="specimen" data-prototype-specimen="{{ form_widget(patient.specimen.vars.prototype)|e }}" >
+
+                {#<div class="specimen" data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype)|e }}" >#}
+                <div class="specimen">
                     {% for specimen in patient.specimen %}
                         <div class="specimen-data">
-                            {{ form_widget(specimen) }}
-                            {{ form_rest(specimen) }}
+                            <h3>Specimen:</h3>
+                            {#{{ form_widget(specimen) }}#}
+                            {#{{ form_rest(specimen) }}#}
+                            {{ form_row(specimen) }}
                         </div>
                     {% endfor %}
                 </div>
+                {# end of specimen #}
 
             </div>
         {% endfor %}                           

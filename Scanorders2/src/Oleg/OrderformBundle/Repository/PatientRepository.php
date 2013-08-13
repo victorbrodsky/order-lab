@@ -29,7 +29,8 @@ class PatientRepository extends EntityRepository
             return $in_entity;
         } 
               
-        $em->persist($entity);          
+        $em->persist($entity);
+
         return $entity;
     }
     

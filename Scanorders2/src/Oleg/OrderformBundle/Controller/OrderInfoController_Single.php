@@ -115,7 +115,7 @@ class OrderInfoController extends Controller {
      *
      * @Route("/", name="orderinfo_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
+     * @Template("OlegOrderformBundle:OrderInfo:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -180,7 +180,7 @@ class OrderInfoController extends Controller {
      *
      * @Route("/new", name="orderinfo_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:OrderInfo:new.html.twig")
+     * @Template("OlegOrderformBundle:OrderInfo:new_orig.html.twig")
      */
     public function newAction()
     {         

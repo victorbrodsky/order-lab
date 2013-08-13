@@ -41,7 +41,7 @@ class PartController extends Controller
      *
      * @Route("/", name="part_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Part:new.html.twig")
+     * @Template("OlegOrderformBundle:Part:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

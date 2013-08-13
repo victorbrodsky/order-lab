@@ -44,7 +44,7 @@ class BlockController extends Controller
      *
      * @Route("/", name="block_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Block:new.html.twig")
+     * @Template("OlegOrderformBundle:Block:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

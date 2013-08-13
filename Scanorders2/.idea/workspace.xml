@@ -4,18 +4,104 @@
     <list default="true" id="c1607861-9151-4548-aa39-b55d08a92121" name="Default" comment="" />
     <ignored path="Scanorders2.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Patient.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376340177499" ignored="false" />
-    <file path="/MultyScanOrderController.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376340346860" ignored="false" />
+    <file path="/Patient.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376433713457" ignored="false" />
+    <file path="/MultyScanOrderController.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376433974428" ignored="false" />
     <file path="/index.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376340615325" ignored="false" />
-    <file path="/show.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376341441981" ignored="false" />
-    <file path="/Specimen.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376341324852" ignored="false" />
+    <file path="/show.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376419512217" ignored="false" />
+    <file path="/Specimen.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376432879551" ignored="false" />
     <file path="/addCollectionForm2.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376342154246" ignored="false" />
-    <file path="/new.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376344754351" ignored="false" />
-    <file path="/addCollectionForm.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376344876969" ignored="false" />
+    <file path="/new.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376413405673" ignored="false" />
+    <file path="/addCollectionForm.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376430992060" ignored="false" />
     <file path="$PROJECT_DIR$/web/js/93597e6.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376344628254" ignored="false" />
     <file path="$PROJECT_DIR$/web/css/bdea819_part_1_bootstrap.min_2.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376344628254" ignored="false" />
     <file path="$PROJECT_DIR$/web/css/bdea819.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376344628254" ignored="false" />
     <file path="$PROJECT_DIR$/web/css/bdea819_part_1_bootstrap-responsive.min_1.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376344628254" ignored="false" />
+    <file path="/dummy.txt" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376409273967" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/9/987c66e3fe85e9196b315af2917ebaea.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/f/f646ad1c98bd84207176ab941ecae963.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/web/css/2f1ad03.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/f/f21c16d32cc5d72c08130b9a764d2ae7.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/17/94/a252f28b9b813892fc20988b1a2f.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-SlideController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-StainController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-MultyScanOrderController#newMultyAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/1b/79/a4db644c88685594058c0331844c.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-PartController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/d/d00d2200bcbf32098c3d77de3f0ec590.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/d/d05048d0e0df1b18b2c614158f48c5b1.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-ScanOrderController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/templates.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/2a/69/6724d94de9bb71ed232557a42921.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-ScanController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-SecurityController#loginCheckAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/ea/db/0b6f4be25e2d15ef818ab7e76c16.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412810088" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/ea/db/0b6f4be25e2d15ef818ab7e76c16.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/css/new_form.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-PatientController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/f/f646ad1c98bd84207176ab941ecae963.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/f/f21c16d32cc5d72c08130b9a764d2ae7.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/f0/2f/3c63fffb5457f54ead4539e070b0.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/f0/2f/3c63fffb5457f54ead4539e070b0.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-BlockController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-SpecimenController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/46/2f/832636dcedcb0f3adb8e663d4787.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057022" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-SlideController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/83/24/81a6830b5da978e926f33545f0f6.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-ScanController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-AccessionController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/17/94/a252f28b9b813892fc20988b1a2f.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-PatientController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/90/94/1e80f709e878373c7088b62dff25.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-OrderInfoController#newAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/1b/79/a4db644c88685594058c0331844c.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/91/3a/be77d95e43b1d954caa17b838183.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-ScanOrderController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-SpecimenController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/1/1a734619104b40b55ffc31e18a966a0d.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-ScanOrderController#newAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/web/bundles/olegorderform/form/css/new_form.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/9a/80/b4b726fd0ac0e83d38dcf296722d.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/2a/69/6724d94de9bb71ed232557a42921.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/2/231d98dc54d83bbdc4452a0df52dcd37.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-PartController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/2/23b66f9da2b26a8841b567dd1f923e39.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/3/3f16aab1d66710c6a6f9a1c925854a3a.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/83/24/81a6830b5da978e926f33545f0f6.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-OrderInfoController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-BlockController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/5/52e03754387165e2702f17fbcc374b30.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/90/94/1e80f709e878373c7088b62dff25.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-AccessionController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/91/3a/be77d95e43b1d954caa17b838183.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/6/6faa8a32effea173e3e427f69f6a96bd.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/1/1a734619104b40b55ffc31e18a966a0d.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/9a/80/b4b726fd0ac0e83d38dcf296722d.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/2/231d98dc54d83bbdc4452a0df52dcd37.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/9/98fce2f1a0cd4acc67cdd47830a48596.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/b5/2b/976c9e9115d7b61bbe3b98eba1bc.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/2/23b66f9da2b26a8841b567dd1f923e39.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-OrderInfoController#newAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/bb/5d/ac20123d2432a7e1b4e81eaf15b5.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/Tests/Generator/DoctrineCrudGeneratorTest.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/3/3f16aab1d66710c6a6f9a1c925854a3a.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412810088" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-StainController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/9/987c66e3fe85e9196b315af2917ebaea.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-MultyScanOrderController#newMultyAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-ScanOrderController#newAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/5/52e03754387165e2702f17fbcc374b30.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/annotations/Oleg-OrderformBundle-Controller-SecurityController#loginCheckAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/twig/46/2f/832636dcedcb0f3adb8e663d4787.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/annotations/Oleg-OrderformBundle-Controller-OrderInfoController#createAction.cache.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/b5/2b/976c9e9115d7b61bbe3b98eba1bc.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/Generator/DoctrineCrudGenerator.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/6/6faa8a32effea173e3e427f69f6a96bd.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/twig/bb/5d/ac20123d2432a7e1b4e81eaf15b5.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/d/d00d2200bcbf32098c3d77de3f0ec590.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/prod/assetic/config/d/d05048d0e0df1b18b2c614158f48c5b1.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412057023" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/assetic/config/9/98fce2f1a0cd4acc67cdd47830a48596.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="$PROJECT_DIR$/web/js/93597e6_part_1_jquery_1.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376412757447" ignored="false" />
+    <file path="/SpecimenRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376432131164" ignored="false" />
+    <file path="/OrderInfo.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376433593275" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,10 +121,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MultyScanOrderController.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MultyScanOrderController.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="113" column="17" selection-start="4255" selection-end="4255" vertical-scroll-proportion="-18.961538">
+            <state line="136" column="14" selection-start="5077" selection-end="5077" vertical-scroll-proportion="0.81107956">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ScanOrderController.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="292" column="51" selection-start="11390" selection-end="11390" vertical-scroll-proportion="-70.15385">
               <folding />
             </state>
           </provider>
@@ -47,16 +142,16 @@
       <file leaf-file-name="new.html.twig" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="36" selection-start="868" selection-end="876" vertical-scroll-proportion="-9.807693">
+            <state line="20" column="38" selection-start="758" selection-end="758" vertical-scroll-proportion="-11.115385">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addCollectionForm.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="addCollectionForm.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/addCollectionForm.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="16" selection-start="3132" selection-end="3132" vertical-scroll-proportion="0.9721408">
+            <state line="112" column="66" selection-start="4065" selection-end="4065" vertical-scroll-proportion="-12.12">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -67,7 +162,16 @@
       <file leaf-file-name="Specimen.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Specimen.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="140" column="6" selection-start="2941" selection-end="2941" vertical-scroll-proportion="-13.807693">
+            <state line="151" column="16" selection-start="3133" selection-end="3133" vertical-scroll-proportion="-22.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Patient.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Patient.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="325" column="52" selection-start="6441" selection-end="6441" vertical-scroll-proportion="-19.884615">
               <folding />
             </state>
           </provider>
@@ -76,7 +180,7 @@
       <file leaf-file-name="PatientRepository.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+            <state line="27" column="44" selection-start="835" selection-end="835" vertical-scroll-proportion="-17.653847">
               <folding />
             </state>
           </provider>
@@ -85,7 +189,7 @@
       <file leaf-file-name="SpecimenRepository.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/SpecimenRepository.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="25" selection-start="432" selection-end="432" vertical-scroll-proportion="-6.269231">
+            <state line="38" column="51" selection-start="1161" selection-end="1161" vertical-scroll-proportion="-10.509804">
               <folding />
             </state>
           </provider>
@@ -98,26 +202,34 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///dummy.txt" root0="SKIP_INSPECTION" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/web/app_dev.php" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PatientType.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Patient.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/index.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Specimen.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Patient/show.html.twig" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/addCollectionForm2.js" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new_orig.html.twig" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Patient/show.html.twig" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/addCollectionForm.js" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/SpecimenRepository.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Specimen.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/OrderInfo.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Patient.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="106" />
-    <option name="y" value="361" />
+    <option name="x" value="253" />
+    <option name="y" value="452" />
     <option name="width" value="2195" />
     <option name="height" value="1028" />
   </component>
@@ -228,259 +340,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Patient" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MultyScanOrder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="form" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="form" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Repository" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Form" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -557,6 +417,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\views\MultyScanOrder" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\form\js" />
       <recent name="Z:\scanorder\Scanorders2\app\config" />
     </key>
@@ -580,21 +441,22 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="106" y="361" width="2195" height="1028" extended-state="0" />
-    <editor active="false" />
+    <frame x="253" y="452" width="2195" height="1028" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.49968454" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.49929675" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24921136" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17815283" sideWeight="0.8147296" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13003452" sideWeight="0.5002344" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18527043" sideWeight="0.5003154" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24894515" sideWeight="0.8147296" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18002813" sideWeight="0.8699655" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Command Line Tools Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.49976557" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -664,97 +526,24 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/config/security.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.9520349">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="4" selection-start="248" selection-end="248" vertical-scroll-proportion="0.19767442">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/OrderInfoType.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="8" selection-start="627" selection-end="627" vertical-scroll-proportion="0.12957317">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Patient.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="265" column="41" selection-start="4965" selection-end="4965" vertical-scroll-proportion="0.7987805">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Specimen.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="6" selection-start="2941" selection-end="2941" vertical-scroll-proportion="-13.807693">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Patient/show.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="89" selection-start="862" selection-end="862" vertical-scroll-proportion="0.6692913">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="28" selection-start="1598" selection-end="1865" vertical-scroll-proportion="0.6219512">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="17" selection-start="4255" selection-end="4255" vertical-scroll-proportion="-18.961538">
-          <folding />
-        </state>
+        <state line="48" column="28" selection-start="1598" selection-end="1865" vertical-scroll-proportion="0.6219512" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/SpecimenType.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.32164633">
-          <folding>
-            <element signature="e#45#85#0" expanded="false" />
-          </folding>
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.32164633" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PatientType.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="34" selection-start="2149" selection-end="2149" vertical-scroll-proportion="0.3932927">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/SpecimenRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="25" selection-start="432" selection-end="432" vertical-scroll-proportion="-6.269231">
-          <folding />
-        </state>
+        <state line="69" column="34" selection-start="2149" selection-end="2149" vertical-scroll-proportion="0.3932927" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/form.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.34604105">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.34604105" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/addCollectionForm2.js">
@@ -766,19 +555,82 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new_test.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="116" selection-start="291" selection-end="371" vertical-scroll-proportion="0.1903409">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Patient/show.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="126" selection-start="899" selection-end="899" vertical-scroll-proportion="0.4588068">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="36" selection-start="868" selection-end="876" vertical-scroll-proportion="-9.807693">
+        <state line="20" column="38" selection-start="758" selection-end="758" vertical-scroll-proportion="-11.115385">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/addCollectionForm.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="16" selection-start="3132" selection-end="3132" vertical-scroll-proportion="0.9721408">
+        <state line="112" column="66" selection-start="4065" selection-end="4065" vertical-scroll-proportion="-12.12">
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="44" selection-start="835" selection-end="835" vertical-scroll-proportion="-17.653847">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/SpecimenRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="51" selection-start="1161" selection-end="1161" vertical-scroll-proportion="-10.509804">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="292" column="51" selection-start="11390" selection-end="11390" vertical-scroll-proportion="-70.15385">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/OrderInfo.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="387" column="19" selection-start="7930" selection-end="8228" vertical-scroll-proportion="0.7386364">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Patient.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="325" column="52" selection-start="6441" selection-end="6441" vertical-scroll-proportion="-19.884615">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Entity/Specimen.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="151" column="16" selection-start="3133" selection-end="3133" vertical-scroll-proportion="-22.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="136" column="14" selection-start="5077" selection-end="5077" vertical-scroll-proportion="0.81107956">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -172,7 +172,7 @@ class SlideController extends Controller {
         
         $form = $this->createForm(new SlideType(), $entity); 
         
-        return $this->render('OlegOrderformBundle:Slide:new.html.twig',
+        return $this->render('OlegOrderformBundle:Slide:new_orig.html.twig',
             array(
                 'form' => $form->createView(),
                 //'part_form' => $part_form->createView(),
@@ -185,7 +185,7 @@ class SlideController extends Controller {
      *
      * @Route("/", name="slide_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Slide:new.html.twig")
+     * @Template("OlegOrderformBundle:Slide:new_orig.html.twig")
      */
     public function createAction(Request $request) {
         $entity  = new Slide();             

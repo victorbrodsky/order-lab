@@ -20,8 +20,6 @@ class SpecimenRepository extends EntityRepository
         
         if( $accession == null ) {         
             $em->persist($in_entity);
-            $em->flush();
-            
             return $in_entity;
         }
         
@@ -31,14 +29,16 @@ class SpecimenRepository extends EntityRepository
         ));
         
         if( $accession_found == null || $accession_found->getSpecimen() == null ) {
-            $em->persist($in_entity);
-            $em->flush();
-            
-            return $in_entity;
-        }           
 
-        return $accession_found->getSpecimen();
-        
+            $em->persist($in_entity);
+            return $in_entity;
+
+        } else {
+
+            $em->persist($accession_found->getSpecimen());
+            return $accession_found->getSpecimen();
+
+        }
     }
     
 }

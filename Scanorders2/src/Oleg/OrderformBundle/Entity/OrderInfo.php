@@ -383,8 +383,11 @@ class OrderInfo
     public function __toString(){
         
         $patient_info = "(";
+        $count = 0;
         foreach( $this->patient as $patient ) {
-            $patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+            $patient_info .= $count.":" . $patient. "; ";
+            $count++;
         }
         $patient_info .= ")";
         

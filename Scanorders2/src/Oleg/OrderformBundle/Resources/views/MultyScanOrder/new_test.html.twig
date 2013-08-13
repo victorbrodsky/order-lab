@@ -1,0 +1,41 @@
+{#{% extends "::base.html.twig" %}#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %}
+    {{ form_start(form) }}
+    {# ... #}
+
+    {# store the prototype on the data-prototype attribute #}
+    <ul id="email-fields-list"
+        data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype) | e }}"
+        data-prototype="{{ form_widget(form.patient.vars.prototype) | e }}"
+            >
+        {% for patient in form.patient %}
+            <li>
+                {{ form_errors(patient) }}
+                {{ form_widget(patient) }}
+
+                {% for specimen in patient.specimen %}
+                    <li>
+                        {{ form_errors(specimen) }}
+                        {{ form_widget(specimen) }}
+                    </li>
+                {% endfor %}
+
+
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="#" id="add-another-email">Add another patient</a>
+    <br>
+    {#<a href="#" id="add-another-specimen">Add another specimen</a>#}
+
+    {# ... #}
+    {{ form_end(form) }}
+
+
+
+{#{% endblock %}#}
+{% endblock %}

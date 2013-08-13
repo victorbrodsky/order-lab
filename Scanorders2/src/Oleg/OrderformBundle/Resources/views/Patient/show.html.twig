@@ -23,7 +23,7 @@
                     {#{{ entity.specimen }}#}
                     {% for specimen in entity.specimen %}
                         <a href="{{ path('specimen_show', { 'id': specimen.id }) }}">
-                            Patient: (ID={{ specimen.id }}, MRN={{ specimen.proceduretype }})<br>
+                            Specimen: ID={{ specimen.id }}, MRN={{ specimen.proceduretype }}, patientId={{ specimen.patient.id }}<br>
                         </a>
                     {% endfor %}
                 </td>

@@ -40,7 +40,7 @@ class SlideController extends Controller
      *
      * @Route("/", name="slide_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Slide:new.html.twig")
+     * @Template("OlegOrderformBundle:Slide:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

@@ -40,7 +40,7 @@ class StainController extends Controller
      *
      * @Route("/", name="stain_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Stain:new.html.twig")
+     * @Template("OlegOrderformBundle:Stain:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

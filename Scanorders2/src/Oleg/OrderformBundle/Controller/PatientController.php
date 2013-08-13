@@ -40,7 +40,7 @@ class PatientController extends Controller
      *
      * @Route("/", name="patient_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     * @Template("OlegOrderformBundle:Patient:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

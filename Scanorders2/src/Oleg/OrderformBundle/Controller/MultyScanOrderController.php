@@ -78,13 +78,14 @@ class MultyScanOrderController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
         
-        echo " controller multy1";
+        echo " controller multy<br>";
 
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(true), $entity);  
 //        $form->bind($request);
         $form->handleRequest($request);
-        
+
+        echo "Before validation main entity:<br>";
         echo $entity;
         echo " valid?: <br>";
         
@@ -106,11 +107,23 @@ class MultyScanOrderController extends Controller {
                 $entity->removePatient( $patient ); 
                 //$patient_processed->addOrderinfo($entity);
                 $entity->addPatient($patient_processed);
+                echo " after_process ";
+                echo $patient_processed;
 
                 foreach( $patient->getSpecimen() as $specimen ) {
+                    $entity->removePatient( $patient_processed );
                     $specimen_processed = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen );
-                    $patient->removeSpecimen( $specimen );
-                    $patient->addSpecimen($specimen_processed);
+                    //$specimen_processed->setPatient($patient_processed);
+                    //$em->persist($specimen_processed->getPatient());
+
+                    $patient_processed->removeSpecimen( $specimen );
+                    $patient_processed->addSpecimen( $specimen_processed );
+                    $entity->addPatient($patient_processed);
+
+                    echo "specimen: <br>";
+                    echo $entity;
+                    echo " end of specimen <br>";
+
                 }
 
                 //$entity->addPatient($patient);

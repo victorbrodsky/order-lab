@@ -40,7 +40,7 @@ class SpecimenController extends Controller
      *
      * @Route("/", name="specimen_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Specimen:new.html.twig")
+     * @Template("OlegOrderformBundle:Specimen:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

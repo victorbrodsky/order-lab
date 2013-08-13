@@ -62,7 +62,7 @@ class SecurityController extends Controller
     /**   
      * @Route("/login_check", name="login_check")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
+     * @Template("OlegOrderformBundle:ScanOrder:new_orig.html.twig")
      */
     public function loginCheckAction( Request $request )
     {                         

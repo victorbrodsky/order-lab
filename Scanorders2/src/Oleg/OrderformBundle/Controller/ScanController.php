@@ -43,7 +43,7 @@ class ScanController extends Controller
      *
      * @Route("/", name="scan_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Scan:new.html.twig")
+     * @Template("OlegOrderformBundle:Scan:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {

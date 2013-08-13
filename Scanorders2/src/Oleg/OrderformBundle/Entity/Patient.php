@@ -318,7 +318,17 @@ class Patient
     }
     
     public function __toString(){
-        return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)."<br>";
+
+        $specimen_info = "(";
+        $count = 0;
+        foreach( $this->specimen as $specimen ) {
+            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+            $specimen_info .= $count.":" . $specimen. "; ";
+            $count++;
+        }
+        $specimen_info .= ")";
+
+        return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)." (".$specimen_info.")<br>";
     }
     
 }

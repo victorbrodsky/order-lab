@@ -40,7 +40,7 @@ class AccessionController extends Controller
      *
      * @Route("/", name="accession_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Accession:new.html.twig")
+     * @Template("OlegOrderformBundle:Accession:new_orig.html.twig")
      */
     public function createAction(Request $request)
     {
