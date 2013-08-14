@@ -186,5 +186,18 @@ class MultyScanOrderController extends Controller {
         );
     }
     
+    /**
+     * Displays a form to create a new OrderInfo + Scan entities.
+     *
+     * @Route("/table", name="table")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Order:table.html.twig")
+     */
+    public function tableAction()
+    {     
+        return array(          
+            //'form' => $form->createView(),          
+        ); 
+    }
  
 }

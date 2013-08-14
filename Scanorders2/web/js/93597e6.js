@@ -9613,70 +9613,19 @@ var $addTagLink = $('<a href="#" class="btn btn-primary add_tag_link">Add Patien
 var $newLinkLi = $('<div class="patient-data"></div>').append($addTagLink);
 
 
-///specimen
-var collectionHolder_specimen = $('.patient');
+/////specimen
+var collectionHolder_specimen = $('.specimen');
 var $addTagLink_specimen = $('<a href="#" class="btn btn-primary add_tag_link">Add Specimen</a>');
 var $newLinkLi_specimen = $('<div class="specimen-data"></div>').append($addTagLink_specimen);
 
-var emailCount = '{{ form.patient | length }}';
-var specimenCount = '{{ form.patient.specimen | length }}';
+var patientCount = 0;   //'{{ form.patient | length }}';
+var specimenCount = 0;  //'{{ form.patient.specimen | length }}';
 
 $(document).ready(function() {
 
-    /////////test ////////////
-    $('#add-another-email').click(function() {
-        var emailList = $('#email-fields-list');
+    addPatientBtn();
 
-        // grab the prototype template
-        var newWidget = emailList.attr('data-prototype');
-        // replace the "__name__" used in the id and name of the prototype
-        // with a number that's unique to your emails
-        // end name attribute looks like name="contact[emails][2]"
-        newWidget = newWidget.replace(/__patient__/g, emailCount);
-        emailCount++;
-
-        // create a new list element and add it to the list
-        var newLi = $('<li></li>').html(newWidget);
-        newLi.appendTo($('#email-fields-list'));
-
-        //add specimen button
-//        $(newWidget).append('<a href="#" id="add-another-specimen">Add another specimen</a>');
-        $('<p><a href="#" id="add-another-specimen">Add another specimen</a></p>').appendTo("#email-fields-list");
-        return false;
-    });
-//    $('#add-another-specimen').click(function() {
-    $('#add-another-specimen').on('click', function(e) {
-        alert('add specimen');
-        var emailList = $('#email-fields-list');
-
-        // grab the prototype template
-        var newWidget = emailList.attr('data-prototype-specimen');
-        // replace the "__name__" used in the id and name of the prototype
-        // with a number that's unique to your emails
-        // end name attribute looks like name="contact[emails][2]"
-        newWidget = newWidget.replace(/__specimen__/g, specimenCount);
-        specimenCount++;
-
-        // create a new list element and add it to the list
-        var newLi = $('<li></li>').html(newWidget);
-        newLi.appendTo($('#email-fields-list'));
-
-        return false;
-    });
-    /////////// end of test ///////////////
-
-
-    // add a delete link to all of the existing tag form li elements
-    collectionHolder.find('.patient-data').each(function() {
-        addTagFormDeleteLink($(this));
-    });  
-    
-    // add the "add a tag" anchor and li to the tags ul
-    collectionHolder.append($newLinkLi);
-
-    // count the current form inputs we have (e.g. 2), use that as the new
-    // index when inserting a new item (e.g. 2)
-    collectionHolder.data('index', collectionHolder.find(':input').length);
+    //addSpecimenBtnTest();
 
     $addTagLink.on('click', function(e) {
         //alert("on click");
@@ -9687,75 +9636,131 @@ $(document).ready(function() {
         addTagForm(collectionHolder, $newLinkLi);
     });
 
-
-                       
-});
-
-function addTagForm(collectionHolder, $newLinkLi) {  
-    // Get the data-prototype explained earlier
-    var prototype = collectionHolder.data('prototype-patient');
-
-    // get the new index
-    var index = collectionHolder.data('index');
-
-    // Replace '__name__' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    //var newForm = prototype.replace(/__name__/g, index);
-    var newForm = prototype.replace(/__patient__/g, index);
-
-    // increase the index with one for the next item
-    collectionHolder.data('index', index + 1);
-
-    // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<div class="patient-data"></div>').append(newForm);
-    $newLinkLi.before($newFormLi);
-    
-//    collectionHolder.append($newLinkLi_specimen); 
-    // add a delete link to the new form
-    addTagFormDeleteLink($newFormLi);
-//    $newLinkLi_specimen.on('click', function(e) {
-//        // prevent the link from creating a "#" on the URL
-//        e.preventDefault();
-//        // add a new tag form (see next code block)
-//        addTagForm_specimen(collectionHolder, $newLinkLi_specimen);
-//    });
-
-
-    //specimen
-    //$('<div class="patient"></div>').append('DDD');
-    // add the "add a tag" anchor and li to the tags ul
-    collectionHolder_specimen.append($newLinkLi_specimen);
-    // count the current form inputs we have (e.g. 2), use that as the new
-    // index when inserting a new item (e.g. 2)
-    collectionHolder_specimen.data('index', collectionHolder_specimen.find(':input').length);
     $addTagLink_specimen.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
         // add a new tag form (see next code block)
         addTagForm_specimen(collectionHolder_specimen, $newLinkLi_specimen);
     });
+
+});
+
+
+function addPatientBtn() {
+    // add a delete link to all of the existing tag form li elements
+    collectionHolder.find('.patient-data').each(function() {
+        addTagFormDeleteLink($(this));
+    });
+
+    // add the "add a tag" anchor and li to the tags ul
+    collectionHolder.append($newLinkLi);
+
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    collectionHolder.data('index', collectionHolder.find(':input').length);
+}
+
+function addSpecimenBtnTest() {
+
+    //alert("add specimen");
+
+    //create specimen div
+    $(".patient-data").append("<div class='specimen'>QQQQQQQQQ</div>");
+    //collectionHolder_specimen = $('.patient-data');
+
+    //$('<div class="patient"></div>').append('DDD');
+    // add the "add a tag" anchor and li to the tags ul
+    collectionHolder.append($newLinkLi_specimen);
+
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    collectionHolder.data('index', collectionHolder_specimen.find(':input').length);
+    //specimenCount = collectionHolder_specimen.find(':input').length;
+}
+function addSpecimenBtn( inputform ) {
+
+    //alert("add specimen");
+
+    //create specimen div
+    $(".patient-data").append("<div class='specimen'>QQQQQQQQQ</div>");
+    //collectionHolder_specimen = $('.patient-data');
+
+    //$('<div class="patient"></div>').append('DDD');
+    // add the "add a tag" anchor and li to the tags ul
+    //collectionHolder_specimen.append($newLinkLi_specimen);
+    inputform.append($newLinkLi_specimen);
+
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    collectionHolder_specimen.data('index', collectionHolder_specimen.find(':input').length);
+    //specimenCount = collectionHolder_specimen.find(':input').length;
+
+    return inputform;
+}
+
+
+function addTagForm(collectionHolder, $newLinkLi) {
+
+    // increase the index with one for the next item
+    collectionHolder.data('index', index + 1);
+    patientCount++;
+
+    // Get the data-prototype explained earlier
+    var prototype = collectionHolder.data('prototype-patient');
+
+    // get the new index
+    var index = collectionHolder.data('index');
+    //alert('index='+index);
+    // Replace '__name__' in the prototype's HTML to
+    // instead be a number based on how many items we have
+    //var newForm = prototype.replace(/__name__/g, index);
+    var newForm = prototype.replace(/__patient__/g, patientCount);
+
+    // Display the form in the page in an li, before the "Add a tag" link li
+    var $newFormLi = $('<div class="patient-data"></div>').append(newForm);
+
+    $newFormLi.prepend("<h3>"+patientCount+") Patient:</h3>");
+
+    //specimen
+    //$newFormLi = addSpecimenBtn($newFormLi);
+    addSpecimenBtnTest();
+
+    $newLinkLi.before($newFormLi);
+
+    // add a delete link to the new form
+    addTagFormDeleteLink($newFormLi);
+
 }
 
 //specimen
 function addTagForm_specimen(collectionHolder_specimen, $newLinkLi_specimen) {
+
+    // increase the index with one for the next item
+    collectionHolder_specimen.data('index', index + 1);
+    specimenCount++;
+
     //alert('add specimen');
     // Get the data-prototype explained earlier
-    var prototype = collectionHolder_specimen.data('prototype-specimen');
+    var prototype = collectionHolder.data('prototype-specimen');
 
     // get the new index
     var index = collectionHolder_specimen.data('index');
 
+    //alert("patientCount="+patientCount+", index"+index);
+
     // Replace '__name__' in the prototype's HTML to
     // instead be a number based on how many items we have
-    var newForm_specimen = prototype.replace(/__specimen__/g, index);
+    var newForm_specimen = prototype.replace(/__patient__/g, patientCount);
+    newForm_specimen = newForm_specimen.replace(/__specimen__/g, specimenCount);
 
-    // increase the index with one for the next item
-    collectionHolder_specimen.data('index', index + 1);
+    alert(newForm_specimen);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-//    var $newFormLi = $('.specimen-data').append(newForm);
-    var $newFormLi_specimen = $('<div class="test"></div>').append(newForm_specimen);
-    $newLinkLi_specimen.before($newFormLi_specimen);
+    var $newFormLi = $('.specimen-data').append(newForm_specimen);
+
+    $newFormLi.prepend("<h3>"+specimenCount+") Specimen:</h3>")
+
+    $newLinkLi_specimen.before( $newFormLi );
     
     // add a delete link to the new form
     //addTagFormDeleteLink_specimen($newFormLi);
@@ -9772,6 +9777,50 @@ function addTagFormDeleteLink($tagFormLi) {
         // remove the li for the tag form
         $tagFormLi.remove();
     });
+}
+
+var count=1;
+function addTable() {
+	// if there's no table created yet, add the table to the tableHolder div
+	var insertLocation = document.getElementById("tableHolder")
+	var allTables = document.getElementById("tableHolder").getElementsByTagName("table")
+	if (allTables.length > 0) {
+		// if there is(are) a table(tables) in the tableHolder, add the table to the table created last
+		insertLocation = allTables[allTables.length-1].getElementsByTagName("tr")[0].getElementsByTagName("td")[0]
+	}
+	// create new table
+	var newTable = document.createElement("table")
+	var newTBody = document.createElement("tbody")
+	var newRow   = document.createElement("tr")
+	var newCell  = document.createElement("td")
+        
+        var newDiv   = document.createElement("div")
+        newDiv.className = "div_"+count;
+        newDiv.id = "div_"+count;
+        
+        
+	//var newData  = document.createTextNode(allTables.length + ": some sample text")
+        
+        var newData  = document.createTextNode('Hello text: '+count)  
+        
+        //newData.appendChild("<div class='btn_margin_top btn btn-primary' onclick='addTable()'>addTable</div>")
+        var myclass = ".div_"+count;
+        //alert("("+$myclass+")");
+        var myclassname = $(myclass).show();
+        //var myclassname = $(".div_1");
+        myclassname.show().append("<div class='btn_margin_top btn btn-primary' onclick='addTable()'>addTable</div>");   
+        
+        newDiv.appendChild(newData)
+        
+        newCell.appendChild(newDiv)
+        
+	//newCell.appendChild(newData)
+	newRow.appendChild(newCell)
+	newTBody.appendChild(newRow)
+	newTable.appendChild(newTBody)
+	// insert new table at proper location
+	insertLocation.appendChild(newTable)
+        count++;
 }
 
 

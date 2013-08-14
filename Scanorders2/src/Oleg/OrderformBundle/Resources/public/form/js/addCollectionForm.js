@@ -175,4 +175,94 @@ function addTagFormDeleteLink($tagFormLi) {
     });
 }
 
+var count=1;
+function addTable() {
+	// if there's no table created yet, add the table to the tableHolder div
+	var insertLocation = document.getElementById("tableHolder")
+	var allTables = document.getElementById("tableHolder").getElementsByTagName("table")
+	if (allTables.length > 0) {
+		// if there is(are) a table(tables) in the tableHolder, add the table to the table created last
+		insertLocation = allTables[allTables.length-1].getElementsByTagName("tr")[0].getElementsByTagName("td")[0]
+	}
+	// create new table
+	var newTable = document.createElement("table")
+	var newTBody = document.createElement("tbody")
+	var newRow   = document.createElement("tr")
+	var newCell  = document.createElement("td")
+        
+        var newDiv   = document.createElement("div")
+        newDiv.className = "div_"+count;
+        newDiv.id = "div_"+count;
+        
+        
+	//var newData  = document.createTextNode(allTables.length + ": some sample text")
+        
+        var newData  = document.createTextNode('Hello text: '+count)  
+        
+        //newData.appendChild("<div class='btn_margin_top btn btn-primary' onclick='addTable()'>addTable</div>")
+        var myclass = ".div_" + (count-1);
+        //alert("("+$myclass+")");
+        var myclassname = $(myclass).show();
+        //var myclassname = $(".div_1"); 
+        myclassname.append("<div class='btn_margin_top btn btn-primary' onclick='addTable2()'>addTable</div>"); 
+        
+        myclassname.append('<div id="tableHolder2"></div>');
+        
+        newDiv.appendChild(newData)
+        
+        newCell.appendChild(newDiv)
+        
+	//newCell.appendChild(newData)
+	newRow.appendChild(newCell)
+	newTBody.appendChild(newRow)
+	newTable.appendChild(newTBody)
+	// insert new table at proper location
+	insertLocation.appendChild(newTable)
+            
+        count++;   
+}
 
+var count2=1;
+function addTable2() {
+	// if there's no table created yet, add the table to the tableHolder div
+	var insertLocation = document.getElementById("tableHolder2")
+	var allTables = document.getElementById("tableHolder2").getElementsByTagName("table")
+	if (allTables.length > 0) {
+		// if there is(are) a table(tables) in the tableHolder, add the table to the table created last
+		insertLocation = allTables[allTables.length-1].getElementsByTagName("tr")[0].getElementsByTagName("td")[0]
+	}
+	// create new table
+	var newTable = document.createElement("table")
+	var newTBody = document.createElement("tbody")
+	var newRow   = document.createElement("tr")
+	var newCell  = document.createElement("td")
+        
+        var newDiv   = document.createElement("div")
+        newDiv.className = "div_"+count2;
+        newDiv.id = "div_"+count2;
+        
+        
+	//var newData  = document.createTextNode(allTables.length + ": some sample text")
+        
+        var newData  = document.createTextNode('Hello text: '+count2)  
+        
+        //newData.appendChild("<div class='btn_margin_top btn btn-primary' onclick='addTable()'>addTable</div>")
+        var myclass = ".div_" + (count-1);
+        //alert("("+$myclass+")");
+        var myclassname = $(myclass).show();
+        //var myclassname = $(".div_1"); 
+        //myclassname.append("<div class='btn_margin_top btn btn-primary' onclick='addTable2()'>addTable</div>"); 
+        
+        newDiv.appendChild(newData)
+        
+        newCell.appendChild(newDiv)
+        
+	//newCell.appendChild(newData)
+	newRow.appendChild(newCell)
+	newTBody.appendChild(newRow)
+	newTable.appendChild(newTBody)
+	// insert new table at proper location
+	insertLocation.appendChild(newTable)
+            
+        count2++;   
+}
