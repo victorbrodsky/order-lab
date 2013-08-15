@@ -1,0 +1,28 @@
+{#  input: object name : 'name', 'id', parent id: 'pid', data prototype holder class: 'holder' #}
+
+{#set unique id for this form#}
+{% set uid = name~"_"~id %}
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+
+        {{ name }} {{ id }}
+
+        <button id="form_body_btn_{{ uid }}" type="button" class="btn btn_margin" data-toggle="collapse" data-target="#form_body_{{ uid }}">
+            {{ name }} {{ id }} +/-
+        </button>
+
+    </div>
+
+    <div id="form_body_{{ uid }}" class="panel-body collapse in">
+        Object: {{ uid }}
+
+    </div>
+
+</div>
+
+
+
+
+

@@ -318,11 +318,12 @@ class OrderInfo
         
 //        //$this->patient->add($patient);
         if( !$this->patient->contains($patient) ) {  
-            echo "<br>patient not exists: add!:".$patient;                
+            //echo "<br>patient not exists: add!:".$patient;
             $this->patient->add($patient);
-        } else {
-            "<br>patient exists! <br>";
-        }  
+        }
+//        else {
+//            //"<br>patient exists! <br>";
+//        }
            
     }
 

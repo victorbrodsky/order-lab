@@ -169,17 +169,36 @@ class MultyScanOrderController extends Controller {
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
     public function newMultyAction()
-    {     
-        
+    {
+
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             //throw new AccessDeniedException();
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
-        
-        $entity = new OrderInfo();   
+
+        $entity = new OrderInfo();
         $username = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($username);
-        $form   = $this->createForm( new OrderInfoType(true), $entity );  
+
+        $patient = new Patient();
+        $entity->addPatient($patient);
+
+        $procedure = new Specimen();
+        $patient->addSpeciman($procedure);
+
+        $accession = new Accession();
+        $procedure->addAccession($accession);
+
+        $part = new Part();
+        $accession->addPart($part);
+
+        $block = new Block();
+        $part->addBlock($block);
+
+        $slide = new Slide();
+        $block->addSlide($slide);
+
+        $form   = $this->createForm( new OrderInfoType(true), $entity );
         
         return array(          
             'form' => $form->createView(),          

@@ -132,7 +132,7 @@ class SecurityController extends Controller
     
     private function AperioAuth( $loginName, $password ) {    
         
-        if(0) {
+        if(1) {
         $DataServerURL = GetDataServerURL();             
         $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
         $AuthResult = $client->Authenticate($loginName,$password);
