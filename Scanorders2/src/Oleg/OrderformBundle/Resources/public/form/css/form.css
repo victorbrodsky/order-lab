@@ -2,11 +2,11 @@
     Created on : Jul 17, 2013, 1:12:10 PM
     Author     : oli2002
 */
-//input, label {
-    //display: inline;
-    //display: inline-block;
-    //width: 50px;
-//}
+/*//input, label {*/
+    /*//display: inline;*/
+    /*//display: inline-block;*/
+    /*//width: 50px;*/
+/*//}*/
 
 .horizontal_type {
     padding-bottom: 5%;
@@ -117,30 +117,4 @@
     text-align:center;
 }
 
-//.oleg_padding_top_bottom {
-    //marging-top: 2%;
-    //margin-bottom: 2%;
-    //border:2px solid #a1a1a1;
-    //padding:10px 40px; 
-    //background:#dddddd;
-    //width:700px;
-    //border-radius:25px;
-//}
-
-#acc_part_block {
-    //float: left;
-    //width: 150px;
-}
-
-.olspan1 {
-    //margin: 0 auto; // !important;
-    //padding: 0; // !important;
-    //width: auto;
-}
-.olspanmin {
-    //float: left;
-    //margin: 0 auto; // !important;
-    //padding: 0; // !important;
-    //width: auto;
-}
 

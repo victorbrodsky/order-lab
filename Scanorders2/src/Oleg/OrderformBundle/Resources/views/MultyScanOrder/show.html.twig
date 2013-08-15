@@ -1,0 +1,324 @@
+{#{% extends "::base.html.twig" %}#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+    
+<h3 class="text-info">Clinical Multy Slide Scan Order </h3>
+
+{% set patientCount = 1 %}
+{% set procedureCount = 1 %}
+{% set accessionCount = 1 %}
+{% set partCount = 1 %}
+{% set blockCount = 1 %}
+{% set slideCount = 1 %}
+
+{#macro#}
+{% macro field( field ) %}
+    <div class="row-fluid">
+        <div class="span6" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="span6" align="left">
+            {{ form_widget(field) }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% import _self as myform %}
+
+
+<div id="patient-data"
+           data-prototype="
+                {{ myform.field(form.patient.vars.prototype.mrn)|e }}
+                {{ myform.field(form.patient.vars.prototype.name)|e }}
+                {{ myform.field(form.patient.vars.prototype.age)|e }}
+                {{ myform.field(form.patient.vars.prototype.sex)|e }}
+                {{ myform.field(form.patient.vars.prototype.dob)|e }}
+                {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}
+           "
+>
+</div>
+
+<div id="specimen-data"
+     data-prototype="
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper)|e }}
+     "
+>
+</div>
+
+{#<form action="{{ path('multy_create') }}" method="post">#}
+{{ form_start(form) }}
+
+    {#{{ form_errors(form) }}#}
+    {#{{form_widget(form.patient.vars.prototype)|e}}#}
+    {#data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype)|e }}"#}
+
+<div id="formpanel" class="panel">
+
+    <div class="orderinfo-data"
+
+        {#data-prototype-patient="#}
+            {#{{ myform.field(form.patient.vars.prototype.mrn)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.name)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.age)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.sex)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.dob)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}#}
+        {#"#}
+
+        {#data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.specimen.vars.prototype)|e }}"#}
+        {#data-prototype-accession="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype.children['accession'].vars.prototype)|e }}"#}
+        data-prototype-accession="{{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.children.accession.vars.prototype)|e }}"
+        data-prototype-part="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype.children['accession'].vars.prototype.children['part'].vars.prototype)|e }}"
+        data-prototype-block="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype.children['accession'].vars.prototype.children['part'].vars.prototype.children['block'].vars.prototype)|e }}"
+        data-prototype-slide="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype.children['accession'].vars.prototype.children['part'].vars.prototype.children['block'].vars.prototype.children['slide'].vars.prototype)|e }}"
+    >
+
+        {#patient#}
+        <div id="formpanel_collection_patient_{{ patientCount }}" class="panel panel-primary">
+            {% for patient in form.patient %}
+            <div class="patient-data">
+                <div class="panel-heading">
+                    Patient {{ patientCount }}
+                    <button id="form_body_btn_patient_{{ patientCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_patient_{{ patientCount }}">
+                        +/-
+                    </button>
+                </div>
+                <div id="form_body_patient_{{ patientCount }}" class="panel-body collapse in">
+
+                    {{ myform.field(patient.mrn) }}
+                    {{ myform.field(patient.name) }}
+                    {{ myform.field(patient.age) }}
+                    {{ myform.field(patient.sex) }}
+                    {{ myform.field(patient.dob) }}
+                    {{ myform.field(patient.clinicalHistory) }}
+
+                    {#specimen/procedure#}
+                    <div id="formpanel_collection_procedure_{{ procedureCount }}" class="panel panel-primary">
+                    {% for specimen in patient.specimen %}
+                        <div class="procedure-data">
+                            <div class="panel-heading">
+                                Procedure {{ procedureCount }}
+                                <button id="form_body_btn_procedure_{{ procedureCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_procedure_{{ procedureCount }}">
+                                    +/-
+                                </button>
+                            </div>
+                            <div id="form_body_procedure_{{ procedureCount }}" class="panel-body collapse in">
+                                {#{{ form_row(specimen) }}#}
+                                {{ myform.field(specimen.proceduretype) }}
+                                {{ myform.field(specimen.paper) }}
+
+                                {#accession#}
+                                <div id="formpanel_collection_accession_{{ accessionCount }}" class="panel panel-primary">
+                                    {% for accession in specimen.accession %}
+                                        <div class="specimen-data">
+                                            <div class="panel-heading">
+                                                Accession {{ accessionCount }}
+                                                <button id="form_body_btn_procedure_{{ accessionCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_accession_{{ accessionCount }}">
+                                                    +/-
+                                                </button>
+                                            </div>
+                                            <div id="form_body_accession_{{ accessionCount }}" class="panel-body collapse in">
+                                                {{ myform.field(accession.accession) }}
+                                                {{ myform.field(accession.date) }}
+
+                                                {#part#}
+                                                <div id="formpanel_collection_part_{{ partCount }}" class="panel panel-primary">
+                                                    {% for part in accession.part %}
+                                                        <div class="specimen-data">
+                                                            <div class="panel-heading">
+                                                                Part {{ partCount }}
+                                                                <button id="form_body_btn_part_{{ partCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_part_{{ partCount }}">
+                                                                    +/-
+                                                                </button>
+                                                            </div>
+                                                            <div id="form_body_part_{{ partCount }}" class="panel-body collapse in">
+                                                                {{ myform.field(part.name) }}
+                                                                {{ myform.field(part.sourceOrgan) }}
+                                                                {{ myform.field(part.description) }}
+                                                                {{ myform.field(part.diagnosis) }}
+                                                                {{ myform.field(part.diffDiagnosis) }}
+                                                                {{ myform.field(part.diseaseType) }}
+
+                                                                {#block#}
+                                                                <div id="formpanel_collection_block_{{ blockCount }}" class="panel panel-primary">
+                                                                    {% for block in part.block %}
+                                                                        <div class="block-data">
+                                                                            <div class="panel-heading">
+                                                                                Block {{ blockCount }}
+                                                                                <button id="form_body_btn_block_{{ blockCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_block_{{ blockCount }}">
+                                                                                    +/-
+                                                                                </button>
+                                                                            </div>
+                                                                            <div id="form_body_block_{{ blockCount }}" class="panel-body collapse in">
+                                                                                {{ myform.field(block.name) }}
+
+
+                                                                                {#slide#}
+                                                                                <div id="formpanel_collection_slide_{{ slideCount }}" class="panel panel-primary">
+                                                                                    {% for slide in block.slide %}
+                                                                                        <div class="slide-data">
+                                                                                            <div class="panel-heading">
+                                                                                                Slide {{ slideCount }}
+                                                                                                <button id="form_body_btn_slide_{{ slideCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_slide_{{ slideCount }}">
+                                                                                                    +/-
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div id="form_body_slide_{{ slideCount }}" class="panel-body collapse in">
+                                                                                                {{ myform.field(slide.diagnosis) }}
+                                                                                                {{ myform.field(slide.microscopicdescr) }}
+                                                                                                {{ myform.field(slide.specialstain) }}
+                                                                                                {{ myform.field(slide.relevantscan) }}
+
+                                                                                                {{ myform.field(slide.stain.name) }}
+                                                                                                {{ myform.field(slide.scan.mag) }}
+                                                                                                {{ myform.field(slide.scan.scanregion) }}
+                                                                                                {{ myform.field(slide.scan.note) }}
+
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {% set slideCount = slideCount + 1 %}
+                                                                                    {% endfor %}
+                                                                                </div> {#end of slide#}
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                        {% set blockCount = blockCount + 1 %}
+                                                                    {% endfor %}
+                                                                </div> {#end of block#}
+
+
+                                                            </div>
+                                                        </div>
+                                                        {% set partCount = partCount + 1 %}
+                                                    {% endfor %}
+                                                </div> {#end of part#}
+
+
+                                            </div>
+                                        </div>
+                                        {% set accessionCount = accessionCount + 1 %}
+                                    {% endfor %}
+                                </div> {#end of accession#}
+
+
+                            </div>
+                        </div>
+                        {% set procedureCount = procedureCount + 1 %}
+                    {% endfor %} {# specimen loop #}
+                    <button id="form_add_btn" type="button" class="btn btn_margin" onclick="addSameForm('procedure', {{ procedureCount }})">Add Procedure</button>
+                </div>{#end of specimen #}
+
+                </div>{# end of form_body_patient_ #}
+            </div>{# end of patient-data #}
+                {% set patientCount = patientCount + 1 %}
+            {% endfor %} {# patient loop #}
+        <button id="form_add_btn" type="button" class="btn btn_margin" onclick="addSameForm('patient', {{ patientCount }})">Add Patient</button>
+        </div>{# end of patient#}
+
+    </div>{# end of orderinfo-data#}
+
+
+    {#{{ include(#}
+        {#'OlegOrderformBundle::MultyScanOrder/panel.html.twig', {'name':'Patient','id':1, 'pid':1}#}
+    {#) }}#}
+
+{#    Test cal controller: it works!#}
+{#    {% render url('part_new') %}#}
+
+    <button id="next_button" type="button" class="btn" 
+            data-toggle="collapse" data-target="#orderinfo_param">Next
+    </button>
+
+
+    <div id="orderinfo_param" class="collapse">
+        <div class="row-fluid">
+        <div class="span12">
+        <h4>Scan Order Info</h4>   
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.provider) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.provider) }} 
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.pathologyService) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.pathologyService) }}
+        </div>
+        </div>
+
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.priority) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.priority) }}
+        </div>
+        </div>
+{#            optional for priority#}
+        <div id="priority_option" class="collapse"> 
+{#            <div class="oleg_padding_top_bottom text-info">#}
+        <div class="well">
+
+            <div class="row-fluid">              
+            <div class="span6" align="right">              
+            {{ form_label(form.scandeadline) }}
+            </div>            
+            <div class="span6" align="left">
+            {{ form_widget(form.scandeadline) }} 
+            </div>   
+            </div>    
+
+            <div class="row-fluid">              
+            <div class="span6" align="right">
+            {{ form_label(form.returnoption) }}
+            </div>            
+            <div class="span6" align="left">
+            {{ form_widget(form.returnoption) }} 
+            </div>   
+            </div>    
+        </div>    
+        </div>  
+
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.slideDelivery) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.slideDelivery) }}
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span6" align="right">
+        {{ form_label(form.returnSlide) }}
+        </div>
+        <div class="span6" align="left">
+        {{ form_widget(form.returnSlide) }}
+        </div>
+        </div>
+        <div class="row-fluid">
+        <div class="span12">
+            <button class="btn_margin_top btn btn-primary btn-success" type="submit">Submit</button>        
+        </div>
+        </div> 
+    </div>
+   
+     {#{{ form_rest(form) }}#}
+
+</div>
+    
+{{ form_end(form) }}
+{#</form>#}
+    
+{% endblock %}
+  

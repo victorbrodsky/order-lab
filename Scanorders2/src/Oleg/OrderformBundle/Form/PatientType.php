@@ -70,7 +70,7 @@ class PatientType extends AbstractType
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'label' => "Specimen:",
+                'label' => " ",
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__specimen__',

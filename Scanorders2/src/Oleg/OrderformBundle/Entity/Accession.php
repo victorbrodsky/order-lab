@@ -67,7 +67,7 @@ class Accession {
       
     public function __toString()
     {
-        return $this->accession;
+        return "Accession: id=".$this->id.", accession#".$this->accession;
     }
 
     /**
