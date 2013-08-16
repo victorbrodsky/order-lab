@@ -93,18 +93,24 @@
 
     {#<div>#}
 
+    {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
+
     {#patient#}
-    {% set patientCount = 1 %}
+    {% set patientCount = 0 %}
     {% for patient in form.patient %}
-        <div id="formpanel_patient_{{ patientCount }}_1" class="panel panel-primary">
+        {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+        {#{% set patientCountNext = patientCount + 1 %}#}
+        <div id="formpanel_patient_{{ uid }}" class="panel panel-patient">
             <div class="panel-heading" align="left">
-                <button id="form_body_btn_patient_{{ patientCount }}" type="button" class="btn btn-mini btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_patient_{{ patientCount }}">
+                <button type="button" class="btn btn-mini btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_patient_{{ uid }}">
                     +/-
                 </button>
                 Patient {{ patientCount }}
-                <button id="form_add_btn" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('patient', {{ patientCount }}, 1)">Add Patient</button>
+                {% if form.patient|length ==  (patientCount + 1) %}
+                <button id="form_add_btn_patient_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('patient', {{ patientCount }}, 0, 0, 0, 0, 0)">Add Patient</button>
+                {% endif %}
             </div>
-            <div id="form_body_patient_{{ patientCount }}" class="panel-body collapse in">
+            <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
                 {{ myform.field(patient.mrn) }}
                 {{ myform.field(patient.name) }}
                 {{ myform.field(patient.age) }}
@@ -113,49 +119,58 @@
                 {{ myform.field(patient.clinicalHistory) }}
 
                 {#specimen/procedure#}
-                {% set procedureCount = 1 %}
+                {% set procedureCount = 0 %}
                 {% for specimen in patient.specimen %}
-                    <div id="formpanel_procedure_{{ procedureCount }}_{{ patientCount }}" class="panel panel-primary">
+                    {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                    <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
                         <div class="panel-heading" align="left">
-                            <button id="form_body_btn_procedure_{{ procedureCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_procedure_{{ procedureCount }}">
+                            <button id="form_body_btn_procedure_{{ procedureCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_procedure_{{ uid }}">
                                 +/-
                             </button>
                             Procedure {{ procedureCount }}
-                            <button id="form_add_btn" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('procedure', {{ procedureCount }}, {{ patientCount }})">Add Procedure</button>
+                            {% if patient.specimen|length ==  (procedureCount + 1) %}
+                            <button id="form_add_btn_specimen_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('procedure', {{ patientCount }}, {{ procedureCount }}, 0, 0, 0, 0)">Add Procedure</button>
+                            {% endif %}
                             <button onclick="return confirm('Are you sure?');" id="form_body_btn_procedure_{{ procedureCount }}" type="button" class="btn btn-danger btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_procedure_{{ procedureCount }}">
                                 Delete This Procedure
                             </button>
                         </div>
-                        <div id="form_body_procedure_{{ procedureCount }}" class="panel-body collapse in">
+                        <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
                             {#{{ form_row(specimen) }}#}
                             {{ myform.field(specimen.proceduretype) }}
                             {{ myform.field(specimen.paper) }}
 
                             {#accession#}
-                            {% set accessionCount = 1 %}
+                            {% set accessionCount = 0 %}
                             {% for accession in specimen.accession %}
-                                <div id="formpanel_accession_{{ accessionCount }}_{{ procedureCount }}" class="panel panel-primary">
+                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0 %}
+                                <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
                                     <div class="panel-heading" align="left">
-                                            <a style="background-color:white;" data-toggle="collapse" href="#form_body_accession_{{ accessionCount }}">+/-</a>
-                                            Accession {{ accessionCount }}
-                                            <button id="form_add_btn" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('accession', {{ accessionCount }}, {{ procedureCount }})">Add Accession</button>
+                                        <a style="background-color:white;" data-toggle="collapse" href="#form_body_accession_{{ uid }}">+/-</a>
+                                        Accession {{ accessionCount }}
+                                        {% if specimen.accession|length ==  (accessionCount + 1) %}
+                                        <button id="form_add_btn_accession_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('accession', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, 0, 0, 0)">Add Accession</button>
+                                        {% endif %}
                                     </div>
-                                    <div id="form_body_accession_{{ accessionCount }}" class="panel-body collapse in">
+                                    <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
                                             {{ myform.field(accession.accession) }}
                                             {{ myform.field(accession.date) }}
 
                                         {#part#}
-                                        {% set partCount = 1 %}
+                                        {% set partCount = 0 %}
                                         {% for part in accession.part %}
-                                            <div id="formpanel_part_{{ partCount }}_{{ accessionCount }}" class="panel panel-primary">
+                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0 %}
+                                            <div id="formpanel_part_{{ uid }}" class="panel panel-part">
                                                 <div class="panel-heading" align="left">
-                                                    <button id="form_body_btn_part_{{ partCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_part_{{ partCount }}">
+                                                    <button id="form_body_btn_part_{{ partCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_part_{{ uid }}">
                                                         +/-
                                                     </button>
                                                     Part {{ partCount }}
-                                                    <button id="form_add_btn" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('part', {{ partCount }}, {{ accessionCount }})">Add Part</button>
+                                                    {% if accession.part|length ==  (partCount + 1) %}
+                                                    <button id="form_add_btn_part_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('part', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, 0, 0)">Add Part</button>
+                                                    {% endif %}
                                                 </div>
-                                                <div id="form_body_part_{{ partCount }}" class="panel-body collapse in">
+                                                <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
                                                     {{ myform.field(part.name) }}
                                                     {{ myform.field(part.sourceOrgan) }}
                                                     {{ myform.field(part.description) }}
@@ -164,32 +179,38 @@
                                                     {{ myform.field(part.diseaseType) }}
 
                                                     {#block#}
-                                                    {% set blockCount = 1 %}
+                                                    {% set blockCount = 0 %}
                                                     {% for block in part.block %}
-                                                        <div id="formpanel_block_{{ blockCount }}_{{ partCount }}" class="panel panel-primary">
+                                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0 %}
+                                                        <div id="formpanel_block_{{ uid }}" class="panel panel-block">
                                                                 <div class="panel-heading" align="left">
-                                                                    <button id="form_body_btn_block_{{ blockCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_block_{{ blockCount }}">
+                                                                    <button id="form_body_btn_block_{{ uid }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_block_{{ uid }}">
                                                                         +/-
                                                                     </button>
                                                                     Block {{ blockCount }}
-                                                                    <button id="form_add_btn" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('block', {{ blockCount }}, {{ partCount }})">Add Block</button>
+                                                                    {% if part.block|length ==  (blockCount + 1) %}
+                                                                    <button id="form_add_btn_block_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('block', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, 0)">Add Block</button>
+                                                                    {% endif %}
                                                                 </div>
-                                                                <div id="form_body_block_{{ blockCount }}" class="panel-body collapse in">
+                                                                <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
                                                                     {{ myform.field(block.name) }}
 
 
                                                                     {#slide#}
-                                                                    {% set slideCount = 1 %}
+                                                                    {% set slideCount = 0 %}
                                                                     {% for slide in block.slide %}
-                                                                        <div id="formpanel_slide_{{ slideCount }}_{{ blockCount }}" class="panel panel-primary">
+                                                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount %}
+                                                                        <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
                                                                             <div class="panel-heading" align="left">
-                                                                                <button id="form_body_btn_slide_{{ slideCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_slide_{{ slideCount }}">
+                                                                                <button id="form_body_btn_slide_{{ slideCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_slide_{{ uid }}">
                                                                                     +/-
                                                                                 </button>
                                                                                 Slide {{ slideCount }}
-                                                                                <button id="form_add_btn" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('slide', {{ slideCount }}, {{ blockCount }})">Add Slide</button>
+                                                                                {% if block.slide|length ==  (slideCount + 1) %}
+                                                                                <button id="form_add_btn_slide_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('slide', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, {{ slideCount }})">Add Slide</button>
+                                                                                {% endif %}
                                                                             </div>
-                                                                            <div id="form_body_slide_{{ slideCount }}" class="panel-body collapse in">
+                                                                            <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
                                                                                 {{ myform.field(slide.diagnosis) }}
                                                                                 {{ myform.field(slide.microscopicdescr) }}
                                                                                 {{ myform.field(slide.specialstain) }}

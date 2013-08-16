@@ -2,11 +2,11 @@
     Created on : Jul 17, 2013, 1:12:10 PM
     Author     : oli2002
 */
-//input, label {
-    //display: inline;
-    //display: inline-block;
-    //width: 50px;
-//}
+/*//input, label {*/
+    /*//display: inline;*/
+    /*//display: inline-block;*/
+    /*//width: 50px;*/
+/*//}*/
 
 .horizontal_type {
     padding-bottom: 5%;
@@ -117,30 +117,61 @@
     text-align:center;
 }
 
-//.oleg_padding_top_bottom {
-    //marging-top: 2%;
-    //margin-bottom: 2%;
-    //border:2px solid #a1a1a1;
-    //padding:10px 40px; 
-    //background:#dddddd;
-    //width:700px;
-    //border-radius:25px;
-//}
-
-#acc_part_block {
-    //float: left;
-    //width: 150px;
+.panel {
+    /*border-top: 7px solid #428bca;*/
+    border-left: 7px solid;
 }
 
-.olspan1 {
-    //margin: 0 auto; // !important;
-    //padding: 0; // !important;
-    //width: auto;
+.panel-patient {
+    border-color: #90BEE4;
 }
-.olspanmin {
-    //float: left;
-    //margin: 0 auto; // !important;
-    //padding: 0; // !important;
-    //width: auto;
+.panel-patient .panel-heading {
+    color: #ffffff;
+    background-color: #90BEE4;
+    border-color: #90BEE4;
 }
 
+.panel-procedure {
+    border-color: #71B0E4;
+}
+.panel-procedure .panel-heading {
+    color: #ffffff;
+    background-color: #71B0E4;
+    border-color: #71B0E4;
+}
+
+.panel-accession {
+    border-color: #3F98C8;
+}
+.panel-accession .panel-heading {
+    color: #ffffff;
+    background-color: #3F98C8;
+    border-color: #3F98C8;
+}
+
+.panel-part {
+     border-color: #428CCA;
+ }
+.panel-part .panel-heading {
+    color: #ffffff;
+    background-color: #428CCA;
+    border-color: #428CCA;
+}
+
+.panel-block {
+    border-color: #1268B3;
+}
+.panel-block .panel-heading {
+    color: #ffffff;
+    background-color: #1268B3;
+    border-color: #1268B3;
+}
+
+.panel-slide {
+    border-color: #155183; //35478C
+}
+.panel-slide .panel-heading {
+    color: #ffffff;
+    background-color: #155183;
+    border-color: #155183;
+}

@@ -183,8 +183,14 @@ class MultyScanOrderController extends Controller {
         $patient = new Patient();
         $entity->addPatient($patient);
 
+        //$patient2 = new Patient();
+        //$entity->addPatient($patient2);
+
         $procedure = new Specimen();
         $patient->addSpeciman($procedure);
+
+        $procedure2 = new Specimen();
+        $patient->addSpeciman($procedure2);
 
         $accession = new Accession();
         $procedure->addAccession($accession);
@@ -197,6 +203,9 @@ class MultyScanOrderController extends Controller {
 
         $slide = new Slide();
         $block->addSlide($slide);
+
+        //$slide2 = new Slide();
+        //$block->addSlide($slide2);
 
         $form   = $this->createForm( new OrderInfoType(true), $entity );
         

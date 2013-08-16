@@ -8,64 +8,137 @@
 
 //var id = 0;
 
-var collectionHolder = $('.orderinfo-data');
+//var collectionHolder = $('.orderinfo-data');
 
-$(document).ready(function() {
+//$(document).ready(function() {
+//
+//    //addSameForm( 'patient' );
+//
+//});
 
-    //addSameForm( 'patient' );
 
-});
+function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+
+    var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+
+    //alert("addSameForm="+uid);
+
+    //place the form in the html page
+    var holder = "#formpanel_"+name+"_"+uid;
+    $(holder).after( getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) );
+
+    //populate form with html data
+    //addTagForm( name, patientid, procedureid, accessionid, partid, blockid, slideid );
+
+    //append to form_body_ the rest of forms
+//    if( name == 'patient') {
+//        var uid = name+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+//        var holder = "#form_body_"+uid;
+//        $(holder).after( getForm( 'procedure', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
+//
+//        var uid = 'procedure'+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+//        var holder = "#form_body_"+uid;
+//        $(holder).after( getForm( 'accession', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
+//
+//        var uid = 'accession'+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+//        var holder = "#form_body_"+uid;
+//        $(holder).after( getForm( 'part', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
+//    }
 
 
-function addSameForm( name, id ) {
+    var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide'];
+    var length = nameArray.length
+    var index = nameArray.indexOf(name);
+    //console.log("index="+index+" len="+length);
+    for (var i = index+1; i < length; i++) {
+        console.log("--name="+nameArray[i]);
+        addChildForms( name, nameArray[i], patientid, procedureid, accessionid, partid, blockid, slideid );
+    }
 
-    //alert("addSameForm="+name+" id="+id);
-
-    id++;
-
-    //var form = "{{ include('OlegOrderformBundle::MultyScanOrder/sameform.html.twig', {'name':'"+name+"','id':"+id+"}) }}";
-
-    var holder = "#formpanel_collection";
-
-    $(holder).append( sameForm( name, id ) );
-
-    var formholder = "#form_body_" + name + "_" + id;
-
-    addTagForm( name, id, formholder );
+    //addRestForms( name, patientid, procedureid, accessionid, partid, blockid, slideid );
 }
 
-function sameForm( name, id ) {
+function addChildForms( name, nextName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
+    var idsu = btnids[2];
+    //var nextName = btnids[3];
 
-    var uid = name + "_" + id;
+    var uid = name+"_"+idsu;
+    var holder = "#form_body_"+uid;
+    console.log(name+": add childs to="+holder);
+
+    var idsArray = idsu.split("_");
+
+    $(holder).after( getForm( nextName, idsArray[0], idsArray[1], idsArray[2], idsArray[3], idsArray[4], idsArray[5] ) );
+
+}
+
+function getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+
+    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
+    var id = btnids[0];
+    var ids = btnids[1];
+    var idsu = btnids[2];
+
+    //alert(idsu);
+
+    var formbody = getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid );
 
     var formhtml =
-        '<div class="panel panel-primary">' +
-            '<div class="panel-heading">' +
-                name + ' ' + id +
-                    '<button id="form_body_btn_' + uid + '" type="button" class="btn btn_margin" data-toggle="collapse" data-target="#form_body_' + uid + '">+/-</button>'+
+        '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
+            '<div class="panel-heading" align="left">' +
+                '<a style="background-color:white;" data-toggle="collapse" href="#form_body_' + name + '_' + idsu + '">+/-</a> &nbsp;' +
+                capitaliseFirstLetter(name) + ' ' + (id+1) + '&nbsp;' +
+                '<button id="form_add_btn_' + idsu + '" type="button" class="btn btn-mini btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids + ')">Add ' + capitaliseFirstLetter(name) + '</button>' +
             '</div>' +
-            '<div id="form_body_' + uid + '" class="panel-body collapse in"></div>' +
+            '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' + formbody + '</div>' +
         '</div>';
 //        '<button id="form_add_btn" type="button" class="btn btn_margin" onclick="addSameForm(\'' + name + '\')">Add ' + name + '</button>';
+
+    //remove previous form add button
+    var uid =patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+    //alert("remove uid="+uid);
+    $('#form_add_btn_'+name+'_'+uid).remove();
 
     return formhtml;
 }
 
-function addTagForm( name, id, formholder ) {
+function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+
+    //var uid = name+"_"+patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+    //var formbody = "#form_body_" + uid;
+
+    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
+    var id = btnids[0];
+
+    var collectionHolder =  $('#'+name+'-data');
+
+    console.log("prot name = "+name);
 
     // Get the data-prototype explained earlier
-    var prototype = collectionHolder.data('prototype-patient');
+    var prototype = collectionHolder.data('prototype');
 
     // get the new index
-    var index = collectionHolder.data('index');
-    //alert('index='+index);
-    // Replace '__name__' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    //var newForm = prototype.replace(/__name__/g, index);
-    var newForm = prototype.replace(/__"+name+"__/g, id);
+    //var index = collectionHolder.data('index');
+
+    //var myRegExp = new RegExp("__"+name+"__",'gi');
+    //var newForm = prototype.replace(myRegExp, id);
+
+    var newForm = prototype.replace(/__patient__/g, patientid);
+    newForm = newForm.replace(/__specimen__/g, procedureid);
+    newForm = newForm.replace(/__accession__/g, accessionid);
+    newForm = newForm.replace(/__part__/g, partid);
+    newForm = newForm.replace(/__block__/g, blockid);
+    newForm = newForm.replace(/__slide__/g, slideid);
+
+    //In order to have a correct form here replace all parents name with ids...
+
+    //alert(newForm);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $(formholder).append(newForm);
+    //var $newFormLi = $(formbody).append(newForm);
+
+    return newForm;
 
     //$newFormLi.prepend("<h3>"+patientCount+") Patient:</h3>");
 
@@ -82,5 +155,62 @@ function addTagForm( name, id, formholder ) {
 
     // add a delete link to the new form
     //addTagFormDeleteLink($newFormLi);
+}
 
+//Helpers
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getIds( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+    var id = 0;
+    var nextName = "";
+
+    switch(name)
+    {
+        case "patient":
+            id = patientid;
+            patientid++;
+            nextName = "procedure";
+            break;
+        case "procedure":
+            id = procedureid;
+            procedureid++;
+            nextName = "accession";
+            break;
+        case "accession":
+            id = accessionid;
+            accessionid++;
+            nextName = "part";
+            break;
+        case "part":
+            id = partid;
+            partid++;
+            nextName = "block";
+            break;
+        case "block":
+            id = blockid;
+            blockid++;
+            nextName = "slide";
+            break;
+        case "slide":
+            id = slideid;
+            slideid++;
+            nextName = "";
+            break;
+        default:
+            id = 0;
+    }
+
+    var ids = patientid+","+procedureid+","+accessionid+","+partid+","+blockid+","+slideid;
+    var idsu = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+
+    var res_array = [];
+    res_array.push( id );
+    res_array.push( ids );
+    res_array.push( idsu );
+    res_array.push( nextName );
+
+    return res_array;
 }
