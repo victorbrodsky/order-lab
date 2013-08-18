@@ -52,20 +52,25 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     //console.log("index="+index+" len="+length);
     for (var i = index+1; i < length; i++) {
         console.log("--name="+nameArray[i]);
-        addChildForms( name, nameArray[i], patientid, procedureid, accessionid, partid, blockid, slideid );
+        addChildForms( name, nameArray[i-1], nameArray[i], patientid, procedureid, accessionid, partid, blockid, slideid );
     }
 
     //addRestForms( name, patientid, procedureid, accessionid, partid, blockid, slideid );
 }
 
-function addChildForms( name, nextName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+function addChildForms( name, prevName, nextName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
     var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
     var idsu = btnids[2];
     //var nextName = btnids[3];
 
+    //add 1 to preceding name only, the rest are 0s
+    console.log(name + " " + prevName + " " + nextName );
+    var btnids = getIds(prevName, patientid, procedureid, accessionid, partid, blockid, slideid);
+    var idsu = btnids[2];
+
     var uid = name+"_"+idsu;
     var holder = "#form_body_"+uid;
-    console.log(name+": add childs to="+holder);
+    console.log(nextName+": add childs to="+holder+" uid="+idsu);
 
     var idsArray = idsu.split("_");
 
@@ -207,10 +212,10 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
     var idsu = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
 
     var res_array = [];
-    res_array.push( id );
-    res_array.push( ids );
-    res_array.push( idsu );
-    res_array.push( nextName );
+    res_array.push( id );       //0
+    res_array.push( ids );      //1
+    res_array.push( idsu );     //2
+    res_array.push( nextName ); //3
 
     return res_array;
 }

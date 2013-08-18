@@ -65,10 +65,15 @@ $(document).ready(function() {
 });
 
 function setNavBar() {
+
     var index_arr = window.location.pathname.split('/');
-    var index = index_arr.indexOf("app_dev.php");
-    console.log("full="+window.location.pathname+", index="+index + " name="+index_arr[index+1]);
+    var index = index_arr.indexOf("order");
+    if( index_arr.indexOf("app_dev.php") != -1 ) {
+        index = index + 4;
+    }
+    console.info("full="+window.location.pathname+", index="+index + " name="+index_arr[index+1]);
     $('ul.li').removeClass('active');
+
     switch( index_arr[index+1] )
     {
         case "multy":

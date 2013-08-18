@@ -25,6 +25,9 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //place the form in the html page
     var holder = "#formpanel_"+name+"_"+uid;
+    
+    //prepare form ids and pass it as array
+    
     $(holder).after( getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) );
 
     //populate form with html data
@@ -35,51 +38,59 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 //        var uid = name+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
 //        var holder = "#form_body_"+uid;
 //        $(holder).after( getForm( 'procedure', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
-//
-//        var uid = 'procedure'+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-//        var holder = "#form_body_"+uid;
-//        $(holder).after( getForm( 'accession', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
-//
-//        var uid = 'accession'+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-//        var holder = "#form_body_"+uid;
-//        $(holder).after( getForm( 'part', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
 //    }
-
 
     var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide'];
     var length = nameArray.length
     var index = nameArray.indexOf(name);
     //console.log("index="+index+" len="+length);
+    var parentName = name;
     for (var i = index+1; i < length; i++) {
-        console.log("--name="+nameArray[i]);
-        addChildForms( name, nameArray[i-1], nameArray[i], patientid, procedureid, accessionid, partid, blockid, slideid );
+        console.log("=> name="+nameArray[i]);
+        addChildForms( parentName, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid );
     }
 
     //addRestForms( name, patientid, procedureid, accessionid, partid, blockid, slideid );
 }
 
-function addChildForms( name, prevName, nextName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
     var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
     var idsu = btnids[2];
     //var nextName = btnids[3];
 
     //add 1 to preceding name only, the rest are 0s
-    console.log(name + " " + prevName + " " + nextName );
-    var btnids = getIds(prevName, patientid, procedureid, accessionid, partid, blockid, slideid);
+    console.log(name + " " + prevName );
+    //var idsu = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+    
+    //idsu - +1 for the parent object (parentName) and -1 for current iterated object (name) (getForm will increment it by 1)
+    //attach to previous object (prevName)
+    var btnids = getIds( parentName, patientid, procedureid, accessionid, partid, blockid, slideid );
     var idsu = btnids[2];
+    
+//    var nameArr = btnids[2].split("_"); 
+//    var btnids2 = getIds( name, nameArr[0], nameArr[1], nameArr[2], nameArr[3], nameArr[4], nameArr[5] );
+//    var idsu = btnids2[2];
 
-    var uid = name+"_"+idsu;
+    var uid = prevName+"_"+idsu;
     var holder = "#form_body_"+uid;
-    console.log(nextName+": add childs to="+holder+" uid="+idsu);
+    console.log(name+": add childs to="+holder+" uid="+idsu);
 
-    var idsArray = idsu.split("_");
+    //now use idsu and minus 1 for inserted object (name)
+    var idArr = idsu.split("_"); 
+    var btnids2 = getIdsMinus( name, idArr[0], idArr[1], idArr[2], idArr[3], idArr[4], idArr[5] );  
+    var resArr = btnids2[2].split("_"); 
 
-    $(holder).after( getForm( nextName, idsArray[0], idsArray[1], idsArray[2], idsArray[3], idsArray[4], idsArray[5] ) );
+    $(holder).append( getForm( name, resArr[0], resArr[1], resArr[2], resArr[3], resArr[4], resArr[5] ) );
+//    $(holder).after( getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) );
 
 }
 
+//input: current form ids
 function getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
 
+    console.log("getForm: "+name+"_"+patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid);
+
+    //increment by 1 current object id
     var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
     var id = btnids[0];
     var ids = btnids[1];
@@ -93,7 +104,7 @@ function getForm( name, patientid, procedureid, accessionid, partid, blockid, sl
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
                 '<a style="background-color:white;" data-toggle="collapse" href="#form_body_' + name + '_' + idsu + '">+/-</a> &nbsp;' +
-                capitaliseFirstLetter(name) + ' ' + (id+1) + '&nbsp;' +
+                capitaliseFirstLetter(name) + ' ' + id + '&nbsp;' +
                 '<button id="form_add_btn_' + idsu + '" type="button" class="btn btn-mini btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids + ')">Add ' + capitaliseFirstLetter(name) + '</button>' +
             '</div>' +
             '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' + formbody + '</div>' +
@@ -128,13 +139,22 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     //var myRegExp = new RegExp("__"+name+"__",'gi');
     //var newForm = prototype.replace(myRegExp, id);
+     
+    var resArr = btnids[2].split("_"); 
+    
+    var newForm = prototype.replace(/__patient__/g, resArr[0]);
+    newForm = newForm.replace(/__specimen__/g, resArr[1]);
+    newForm = newForm.replace(/__accession__/g, resArr[2]);
+    newForm = newForm.replace(/__part__/g, resArr[3]);
+    newForm = newForm.replace(/__block__/g, resArr[4]);
+    newForm = newForm.replace(/__slide__/g, resArr[5]);
 
-    var newForm = prototype.replace(/__patient__/g, patientid);
-    newForm = newForm.replace(/__specimen__/g, procedureid);
-    newForm = newForm.replace(/__accession__/g, accessionid);
-    newForm = newForm.replace(/__part__/g, partid);
-    newForm = newForm.replace(/__block__/g, blockid);
-    newForm = newForm.replace(/__slide__/g, slideid);
+//    var newForm = prototype.replace(/__patient__/g, patientid);
+//    newForm = newForm.replace(/__specimen__/g, procedureid);
+//    newForm = newForm.replace(/__accession__/g, accessionid);
+//    newForm = newForm.replace(/__part__/g, partid);
+//    newForm = newForm.replace(/__block__/g, blockid);
+//    newForm = newForm.replace(/__slide__/g, slideid);
 
     //In order to have a correct form here replace all parents name with ids...
 
@@ -174,34 +194,86 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
 
     switch(name)
     {
+        case "patient":           
+            patientid++;
+            id = patientid;
+            nextName = "procedure";
+            break;
+        case "procedure":           
+            procedureid++;
+            id = procedureid;
+            nextName = "accession";
+            break;
+        case "accession":           
+            accessionid++;
+            id = accessionid;
+            nextName = "part";
+            break;
+        case "part":           
+            partid++;
+            id = partid;
+            nextName = "block";
+            break;
+        case "block":           
+            blockid++;
+            id = blockid;
+            nextName = "slide";
+            break;
+        case "slide":           
+            slideid++;
+            id = slideid;
+            nextName = "";
+            break;
+        default:
+            id = 0;
+    }
+
+    var ids = patientid+","+procedureid+","+accessionid+","+partid+","+blockid+","+slideid;
+    var idsu = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+
+    var res_array = [];
+    res_array.push( id );       //0
+    res_array.push( ids );      //1
+    res_array.push( idsu );     //2
+    res_array.push( nextName ); //3
+
+    return res_array;
+}
+
+function getIdsMinus( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+    var id = 0;
+    var nextName = "";
+
+    switch(name)
+    {
         case "patient":
             id = patientid;
-            patientid++;
+            patientid--;
             nextName = "procedure";
             break;
         case "procedure":
             id = procedureid;
-            procedureid++;
+            procedureid--;
             nextName = "accession";
             break;
         case "accession":
             id = accessionid;
-            accessionid++;
+            accessionid--;
             nextName = "part";
             break;
         case "part":
             id = partid;
-            partid++;
+            partid--;
             nextName = "block";
             break;
         case "block":
             id = blockid;
-            blockid++;
+            blockid--;
             nextName = "slide";
             break;
         case "slide":
             id = slideid;
-            slideid++;
+            slideid--;
             nextName = "";
             break;
         default:
