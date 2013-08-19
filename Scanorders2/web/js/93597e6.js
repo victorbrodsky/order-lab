@@ -9610,17 +9610,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
  * To change this template use File | Settings | File Templates.
  */
 
-//var id = 0;
-
-//var collectionHolder = $('.orderinfo-data');
-
-//$(document).ready(function() {
-//
-//    //addSameForm( 'patient' );
-//
-//});
-
-
 function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
 
     var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
@@ -9629,109 +9618,104 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //place the form in the html page
     var holder = "#formpanel_"+name+"_"+uid;
-    $(holder).after( getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) );
+    
+    //prepare form ids and pass it as array
+    //increment by 1 current object id
+    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
+    var id = btnids['id'];  
+    var idsorig = btnids['orig'];
+    var ids = btnids['ids'];
+    var idsm = btnids['idsm'];
+    
+    $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
 
-    //populate form with html data
-    //addTagForm( name, patientid, procedureid, accessionid, partid, blockid, slideid );
-
-    //append to form_body_ the rest of forms
-//    if( name == 'patient') {
-//        var uid = name+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-//        var holder = "#form_body_"+uid;
-//        $(holder).after( getForm( 'procedure', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
-//
-//        var uid = 'procedure'+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-//        var holder = "#form_body_"+uid;
-//        $(holder).after( getForm( 'accession', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
-//
-//        var uid = 'accession'+"_"+(patientid+1)+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-//        var holder = "#form_body_"+uid;
-//        $(holder).after( getForm( 'part', patientid+1, procedureid, accessionid, partid, blockid, slideid ) );
-//    }
-
-
+    //create children nested forms
     var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide'];
     var length = nameArray.length
     var index = nameArray.indexOf(name);
     //console.log("index="+index+" len="+length);
+    var parentName = name;
     for (var i = index+1; i < length; i++) {
-        console.log("--name="+nameArray[i]);
-        addChildForms( name, nameArray[i-1], nameArray[i], patientid, procedureid, accessionid, partid, blockid, slideid );
+        //console.log("=> name="+nameArray[i]);
+        addChildForms( parentName, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid );
     }
 
-    //addRestForms( name, patientid, procedureid, accessionid, partid, blockid, slideid );
+     //remove previous form add button only for parent object
+    var uid = idsorig.join("_"); 
+    //console.log("remove="+'#form_add_btn_'+name+'_'+uid);
+    $('#form_add_btn_'+name+'_'+uid).remove();
 }
 
-function addChildForms( name, prevName, nextName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
-    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
-    var idsu = btnids[2];
-    //var nextName = btnids[3];
+function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+    
+    //idsu: +1 for the parent object (parentName)
+    //attach to previous object (prevName)
+    var btnids = getIds( parentName, patientid, procedureid, accessionid, partid, blockid, slideid );
+    var idsorig = btnids['orig'];
+    var ids = btnids['ids']; 
+    var idsm = btnids['idsm']; 
+    var id = btnids['id'];
+    id = id - 1;
+    var idsu = ids.join("_");
 
-    //add 1 to preceding name only, the rest are 0s
-    console.log(name + " " + prevName + " " + nextName );
-    var btnids = getIds(prevName, patientid, procedureid, accessionid, partid, blockid, slideid);
-    var idsu = btnids[2];
-
-    var uid = name+"_"+idsu;
+    var uid = prevName+"_"+idsu;
     var holder = "#form_body_"+uid;
-    console.log(nextName+": add childs to="+holder+" uid="+idsu);
+    //console.log(name+": add childs to="+holder+" uid="+idsu);
 
-    var idsArray = idsu.split("_");
-
-    $(holder).after( getForm( nextName, idsArray[0], idsArray[1], idsArray[2], idsArray[3], idsArray[4], idsArray[5] ) );
-
+    $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );  
 }
 
-function getForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+//input: current form ids
+function getForm( name, id, idsorig, ids, idsm ) {
+  
+    //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
 
-    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
-    var id = btnids[0];
-    var ids = btnids[1];
-    var idsu = btnids[2];
+    //increment by 1 current object id
+    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5] );
 
-    //alert(idsu);
-
-    var formbody = getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid );
+    var idsu = ids.join("_"); 
+    var idsc = ids.join(",");
 
     var formhtml =
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
                 '<a style="background-color:white;" data-toggle="collapse" href="#form_body_' + name + '_' + idsu + '">+/-</a> &nbsp;' +
                 capitaliseFirstLetter(name) + ' ' + (id+1) + '&nbsp;' +
-                '<button id="form_add_btn_' + idsu + '" type="button" class="btn btn-mini btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids + ')">Add ' + capitaliseFirstLetter(name) + '</button>' +
+                '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-mini btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add ' + capitaliseFirstLetter(name) + '</button>' +
             '</div>' +
             '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' + formbody + '</div>' +
         '</div>';
 //        '<button id="form_add_btn" type="button" class="btn btn_margin" onclick="addSameForm(\'' + name + '\')">Add ' + name + '</button>';
 
-    //remove previous form add button
-    var uid =patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-    //alert("remove uid="+uid);
-    $('#form_add_btn_'+name+'_'+uid).remove();
+    //remove previous form add button only for parent object
+//    var uid = idsorig.join("_"); 
+//    //console.log("remove="+'#form_add_btn_'+name+'_'+uid);
+//    $('#form_add_btn_'+name+'_'+uid).remove();
 
     return formhtml;
 }
 
 function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
 
-    //var uid = name+"_"+patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-    //var formbody = "#form_body_" + uid;
+//    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
+    //var id = btnids['id'];
 
-    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
-    var id = btnids[0];
-
-    var collectionHolder =  $('#'+name+'-data');
+//    var collectionHolder =  $('#'+name+'-data');
+    var collectionHolder =  $('#patient-data'); 
 
     console.log("prot name = "+name);
 
     // Get the data-prototype explained earlier
-    var prototype = collectionHolder.data('prototype');
+    var prototype = collectionHolder.data('prototype-'+name);
 
-    // get the new index
-    //var index = collectionHolder.data('index');
-
-    //var myRegExp = new RegExp("__"+name+"__",'gi');
-    //var newForm = prototype.replace(myRegExp, id);
+//    var resArr = btnids['orig']; 
+    
+//    var newForm = prototype.replace(/__patient__/g, resArr[0]);
+//    newForm = newForm.replace(/__specimen__/g, resArr[1]);
+//    newForm = newForm.replace(/__accession__/g, resArr[2]);
+//    newForm = newForm.replace(/__part__/g, resArr[3]);
+//    newForm = newForm.replace(/__block__/g, resArr[4]);
+//    newForm = newForm.replace(/__slide__/g, resArr[5]);
 
     var newForm = prototype.replace(/__patient__/g, patientid);
     newForm = newForm.replace(/__specimen__/g, procedureid);
@@ -9739,31 +9723,10 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     newForm = newForm.replace(/__part__/g, partid);
     newForm = newForm.replace(/__block__/g, blockid);
     newForm = newForm.replace(/__slide__/g, slideid);
-
-    //In order to have a correct form here replace all parents name with ids...
-
-    //alert(newForm);
-
-    // Display the form in the page in an li, before the "Add a tag" link li
-    //var $newFormLi = $(formbody).append(newForm);
-
+  
+    console.log("prot name= "+name+", form="+newForm);
+  
     return newForm;
-
-    //$newFormLi.prepend("<h3>"+patientCount+") Patient:</h3>");
-
-    //specimen
-    //$newFormLi = addSpecimenBtn($newFormLi);
-    //addSpecimenBtnTest();
-
-
-    //var $addTagLink = $('<a href="#" class="btn btn-primary add_tag_link">Add Patient</a>');
-    //var $newLinkLi = $('<div class="patient-data"></div>').append($addTagLink);
-    //var $newLinkLi = $('<div class="patient-data"></div>');
-
-    //$newLinkLi.before($newFormLi);
-
-    // add a delete link to the new form
-    //addTagFormDeleteLink($newFormLi);
 }
 
 //Helpers
@@ -9776,53 +9739,71 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
     var id = 0;
     var nextName = "";
 
+    var patientidm = patientid;
+    var procedureidm = procedureid;
+    var accessionidm = accessionid;
+    var partidm = partid;
+    var blockidm = blockid;
+    var slideidm = slideid;
+    
+    var orig = [patientid, procedureid, accessionid, partid, blockid, slideid];
+    
     switch(name)
     {
-        case "patient":
-            id = patientid;
+        case "patient":                       
+            patientidm = patientid-1;
             patientid++;
+            id = patientid;
             nextName = "procedure";
             break;
-        case "procedure":
-            id = procedureid;
+        case "procedure":                    
+            procedureidm = procedureid-1;
             procedureid++;
+            id = procedureid;
             nextName = "accession";
             break;
-        case "accession":
-            id = accessionid;
+        case "accession":                     
+            accessionidm = accessionid-1;
             accessionid++;
+            id = accessionid;
             nextName = "part";
             break;
-        case "part":
-            id = partid;
+        case "part":                      
+            partidm = partid-1;
             partid++;
+            id = partid;
             nextName = "block";
             break;
-        case "block":
-            id = blockid;
+        case "block":                     
+            blockidm = blockid-1;
             blockid++;
+            id = blockid;
             nextName = "slide";
             break;
-        case "slide":
-            id = slideid;
+        case "slide":                     
+            slideidm = slideid-1;
             slideid++;
+            id = slideid;
             nextName = "";
             break;
         default:
             id = 0;
     }
 
-    var ids = patientid+","+procedureid+","+accessionid+","+partid+","+blockid+","+slideid;
-    var idsu = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
-
-    var res_array = [];
-    res_array.push( id );       //0
-    res_array.push( ids );      //1
-    res_array.push( idsu );     //2
-    res_array.push( nextName ); //3
-
+    var idsArray = [patientid, procedureid, accessionid, partid, blockid, slideid];
+    var idsArrayM = [patientidm, procedureidm, accessionidm, partidm, blockidm, slideidm];
+    
+    var res_array = { 
+            'id' : id, 
+            'orig' : orig,
+            'ids' : idsArray, 
+            'idsm' : idsArrayM, 
+            'nextName' : nextName
+        };  
+    
     return res_array;
 }
+
 
 $(document).ready(function() {
     $('.combobox').combobox();

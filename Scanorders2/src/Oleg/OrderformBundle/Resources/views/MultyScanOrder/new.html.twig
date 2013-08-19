@@ -1,7 +1,7 @@
 
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-
+{#{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
 
 {% block content %}  
     
@@ -10,48 +10,41 @@
 {#macro#}
 {% macro field( field ) %}
     <div class="row-fluid">
+        {{ form_errors(field) }}
         <div class="span6" align="right">
             {{ form_label(field) }}
         </div>
         <div class="span6" align="left">
             {{ form_widget(field) }}
         </div>
+        {{ form_rest(field) }}
     </div>
 {% endmacro %}
-
 {% import _self as myform %}
 
+<form action="{{ path('multy_create') }}" method="post" {{ form_enctype(form) }}>
+{#{{ form_start(form) }}#}
 
-<div id="patient-data"
-       data-prototype="
-            {{ myform.field(form.patient.vars.prototype.mrn)|e }}
-            {{ myform.field(form.patient.vars.prototype.name)|e }}
-            {{ myform.field(form.patient.vars.prototype.age)|e }}
-            {{ myform.field(form.patient.vars.prototype.sex)|e }}
-            {{ myform.field(form.patient.vars.prototype.dob)|e }}
-            {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}
-       "
->
-</div>
+{#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
 
-<div id="procedure-data"
-       data-prototype="
-            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
-            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper)|e }}
-         "
->
-</div>
-
-<div id="accession-data"
-         data-prototype="
-            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
-            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}
-         "
->
-</div>
-
-<div id="part-data"
-     data-prototype="
+<div id="patient-data" 
+     data-prototype-patient="
+        {{ myform.field(form.patient.vars.prototype.mrn)|e }} 
+        {{ myform.field(form.patient.vars.prototype.name)|e }}
+        {{ myform.field(form.patient.vars.prototype.age)|e }}
+        {{ myform.field(form.patient.vars.prototype.sex)|e }}
+        {{ myform.field(form.patient.vars.prototype.dob)|e }}
+        {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}  
+     "
+     data-prototype-procedure="
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper)|e }}
+     "
+     data-prototype-accession="
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       
+     "
+     data-prototype-part="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
@@ -59,18 +52,10 @@
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType)|e }}
      "
->
-</div>
-
-<div id="block-data"
-     data-prototype="
+     data-prototype-block="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}
      "
->
-</div>
-
-<div id="slide-data"
-     data-prototype="
+     data-prototype-slide="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.diagnosis)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialstain)|e }}
@@ -79,23 +64,10 @@
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.mag)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.scanregion)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.note)|e }}
-     "
+     " 
 >
-</div>
-
-    {#<form action="{{ path('multy_create') }}" method="post">#}
-{{ form_start(form) }}
-
-    {#{{ form_errors(form) }}#}
-    {#{{form_widget(form.patient.vars.prototype)|e}}#}
-    {#data-prototype-specimen="{{ form_widget(form.patient.vars.prototype.children['specimen'].vars.prototype)|e }}"#}
-
-{#<div id="formpanel" class="panel">#}
-
-    {#<div>#}
-
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
-
+    
     {#patient#}
     {% set patientCount = 0 %}
     {% for patient in form.patient %}
@@ -106,7 +78,7 @@
                 <button type="button" class="btn btn-mini btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_patient_{{ uid }}">
                     +/-
                 </button>
-                Patient {{ patientCount }}
+                Patient {{ patientCount+1 }}
                 {% if form.patient|length ==  (patientCount + 1) %}
                 <button id="form_add_btn_patient_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('patient', {{ patientCount }}, 0, 0, 0, 0, 0)">Add Patient</button>
                 {% endif %}
@@ -128,7 +100,7 @@
                             <button id="form_body_btn_procedure_{{ procedureCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_procedure_{{ uid }}">
                                 +/-
                             </button>
-                            Procedure {{ procedureCount }}
+                            Procedure {{ procedureCount+1 }}
                             {% if patient.specimen|length ==  (procedureCount + 1) %}
                             <button id="form_add_btn_specimen_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('procedure', {{ patientCount }}, {{ procedureCount }}, 0, 0, 0, 0)">Add Procedure</button>
                             {% endif %}
@@ -136,8 +108,7 @@
                                 Delete This Procedure
                             </button>
                         </div>
-                        <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
-                            {#{{ form_row(specimen) }}#}
+                        <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">                            
                             {{ myform.field(specimen.proceduretype) }}
                             {{ myform.field(specimen.paper) }}
 
@@ -148,15 +119,15 @@
                                 <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
                                     <div class="panel-heading" align="left">
                                         <a style="background-color:white;" data-toggle="collapse" href="#form_body_accession_{{ uid }}">+/-</a>
-                                        Accession {{ accessionCount }}
+                                        Accession {{ accessionCount+1 }}
                                         {% if specimen.accession|length ==  (accessionCount + 1) %}
                                         <button id="form_add_btn_accession_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('accession', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, 0, 0, 0)">Add Accession</button>
                                         {% endif %}
                                     </div>
                                     <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
                                             {{ myform.field(accession.accession) }}
-                                            {{ myform.field(accession.date) }}
-
+                                            {{ myform.field(accession.date) }}                                       
+                                       
                                         {#part#}
                                         {% set partCount = 0 %}
                                         {% for part in accession.part %}
@@ -166,7 +137,7 @@
                                                     <button id="form_body_btn_part_{{ partCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_part_{{ uid }}">
                                                         +/-
                                                     </button>
-                                                    Part {{ partCount }}
+                                                    Part {{ partCount+1 }}
                                                     {% if accession.part|length ==  (partCount + 1) %}
                                                     <button id="form_add_btn_part_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('part', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, 0, 0)">Add Part</button>
                                                     {% endif %}
@@ -188,7 +159,7 @@
                                                                     <button id="form_body_btn_block_{{ uid }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_block_{{ uid }}">
                                                                         +/-
                                                                     </button>
-                                                                    Block {{ blockCount }}
+                                                                    Block {{ blockCount+1 }}
                                                                     {% if part.block|length ==  (blockCount + 1) %}
                                                                     <button id="form_add_btn_block_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('block', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, 0)">Add Block</button>
                                                                     {% endif %}
@@ -206,7 +177,7 @@
                                                                                 <button id="form_body_btn_slide_{{ slideCount }}" type="button" class="btn btn_margin btn-mini" data-toggle="collapse" data-target="#form_body_slide_{{ uid }}">
                                                                                     +/-
                                                                                 </button>
-                                                                                Slide {{ slideCount }}
+                                                                                Slide {{ slideCount+1 }}
                                                                                 {% if block.slide|length ==  (slideCount + 1) %}
                                                                                 <button id="form_add_btn_slide_{{ uid }}" type="button" class="btn btn-mini btn_margin" onclick="addSameForm('slide', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, {{ slideCount }})">Add Slide</button>
                                                                                 {% endif %}
@@ -258,20 +229,9 @@
     {% endfor %} {# patient loop #}
 
 
-    {#</div>&#123;&#35; end of orderinfo-data&#35;&#125;#}
-
-
-    {#{{ include(#}
-        {#'OlegOrderformBundle::MultyScanOrder/panel.html.twig', {'name':'Patient','id':1, 'pid':1}#}
-    {#) }}#}
-
-{#    Test cal controller: it works!#}
-{#    {% render url('part_new') %}#}
-
     <button id="next_button" type="button" class="btn" 
             data-toggle="collapse" data-target="#orderinfo_param">Next
     </button>
-
 
     <div id="orderinfo_param" class="collapse">
         <div class="row-fluid">
@@ -352,12 +312,15 @@
         </div> 
     </div>
    
-     {#{{ form_rest(form) }}#}
-
-{#</div>#}
+    {#Note: data-prototype-rest="{{form_widget(form) | e}} is required; otherwise the leftovers of the form (?) appears in html page#}
+    <div data-prototype-orderinfo="{{form_rest(form) | e}}">
+        {{ form_rest(form) }}
+    </div>
     
-{{ form_end(form) }}
-{#</form>#}
+{#    {{ form_rest(form) }}#}
+    
+{#{{ form_end(form) }}#}
+</form>
     
 {% endblock %}
   

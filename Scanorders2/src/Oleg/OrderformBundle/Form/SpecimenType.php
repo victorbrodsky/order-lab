@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SpecimenType extends AbstractType
 {
     
-    protected $multy;
+    protected $multy;    
     
     public function __construct( $multy = false )
     {
@@ -39,7 +39,7 @@ class SpecimenType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
-                'label' => " ",
+                'label' => " ",                         
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__accession__',

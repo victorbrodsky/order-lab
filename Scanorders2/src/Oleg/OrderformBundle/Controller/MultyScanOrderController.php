@@ -68,7 +68,7 @@ class MultyScanOrderController extends Controller {
      *
      * @Route("/new", name="multy_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:ScanOrder:newmulty.html.twig")
+     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
     public function multyCreateAction(Request $request)
     { 
@@ -82,14 +82,22 @@ class MultyScanOrderController extends Controller {
 
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(true), $entity);  
-//        $form->bind($request);
-        $form->handleRequest($request);
+        $form->bind($request);
+//        $form->handleRequest($request);
 
+        if(1) {
+            $errorHelper = new ErrorHelper();
+            $errors = $errorHelper->getErrorMessages($form);
+            echo "<br>form errors:<br>";
+            print_r($errors);           
+        }
+        
         echo "Before validation main entity:<br>";
         echo $entity;
         echo " valid?: <br>";
         
-        if( $form->isValid() ) {
+//        if( $form->isValid() ) {
+        if( 1 ) {
             
             $em = $this->getDoctrine()->getManager();                            
                        
@@ -120,6 +128,13 @@ class MultyScanOrderController extends Controller {
                     $patient_processed->addSpecimen( $specimen_processed );
                     $entity->addPatient($patient_processed);
 
+                    
+                    foreach( $specimen->getAccession() as $accession ) {
+                        $specimen->removeAccession( $accession );                                           
+                        $accession_processed = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
+                        $specimen->addAccession($accession_processed); 
+                    }
+                    
                     echo "specimen: <br>";
                     echo $entity;
                     echo " end of specimen <br>";
@@ -134,7 +149,7 @@ class MultyScanOrderController extends Controller {
                   
             echo "<br>End of loop<br>";
             echo $entity;
-            //exit();
+            exit();
             
 //            $count = 0;
 //            foreach( $entity->getPatient() as $patient ) {              
@@ -155,8 +170,7 @@ class MultyScanOrderController extends Controller {
         }
         
         
-        return array(
-            'entity' => $entity,
+        return array(           
             'form'   => $form->createView()
         );    
     }    
@@ -189,8 +203,8 @@ class MultyScanOrderController extends Controller {
         $procedure = new Specimen();
         $patient->addSpeciman($procedure);
 
-        $procedure2 = new Specimen();
-        $patient->addSpeciman($procedure2);
+        //$procedure2 = new Specimen();
+        //$patient->addSpeciman($procedure2);
 
         $accession = new Accession();
         $procedure->addAccession($accession);
