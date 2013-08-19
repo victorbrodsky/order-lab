@@ -74,16 +74,15 @@ class MultyScanOrderController extends Controller {
     { 
         
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            //throw new AccessDeniedException();
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
         
-        echo " controller multy<br>";
+        //echo " controller multy<br>";
 
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(true), $entity);  
-        $form->bind($request);
-//        $form->handleRequest($request);
+//        $form->bind($request);
+        $form->handleRequest($request);
 
         if(1) {
             $errorHelper = new ErrorHelper();
@@ -93,73 +92,84 @@ class MultyScanOrderController extends Controller {
         }
         
         echo "Before validation main entity:<br>";
-        echo $entity;
-        echo " valid?: <br>";
-        
+
 //        if( $form->isValid() ) {
         if( 1 ) {
             
             $em = $this->getDoctrine()->getManager();                            
                        
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );                   
-           
-            echo "before loop:<br>";
-            echo $entity;
-            $count = 0;
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );
+
+            echo "Before loop:<br>";
+            //echo $entity;
+
             foreach( $entity->getPatient() as $patient ) {
-                
-                echo $patient;              
-                echo " before_process ";
-                $patient_processed = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );  //$entity->getPatient()[$count] );           
-                //remove old and attach new patient. This requires only for multyple order with data_prototype                                                            
-                $entity->removePatient( $patient ); 
-                //$patient_processed->addOrderinfo($entity);
-                $entity->addPatient($patient_processed);
-                echo " after_process ";
-                echo $patient_processed;
-
-                foreach( $patient->getSpecimen() as $specimen ) {
-                    $entity->removePatient( $patient_processed );
-                    $specimen_processed = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen );
-                    //$specimen_processed->setPatient($patient_processed);
-                    //$em->persist($specimen_processed->getPatient());
-
-                    $patient_processed->removeSpecimen( $specimen );
-                    $patient_processed->addSpecimen( $specimen_processed );
-                    $entity->addPatient($patient_processed);
-
-                    
-                    foreach( $specimen->getAccession() as $accession ) {
-                        $specimen->removeAccession( $accession );                                           
-                        $accession_processed = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
-                        $specimen->addAccession($accession_processed); 
-                    }
-                    
-                    echo "specimen: <br>";
-                    echo $entity;
-                    echo " end of specimen <br>";
-
+                if( !$patient->getId() ) {
+                    $entity->removePatient( $patient );
+                    $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );
+                    $entity->addPatient($patient);
                 }
 
-                //$entity->addPatient($patient);
-                echo " after processing: <br>";
-                echo $entity; 
-                
-            } //foreach
-                  
+                //Procedure
+                foreach( $patient->getSpecimen() as $specimen ) {
+                    if( !$specimen->getId() ) {
+                        $patient->removeSpecimen( $specimen );
+                        $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, $specimen->getAccession() );
+                        $patient->addSpecimen($specimen);
+                    }
+
+                    //Accession
+                    foreach( $specimen->getAccession() as $accession ) {
+                        if( !$accession->getId() ) {
+                            $specimen->removeAccession( $accession );
+                            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
+                            $specimen->addAccession($accession);
+                        }
+
+                        //Part
+                        foreach( $accession->getPart() as $part ) {
+                            if( !$part->getId() ) {
+                                $accession->removePart( $part );
+                                $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession );
+                                $accession->addPart($part);
+                            }
+                            //Block
+                            foreach( $part->getBlock() as $block ) {
+                                if( !$block->getId() ) {
+                                    $part->removeBlock( $block );
+                                    $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part );
+                                    $part->addBlock($block);
+                                }
+
+                                //Slide
+                                foreach( $block->getSlide() as $slide ) {
+                                    if( !$slide->getId() ) {
+                                        $block->removeSlide( $slide );
+                                        $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
+                                        $slide->setOrderInfo($entity);
+                                        $slide->setAccession($accession);
+                                        $slide->setPart($part);
+                                        //$slide->setBlock($block);
+                                        $block->addSlide($slide);
+                                    }
+                                } //slide
+
+                            } //block
+
+                        } //part
+
+                    } //accession
+
+                } //procedure
+
+            } //patient
+
             echo "<br>End of loop<br>";
-            echo $entity;
-            exit();
-            
-//            $count = 0;
-//            foreach( $entity->getPatient() as $patient ) {              
-//                $entity->removePatient($entity->getPatient()[$count++]);             
-//            }
-//            echo "<br>after removal directly<br>";
-//            echo $entity; 
-            
-            $em->persist($entity);         
-            $em->flush($entity);
+            //echo $entity;
+            //exit();
+
+            $em->persist($entity);
+            $em->flush();
 
             $this->get('session')->getFlashBag()->add(
                 'notice',

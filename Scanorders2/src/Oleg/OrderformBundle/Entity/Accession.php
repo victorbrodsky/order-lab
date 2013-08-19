@@ -67,7 +67,16 @@ class Accession {
       
     public function __toString()
     {
-        return "Accession: id=".$this->id.", accession#".$this->accession;
+//        $part_info = "(";
+//        $count = 0;
+//        foreach( $this->part as $part ) {
+//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+//            $part_info .= $count.":" . $part. "; ";
+//            $count++;
+//        }
+//        $part_info .= ")";
+//        return "Accession: id=".$this->id.", accession#".$this->accession.", partCount=".count($this->part)." (".$part_info.")<br>";
+        return "Accession: id=".$this->id.", accession#".$this->accession.", partCount=".count($this->part)."<br>";
     }
 
     /**
@@ -157,9 +166,11 @@ class Accession {
      */
     public function addPart(\Oleg\OrderformBundle\Entity\Part $part)
     {
-        $part->setAccession($this);
-        $this->part[] = $part;
-    
+        if( !$this->part->contains($part) ) {
+            $part->setAccession($this);
+            $this->part[] = $part;
+        }
+
         return $this;
     }
 
@@ -182,6 +193,10 @@ class Accession {
     {
         return $this->part;
     }
+    public function setPart(\Doctrine\Common\Collections\ArrayCollection $part)
+    {
+        $this->part = $part;
+    }
 
 
     /**
@@ -192,8 +207,10 @@ class Accession {
      */
     public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        $slide->setAccession($this);
-        $this->slide[] = $slide;
+        if( !$this->slide->contains($slide) ) {
+            $slide->setAccession($this);
+            $this->slide[] = $slide;
+        }
     
         return $this;
     }
@@ -217,4 +234,5 @@ class Accession {
     {
         return $this->slide;
     }
+
 }

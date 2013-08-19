@@ -20,28 +20,25 @@ class PartRepository extends EntityRepository
         $em = $this->_em;
         
         $helper = new FormHelper();        
-        $key = $part->getSourceOrgan();   
-        if( $key ) {
+        $key = $part->getSourceOrgan();
+        if( $key && $key >= 0 ) {
             $sourceOrgan = $helper->getSourceOrgan();
             $part->setSourceOrgan( $sourceOrgan[$key] );
         }
         
-        $key = $part->getName();   
-        $name = $helper->getPart();
-        $part->setName( $name[$key] );
+        $key = $part->getName();
+        if( $key && $key >= 0 ) {
+            $name = $helper->getPart();
+            $part->setName( $name[$key] );
+        }
         
-        if( $accession == null ) {      
+        if( $accession == null || $accession->getId() == null ) {
             $em->persist($part);
-            $em->flush();
-            
+            //$em->flush();
             return $part;
         }
         
-        //check if accession already has part with the same name. TODO: is it correct to find by part as an object
-//        $accession_found = $em->getRepository('OlegOrderformBundle:Accession')->findOneBy( array(
-//            'accession' => $accession->getAccession(),
-//            'part' => $part
-//        ));
+        //check if accession already has part with the same name.
         $part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneBy( array(
             'accession' => $accession,
             'name' => $part->getName()
@@ -50,19 +47,25 @@ class PartRepository extends EntityRepository
         
         if( $part_found == null ) {
             $em->persist($part);
-            $em->flush();
-            
+            //$em->flush();
             return $part;
         }
         
         if( $part_found->getName() != $part->getName() ) {
             $em->persist($part);
-            $em->flush();
-            
+            //$em->flush();
             return $part;
         }
-        
-        
+
+        //copy all children to existing entity
+        foreach( $part->getBlock() as $block ) {
+            $part_found->addBlock( $block );
+        }
+        foreach( $part->getSlide() as $slide ) {
+            $part_found->addSlide( $slide );
+        }
+
+        $em->persist($part_found);
         return $part_found; 
     }
     

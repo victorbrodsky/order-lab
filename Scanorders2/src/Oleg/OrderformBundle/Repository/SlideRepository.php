@@ -9,16 +9,15 @@ use Doctrine\ORM\EntityRepository;
 class SlideRepository extends EntityRepository {
     
     //Make new - no requirements for uniqueness.
-    public function processEntity( $in_entity ) { 
+    public function processEntity( $entity ) {
           
-        $in_entity->getScan()->setStatus("submitted");
+        $entity->getScan()->setStatus("submitted");
         
         //create new           
         $em = $this->_em;
-        $em->persist($in_entity);
-        $em->flush();
+        $em->persist($entity);
 
-        return $in_entity;
+        return $entity;
         
     }
     

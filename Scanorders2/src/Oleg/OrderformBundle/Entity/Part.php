@@ -72,7 +72,7 @@ class Part
      * Accession might have many slide s
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="part", cascade={"persist"})
      */
-    //protected $slide;
+    protected $slide;
     
     /**
      * One Part has Many blocks
@@ -82,7 +82,7 @@ class Part
     protected $block;
     
     public function __construct() {
-        //$this->slide = new ArrayCollection();
+        $this->slide = new ArrayCollection();
         $this->block = new ArrayCollection();
     }
     
@@ -158,32 +158,38 @@ class Part
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Part
      */
-//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        $this->slide[] = $slide;
-//    
-//        return $this;
-//    }
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        if( !$this->slide->contains($slide) ) {
+            $this->slide[] = $slide;
+        }
+
+        return $this;
+    }
 
     /**
      * Remove slide
      *
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        $this->slide->removeElement($slide);
-//    }
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $this->slide->removeElement($slide);
+    }
 
     /**
      * Get slide
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-//    public function getSlide()
-//    {
-//        return $this->slide;
-//    }
+    public function getSlide()
+    {
+        return $this->slide;
+    }
+    public function setSlide(\Doctrine\Common\Collections\ArrayCollection $slide)
+    {
+        $this->slide = $slide;
+    }
 
     /**
      * Add block
@@ -193,9 +199,11 @@ class Part
      */
     public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
     {
-        $block->setPart($this);
-        $this->block[] = $block;
-    
+        if( !$this->block->contains($block) ) {
+            $block->setPart($this);
+            $this->block[] = $block;
+        }
+
         return $this;
     }
 
@@ -218,9 +226,23 @@ class Part
     {
         return $this->block;
     }
-    
-    public function __toString() {
-        return $this->name;
+    public function setBlock(\Doctrine\Common\Collections\ArrayCollection $block)
+    {
+        $this->block = $block;
+    }
+
+    public function __toString()
+    {
+//        $block_info = "(";
+//        $count = 0;
+//        foreach( $this->block as $block ) {
+//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+//            $block_info .= $count.":" . $block. "; ";
+//            $count++;
+//        }
+//        $block_info .= ")";
+//        return "Part: id=".$this->id.", name=".$this->name.", blockCount=".count($this->block)." (".$block_info.")<br>";
+        return "Part: id=".$this->id.", name=".$this->name.", blockCount=".count($this->block)."<br>";
     }
     
 }

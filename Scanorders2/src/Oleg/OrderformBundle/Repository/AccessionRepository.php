@@ -13,19 +13,27 @@ use Doctrine\ORM\EntityRepository;
 class AccessionRepository extends EntityRepository {
     
     //this function will create an accession if it doesn't exist or return the existing accession object
-    public function processEntity( $accession ) { 
-        
+    public function processEntity( $accession ) {
+
         $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
-        
+
+        $em = $this->_em;
+
         if( !$entity ) {        
-            //create new accession           
-            $em = $this->_em;
+            //create new accession
             $em->persist($accession);
-            $em->flush();
-            
             return $accession;
-        } 
-        
+        }
+
+        //copy all children to existing entity
+        foreach( $accession->getPart() as $part ) {
+            $entity->addPart( $part );
+        }
+        foreach( $accession->getSlide() as $slide ) {
+            $entity->addSlide( $slide );
+        }
+
+        $em->persist($entity);
         return $entity;
     }
     

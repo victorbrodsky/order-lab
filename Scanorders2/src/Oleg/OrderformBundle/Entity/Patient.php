@@ -242,8 +242,11 @@ class Patient
      */
     public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
     {
-        $specimen->setPatient($this);
-        $this->specimen[] = $specimen;   
+        if( !$this->specimen->contains($specimen) ) {
+            $specimen->setPatient($this);
+            $this->specimen->add($specimen);
+        }
+
         return $this;
     }
     public function addSpeciman(\Oleg\OrderformBundle\Entity\Specimen $specimen)
@@ -276,10 +279,10 @@ class Patient
         return $this->specimen;
     }
     
-//    public function setSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
-//    {
-//        $this->specimen = $specimen;
-//    }
+    public function setSpecimen(\Doctrine\Common\Collections\ArrayCollection $specimen)
+    {
+        $this->specimen = $specimen;
+    }
 
     /**
      * Add orderinfo

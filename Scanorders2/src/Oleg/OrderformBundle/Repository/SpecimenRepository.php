@@ -13,20 +13,28 @@ use Doctrine\ORM\EntityRepository;
 class SpecimenRepository extends EntityRepository
 {
     
-    //Accession number is the key to check uniqueness 
-    public function processEntity( $in_entity, $accession=null ) { 
+    //Accession number is the key to check uniqueness for single slide order
+    public function processEntity( $in_entity, $accessions=null ) {
         
         $em = $this->_em;
-        
-        if( $accession == null ) {         
+
+        if( $accessions == null ) {
             $em->persist($in_entity);
             return $in_entity;
         }
-        
-        //if accession exists then return prcedure for this accession; otherwise, create a new
-        $accession_found = $em->getRepository('OlegOrderformBundle:Accession')->findOneBy( array(                    
-            'accession' => $accession->getAccession()                
-        ));
+
+        $accession_found = null;
+        //if at least one accession belongs to a procedure, then use this procedure
+        foreach( $accessions as $accession ) {
+            //if accession exists then return procedure for this accession; otherwise, create a new
+            $accession_found_this = $em->getRepository('OlegOrderformBundle:Accession')->findOneBy( array(
+                'accession' => $accession->getAccession()
+            ));
+            if( $accession_found_this != null && $accession_found_this->getSpecimen() != null ) {
+                $accession_found = $accession_found_this;
+                break;
+            }
+        }
         
         if( $accession_found == null || $accession_found->getSpecimen() == null ) {
 
@@ -34,10 +42,15 @@ class SpecimenRepository extends EntityRepository
             return $in_entity;
 
         } else {
+            $specimen = $accession_found->getSpecimen();
 
-            $em->persist($accession_found->getSpecimen());
-            return $accession_found->getSpecimen();
+            //copy all children to existing entity
+            foreach( $in_entity->getAccession() as $accession ) {
+                $specimen->addAccession( $accession );
+            }
 
+            $em->persist($specimen);
+            return $specimen;
         }
     }
     

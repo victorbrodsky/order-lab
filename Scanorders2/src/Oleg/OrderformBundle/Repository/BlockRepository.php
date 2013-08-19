@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 /**
  * BlockRepository
@@ -17,14 +18,21 @@ class BlockRepository extends EntityRepository
     public function processEntity( $block, $part=null ) {  
         
         $em = $this->_em;
-        
-        if( $part == null ) {         
+
+        if( $part == null || $part->getId() == null) {
             $em->persist($block);
-            $em->flush();
-            
+            //$em->flush();
+
             return $block;
         }
-        
+
+        $helper = new FormHelper();
+        $key = $block->getName();
+        if( $key && $key >= 0 ) {
+            $name = $helper->getBlock();
+            $block->setName( $name[$key] );
+        }
+
         //Check if the part has the block with the same name    
         $query = $em->createQuery(
             'SELECT b FROM OlegOrderformBundle:Block b
@@ -36,42 +44,28 @@ class BlockRepository extends EntityRepository
             'bname' => $block->getName(),
             'acc' => $part->getAccession()
         ));
-        
-        //Check if the part has the block with the same name    
-//        $query = $em->createQuery(
-//            'SELECT b FROM OlegOrderformBundle:Block b
-//            JOIN b.part p
-//            WHERE p = :part AND b.name = :bname'
-//        )->setParameters( array(
-//            'part' => $part,
-//            'bname' => $block->getName()
-//        ));
 
         $block_found =  $query->getResult();
                   
         if( $block_found == null ) {
             $em->persist($block);
-            $em->flush();
-            
+            //$em->flush();
+
             return $block;
         }
-        
-//        echo "block found ".count($block_found).":<br>";
-//        echo "id=".$block_found->getId()." name=".$block_found->getName();
+
+//        echo " block_found is not null ";
+//        echo "block count=".count($block_found)."<br>";
 //        exit();
-        
+
+        $block_res = $block_found[0];
+        //copy all children to existing entity
+        foreach( $block->getSlide() as $slide ) {
+            $block_res->addSlide($slide);
+        }
+
        //anyway we should get only one block found 
-       return $block_found[0];     
+       return $block_res;
     }
-    
-//    public function getByAccession( $accession_number ) { 
-//        
-//        $entity = $this->findBy(
-//            array('accession' => $accession_number),
-//            array('id' => 'ASC')
-//        );
-//              
-//        return $entity;
-//    }
     
 }

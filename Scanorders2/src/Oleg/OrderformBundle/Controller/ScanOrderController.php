@@ -193,7 +193,7 @@ class ScanOrderController extends Controller {
             //$em->persist($entity);          
             //$em->flush();
             
-            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, $accession );
+            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, array($accession) );
             $patient->addSpecimen($procedure);
             //$em->persist($patient); 
             //$em->persist($procedure);

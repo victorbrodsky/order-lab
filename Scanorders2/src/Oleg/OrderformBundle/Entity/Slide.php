@@ -23,27 +23,17 @@ class Slide
     //*******************************// 
     // first step fields 
     //*******************************//
-    
-    //Slide belongs to exactly one Accession => 
-    //Slide has only one Accession, Accession might have many Slides (1..n)
-    //Note: Unique slide accession number is combination of Accession+Part+Block (S12-99997 A2)
+
+    //add manytoone for accession, part and block for fast querying
     /**
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
-     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
-     * @Assert\NotBlank
-     */
-    //protected $accession;
-    
-    //add manytoone for block and part?
-    /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide")
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    //protected $part;
+    protected $part;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide")
      * @ORM\JoinColumn(name="block_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -51,14 +41,14 @@ class Slide
     
     /**
      * Keep info about orderinfo, so we can get quickly how many slides in this orderinfo
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide")
      * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
      */
     protected $orderinfo; 
     
     /**
      * Keep info about accession, so we can get quickly how many slides in this accession
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -211,7 +201,7 @@ class Slide
     }
     
      public function __toString() {
-        return "id=".$this->getId().", accession=".$this->getAccession(); 
+        return "Slide: id=".$this->getId().", accession=".$this->getAccession().", mag=".$this->getScan()->getMag().", stain=".$this->getStain()->getName()."<br>";
     }
     
 
@@ -297,13 +287,19 @@ class Slide
         return $this;
     }
 
-    /**
-     * Get accession
-     *
-     * @return \Oleg\OrderformBundle\Entity\Accession 
-     */
     public function getAccession()
     {
         return $this->accession;
+    }
+
+    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    {
+        $this->part = $part;
+
+        return $this;
+    }
+    public function getPart()
+    {
+        return $this->part;
     }
 }

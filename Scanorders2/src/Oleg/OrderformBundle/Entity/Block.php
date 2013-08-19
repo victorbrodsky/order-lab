@@ -78,9 +78,11 @@ class Block
      */
     public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        $slide->setBlock($this);
-        $this->slide[] = $slide;
-    
+        if( !$this->slide->contains($slide) ) {
+            $slide->setBlock($this);
+            $this->slide[] = $slide;
+        }
+
         return $this;
     }
 
@@ -104,16 +106,12 @@ class Block
         return $this->slide;
     }
     
-    public function setSlide($slide){
-        $this->slide = $slide;
-        foreach ($slide as $slide_single){
-            $slide_single->setBlock($this);
-        }
-    }
-    
-    public function __toString() {
-        return $this->name;
-    }
+//    public function setSlide($slide){
+//        $this->slide = $slide;
+//        foreach( $slide as $slide_single ) {
+//            $slide_single->setBlock($this);
+//        }
+//    }
 
     /**
      * Set part
@@ -136,5 +134,18 @@ class Block
     public function getPart()
     {
         return $this->part;
+    }
+
+    public function __toString()
+    {
+        //return "Block: id=".$this->id.", name".$this->name."<br>";
+        $slide_info = "(";
+        $count = 0;
+        foreach( $this->slide as $slide ) {
+            $slide_info .= $count.":" . $slide. "; ";
+            $count++;
+        }
+        $slide_info .= ")";
+        return "Block: id=".$this->id.", name".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
     }
 }

@@ -93,26 +93,12 @@ function getForm( name, id, idsorig, ids, idsm ) {
 
 function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
 
-//    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
-    //var id = btnids['id'];
-
 //    var collectionHolder =  $('#'+name+'-data');
     var collectionHolder =  $('#patient-data'); 
 
-    console.log("prot name = "+name);
-
     // Get the data-prototype explained earlier
     var prototype = collectionHolder.data('prototype-'+name);
-
-//    var resArr = btnids['orig']; 
     
-//    var newForm = prototype.replace(/__patient__/g, resArr[0]);
-//    newForm = newForm.replace(/__specimen__/g, resArr[1]);
-//    newForm = newForm.replace(/__accession__/g, resArr[2]);
-//    newForm = newForm.replace(/__part__/g, resArr[3]);
-//    newForm = newForm.replace(/__block__/g, resArr[4]);
-//    newForm = newForm.replace(/__slide__/g, resArr[5]);
-
     var newForm = prototype.replace(/__patient__/g, patientid);
     newForm = newForm.replace(/__specimen__/g, procedureid);
     newForm = newForm.replace(/__accession__/g, accessionid);

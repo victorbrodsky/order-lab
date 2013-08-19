@@ -21,9 +21,11 @@ class ScanRepository extends EntityRepository
         $helper = new FormHelper();
         $mags = $helper->getMags();
         $key = $in_entity->getMag();
-        //echo " value=".$mags[$key]."<br>";      
-        $in_entity->setMag( $mags[$key] );
-                  
+        //echo " value=".$mags[$key]."<br>";
+        if( $key && $key >= 0 ) {
+            $in_entity->setMag( $mags[$key] );
+        }
+
         return;
     }
     

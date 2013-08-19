@@ -97,8 +97,10 @@ class Specimen
      */
     public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
     {
-        $accession->setSpecimen($this);
-        $this->accession[] = $accession;
+        if( !$this->accession->contains($accession) ) {
+            $accession->setSpecimen($this);
+            $this->accession[] = $accession;
+        }
     
         return $this;
     }
@@ -121,6 +123,10 @@ class Specimen
     public function getAccession()
     {
         return $this->accession;
+    }
+    public function setAccession(\Doctrine\Common\Collections\ArrayCollection $accession)
+    {
+        $this->accession = $accession;
     }
 
     /**
@@ -147,9 +153,16 @@ class Specimen
     }
 
     public function __toString() {
+        $acc_info = "(";
+        $count = 0;
+        foreach( $this->accession as $accession ) {
+            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+            $acc_info .= $count.":" . $accession. "; ";
+            $count++;
+        }
+        $acc_info .= ")";
 
-
-        return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype()." (patientId=".$this->patient->getId().", patientMRN=".$this->patient->getMrn().")<br>";
+        return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype()." Accession count=".count($this->getAccession())." (".$acc_info.")<br>";
     }
 
 }
