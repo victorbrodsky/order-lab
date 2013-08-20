@@ -6,10 +6,21 @@
     {% if not is_granted('ROLE_USER') %}                        
         <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
     {% endif %}
-        
-    {% stylesheets 
-        '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
-        '@OlegOrderformBundle/Resources/public/form/css/form.css'
+
+    {% stylesheets
+        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
+        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {#{% stylesheets '@css_bootstrap' %}#}
+        {#<link href="{{ asset_url }}" rel="stylesheet" type="text/css"/>#}
+    {#{% endstylesheets %}#}
+
+    {#'@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'#}
+    {#'@OlegOrderformBundle/Resources/public/form/css/form.css'#}
+    {% stylesheets
+
         '@OlegOrderformBundle/Resources/public/datepicker/css/*'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
@@ -22,7 +33,7 @@
         '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}         
+    {% endstylesheets %}
        
    {% block head %}                                                                       
         <title>{% block title %}{% endblock %} - Scan Order</title>   
@@ -62,14 +73,14 @@
         {% endblock %}
     </div>                   
  
-    {% javascripts 
+    {% javascripts
         '@OlegOrderformBundle/Resources/public/jquery/*'
-        '@OlegOrderformBundle/Resources/public/bootstrap/js/*' 
+        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
         '@OlegOrderformBundle/Resources/public/form/js/*'
         '@OlegOrderformBundle/Resources/public/datepicker/js/*'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}     
+    {% endjavascripts %}
 
     {# Bootstrap Combobox #}        
     {% javascripts                   
