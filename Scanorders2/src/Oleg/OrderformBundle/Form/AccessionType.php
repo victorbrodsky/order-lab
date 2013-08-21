@@ -23,7 +23,7 @@ class AccessionType extends AbstractType
                 'label'=>'Accession#:', 
                 'max_length'=>100,
                 'required'=>true,
-                'attr' => array('style' => 'width:100px'),
+                'attr' => array('style' => 'width:100px', 'required' => 'required'),
         ));      
         
         $builder->add('date','date',array(

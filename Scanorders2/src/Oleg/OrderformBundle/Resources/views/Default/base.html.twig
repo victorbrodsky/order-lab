@@ -34,12 +34,15 @@
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
-       
-   {% block head %}                                                                       
-        <title>{% block title %}{% endblock %} - Scan Order</title>   
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% endblock %}
-        
+
+    <title>
+        {% block title %}
+            Scan Order
+        {% endblock %}
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </head> 
              
 <body>

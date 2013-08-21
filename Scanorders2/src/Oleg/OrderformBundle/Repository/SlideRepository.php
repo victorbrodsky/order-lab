@@ -12,7 +12,7 @@ class SlideRepository extends EntityRepository {
     public function processEntity( $entity ) {
           
         $entity->getScan()->setStatus("submitted");
-        
+
         //create new           
         $em = $this->_em;
         $em->persist($entity);

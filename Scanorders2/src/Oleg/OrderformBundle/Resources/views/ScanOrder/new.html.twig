@@ -3,10 +3,13 @@
 {#{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}    #}
 {#{% form_theme form 'OlegOrderformBundle:Default:form_table_layout.html.twig' %}#}
 
+{% block title %}
+    Scan Order
+{% endblock %}
 
 {% block content %} 
     
-    <h3 class="text-info">Slide Scan Order</h3>
+    <h3 class="text-info">Scan Order</h3>
     
 {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
@@ -77,7 +80,7 @@
         <div id="orderinfo_param" class="collapse">
             <div class="row-fluid">
             <div class="span12">
-            <h4>Scan Order Info</h4>   
+            <h3 class="text-info">Order Info</h3>
             </div>
             </div>
             <div class="row-fluid">
@@ -157,7 +160,7 @@
         <div class="row-fluid">
         <div class="span12">
         <button id="optional_button" type="button" class="btn btn_margin" data-toggle="collapse" data-target="#optional_param">
-            Options
+            Optional Info
         </button>
         </div>
         </div>

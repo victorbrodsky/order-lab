@@ -82,7 +82,7 @@ class MultyScanOrderController extends Controller {
         $entity  = new OrderInfo();
         $form = $this->createForm(new OrderInfoType(true), $entity);  
 //        $form->bind($request);
-        $form->handleRequest($request);
+        $form->bind($request);
 
         if(1) {
             $errorHelper = new ErrorHelper();
@@ -146,6 +146,8 @@ class MultyScanOrderController extends Controller {
                                     if( !$slide->getId() ) {
                                         $block->removeSlide( $slide );
                                         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
+                                        $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
+                                        $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );
                                         $slide->setOrderInfo($entity);
                                         $slide->setAccession($accession);
                                         $slide->setPart($part);
@@ -181,7 +183,8 @@ class MultyScanOrderController extends Controller {
         
         
         return array(           
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'type' => 'new'
         );    
     }    
     
@@ -234,10 +237,68 @@ class MultyScanOrderController extends Controller {
         $form   = $this->createForm( new OrderInfoType(true), $entity );
         
         return array(          
-            'form' => $form->createView(),          
+            'form' => $form->createView(),
+            'type' => 'new'
         );
     }
-    
+
+
+
+    /**
+     * Displays a form to create a new OrderInfo + Scan entities.
+     *
+     * @Route("/{id}", name="multy_show", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+     */
+    public function showMultyAction($id)
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            //throw new AccessDeniedException();
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $slides = $em->getRepository('OlegOrderformBundle:Slide')->findByOrderinfo($id);
+
+        $entity = new OrderInfo();
+
+        //get only elements with this orderinfo id (use slide object)
+        foreach( $slides as $slide  ) {
+            //$patient = $slide->getAccession()->getSpecimen()->getPatient();
+            //$patients = $em->getRepository('OlegOrderformBundle:Patient')->findByOrderinfo($id);
+
+            //if( !$patients->contains($patient) ) {
+                //$patients
+            //}
+            $patient = new Patient();
+            $specimen = new Specimen();
+            $accession = new Accession();
+            $part = new Part();
+            $block = new Block();
+
+            $block->addSlide($slide);
+            $part->addBlock($block);
+            $accession->addPart($part);
+            $specimen->addAccession( $accession );
+            $patient->addSpecimen($specimen);
+            $entity->addPatient($patient);
+            $entity->addSlide($slide);
+        }
+
+        $form   = $this->createForm( new OrderInfoType(true), $entity, array('disabled' => true) );
+
+        return array(
+            'form' => $form->createView(),
+            'type' => 'show'
+        );
+    }
+
+
+
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *

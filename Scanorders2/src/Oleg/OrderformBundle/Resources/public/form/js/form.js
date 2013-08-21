@@ -160,7 +160,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
             '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
-            '&nbsp;' + capitaliseFirstLetter(name) + ' ' + (id+1) +
+            '&nbsp;e' + capitaliseFirstLetter(name) + ' ' + (id+1) +
             '<div class="form-btn-options">' +
             '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>' +
             '<button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>' +

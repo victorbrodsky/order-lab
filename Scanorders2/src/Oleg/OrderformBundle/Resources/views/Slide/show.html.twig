@@ -1,50 +1,119 @@
-{% extends '::base.html.twig' %}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
+{% block title %}
+    Slide #{{ entity.id }}
+{% endblock %}
+
+{% block content %}
 {% block body -%}
-    <h1>Slide</h1>
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Diagnosis</th>
-                <td>{{ entity.diagnosis }}</td>
-            </tr>
-            <tr>
-                <th>Microscopicdescr</th>
-                <td>{{ entity.microscopicdescr }}</td>
-            </tr>
-            <tr>
-                <th>Specialstain</th>
-                <td>{{ entity.specialstain }}</td>
-            </tr>
-            <tr>
-                <th>Relevantscan</th>
-                <td>{{ entity.relevantscan }}</td>
-            </tr>           
-        </tbody>
-    </table>
+    <div class="panel panel-patient">
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('slide') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('slide_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('slide_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+        <div class="panel-heading" align="left">
+            <h3 class="text-info">Slide #{{ entity.id }}</h3>
+        </div>
+
+        <div class="panel-body">
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr>
+                        <th class="span6">Id</th>
+                        <td class="span6">{{ entity.id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="span6">Diagnosis</th>
+                        <td class="span6">{{ entity.diagnosis }}</td>
+                    </tr>
+                    <tr>
+                        <th class="span6">Microscopicdescr</th>
+                        <td class="span6">{{ entity.microscopicdescr }}</td>
+                    </tr>
+                    <tr>
+                        <th class="span6">Specialstain</th>
+                        <td class="span6">{{ entity.specialstain }}</td>
+                    </tr>
+                    <tr>
+                        <th class="span6">Relevantscan</th>
+                        <td class="span6">{{ entity.relevantscan }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+     </div>
+
+
+    <div class="panel panel-patient">
+        <div class="panel-heading" align="left">
+            <h3 class="text-info">Scan</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover table-condensed">
+                <tbody>
+                <tr>
+                    <th class="span6">Mag</th>
+                    <td class="span6">{{ entity.scan.mag }}</td>
+                </tr>
+                <tr>
+                    <th class="span6">Scanregion</th>
+                    <td class="span6">{{ entity.scan.scanregion }}</td>
+                </tr>
+                <tr>
+                    <th class="span6">Note</th>
+                    <td class="span6">{{ entity.scan.note }}</td>
+                </tr>
+                <tr>
+                    <th class="span6">Status</th>
+                    <td class="span6">{{ entity.scan.status }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="panel panel-patient">
+        <div class="panel-heading" align="left">
+            <h3 class="text-info">Stain</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover table-condensed">
+                <tbody>
+                <tr>
+                    <th class="span6">Stain</th>
+                    <td class="span6">{{ entity.stain.name }}</td>
+                </tr>
+                <tr>
+                    <th class="span6">Stainer</th>
+                    <td class="span6">{{ entity.stain.stainer }}</td>
+                </tr>
+                <tr>
+                    <th class="span6">Date</th>
+                    <td class="span6">{{ entity.stain.date|date('Y-m-d H:i:s') }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {#<ul class="record_actions">#}
+    {#<li>#}
+        {#<a href="{{ path('slide') }}">#}
+            {#Back to the list#}
+        {#</a>#}
+    {#</li>#}
+    {#<li>#}
+        {#<a href="{{ path('slide_edit', { 'id': entity.id }) }}">#}
+            {#Edit#}
+        {#</a>#}
+    {#</li>#}
+    {#<li>#}
+        {#<form action="{{ path('slide_delete', { 'id': entity.id }) }}" method="post">#}
+            {#<input type="hidden" name="_method" value="DELETE" />#}
+            {#{{ form_widget(delete_form) }}#}
+            {#<button type="submit">Delete</button>#}
+        {#</form>#}
+    {#</li>#}
+    {#</ul>#}
+
+{% endblock %}
 {% endblock %}

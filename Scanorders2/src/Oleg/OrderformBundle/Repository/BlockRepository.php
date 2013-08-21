@@ -28,10 +28,13 @@ class BlockRepository extends EntityRepository
 
         $helper = new FormHelper();
         $key = $block->getName();
-        if( $key && $key >= 0 ) {
+
+        if( $key >= 0 ) {
             $name = $helper->getBlock();
             $block->setName( $name[$key] );
+            //echo "name =" .  $name[$key];
         }
+        //exit();
 
         //Check if the part has the block with the same name    
         $query = $em->createQuery(

@@ -82,12 +82,13 @@ class SlideController extends Controller
         );
     }
 
+    //@Template("OlegOrderformBundle:Slide:edit.html.twig")
     /**
      * Finds and displays a Slide entity.
      *
      * @Route("/{id}", name="slide_show")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Slide:edit.html.twig")
+     * @Template("OlegOrderformBundle:Slide:show.html.twig")
      */
     public function showAction($id)
     {

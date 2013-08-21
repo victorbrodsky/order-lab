@@ -1,52 +1,46 @@
-{#{% extends '::base.html.twig' %}#}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+{% block title %}
+    My Orders
+{% endblock %}
 
 {% block content %} 
 {% block body -%}
 
-{#   
-    <h2>My Orders</h2>
-    <div class="btn_margin_top">
-        <form method="get" action="{{ path('scanorder_new') }}">
-            <button type="submit" class="btn btn-primary btn-success">New Scan Order</button>
-        </form>
-    </div>
-#} 
+    {#<form action="{{ path('index') }}" method="get" {{ form_enctype(form) }}>#}
+        {#<div class="row-fluid">#}
+            {#<div class="span4">#}
+                {#{{ form_widget(form.filter) }}#}
+                {#<button class="btn " type="submit">Filter</button>#}
+            {#</div>#}
+            {#<div class="span4">#}
+                {#{{ form_widget(form.search) }}#}
+                {#<button class="btn" type="submit">Search</button>#}
+            {#</div>#}
+        {#</div>#}
+    {#</form>#}
 
-    <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }}>                  
-{#        {{ form_errors(form) }} #}
-        
+    <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">
         <div class="row-fluid">
-            <div class="span4">
-{#            {{ form_label(form.filter) }}#}
-{#            </div>#}
-{#            <div class="span4" align="left">#}
-            {{ form_widget(form.filter) }}
-            <button class="btn " type="submit">Filter</button>     
+            <div class="span6">
+                {{ form_widget(form.filter) }}
+                <button class="btn " type="submit"><i class="icon-filter"></i> Filter</button>
             </div>
-{#        </div>#}
-{#        <div class="row">#}
-            <div class="span4">
-{#            {{ form_label(form.search) }}#}           
-{#            </div>#}
-{#            <div class="span4" align="left">#}
-            {{ form_widget(form.search) }}                
-            <button class="btn" type="submit">Search</button>
+            <div class="span6">
+                {{ form_widget(form.search) }}
+                <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
             </div>
         </div>
-              
-{#        {{ form_rest(form) }}#}
-        
+        {{ form_rest(form) }}
     </form>
 
     <table class="table table-hover table-condensed">
         <thead>
             <tr>
-                <th>Order#</th>
-                <th>#Slides</th>              
-                <th>Order Date</th>
-                <th>Status</th>              
+                <th class="span2">Date</th>
+                <th>Status</th>
+                <th>ID</th>
+                <th class="span2">Slides#</th>
                 <th>Priority</th>               
                 <th>Return Slide</th>             
                 <th>Provider</th>
@@ -67,10 +61,14 @@
             {% else %}
                 <tr>
             {% endif %}
-
-                <td><a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H') }}h{% endif %}</td>
+                <td>{{ entity.status }}</td>
                 <td>
-                    {{ entity.slide.count }}:
+                    {#<a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
+                    <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                </td>
+                <td>
+                    {#{{ entity.slide.count }}:#}
 {#                    {% for patient in entity.patient %}#}
 {#                        {{ patient.specimen }}#}
 {#                        {% for specimen in patient.specimen %}#}
@@ -79,14 +77,10 @@
 {#                    {% endfor %}#}
                     {% for slide in entity.slide %}
                         <a href="{{ path('slide_show', { 'id': slide.id }) }}">
-                            acc:{{ slide.accession }}&nbsp;
-                            {{ slide.block.part }}
-                            {{ slide.block }} 
+                            <p>{{ slide.accession.accession }}&nbsp;{{slide.block.part.name}}{{slide.block.name}}</p>
                         </a>
                     {% endfor %}
                 </td>
-                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H') }}h{% endif %}</td>
-                <td>{{ entity.status }}</td>
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>
                 <td>{{ entity.provider }}</td>

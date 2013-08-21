@@ -19,12 +19,20 @@ class ScanRepository extends EntityRepository
     public function processEntity( $in_entity ) { 
         
         $helper = new FormHelper();
+
         $mags = $helper->getMags();
+
         $key = $in_entity->getMag();
+
+        //echo " key=".$key."<br>";
         //echo " value=".$mags[$key]."<br>";
-        if( $key && $key >= 0 ) {
+
+        if( $key >= 0 ) {
+            //echo "set name";
             $in_entity->setMag( $mags[$key] );
         }
+
+        //exit();
 
         return;
     }

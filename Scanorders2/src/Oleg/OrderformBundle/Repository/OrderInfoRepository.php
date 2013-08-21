@@ -26,18 +26,18 @@ class OrderInfoRepository extends EntityRepository
         
         $slideDelivery = $helper->getSlideDelivery();
         $key = $entity->getSlideDelivery();
-        if( $key && $key >= 0 ) {
+        if( $key >= 0 ) {
             $entity->setSlideDelivery( $slideDelivery[$key] );
         }
         
         $returnSlide = $helper->getReturnSlide();
         $key = $entity->getReturnSlide();
-        if( $key && $key >= 0 ) {
+        if( $key >= 0 ) {
             $entity->setReturnSlide( $returnSlide[$key] );
         }
              
         $key = $entity->getPathologyService();   
-        if( $key && $key >= 0 ) {
+        if( $key >= 0 ) {
             $pathologyService = $helper->getPathologyService();
             $entity->setPathologyService( $pathologyService[$key] );
         }

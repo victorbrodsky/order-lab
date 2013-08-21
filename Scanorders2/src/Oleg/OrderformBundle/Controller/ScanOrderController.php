@@ -75,12 +75,12 @@ class ScanOrderController extends Controller {
         
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
-        
+
         //filter           
         if( $filter && $filter != 'all'  ) {     
             $criteria['status']= $filter;
-        } 
-        
+        }
+
         //search           
         if( $search && $search != ''  ) {            
             $criteria['pathologyService']= $search;
@@ -124,27 +124,27 @@ class ScanOrderController extends Controller {
               
         $patient = new Patient();      
         $form_patient = $this->createForm(new PatientType(), $patient);
-        $form_patient->bind($request);     
+        $form_patient->bind($request);
         
         $procedure = new Specimen();
         $form_procedure = $this->createForm(new SpecimenType(), $procedure);
-        $form_procedure->bind($request);            
+        $form_procedure->bind($request);
         
         $accession = new Accession();
         $form_accession = $this->createForm(new AccessionType(), $accession);
-        $form_accession->bind($request); 
+        $form_accession->bind($request);
         
         $part = new Part();
         $form_part = $this->createForm(new PartType(), $part);
-        $form_part->bind($request); 
+        $form_part->bind($request);
         
         $block = new Block();
         $form_block = $this->createForm(new BlockType(), $block);
-        $form_block->bind($request); 
-        
+        $form_block->bind($request);
+
         $slide = new Slide();
         $form_slide = $this->createForm(new SlideType(), $slide);
-        $form_slide->bind($request);               
+        $form_slide->bind($request);
         
         if(0) {
             $errorHelper = new ErrorHelper();
@@ -231,22 +231,21 @@ class ScanOrderController extends Controller {
         <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
         <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
             
-           if( 0 ) { 
-            
-            $message = \Swift_Message::newInstance()
-                ->setSubject('Scan Order Confirmation')
-                ->setFrom('slidescan@med.cornell.edu')
-                ->setTo($email)
-                ->setBody(
-                    $this->renderView(
-                        'OlegOrderformBundle:ScanOrder:email.html.twig',
-                        array( 
-                            'orderid' => $entity->getId() 
+           if( 0 ) {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Scan Order Confirmation')
+                    ->setFrom('slidescan@med.cornell.edu')
+                    ->setTo($email)
+                    ->setBody(
+                        $this->renderView(
+                            'OlegOrderformBundle:ScanOrder:email.html.twig',
+                            array(
+                                'orderid' => $entity->getId()
+                            )
                         )
                     )
-                )
-            ;
-            $this->get('mailer')->send($message);
+                ;
+                $this->get('mailer')->send($message);
            } else {
                 ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
                 ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender

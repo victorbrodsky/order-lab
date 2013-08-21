@@ -179,9 +179,12 @@
 /*shift left the buttons on the each form menu*/
 .form-btn-options {
     float:right;
-    width: 20%;
+    /*width: 20%;*/
 }
 
 .icon-folder-open, .icon-folder-close{
     background-image: url("glyphicons-halflings-white.png");
+}
+.icon-search, .icon-filter{
+    background-image: url("glyphicons-halflings.png");
 }

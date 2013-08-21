@@ -42,7 +42,8 @@ class OrderInfoType extends AbstractType
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 
                 'max_length'=>'200', 
-                'required'=>true
+                'required'=>true,
+                'attr' => array('required' => 'required')
         ));
                
         $builder->add( 'pathologyService', 'choice', array(
@@ -62,7 +63,7 @@ class OrderInfoType extends AbstractType
                 'data' => 'Routine',  
                 'multiple' => false,
                 'expanded' => true,
-                'attr' => array('class' => 'horizontal_type')  
+                'attr' => array('class' => 'horizontal_type', 'required' => 'required')
         ));
         
         $builder->add( 'slideDelivery', 
@@ -72,7 +73,7 @@ class OrderInfoType extends AbstractType
                 'choices' => $helper->getSlideDelivery(),
                 'required'=>true,
                 'data' => 0,     
-                'attr' => array('class' => 'combobox')    
+                'attr' => array('class' => 'combobox', 'required' => 'required')
         ));
                 
         $builder->add( 'returnSlide', 
@@ -82,7 +83,7 @@ class OrderInfoType extends AbstractType
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
                 'data' => 'Filing Room',
-                'attr' => array('class' => 'combobox')    
+                'attr' => array('class' => 'combobox', 'required' => 'required')
         ));
         
         $builder->add('scandeadline','date',array(

@@ -31,7 +31,7 @@ class ScanType extends AbstractType
                 'data' => 0,//'20X',
                 'multiple' => false,
                 'expanded' => true,
-                'attr' => array('class' => 'horizontal_type')              
+                'attr' => array('class' => 'horizontal_type', 'required' => 'required')
         ));                       
         
         $builder->add('note', 'textarea', array(

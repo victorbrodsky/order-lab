@@ -20,7 +20,7 @@ class StainType extends AbstractType
                 'max_length' => 200,
                 'required' => true,
                 'label' => '* Stain:',
-                'attr' => array('class' => 'combobox')
+                'attr' => array('class' => 'combobox', 'required' => 'required')
                 //'attr' => array('class' => 'horizontal_type') 
         ));
         

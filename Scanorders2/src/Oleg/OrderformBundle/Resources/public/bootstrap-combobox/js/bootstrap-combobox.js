@@ -194,6 +194,7 @@
           break
 
         default:
+          //removed by Oleg to allow add items
           this.clearTarget()
           this.lookup()
       }
