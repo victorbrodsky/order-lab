@@ -623,6 +623,96 @@ Translational Research"
         
         return $arr;
     }
+
+
+    public function getUserPathology($email) {
+
+        $arr = array(
+            'rbaergen@med.cornell.edu' => 'Gynecologic Pathology / Perinatal Pathology / Autopsy',
+            'dmb2007@med.cornell.edu' => 'Gastrointestinal Pathology / Pediatric Pathology / Autopsy',
+            'vib9020@med.cornell.edu' => 'Informatics',
+            'ytchen@med.cornell.edu' => 'Gastrointestinal Pathology',
+            'tid9007@med.cornell.edu' => 'Breast Pathology',
+            'gad9013@med.cornell.edu' => 'Dermatopathology',
+            'lhellens@med.cornell.edu' => 'Gynecologic Pathology',
+            'sahoda@med.cornell.edu' => 'Breast Pathology',
+            'joj9034@med.cornell.edu' => 'Gastrointestinal Pathology',
+            'jhkoizum@med.cornell.edu' => 'Cytopathology',
+            'ehl2005@med.cornell.edu' => 'Neuropathology',
+            'cym2003@med.cornell.edu' => 'Dermatopathology',
+            'jmm9018@med.cornell.edu' => 'Genitourinary Pathology',
+            'nan9030@med.cornell.edu' => 'Genitourinary Pathology',
+            'nip9020@med.cornell.edu' => 'Gastrointestinal Pathology',
+            'ecpirog@med.cornell.edu' => 'Gynecologic Pathology',
+            'liq9005@med.cornell.edu' => 'Gastrointestinal Pathology',
+            'ner9004@med.cornell.edu' => 'Autopsy',
+            'brr2006@med.cornell.edu' => 'Genitourinary Pathology',
+            'rubinma@med.cornell.edu' => 'Genitourinary Pathology',
+            'sts9057@med.cornell.edu' => 'Renal Pathology',
+            'ams2033@med.cornell.edu' => 'Cytopathology',
+            'ths9004@med.cornell.edu' => 'Head & Neck Pathology',
+            'svs2002@med.cornell.edu' => 'Renal Pathology',
+            'rhoda@med.cornell.edu' => 'Cytopathology',
+            'mas2090@med.cornell.edu' => 'Genitourinary Pathology',
+            'sjshin@med.cornell.edu' => 'Breast Pathology',
+            'gry2001@med.cornell.edu' => 'Cytopathology',
+            'rhy2001@med.cornell.edu' => 'Gastrointestinal Pathology',
+            'sua9036@nyp.org' => 'Cytopathology',
+            'lia9040@nyp.org' => 'Histology',
+            'smb9005@med.cornell.edu' => 'Renal Pathology',
+            'lcervino@nyp.org' => 'Gross Room',
+            'mtg2003@med.cornell.edu' => 'Renal Pathology',
+            'neg2003@med.cornell.edu' => 'Autopsy',
+            'rog2015@med.cornell.edu' => 'Dermatopathology',
+            'cah2028@med.cornell.edu' => 'Dermatopathology',
+            'reh9002@nyp.org' => 'Informatics',
+            'hhp2001@nyp.org' => 'Accessioning',
+            'mor2007@med.cornell.edu' => 'Breast Pathology',
+            'jos9115@nyp.org' => 'Informatics',
+            'aat2001@med.cornell.edu' => 'Autopsy',
+            'yaa2004@med.cornell.edu' => 'Central Laboratory and Point of Care Services',
+            'sca2002@med.cornell.edu' => 'Transfusion Medicine and Cellular Therapy',
+            'mec2013@med.cornell.edu' => 'Transfusion Medicine and Cellular Therapy',
+            'chg9006@med.cornell.edu' => 'Transfusion Medicine and Cellular Therapy',
+            'stj2005@med.cornell.edu' => 'Microbiology',
+            'dgl2001@med.cornell.edu' => 'Molecular Pathology',
+            'sum2001@med.cornell.edu' => 'Cytogenetics',
+            'vep2004@med.cornell.edu' => 'Cytogenetics',
+            'har2006@med.cornell.edu' => 'Molecular Pathology',
+            'mir9079@med.cornell.edu' => 'Central Laboratory and Point of Care Services',
+            'ans9112@med.cornell.edu' => 'Microbiology',
+            'shs9100@med.cornell.edu' => 'Cytogenetics',
+            'ecesarm@med.cornell.edu' => 'Molecular Hematopathology',
+            'sae2001@med.cornell.edu' => 'Immunopathology',
+            'jut9021@med.cornell.edu' => 'Immunopathology',
+            'dknowles@med.cornell.edu' => 'Immunopathology',
+            'ato9002@med.cornell.edu' => 'Immunopathology',
+            'sop9018@med.cornell.edu' => 'Immunopathology',
+            'ris9004@med.cornell.edu' => 'Immunopathology',
+            'wtam@med.cornell.edu' => 'Immunopathology',
+            'lyw2001@med.cornell.edu' => 'Molecular Hematopathology',
+            'anb9154@nyp.org' => 'Gastrointestinal Pathology',
+            'sed9044@nyp.org' => 'Dermatopathology',
+            'jeg9101@nyp.org' => 'Transfusion Medicine and Cellular Therapy',
+            'jjh7002@nyp.org' => 'Cytopathology',
+            'kak9058@nyp.org' => 'Gastrointestinal Pathology',
+            'rco9001@nyp.org' => 'Hematopathology',
+            'sov9008@nyp.org' => 'Breast Pathology',
+            'xuw9004@nyp.org' => 'Dermatopathology',
+            'jiy9006@nyp.org' => 'Hematopathology',
+            'rok2011@med.cornell.edu' => 'Translational Research',
+            'shb2016@med.cornell.edu' => 'Translational Research',
+            //'oli2002@med.cornell.edu' => 'Gynecologic Pathology / Perinatal Pathology / Autopsy'
+        );
+
+        $service = null;
+
+        if (array_key_exists($email, $arr)) {
+            $service = $arr[$email];
+        }
+
+        return $service;
+    }
     
     
     public function getMags() {        

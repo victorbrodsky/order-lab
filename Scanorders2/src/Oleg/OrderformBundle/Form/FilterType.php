@@ -21,10 +21,10 @@ class FilterType extends AbstractType
         );
         
         $builder->add( 'filter', 'choice', array(  
-                'label' => 'Filter:',
+                'label' => 'Filter by Order Status:',
                 'max_length'=>50,
                 'choices' => $search,
-                'required' => true,             
+                'required' => true,
                 //'multiple' => true,
                 //'expanded' => true,
                 //'attr' => array('class' => 'horizontal_type')              
@@ -34,6 +34,11 @@ class FilterType extends AbstractType
                 'max_length'=>200,
                 'required'=>false,
                 'label'=>'Search:',            
+        ));
+
+        $builder->add('service', 'checkbox', array(
+            'label'     => 'My service',
+            'required'  => false,
         ));
     }
 

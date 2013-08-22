@@ -26,12 +26,13 @@ use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 //ScanOrder joins OrderInfo + Scan
 /**
  * OrderInfo controller.
  *
- * @Route("/multy")
+ * @Route("/multi")
  */
 class MultyScanOrderController extends Controller {
    
@@ -74,7 +75,9 @@ class MultyScanOrderController extends Controller {
     { 
         
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->render('OlegOrderformBundle:Security:login.html.twig'
+
+            );
         }
         
         //echo " controller multy<br>";
@@ -87,11 +90,11 @@ class MultyScanOrderController extends Controller {
         if(1) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
-            echo "<br>form errors:<br>";
-            print_r($errors);           
+            //echo "<br>form errors:<br>";
+            //print_r($errors);
         }
         
-        echo "Before validation main entity:<br>";
+        //echo "Before validation main entity:<br>";
 
 //        if( $form->isValid() ) {
         if( 1 ) {
@@ -100,7 +103,7 @@ class MultyScanOrderController extends Controller {
                        
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );
 
-            echo "Before loop:<br>";
+            //echo "Before loop:<br>";
             //echo $entity;
 
             foreach( $entity->getPatient() as $patient ) {
@@ -166,19 +169,63 @@ class MultyScanOrderController extends Controller {
 
             } //patient
 
-            echo "<br>End of loop<br>";
+            //echo "<br>End of loop<br>";
             //echo $entity;
             //exit();
 
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You successfully submit a scan request! Confirmation email sent!'
-            );
-            
-            return $this->redirect( $this->generateUrl('multy_new') );
+            //email
+            $email = $this->get('security.context')->getToken()->getAttribute('email');
+
+            $thanks_txt = "<p><h1>Thank You For Your Order !</h1></p>
+                <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
+                <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
+
+            if( 0 ) {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Scan Order Confirmation')
+                    ->setFrom('slidescan@med.cornell.edu')
+                    ->setTo($email)
+                    ->setBody(
+                        $this->renderView(
+                            'OlegOrderformBundle:ScanOrder:email.html.twig',
+                            array(
+                                'orderid' => $entity->getId()
+                            )
+                        )
+                    )
+                ;
+                $this->get('mailer')->send($message);
+            } else {
+                ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
+                ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
+                //ini_set( 'smtp_port', 25 );
+
+                $thanks_txt =
+                    "Thank You For Your Order !\r\n"
+                    . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
+                    . "Confirmation Email was sent to " . $email . "\r\n";
+
+                $message = $thanks_txt;
+                // In case any of our lines are larger than 70 characters, we should use wordwrap()
+                $message = wordwrap($message, 70, "\r\n");
+                // Send
+                mail($email, 'Scan Order Confirmation', $message);
+            }
+
+
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'You successfully submit a scan request! Confirmation email sent!'
+//            );
+//            return $this->redirect( $this->generateUrl('multy_new') );
+
+            return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+                'orderid' => $entity->getId(),
+            ));
+
         }
         
         
@@ -191,7 +238,9 @@ class MultyScanOrderController extends Controller {
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
-     * @Route("/new", name="multy_new")
+     * @Route("/research/new", name="res_new")
+     * @Route("/educational/new", name="edu_new")
+     * @Route("/clinical/new", name="multy_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -234,7 +283,17 @@ class MultyScanOrderController extends Controller {
         //$slide2 = new Slide();
         //$block->addSlide($slide2);
 
-        $form   = $this->createForm( new OrderInfoType(true), $entity );
+        //get pathology service for this user by email
+        $helper = new FormHelper();
+        $email = $this->get('security.context')->getToken()->getAttribute('email');
+        $service = $helper->getUserPathology($email);
+//        if( $service ) {
+//            $services = explode("/", $service);
+//            $service = $services[0];
+//        }
+        $entity->setPathologyService($service);
+
+        $form   = $this->createForm( new OrderInfoType(true,$service), $entity );
         
         return array(          
             'form' => $form->createView(),

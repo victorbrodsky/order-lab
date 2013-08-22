@@ -26,6 +26,7 @@ use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Form\FilterType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
+use Oleg\OrderformBundle\Helper\FormHelper;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -34,7 +35,7 @@ use Oleg\OrderformBundle\Helper\ErrorHelper;
  * @Route("/")
  */
 class ScanOrderController extends Controller {
-   
+
     /**
      * Lists all OrderInfo entities.
      *
@@ -61,9 +62,6 @@ class ScanOrderController extends Controller {
         }
         
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-        
-        $pre_query = $repository->createQueryBuilder('order')
-                    ->orderBy('or.orderdate', 'DESC');
 
         //by user
         $user = $this->get('security.context')->getToken()->getUser();
@@ -75,6 +73,7 @@ class ScanOrderController extends Controller {
         
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
+        $service = $form->get('service')->getData();
 
         //filter           
         if( $filter && $filter != 'all'  ) {     
@@ -84,23 +83,85 @@ class ScanOrderController extends Controller {
         //search           
         if( $search && $search != ''  ) {            
             $criteria['pathologyService']= $search;
-        } 
-        
+        }
+
+        //service
+        //echo "service=".$service;
+        //exit();
+        $showprovider = 'false';
+        if( $service && $service == 1  ) {
+            $helper = new FormHelper();
+            $email = $this->get('security.context')->getToken()->getAttribute('email');
+            $userService = $helper->getUserPathology($email);
+            if( $userService && $userService != ''  ) {
+                $criteria['pathologyService']= trim($userService);
+            }
+            $showprovider = 'true';
+        }
+
+//        $pre_query = $repository->createQueryBuilder('order')
+//                    ->orderBy('or.orderdate', 'DESC');
 //        $query = $pre_query->getQuery();     
 //        $entities = $query->getResult();
-        
-        //findAll();
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
-                    findBy(
-                            $criteria,                           
-                            array('orderdate'=>'desc')
-                    ); 
-       
+//        //findAll();
+//        $limit = 10;
+//        $num_pages = 1; // some calculation of what page you're currently on
+//        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->
+//                    findBy(
+//                            $criteria,
+//                            array('orderdate'=>'desc'),
+//                            $limit, // limit (doctrine)
+//                            $limit * ($num_pages - 1) // offset (doctrine)
+//                    );
+
+        $orderby = "";
+
+        $params = $this->getRequest()->query->all();
+        $sort = $this->getRequest()->query->get('sort');
+
+        if( $params == null || count($params) == 0 ) {
+            $orderby = "ORDER BY orderinfo.id DESC";
+        }
+
+        if( $sort != 'orderinfo.id' ) {
+            $orderby = " ORDER BY orderinfo.id DESC";
+        }
+
+        $criteriastr = "";
+        if( count($criteria) != 0 ) {
+            $criteriastr = "WHERE ";
+        }
+
+        $count = 0;
+        foreach( $criteria as $key => $value ){
+            $criteriastr .= "orderinfo." . $key . "='" . $value . "'";
+            if( count($criteria) > $count+1 ) {
+                $criteriastr .= " AND ";
+            }
+            $count++;
+        }
+
+        //echo $criteriastr;
+
+        //paginator
+        //, COUNT(orderinfo.slide) as slides
+        $limit = 15;
+        $dql = "SELECT orderinfo FROM OlegOrderformBundle:OrderInfo orderinfo ".$criteriastr.$orderby;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
+
         //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
         
         return array(
-            'entities' => $entities,  
-            'form' => $form->createView()
+            //'entities' => $entities,
+            'form' => $form->createView(),
+            'showprovider' => $showprovider,
+            'pagination' => $pagination
         );
     }
     
@@ -301,7 +362,20 @@ class ScanOrderController extends Controller {
         $entity = new OrderInfo();
         $username = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($username);
-        $form   = $this->createForm( new OrderInfoType(), $entity );
+
+        //get pathology service for this user by email
+        $helper = new FormHelper();
+        $email = $this->get('security.context')->getToken()->getAttribute('email');
+        $service = $helper->getUserPathology($email);
+//        if( $service ) {
+//            $services = explode("/", $service);
+//            $service = $services[0];
+//        }
+
+        //echo "service=".$service."<br>";
+        $entity->setPathologyService($service);
+
+        $form   = $this->createForm( new OrderInfoType(true,$service), $entity );
 
         $patient = new Patient();      
         $form_patient   = $this->createForm(new PatientType(), $patient);

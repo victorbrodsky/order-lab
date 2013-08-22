@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             //LDAPs
 //            new IMAG\LdapBundle\IMAGLdapBundle(),
 //            new Daps\LdapBundle\DapsLdapBundle(),

@@ -13,7 +13,7 @@
 }
 .horizontal_type LABEL, .horizontal_type INPUT {
     display: inline;
-    //padding-right: 5%;
+    padding-right: 5%;
 }
 
 .flash-notice {
@@ -188,3 +188,5 @@
 .icon-search, .icon-filter{
     background-image: url("glyphicons-halflings.png");
 }
+
+

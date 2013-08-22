@@ -20,27 +20,31 @@ class OrderInfoRepository extends EntityRepository
         
         
         $entity->setStatus("active"); 
-        $entity->setType($type);  
-        
+        $entity->setType($type);
+
         $helper = new FormHelper();
         
         $slideDelivery = $helper->getSlideDelivery();
         $key = $entity->getSlideDelivery();
-        if( $key >= 0 ) {
-            $entity->setSlideDelivery( $slideDelivery[$key] );
+        if( isset($key) && $key >= 0 ) {
+            $entity->setSlideDelivery( trim($slideDelivery[$key]) );
         }
         
         $returnSlide = $helper->getReturnSlide();
         $key = $entity->getReturnSlide();
-        if( $key >= 0 ) {
-            $entity->setReturnSlide( $returnSlide[$key] );
+        if( isset($key) && $key >= 0 ) {
+            $entity->setReturnSlide( trim($returnSlide[$key]) );
         }
              
         $key = $entity->getPathologyService();   
-        if( $key >= 0 ) {
+        if( isset($key) && $key >= 0 ) {
             $pathologyService = $helper->getPathologyService();
-            $entity->setPathologyService( $pathologyService[$key] );
+            $entity->setPathologyService( trim($pathologyService[$key]) );
         }
+
+        //echo "key=".$key."<br>";
+//        echo "pathservice=".$entity->getPathologyService();
+//        exit();
         
         return $entity; 
     }

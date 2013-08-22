@@ -1,0 +1,52 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    Request an Aperio eSlide Manager Account
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">Request an Aperio eSlide Manager Account</h3>
+
+    <form action="{{ path('userrequest_create') }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_errors(form) }}
+
+        <div class="row-fluid">
+            <div class="span6" align="right">
+                {{ form_label(form.cwid) }}
+            </div>
+            <div class="span6" align="left">
+                {{ form_widget(form.cwid) }}
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span6" align="right">
+                {{ form_label(form.request) }}
+            </div>
+            <div class="span6" align="left">
+                {{ form_widget(form.request) }}
+            </div>
+        </div>
+
+
+        <div class="row-fluid">
+            <div class="span6" align="right">
+                {{ form_label(form.pathologyService) }}
+            </div>
+            <div class="span6" align="left">
+                {{ form_widget(form.pathologyService) }}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+
+
+{% endblock %}

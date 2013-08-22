@@ -35,7 +35,7 @@ class OrderInfo
     /**
      * @var string
      *
-     * @ORM\Column(name="pathologyService", nullable=true, type="string", length=200)
+     * @ORM\Column(name="pathologyService", nullable=true, type="string", length=500)
      */
     private $pathologyService;
 

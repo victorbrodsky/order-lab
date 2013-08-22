@@ -7,29 +7,30 @@
 {% block content %} 
 {% block body -%}
 
-    {#<form action="{{ path('index') }}" method="get" {{ form_enctype(form) }}>#}
-        {#<div class="row-fluid">#}
-            {#<div class="span4">#}
-                {#{{ form_widget(form.filter) }}#}
-                {#<button class="btn " type="submit">Filter</button>#}
-            {#</div>#}
-            {#<div class="span4">#}
-                {#{{ form_widget(form.search) }}#}
-                {#<button class="btn" type="submit">Search</button>#}
-            {#</div>#}
-        {#</div>#}
-    {#</form>#}
+    <h5 class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</h5>
 
     <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">
         <div class="row-fluid">
-            <div class="span6">
-                {{ form_widget(form.filter) }}
-                <button class="btn " type="submit"><i class="icon-filter"></i> Filter</button>
+            <div class="span2">
+                My Service {{ form_widget(form.service) }}
             </div>
-            <div class="span6">
+            <div class="span5">
+                {{ form_widget(form.filter) }}
+                <button class="btn " type="submit"><i class="icon-filter"></i> Filter by Status</button>
+            </div>
+            <div class="span5">
                 {{ form_widget(form.search) }}
                 <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
             </div>
+
+
+                {#<div class="span6" align="right">#}
+                    {#{{ form_label(form.service) }}#}
+                {#</div>#}
+                {#<div class="span6" align="left">#}
+                    {#{{ form_widget(form.service) }}#}
+                {#</div>#}
+
         </div>
         {{ form_rest(form) }}
     </form>
@@ -37,18 +38,23 @@
     <table class="table table-hover table-condensed">
         <thead>
             <tr>
-                <th class="span2">Date</th>
-                <th>Status</th>
-                <th>ID</th>
-                <th class="span2">Slides#</th>
-                <th>Priority</th>               
-                <th>Return Slide</th>             
-                <th>Provider</th>
+                <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
+                <th{% if pagination.isSorted('orderinfo.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Status', 'orderinfo.status') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
+                {#<th{% if pagination.isSorted('orderinfo.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Order #', 'orderinfo.id') }}</th>#}
+                {#<th{% if pagination.isSorted('orderinfo.slide') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Slides #', 'orderinfo.slide') }}</th>#}
+                <th class="span2">Slides #</th>
+                <th{% if pagination.isSorted('orderinfo.priority') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
+                <th{% if pagination.isSorted('orderinfo.returnoption') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
+                {% if showprovider is defined and showprovider == 'true' %}
+                    <th{% if pagination.isSorted('orderinfo.provider') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Provider', 'orderinfo.provider') }}</th>
+                {% endif %}
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for entity in entities %}
+        {#{% for entity in entities %}#}
+        {% for entity in pagination  %}
             
             {% if entity.status == 'active' %}
                 <tr class="activetr" >
@@ -61,13 +67,14 @@
             {% else %}
                 <tr>
             {% endif %}
-                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H') }}h{% endif %}</td>
+                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H:i') }}{% endif %}</td>
                 <td>{{ entity.status }}</td>
                 <td>
                     {#<a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
                     <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                 </td>
-                <td>
+            {#<td>{{ entity.slide.count }}</td>#}
+            <td>
                     {#{{ entity.slide.count }}:#}
 {#                    {% for patient in entity.patient %}#}
 {#                        {{ patient.specimen }}#}
@@ -83,7 +90,9 @@
                 </td>
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>
-                <td>{{ entity.provider }}</td>
+                {% if showprovider is defined and showprovider == 'true' %}
+                    <td>{{ entity.provider }}</td>
+                {% endif %}
                 <td>  
                     
                     {{ include('OlegOrderformBundle::Default/action.html.twig') }}
@@ -102,6 +111,10 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
       
 {% endblock %}
 {% endblock %}

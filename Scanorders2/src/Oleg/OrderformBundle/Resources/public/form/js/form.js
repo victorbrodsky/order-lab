@@ -299,33 +299,34 @@ function bindDeleteBtn( uid ) {
 function setNavBar() {
 
     var index_arr = window.location.pathname.split('/');
-    var index = index_arr.indexOf("order");
-    if( index_arr.indexOf("app_dev.php") != -1 ) {
-        index = index + 4;
-    }
-    console.info("full="+window.location.pathname+", index="+index + " name="+index_arr[index+1]);
+
     $('ul.li').removeClass('active');
 
-    switch( index_arr[index+1] )
-    {
-        case "multy":
-            id = 1;
-            break;
-        case "edu":
-            id = 2;
-            break;
-        case "res":
-            id = 3;
-            break;
-        case "index":
-            id = 4;
-            break;
-        case "login":
-            id = 5;
-            break;
-        default:
-            id = 0;
+    var full = window.location.pathname;
+
+    var id = 0;
+
+    if( full.indexOf("/order") !== -1 ) {
+        id = 4;
     }
+
+    if( full.indexOf("multi/clinical") !== -1 ) {
+        id = 1;
+    }
+
+    if ( full.indexOf("multi/educational") !== -1 ) {
+        id = 2;
+    }
+
+    if( full.indexOf("multi/research") !== -1 ) {
+        id = 3;
+    }
+
+    if( full.indexOf("login") !== -1 ) {
+        id = 5;
+    }
+
+    //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
     $('#'+id).addClass('active');
 }

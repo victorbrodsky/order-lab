@@ -31,7 +31,7 @@ class ScanType extends AbstractType
                 'data' => 0,//'20X',
                 'multiple' => false,
                 'expanded' => true,
-                'attr' => array('class' => 'horizontal_type', 'required' => 'required')
+                'attr' => array('class' => 'horizontal_type', 'required' => 'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
         ));                       
         
         $builder->add('note', 'textarea', array(

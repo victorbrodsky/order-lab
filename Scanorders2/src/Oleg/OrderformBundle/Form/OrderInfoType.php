@@ -12,10 +12,12 @@ class OrderInfoType extends AbstractType
 {
     
     protected $multy;
+    protected $service;
     
-    public function __construct( $multy = false )
+    public function __construct( $multy = false, $service = null )
     {
         $this->multy = $multy;
+        $this->service = trim($service);
     }
         
     
@@ -45,15 +47,47 @@ class OrderInfoType extends AbstractType
                 'required'=>true,
                 'attr' => array('required' => 'required')
         ));
-               
-        $builder->add( 'pathologyService', 'choice', array(
-                'label' => 'Pathology Service:', 
-                'max_length'=>200,
-                'choices' => $helper->getPathologyService(),
+
+        if( 0 ) {//$this->service ) {
+            $builder->add( 'pathologyService', 'text', array(
+                'label'=>'Pathology Service:',
+                'max_length'=>'200',
                 'required'=>false,
-                'attr' => array('class' => 'combobox')
-                //'data' => 0, 
-        ));
+                'attr' => array('required' => 'required')
+            ));
+        } else {
+
+//            $helper = new FormHelper();
+//            $email = $this->get('security.context')->getToken()->getAttribute('email');
+//            $service = $helper->getUserPathology($email);
+//            $email = 'Gynecologic Pathology / Perinatal Pathology / Autopsy';//'oli2002@med.cornell.edu';
+
+            $pathServices = $helper->getPathologyService();
+            $pathParam = array(
+                'label' => 'Pathology Service:',
+                'max_length'=>200,
+                'choices' => $pathServices,
+                'required'=>false,
+                'attr' => array('class' => 'combobox'),
+            );
+
+            $counter = 0;
+            foreach( $pathServices as $ser ){
+                //echo "<br>ser=(".$ser.") (".$this->service.")<br>";
+                if( trim($ser) == trim($this->service) ){
+                    //echo "found";
+                    $key = $counter;
+                    //echo " key=".$key;
+                    $pathParam['data'] = $key;
+                }
+                $counter++;
+            }
+
+            $builder->add( 'pathologyService', 'choice', $pathParam );
+
+        }
+//
+
         
         $builder->add( 'priority', 'choice', array(
                 'label' => '* Priority:', 
@@ -85,13 +119,13 @@ class OrderInfoType extends AbstractType
                 'data' => 'Filing Room',
                 'attr' => array('class' => 'combobox', 'required' => 'required')
         ));
-        
+
         $builder->add('scandeadline','date',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
             'attr' => array('class' => 'datepicker'),
             'required' => false,
-            'data' => new \DateTime(),
+            'data' => date_modify(new \DateTime(), '+2 week'),
             'label'=>'Scan Deadline:',
         ));
         

@@ -2,8 +2,12 @@
 <html>
 
 <head>
-    
-    {% if not is_granted('ROLE_USER') %}                        
+
+    {% if security is not defined %}
+        {% set security = 'true' %}
+    {% endif %}
+
+    {% if not is_granted('ROLE_USER') and security == 'true' %}
         <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
     {% endif %}
 
@@ -72,7 +76,10 @@
 
     <div class="footer">
         {% block footer %}
-            &copy; Copyright 2013 by <a href="https://webmail.med.cornell.edu/">Pathology - Weill Cornell Medical College</a>.
+            &copy; Copyright 2013 by
+            <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
+            at
+            <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
         {% endblock %}
     </div>                   
  
