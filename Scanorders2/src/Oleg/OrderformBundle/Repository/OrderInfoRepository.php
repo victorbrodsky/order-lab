@@ -42,6 +42,12 @@ class OrderInfoRepository extends EntityRepository
             $entity->setPathologyService( trim($pathologyService[$key]) );
         }
 
+        $key = $entity->getPriority();
+        if( isset($key) && $key >= 0 ) {
+            $priority = $helper->getPriority();
+            $entity->setPriority( trim($priority[$key]) );
+        }
+
         //echo "key=".$key."<br>";
 //        echo "pathservice=".$entity->getPathologyService();
 //        exit();

@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -14,7 +16,7 @@ class OrderInfoType extends AbstractType
     protected $multy;
     protected $service;
     
-    public function __construct( $multy = false, $service = null )
+    public function __construct( $multy = null, $service = null )
     {
         $this->multy = $multy;
         $this->service = trim($service);
@@ -28,7 +30,7 @@ class OrderInfoType extends AbstractType
                    
         $builder->add( 'type', 'hidden' ); 
         
-        if( $this->multy ) {          
+        if( $this->multy ) {
             $builder->add('patient', 'collection', array(
                 'type' => new PatientType($this->multy),
                 'required' => false,
@@ -38,9 +40,21 @@ class OrderInfoType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__patient__',
-            ));                  
+            ));
         }
-        
+
+        //echo "<br>type=".$this->multy."<br>";
+
+        if( $this->multy == 'educational' ) {
+            //echo " add type educational ";
+            $builder->add( 'educational', new EducationalType(), array('label'=>'Educational:') );
+        }
+
+        if( $this->multy == 'research' ) {
+            //echo " add type research ";
+            $builder->add( 'research', new ResearchType(), array('label'=>'Research:') );
+        }
+
         $builder->add( 'provider', 'text', array(
                 'label'=>'* Ordering Provider:', 
                 'max_length'=>'200', 
@@ -94,7 +108,7 @@ class OrderInfoType extends AbstractType
                 //'max_length'=>200,
                 'required' => true,
                 'choices' => $helper->getPriority(),
-                'data' => 'Routine',  
+                'data' => 0,    //'Routine',
                 'multiple' => false,
                 'expanded' => true,
                 'attr' => array('class' => 'horizontal_type', 'required' => 'required')
@@ -133,6 +147,158 @@ class OrderInfoType extends AbstractType
             'label'     => 'Return slide(s) by this date even if not scanned',
             'required'  => false,
         ));
+
+
+        //fill out choices with pre set data PRE_SET_DATA
+        $factory  = $builder->getFormFactory();
+        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                //echo "class=".get_class($data)."<br>";
+                //echo "parent=".get_parent_class($data)."<br>";
+
+                //if( $data instanceof Stain ) {
+                //TODO: fix it. Here the listenere always executes this block (because of some preset data on new form?)
+                //read: http://symfony.com/doc/current/cookbook/form/dynamic_form_modification.html
+                if( 0 ) {//get_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) { //} || get_parent_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) {
+
+                    $pathservice = $data->getPathologyService();
+                    $return = $data->getReturnSlide();
+                    $delivery = $data->getSlideDelivery();
+                    $priority = $data->getPriority();
+
+                    $helper = new FormHelper();
+
+                    $pathserviceArr = $helper->getPathologyService();
+                    $deliveryArr = $helper->getSlideDelivery();
+                    $returnArr = $helper->getReturnSlide();
+                    $priorityArr = $helper->getPriority();
+
+                    //pathology service
+                    $pathservice_param = array(
+                        'label' => 'Pathology Service:',
+                        'max_length'=>200,
+                        'choices' => $pathserviceArr,
+                        'required'=>false,
+                        'attr' => array('class' => 'combobox'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $pathserviceArr as $var ){
+                        //echo "<br>".$var."?".$pathservice;
+                        if( trim( $var ) == trim( $pathservice ) ){
+                            $key = $counter;
+                            //echo "!!!!!!!!!!!!!!!!!! key=".$key;
+                            $pathservice_param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'pathologyService',
+                            'choice',
+                            null,
+                            $pathservice_param
+                    ));
+
+                    //delivery
+                    $delivery_param = array(
+                        'label'=>'* Slide Delivery:',
+                        'max_length'=>200,
+                        'choices' => $deliveryArr,
+                        'required'=>true,
+                        'attr' => array('class' => 'combobox', 'required' => 'required'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $deliveryArr as $var ){
+                        if( trim( $var ) == trim( $delivery ) ){
+                            $key = $counter;
+                            $delivery_param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'slideDelivery',
+                            'choice',
+                            null,
+                            $delivery_param
+                    ));
+
+
+                    //return
+                    $return_param = array(
+                        'label'=>'* Return Slides to:',
+                        'max_length'=>200,
+                        'choices' => $helper->getReturnSlide(),
+                        'required'=>true,
+                        'attr' => array('class' => 'combobox', 'required' => 'required'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $returnArr as $var ){
+                        if( trim( $var ) == trim( $return ) ){
+                            $key = $counter;
+                            $return_param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'returnSlide',
+                            'choice',
+                            null,
+                            $return_param
+                        ));
+
+
+                    //priority
+                    $priority_param = array(
+                        'label' => '* Priority:',
+                        //'max_length'=>200,
+                        'required' => true,
+                        'choices' => $priorityArr,
+                        'multiple' => false,
+                        'expanded' => true,
+                        'attr' => array('class' => 'horizontal_type', 'required' => 'required'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $priorityArr as $var ){
+                        //echo "<br>".$var."?".$pathservice;
+                        if( trim( $var ) == trim( $priority ) ){
+                            $key = $counter;
+                            $priority_param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'priority',
+                            'choice',
+                            null,
+                            $priority_param
+                        ));
+
+                }
+
+            }
+        );
         
         
     }

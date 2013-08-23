@@ -2,6 +2,10 @@
 
 {#{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
 
+{% if multy is not defined %}
+    {% set multy = 'multy' %}
+{% endif %}
+
 {% block title %}
     Clinical Multy Slide Scan Order
 {% endblock %}
@@ -10,104 +14,51 @@
     
 <h3 class="text-info">Clinical Multy Slide Scan Order</h3>
 
-{#macro#}
-{% macro field( field ) %}
-    <div class="row-fluid">
-        {{ form_errors(field) }}
-        <div class="span6" align="right">
-            {{ form_label(field) }}
-        </div>
-        <div class="span6" align="left">
-            {{ form_widget(field) }}
-        </div>
-        {{ form_rest(field) }}
-    </div>
-{% endmacro %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
 
-{% macro orderinfo(form) %}
-    <div class="row-fluid">
-        <div class="span12">
-            <h4>Scan Order Info</h4>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span6" align="right">
-            {{ form_label(form.provider) }}
-        </div>
-        <div class="span6" align="left">
-            {{ form_widget(form.provider) }}
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span6" align="right">
-            {{ form_label(form.pathologyService) }}
-        </div>
-        <div class="span6" align="left">
-            {{ form_widget(form.pathologyService) }}
-        </div>
-    </div>
+{% set formpath = 'clinical_create' %}
 
-    <div class="row-fluid">
-        <div class="span6" align="right">
-            {{ form_label(form.priority) }}
-        </div>
-        <div class="span6" align="left">
-            {{ form_widget(form.priority) }}
-        </div>
-    </div>
-    {#            optional for priority#}
-    <div id="priority_option" class="collapse">
-        {#            <div class="oleg_padding_top_bottom text-info">#}
-        <div class="well">
+{% if multy == 'educational' %}
+    {% set formpath = 'edu_create' %}
+{% endif %}
 
-            <div class="row-fluid">
-                <div class="span6" align="right">
-                    {{ form_label(form.scandeadline) }}
-                </div>
-                <div class="span6" align="left">
-                    {{ form_widget(form.scandeadline) }}
-                </div>
-            </div>
+{% if multy == 'research' %}
+    {% set formpath = 'res_create' %}
+{% endif %}
 
-            <div class="row-fluid">
-                <div class="span6" align="right">
-                    {{ form_label(form.returnoption) }}
-                </div>
-                <div class="span6" align="left">
-                    {{ form_widget(form.returnoption) }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row-fluid">
-        <div class="span6" align="right">
-            {{ form_label(form.slideDelivery) }}
-        </div>
-        <div class="span6" align="left">
-            {{ form_widget(form.slideDelivery) }}
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span6" align="right">
-            {{ form_label(form.returnSlide) }}
-        </div>
-        <div class="span6" align="left">
-            {{ form_widget(form.returnSlide) }}
-        </div>
-    </div>
-{% endmacro %}
-
-{% import _self as myform %}
-
-<form action="{{ path('multy_create') }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
 {#{{ form_start(form) }}#}
 
 {#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
 
-{% if type == 'show' %}
-    {{ myform.orderinfo(form) }}
-{% endif %}
+    {% if type == 'show' %}
+        {{ myform.orderinfo(form) }}
+    {% endif %}
+
+    {% if multy == 'educational' %}
+        <div  class="panel panel-patient">
+            <div class="panel-heading">
+                <h4>Topic</h4>
+            </div>
+            <div class="panel-body">
+                {{ myform.field(form.educational.goal) }}
+                {{ myform.field(form.educational.course) }}
+                {{ myform.field(form.educational.lesson) }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if multy == 'research' %}
+        <div  class="panel panel-patient">
+            <div class="panel-heading">
+                <h4>Research Project Info</h4>
+            </div>
+            <div class="panel-body">
+                {{ myform.field(form.research.project) }}
+                {{ myform.field(form.research.principal) }}
+            </div>
+        </div>
+    {% endif %}
 
 <div id="patient-data" 
      data-prototype-patient="
@@ -149,7 +100,10 @@
      " 
 >
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
-    
+
+
+
+
     {#patient#}
     {% set patientCount = 0 %}
     {% for patient in form.patient %}

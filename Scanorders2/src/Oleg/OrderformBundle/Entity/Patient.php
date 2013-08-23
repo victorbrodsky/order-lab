@@ -284,6 +284,12 @@ class Patient
         $this->specimen = $specimen;
     }
 
+    public function clearSpecimen(){
+        foreach( $this->specimen as $thisspecimen ) {
+            $this->removeSpecimen($thisspecimen);
+        }
+    }
+
     /**
      * Add orderinfo
      *

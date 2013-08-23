@@ -27,7 +27,7 @@ class ScanRepository extends EntityRepository
         //echo " key=".$key."<br>";
         //echo " value=".$mags[$key]."<br>";
 
-        if( $key >= 0 ) {
+        if( isset($key) && $key >= 0 ) {
             //echo "set name";
             $in_entity->setMag( $mags[$key] );
         }

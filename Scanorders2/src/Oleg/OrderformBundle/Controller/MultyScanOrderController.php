@@ -23,6 +23,11 @@ use Oleg\OrderformBundle\Form\BlockType;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
 
+use Oleg\OrderformBundle\Entity\Educational;
+use Oleg\OrderformBundle\Form\EducationalType;
+use Oleg\OrderformBundle\Entity\Research;
+use Oleg\OrderformBundle\Form\ResearchType;
+
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
@@ -63,11 +68,13 @@ class MultyScanOrderController extends Controller {
             //'slides' => $slides
         );
     }
-     
+
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/new", name="multy_create")
+     * @Route("/research/new", name="res_create")
+     * @Route("/educational/new", name="edu_create")
+     * @Route("/clinical/new", name="clinical_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -81,13 +88,36 @@ class MultyScanOrderController extends Controller {
         }
         
         //echo " controller multy<br>";
+        //exit();
 
         $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType(true), $entity);  
-//        $form->bind($request);
+
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+        //echo "routeName=".$routeName;
+
+        $type = "clinical";
+
+        if( $routeName == "clinical_create") {
+            $type = "clinical";
+            //$entity->setEducational(null);
+            //$entity->setResearch(null);
+        }
+
+        if( $routeName == "edu_create") {
+            $type = "educational";
+            //$entity->setResearch(null);
+        }
+
+        if( $routeName == "res_create") {
+            $type = "research";
+            //$entity->setEducational(null);
+        }
+
+        $form = $this->createForm(new OrderInfoType($type), $entity);
         $form->bind($request);
 
-        if(1) {
+        if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             //echo "<br>form errors:<br>";
@@ -98,13 +128,14 @@ class MultyScanOrderController extends Controller {
 
 //        if( $form->isValid() ) {
         if( 1 ) {
-            
+
             $em = $this->getDoctrine()->getManager();                            
                        
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "multy" );
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 
-            //echo "Before loop:<br>";
-            //echo $entity;
+//            echo "<br>Before loop:<br>";
+//            echo $entity;
+//            exit();
 
             foreach( $entity->getPatient() as $patient ) {
                 if( !$patient->getId() ) {
@@ -146,6 +177,7 @@ class MultyScanOrderController extends Controller {
 
                                 //Slide
                                 foreach( $block->getSlide() as $slide ) {
+                                    //echo "!!!!!!!!!!slide = ". $slide. "<br>";
                                     if( !$slide->getId() ) {
                                         $block->removeSlide( $slide );
                                         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
@@ -220,7 +252,7 @@ class MultyScanOrderController extends Controller {
 //                'notice',
 //                'You successfully submit a scan request! Confirmation email sent!'
 //            );
-//            return $this->redirect( $this->generateUrl('multy_new') );
+//            return $this->redirect( $this->generateUrl('clinical_new') );
 
             return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                 'orderid' => $entity->getId(),
@@ -240,7 +272,7 @@ class MultyScanOrderController extends Controller {
      *
      * @Route("/research/new", name="res_new")
      * @Route("/educational/new", name="edu_new")
-     * @Route("/clinical/new", name="multy_new")
+     * @Route("/clinical/new", name="clinical_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -248,7 +280,6 @@ class MultyScanOrderController extends Controller {
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            //throw new AccessDeniedException();
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
@@ -280,6 +311,24 @@ class MultyScanOrderController extends Controller {
         $slide = new Slide();
         $block->addSlide($slide);
 
+
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+        //echo "routeName=".$routeName;
+        $type = "clinical";
+        if( $routeName == "edu_new") {
+            //echo " add edu ";
+            $type = "educational";
+            $edu = new Educational();
+            $entity->setEducational($edu);
+        }
+
+        if( $routeName == "res_new") {
+            $type = "research";
+            $res = new Research();
+            $entity->setResearch($res);
+        }
+
         //$slide2 = new Slide();
         //$block->addSlide($slide2);
 
@@ -293,11 +342,12 @@ class MultyScanOrderController extends Controller {
 //        }
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType(true,$service), $entity );
+        $form   = $this->createForm( new OrderInfoType($type,$service), $entity );
         
         return array(          
             'form' => $form->createView(),
-            'type' => 'new'
+            'type' => 'new',
+            'multy' => $type
         );
     }
 
@@ -314,30 +364,61 @@ class MultyScanOrderController extends Controller {
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            //throw new AccessDeniedException();
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+
         $slides = $em->getRepository('OlegOrderformBundle:Slide')->findByOrderinfo($id);
 
-        $entity = new OrderInfo();
+
+        $entity->clearPatient();
 
         //get only elements with this orderinfo id (use slide object)
         foreach( $slides as $slide  ) {
+
+            //get all
+            $block = $slide->getBlock();
+            $part = $block->getPart();
+            $accession = $slide->getAccession();
+            $specimen = $accession->getSpecimen();
+            $patient = $specimen->getPatient();
+
+            //clean
+            $block->clearSlide();
+
+            $part->clearSlide();
+            $part->clearBlock();
+
+            $accession->clearSlide();
+            $accession->clearPart();
+
+            $specimen->clearAccession();
+
+            $patient->clearSpecimen();
+//            $patient->setSpecimen(null);
+
+            //re-build
+
+
+
+            //echo $block;
+
+            //exit();
+
             //$patient = $slide->getAccession()->getSpecimen()->getPatient();
             //$patients = $em->getRepository('OlegOrderformBundle:Patient')->findByOrderinfo($id);
 
             //if( !$patients->contains($patient) ) {
                 //$patients
             //}
-            $patient = new Patient();
-            $specimen = new Specimen();
-            $accession = new Accession();
-            $part = new Part();
-            $block = new Block();
+//            $patient = new Patient();
+//            $specimen = new Specimen();
+//            $accession = new Accession();
+//            $part = new Part();
+//            $block = new Block();
 
             $block->addSlide($slide);
             $part->addBlock($block);
@@ -346,30 +427,23 @@ class MultyScanOrderController extends Controller {
             $patient->addSpecimen($specimen);
             $entity->addPatient($patient);
             $entity->addSlide($slide);
+
+            //echo "slide=".$slide;
+
         }
 
-        $form   = $this->createForm( new OrderInfoType(true), $entity, array('disabled' => true) );
+
+        $form   = $this->createForm( new OrderInfoType(true, null, $entity), $entity, array('disabled' => true) );
+
+//        echo "type=".$entity->getType();
+//        exit();
 
         return array(
             'form' => $form->createView(),
-            'type' => 'show'
+            'type' => 'show',
+            'multy' => $entity->getType()
         );
     }
 
-
-
-    /**
-     * Displays a form to create a new OrderInfo + Scan entities.
-     *
-     * @Route("/table", name="table")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:Order:table.html.twig")
-     */
-    public function tableAction()
-    {     
-        return array(          
-            //'form' => $form->createView(),          
-        ); 
-    }
  
 }

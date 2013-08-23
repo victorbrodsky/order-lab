@@ -21,13 +21,16 @@ class Block
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
-    //Block belongs to exactly one Accession => Block has only one Accession
+
     /**
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="block")
-     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)    
+     * Name is a letter (A,B ...)
+     * @ORM\Column(type="string", length=3)
+     * @Assert\NotBlank
      */
-    //protected $accession;
+    protected $name;
+
+
+    //////////////  OBJECTS /////////////
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")
@@ -41,14 +44,7 @@ class Block
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="block", cascade={"persist"})
      */
     protected $slide;
-    
-    /**
-     * Name is a letter (A,B ...)
-     * @ORM\Column(type="string", length=3)
-     * @Assert\NotBlank   
-     */
-    protected $name;  
-    
+
     
     public function __construct() {
         $this->slide = new ArrayCollection();
@@ -106,12 +102,11 @@ class Block
         return $this->slide;
     }
     
-//    public function setSlide($slide){
-//        $this->slide = $slide;
-//        foreach( $slide as $slide_single ) {
-//            $slide_single->setBlock($this);
-//        }
-//    }
+    public function clearSlide(){
+        foreach( $this->slide as $thisslide ) {
+            $this->removeSlide($thisslide);
+        }
+    }
 
     /**
      * Set part
@@ -146,6 +141,6 @@ class Block
             $count++;
         }
         $slide_info .= ")";
-        return "Block: id=".$this->id.", name".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
+        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
     }
 }

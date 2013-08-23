@@ -231,6 +231,19 @@ class Part
         $this->block = $block;
     }
 
+
+    public function clearSlide(){
+        foreach( $this->slide as $thisslide ) {
+            $this->removeSlide($thisslide);
+        }
+    }
+
+    public function clearBlock(){
+        foreach( $this->block as $thisblock ) {
+            $this->removeBlock($thisblock);
+        }
+    }
+
     public function __toString()
     {
 //        $block_info = "(";

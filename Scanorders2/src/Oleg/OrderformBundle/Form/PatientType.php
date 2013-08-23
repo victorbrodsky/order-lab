@@ -5,11 +5,13 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 class PatientType extends AbstractType
 {
     protected $multy;
-    
+
     public function __construct( $multy = false )
     {
         $this->multy = $multy;
@@ -76,6 +78,52 @@ class PatientType extends AbstractType
                 'prototype_name' => '__specimen__',
             ));  
         }
+
+
+        $factory  = $builder->getFormFactory();
+        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Patient' || get_class($data) == 'Oleg\OrderformBundle\Entity\Patient' ) {
+                    $name = $data->getName();
+
+                    $arr = array("Male"=>"Male", "Female"=>"Female");
+
+                    $param = array(
+                        'label'=>'Sex:',
+                        'max_length'=>20,
+                        'required'=>false,
+                        'choices' => $arr,
+                        'multiple' => false,
+                        'expanded' => true,
+                        'attr' => array('class' => 'horizontal_type'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $arr as $var ){
+                        if( trim( $var ) == trim( $name ) ){
+                            $key = $counter;
+                            $param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'sex',
+                            'choice',
+                            null,
+                            $param
+                        ));
+                }
+
+            }
+        );
+
         
     }
 

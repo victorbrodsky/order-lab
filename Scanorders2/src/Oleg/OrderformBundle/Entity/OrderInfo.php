@@ -99,6 +99,9 @@ class OrderInfo
      */
     private $provider;
 
+
+    /////////////////    OBJECTS    //////////////////////
+
     //cascade={"persist"}   
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo")
@@ -112,6 +115,35 @@ class OrderInfo
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo")
      */
     protected $slide;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Educational",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="educational_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
+     */
+    protected $educational;
+
+    //     nullable=true
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Research",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="research_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
+     */
+    protected $research;
     
     /**
      * Constructor
@@ -346,6 +378,13 @@ class OrderInfo
     {
         return $this->patient;
     }
+
+    public function clearPatient()
+    {
+        foreach( $this->patient as $thispatient ) {
+            $this->removePatient($thispatient);
+        }
+    }
     
     /**
      * Add slide
@@ -380,19 +419,53 @@ class OrderInfo
     {
         return $this->slide;
     }
+
+    /**
+     * @param mixed $educational
+     */
+    public function setEducational($educational)
+    {
+        $this->educational = $educational;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEducational()
+    {
+        return $this->educational;
+    }
+
+    /**
+     * @param mixed $research
+     */
+    public function setResearch($research)
+    {
+        $this->research = $research;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResearch()
+    {
+        return $this->research;
+    }
+
     
     public function __toString(){
         
-        $patient_info = "(";
-        $count = 0;
-        foreach( $this->patient as $patient ) {
-            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-            $patient_info .= $count.":" . $patient. "; ";
-            $count++;
-        }
-        $patient_info .= ")";
-        
-        return "OrderInfo: id=".$this->id.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
+//        $patient_info = "(";
+//        $count = 0;
+//        foreach( $this->patient as $patient ) {
+//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+//            $patient_info .= $count.":" . $patient. "; ";
+//            $count++;
+//        }
+//        $patient_info .= ")";
+
+//        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
+        return "OrderInfo: id=".$this->id.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
     }
     
 }

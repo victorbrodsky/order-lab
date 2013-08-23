@@ -152,6 +152,12 @@ class Specimen
         return $this->patient;
     }
 
+    public function clearAccession(){
+        foreach( $this->accession as $thisaccession ) {
+            $this->removeAccession($thisaccession);
+        }
+    }
+
     public function __toString() {
         $acc_info = "(";
         $count = 0;

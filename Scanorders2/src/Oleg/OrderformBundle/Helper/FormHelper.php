@@ -9,10 +9,7 @@ class FormHelper {
             'H&E'=>'H&E','2-Oct'=>'2-Oct','4-Oct'=>'4-Oct','A103 (Melan-A)'=>'A103 (Melan-A)'
         );
         $arr = array(
-            'H&E','2-Oct','4-Oct','A103 (Melan-A)',
-            
-            "H&E","
-A103 (Melan-A)	","
+            "H&E","A103 (Melan-A)","
 a-1-ACT	","
 a-1-IAT	","
 a-B-Crystallin	","
@@ -723,7 +720,8 @@ Translational Research"
     }
     
     public function getPriority() {        
-        $arr = array( 'Routine'=>'Routine', 'Stat'=>'Stat' );
+        $arr1 = array( 'Routine'=>'Routine', 'Stat'=>'Stat' );
+        $arr = array( 'Routine', 'Stat' );
         
         return $arr;
     }
@@ -747,7 +745,7 @@ Translational Research"
     }
     
     public function getReturnSlide() {        
-        $arr = array( 'Filing Room'=>'Filing Room', "Me"=>"Me" );
+        $arr = array( 'Filing Room', "Me" );
         
         return $arr;
     }

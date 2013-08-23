@@ -409,7 +409,7 @@ class ScanOrderController extends Controller {
         //echo "service=".$service."<br>";
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType(true,$service), $entity );
+        $form   = $this->createForm( new OrderInfoType("multy",$service), $entity );
 
         $patient = new Patient();      
         $form_patient   = $this->createForm(new PatientType(), $patient);

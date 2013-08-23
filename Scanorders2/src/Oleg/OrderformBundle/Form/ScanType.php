@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -41,6 +43,66 @@ class ScanType extends AbstractType
                 'data' => 'Interesting case',
                 //'attr'=>array('readonly'=>true)
         ));
+
+
+        $factory  = $builder->getFormFactory();
+        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                //echo "class=".get_class($data)."<br>";
+                //echo "parent=".get_parent_class($data)."<br>";
+
+                //if( $data instanceof Stain ) {
+                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Scan' ) {
+                    $name = $data->getMag();
+                    //echo "name === ".$name;
+
+                    $helper = new FormHelper();
+                    $arr = $helper->getMags();
+
+                    $param = array(
+                            'label' => 'Magnification:',
+                            'max_length'=>50,
+                            'choices' => $arr,
+                            'required' => true,
+                            'multiple' => false,
+                            'expanded' => true,
+                            'auto_initialize' => false,
+                            'attr' => array(
+                                            'class' => 'horizontal_type',
+                                            'required' => 'required',
+                                            'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.'
+                                           )
+                        );
+
+                    $counter = 0;
+                    foreach( $arr as $var ){
+                        //echo "<br>".$var."?".$name;
+                        if( trim( $var ) == trim( $name ) ){
+                            $key = $counter;
+                            //echo " key=".$key;
+                            $param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    $form->add(
+                        $factory->createNamed(
+                            'mag',
+                            'choice',
+                            null,
+                            $param
+                        ));
+
+                }
+
+            }
+        );
+
+
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

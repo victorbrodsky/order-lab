@@ -19,22 +19,22 @@ class BlockRepository extends EntityRepository
         
         $em = $this->_em;
 
+        $helper = new FormHelper();
+        $key = $block->getName();
+
+        if( isset($key) && $key >= 0 ) {
+            $name = $helper->getBlock();
+            $block->setName( $name[$key] );
+            //echo "name =" .  $name[$key];
+        }
+        //exit();
+
         if( $part == null || $part->getId() == null) {
             $em->persist($block);
             //$em->flush();
 
             return $block;
         }
-
-        $helper = new FormHelper();
-        $key = $block->getName();
-
-        if( $key >= 0 ) {
-            $name = $helper->getBlock();
-            $block->setName( $name[$key] );
-            //echo "name =" .  $name[$key];
-        }
-        //exit();
 
         //Check if the part has the block with the same name    
         $query = $em->createQuery(

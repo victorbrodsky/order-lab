@@ -235,4 +235,16 @@ class Accession {
         return $this->slide;
     }
 
+    public function clearSlide(){
+        foreach( $this->slide as $thisslide ) {
+            $this->removeSlide($thisslide);
+        }
+    }
+
+    public function clearPart(){
+        foreach( $this->part as $thispart ) {
+            $this->removePart($thispart);
+        }
+    }
+
 }

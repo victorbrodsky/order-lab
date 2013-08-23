@@ -145,7 +145,10 @@ class SecurityController extends Controller
         }       
         
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
-            
+
+            //print_r($AuthResult);
+            //exit();
+
             $user = new User();
             $user->setUsername($loginName);
             $user->setEmail($AuthResult['E_Mail']);

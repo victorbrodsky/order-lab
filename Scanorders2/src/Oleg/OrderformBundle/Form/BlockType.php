@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -43,6 +45,57 @@ class BlockType extends AbstractType
                 'prototype_name' => '__slide__',
             ));
         }
+
+
+        $factory  = $builder->getFormFactory();
+        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                //echo "class=".get_class($data)."<br>";
+                //echo "parent=".get_parent_class($data)."<br>";
+
+                //if( $data instanceof Stain ) {
+                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Block' || get_class($data) == 'Oleg\OrderformBundle\Entity\Block' ) {
+                    $name = $data->getName();
+                    //echo $data;
+
+                    $helper = new FormHelper();
+                    $arr = $helper->getBlock();
+
+                    $param = array(
+                        'label'=>' ',
+                        'max_length'=>'3',
+                        'choices' => $arr,
+                        'required'=> true,
+                        'attr' => array('style' => 'width:70px'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $arr as $var ){
+                        //echo "<br>".$var."?".$name;
+                        if( trim( $var ) == trim( $name ) ){
+                            $key = $counter;
+                            //echo " key=".$key;
+                            $param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'name',
+                            'choice',
+                            null,
+                            $param
+                        ));
+                }
+
+            }
+        );
         
         
     }

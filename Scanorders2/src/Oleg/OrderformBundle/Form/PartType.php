@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -88,6 +90,89 @@ class PartType extends AbstractType
 //            'required'=>false,
 //            //'hidden'=>true,
 //        ));
+
+
+        $factory  = $builder->getFormFactory();
+        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Part' || get_class($data) == 'Oleg\OrderformBundle\Entity\Part' ) {
+
+                    $name = $data->getName();
+                    $source = $data->getSourceOrgan();
+
+                    $helper = new FormHelper();
+                    $arr = $helper->getPart();
+                    $sourceArr = $helper->getSourceOrgan();
+
+                    //name
+                    $param = array(
+                        'choices' => $arr,
+                        'required'=>true,
+                        'label'=>' ',
+                        'max_length'=>'3',
+                        'attr' => array('style' => 'width:70px'),
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $arr as $var ){
+                        //echo "<br>".$var."?".$name;
+                        if( trim( $var ) == trim( $name ) ){
+                            $key = $counter;
+                            //echo " key=".$key;
+                            $param['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'name',
+                            'choice',
+                            null,
+                            $param
+                        ));
+
+
+                    //source Oragn
+                    $sourceparam = array(
+                        'choices' => $sourceArr,
+                        'label'=>'Source Organ:',
+                        'max_length'=>'100',
+                        'choices' => $helper->getSourceOrgan(),
+                        'required'=>false,
+                        'auto_initialize' => false,
+                    );
+
+                    $counter = 0;
+                    foreach( $sourceArr as $var ){
+                        //echo "<br>".$var."?".$name;
+                        if( trim( $var ) == trim( $source ) ){
+                            $key = $counter;
+                            //echo " key=".$key;
+                            $sourceparam['data'] = $key;
+                        }
+                        $counter++;
+                    }
+
+                    // field name, field type, data, options
+                    $form->add(
+                        $factory->createNamed(
+                            'sourceOrgan',
+                            'choice',
+                            null,
+                            $sourceparam
+                        ));
+
+                }
+
+            }
+        );
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

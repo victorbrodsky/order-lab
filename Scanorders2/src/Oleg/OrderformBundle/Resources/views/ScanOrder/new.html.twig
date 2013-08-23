@@ -3,6 +3,8 @@
 {#{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}    #}
 {#{% form_theme form 'OlegOrderformBundle:Default:form_table_layout.html.twig' %}#}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
 {% block title %}
     Scan Order
 {% endblock %}
@@ -23,8 +25,10 @@
         {{ form_errors(form_part) }}
         {{ form_errors(form_block) }}
         {{ form_errors(form_slide) }}
-     
-      
+
+
+        <h4 class="text-info">Slide Info</h4>
+
         <div class="row-fluid">
         <div class="span6" align="right">      
         {{ form_label(form_accession.accession, '* Accession+Part+Block') }} 
@@ -80,7 +84,7 @@
         <div id="orderinfo_param" class="collapse">
             <div class="row-fluid">
             <div class="span12">
-            <h3 class="text-info">Order Info</h3>
+            <h4 class="text-info">Order Info</h4>
             </div>
             </div>
             <div class="row-fluid">
@@ -159,7 +163,7 @@
         <div class="row-fluid">
         <div class="span12">
         <button id="optional_button" type="button" class="btn btn_margin" data-toggle="collapse" data-target="#optional_param">
-            Optional Info
+            Add Optional Info
         </button>
         </div>
         </div>
@@ -180,14 +184,39 @@
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane active" id="patient"> {{ form_rest(form_patient) }} </div>
-              <div class="tab-pane" id="procedure"> {{ form_rest(form_procedure) }} </div>
-              <div class="tab-pane" id="accession"> {{ form_rest(form_accession) }} </div>
-              <div class="tab-pane" id="part"> {{ form_rest(form_part) }} </div>
+              <div class="tab-pane active" id="patient">
+                  {{ formmacros.field(form_patient.mrn) }}
+                  {{ formmacros.field(form_patient.name) }}
+                  {{ formmacros.field(form_patient.age) }}
+                  {{ formmacros.field(form_patient.sex) }}
+                  {{ formmacros.field(form_patient.dob) }}
+                  {{ formmacros.field(form_patient.clinicalHistory) }}
+              </div>
+              <div class="tab-pane" id="procedure">
+                  {{ formmacros.field(form_procedure.proceduretype) }}
+                  {{ formmacros.field(form_procedure.paper) }}
+              </div>
+              <div class="tab-pane" id="accession">
+                  {{ formmacros.field(form_accession.date) }}
+              </div>
+              <div class="tab-pane" id="part">
+                  {{ formmacros.field(form_part.sourceOrgan) }}
+                  {{ formmacros.field(form_part.description) }}
+                  {{ formmacros.field(form_part.diagnosis) }}
+                  {{ formmacros.field(form_part.diffDiagnosis) }}
+                  {{ formmacros.field(form_part.diseaseType) }}
+              </div>
 {#              <div class="tab-pane" id="block"> {{ form_rest(form_block) }}</div>           #}
 {#              <div class="tab-pane" id="stain"> {{ form_rest(form_slide.stain) }} </div>#}
-              <div class="tab-pane" id="scan"> {{ form_rest(form_slide.scan) }} </div>
-              <div class="tab-pane" id="slide"> {{ form_rest(form_slide) }} </div>
+              <div class="tab-pane" id="scan">
+                  {{ formmacros.field(form_slide.scan.scanregion) }}
+              </div>
+              <div class="tab-pane" id="slide">
+                  {{ formmacros.field(form_slide.diagnosis) }}
+                  {{ formmacros.field(form_slide.microscopicdescr) }}
+                  {{ formmacros.field(form_slide.specialstain) }}
+                  {{ formmacros.field(form_slide.relevantscan) }}
+              </div>
             </div>
                 
             </div>

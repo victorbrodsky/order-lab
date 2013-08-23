@@ -9,8 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SpecimenType extends AbstractType
 {
     
-    protected $multy;    
-    
+    protected $multy;
+
     public function __construct( $multy = false )
     {
         $this->multy = $multy;

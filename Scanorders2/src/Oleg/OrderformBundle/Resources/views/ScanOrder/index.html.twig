@@ -46,6 +46,7 @@
                 <th class="span2">Slides #</th>
                 <th{% if pagination.isSorted('orderinfo.priority') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
                 <th{% if pagination.isSorted('orderinfo.returnoption') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
+                <th{% if pagination.isSorted('orderinfo.type') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <th{% if pagination.isSorted('orderinfo.provider') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Provider', 'orderinfo.provider') }}</th>
                 {% endif %}
@@ -90,6 +91,7 @@
                 </td>
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>
+                <td>{{ entity.type }}</td>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>{{ entity.provider }}</td>
                 {% endif %}

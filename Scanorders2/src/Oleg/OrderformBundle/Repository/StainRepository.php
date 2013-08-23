@@ -24,7 +24,7 @@ class StainRepository extends EntityRepository
 
         $key = $in_entity->getName();
 
-        if( $key >= 0 ) {
+        if( isset($key) && $key >= 0 ) {
 
             $stain = $stains[$key];
             $in_entity->setName( $stain );

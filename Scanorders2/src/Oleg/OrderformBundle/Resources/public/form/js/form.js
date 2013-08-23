@@ -306,7 +306,7 @@ function setNavBar() {
 
     var id = 0;
 
-    if( full.indexOf("/order") !== -1 ) {
+    if( full.indexOf("/index") !== -1 || full.indexOf("/multi/") !== -1 ) {
         id = 4;
     }
 

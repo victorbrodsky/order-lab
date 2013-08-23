@@ -33,10 +33,6 @@ class Educational
      * @ORM\Column(type="string", nullable=true, length=200)
      */
     protected $lesson;
-    
-
-
-
 
     /**
      * Get id
@@ -116,4 +112,10 @@ class Educational
     {
         return $this->lesson;
     }
+
+    public function __toString(){
+
+        return "Principal: id=".$this->id.", goal=".$this->goal.", course=".$this->course.", lesson".$this->lesson."<br>";
+    }
+
 }
