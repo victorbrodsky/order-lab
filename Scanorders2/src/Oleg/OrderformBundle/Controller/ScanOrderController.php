@@ -80,11 +80,6 @@ class ScanOrderController extends Controller {
             $criteria['status']= $filter;
         }
 
-        //search           
-        if( $search && $search != ''  ) {            
-            $criteria['pathologyService']= $search;
-        }
-
         //service
         //echo "service=".$service;
         //exit();
@@ -120,7 +115,7 @@ class ScanOrderController extends Controller {
         $sort = $this->getRequest()->query->get('sort');
 
         if( $params == null || count($params) == 0 ) {
-            $orderby = "ORDER BY orderinfo.id DESC";
+            $orderby = " ORDER BY orderinfo.id DESC";
         }
 
         if( $sort != 'orderinfo.id' ) {
@@ -128,9 +123,7 @@ class ScanOrderController extends Controller {
         }
 
         $criteriastr = "";
-        if( count($criteria) != 0 ) {
-            $criteriastr = "WHERE ";
-        }
+        //print_r($criteria);
 
         $count = 0;
         foreach( $criteria as $key => $value ){
@@ -140,13 +133,54 @@ class ScanOrderController extends Controller {
             }
             $count++;
         }
-
-        //echo $criteriastr;
-
+      
         //paginator
         //, COUNT(orderinfo.slide) as slides
+//        $limit = 15;
+        //$dql1 = "SELECT orderinfo FROM OlegOrderformBundle:OrderInfo orderinfo ".$criteriastr.$orderby;
+        
+//        $dql = "SELECT orderinfo FROM "
+//                . "OlegOrderformBundle:OrderInfo orderinfo "
+//                . "LEFT JOIN OlegOrderformBundle:Slide slide "
+//                . "ON slide.orderinfo = orderinfo.id"
+//                //. "OlegOrderformBundle:Accession accession "           
+//                . $criteriastr.$orderby;
+        
+        $dql =  $repository->createQueryBuilder("orderinfo");
+        
+        //echo "<br>criteriastr=".$criteriastr."<br>";
+        
+//        if( $criteriastr != "" ) {
+//            $dql->where($criteriastr);
+//        }
+        $criteriafull = "";
+        if( $search && $search != '' ) {
+            $dql->innerJoin("orderinfo.slide", "slide");
+            $dql->innerJoin("slide.accession", "accession");
+            //$dql->where( "slide.orderinfo = orderinfo.id AND slide.accession = accession.id AND accession.accession LIKE '%". 
+            //                $search ."%'".$criteriastr);
+            $criteriafull = "slide.orderinfo = orderinfo.id AND slide.accession = accession.id AND accession.accession LIKE '%". 
+                           $search ."%'";         
+        }              
+        
+        if( $criteriastr != "" ) {
+            if( $criteriafull != "" ) {
+                $criteriafull .= " AND ";
+            }
+            $criteriafull .= $criteriastr;           
+        } 
+        
+        if( $criteriafull != "" ) {
+            $dql->where($criteriafull);
+        }
+        
+        if( $orderby != "" ) {
+            $dql->orderBy("orderinfo.id","DESC");
+        }
+        
+        //echo "dql=".$dql;
+        
         $limit = 15;
-        $dql = "SELECT orderinfo FROM OlegOrderformBundle:OrderInfo orderinfo ".$criteriastr.$orderby;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
