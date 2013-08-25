@@ -1,43 +1,99 @@
-{% extends '::base.html.twig' %}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
-{% block body -%}
-    <h1>UserRequest list</h1>
+{% block title %}
+    User Request List
+{% endblock %}
 
-    <table class="records_list">
+{% block content %} 
+
+    <h3 class="text-info">User Request List</h3>
+
+    <table class="table table-hover table-condensed">
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Status</th>
                 <th>Cwid</th>
-                <th>Request</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Job</th>
+                <th>Organization</th>
+                <th>Department</th>
+                <th>Service / Division</th>
+                <th>Reason for account request</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
-            <tr>
+            
+            {% if entity.status == 'active' %}
+                <tr class="canceltr" >
+            {% elseif entity.status == 'cancel' %}
+                <tr class="activetr" >
+            {% elseif entity.status == 'completed' %}
+                <tr class="completedtr" >
+            {% elseif entity.status == 'uncompleted' %}
+                <tr class="uncompletedtr" >
+            {% else %}
+                <tr>
+            {% endif %}
                 <td><a href="{{ path('userrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.status }}</td>
                 <td>{{ entity.cwid }}</td>
-                <td>{{ entity.request }}</td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.email }}</td>
+                <td>{{ entity.phone }}</td>
+                <td>{{ entity.job }}</td>
+                <td>{{ entity.organization }}</td>
+                <td>{{ entity.department }}</td>
+                <td>{{ entity.pathologyService }}</td>
+                <td> {{ entity.request[:10] ~ '...' }}</td>
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('userrequest_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('userrequest_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                    
+{#                <a class="btn" href="{{ path('userrequest_show', { 'id': entity.id }) }}">Show</a>#}
+                   
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                          Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path('userrequest_show', { 'id': entity.id }) }}">View Details</a></li>
+
+                            <li class="divider"></li>
+
+                            {% if entity.status != 'cancel' %}
+                                <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
+                                       href="{{ path('userrequest_status', { 'id': entity.id, 'status': 'cancel' }) }}">Cancel</a>
+                                </li>                  
+                            {% endif %}                                                                
+
+                            {% if entity.status != 'active' %}
+                                <li><a onclick="return confirm('Are you sure?');" 
+                                       href="{{ path('userrequest_status', { 'id': entity.id, 'status': 'active' }) }}">Active</a>
+                                </li>                  
+                            {% endif %}
+
+                            {% if entity.status != 'completed' %}
+                                <li><a onclick="return confirm('Are you sure?');" 
+                                       href="{{ path('userrequest_status', { 'id': entity.id, 'status': 'completed' }) }}">Completed</a>
+                                </li>                  
+                            {% endif %}
+                         
+
+                        </ul>
+                   </div>
+                    
+                    
+                    
+                    
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('userrequest_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+        
     {% endblock %}

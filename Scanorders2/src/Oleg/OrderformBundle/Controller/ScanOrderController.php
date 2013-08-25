@@ -52,8 +52,7 @@ class ScanOrderController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
         
-        
-        
+              
         $form = $this->createForm(new FilterType(), null);         
         $form->bind($request);
 
@@ -191,11 +190,18 @@ class ScanOrderController extends Controller {
 
         //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
         
+        //check for active user requests
+        $reqs = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {                     
+            $reqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
+        }
+        
         return array(
             //'entities' => $entities,
             'form' => $form->createView(),
             'showprovider' => $showprovider,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'userreqs' => $reqs
         );
     }
     

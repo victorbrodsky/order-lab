@@ -28,6 +28,8 @@ class UserRequestRepository extends EntityRepository
 
         }
 
+        $entity->setStatus('active');
+        
         return $entity;
     }
 }

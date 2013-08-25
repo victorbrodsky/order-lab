@@ -15,24 +15,62 @@ class UserRequestType extends AbstractType
         $helper = new FormHelper();
         
         $builder->add( 'cwid', 'text', array(
-                'label'=>'CWID:',
+                'label'=>'WCMC CWID:',
                 'max_length'=>'10',
                 'required'=> false,
         ));
         
-        $builder->add('request', 'textarea', array(
-            'label'=>'Request:',
-            'max_length'=>'1000',
-            'required'=> false,
+        $builder->add( 'name', 'text', array(
+                'label'=>'Name:',
+                'max_length'=>'500',
+                'required'=> false,
         ));
-
+        
+        $builder->add( 'email', 'email', array(
+                'label'=>'* Email:',
+                'max_length'=>'200',
+                'required'=> true,
+        ));
+        
+        $builder->add( 'phone', 'text', array(
+                'label'=>'Phone Number:',
+                'max_length'=>'20',
+                'required'=> false,
+        ));
+        
+        $builder->add( 'job', 'text', array(
+                'label'=>'Job title:',
+                'max_length'=>'200',
+                'required'=> false,
+        ));
+        
+        $builder->add( 'organization', 'text', array(
+                'label'=>'Organization:',
+                'max_length'=>'200',
+                'required'=> false,
+                'data'=>'Weill Cornell Medical College'
+        ));
+        
+        $builder->add( 'department', 'text', array(
+                'label'=>'Department:',
+                'max_length'=>'200',
+                'required'=> false,
+                'data'=>'Department of Pathology and Laboratory Medicine'
+        ));
+        
         $builder->add( 'pathologyService', 'choice', array(
-            'label' => 'Pathology Service:',
+            'label' => 'Service / Division:',
             'max_length'=>200,
             'choices' => $helper->getPathologyService(),
             'required'=>false,
             'attr' => array('class' => 'combobox'),
         ));
+        
+        $builder->add('request', 'textarea', array(
+            'label'=>'Reason for account request:',
+            'max_length'=>'1000',
+            'required'=> false,
+        ));    
 
     }
 

@@ -27,6 +27,10 @@ class UserRequestController extends Controller
      */
     public function indexAction()
     {
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegOrderformBundle:UserRequest')->findAll();
@@ -52,7 +56,7 @@ class UserRequestController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->processEntity( $entity );
-
+            
             $em->persist($entity);
             $em->flush();
 
@@ -61,7 +65,8 @@ class UserRequestController extends Controller
                 'You successfully submit a request for an Aperio eSlide Manager account!'
             );
 
-            return $this->redirect($this->generateUrl('userrequest_show', array('id' => $entity->getId())));
+            //return $this->redirect($this->generateUrl('scanorder_new', array('id' => $entity->getId())));
+            return $this->redirect( $this->generateUrl('login') );
         }
 
         return array(
@@ -233,4 +238,35 @@ class UserRequestController extends Controller
             ->getForm()
         ;
     }
+    
+    
+    /**
+     * @Route("/{id}/{status}/status", name="userrequest_status")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
+     */
+    public function statusAction($id, $status)
+    {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find UserRequest entity.');
+        }
+      
+        $entity->setStatus($status);
+        $em->persist($entity);
+        $em->flush();
+        
+        
+        return $this->redirect($this->generateUrl('userrequest'));
+            
+    }
+    
 }

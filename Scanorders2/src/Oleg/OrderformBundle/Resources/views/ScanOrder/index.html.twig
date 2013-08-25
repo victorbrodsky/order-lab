@@ -8,6 +8,19 @@
 {% block body -%}
 
     <h5 class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</h5>
+    
+    {% if is_granted('ROLE_ADMIN') and security == 'true' %}              
+        {% if userreqs is defined %}
+            {% if userreqs | length == 0 %}
+                <i class="text-success">Active User Requests:{{ userreqs | length }}</i>
+            {% else %}
+                <i class="text-error">Active User Requests:{{ userreqs | length }}</i>
+            {% endif %}           
+        {% else %}
+            <i class="text-success">Active User Requests:0</i>
+        {% endif %}
+        <a href="{{ path('userrequest') }}">All User Requests</a>
+    {% endif %}
 
     <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">
         <div class="row-fluid">
