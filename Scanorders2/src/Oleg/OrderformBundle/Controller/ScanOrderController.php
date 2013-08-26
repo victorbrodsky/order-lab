@@ -27,6 +27,7 @@ use Oleg\OrderformBundle\Form\FilterType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\OrderformBundle\Helper\EmailUtil;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -298,22 +299,26 @@ class ScanOrderController extends Controller {
             
             $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, array($accession) );
             $patient->addSpecimen($procedure);
+            $entity->addSpecimen($procedure);
             //$em->persist($patient); 
             //$em->persist($procedure);
             //$em->flush();
-            
+
             $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
-            $procedure->addAccession($accession); 
+            $procedure->addAccession($accession);
+            $entity->addAccession($accession);
             //$em->persist($accession);          
             //$em->flush();
             
             $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession );
             $accession->addPart($part);
+            $entity->addPart($part);
             //$em->persist($part);          
             //$em->flush();
             
             $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part );
             $part->addBlock($block);
+            $entity->addBlock($block);
             //$em->persist($block);          
             //$em->flush();
             
@@ -324,37 +329,23 @@ class ScanOrderController extends Controller {
             //$part->addSlide($slide);
             $block->addSlide($slide);  
             $entity->addSlide($slide);
-            
+
+//            echo $entity;
+//            echo $procedure;
+//            echo "orderinfo proc count=".count($procedure->getOrderInfo())."<br>";
+//            echo "proc count=".count($entity->getSpecimen())."<br>";
+//            echo "orderinfo part count=".count($part->getOrderInfo())."<br>";
+//            echo "part count=".count($entity->getPart())."<br>";
+            //exit();
+
             $em->persist($entity);
             $em->flush();
 
             
             $email = $this->get('security.context')->getToken()->getAttribute('email');
-            
-            $thanks_txt = "<p><h1>Thank You For Your Order !</h1></p>
-        <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
-        <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
-            
-           if( 0 ) {               
-                ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
-                ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
-                //ini_set( 'smtp_port', 25 );
-               
-                $thanks_txt = 
-                        "Thank You For Your Order !\r\n"
-                        . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
-                        . "Confirmation Email was sent to " . $email . "\r\n";
-                
-                $message = $thanks_txt;
-                // In case any of our lines are larger than 70 characters, we should use wordwrap()
-                $message = wordwrap($message, 70, "\r\n");
-                // Send
-                mail($email, 'Scan Order Confirmation', $message);
-           } 
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                'You successfully submit a scan request! Confirmation email sent!'
-//            );
+
+            $emailUtil = new EmailUtil();
+            $emailUtil->sendEmail( $email, $entity, null );
                       
             return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                 'orderid' => $entity->getId(),

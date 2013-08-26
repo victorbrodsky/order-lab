@@ -13,7 +13,7 @@ use Oleg\OrderformBundle\Form\UserRequestType;
 /**
  * UserRequest controller.
  *
- * @Route("/userrequest")
+ * @Route("/accountrequest")
  */
 class UserRequestController extends Controller
 {
@@ -21,7 +21,7 @@ class UserRequestController extends Controller
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/", name="userrequest")
+     * @Route("/", name="accountrequest")
      * @Method("GET")
      * @Template()
      */
@@ -42,7 +42,7 @@ class UserRequestController extends Controller
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/", name="userrequest_create")
+     * @Route("/", name="accountrequest_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:UserRequest:new.html.twig")
      */
@@ -78,7 +78,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/new", name="userrequest_new")
+     * @Route("/new", name="accountrequest_new")
      * @Method("GET")
      * @Template()
      */
@@ -97,7 +97,7 @@ class UserRequestController extends Controller
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/{id}", name="userrequest_show")
+     * @Route("/{id}", name="accountrequest_show")
      * @Method("GET")
      * @Template()
      */
@@ -126,7 +126,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/{id}/edit", name="userrequest_edit")
+     * @Route("/{id}/edit", name="accountrequest_edit")
      * @Method("GET")
      * @Template()
      */
@@ -157,7 +157,7 @@ class UserRequestController extends Controller
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/{id}", name="userrequest_update")
+     * @Route("/{id}", name="accountrequest_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:UserRequest:edit.html.twig")
      */
@@ -184,7 +184,7 @@ class UserRequestController extends Controller
 
             return $this->redirect( $this->generateUrl('multy_new') );
 
-            return $this->redirect($this->generateUrl('userrequest_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('accountrequest_edit', array('id' => $id)));
         }
 
         return array(
@@ -196,7 +196,7 @@ class UserRequestController extends Controller
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/{id}", name="userrequest_delete")
+     * @Route("/{id}", name="accountrequest_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -221,7 +221,7 @@ class UserRequestController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('userrequest'));
+        return $this->redirect($this->generateUrl('accountrequest'));
     }
 
     /**
@@ -241,7 +241,7 @@ class UserRequestController extends Controller
     
     
     /**
-     * @Route("/{id}/{status}/status", name="userrequest_status")
+     * @Route("/{id}/{status}/status", name="accountrequest_status")
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
      */
@@ -265,7 +265,7 @@ class UserRequestController extends Controller
         $em->flush();
         
         
-        return $this->redirect($this->generateUrl('userrequest'));
+        return $this->redirect($this->generateUrl('accountrequest'));
             
     }
     

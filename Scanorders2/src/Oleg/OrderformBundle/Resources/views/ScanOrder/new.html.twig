@@ -202,21 +202,28 @@
               <div class="tab-pane" id="part">
                   {{ formmacros.field(form_part.sourceOrgan) }}
                   {{ formmacros.field(form_part.description) }}
-                  {{ formmacros.field(form_part.diagnosis) }}
                   {{ formmacros.field(form_part.diffDiagnosis) }}
                   {{ formmacros.field(form_part.diseaseType) }}
               </div>
+
 {#              <div class="tab-pane" id="block"> {{ form_rest(form_block) }}</div>           #}
 {#              <div class="tab-pane" id="stain"> {{ form_rest(form_slide.stain) }} </div>#}
-              <div class="tab-pane" id="scan">
-                  {{ formmacros.field(form_slide.scan.scanregion) }}
-              </div>
+
+              {#<div class="tab-pane" id="scan">#}
+                  {#{{ formmacros.field(form_slide.scan.scanregion) }}#}
+              {#</div>#}
+
               <div class="tab-pane" id="slide">
                   {{ formmacros.field(form_slide.diagnosis) }}
                   {{ formmacros.field(form_slide.microscopicdescr) }}
                   {{ formmacros.field(form_slide.specialstain) }}
                   {{ formmacros.field(form_slide.relevantscan) }}
               </div>
+
+                <div class="tab-pane" id="scan">
+                    {{ formmacros.field(form_slide.scan.scanregion) }}
+                </div>
+
             </div>
                 
             </div>

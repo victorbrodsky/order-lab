@@ -68,7 +68,7 @@ class PartType extends AbstractType
         ));
         
         $builder->add( 'diagnosis', 'textarea', array(
-                'label'=>'Diagnosis :', 
+                'label'=>'Diagnosis :',
                 'max_length'=>'10000', 
                 'required'=>false
         ));

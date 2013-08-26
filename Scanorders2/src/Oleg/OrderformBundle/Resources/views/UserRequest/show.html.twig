@@ -57,12 +57,12 @@
     </table>
 
     <p>
-        <a href="{{ path('userrequest') }}">
+        <a href="{{ path('accountrequest') }}">
             Back to the list
         </a>
     </p>
     
-    <form action="{{ path('userrequest_delete', { 'id': entity.id }) }}" method="post">
+    <form action="{{ path('accountrequest_delete', { 'id': entity.id }) }}" method="post">
         <input type="hidden" name="_method" value="DELETE" />
         {{ form_widget(delete_form) }}
         <button type="submit">Delete</button>

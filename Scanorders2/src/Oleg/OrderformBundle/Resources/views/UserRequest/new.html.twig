@@ -10,13 +10,14 @@
 
     <h3 class="text-info">Request an Aperio eSlide Manager Account</h3>
 
-    <form action="{{ path('userrequest_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('accountrequest_create') }}" method="post" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
        
         <div class="row-fluid">      
             <div class="span6" align="right">
-                <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/" target="_blank">{{ form_label(form.cwid) }}</a>                         
+                {#<a href="#" onclick="onCwid();return false;">{{ form_label(form.cwid) }}</a>#}
+                <a href="#" onclick="window.open('http://weill.cornell.edu/its/identity-security/identity/cwid/');return false;">{{ form_label(form.cwid) }}</a>
             </div>
             <div class="span6" align="left">
                 {{ form_widget(form.cwid) }}

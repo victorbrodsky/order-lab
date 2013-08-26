@@ -39,7 +39,7 @@
             {% else %}
                 <tr>
             {% endif %}
-                <td><a href="{{ path('userrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.status }}</td>
                 <td>{{ entity.cwid }}</td>
                 <td>{{ entity.name }}</td>
@@ -52,7 +52,7 @@
                 <td> {{ entity.request[:10] ~ '...' }}</td>
                 <td>
                     
-{#                <a class="btn" href="{{ path('userrequest_show', { 'id': entity.id }) }}">Show</a>#}
+{#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}
                    
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -60,25 +60,25 @@
                         </button>
                         <ul class="dropdown-menu">
 
-                            <li><a href="{{ path('userrequest_show', { 'id': entity.id }) }}">View Details</a></li>
+                            <li><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">View Details</a></li>
 
                             <li class="divider"></li>
 
                             {% if entity.status != 'cancel' %}
                                 <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
-                                       href="{{ path('userrequest_status', { 'id': entity.id, 'status': 'cancel' }) }}">Cancel</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'cancel' }) }}">Cancel</a>
                                 </li>                  
                             {% endif %}                                                                
 
                             {% if entity.status != 'active' %}
                                 <li><a onclick="return confirm('Are you sure?');" 
-                                       href="{{ path('userrequest_status', { 'id': entity.id, 'status': 'active' }) }}">Active</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'active' }) }}">Active</a>
                                 </li>                  
                             {% endif %}
 
                             {% if entity.status != 'completed' %}
                                 <li><a onclick="return confirm('Are you sure?');" 
-                                       href="{{ path('userrequest_status', { 'id': entity.id, 'status': 'completed' }) }}">Completed</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'completed' }) }}">Completed</a>
                                 </li>                  
                             {% endif %}
                          

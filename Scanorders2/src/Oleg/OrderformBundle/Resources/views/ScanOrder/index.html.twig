@@ -19,7 +19,7 @@
         {% else %}
             <i class="text-success">Active User Requests:0</i>
         {% endif %}
-        <a href="{{ path('userrequest') }}">All User Requests</a>
+        <a href="{{ path('accountrequest') }}">All User Requests</a>
     {% endif %}
 
     <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">

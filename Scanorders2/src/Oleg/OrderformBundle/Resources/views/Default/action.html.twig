@@ -21,7 +21,7 @@
             {% if is_granted('ROLE_ADMIN') %} 
                 <li>
                     <a class="btn-warning" 
-                       href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a> 
+                       href="{{ path('multy_edit', { 'id': entity.id }) }}">Edit</a>
                 </li>             
                 
                 {% if entity.status != 'active' %}

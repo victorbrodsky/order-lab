@@ -130,7 +130,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
-                'data' => 'Filing Room',
+                'data' => 0,    //'Filing Room',
                 'attr' => array('class' => 'combobox', 'required' => 'required')
         ));
 

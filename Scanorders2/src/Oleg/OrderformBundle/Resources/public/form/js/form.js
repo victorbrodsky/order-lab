@@ -58,7 +58,10 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
+
+
 });
+
 
 function init() {
 
@@ -330,3 +333,8 @@ function setNavBar() {
 
     $('#'+id).addClass('active');
 }
+
+
+//function onCwid(){
+//    window.open("http://weill.cornell.edu/its/identity-security/identity/cwid/")
+//}

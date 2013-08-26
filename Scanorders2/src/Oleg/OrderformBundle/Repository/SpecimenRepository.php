@@ -17,9 +17,11 @@ class SpecimenRepository extends EntityRepository
     public function processEntity( $in_entity, $accessions=null ) {
         
         $em = $this->_em;              
-        
+
+        //can't check uniqueness without accession number
         if( $accessions == null ) {
             $em->persist($in_entity);
+            //echo "return by accession = null <br>";
             return $in_entity;
         }
         
@@ -28,6 +30,7 @@ class SpecimenRepository extends EntityRepository
 //                'mrn' => $in_entity->getPatient()->getMrn()
 //        ));
 //        if( $patient == null ) {
+//            echo "return by patient = null <br>";
 //            $em->persist($in_entity);
 //            return $in_entity;
 //        }
@@ -41,12 +44,13 @@ class SpecimenRepository extends EntityRepository
             ));
             if( $accession_found_this != null && $accession_found_this->getSpecimen() != null ) {
                 $accession_found = $accession_found_this;
+                //echo "return by accession not found <br>";
                 break;
             }
         }
         
         if( $accession_found == null || $accession_found->getSpecimen() == null ) {
-
+            //echo "return by accession not found 2<br>";
             $em->persist($in_entity);
             return $in_entity;
 

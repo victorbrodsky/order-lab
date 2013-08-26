@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Serializer\Exception\LogicException;
 
 /**
  * PatientRepository
@@ -13,12 +14,40 @@ use Doctrine\ORM\EntityRepository;
 class PatientRepository extends EntityRepository
 {
     //make sure the uniqueness entity. Make new or return id of existing.
-    public function processEntity( $in_entity ) { 
-        
+    public function processEntity( $in_entity ) {
+
+        $em = $this->_em;
+
+        if( strpos( $in_entity->getMrn(), 'NOMRNPROVIDED' ) !== false ) {
+            //throw new LogicException('MRN cannot contain NOMRNPROVIDED string');
+        }
+
         //set up unknown patient
         if( $in_entity->getMrn() == "" || $in_entity->getMrn() == null ) {
-            $in_entity->setMrn('000');
+
+            //check the last NOMRNPROVIDED MRN in DB
+            $dql = "SELECT MAX(p.mrn) as maxmrn FROM OlegOrderformBundle:Patient p WHERE p.mrn LIKE '%NOMRNPROVIDED%'";
+            $query = $em->createQuery($dql);
+
+            $lastMrn =  $query->getResult();
+
+            $lastMrnStr = $lastMrn[0]['maxmrn'];
+
+            //echo $lastMrnStr;
+            //exit();
+
+            $mrnIndexArr = explode("-",$lastMrnStr);
+            $mrnIndex = $mrnIndexArr[1];
+
+            $mrnIndex = ltrim($mrnIndex,'0') + 1;
+
+            $paddedmrn = str_pad($mrnIndex,10,'0',STR_PAD_LEFT);
+
+            $in_entity->setMrn('NOMRNPROVIDED-'.$paddedmrn);
+
         }
+
+        //exit();
         
         $entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
         $em = $this->_em;

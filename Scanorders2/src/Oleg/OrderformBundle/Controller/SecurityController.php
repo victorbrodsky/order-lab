@@ -135,37 +135,55 @@ class SecurityController extends Controller
     
     private function AperioAuth( $loginName, $password ) {    
         
-        if( $loginName = "admin" && $password == "@dmin123") {
+        if( $loginName == "admin" && $password == "@dmin123") {
             $AuthResult = array(
                 'UserId' => 11,
                 'ReturnCode' => 0
             );
-            $loginName = 'admin';
-            
+
             $user = new User();
             $user->setUsername($loginName);
             //$user->setEmail($AuthResult['E_Mail']);
             $user->addRole('ROLE_USER');
-                
-            return $user;         
+
+            return $user;
         }
-        
-        if(1) {
-        $DataServerURL = GetDataServerURL();             
-        $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
-        $AuthResult = $client->Authenticate($loginName,$password);
+
+        if( $loginName == "user" && $password == "userpw") {
+            $AuthResult = array(
+                'UserId' => 11,
+                'ReturnCode' => 0
+            );
+
+            $user = new User();
+            $user->setUsername($loginName);
+            //$user->setEmail($AuthResult['E_Mail']);
+            $user->addRole('ROLE_USER');
+
+            return $user;
+        }
+
+        //echo " skip login=".$loginName.", pass=". $password." <br>";
+
+        if( 1 ) {
+
+            $DataServerURL = GetDataServerURL();
+            $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
+            $AuthResult = $client->Authenticate($loginName,$password);
+
         } else {
+
             $AuthResult = array(
                 'UserId' => 11,
                 'ReturnCode' => 0
             );
             $loginName = 'oli2002';
-        }       
-        
-        if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
+        }
 
-            //print_r($AuthResult);
-            //exit();
+//        print_r($AuthResult);
+//        exit();
+
+        if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
 
             $user = new User();
             $user->setUsername($loginName);

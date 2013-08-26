@@ -8,7 +8,7 @@ namespace Oleg\OrderformBundle\Helper;
  */
 class EmailUtil {
     
-    public function sendEmail( $email, $entity, $text ) {
+    public function sendEmail( $email, $entity, $text = null ) {
         
         ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
         ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
@@ -19,7 +19,12 @@ class EmailUtil {
             . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
             . "Confirmation Email was sent to " . $email . "\r\n";
 
-        $message = $text;
+        if( $text ) {
+            $message = $text;
+        } else {
+            $message = $thanks_txt;
+        }
+
         // In case any of our lines are larger than 70 characters, we should use wordwrap()
         $message = wordwrap($message, 70, "\r\n");
         // Send

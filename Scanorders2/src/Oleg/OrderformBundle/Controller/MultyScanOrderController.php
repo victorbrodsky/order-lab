@@ -70,6 +70,31 @@ class MultyScanOrderController extends Controller {
         );
     }
 
+
+    /**
+     * Edit: If the form exists, use this function
+     * @Route("/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+     */
+    public function editAction( $id )
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('OlegOrderformBundle:Slide')->findOneBy($id);
+
+        $em->persist($entity);
+        $em->flush();
+
+        $this->showMultyAction($entity->getId(), "show");
+
+    }
+
+
     /**
      * Creates a new OrderInfo entity.
      *
@@ -117,6 +142,15 @@ class MultyScanOrderController extends Controller {
 
         $form = $this->createForm(new OrderInfoType($type), $entity);
         $form->bind($request);
+
+        //check if the orderform already exists, so it's edit case
+        //TODO: edit id is empty. Why??
+        echo "id=".$entity->getId();
+        //exit();
+        if( $entity->getId() && $entity->getId() > 0 ) {
+            $this->editAction( $entity->getId() );
+            return;
+        }
 
         if(0) {
             $errorHelper = new ErrorHelper();
@@ -236,51 +270,37 @@ class MultyScanOrderController extends Controller {
             //echo $entity;
             //exit();
 
+            if (isset($_POST['btnSave'])) {
+                //echo "save";
+                $entity->setStatus('save');
+            }
+
+            //exit();
+
             $em->persist($entity);
             $em->flush();
 
-            //email
-            $email = $this->get('security.context')->getToken()->getAttribute('email');
+            if (isset($_POST['btnSubmit'])) {
+                //email
+                $email = $this->get('security.context')->getToken()->getAttribute('email');
 
-            $thanks_txt = "<p><h1>Thank You For Your Order !</h1></p>
-                <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
-                <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
+                $emailUtil = new EmailUtil();
+                $emailUtil->sendEmail( $email, $entity, null );
 
-            $emailUtil = new EmailUtil();
-            
-            //$emailUtil->sendEmail( $email, $entity, $thanks_txt );
-            
-            if( 0 ) {              
-                ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
-                ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
-                //ini_set( 'smtp_port', 25 );
-
-                $thanks_txt =
-                    "Thank You For Your Order !\r\n"
-                    . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
-                    . "Confirmation Email was sent to " . $email . "\r\n";
-
-                $message = $thanks_txt;
-                // In case any of our lines are larger than 70 characters, we should use wordwrap()
-                $message = wordwrap($message, 70, "\r\n");
-                // Send
-                mail($email, 'Scan Order Confirmation', $message);
+                return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+                    'orderid' => $entity->getId(),
+                ));
             }
 
-
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                'You successfully submit a scan request! Confirmation email sent!'
-//            );
-//            return $this->redirect( $this->generateUrl('clinical_new') );
-
-            return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-                'orderid' => $entity->getId(),
-            ));
+            if (isset($_POST['btnSave'])) {
+//                $response = $this->forward('OlegOrderformBundle:ScanOrder:multi', array(
+//                    'id'  => $entity->getId(),
+//                ));
+                $this->showMultyAction($entity->getId(), "edit");
+            }
 
         }
-        
-        
+
         return array(           
             'form'   => $form->createView(),
             'type' => 'new'
@@ -375,12 +395,12 @@ class MultyScanOrderController extends Controller {
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     *
+     * @Route("/{id}", name="multy_edit", requirements={"id" = "\d+"})
      * @Route("/{id}", name="multy_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
-    public function showMultyAction($id)
+    public function showMultyAction( $id, $type = "show" )
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
@@ -389,84 +409,122 @@ class MultyScanOrderController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-        $dql =  $repository->createQueryBuilder("orderinfo");
-              
-        //$repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Slide');
-        //$dql =  $repository->createQueryBuilder("slide");
-        //$dql->innerJoin("slide.orderinfo", "orderinfo");      
-        //$dql->where("orderinfo.id = :orderid");
-        
-        $dql->innerJoin("orderinfo.patient", "patient");
-        $dql->innerJoin("orderinfo.specimen", "specimen");     
-        $dql->innerJoin("orderinfo.accession", "accession");
-        $dql->innerJoin("orderinfo.part", "part");      
-        $dql->innerJoin("orderinfo.block", "block");
-        $dql->innerJoin("orderinfo.slide", "slide");
-        $dql->where("orderinfo.id = :orderid AND slide.orderinfo = orderinfo");
-        
-        $dql->distinct('orderinfo.');
-        //$dql->where("orderinfo.id = :orderid AND patient.orderinfo = orderinfo.id");
-        //$dql->setParameter('orderid', $id);
-        //$dql->setParameter('orderid', "active");
-        
-        $query = $em->createQuery($dql);
-        $query->setParameter('orderid', $id);
-        
-        //$entity = $query->getResult();  
-               
-//        $slides = $em->getRepository('OlegOrderformBundle:OrderInfo')->findBy( array('slide' => $id) );      
-//
-//        $entity->clearPatient();
-//
-//        //get only elements with this orderinfo id (use slide object)
-//        foreach( $slides as $slide  ) {
-//
-//            //get all
-//            $block = $slide->getBlock();
-//            $part = $block->getPart();
-//            $accession = $slide->getAccession();
-//            $specimen = $accession->getSpecimen();
-//            $patient = $specimen->getPatient();
-//
-//            //clean
-//            $block->clearSlide();
-//
-//            $part->clearSlide();
-//            $part->clearBlock();
-//
-//            $accession->clearSlide();
-//            $accession->clearPart();
-//
-//            $specimen->clearAccession();
-//
-//            $patient->clearSpecimen();
-//
-//            //re-build                     
-//            $block->addSlide($slide);
-//            $part->addBlock($block);
-//            $accession->addPart($part);
-//            $specimen->addAccession( $accession );
-//            $patient->addSpecimen($specimen);
-//            $entity->addPatient($patient);
-//            $entity->addSlide($slide);
-//
-//            //echo "slide=".$slide;
-//        }
+        //TODO: is it possible to filter orderinfo by JOINs?
+        //INNER JOIN orderinfo.specimen specimen
+        $query = $em->createQuery('
+            SELECT orderinfo
+            FROM OlegOrderformBundle:OrderInfo orderinfo
+            INNER JOIN orderinfo.patient patient
+            INNER JOIN orderinfo.specimen specimen
+            INNER JOIN orderinfo.accession accession
+            INNER JOIN orderinfo.part part
+            INNER JOIN orderinfo.block block
+            INNER JOIN orderinfo.slide slide
+            WHERE orderinfo.id = :id
+        ')->setParameter('id', $id);
 
+        $entities = $query->getResult();
 
-        $form   = $this->createForm( new OrderInfoType(true, null, $entity), $entity, array('disabled' => true) );
+        //echo "<br>orderinfo count=".count( $entities )."<br>";
+
+        if( count( $entities ) == 0 ) {
+            throw $this->createNotFoundException('Unable to find entity.');
+        } else {
+            $entity = $entities[0];
+        }
+
+        //echo $entity;
+        //echo $entity->getStatus();
+        //echo "<br>specimen count=".count( $entity->getSpecimen() );
+
+        //patient
+        foreach( $entity->getPatient() as $patient ) {
+
+//            echo "<br>patient order info count=".count( $patient->getOrderInfo() )."<br>";
+            //check if patient has this orderinfo
+            if( !$this->hasOrderInfo($patient,$id) ) {
+                //echo "remove patient!!!! <br>";
+                $entity->removePatient($patient);
+                continue;
+            }
+
+//            echo "<br>patient has procedure count=".count( $patient->getSpecimen() )."<br>";
+
+            //procdeure
+            foreach( $patient->getSpecimen() as $specimen ) {
+
+                if( !$this->hasOrderInfo($specimen,$id) ) {
+                    $patient->removeSpecimen($specimen);
+                    continue;
+                }
+
+                //accession
+                foreach( $specimen->getAccession() as $accession ) {
+                    if( !$this->hasOrderInfo($accession,$id) ) {
+                        $specimen->removeAccession($accession);
+                        continue;
+                    }
+
+                    //part
+                    foreach( $accession->getPart() as $part ) {
+                       if( !$this->hasOrderInfo($part,$id) ) {
+                            $accession->removePart($part);
+                            continue;
+                        }
+
+                        //block
+                        foreach( $part->getBlock() as $block ) {
+                            if( !$this->hasOrderInfo($block,$id) ) {
+                                $part->removeBlock($block);
+                                continue;
+                            }
+
+                            //slide
+                            foreach( $block->getSlide() as $slide ) {
+                                if( !$this->hasOrderInfo($slide,$id) ) {
+                                    $block->removeSlide($slide);
+                                    continue;
+                                }
+                            }//slide
+                        }//block
+                    }//part
+                }//accession
+            }//procedure
+        }//patient
+
+        //echo "<br>specimen count=".count( $entity->getSpecimen() );
+
+        $disable = true;
+
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+
+        if( $type == "edit" || $routeName == "multy_edit") {
+            $disable = false;
+            $type = "edit";
+        }
+
+        $form   = $this->createForm( new OrderInfoType(true, null, $entity), $entity, array('disabled' => $disable) );
 
 //        echo "type=".$entity->getType();
 //        exit();
 
         return array(
             'form' => $form->createView(),
-            'type' => 'show',
+            'type' => $type,
             'multy' => $entity->getType()
         );
+    }
+
+    public function hasOrderInfo( $entity, $id ) {
+        $has = false;
+        foreach( $entity->getOrderInfo() as $child ) {
+            if( $child->getId() == $id ) {
+                $has = true;
+            }
+        }
+        return $has;
     }
 
  
