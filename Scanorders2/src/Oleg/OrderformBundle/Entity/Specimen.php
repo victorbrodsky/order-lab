@@ -43,9 +43,16 @@ class Specimen
      * @ORM\OneToMany(targetEntity="Accession", mappedBy="specimen")
      */
     protected $accession;
+    
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="specimen")
+     **/
+    protected $orderinfo; 
 
     public function __construct() {
         $this->accession = new ArrayCollection();
+        $this->orderinfo = new ArrayCollection();
     }   
 
     /**
@@ -171,4 +178,37 @@ class Specimen
         return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype()." Accession count=".count($this->getAccession())." (".$acc_info.")<br>";
     }
 
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Specimen
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {    
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }   
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
 }

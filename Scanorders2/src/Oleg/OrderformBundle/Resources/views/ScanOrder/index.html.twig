@@ -98,7 +98,7 @@
 {#                    {% endfor %}#}
                     {% for slide in entity.slide %}
                         <a href="{{ path('slide_show', { 'id': slide.id }) }}">
-                            <p>{{ slide.accession.accession }}&nbsp;{{slide.block.part.name}}{{slide.block.name}}</p>
+                            <p>{{ slide.block.part.accession.accession }}&nbsp;{{slide.block.part.name}}{{slide.block.name}}</p>
                         </a>
                     {% endfor %}
                 </td>

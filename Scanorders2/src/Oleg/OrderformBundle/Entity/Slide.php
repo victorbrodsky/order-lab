@@ -30,7 +30,7 @@ class Slide
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    protected $part;
+    //protected $part;
     
     /**
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide")
@@ -44,7 +44,7 @@ class Slide
      * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="slide")
      * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
      */
-    protected $orderinfo; 
+    //protected $orderinfo; 
     
     /**
      * Keep info about accession, so we can get quickly how many slides in this accession
@@ -52,7 +52,7 @@ class Slide
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
-    protected $accession;  
+    //protected $accession;  
     
     /**
      * @ORM\Column(type="text", nullable=true, length=10000)
@@ -113,6 +113,16 @@ class Slide
      * @Assert\NotBlank   
      */
     protected $scan;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="slide")
+     **/
+    protected $orderinfo; 
+    
+    public function __construct()
+    {
+        $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();      
+    }
     
     public function getId() {
         return $this->id;
@@ -201,7 +211,7 @@ class Slide
     }
     
      public function __toString() {
-        return "Slide: id=".$this->getId().", accession=".$this->getAccession().", mag=".$this->getScan()->getMag().", stain=".$this->getStain()->getName()."<br>";
+        return "Slide: id=".$this->getId().", mag=".$this->getScan()->getMag().", stain=".$this->getStain()->getName()."<br>";
     }
     
 
@@ -257,22 +267,22 @@ class Slide
      * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
      * @return Slide
      */
-    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
-    {
-        $this->orderinfo = $orderinfo;
-    
-        return $this;
-    }
+//    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
+//    {
+//        $this->orderinfo = $orderinfo;
+//    
+//        return $this;
+//    }
 
     /**
      * Get orderinfo
      *
      * @return \Oleg\OrderformBundle\Entity\OrderInfo 
      */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
 
     /**
      * Set accession
@@ -280,26 +290,61 @@ class Slide
      * @param \Oleg\OrderformBundle\Entity\Accession $accession
      * @return Slide
      */
-    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
-    {
-        $this->accession = $accession;
+//    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
+//    {
+//        $this->accession = $accession;
+//    
+//        return $this;
+//    }
+//
+//    public function getAccession()
+//    {
+//        return $this->accession;
+//    }
+
+//    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+//    {
+//        $this->part = $part;
+//
+//        return $this;
+//    }
+//    public function getPart()
+//    {
+//        return $this->part;
+//    }
     
-        return $this;
+    
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Slide
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }  
     }
 
-    public function getAccession()
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
     {
-        return $this->accession;
+        $this->orderinfo->removeElement($orderinfo);
     }
 
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    /**
+     * Get orderinfos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
     {
-        $this->part = $part;
-
-        return $this;
-    }
-    public function getPart()
-    {
-        return $this->part;
+        return $this->orderinfo;
     }
 }

@@ -58,11 +58,17 @@ class Accession {
      * Accession might have many slides
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession", cascade={"persist"})
      */
-    protected $slide;
+    //protected $slide;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
+     **/
+    protected $orderinfo; 
       
     public function __construct() {
         $this->part = new ArrayCollection(); 
-        $this->slide = new ArrayCollection();
+        //$this->slide = new ArrayCollection();
+        $this->orderinfo = new ArrayCollection();
     }
       
     public function __toString()
@@ -205,41 +211,41 @@ class Accession {
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Accession
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        if( !$this->slide->contains($slide) ) {
-            $slide->setAccession($this);
-            $this->slide[] = $slide;
-        }
-    
-        return $this;
-    }
+//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        if( !$this->slide->contains($slide) ) {
+//            $slide->setAccession($this);
+//            $this->slide[] = $slide;
+//        }
+//    
+//        return $this;
+//    }
 
     /**
      * Remove slide
      *
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide->removeElement($slide);
-    }
+//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        $this->slide->removeElement($slide);
+//    }
 
     /**
      * Get slide
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
 
-    public function clearSlide(){
-        foreach( $this->slide as $thisslide ) {
-            $this->removeSlide($thisslide);
-        }
-    }
+//    public function clearSlide(){
+//        foreach( $this->slide as $thisslide ) {
+//            $this->removeSlide($thisslide);
+//        }
+//    }
 
     public function clearPart(){
         foreach( $this->part as $thispart ) {
@@ -247,4 +253,37 @@ class Accession {
         }
     }
 
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Accession
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {      
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }   
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
 }

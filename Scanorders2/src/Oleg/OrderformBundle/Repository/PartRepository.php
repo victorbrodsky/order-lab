@@ -59,11 +59,11 @@ class PartRepository extends EntityRepository
 
         //copy all children to existing entity
         foreach( $part->getBlock() as $block ) {
-            $part_found->addBlock( $block );
+            $part_found->addBlock( $block );                   
         }
-        foreach( $part->getSlide() as $slide ) {
-            $part_found->addSlide( $slide );
-        }
+//        foreach( $part->getSlide() as $slide ) {
+//            $part_found->addSlide( $slide );
+//        }
 
         $em->persist($part_found);
         return $part_found; 

@@ -13,15 +13,24 @@ use Doctrine\ORM\EntityRepository;
 class SpecimenRepository extends EntityRepository
 {
     
-    //Accession number is the key to check uniqueness for single slide order
+    //Patient and Accession number is the key to check uniqueness for single slide order
     public function processEntity( $in_entity, $accessions=null ) {
         
-        $em = $this->_em;
-
+        $em = $this->_em;              
+        
         if( $accessions == null ) {
             $em->persist($in_entity);
             return $in_entity;
         }
+        
+        //check if the patient exists
+//        $patient = $em->getRepository('OlegOrderformBundle:Patient')->findOneBy( array(
+//                'mrn' => $in_entity->getPatient()->getMrn()
+//        ));
+//        if( $patient == null ) {
+//            $em->persist($in_entity);
+//            return $in_entity;
+//        }
 
         $accession_found = null;
         //if at least one accession belongs to a procedure, then use this procedure

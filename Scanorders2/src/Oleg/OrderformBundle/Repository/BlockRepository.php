@@ -32,6 +32,7 @@ class BlockRepository extends EntityRepository
         if( $part == null || $part->getId() == null) {
             $em->persist($block);
             //$em->flush();
+            //echo "return block ################################<br>";
 
             return $block;
         }
@@ -51,9 +52,9 @@ class BlockRepository extends EntityRepository
         $block_found =  $query->getResult();
                   
         if( $block_found == null ) {
-            $em->persist($block);
+            $em->persist($block); //persisting this block cause the slide assign id
             //$em->flush();
-
+            //echo "return block 2 ################################<br>";
             return $block;
         }
 

@@ -114,7 +114,7 @@ class OrderInfo
      * By this, we can get fast how many slides in this order
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo")
      */
-    protected $slide;
+//    protected $slide;
 
     /**
      * @ORM\OneToOne(
@@ -144,6 +144,36 @@ class OrderInfo
      * )
      */
     protected $research;
+       
+    /**
+     * @ORM\ManyToMany(targetEntity="Specimen", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="specimen_orderinfo")
+     **/
+    protected $specimen;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="accession_orderinfo")
+     **/
+    protected $accession;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Part", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="part_orderinfo")
+     **/
+    protected $part;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Block", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="block_orderinfo")
+     **/
+    protected $block;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="slide_orderinfo")
+     **/
+    protected $slide;
     
     /**
      * Constructor
@@ -152,6 +182,12 @@ class OrderInfo
     {
         $this->patient = new ArrayCollection();
         $this->slide = new ArrayCollection();
+        
+        $this->specimen = new ArrayCollection();
+        $this->accession = new ArrayCollection();
+        $this->part = new ArrayCollection();      
+        $this->block = new ArrayCollection();
+        //$this->slides = new ArrayCollection();
     }
     
     /**
@@ -340,23 +376,10 @@ class OrderInfo
      * @return OrderInfo
      */
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
-    {       
-        //$patient->setOrderinfo($this); 
-//        Do I need to check if patient is already exists?
-//        $this->patient[] = $patient;
-//        return $this;
-        
-        //$patient->addOrderinfo($this);
-        
-//        //$this->patient->add($patient);
-        if( !$this->patient->contains($patient) ) {  
-            //echo "<br>patient not exists: add!:".$patient;
+    {             
+        if( !$this->patient->contains($patient) ) {            
             $this->patient->add($patient);
-        }
-//        else {
-//            //"<br>patient exists! <br>";
-//        }
-           
+        }               
     }
 
     /**
@@ -394,10 +417,13 @@ class OrderInfo
      */
     public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        $slide->setOrderinfo($this);
-        $this->slide[] = $slide;
-    
-        return $this;
+//        $slide->addOrderinfo($this);
+//        $this->slide[] = $slide;
+//    
+//        return $this;     
+        if( !$this->slide->contains($slide) ) {            
+            $this->slide->add($slide);
+        }    
     }
 
     /**
@@ -453,6 +479,7 @@ class OrderInfo
     }
 
     
+    
     public function __toString(){
         
 //        $patient_info = "(";
@@ -468,4 +495,158 @@ class OrderInfo
         return "OrderInfo: id=".$this->id.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
     }
     
+
+    /**
+     * Add specimen
+     *
+     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @return OrderInfo
+     */
+    public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    {         
+        if( !$this->specimen->contains($specimen) ) {            
+            $this->specimen->add($specimen);
+        }   
+    }
+
+    /**
+     * Remove specimen
+     *
+     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     */
+    public function removeSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    {
+        $this->specimen->removeElement($specimen);
+    }
+
+    /**
+     * Get specimen
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSpecimen()
+    {
+        return $this->specimen;
+    }
+
+    /**
+     * Add accession
+     *
+     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     * @return OrderInfo
+     */
+    public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
+    {             
+        if( !$this->accession->contains($accession) ) {            
+            $this->accession->add($accession);
+        }  
+    }
+
+    /**
+     * Remove accession
+     *
+     * @param \Oleg\OrderformBundle\Entity\Accession $accession
+     */
+    public function removeAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
+    {
+        $this->accession->removeElement($accession);
+    }
+
+    /**
+     * Get accession
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccession()
+    {
+        return $this->accession;
+    }
+
+    /**
+     * Add part
+     *
+     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @return OrderInfo
+     */
+    public function addPart(\Oleg\OrderformBundle\Entity\Part $part)
+    {     
+        if( !$this->part->contains($part) ) {            
+            $this->part->add($part);
+        }  
+    }
+
+    /**
+     * Remove part
+     *
+     * @param \Oleg\OrderformBundle\Entity\Part $part
+     */
+    public function removePart(\Oleg\OrderformBundle\Entity\Part $part)
+    {
+        $this->part->removeElement($part);
+    }
+
+    /**
+     * Get part
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPart()
+    {
+        return $this->part;
+    }
+
+    /**
+     * Add block
+     *
+     * @param \Oleg\OrderformBundle\Entity\Block $block
+     * @return OrderInfo
+     */
+    public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    {      
+        if( !$this->block->contains($block) ) {            
+            $this->block->add($block);
+        }  
+    }
+
+    /**
+     * Remove block
+     *
+     * @param \Oleg\OrderformBundle\Entity\Block $block
+     */
+    public function removeBlock(\Oleg\OrderformBundle\Entity\Block $block)
+    {
+        $this->block->removeElement($block);
+    }
+
+    /**
+     * Get block
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBlock()
+    {
+        return $this->block;
+    }
+
+    /**
+     * Get slides
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+//    public function getSlides()
+//    {
+//        return $this->slides;
+//    }
+//    
+//    public function addSlides(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {      
+//        if( !$this->slides->contains($slide) ) {            
+//            $this->slides->add($slide);
+//        }  
+//    }
+//    
+//    public function removeSlides(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        $this->slides->removeElement($slide);
+//    }
 }

@@ -55,12 +55,7 @@ class Patient
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
     protected $clinicalHistory;
-    
-    //, cascade={"persist"}
-    /**
-     * ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="patient")
-     * ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id")
-     */
+        
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
      **/
@@ -298,9 +293,6 @@ class Patient
      */
     public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
     {
-//        $this->orderinfo[] = $orderinfo;
-//        return $this;
-        
         if( !$this->orderinfo->contains($orderinfo) ) {
             $this->orderinfo->add($orderinfo);
         }    

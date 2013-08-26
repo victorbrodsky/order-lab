@@ -154,12 +154,14 @@ class ScanOrderController extends Controller {
 //        }
         $criteriafull = "";
         if( $search && $search != '' ) {
-            $dql->innerJoin("orderinfo.slide", "slide");
-            $dql->innerJoin("slide.accession", "accession");
-            //$dql->where( "slide.orderinfo = orderinfo.id AND slide.accession = accession.id AND accession.accession LIKE '%". 
-            //                $search ."%'".$criteriastr);
-            $criteriafull = "slide.orderinfo = orderinfo.id AND slide.accession = accession.id AND accession.accession LIKE '%". 
-                           $search ."%'";         
+//            $dql->innerJoin("orderinfo.slide", "slide");
+//            $dql->innerJoin("slide.accession", "accession");           
+//            $criteriafull = "slide.orderinfo = orderinfo.id AND slide.accession = accession.id AND accession.accession LIKE '%". 
+//                           $search ."%'";    
+                                  
+            $dql->innerJoin("orderinfo.accession", "accession");           
+            $criteriafull = "accession.accession LIKE '%" . $search . "%'";    
+            
         }              
         
         if( $criteriastr != "" ) {
@@ -317,10 +319,11 @@ class ScanOrderController extends Controller {
             
             $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
             $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
-            $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );        
-            $block->addSlide($slide);
+            $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );                        
+            //$accession->addSlide($slide); 
+            //$part->addSlide($slide);
+            $block->addSlide($slide);  
             $entity->addSlide($slide);
-            $accession->addSlide($slide);          
             
             $em->persist($entity);
             $em->flush();
@@ -332,22 +335,7 @@ class ScanOrderController extends Controller {
         <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
         <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
             
-           if( 0 ) {
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('Scan Order Confirmation')
-                    ->setFrom('slidescan@med.cornell.edu')
-                    ->setTo($email)
-                    ->setBody(
-                        $this->renderView(
-                            'OlegOrderformBundle:ScanOrder:email.html.twig',
-                            array(
-                                'orderid' => $entity->getId()
-                            )
-                        )
-                    )
-                ;
-                $this->get('mailer')->send($message);
-           } else {
+           if( 0 ) {               
                 ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
                 ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
                 //ini_set( 'smtp_port', 25 );

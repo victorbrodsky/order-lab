@@ -32,6 +32,7 @@ use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\OrderformBundle\Helper\EmailUtil;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -136,45 +137,73 @@ class MultyScanOrderController extends Controller {
 //            echo "<br>Before loop:<br>";
 //            echo $entity;
 //            exit();
-
+            
+            //Patient
+            //$pat_count = 0;
             foreach( $entity->getPatient() as $patient ) {
                 if( !$patient->getId() ) {
+                    //echo " pat id null <br>";
                     $entity->removePatient( $patient );
                     $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );
                     $entity->addPatient($patient);
+                } else {
+                    continue;
                 }
-
+                //echo $pat_count++." !!!!!!!!!!patient = ". $patient. "<br>";
+                
                 //Procedure
+                $specimen_count = 0;
                 foreach( $patient->getSpecimen() as $specimen ) {
                     if( !$specimen->getId() ) {
+                        //echo " specimen id null <br>";
                         $patient->removeSpecimen( $specimen );
                         $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, $specimen->getAccession() );
                         $patient->addSpecimen($specimen);
+                        $entity->addSpecimen($specimen);
+                    } else {
+                        continue;
                     }
-
+                    //echo $specimen_count++." !!!!!!!!!!specimen = ". $specimen. "<br>";
+                    
                     //Accession
+                    //$acc_count = 0;
                     foreach( $specimen->getAccession() as $accession ) {
                         if( !$accession->getId() ) {
                             $specimen->removeAccession( $accession );
                             $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
                             $specimen->addAccession($accession);
+                            $entity->addAccession($accession);
+                        } else {
+                            continue;
                         }
+                        //echo $acc_count++." !!!!!!!!!!acc = ". $accession. "<br>";
 
                         //Part
+                        //$part_count = 0;
                         foreach( $accession->getPart() as $part ) {
                             if( !$part->getId() ) {
                                 $accession->removePart( $part );
                                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession );
                                 $accession->addPart($part);
+                                $entity->addPart($part);
+                            } else {
+                                continue;
                             }
+                            //echo $part_count++." !!!!!!!!!!part = ". $part. "<br>";
                             //Block
+                            //$count=0;
                             foreach( $part->getBlock() as $block ) {
                                 if( !$block->getId() ) {
+                                    //echo " !!!!!!!!!! block0 = ". $block. "<br>";
                                     $part->removeBlock( $block );
                                     $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part );
                                     $part->addBlock($block);
+                                    $entity->addBlock($block);
+                                    //echo " !!!!!!!!!! block1 = ". $block. "<br>";
+                                } else {
+                                    continue;
                                 }
-
+                                //echo $count++." !!!!!!!!!!block = ". $block. "<br>";
                                 //Slide
                                 foreach( $block->getSlide() as $slide ) {
                                     //echo "!!!!!!!!!!slide = ". $slide. "<br>";
@@ -182,12 +211,14 @@ class MultyScanOrderController extends Controller {
                                         $block->removeSlide( $slide );
                                         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
                                         $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
-                                        $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );
-                                        $slide->setOrderInfo($entity);
-                                        $slide->setAccession($accession);
-                                        $slide->setPart($part);
-                                        //$slide->setBlock($block);
-                                        $block->addSlide($slide);
+                                        $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() ); 
+                                        
+                                        //$accession->addSlide($slide);  
+                                        //$part->addSlide($slide);  
+                                        $block->addSlide($slide);                                                                                                                             
+                                        $entity->addSlide($slide);                                                                           
+                                    } else {
+                                        continue;
                                     }
                                 } //slide
 
@@ -215,22 +246,11 @@ class MultyScanOrderController extends Controller {
                 <p><h3>Order #".$entity->getId()." Successfully Submitted.</h3></p>
                 <p><h3>Confirmation Email was sent to ".$email."</h3></p>";
 
-            if( 0 ) {
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('Scan Order Confirmation')
-                    ->setFrom('slidescan@med.cornell.edu')
-                    ->setTo($email)
-                    ->setBody(
-                        $this->renderView(
-                            'OlegOrderformBundle:ScanOrder:email.html.twig',
-                            array(
-                                'orderid' => $entity->getId()
-                            )
-                        )
-                    )
-                ;
-                $this->get('mailer')->send($message);
-            } else {
+            $emailUtil = new EmailUtil();
+            
+            //$emailUtil->sendEmail( $email, $entity, $thanks_txt );
+            
+            if( 0 ) {              
                 ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
                 ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
                 //ini_set( 'smtp_port', 25 );
@@ -371,66 +391,70 @@ class MultyScanOrderController extends Controller {
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
 
-        $slides = $em->getRepository('OlegOrderformBundle:Slide')->findByOrderinfo($id);
-
-
-        $entity->clearPatient();
-
-        //get only elements with this orderinfo id (use slide object)
-        foreach( $slides as $slide  ) {
-
-            //get all
-            $block = $slide->getBlock();
-            $part = $block->getPart();
-            $accession = $slide->getAccession();
-            $specimen = $accession->getSpecimen();
-            $patient = $specimen->getPatient();
-
-            //clean
-            $block->clearSlide();
-
-            $part->clearSlide();
-            $part->clearBlock();
-
-            $accession->clearSlide();
-            $accession->clearPart();
-
-            $specimen->clearAccession();
-
-            $patient->clearSpecimen();
-//            $patient->setSpecimen(null);
-
-            //re-build
-
-
-
-            //echo $block;
-
-            //exit();
-
-            //$patient = $slide->getAccession()->getSpecimen()->getPatient();
-            //$patients = $em->getRepository('OlegOrderformBundle:Patient')->findByOrderinfo($id);
-
-            //if( !$patients->contains($patient) ) {
-                //$patients
-            //}
-//            $patient = new Patient();
-//            $specimen = new Specimen();
-//            $accession = new Accession();
-//            $part = new Part();
-//            $block = new Block();
-
-            $block->addSlide($slide);
-            $part->addBlock($block);
-            $accession->addPart($part);
-            $specimen->addAccession( $accession );
-            $patient->addSpecimen($specimen);
-            $entity->addPatient($patient);
-            $entity->addSlide($slide);
-
-            //echo "slide=".$slide;
-
-        }
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+        $dql =  $repository->createQueryBuilder("orderinfo");
+              
+        //$repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Slide');
+        //$dql =  $repository->createQueryBuilder("slide");
+        //$dql->innerJoin("slide.orderinfo", "orderinfo");      
+        //$dql->where("orderinfo.id = :orderid");
+        
+        $dql->innerJoin("orderinfo.patient", "patient");
+        $dql->innerJoin("orderinfo.specimen", "specimen");     
+        $dql->innerJoin("orderinfo.accession", "accession");
+        $dql->innerJoin("orderinfo.part", "part");      
+        $dql->innerJoin("orderinfo.block", "block");
+        $dql->innerJoin("orderinfo.slide", "slide");
+        $dql->where("orderinfo.id = :orderid AND slide.orderinfo = orderinfo");
+        
+        $dql->distinct('orderinfo.');
+        //$dql->where("orderinfo.id = :orderid AND patient.orderinfo = orderinfo.id");
+        //$dql->setParameter('orderid', $id);
+        //$dql->setParameter('orderid', "active");
+        
+        $query = $em->createQuery($dql);
+        $query->setParameter('orderid', $id);
+        
+        //$entity = $query->getResult();  
+               
+//        $slides = $em->getRepository('OlegOrderformBundle:OrderInfo')->findBy( array('slide' => $id) );      
+//
+//        $entity->clearPatient();
+//
+//        //get only elements with this orderinfo id (use slide object)
+//        foreach( $slides as $slide  ) {
+//
+//            //get all
+//            $block = $slide->getBlock();
+//            $part = $block->getPart();
+//            $accession = $slide->getAccession();
+//            $specimen = $accession->getSpecimen();
+//            $patient = $specimen->getPatient();
+//
+//            //clean
+//            $block->clearSlide();
+//
+//            $part->clearSlide();
+//            $part->clearBlock();
+//
+//            $accession->clearSlide();
+//            $accession->clearPart();
+//
+//            $specimen->clearAccession();
+//
+//            $patient->clearSpecimen();
+//
+//            //re-build                     
+//            $block->addSlide($slide);
+//            $part->addBlock($block);
+//            $accession->addPart($part);
+//            $specimen->addAccession( $accession );
+//            $patient->addSpecimen($specimen);
+//            $entity->addPatient($patient);
+//            $entity->addSlide($slide);
+//
+//            //echo "slide=".$slide;
+//        }
 
 
         $form   = $this->createForm( new OrderInfoType(true, null, $entity), $entity, array('disabled' => true) );

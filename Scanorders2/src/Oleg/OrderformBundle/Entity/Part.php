@@ -72,7 +72,7 @@ class Part
      * Accession might have many slide s
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="part", cascade={"persist"})
      */
-    protected $slide;
+    //protected $slide;
     
     /**
      * One Part has Many blocks
@@ -81,9 +81,15 @@ class Part
      */
     protected $block;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="part")
+     **/
+    protected $orderinfo; 
+    
     public function __construct() {
-        $this->slide = new ArrayCollection();
+        //$this->slide = new ArrayCollection();
         $this->block = new ArrayCollection();
+        $this->orderinfo = new ArrayCollection();
     }
     
     public function getId() {
@@ -158,38 +164,39 @@ class Part
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Part
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        if( !$this->slide->contains($slide) ) {
-            $this->slide[] = $slide;
-        }
-
-        return $this;
-    }
+//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        if( !$this->slide->contains($slide) ) {
+//            $slide->setPart($this);
+//            $this->slide[] = $slide;
+//        }
+//
+//        return $this;
+//    }
 
     /**
      * Remove slide
      *
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-    {
-        $this->slide->removeElement($slide);
-    }
+//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+//    {
+//        $this->slide->removeElement($slide);
+//    }
 
     /**
      * Get slide
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
-    public function setSlide(\Doctrine\Common\Collections\ArrayCollection $slide)
-    {
-        $this->slide = $slide;
-    }
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
+//    public function setSlide(\Doctrine\Common\Collections\ArrayCollection $slide)
+//    {
+//        $this->slide = $slide;
+//    }
 
     /**
      * Add block
@@ -243,6 +250,8 @@ class Part
             $this->removeBlock($thisblock);
         }
     }
+    
+    
 
     public function __toString()
     {
@@ -258,4 +267,37 @@ class Part
         return "Part: id=".$this->id.", name=".$this->name.", blockCount=".count($this->block)."<br>";
     }
     
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Part
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }   
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
 }

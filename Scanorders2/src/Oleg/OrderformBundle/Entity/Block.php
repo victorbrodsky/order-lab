@@ -38,16 +38,23 @@ class Block
      */
     protected $part;
     
+    //cascade={"persist"}
     /**
      * One Block has Many slides
      * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="block", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="block")
      */
     protected $slide;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="block")
+     **/
+    protected $orderinfo; 
 
     
     public function __construct() {
         $this->slide = new ArrayCollection();
+        $this->orderinfo = new ArrayCollection();
     }
    
     public function getId() {
@@ -142,5 +149,38 @@ class Block
         }
         $slide_info .= ")";
         return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
+    }
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Block
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }  
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
     }
 }

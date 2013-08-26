@@ -29,9 +29,9 @@ class AccessionRepository extends EntityRepository {
         foreach( $accession->getPart() as $part ) {
             $entity->addPart( $part );
         }
-        foreach( $accession->getSlide() as $slide ) {
-            $entity->addSlide( $slide );
-        }
+//        foreach( $accession->getSlide() as $slide ) {
+//            $entity->addSlide( $slide );
+//        }
 
         $em->persist($entity);
         return $entity;
