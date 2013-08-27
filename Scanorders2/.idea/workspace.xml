@@ -5,12 +5,12 @@
     <ignored path="Scanorders2.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Patient.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376433713457" ignored="false" />
-    <file path="/MultyScanOrderController.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377555478988" ignored="false" />
+    <file path="/MultyScanOrderController.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377625235100" ignored="false" />
     <file path="/index.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377278727666" ignored="false" />
     <file path="/show.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377285652803" ignored="false" />
     <file path="/Specimen.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377295519087" ignored="false" />
     <file path="/addCollectionForm2.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376342154246" ignored="false" />
-    <file path="/new.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377553555925" ignored="false" />
+    <file path="/new.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377633447600" ignored="false" />
     <file path="/addCollectionForm.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376430992060" ignored="false" />
     <file path="$PROJECT_DIR$/web/js/93597e6.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377003301585" ignored="false" />
     <file path="$PROJECT_DIR$/web/css/bdea819_part_1_bootstrap.min_2.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376946637976" ignored="false" />
@@ -122,9 +122,9 @@
     <file path="$PROJECT_DIR$/web/css/bdea819_part_1_bootstrap3custom.min_3.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376946637976" ignored="false" />
     <file path="$PROJECT_DIR$/app/cache/dev/appDevUrlMatcher.php.meta" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377179970816" ignored="false" />
     <file path="/SpecimenType.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377289978369" ignored="false" />
-    <file path="/form.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377185948079" ignored="false" />
+    <file path="/form.css" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377631621993" ignored="false" />
     <file path="/Accession.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377295414389" ignored="false" />
-    <file path="/form.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377549936013" ignored="false" />
+    <file path="/form.js" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377632083549" ignored="false" />
     <file path="/navbar.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377274994540" ignored="false" />
     <file path="/Part.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377295315162" ignored="false" />
     <file path="/Block.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377295049087" ignored="false" />
@@ -137,15 +137,15 @@
     <file path="/ScanRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377108815220" ignored="false" />
     <file path="/login_content.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377178558206" ignored="false" />
     <file path="/thanks.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1376947045363" ignored="false" />
-    <file path="$PROJECT_DIR$/app/cache/dev/appDevDebugProjectContainer.xml" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377281795507" ignored="false" />
+    <file path="$PROJECT_DIR$/app/cache/dev/appDevDebugProjectContainer.xml" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377638955779" ignored="false" />
     <file path="/composer.json" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377007913214" ignored="false" />
     <file path="/config.yml" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377016633411" ignored="false" />
     <file path="$PROJECT_DIR$/app/dev/cache/appDevDebugProjectContainer.xml" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377008385393" ignored="false" />
-    <file path="/base.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377195584818" ignored="false" />
+    <file path="/base.html.twig" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377630895485" ignored="false" />
     <file path="/StainRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377105834458" ignored="false" />
     <file path="/SlideRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377109239128" ignored="false" />
-    <file path="/OrderInfoRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377299987586" ignored="false" />
-    <file path="/OrderInfoType.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377297814604" ignored="false" />
+    <file path="/OrderInfoRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377632363136" ignored="false" />
+    <file path="/OrderInfoType.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377623103934" ignored="false" />
     <file path="/Request.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377179210678" ignored="false" />
     <file path="/a.dummy" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377179229541" ignored="false" />
     <file path="/UserRequestRepository.php" changelist="c1607861-9151-4548-aa39-b55d08a92121" time="1377186907115" ignored="false" />
@@ -188,25 +188,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MultyScanOrderController.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MultyScanOrderController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="39" selection-start="4554" selection-end="4554" vertical-scroll-proportion="0.48909658">
+            <state line="532" column="41" selection-start="19505" selection-end="19505" vertical-scroll-proportion="-8.627451">
               <folding>
                 <element signature="e#51#96#0" expanded="true" />
-                <element signature="e#11786#12110#0" expanded="false" />
-                <element signature="e#12163#12326#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PatientRepository.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="14" selection-start="567" selection-end="567" vertical-scroll-proportion="-7.8461537">
-              <folding>
-                <element signature="e#51#85#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -215,7 +202,61 @@
       <file leaf-file-name="new.html.twig" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="60" selection-start="820" selection-end="820" vertical-scroll-proportion="42.384617">
+            <state line="255" column="83" selection-start="18799" selection-end="18799" vertical-scroll-proportion="-23.529411">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="new.html.twig" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/new.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="37" column="112" selection-start="1333" selection-end="1333" vertical-scroll-proportion="-11.923077">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PartType.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PartType.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="116" column="42" selection-start="4002" selection-end="4002" vertical-scroll-proportion="-7.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FormHelper.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Helper/FormHelper.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="727" column="4" selection-start="14358" selection-end="14358" vertical-scroll-proportion="-10.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="form.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/form.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="77" column="0" selection-start="1738" selection-end="1738" vertical-scroll-proportion="-13.64">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.html.twig" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/base.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="62" selection-start="804" selection-end="804" vertical-scroll-proportion="0.56071967">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="form.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/css/form.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="184" column="3" selection-start="2761" selection-end="2967" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -224,10 +265,8 @@
       <file leaf-file-name="ScanOrderController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="341" column="25" selection-start="12954" selection-end="13002" vertical-scroll-proportion="-5.576923">
-              <folding>
-                <element signature="e#51#96#0" expanded="true" />
-              </folding>
+            <state line="396" column="50" selection-start="14996" selection-end="14996" vertical-scroll-proportion="-107.88461">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -242,29 +281,29 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/SpecimenRepository.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/UserRequestType.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/form.js" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/UserRequest/new.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/UserRequest/show.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/UserRequest/index.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Security/login_content.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/index.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/UserRequestController.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PartType.php" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/new.html.twig" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/action.html.twig" />
-        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Slide/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PatientType.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/OrderInfoType.php" />
         <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/form.js" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/OrderInfoRepository.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/StainType.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/BlockType.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/new.html.twig" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PartType.php" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/css/form.css" />
+        <option value="$PROJECT_DIR$/app/config/config.yml" />
+        <option value="$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/base.html.twig" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="320" />
-    <option name="y" value="579" />
+    <option name="x" value="196" />
+    <option name="y" value="279" />
     <option name="width" value="2086" />
     <option name="height" value="878" />
   </component>
@@ -373,10 +412,6 @@
               <option name="myItemId" value="Resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -404,123 +439,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MultyScanOrder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Repository" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorder" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scanorders2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Oleg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OrderformBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Controller" />
+              <option name="myItemId" value="public" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -538,8 +457,8 @@
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="options.lastSelected" value="vcs.Git" />
     <property name="FullScreen" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PublishConfig" serverName="Scanorder" serverId="596bfc49-ce1a-419a-a78b-e1c0c90cbda0">
     <servers>
@@ -554,13 +473,16 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\select2" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\views\Default" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Form" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Entity" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\views\UserRequest" />
-      <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\form\css" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\bootstrap-combobox\css" />
+      <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\bootstrap-combobox\js" />
+      <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\bootstrap-combobox" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Repository" />
       <recent name="Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\public\form" />
     </key>
@@ -605,15 +527,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="320" y="579" width="2086" height="878" extended-state="0" />
+    <frame x="196" y="279" width="2086" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32823366" sideWeight="0.49929675" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24894515" sideWeight="0.8147296" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21343873" sideWeight="0.6708861" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21541502" sideWeight="0.67176634" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13003452" sideWeight="0.5002344" order="7" side_tool="true" content_ui="tabs" />
@@ -622,7 +545,6 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32911393" sideWeight="0.49929675" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -692,104 +614,37 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/UserRequest/new.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="41" selection-start="351" selection-end="351" vertical-scroll-proportion="0.30584708">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/UserRequest/show.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="41" selection-start="1723" selection-end="1723" vertical-scroll-proportion="0.69415295">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Security/login_content.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="44" selection-start="1313" selection-end="1313" vertical-scroll-proportion="0.6431784">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Security/login.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="13" selection-start="580" selection-end="580" vertical-scroll-proportion="0.48425788">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/form.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="337" column="0" selection-start="9960" selection-end="10065" vertical-scroll-proportion="0.77922076">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="40" selection-start="766" selection-end="766" vertical-scroll-proportion="0.53523237">
+        <state line="87" column="48" selection-start="4449" selection-end="4449" vertical-scroll-proportion="0.19937694">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/UserRequestController.php">
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/bootstrap-combobox/css/bootstrap-combobox.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="34" selection-start="1763" selection-end="1763" vertical-scroll-proportion="-10.5">
-          <folding>
-            <element signature="e#51#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/UserRequest/index.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="68" selection-start="3502" selection-end="3516" vertical-scroll-proportion="0.67912775">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PartType.php">
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/select2/select2.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="38" selection-start="2188" selection-end="2188" vertical-scroll-proportion="0.35825545">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/new.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/StainType.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="224" column="22" selection-start="8527" selection-end="8527" vertical-scroll-proportion="0.91004497">
+        <state line="26" column="51" selection-start="753" selection-end="753" vertical-scroll-proportion="-1.1315789">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/action.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="48" selection-start="896" selection-end="896" vertical-scroll-proportion="0.33333334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/OrderInfoRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="8" selection-start="421" selection-end="421" vertical-scroll-proportion="0.031484257">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/PatientRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="14" selection-start="567" selection-end="567" vertical-scroll-proportion="-7.8461537">
-          <folding>
-            <element signature="e#51#85#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="341" column="25" selection-start="12954" selection-end="13002" vertical-scroll-proportion="-5.576923">
+        <state line="532" column="41" selection-start="19505" selection-end="19505" vertical-scroll-proportion="-8.627451">
           <folding>
             <element signature="e#51#96#0" expanded="true" />
           </folding>
@@ -798,19 +653,78 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/MultyScanOrder/new.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="60" selection-start="820" selection-end="820" vertical-scroll-proportion="42.384617">
+        <state line="255" column="83" selection-start="18799" selection-end="18799" vertical-scroll-proportion="-23.529411">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/MultyScanOrderController.php">
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/js/form.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="39" selection-start="4554" selection-end="4554" vertical-scroll-proportion="0.48909658">
-          <folding>
-            <element signature="e#51#96#0" expanded="true" />
-            <element signature="e#11786#12110#0" expanded="false" />
-            <element signature="e#12163#12326#0" expanded="false" />
-          </folding>
+        <state line="77" column="0" selection-start="1738" selection-end="1738" vertical-scroll-proportion="-13.64">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/BlockType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="63" selection-start="2404" selection-end="2404" vertical-scroll-proportion="0.21052632">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Repository/OrderInfoRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="43" selection-start="765" selection-end="765" vertical-scroll-proportion="0.33133432">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Controller/ScanOrderController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="396" column="50" selection-start="14996" selection-end="14996" vertical-scroll-proportion="-107.88461">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/ScanOrder/new.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="112" selection-start="1333" selection-end="1333" vertical-scroll-proportion="-11.923077">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Form/PartType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="116" column="42" selection-start="4002" selection-end="4002" vertical-scroll-proportion="-7.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Helper/FormHelper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="727" column="4" selection-start="14358" selection-end="14358" vertical-scroll-proportion="-10.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/public/form/css/form.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="184" column="3" selection-start="2761" selection-end="2967" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="52" selection-start="1788" selection-end="2287" vertical-scroll-proportion="0.68303573">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/base.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="62" selection-start="804" selection-end="804" vertical-scroll-proportion="0.56071967">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -20,8 +20,6 @@ class PatientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
-        //$multi = false;
-        
         $builder->add( 'mrn', 'text', array(
                 'label'=>'MRN:', 
                 'max_length'=>100,

@@ -1,6 +1,6 @@
-{% extends '::base.html.twig' %}
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% block body -%}
+{% block content %}
     <h1>Slide list</h1>
 
     <table class="records_list">
@@ -11,7 +11,6 @@
                 <th>Microscopicdescr</th>
                 <th>Specialstain</th>
                 <th>Relevantscan</th>
-                <th>Scanregion</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -23,7 +22,6 @@
                 <td>{{ entity.microscopicdescr }}</td>
                 <td>{{ entity.specialstain }}</td>
                 <td>{{ entity.relevantscan }}</td>
-                <td>{{ entity.scanregion }}</td>
                 <td>
                 <ul>
                     <li>

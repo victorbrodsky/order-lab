@@ -25,7 +25,7 @@ class StainType extends AbstractType
             'required' => true,
             'label' => '* Stain:',
             'attr' => array('class' => 'combobox', 'required' => 'required', 'disabled')
-            //'attr' => array('class' => 'horizontal_type')
+//            'attr' => array('class'=>'select2combo','required' => 'required')
         ));
 
         $factory  = $builder->getFormFactory();
@@ -51,6 +51,7 @@ class StainType extends AbstractType
                         'required' => true,
                         'label' => '* Stain:',
                         'attr' => array('class' => 'combobox', 'required' => 'required', 'disabled' ),
+//                        'attr' => array('required' => 'required'),
                         'auto_initialize' => false,
                     );
 

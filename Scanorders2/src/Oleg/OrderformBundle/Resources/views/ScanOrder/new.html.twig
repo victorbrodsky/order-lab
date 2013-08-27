@@ -12,8 +12,9 @@
 {% block content %} 
     
     <h3 class="text-info">Scan Order</h3>
-    
-{#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
+
+
+    {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
@@ -34,9 +35,7 @@
         {{ form_label(form_accession.accession, '* Accession+Part+Block') }} 
         </div>
         <div class="span6" align="left">
-        {{ form_widget(form_accession.accession) }}             
-        {{ form_widget(form_part.name) }}                   
-        {{ form_widget(form_block.name) }}
+        {{form_widget(form_accession.accession)}}{{form_widget(form_part.name)}}{{form_widget(form_block.name)}}
         </div>
         </div>
         

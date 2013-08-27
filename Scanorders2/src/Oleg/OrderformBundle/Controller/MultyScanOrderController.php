@@ -142,21 +142,30 @@ class MultyScanOrderController extends Controller {
 
         $form = $this->createForm(new OrderInfoType($type), $entity);
         $form->bind($request);
+        //$form->handleRequest($request);
 
         //check if the orderform already exists, so it's edit case
         //TODO: edit id is empty. Why??
-        echo "id=".$entity->getId();
-        //exit();
-        if( $entity->getId() && $entity->getId() > 0 ) {
-            $this->editAction( $entity->getId() );
-            return;
-        }
+//        echo "id=".$entity->getId()."<br>";
+//        echo "entity count=".count($entity)."<br>";
+//        echo "patient count=".count($entity->getPatient())." patient=".$entity->getPatient()[0]."<br>";
+//        $id = $form["id"]->getData();
+//        $provider = $form["provider"]->getData();
+//        echo "form field id=".$id.", provider=".$provider."<br>";
+//        //$request  = $this->getRequest();
+//        $idrequest = $request->query->get('id');
+//        echo "idreq=".$idrequest."<br>";
+//        //exit();
+//        if( $entity->getId() && $entity->getId() > 0 ) {
+//            $this->editAction( $entity->getId() );
+//            return;
+//        }
 
         if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
-            //echo "<br>form errors:<br>";
-            //print_r($errors);
+            echo "<br>form errors:<br>";
+            print_r($errors);
         }
         
         //echo "Before validation main entity:<br>";
@@ -164,13 +173,15 @@ class MultyScanOrderController extends Controller {
 //        if( $form->isValid() ) {
         if( 1 ) {
 
+            //echo "id2=".$entity->getId()."<br>";
+            //exit();
             $em = $this->getDoctrine()->getManager();                            
                        
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 
 //            echo "<br>Before loop:<br>";
 //            echo $entity;
-//            exit();
+            //exit();
             
             //Patient
             //$pat_count = 0;
@@ -240,7 +251,7 @@ class MultyScanOrderController extends Controller {
                                 //echo $count++." !!!!!!!!!!block = ". $block. "<br>";
                                 //Slide
                                 foreach( $block->getSlide() as $slide ) {
-                                    //echo "!!!!!!!!!!slide = ". $slide. "<br>";
+                                    echo "!!!!!!!!!!slide = ". $slide. "<br>";
                                     if( !$slide->getId() ) {
                                         $block->removeSlide( $slide );
                                         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
@@ -250,7 +261,7 @@ class MultyScanOrderController extends Controller {
                                         //$accession->addSlide($slide);  
                                         //$part->addSlide($slide);  
                                         $block->addSlide($slide);                                                                                                                             
-                                        $entity->addSlide($slide);                                                                           
+                                        $entity->addSlide($slide);
                                     } else {
                                         continue;
                                     }
@@ -395,8 +406,8 @@ class MultyScanOrderController extends Controller {
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/{id}", name="multy_edit", requirements={"id" = "\d+"})
-     * @Route("/{id}", name="multy_show", requirements={"id" = "\d+"})
+     * @Route("/edit/{id}", name="multy_edit", requirements={"id" = "\d+"})
+     * @Route("/show/{id}", name="multy_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -500,15 +511,21 @@ class MultyScanOrderController extends Controller {
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
 
+        //echo "route=".$routeName.", type=".$type."<br>";
         if( $type == "edit" || $routeName == "multy_edit") {
             $disable = false;
             $type = "edit";
         }
 
+        //echo "show id=".$entity->getId()."<br>";
         $form   = $this->createForm( new OrderInfoType(true, null, $entity), $entity, array('disabled' => $disable) );
 
 //        echo "type=".$entity->getType();
 //        exit();
+
+//        $id = $form["id"]->getData();
+//        $provider = $form["provider"]->getData();
+//        echo "id=".$id.", provider=".$provider.", type=".$type."<br>";
 
         return array(
             'form' => $form->createView(),

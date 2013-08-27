@@ -18,7 +18,9 @@ class OrderInfoRepository extends EntityRepository
     //make correct object
     public function processEntity( $entity, $type ) {  
         
-        
+//        echo "orderifno repos id=".$entity->getId()."<br>";
+//        echo "orderifno repos provider=".$entity->getProvider()."<br>";
+
         $entity->setStatus("active"); 
         $entity->setType($type);
 

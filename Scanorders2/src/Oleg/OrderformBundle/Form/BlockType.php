@@ -30,7 +30,7 @@ class BlockType extends AbstractType
                 'choices' => $helper->getBlock(),
                 'required'=> true,
                 'data' => 0,
-                'attr' => array('style' => 'width:70px'),
+                'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
         ));
         
         if( $this->multy ) { 
@@ -69,7 +69,7 @@ class BlockType extends AbstractType
                         'max_length'=>'3',
                         'choices' => $arr,
                         'required'=> true,
-                        'attr' => array('style' => 'width:70px'),
+                        'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
                         'auto_initialize' => false,
                     );
 

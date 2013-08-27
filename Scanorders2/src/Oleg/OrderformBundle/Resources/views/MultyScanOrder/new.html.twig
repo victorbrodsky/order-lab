@@ -1,5 +1,7 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+
 {#{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
 
 {% if multy is not defined %}
@@ -7,24 +9,36 @@
 {% endif %}
 
 {% block title %}
-    Clinical Multy Slide Scan Order
+    Clinical Multi-Slide Scan Order
 {% endblock %}
 
-{% block content %}  
-    
-<h3 class="text-info">Clinical Multy Slide Scan Order</h3>
+{% block content %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+    {#ID={{ form.vars.value.id }}#}
+    {#{% if type == 'edit' or type == 'show' %}#}
+        {#ID={{ form_widget(form.id) }}#}
+        {#&#123;&#35;{{ form.vars.value.id }}&#35;&#125;#}
+    {#{% endif %}#}
 
 {% set formpath = 'clinical_create' %}
+{% set headername = 'Clinical' %}
 
 {% if multy == 'educational' %}
     {% set formpath = 'edu_create' %}
+    {% set headername = 'Educational' %}
 {% endif %}
 
 {% if multy == 'research' %}
     {% set formpath = 'res_create' %}
+    {% set headername = 'Research' %}
 {% endif %}
+
+<h3 class="text-info">
+    {{ headername  }} Multi-Slide Scan Order
+    {% if form.vars.value.id != "" %}
+        #{{ form.vars.value.id }}
+    {% endif %}
+</h3>
 
 <form action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
 {#{{ form_start(form) }}#}
@@ -225,7 +239,7 @@
                                                                         <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
                                                                             <div class="panel-heading" align="left">
                                                                                 <div id="form_body_toggle_slide_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_slide_{{ uid }}"></div>
-                                                                                eSlide {{ slideCount+1 }}
+                                                                                Slide {{ slideCount+1 }}
                                                                                 {% if type == 'new' or type == 'edit' %}
                                                                                     <div class="form-btn-options">
                                                                                         {% if block.slide|length ==  (slideCount + 1) %}
@@ -283,29 +297,30 @@
 
 
     {% if type == 'new' or type == 'edit' %}
-    <button id="next_button" type="button" class="btn" 
-            data-toggle="collapse" data-target="#orderinfo_param">Next
-    </button>
+
+        <button id="next_button" type="button" class="btn"
+                data-toggle="collapse" data-target="#orderinfo_param">Next
+        </button>
 
 
-    <div id="orderinfo_param" class="collapse">
-        {{ myform.orderinfo(form) }}
-        <div class="row-fluid">
-            <div class="span12">
-                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
-                <p><button class="btn_margin_top btn" name="btnSave" type="submit">Save and Continue Later</button></p>
+        <div id="orderinfo_param" class="collapse">
+            {{ myform.orderinfo(form) }}
+            <div class="row-fluid">
+                <div class="span12">
+                    <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
+                    <p><button class="btn_margin_top btn" name="btnSave" type="submit">Save and Continue Later</button></p>
+                </div>
             </div>
         </div>
-    </div>
-   
-    {#Note: data-prototype-rest="{{form_widget(form) | e}} is required; otherwise the leftovers of the form (?) appears in html page#}
-    <div data-prototype-orderinfo="{{form_rest(form) | e}}">
-        {{ form_rest(form) }}
-    </div>
+
+        {#Note: data-prototype-rest="{{form_widget(form) | e}} is required; otherwise the leftovers of the form (?) appears in html page#}
+        <div data-prototype-orderinfo="{{form_rest(form) | e}}">
+            {{ form_rest(form) }}
+        </div>
 
     {% endif %}
-    
-{#    {{ form_rest(form) }}#}
+
+    {#{{ form_rest(form.id) }}#}
     
 {#{{ form_end(form) }}#}
 </form>

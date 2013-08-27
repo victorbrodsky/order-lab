@@ -2,11 +2,6 @@
     Created on : Jul 17, 2013, 1:12:10 PM
     Author     : oli2002
 */
-/*//input, label {*/
-    /*//display: inline;*/
-    /*//display: inline-block;*/
-    /*//width: 50px;*/
-/*//}*/
 
 .horizontal_type {
     padding-bottom: 5%;
@@ -182,11 +177,17 @@
     /*width: 20%;*/
 }
 
-.icon-folder-open, .icon-folder-close{
-    background-image: url("glyphicons-halflings-white.png");
+/*.icon-folder-open, .icon-folder-close{*/
+    /*background-image: url("glyphicons-halflings-white.png");*/
+/*}*/
+/*.icon-search, .icon-filter{*/
+    /*background-image: url("glyphicons-halflings.png");*/
+/*}*/
+
+.select2-arrow{
+    background-image: url("select2.png");
 }
-.icon-search, .icon-filter{
-    background-image: url("glyphicons-halflings.png");
-}
+
+
 
 

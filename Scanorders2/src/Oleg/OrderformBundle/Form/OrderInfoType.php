@@ -27,7 +27,9 @@ class OrderInfoType extends AbstractType
     {
         
         $helper = new FormHelper();
-                   
+
+        $builder->add( 'id' , 'hidden' );
+
         $builder->add( 'type', 'hidden' ); 
         
         if( $this->multy ) {
@@ -294,6 +296,23 @@ class OrderInfoType extends AbstractType
                             null,
                             $priority_param
                         ));
+
+                    //hidden id
+                    //priority
+//                    $id_param = array(
+//                        'label' => 'ID:',
+//                        //'max_length'=>200,
+//                        'required' => true,
+//                        'data' => $data->getId(),
+//                        'auto_initialize' => false,
+//                    );
+//                    $form->add(
+//                        $factory->createNamed(
+//                            'id',
+//                            'hidden',
+//                            null,
+//                            $id_param
+//                        ));
 
                 }
 
