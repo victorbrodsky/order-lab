@@ -247,7 +247,7 @@
       <file leaf-file-name="base.html.twig" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/base.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="62" selection-start="804" selection-end="804" vertical-scroll-proportion="0.56071967">
+            <state line="18" column="91" selection-start="282" selection-end="718" vertical-scroll-proportion="0.4587706">
               <folding />
             </state>
           </provider>
@@ -723,7 +723,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Oleg/OrderformBundle/Resources/views/Default/base.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="62" selection-start="804" selection-end="804" vertical-scroll-proportion="0.56071967">
+        <state line="18" column="91" selection-start="282" selection-end="718" vertical-scroll-proportion="0.4587706">
           <folding />
         </state>
       </provider>
