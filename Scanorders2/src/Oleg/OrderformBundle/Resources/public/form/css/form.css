@@ -18,17 +18,59 @@
 }
 
 .page-content {
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-top: 0%;
-    padding-bottom: 5%;
-    float: left;
-    width: 90%;
+    /*padding-left: 5%;*/
+    /*padding-right: 5%;*/
+    /*padding-top: 0%;*/
+    /*padding-bottom: 5%;*/
+    /*float: left;*/
+    /*width: 100%;*/
     text-align: center;
 }
 
 .page-content-top {
    padding-top: 10%; 
+}
+
+/*sign in login*/
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+/*end of sign in*/
+.form-control-modif {
+    display: inline;
+    height: 30px;
+    width: 200px;
 }
 
 .header {
@@ -177,17 +219,42 @@
     /*width: 20%;*/
 }
 
-/*.icon-folder-open, .icon-folder-close{*/
+/*.glyphicon-folder-open, .glyphicon-folder-close{*/
     /*background-image: url("glyphicons-halflings-white.png");*/
 /*}*/
-/*.icon-search, .icon-filter{*/
+/*.glyphicon-search, .glyphicon-filter{*/
     /*background-image: url("glyphicons-halflings.png");*/
 /*}*/
 
-.select2-arrow{
-    background-image: url("select2.png");
-}
+/*.select2-arrow{*/
+    /*background-image: url("select2.png");*/
+/*}*/
 
+
+/*@media (max-width: 980px) {*/
+    /*.form-horizontal .control-group > label {*/
+        /*float: none;*/
+        /*width: auto;*/
+        /*padding-top: 0;*/
+        /*text-align: left;*/
+    /*}*/
+    /*.form-horizontal .controls {*/
+        /*margin-left: 0;*/
+    /*}*/
+    /*.form-horizontal .control-list {*/
+        /*padding-top: 0;*/
+    /*}*/
+    /*.form-horizontal .form-actions {*/
+        /*padding-left: 10px;*/
+        /*padding-right: 10px;*/
+    /*}*/
+/*}*/
+
+/*@font-face {*/
+    /*font-family: 'Glyphicons Halflings';*/
+    /*src: url('../fonts/glyphicons-halflings-regular.eot');*/
+    /*src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');*/
+/*}*/
 
 
 

@@ -27,6 +27,14 @@ $(document).ready(function() {
         e.preventDefault();  
         $('#priority_option').collapse('toggle');
     });
+
+    var checked = $('form input[type=radio]:checked').val();
+    if( checked == 1 ) {
+//        alert(checked);
+        $('#priority_option').collapse('toggle');
+    }
+
+
     
     //tab
     $('#optional_param_tab a').click(function (e) {
@@ -38,12 +46,12 @@ $(document).ready(function() {
     $('.form_body_toggle_btn').on('click', function(e) {
         var className = $(this).attr("class");
         var id = this.id;
-        if( className == 'form_body_toggle_btn icon-folder-open') {
-            $("#"+id).removeClass('icon-folder-open');
-            $("#"+id).addClass('icon-folder-close');
+        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
+            $("#"+id).removeClass('glyphicon glyphicon-folder-open');
+            $("#"+id).addClass('glyphicon glyphicon-folder-close');
         } else {
-            $("#"+id).removeClass('icon-folder-close');
-            $("#"+id).addClass('icon-folder-open');
+            $("#"+id).removeClass('glyphicon glyphicon-folder-close');
+            $("#"+id).addClass('glyphicon glyphicon-folder-open');
         }
     });
 
@@ -65,7 +73,7 @@ $(document).ready(function() {
 
 function init() {
 
-    //datepicker
+    //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
     if( $(".datepicker")[0] ) {
         $('.datepicker').datepicker();
     }
@@ -73,7 +81,7 @@ function init() {
     //$('.combobox').combobox();
 
     $(".combobox").select2({
-        width: 'element'
+        width: 'resolve'
     });
 
 }
@@ -166,11 +174,11 @@ function getForm( name, id, idsorig, ids, idsm ) {
     var formhtml =
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
-            '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
+            '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
             '&nbsp;' + capitaliseFirstLetter(name) + ' ' + (id+1) +
             '<div class="form-btn-options">' +
-            '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>' +
-            '<button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>' +
+            '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>' +
+            ' <button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>' +
             '</div>' +
             '</div>' +
             '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' + formbody + '</div>' +
@@ -284,12 +292,12 @@ function bindToggleBtn( uid ) {
         var id = this.id;
         //alert(className);
 
-        if( className == 'form_body_toggle_btn icon-folder-open') {
-            $("#"+id).removeClass('icon-folder-open');
-            $("#"+id).addClass('icon-folder-close');
+        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
+            $("#"+id).removeClass('glyphicon glyphicon-folder-open');
+            $("#"+id).addClass('glyphicon glyphicon-folder-close');
         } else {
-            $("#"+id).removeClass('icon-folder-close');
-            $("#"+id).addClass('icon-folder-open');
+            $("#"+id).removeClass('glyphicon glyphicon-folder-close');
+            $("#"+id).addClass('glyphicon glyphicon-folder-open');
         }
     });
 }

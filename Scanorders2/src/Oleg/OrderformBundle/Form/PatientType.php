@@ -23,20 +23,23 @@ class PatientType extends AbstractType
         $builder->add( 'mrn', 'text', array(
                 'label'=>'MRN:', 
                 'max_length'=>100,
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'name', 'text', array(
                 'label'=>'Name:', 
                 'max_length'=>500,
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         
         $builder->add( 'age', 'text', array(
                 'label'=>'Age:', 
                 'max_length'=>3,
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));               
         
         $builder->add( 'sex', 'choice', array(
@@ -46,7 +49,7 @@ class PatientType extends AbstractType
                 'choices' => array("Male"=>"Male", "Female"=>"Female"),
                 'multiple' => false,
                 'expanded' => true,
-                'attr' => array('class' => 'horizontal_type')  
+                'attr' => array('class' => 'horizontal_type')
                 //'data' => 'Male',             
         ));
              
@@ -61,7 +64,8 @@ class PatientType extends AbstractType
         $builder->add( 'clinicalHistory', 'textarea', array(
                 'label'=>'Clinical History:', 
                 'max_length'=>10000,
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control'),
         )); 
            
         if( $this->multy ) {

@@ -12,8 +12,5 @@ parameters:
     mailer_password:   
     delivery_strategy: realtime
 
-<!--slidescan@med.cornell.edu-->
-<!--smtp.med.cornell.edu-->
-
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt

@@ -61,7 +61,7 @@ class OrderInfoType extends AbstractType
                 'label'=>'* Ordering Provider:', 
                 'max_length'=>'200', 
                 'required'=>true,
-                'attr' => array('required' => 'required')
+                'attr' => array('required' => 'required', 'class'=>'form-control form-control-modif')
         ));
 
         if( 0 ) {//$this->service ) {
@@ -69,7 +69,7 @@ class OrderInfoType extends AbstractType
                 'label'=>'Pathology Service:',
                 'max_length'=>'200',
                 'required'=>false,
-                'attr' => array('required' => 'required')
+                'attr' => array('required' => 'required', 'class'=>'form-control form-control-modif')
             ));
         } else {
 
@@ -84,7 +84,7 @@ class OrderInfoType extends AbstractType
                 'max_length'=>200,
                 'choices' => $pathServices,
                 'required'=>false,
-                'attr' => array('class' => 'combobox'),
+                'attr' => array('class' => 'combobox', 'style' => 'min-width:345px'),
             );
 
             $counter = 0;
@@ -123,7 +123,7 @@ class OrderInfoType extends AbstractType
                 'choices' => $helper->getSlideDelivery(),
                 'required'=>true,
                 'data' => 0,     
-                'attr' => array('class' => 'combobox', 'required' => 'required')
+                'attr' => array('class' => 'combobox', 'style' => 'min-width:345px', 'required' => 'required')
         ));
                 
         $builder->add( 'returnSlide', 
@@ -133,7 +133,7 @@ class OrderInfoType extends AbstractType
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
                 'data' => 0,    //'Filing Room',
-                'attr' => array('class' => 'combobox', 'required' => 'required')
+                'attr' => array('class' => 'combobox', 'style' => 'min-width:345px', 'required' => 'required')
         ));
 
         $builder->add('scandeadline','date',array(
@@ -158,13 +158,15 @@ class OrderInfoType extends AbstractType
                 $form = $event->getForm();
                 $data = $event->getData();
 
-                //echo "class=".get_class($data)."<br>";
-                //echo "parent=".get_parent_class($data)."<br>";
+//                echo "class=".get_class($data)."<br>";
+//                echo "parent=".get_parent_class($data)."<br>";
+
+                //exit();
 
                 //if( $data instanceof Stain ) {
                 //TODO: fix it. Here the listenere always executes this block (because of some preset data on new form?)
                 //read: http://symfony.com/doc/current/cookbook/form/dynamic_form_modification.html
-                if( 0 ) {//get_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) { //} || get_parent_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) {
+                if( get_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) { //} || get_parent_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) {
 
                     $pathservice = $data->getPathologyService();
                     $return = $data->getReturnSlide();
@@ -184,7 +186,7 @@ class OrderInfoType extends AbstractType
                         'max_length'=>200,
                         'choices' => $pathserviceArr,
                         'required'=>false,
-                        'attr' => array('class' => 'combobox'),
+                        'attr' => array('class' => 'combobox', 'style' => 'min-width:345px'),
                         'auto_initialize' => false,
                     );
 
@@ -214,7 +216,7 @@ class OrderInfoType extends AbstractType
                         'max_length'=>200,
                         'choices' => $deliveryArr,
                         'required'=>true,
-                        'attr' => array('class' => 'combobox', 'required' => 'required'),
+                        'attr' => array('class' => 'combobox', 'required' => 'required', 'style' => 'min-width:345px'),
                         'auto_initialize' => false,
                     );
 
@@ -243,7 +245,7 @@ class OrderInfoType extends AbstractType
                         'max_length'=>200,
                         'choices' => $helper->getReturnSlide(),
                         'required'=>true,
-                        'attr' => array('class' => 'combobox', 'required' => 'required'),
+                        'attr' => array('class' => 'combobox', 'required' => 'required', 'style' => 'min-width:345px'),
                         'auto_initialize' => false,
                     );
 
@@ -274,6 +276,7 @@ class OrderInfoType extends AbstractType
                         'choices' => $priorityArr,
                         'multiple' => false,
                         'expanded' => true,
+                        'data' => 0,
                         'attr' => array('class' => 'horizontal_type', 'required' => 'required'),
                         'auto_initialize' => false,
                     );

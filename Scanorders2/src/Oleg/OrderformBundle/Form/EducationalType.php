@@ -18,18 +18,21 @@ class EducationalType extends AbstractType
                 'label'=>'Goal:',
                 'max_length'=>'200',
                 'required'=> false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'course', 'text', array(
             'label'=>'Course:',
             'max_length'=>'200',
             'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
         $builder->add( 'lesson', 'text', array(
             'label' => 'Lesson:',
             'max_length'=>200,
             'required'=>false,
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
     }

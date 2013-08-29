@@ -37,7 +37,12 @@ class PatientRepository extends EntityRepository
             //exit();
 
             $mrnIndexArr = explode("-",$lastMrnStr);
-            $mrnIndex = $mrnIndexArr[1];
+            if( count($mrnIndexArr) > 0 ) {
+                $mrnIndex = $mrnIndexArr[1];
+            } else {
+                $mrnIndex = 0;
+            }
+
 
             $mrnIndex = ltrim($mrnIndex,'0') + 1;
 

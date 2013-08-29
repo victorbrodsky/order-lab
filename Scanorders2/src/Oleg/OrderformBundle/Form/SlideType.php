@@ -27,25 +27,29 @@ class SlideType extends AbstractType
                 'max_length'=>10000,
                 'required'=>false,
                 'label'=>'Diagnosis / Reason for scans:',
+                'attr' => array('class'=>'form-control'),
                 //'attr'=>array('readonly'=>true)
         ));
         
         $builder->add('microscopicdescr', 'textarea', array(
                 'max_length'=>10000,
                 'required'=>false,
-                'label'=>'Microscopic Description'
+                'label'=>'Microscopic Description',
+                'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add('specialstain', 'text', array(
                 'max_length'=>100,
                 'required'=>false,
-                'label'=>'Special Stain Results'
+                'label'=>'Special Stain Results',
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add('relevantscan', 'text', array(
                 'max_length'=>100,
                 'required'=>false,
-                'label'=>'Relevant Scanned Images' 
+                'label'=>'Relevant Scanned Images',
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false)); 

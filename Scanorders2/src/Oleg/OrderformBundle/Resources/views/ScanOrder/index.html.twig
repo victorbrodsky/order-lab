@@ -8,42 +8,33 @@
 {% block body -%}
 
     <h5 class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</h5>
-    
+
     {% if is_granted('ROLE_ADMIN') and security == 'true' %}              
         {% if userreqs is defined %}
             {% if userreqs | length == 0 %}
-                <i class="text-success">Active User Requests:{{ userreqs | length }}</i>
+                <span class="text-success">Active User Requests:{{ userreqs | length }}</span>
             {% else %}
-                <i class="text-error">Active User Requests:{{ userreqs | length }}</i>
+                <span class="text-danger">Active User Requests:{{ userreqs | length }}</span>
             {% endif %}           
         {% else %}
-            <i class="text-success">Active User Requests:0</i>
+            <span class="text-success">Active User Requests:0</span>
         {% endif %}
         <a href="{{ path('accountrequest') }}">All User Requests</a>
     {% endif %}
 
     <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">
-        <div class="row-fluid">
-            <div class="span2">
+        <div class="row">
+            <div class="col-xs-2">
                 My Service {{ form_widget(form.service) }}
             </div>
-            <div class="span5">
+            <div class="col-xs-5">
                 {{ form_widget(form.filter) }}
-                <button class="btn " type="submit"><i class="icon-filter"></i> Filter by Status</button>
+                <button class="btn btn-xs btn-default" type="submit"><i class="icon-filter"></i> Filter by Status</button>
             </div>
-            <div class="span5">
+            <div class="col-xs-5">
                 {{ form_widget(form.search) }}
-                <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
+                <button type="submit" class="btn btn-xs btn-default"><i class="icon-search"></i> Search</button>
             </div>
-
-
-                {#<div class="span6" align="right">#}
-                    {#{{ form_label(form.service) }}#}
-                {#</div>#}
-                {#<div class="span6" align="left">#}
-                    {#{{ form_widget(form.service) }}#}
-                {#</div>#}
-
         </div>
         {{ form_rest(form) }}
     </form>
@@ -56,7 +47,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
                 {#<th{% if pagination.isSorted('orderinfo.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Order #', 'orderinfo.id') }}</th>#}
                 {#<th{% if pagination.isSorted('orderinfo.slide') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Slides #', 'orderinfo.slide') }}</th>#}
-                <th class="span2">Slides #</th>
+                <th>Slides #</th>
                 <th{% if pagination.isSorted('orderinfo.priority') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
                 <th{% if pagination.isSorted('orderinfo.returnoption') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
                 <th{% if pagination.isSorted('orderinfo.type') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>

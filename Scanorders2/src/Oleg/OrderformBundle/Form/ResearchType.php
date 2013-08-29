@@ -18,12 +18,14 @@ class ResearchType extends AbstractType
                 'label'=>'Project/Paper/Abstract Title:',
                 'max_length'=>'200',
                 'required'=> false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'principal', 'text', array(
             'label'=>'Principal Investigator:',
             'max_length'=>'200',
             'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
     }

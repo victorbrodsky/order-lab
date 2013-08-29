@@ -46,7 +46,7 @@
 {#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
 
     {% if type == 'show' %}
-        {{ myform.orderinfo(form) }}
+        {{ myform.orderinfo_panel(form, "Scan Order Info") }}
     {% endif %}
 
     {% if multy == 'educational' %}
@@ -115,9 +115,6 @@
 >
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
 
-
-
-
     {#patient#}
     {% set patientCount = 0 %}
     {% for patient in form.patient %}
@@ -125,14 +122,14 @@
         {#{% set patientCountNext = patientCount + 1 %}#}
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient">
             <div class="panel-heading" align="left">
-                <div id="form_body_toggle_patient_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_patient_{{ uid }}"></div>
+                <div id="form_body_toggle_patient_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_patient_{{ uid }}"></div>
                 Patient {{ patientCount+1 }}
                 {% if type == 'new' or type == 'edit' %}
                     <div class="form-btn-options">
                         {% if form.patient|length ==  (patientCount + 1) %}
-                        <button id="form_add_btn_patient_{{ uid }}" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm('patient', {{ patientCount }}, 0, 0, 0, 0, 0)">Add</button>
+                        <button id="form_add_btn_patient_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('patient', {{ patientCount }}, 0, 0, 0, 0, 0)">Add</button>
                         {% endif %}
-                        <button id="patient_{{ uid }}" type="button" class="delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>
+                        <button id="patient_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn-xs btn_margin">Delete</button>
                     </div>
                 {% endif %}
             </div>
@@ -150,14 +147,14 @@
                     {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
                     <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
                         <div class="panel-heading" align="left">
-                            <div id="form_body_toggle_specimen_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_procedure_{{ uid }}"></div>
+                            <div id="form_body_toggle_specimen_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_procedure_{{ uid }}"></div>
                             Procedure {{ procedureCount+1 }}
                             {% if type == 'new' or type == 'edit' %}
                                 <div class="form-btn-options">
                                     {% if patient.specimen|length ==  (procedureCount + 1) %}
-                                    <button id="form_add_btn_specimen_{{ uid }}" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm('procedure', {{ patientCount }}, {{ procedureCount }}, 0, 0, 0, 0)">Add</button>
+                                    <button id="form_add_btn_specimen_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('procedure', {{ patientCount }}, {{ procedureCount }}, 0, 0, 0, 0)">Add</button>
                                     {% endif %}
-                                    <button id="procedure_{{ uid }}" type="button" class="delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>
+                                    <button id="procedure_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>
                                 </div>
                             {% endif %}
                         </div>
@@ -171,14 +168,14 @@
                                 {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0 %}
                                 <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
                                     <div class="panel-heading" align="left">
-                                        <div id="form_body_toggle_accession_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_accession_{{ uid }}"></div>
+                                        <div id="form_body_toggle_accession_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_accession_{{ uid }}"></div>
                                         Accession {{ accessionCount+1 }}
                                         {% if type == 'new' or type == 'edit' %}
                                             <div class="form-btn-options">
                                                 {% if specimen.accession|length ==  (accessionCount + 1) %}
-                                                <button id="form_add_btn_accession_{{ uid }}" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm('accession', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, 0, 0, 0)">Add</button>
+                                                <button id="form_add_btn_accession_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('accession', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, 0, 0, 0)">Add</button>
                                                 {% endif %}
-                                                <button id="accession_{{ uid }}" type="button" class="span1 delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>
+                                                <button id="accession_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>
                                             </div>
                                         {% endif %}
                                     </div>
@@ -192,14 +189,14 @@
                                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0 %}
                                             <div id="formpanel_part_{{ uid }}" class="panel panel-part">
                                                 <div class="panel-heading" align="left">
-                                                    <div id="form_body_toggle_part_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_part_{{ uid }}"></div>
+                                                    <div id="form_body_toggle_part_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_part_{{ uid }}"></div>
                                                     Part {{ partCount+1 }}
                                                     {% if type == 'new' or type == 'edit' %}
                                                         <div class="form-btn-options">
                                                             {% if accession.part|length ==  (partCount + 1) %}
-                                                            <button id="form_add_btn_part_{{ uid }}" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm('part', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, 0, 0)">Add</button>
+                                                            <button id="form_add_btn_part_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('part', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, 0, 0)">Add</button>
                                                             {% endif %}
-                                                            <button id="part_{{ uid }}" type="button" class="span1 delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>
+                                                            <button id="part_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>
                                                         </div>
                                                     {% endif %}
                                                 </div>
@@ -217,14 +214,14 @@
                                                         {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0 %}
                                                         <div id="formpanel_block_{{ uid }}" class="panel panel-block">
                                                                 <div class="panel-heading" align="left">
-                                                                    <div id="form_body_toggle_block_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_block_{{ uid }}"></div>
+                                                                    <div id="form_body_toggle_block_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_block_{{ uid }}"></div>
                                                                     Block {{ blockCount+1 }}
                                                                     {% if type == 'new' or type == 'edit' %}
                                                                         <div class="form-btn-options">
                                                                             {% if part.block|length ==  (blockCount + 1) %}
-                                                                            <button id="form_add_btn_block_{{ uid }}" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm('block', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, 0)">Add</button>
+                                                                            <button id="form_add_btn_block_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('block', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, 0)">Add</button>
                                                                             {% endif %}
-                                                                            <button id="block_{{ uid }}" type="button" class="span1 delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>
+                                                                            <button id="block_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>
                                                                         </div>
                                                                     {% endif %}
                                                                 </div>
@@ -238,14 +235,14 @@
                                                                         {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount %}
                                                                         <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
                                                                             <div class="panel-heading" align="left">
-                                                                                <div id="form_body_toggle_slide_{{ uid }}" class="form_body_toggle_btn icon-folder-open" data-toggle="collapse" data-target="#form_body_slide_{{ uid }}"></div>
+                                                                                <div id="form_body_toggle_slide_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_slide_{{ uid }}"></div>
                                                                                 Slide {{ slideCount+1 }}
                                                                                 {% if type == 'new' or type == 'edit' %}
                                                                                     <div class="form-btn-options">
                                                                                         {% if block.slide|length ==  (slideCount + 1) %}
-                                                                                        <button id="form_add_btn_slide_{{ uid }}" type="button" class="span1 btn btn-mini btn_margin" onclick="addSameForm('slide', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, {{ slideCount }})">Add</button>
+                                                                                        <button id="form_add_btn_slide_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('slide', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, {{ slideCount }})">Add</button>
                                                                                         {% endif %}
-                                                                                        <button id="slide_{{ uid }}" type="button" class="span1 delete_form_btn span1 btn btn-danger btn_margin btn-mini">Delete</button>
+                                                                                        <button id="slide_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>
                                                                                     </div>
                                                                                 {% endif %}
                                                                             </div>
@@ -298,18 +295,18 @@
 
     {% if type == 'new' or type == 'edit' %}
 
-        <button id="next_button" type="button" class="btn"
+        <button id="next_button" type="button" class="btn btn-default"
                 data-toggle="collapse" data-target="#orderinfo_param">Next
         </button>
 
 
         <div id="orderinfo_param" class="collapse">
-            {{ myform.orderinfo(form) }}
-            <div class="row-fluid">
-                <div class="span12">
-                    <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
-                    <p><button class="btn_margin_top btn" name="btnSave" type="submit">Save and Continue Later</button></p>
-                </div>
+
+            {{ myform.orderinfo_panel(form,"Scan Order Info") }}
+
+            <div class="row">
+                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
+                <p><button class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>
             </div>
         </div>
 

@@ -21,7 +21,8 @@ class ScanType extends AbstractType
         $builder->add('scanregion', 'text', array(
                 'max_length'=>200,
                 'required'=>false,
-                'label' => 'Region to scan'
+                'label' => 'Region to scan',
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'mag', 
@@ -40,8 +41,8 @@ class ScanType extends AbstractType
                 'max_length'=>5000,
                 'required'=>false,
                 'label'=>'Reason for Scan/Note:',
-                'data' => 'Interesting case',
-                //'attr'=>array('readonly'=>true)
+                //'data' => 'Interesting case',
+                'attr' => array('class'=>'form-control'),
         ));
 
 

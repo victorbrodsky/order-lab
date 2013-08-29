@@ -25,12 +25,14 @@ class SpecimenType extends AbstractType
         
         $builder->add( 'proceduretype', 'text', array(
                 'label'=>'Procedure Type:', 
-                'max_length'=>300,'required'=>false
+                'max_length'=>300,'required'=>false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         )); 
         
         $builder->add( 'paper', 'text', array(
                 'label'=>'Paper:', 
-                'max_length'=>300,'required'=>false
+                'max_length'=>300,'required'=>false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         if( $this->multy ) {          

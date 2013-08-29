@@ -40,7 +40,7 @@ class PartType extends AbstractType
         $builder->add('name', 'choice', array(        
             'choices' => $helper->getPart(),
             'required'=>true,
-            'label'=>' ',
+            'label'=>'Part Name:',
             'max_length'=>'3',
             'data' => 0,
 //            'attr' => array('style' => 'width:70px'),
@@ -58,7 +58,7 @@ class PartType extends AbstractType
                 'max_length'=>'100',
                 'choices' => $helper->getSourceOrgan(),
                 'required'=>false,
-                'attr' => array('class' => 'combobox'),
+                'attr' => array('class' => 'combobox', 'style' => 'width:345px'),
 //                'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
                 //'data' => 0,              
         ));
@@ -66,25 +66,29 @@ class PartType extends AbstractType
         $builder->add( 'description', 'textarea', array(
                 'label'=>'Description :', 
                 'max_length'=>'10000', 
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add( 'diagnosis', 'textarea', array(
                 'label'=>'Diagnosis :',
                 'max_length'=>'10000', 
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add( 'diffDiagnosis', 'textarea', array(
                 'label'=>'Differential Diagnoses:', 
                 'max_length'=>'10000', 
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add( 'diseaseType', 'text', array(
                 'label'=>'Disease Type:', 
                 'max_length'=>'100', 
-                'required'=>false
+                'required'=>false,
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
 //        $builder->add( 'accession', new AccessionType(), array(
@@ -113,7 +117,7 @@ class PartType extends AbstractType
                     $param = array(
                         'choices' => $arr,
                         'required'=>true,
-                        'label'=>' ',
+                        'label'=>'Part Name:',
                         'max_length'=>'3',
                         'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
                         'auto_initialize' => false,
@@ -147,7 +151,7 @@ class PartType extends AbstractType
                         'max_length'=>'100',
                         'choices' => $helper->getSourceOrgan(),
                         'required'=>false,
-                        'attr' => array('class' => 'combobox'),
+                        'attr' => array('class' => 'combobox', 'style' => 'width:345px'),
                         'auto_initialize' => false,
                     );
 

@@ -1,14 +1,12 @@
-<h2 class="alert alert-info well-lg">Scan Order Submission</h2>
+<h2 class="alert alert-info well-lg" align="center">Scan Order Submission</h2>
 
 <br><br>
 
 {% for flashMessage in app.session.flashbag.get('notice') %}
-    <div class="flash-notice">
+    <div class="flash-notice" align="center">
         {{ flashMessage }}
     </div>
 {% endfor %}
-
-
 
 {% if error is not defined %}
     {% set error = '' %}
@@ -24,35 +22,31 @@
  
 <br><br>    
     
-<form action="{{ path('login_check') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+<form class="form-signin" action="{{ path('login_check') }}" method="post">
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
-
-    {#
-        If you want to control the URL the user
-        is redirected to on success (more details below)
-        <input type="hidden" name="_target_path" value="/account" />
-    #}
     <p>
-    <button class="btn-primary" type="submit">Login</button>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
+
+    <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
     </p>
 
-    <br><br>
-    <p>
-        <p>
-            Please use your
-            <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
-            or the Aperio eSlide Manager account to log in.
-        </p>
-        <p>
-            <a href="{{ path('accountrequest_new') }}">
-                Request an Aperio eSlide Manager account
-            </a>
-            if you can't log in.
-        </p>
-    </p>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 
 </form>
+
+<div class="page-content">
+    <br><br>
+    <p>
+    <p>
+        Please use your
+        <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
+        or the Aperio eSlide Manager account to log in.
+    </p>
+    <p>
+        <a href="{{ path('accountrequest_new') }}">
+            Request an Aperio eSlide Manager account
+        </a>
+        if you can't log in.
+    </p>
+    </p>
+</div>

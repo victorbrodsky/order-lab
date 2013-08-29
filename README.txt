@@ -10,12 +10,15 @@ http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/config.php
 http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/
 
 # Production mode:
-http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app.php/
+http://collage.med.cornell.edu/order/
 
 # Note: For production mode execute the following command to clean cache and fix assetic links to js and css
 (read: Dumping Asset Files in the dev environment http://symfony.com/doc/current/cookbook/assetic/asset_management.html):
 php app/console assetic:dump --env=prod --no-debug
 php app/console cache:clear --env=prod --no-debug
+
+# Since web folder is moved to root order/ and this is written in compser.json => run composer update
+composer.phar update
 
 # Doctrine:
 1) Generate only getters/setters:
@@ -46,3 +49,10 @@ php app/console doctrine:database:create
 1) cd to dir created by clone
 2) git remote update
 3) git pull
+
+# To push changes from locally create branch (i.e. iss51) to remote repo
+git push -u origin iss51
+
+# To create local branch from remote repo
+git fetch origin
+git checkout --track origin/iss51

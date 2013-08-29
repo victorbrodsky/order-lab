@@ -251,7 +251,7 @@ class MultyScanOrderController extends Controller {
                                 //echo $count++." !!!!!!!!!!block = ". $block. "<br>";
                                 //Slide
                                 foreach( $block->getSlide() as $slide ) {
-                                    echo "!!!!!!!!!!slide = ". $slide. "<br>";
+                                    //echo "!!!!!!!!!!slide = ". $slide. "<br>";
                                     if( !$slide->getId() ) {
                                         $block->removeSlide( $slide );
                                         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );

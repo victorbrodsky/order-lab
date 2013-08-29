@@ -25,7 +25,7 @@ class BlockType extends AbstractType
         $helper = new FormHelper();
         
         $builder->add( 'name', 'choice', array(
-                'label'=>' ', 
+                'label'=>'Block Name:',
                 'max_length'=>'3', 
                 'choices' => $helper->getBlock(),
                 'required'=> true,
@@ -65,7 +65,7 @@ class BlockType extends AbstractType
                     $arr = $helper->getBlock();
 
                     $param = array(
-                        'label'=>' ',
+                        'label'=>'Block Name:',
                         'max_length'=>'3',
                         'choices' => $arr,
                         'required'=> true,

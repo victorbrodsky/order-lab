@@ -11,16 +11,16 @@
         <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
     {% endif %}
 
-    {#<!-- Latest compiled and minified CSS -->#}
-    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">#}
-    {#<!-- Optional theme -->#}
-    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">#}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
     {#<!-- Latest compiled and minified JavaScript -->#}
     {#<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>#}
 
-
+    {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'#}
+    {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/fonts/*' filter='cssrewrite'#}
     {% stylesheets
-        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
         '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'
         '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/select2/select2.css' filter='cssrewrite'
     %}
@@ -42,11 +42,11 @@
         
     {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
     {# TODO: use 'bundles/acme_foo/css/*' style#}    
-    {% stylesheets 
-        '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
-    %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets #}
+        {#'@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 #}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
 
     <title>
         {% block title %}
@@ -62,55 +62,55 @@
              
 <body>
 
-    <div class="container page-content"> 
+    <div class="container page-content">
 
-    <div class="header">
-        
-        {% block header %}
-{#                <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
-            {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
-        {% endblock %}
-                    
-    </div>   
+        <div class="header">
 
-    <div class="order-content">
-        
-        {% for flashMessage in app.session.flashbag.get('notice') %}
-            <div class="flash-notice">
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
-        
-        {% block content %}{% endblock %}
-        
-    </div>
+            {% block header %}
+    {#                <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+                {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+            {% endblock %}
 
-    <div class="footer">
-        {% block footer %}
-            &copy; Copyright 2013 by
-            <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
-            at
-            <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
-        {% endblock %}
-    </div>                   
+        </div>
+
+        <div class="order-content">
+
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="flash-notice">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            {% block content %}{% endblock %}
+
+        </div>
+
+        <div class="footer">
+            {% block footer %}
+                &copy; Copyright 2013 by
+                <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
+                at
+                <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
+            {% endblock %}
+        </div>
  
-    {% javascripts
-        '@OlegOrderformBundle/Resources/public/jquery/*'
-        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
-        '@OlegOrderformBundle/Resources/public/form/js/*'
-        '@OlegOrderformBundle/Resources/public/datepicker/js/*'
-        '@OlegOrderformBundle/Resources/public/select2/select2.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+        {% javascripts
+            '@OlegOrderformBundle/Resources/public/jquery/*'
+            '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+            '@OlegOrderformBundle/Resources/public/form/js/*'
+            '@OlegOrderformBundle/Resources/public/datepicker/js/*'
+            '@OlegOrderformBundle/Resources/public/select2/select2.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
 
-    {# Bootstrap Combobox #}        
-    {% javascripts                   
-        '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}         
-    {# Bootstrap Combobox #}             
+        {# Bootstrap Combobox #}
+        {#{% javascripts                   #}
+            {#'@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    #}
+        {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}         #}
+        {# Bootstrap Combobox #}
 
     </div>
 
