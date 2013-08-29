@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
@@ -17,14 +18,6 @@ class Scan {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
-    //Scan belongs to exactly one Slide => Scan has only one Slide, but Slide can have many Scans
-    /**
-     * @ORM\OneToOne(targetEntity="Slide", cascade={"persist"}, orphanRemoval=true)
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
-     * @Assert\NotBlank
-     */
-    //protected $slide;
 
     /**
      * @ORM\Column(name="mag", type="string", length=50)
@@ -54,12 +47,22 @@ class Scan {
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $scandate;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="scan", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)    
+     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
+     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
      */
-    //protected $orderinfo;
+    protected $slide;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="scan")
+     **/
+    protected $orderinfo;
+
+    public function __construct()
+    {
+        $this->orderinfo = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -164,52 +167,6 @@ class Scan {
     }
 
     /**
-     * Set slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return Scan
-     */
-//    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
-//    {
-//        $this->slide = $slide;
-//    
-//        return $this;
-//    }
-
-    /**
-     * Get slide
-     *
-     * @return \Oleg\OrderformBundle\Entity\Slide 
-     */
-//    public function getSlide()
-//    {
-//        return $this->slide;
-//    }
-
-    /**
-     * Set orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Scan
-     */
-    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
-    {
-        $this->orderinfo = $orderinfo;
-    
-        return $this;
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Oleg\OrderformBundle\Entity\OrderInfo 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
-
-    /**
      * Set scandate
      *
      * @param \DateTime $scandate
@@ -231,4 +188,77 @@ class Scan {
     {
         return $this->scandate;
     }
+
+
+    /**
+     * Set slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return Scan
+     */
+    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+    {
+        $this->slide = $slide;
+    
+        return $this;
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Oleg\OrderformBundle\Entity\Slide 
+     */
+    public function getSlide()
+    {
+        return $this->slide;
+    }
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Scan
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+//    /**
+//     * Set orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @return Scan
+//     */
+//    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
+//    {
+//        $this->orderinfo = $orderinfo;
+//
+//        return $this;
+//    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Oleg\OrderformBundle\Entity\OrderInfo
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
+
 }

@@ -37,8 +37,7 @@ class StainType extends AbstractType
                 //echo "class=".get_class($data)."<br>";
                 //echo "parent=".get_parent_class($data)."<br>";
 
-                //if( $data instanceof Stain ) {
-                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Stain' ) {
+                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Stain' || get_class($data) == 'Oleg\OrderformBundle\Entity\Stain' ) {
                     $name = $data->getName();
                     //echo "name === ".$name;
 
@@ -56,15 +55,18 @@ class StainType extends AbstractType
                     );
 
                     $counter = 0;
+                    $key = 0;
                     foreach( $arr as $var ){
                         //echo "<br>".$var."?".$name;
                         if( trim( $var ) == trim( $name ) ){
                             $key = $counter;
                             //echo " key=".$key;
-                            $param['data'] = $key;
+                            //$param['data'] = $key;
+                            break;
                         }
                         $counter++;
                     }
+                    $param['data'] = $key;
 
                      $form->add(
                          $factory->createNamed(

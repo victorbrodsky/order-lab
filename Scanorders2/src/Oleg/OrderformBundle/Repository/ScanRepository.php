@@ -32,9 +32,12 @@ class ScanRepository extends EntityRepository
             $in_entity->setMag( $mags[$key] );
         }
 
-        //exit();
+        //create new
+        $em = $this->_em;
+        $em->persist($in_entity);
 
-        return;
+
+        return $in_entity;
     }
     
 }

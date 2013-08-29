@@ -22,6 +22,8 @@ use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
+use Oleg\OrderformBundle\Entity\Scan;
+use Oleg\OrderformBundle\Entity\Stain;
 
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Form\EducationalType;
@@ -140,7 +142,7 @@ class MultyScanOrderController extends Controller {
             //$entity->setEducational(null);
         }
 
-        $form = $this->createForm(new OrderInfoType($type), $entity);
+        $form = $this->createForm(new OrderInfoType($type, null, $entity ), $entity);
         $form->bind($request);
         //$form->handleRequest($request);
 
@@ -155,7 +157,7 @@ class MultyScanOrderController extends Controller {
 //        //$request  = $this->getRequest();
 //        $idrequest = $request->query->get('id');
 //        echo "idreq=".$idrequest."<br>";
-//        //exit();
+//        exit();
 //        if( $entity->getId() && $entity->getId() > 0 ) {
 //            $this->editAction( $entity->getId() );
 //            return;
@@ -255,8 +257,8 @@ class MultyScanOrderController extends Controller {
                                     if( !$slide->getId() ) {
                                         $block->removeSlide( $slide );
                                         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
-                                        $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
-                                        $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() ); 
+                                        //$em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
+                                        //$em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );
                                         
                                         //$accession->addSlide($slide);  
                                         //$part->addSlide($slide);  
@@ -265,6 +267,33 @@ class MultyScanOrderController extends Controller {
                                     } else {
                                         continue;
                                     }
+
+                                        //Scan
+                                        foreach( $slide->getScan() as $scan ) {
+                                            //echo "!!!!!!!!!!slide = ". $slide. "<br>";
+                                            if( !$scan->getId() ) {
+                                                $slide->removeScan( $scan );
+                                                $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
+                                                $slide->addScan($scan);
+                                                $entity->addScan($scan);
+                                            } else {
+                                                continue;
+                                            }
+                                        } //scan
+
+                                        //Stain
+                                        foreach( $slide->getStain() as $stain ) {
+                                            //echo "!!!!!!!!!!slide = ". $slide. "<br>";
+                                            if( !$stain->getId() ) {
+                                                $slide->removeStain( $stain );
+                                                $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
+                                                $slide->addStain($stain);
+                                                $entity->addStain($stain);
+                                            } else {
+                                                continue;
+                                            }
+                                        } //stain
+
                                 } //slide
 
                             } //block
@@ -362,6 +391,12 @@ class MultyScanOrderController extends Controller {
         $slide = new Slide();
         $block->addSlide($slide);
 
+        $scan = new Scan();
+        $slide->addScan($scan);
+
+        $stain = new Stain();
+        $slide->addStain($stain);
+
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -393,7 +428,7 @@ class MultyScanOrderController extends Controller {
 //        }
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType($type,$service), $entity );
+        $form   = $this->createForm( new OrderInfoType($type,$service, $entity), $entity );
         
         return array(          
             'form' => $form->createView(),

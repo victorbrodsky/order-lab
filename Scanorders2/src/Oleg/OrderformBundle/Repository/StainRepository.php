@@ -37,7 +37,11 @@ class StainRepository extends EntityRepository
 
         }
 
-        return;
+        //create new
+        $em = $this->_em;
+        $em->persist($in_entity);
+
+        return $in_entity;
     }
     
 }

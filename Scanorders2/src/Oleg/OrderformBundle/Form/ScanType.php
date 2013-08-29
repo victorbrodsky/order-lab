@@ -24,7 +24,7 @@ class ScanType extends AbstractType
                 'label' => 'Region to scan',
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
-        
+
         $builder->add( 'mag', 
                 'choice', array(  
                 'label' => 'Magnification:',
@@ -46,6 +46,7 @@ class ScanType extends AbstractType
         ));
 
 
+        //use listener or pass actual entity to each entity type
         $factory  = $builder->getFormFactory();
         $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
 
@@ -55,8 +56,9 @@ class ScanType extends AbstractType
                 //echo "class=".get_class($data)."<br>";
                 //echo "parent=".get_parent_class($data)."<br>";
 
-                //if( $data instanceof Stain ) {
-                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Scan' ) {
+//                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Scan' ) {
+                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Scan' || get_class($data) == 'Oleg\OrderformBundle\Entity\Scan' ) {
+
                     $name = $data->getMag();
                     //echo "name === ".$name;
 
@@ -79,15 +81,17 @@ class ScanType extends AbstractType
                         );
 
                     $counter = 0;
+                    $key = 0;
                     foreach( $arr as $var ){
                         //echo "<br>".$var."?".$name;
                         if( trim( $var ) == trim( $name ) ){
                             $key = $counter;
                             //echo " key=".$key;
-                            $param['data'] = $key;
+                            break;
                         }
                         $counter++;
                     }
+                    $param['data'] = $key;
 
                     $form->add(
                         $factory->createNamed(

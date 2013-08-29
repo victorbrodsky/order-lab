@@ -23,6 +23,10 @@ use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
+use Oleg\OrderformBundle\Entity\Scan;
+use Oleg\OrderformBundle\Form\ScanType;
+use Oleg\OrderformBundle\Entity\Stain;
+use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
@@ -223,7 +227,7 @@ class ScanOrderController extends Controller {
         
         //echo "scanorder createAction";
         $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType(), $entity);
+        $form = $this->createForm(new OrderInfoType(null, null, $entity), $entity);
         $form->bind($request);
               
         $patient = new Patient();      
@@ -249,6 +253,14 @@ class ScanOrderController extends Controller {
         $slide = new Slide();
         $form_slide = $this->createForm(new SlideType(), $slide);
         $form_slide->bind($request);
+
+        $scan = new Scan();
+        $form_scan = $this->createForm(new ScanType(), $scan);
+        $form_scan->bind($request);
+
+        $stain = new Stain();
+        $form_stain = $this->createForm(new StainType(), $stain);
+        $form_stain->bind($request);
         
         if(0) {
             $errorHelper = new ErrorHelper();
@@ -273,6 +285,13 @@ class ScanOrderController extends Controller {
             $errors = $errorHelper->getErrorMessages($form_slide);
             echo "<br>slide errors:<br>";
             print_r($errors);
+            $errors = $errorHelper->getErrorMessages($form_scan);
+            echo "<br>scan errors:<br>";
+            print_r($errors);
+            $errors = $errorHelper->getErrorMessages($form_stain);
+            echo "<br>stain errors:<br>";
+            print_r($errors);
+
         }
 //            
 //        echo "<br>stain type=".$slide->getStain()->getName()."<br>";
@@ -283,8 +302,10 @@ class ScanOrderController extends Controller {
             $form_procedure->isValid() &&
             $form_accession->isValid() &&
             $form_part->isValid() &&    
-            $form_block->isValid() //&&
-            //$form_slide->isValid()
+            $form_block->isValid() &&
+            $form_slide->isValid() &&
+            $form_scan->isValid() &&
+            $form_stain->isValid()
         ) {
             $em = $this->getDoctrine()->getManager();                            
                         
@@ -323,12 +344,20 @@ class ScanOrderController extends Controller {
             //$em->flush();
             
             $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
-            $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
-            $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );                        
+            //$em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
+            //$em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );
             //$accession->addSlide($slide); 
             //$part->addSlide($slide);
             $block->addSlide($slide);  
             $entity->addSlide($slide);
+
+            $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
+            $slide->addScan($scan);
+            $entity->addScan($scan);
+
+            $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
+            $slide->addStain($stain);
+            $entity->addStain($stain);
 
 //            echo $entity;
 //            echo $procedure;
@@ -360,7 +389,9 @@ class ScanOrderController extends Controller {
             'form_accession'   => $form_accession->createView(),
             'form_part'   => $form_part->createView(),
             'form_block'   => $form_block->createView(),
-            'form_slide'   => $form_slide->createView(),           
+            'form_slide'   => $form_slide->createView(),
+            'form_stain'   => $form_stain->createView(),
+            'form_scan'   => $form_scan->createView(),
         );
     }
     
@@ -394,7 +425,7 @@ class ScanOrderController extends Controller {
         //echo "service=".$service."<br>";
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType("multy",$service), $entity );
+        $form   = $this->createForm( new OrderInfoType("multy",$service, $entity), $entity );
 
         $patient = new Patient();      
         $form_patient   = $this->createForm(new PatientType(), $patient);
@@ -413,6 +444,12 @@ class ScanOrderController extends Controller {
         
         $slide = new Slide();      
         $form_slide   = $this->createForm(new SlideType(), $slide);
+
+        $scan = new Scan();
+        $form_scan   = $this->createForm(new ScanType(), $scan);
+
+        $stain = new Stain();
+        $form_stain   = $this->createForm(new StainType(), $stain);
         
         return array(          
             'form' => $form->createView(),
@@ -422,6 +459,8 @@ class ScanOrderController extends Controller {
             'form_part' => $form_part->createView(),
             'form_block' => $form_block->createView(),
             'form_slide' => $form_slide->createView(),
+            'form_scan' => $form_scan->createView(),
+            'form_stain' => $form_stain->createView(),
         );
     }
 
@@ -447,7 +486,7 @@ class ScanOrderController extends Controller {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         }
 
-        $showForm = $this->createForm(new OrderInfoType(), $entity, array('disabled' => true));
+        $showForm = $this->createForm(new OrderInfoType(null, null, $entity), $entity, array('disabled' => true));
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -479,7 +518,7 @@ class ScanOrderController extends Controller {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         }
 
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new OrderInfoType(null, null, $entity), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -512,7 +551,7 @@ class ScanOrderController extends Controller {
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrderInfoType(), $entity);
+        $editForm = $this->createForm(new OrderInfoType(null, null, $entity), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {

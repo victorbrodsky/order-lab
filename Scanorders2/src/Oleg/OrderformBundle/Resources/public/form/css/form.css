@@ -33,7 +33,8 @@
 
 /*sign in login*/
 .form-signin {
-    max-width: 330px;
+    max-width: 250px;
+    /*max-width: 100%;*/
     padding: 15px;
     margin: 0 auto;
 }
@@ -166,6 +167,7 @@
     color: #ffffff;
     background-color: #90BEE4;
     border-color: #90BEE4;
+    border-top-left-radius: 0px;
 }
 
 .panel-procedure {
@@ -175,6 +177,7 @@
     color: #ffffff;
     background-color: #71B0E4;
     border-color: #71B0E4;
+    border-top-left-radius: 0px;
 }
 
 .panel-accession {
@@ -184,6 +187,7 @@
     color: #ffffff;
     background-color: #3F98C8;
     border-color: #3F98C8;
+    border-top-left-radius: 0px;
 }
 
 .panel-part {
@@ -193,6 +197,7 @@
     color: #ffffff;
     background-color: #428CCA;
     border-color: #428CCA;
+    border-top-left-radius: 0px;
 }
 
 .panel-block {
@@ -202,6 +207,7 @@
     color: #ffffff;
     background-color: #1268B3;
     border-color: #1268B3;
+    border-top-left-radius: 0px;
 }
 
 .panel-slide {
@@ -211,6 +217,27 @@
     color: #ffffff;
     background-color: #155183;
     border-color: #155183;
+    border-top-left-radius: 0px;
+}
+
+.panel-stain {
+    border-color: #155183; //35478C
+}
+.panel-stain .panel-heading {
+    color: #ffffff;
+    background-color: #155183;
+    border-color: #155183;
+    border-top-left-radius: 0px;
+}
+
+.panel-scan {
+    border-color: #FF9933; //35478C
+}
+.panel-scan .panel-heading {
+    color: #ffffff;
+    background-color: #FF9933;
+    border-color: #FF9933;
+    border-top-left-radius: 0px;
 }
 
 /*shift left the buttons on the each form menu*/

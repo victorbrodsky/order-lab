@@ -37,7 +37,8 @@ class PatientRepository extends EntityRepository
             //exit();
 
             $mrnIndexArr = explode("-",$lastMrnStr);
-            if( count($mrnIndexArr) > 0 ) {
+            //echo "count=".count($mrnIndexArr)."<br>";
+            if( count($mrnIndexArr) > 1 ) {
                 $mrnIndex = $mrnIndexArr[1];
             } else {
                 $mrnIndex = 0;
@@ -47,6 +48,9 @@ class PatientRepository extends EntityRepository
             $mrnIndex = ltrim($mrnIndex,'0') + 1;
 
             $paddedmrn = str_pad($mrnIndex,10,'0',STR_PAD_LEFT);
+
+            //echo "paddedmrn=".$paddedmrn."<br>";
+            //exit();
 
             $in_entity->setMrn('NOMRNPROVIDED-'.$paddedmrn);
 

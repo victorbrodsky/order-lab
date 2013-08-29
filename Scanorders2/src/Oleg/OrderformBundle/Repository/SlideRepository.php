@@ -11,7 +11,10 @@ class SlideRepository extends EntityRepository {
     //Make new - no requirements for uniqueness.
     public function processEntity( $entity ) {
           
-        $entity->getScan()->setStatus("submitted");
+        //$entity->getScan()->setStatus("submitted");
+        foreach( $entity->getScan()  as $scan ) {
+            $scan->setStatus("submitted");
+        }
 
         //create new           
         $em = $this->_em;

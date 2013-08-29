@@ -62,84 +62,34 @@
 
 {% endmacro %}
 
-{% macro orderinfo1(form) %}
-    <div  class="panel panel-patient">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h4>Scan Order Info</h4>
-                </div>
-            </div>
+
+{% macro orderinfo_panel_header(name, type, count, toatlLength, uid, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount) %}
+
+<div class="panel-heading" align="left">
+    <div id="form_body_toggle_{{ name }}_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}"></div>
+    {{ name | capitalize }} {{ count+1 }}
+    {% if name != "scan" and name != "stain" %}
+    {% if type == 'new' or type == 'edit' %}
+        <div class="form-btn-options">
+            {% if toatlLength ==  (count + 1) %}
+                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button" class="btn btn-xs btn_margin"
+                        onclick="addSameForm(
+                            '{{ name }}',
+                            {{ patientCount }},
+                            {{ procedureCount }},
+                            {{ accessionCount }},
+                            {{ partCount }},
+                            {{ blockCount }},
+                            {{ slideCount }},
+                            {{ scanCount }},
+                            {{ stainCount }}
+                        )">Add</button>
+            {% endif %}
+            <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>
         </div>
-        <div class="panel-body collapse in">
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{ form_label(form.provider) }}
-                </div>
-                <div class="col-xs-6" align="left">
-                    {{ form_widget(form.provider) }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{ form_label(form.pathologyService) }}
-                </div>
-                <div class="col-xs-6" align="left">
-                    {{ form_widget(form.pathologyService) }}
-                </div>
-            </div>
+    {% endif %}
+    {% endif %}
+</div>
 
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{ form_label(form.priority) }}
-                </div>
-                <div class="col-xs-6" align="left">
-                    {{ form_widget(form.priority) }}
-                </div>
-            </div>
-            {#            optional for priority#}
-            <div id="priority_option" class="collapse">
-                {#            <div class="oleg_padding_top_bottom text-info">#}
-                <div class="well">
-
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            {{ form_label(form.scandeadline) }}
-                        </div>
-                        <div class="col-xs-6" align="left">
-                            {{ form_widget(form.scandeadline) }}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            {{ form_label(form.returnoption) }}
-                        </div>
-                        <div class="col-xs-6" align="left">
-                            {{ form_widget(form.returnoption) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{ form_label(form.slideDelivery) }}
-                </div>
-                <div class="col-xs-6" align="left">
-                    {{ form_widget(form.slideDelivery) }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{ form_label(form.returnSlide) }}
-                </div>
-                <div class="col-xs-6" align="left">
-                    {{ form_widget(form.returnSlide) }}
-                </div>
-            </div>
-
-        </div>
-    </div>
 {% endmacro %}
                  

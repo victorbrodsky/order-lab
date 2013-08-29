@@ -24,11 +24,17 @@
     
 <form class="form-signin" action="{{ path('login_check') }}" method="post">
 
+<div class="row">
+<div class="col-xs-12">
+
     <p>
     <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
 
     <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
     </p>
+
+</div>
+</div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 

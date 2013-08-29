@@ -17,7 +17,8 @@
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
-                     
+    {{ form_start(form) }}
+
         {{ form_errors(form) }} 
         {{ form_errors(form_patient) }}
         {{ form_errors(form_procedure) }}
@@ -25,6 +26,8 @@
         {{ form_errors(form_part) }}
         {{ form_errors(form_block) }}
         {{ form_errors(form_slide) }}
+        {{ form_errors(form_scan) }}
+        {{ form_errors(form_stain) }}
 
 
         <div  class="panel panel-patient">
@@ -46,13 +49,13 @@
                     </div>
                 </div>
 
-                {{ formmacros.field(form_slide.stain.name) }}
+                {{ formmacros.field(form_stain.name) }}
 
-                {{ formmacros.field(form_slide.scan.mag) }}
+                {{ formmacros.field(form_scan.mag) }}
 
                 {{ formmacros.field(form_part.diagnosis) }}
 
-                {{ formmacros.field(form_slide.scan.note) }}
+                {{ formmacros.field(form_scan.note) }}
 
             </div>
         </div>
@@ -121,10 +124,10 @@
               </div>
 
 {#              <div class="tab-pane" id="block"> {{ form_rest(form_block) }}</div>           #}
-{#              <div class="tab-pane" id="stain"> {{ form_rest(form_slide.stain) }} </div>#}
+{#              <div class="tab-pane" id="stain"> {{ form_rest(form_stain) }} </div>#}
 
               {#<div class="tab-pane" id="scan">#}
-                  {#{{ formmacros.field(form_slide.scan.scanregion) }}#}
+                  {#{{ formmacros.field(form_scan.scanregion) }}#}
               {#</div>#}
 
               <div class="tab-pane" id="slide">
@@ -135,7 +138,7 @@
               </div>
 
                 <div class="tab-pane" id="scan">
-                    {{ formmacros.field(form_slide.scan.scanregion) }}
+                    {{ formmacros.field(form_scan.scanregion) }}
                 </div>
 
             </div>
@@ -151,11 +154,14 @@
             {{ form_rest(form_part) }}
             {{ form_rest(form_block) }}
             {{ form_rest(form_slide) }}
+            {{ form_rest(form_scan) }}
+            {{ form_rest(form_stain) }}
             
         </div>     
        </div>      
 {#        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>#}
-           
+
+    {{ form_end(form) }}
     </form>
     
 {% endblock %} 

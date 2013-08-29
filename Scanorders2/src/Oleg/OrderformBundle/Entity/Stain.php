@@ -2,7 +2,7 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
-//use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,12 +35,22 @@ class Stain
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $date;
-    
+
     /**
-     * @ORM\OneToOne(targetEntity="Slide", inversedBy="stain", cascade={"persist"})
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")   
+     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="stain")
+     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
      */
-    //protected $slide;
+    protected $slide;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="stain")
+     **/
+    protected $orderinfo;
+
+    public function __construct()
+    {
+        $this->orderinfo = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -121,30 +131,62 @@ class Stain
         return $this->date;
     }
 
+
     /**
      * Set slide
      *
      * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return Stain
      */
-//    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
-//    {
-//        $this->slide = $slide;
-//    
-//        return $this;
-//    }
+    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
+    {
+        $this->slide = $slide;
+    
+        return $this;
+    }
 
     /**
      * Get slide
      *
      * @return \Oleg\OrderformBundle\Entity\Slide 
      */
-//    public function getSlide()
-//    {
-//        return $this->slide;
-//    }
-//    
-//    public function __toString() {
-//        return $this->name;
-//    }
+    public function getSlide()
+    {
+        return $this->slide;
+    }
+
+    /**
+     * Add orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     * @return Stain
+     */
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove orderinfo
+     *
+     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+     */
+    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    {
+        $this->orderinfo->removeElement($orderinfo);
+    }
+
+    /**
+     * Get orderinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
 }

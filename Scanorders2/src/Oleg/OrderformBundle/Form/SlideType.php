@@ -11,17 +11,31 @@ class SlideType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {      
-        $builder->add( 'id', 'hidden' );       
+        $builder->add( 'id', 'hidden' );
         
-        //$builder->add( 'accession', new AccessionType(), array('label'=>' ') );
+        //$builder->add( 'stain', new StainType(), array('label'=>'Stain:') ); \
+        $builder->add('stain', 'collection', array(
+            'type' => new StainType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__stain__',
+        ));
         
-        //$builder->add( 'part', new PartType(), array('label'=>' ') );
-        
-        //$builder->add( 'block', new BlockType(), array('label'=>' ') );             
-        
-        $builder->add( 'stain', new StainType(), array('label'=>'Stain:') ); 
-        
-        $builder->add( 'scan', new ScanType(), array('label'=>'Scan:') ); 
+//        $builder->add( 'scan', new ScanType(), array('label'=>'Scan:') );
+        $builder->add('scan', 'collection', array(
+            'type' => new ScanType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__scan__',
+        ));
                     
         $builder->add('diagnosis', 'textarea', array(
                 'max_length'=>10000,

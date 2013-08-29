@@ -96,9 +96,9 @@ function deleteItem(id) {
     return false;
 }
 
-function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid;
+    var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;
 
     //alert("addSameForm="+uid);
 
@@ -107,7 +107,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //prepare form ids and pass it as array
     //increment by 1 current object id
-    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid);
+    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid);
     var id = btnids['id'];
     var idsorig = btnids['orig'];
     var ids = btnids['ids'];
@@ -120,14 +120,21 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindDeleteBtn( name + '_' + ids.join("_") );
 
     //create children nested forms
-    var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide'];
+    var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
     var length = nameArray.length
     var index = nameArray.indexOf(name);
     //console.log("index="+index+" len="+length);
     var parentName = name;
     for (var i = index+1; i < length; i++) {
         //console.log("=> name="+nameArray[i]);
-        addChildForms( parentName, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid );
+
+        if( nameArray[i] == 'stain_scan' ) {
+            addChildForms( parentName, 'stain', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, 'scan', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+        } else {
+            addChildForms( parentName, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+        }
+
     }
 
     //remove previous form add button only for parent object
@@ -139,11 +146,11 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     init();
 }
 
-function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
     //idsu: +1 for the parent object (parentName)
     //attach to previous object (prevName)
-    var btnids = getIds( parentName, patientid, procedureid, accessionid, partid, blockid, slideid );
+    var btnids = getIds( parentName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
     var idsorig = btnids['orig'];
     var ids = btnids['ids'];
     var idsm = btnids['idsm'];
@@ -153,7 +160,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 
     var uid = prevName+"_"+idsu;
     var holder = "#form_body_"+uid;
-    //console.log(name+": add childs to="+holder+" uid="+idsu);
+    console.log(name+": add childs to="+holder+" uid="+idsu);
 
     $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );
     bindToggleBtn( name + '_' + ids.join("_") );
@@ -166,19 +173,30 @@ function getForm( name, id, idsorig, ids, idsm ) {
     //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
 
     //increment by 1 current object id
-    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5] );
+    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
 
     var idsu = ids.join("_");
     var idsc = ids.join(",");
+
+    if( name == "scan" || name == "stain" ) {
+        var addbtn = "";
+        var deletebtn = "";
+        var itemCount = (id+2);
+    } else {
+        var addbtn = '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>';
+        var deletebtn = ' <button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>';
+        var itemCount = (id+1);
+    }
+
 
     var formhtml =
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
             '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
-            '&nbsp;' + capitaliseFirstLetter(name) + ' ' + (id+1) +
+            '&nbsp;' + capitaliseFirstLetter(name) + ' ' + itemCount +
             '<div class="form-btn-options">' +
-            '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>' +
-            ' <button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>' +
+            addbtn +
+            deletebtn +
             '</div>' +
             '</div>' +
             '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' + formbody + '</div>' +
@@ -187,7 +205,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
     return formhtml;
 }
 
-function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
 //    var collectionHolder =  $('#'+name+'-data');
     var collectionHolder =  $('#patient-data');
@@ -201,8 +219,10 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     newForm = newForm.replace(/__part__/g, partid);
     newForm = newForm.replace(/__block__/g, blockid);
     newForm = newForm.replace(/__slide__/g, slideid);
+    newForm = newForm.replace(/__scan__/g, scanid);
+    newForm = newForm.replace(/__stain__/g, stainid);
 
-    console.log("prot name= "+name+", form="+newForm);
+    //console.log("prot name= "+name+", form="+newForm);
 
     return newForm;
 }
@@ -213,7 +233,7 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getIds( name, patientid, procedureid, accessionid, partid, blockid, slideid ) {
+function getIds( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
     var id = 0;
     var nextName = "";
 
@@ -223,8 +243,10 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
     var partidm = partid;
     var blockidm = blockid;
     var slideidm = slideid;
+    var scaniddm = scanid;
+    var stainidm = stainid;
 
-    var orig = [patientid, procedureid, accessionid, partid, blockid, slideid];
+    var orig = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
 
     switch(name)
     {
@@ -264,12 +286,24 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = slideid;
             nextName = "";
             break;
+        case "scan":
+            scaniddm = scanid-1;
+            scanid++;
+            id = scanid;
+            nextName = "";
+            break;
+        case "stain":
+            stainidm = stainid-1;
+            stainid++;
+            id = stainid;
+            nextName = "";
+            break;
         default:
             id = 0;
     }
 
-    var idsArray = [patientid, procedureid, accessionid, partid, blockid, slideid];
-    var idsArrayM = [patientidm, procedureidm, accessionidm, partidm, blockidm, slideidm];
+    var idsArray = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
+    var idsArrayM = [patientidm, procedureidm, accessionidm, partidm, blockidm, slideidm, scaniddm, stainidm];
 
     var res_array = {
         'id' : id,

@@ -589,8 +589,7 @@ Wrist	");
     }
     
     public function getPathologyService() {              
-        $arr = array( 
-                
+        $arr = array(
             "Accessioning","
 Autopsy","
 Breast Pathology","

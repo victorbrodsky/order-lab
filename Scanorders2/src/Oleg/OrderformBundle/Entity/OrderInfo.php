@@ -174,6 +174,18 @@ class OrderInfo
      * @ORM\JoinTable(name="slide_orderinfo")
      **/
     protected $slide;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Scan", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="scan_orderinfo")
+     **/
+    protected $scan;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Stain", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="stain_orderinfo")
+     **/
+    protected $stain;
     
     /**
      * Constructor
@@ -181,13 +193,13 @@ class OrderInfo
     public function __construct()
     {
         $this->patient = new ArrayCollection();
-        $this->slide = new ArrayCollection();
-        
         $this->specimen = new ArrayCollection();
         $this->accession = new ArrayCollection();
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
-        //$this->slides = new ArrayCollection();
+        $this->slide = new ArrayCollection();
+        $this->scan = new ArrayCollection();
+        $this->stain = new ArrayCollection();
     }
     
     /**
@@ -199,6 +211,11 @@ class OrderInfo
     {
         return $this->id;
     }
+
+//    public function setId($id)
+//    {
+//        return $id;
+//    }
 
     /**
     * @ORM\PrePersist
@@ -417,10 +434,6 @@ class OrderInfo
      */
     public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-//        $slide->addOrderinfo($this);
-//        $this->slide[] = $slide;
-//    
-//        return $this;     
         if( !$this->slide->contains($slide) ) {            
             $this->slide->add($slide);
         }    
@@ -628,25 +641,75 @@ class OrderInfo
         return $this->block;
     }
 
+    
+
     /**
-     * Get slides
+     * Add scan
+     *
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     * @return OrderInfo
+     */
+    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+    {
+        if( !$this->scan->contains($scan) ) {
+            $this->scan->add($scan);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove scan
+     *
+     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+     */
+    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+    {
+        $this->scan->removeElement($scan);
+    }
+
+    /**
+     * Get scan
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-//    public function getSlides()
-//    {
-//        return $this->slides;
-//    }
-//    
-//    public function addSlides(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {      
-//        if( !$this->slides->contains($slide) ) {            
-//            $this->slides->add($slide);
-//        }  
-//    }
-//    
-//    public function removeSlides(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        $this->slides->removeElement($slide);
-//    }
+    public function getScan()
+    {
+        return $this->scan;
+    }
+
+    /**
+     * Add stain
+     *
+     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     * @return OrderInfo
+     */
+    public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    {
+        if( !$this->stain->contains($stain) ) {
+            $this->stain->add($stain);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove stain
+     *
+     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     */
+    public function removeStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    {
+        $this->stain->removeElement($stain);
+    }
+
+    /**
+     * Get stain
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStain()
+    {
+        return $this->stain;
+    }
 }

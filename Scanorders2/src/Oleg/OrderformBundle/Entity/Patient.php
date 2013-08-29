@@ -26,8 +26,7 @@ class Patient
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=100, unique=true)   
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $mrn;   
     

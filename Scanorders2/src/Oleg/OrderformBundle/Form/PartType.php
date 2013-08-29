@@ -124,15 +124,18 @@ class PartType extends AbstractType
                     );
 
                     $counter = 0;
+                    $key = 0;
                     foreach( $arr as $var ){
                         //echo "<br>".$var."?".$name;
                         if( trim( $var ) == trim( $name ) ){
                             $key = $counter;
                             //echo " key=".$key;
-                            $param['data'] = $key;
+                            //$param['data'] = $key;
+                            break;
                         }
                         $counter++;
                     }
+                    $param['data'] = $key;
 
                     // field name, field type, data, options
                     $form->add(
@@ -157,11 +160,10 @@ class PartType extends AbstractType
 
                     $counter = 0;
                     foreach( $sourceArr as $var ){
-                        //echo "<br>".$var."?".$name;
                         if( trim( $var ) == trim( $source ) ){
                             $key = $counter;
-                            //echo " key=".$key;
                             $sourceparam['data'] = $key;
+                            break;
                         }
                         $counter++;
                     }
