@@ -74,7 +74,7 @@ class OrderInfoType extends AbstractType
             'max_length'=>200,
             'choices' => $pathServices,
             'required'=>false,
-            'attr' => array('class' => 'combobox', 'style' => 'min-width:345px'),
+            'attr' => array('class' => 'combobox combobox-width'),
         );
 
         if( $this->entity->getPathologyService() && $this->entity->getPathologyService() != "" ) { //show, edit
@@ -114,7 +114,7 @@ class OrderInfoType extends AbstractType
                 'choices' => $helper->getSlideDelivery(),
                 'required'=>true,
                 'data' => 0,     
-                'attr' => array('class' => 'combobox', 'style' => 'min-width:345px', 'required' => 'required')
+                'attr' => array('class' => 'combobox combobox-width', 'required' => 'required')
         ));
                 
         $builder->add( 'returnSlide', 
@@ -124,7 +124,7 @@ class OrderInfoType extends AbstractType
                 'choices' => $helper->getReturnSlide(),
                 'required'=>true,
                 'data' => 0,    //'Filing Room',
-                'attr' => array('class' => 'combobox', 'style' => 'min-width:345px', 'required' => 'required')
+                'attr' => array('class' => 'combobox combobox-width', 'required' => 'required')
         ));
 
         $scandeadline = date_modify(new \DateTime(), '+2 week');
@@ -181,7 +181,7 @@ class OrderInfoType extends AbstractType
                         'max_length'=>200,
                         'choices' => $deliveryArr,
                         'required'=>true,
-                        'attr' => array('class' => 'combobox', 'required' => 'required', 'style' => 'min-width:345px'),
+                        'attr' => array('class' => 'combobox combobox-width', 'required' => 'required'),
                         'auto_initialize' => false,
                     );
 
@@ -213,7 +213,7 @@ class OrderInfoType extends AbstractType
                         'max_length'=>200,
                         'choices' => $helper->getReturnSlide(),
                         'required'=>true,
-                        'attr' => array('class' => 'combobox', 'required' => 'required', 'style' => 'min-width:345px'),
+                        'attr' => array('class' => 'combobox combobox-width', 'required' => 'required'),
                         'auto_initialize' => false,
                     );
 

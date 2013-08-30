@@ -41,10 +41,20 @@ class Part
     // optional fields
     //*********************************************//     
     
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=100)
+//     */
+//    protected $sourceOrgan;
+//    /**
+//     * @ORM\OneToOne(targetEntity="OrganList", cascade={"persist"})
+//     * @ORM\JoinColumn(name="organ_id", referencedColumnName="id")
+//     **/
+//    private $sourceOrgan;
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)   
+     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="part", cascade={"persist"})
+     * @ORM\JoinColumn(name="organlist_id", referencedColumnName="id", nullable=true)
      */
-    protected $sourceOrgan;   
+    protected $sourceOrgan;
     
     /**
      * @ORM\Column(type="string", nullable=true, length=10000)

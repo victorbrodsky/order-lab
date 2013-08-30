@@ -64,10 +64,11 @@
 
     <div class="container page-content">
 
+
         <div class="header">
 
             {% block header %}
-    {#                <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+                {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
                 {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
             {% endblock %}
 
@@ -93,7 +94,7 @@
                 <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
             {% endblock %}
         </div>
- 
+
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/*'
             '@OlegOrderformBundle/Resources/public/bootstrap/js/*'

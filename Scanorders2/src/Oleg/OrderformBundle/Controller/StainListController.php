@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Form\StainListType;
+use Oleg\OrderformBundle\Helper\FormHelper;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * StainList controller.
@@ -44,11 +46,17 @@ class StainListController extends Controller
      */
     public function createAction(Request $request)
     {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $entity = new StainList();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -71,6 +79,10 @@ class StainListController extends Controller
     */
     private function createCreateForm(StainList $entity)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $form = $this->createForm(new StainListType(), $entity, array(
             'action' => $this->generateUrl('stainlist_create'),
             'method' => 'POST',
@@ -90,6 +102,10 @@ class StainListController extends Controller
      */
     public function newAction()
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $entity = new StainList();
         $form   = $this->createCreateForm($entity);
 
@@ -102,7 +118,7 @@ class StainListController extends Controller
     /**
      * Finds and displays a StainList entity.
      *
-     * @Route("/{id}", name="stainlist_show")
+     * @Route("/{id}", name="stainlist_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -133,6 +149,10 @@ class StainListController extends Controller
      */
     public function editAction($id)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:StainList')->find($id);
@@ -143,9 +163,11 @@ class StainListController extends Controller
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
+//        $form = $this->createForm(new StainListType(), $entity);
 
         return array(
             'entity'      => $entity,
+//            'form' => $form,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -178,6 +200,10 @@ class StainListController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:StainList')->find($id);
@@ -191,9 +217,10 @@ class StainListController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+
             $em->flush();
 
-            return $this->redirect($this->generateUrl('stainlist_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('stainlist', array('id' => $id)));
         }
 
         return array(
@@ -210,6 +237,10 @@ class StainListController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -244,4 +275,48 @@ class StainListController extends Controller
             ->getForm()
         ;
     }
+
+
+//    /**
+//     * Populate DB
+//     *
+//     * @Route("/generate", name="generate_new")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function generateAction()
+//    {
+//
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+//
+//        $helper = new FormHelper();
+//        $stains = $helper->getStains();
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $count = 0;
+//        foreach( $stains as $stain ) {
+//            $stainList = new StainList();
+//            $stainList->setCreator( $username );
+//            $stainList->setCreatedate( new \DateTime() );
+//            $stainList->setName( $stain );
+//            $stainList->setType('original');
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($stainList);
+//            $em->flush();
+//            $count++;
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    'Created '.$count. ' stain records'
+//                );
+//
+//        return $this->redirect($this->generateUrl('stainlist'));
+//
+//    }
+
 }

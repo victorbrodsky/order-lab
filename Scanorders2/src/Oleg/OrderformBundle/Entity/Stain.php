@@ -20,11 +20,24 @@ class Stain
      */
     protected $id;
 
+//    /**
+//     * @ORM\Column(type="string", length=200)
+//     * @Assert\NotBlank
+//     */
+//    protected $name;
+
+//    /**
+//     * @ORM\OneToOne(targetEntity="StainList", cascade={"persist"})
+//     * @ORM\JoinColumn(name="stain_id", referencedColumnName="id")
+//     **/
+//    private $name;
+
     /**
-     * @ORM\Column(type="string", length=200)
-     * @Assert\NotBlank
+     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="stain", cascade={"persist"})
+     * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
      */
     protected $name;
+
     
     /**
      * @ORM\Column(type="string", nullable=true, length=200)

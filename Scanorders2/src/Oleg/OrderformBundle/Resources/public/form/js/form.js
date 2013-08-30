@@ -10,6 +10,7 @@ $(document).ready(function() {
 
     init();
 
+    //hide buttons
     $("#orderinfo").hide();
 
     $("#optional_button").hide();
@@ -80,8 +81,11 @@ function init() {
 
     //$('.combobox').combobox();
 
+    //resolve
     $(".combobox").select2({
-        width: 'resolve'
+        width: 'element',
+        dropdownAutoWidth: true,
+        //containerCssClass: 'combobox-width'
     });
 
 }

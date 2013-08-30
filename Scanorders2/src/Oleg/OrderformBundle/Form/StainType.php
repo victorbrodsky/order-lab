@@ -16,70 +16,79 @@ class StainType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $helper = new FormHelper();
+//        $builder->add('name', 'choice', array(
+//            'choices' => $this->stains, //$helper->getStains(),
+//            'data' => 0,
+//            'max_length' => 200,
+//            'required' => true,
+//            'label' => '* Stain:',
+//            'attr' => array('class' => 'combobox combobox-width', 'required' => 'required', 'disabled')
+////            'attr' => array('class'=>'select2combo','required' => 'required')
+//        ));
 
-        $helper = new FormHelper();
-        $builder->add('name', 'choice', array(
-            'choices' => $helper->getStains(),
-            'data' => 0,
-            'max_length' => 200,
-            'required' => true,
+        $builder->add('name', null, array(
             'label' => '* Stain:',
-            'attr' => array('class' => 'combobox', 'required' => 'required', 'disabled')
-//            'attr' => array('class'=>'select2combo','required' => 'required')
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width')
         ));
+
 
         $factory  = $builder->getFormFactory();
         $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
 
-                $form = $event->getForm();
-                $data = $event->getData();
+            $form = $event->getForm();
+            $data = $event->getData();
 
-                //echo "class=".get_class($data)."<br>";
-                //echo "parent=".get_parent_class($data)."<br>";
+//            echo "class=".get_class($data)."<br>";
+//            echo "parent=".get_parent_class($data)."<br>";
 
-                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Stain' || get_class($data) == 'Oleg\OrderformBundle\Entity\Stain' ) {
-                    $name = $data->getName();
-                    //echo "name === ".$name;
+            if(0) {
+            //if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Stain' || get_class($data) == 'Oleg\OrderformBundle\Entity\Stain' ) {
 
-                    $helper = new FormHelper();
-                    $arr = $helper->getStains();
+                $name = $data->getName();
+                //echo "name === ".$name;
 
-                    $param = array(
-                        'choices' => $arr,
-                        'max_length' => 200,
-                        'required' => true,
-                        'label' => '* Stain:',
-                        'attr' => array('class' => 'combobox', 'required' => 'required', 'disabled' ),
+                $helper = new FormHelper();
+                $arr = $helper->getStains();
+                //echo "stain count = " . count($arr);
+                //exit;
+
+                $param = array(
+                    'choices' => $arr,
+                    'max_length' => 200,
+                    'required' => true,
+                    'label' => '* Stain:',
+                    'attr' => array('class' => 'combobox combobox-width', 'required' => 'required', 'disabled' ),
 //                        'attr' => array('required' => 'required'),
-                        'auto_initialize' => false,
-                    );
+                    'auto_initialize' => false,
+                );
 
-                    $counter = 0;
-                    $key = 0;
-                    foreach( $arr as $var ){
-                        //echo "<br>".$var."?".$name;
-                        if( trim( $var ) == trim( $name ) ){
-                            $key = $counter;
-                            //echo " key=".$key;
-                            //$param['data'] = $key;
-                            break;
-                        }
-                        $counter++;
+                $counter = 0;
+                $key = 0;
+                foreach( $arr as $var ){
+                    //echo "<br>".$var."?".$name;
+                    if( trim( $var ) == trim( $name ) ){
+                        $key = $counter;
+                        //echo " key=".$key;
+                        //$param['data'] = $key;
+                        break;
                     }
-                    $param['data'] = $key;
-
-                     $form->add(
-                         $factory->createNamed(
-                            'name',
-                            'choice',
-                            null,
-                            $param
-                     ));
-
+                    $counter++;
                 }
+                $param['data'] = $key;
+
+                 $form->add(
+                     $factory->createNamed(
+                        'name',
+                        'choice',
+                        null,
+                        $param
+                 ));
 
             }
-        );
+
+        });
 
         
 //        $builder->add('stainer', 'text', array(

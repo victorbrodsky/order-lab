@@ -69,7 +69,7 @@ class UserRequestType extends AbstractType
             'max_length'=>200,
             'choices' => $helper->getPathologyService(),
             'required'=>false,
-            'attr' => array('class' => 'combobox'),
+            'attr' => array('class' => 'combobox combobox-width'),
         ));
         
         $builder->add('request', 'textarea', array(

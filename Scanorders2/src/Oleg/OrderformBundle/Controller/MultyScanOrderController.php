@@ -428,7 +428,7 @@ class MultyScanOrderController extends Controller {
 //        }
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType($type,$service, $entity), $entity );
+        $form   = $this->createForm( new OrderInfoType(true, $service, $entity), $entity );
         
         return array(          
             'form' => $form->createView(),

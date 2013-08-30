@@ -17,7 +17,8 @@ class StainRepository extends EntityRepository
     
     //Make changes: 0 to H&E.
     public function processEntity( $in_entity ) { 
-        
+
+    if(0) {
         $helper = new FormHelper();
 
         $stains = $helper->getStains();
@@ -36,6 +37,7 @@ class StainRepository extends EntityRepository
 //            }
 
         }
+     }
 
         //create new
         $em = $this->_em;

@@ -52,15 +52,19 @@ class PartType extends AbstractType
 //                'max_length'=>'100', 
 //                'required'=>false
 //        ));
-        $builder->add( 'sourceOrgan', 
-                'choice', array(  
-                'label'=>'Source Organ:',
-                'max_length'=>'100',
-                'choices' => $helper->getSourceOrgan(),
-                'required'=>false,
-                'attr' => array('class' => 'combobox', 'style' => 'width:345px'),
-//                'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
-                //'data' => 0,              
+//        $builder->add( 'sourceOrgan',
+//                'choice', array(
+//                'label'=>'Source Organ:',
+//                'max_length'=>'100',
+//                'choices' => $helper->getSourceOrgan(),
+//                'required'=>false,
+//                'attr' => array('class' => 'combobox combobox-width'), // 'style' => 'width:345px'),
+////                'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
+//                //'data' => 0,
+//        ));
+        $builder->add('sourceOrgan', null, array(
+            'label' => 'Source Organ:',
+            'attr' => array('class' => 'combobox combobox-width')
         ));
         
         $builder->add( 'description', 'textarea', array(
@@ -147,35 +151,35 @@ class PartType extends AbstractType
                         ));
 
 
-                    //source Oragn
-                    $sourceparam = array(
-                        'choices' => $sourceArr,
-                        'label'=>'Source Organ:',
-                        'max_length'=>'100',
-                        'choices' => $helper->getSourceOrgan(),
-                        'required'=>false,
-                        'attr' => array('class' => 'combobox', 'style' => 'width:345px'),
-                        'auto_initialize' => false,
-                    );
-
-                    $counter = 0;
-                    foreach( $sourceArr as $var ){
-                        if( trim( $var ) == trim( $source ) ){
-                            $key = $counter;
-                            $sourceparam['data'] = $key;
-                            break;
-                        }
-                        $counter++;
-                    }
-
-                    // field name, field type, data, options
-                    $form->add(
-                        $factory->createNamed(
-                            'sourceOrgan',
-                            'choice',
-                            null,
-                            $sourceparam
-                        ));
+//                    //source Oragn
+//                    $sourceparam = array(
+//                        'choices' => $sourceArr,
+//                        'label'=>'Source Organ:',
+//                        'max_length'=>'100',
+//                        'choices' => $helper->getSourceOrgan(),
+//                        'required'=>false,
+//                        'attr' => array('class' => 'combobox combobox-width'), // 'style' => 'width:345px'),
+//                        'auto_initialize' => false,
+//                    );
+//
+//                    $counter = 0;
+//                    foreach( $sourceArr as $var ){
+//                        if( trim( $var ) == trim( $source ) ){
+//                            $key = $counter;
+//                            $sourceparam['data'] = $key;
+//                            break;
+//                        }
+//                        $counter++;
+//                    }
+//
+//                    // field name, field type, data, options
+//                    $form->add(
+//                        $factory->createNamed(
+//                            'sourceOrgan',
+//                            'choice',
+//                            null,
+//                            $sourceparam
+//                        ));
 
                 }
 

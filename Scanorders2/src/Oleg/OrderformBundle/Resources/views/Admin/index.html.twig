@@ -1,0 +1,39 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h3 class="text-info">Admin Manager</h3>
+
+    <br>
+
+    <h3 class="text-info">Stains</h3>
+    <p>
+    <a href="{{ path('stainlist') }}">List Stains</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_stain') }}">Generate Stains</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Organs</h3>
+    <p>
+    <a href="{{ path('stainlist') }}">List  Organs</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_organ') }}">Generate Organss</a>
+    </p>
+
+
+    <br>
+
+    <h3 class="text-info">Procedures</h3>
+    <p>
+        <a href="{{ path('procedurelist') }}">List  Procedures</a>
+    </p>
+    <p>
+        <a href="{{ path('generate_procedure') }}">Generate Procedures</a>
+    </p>
+
+{% endblock %}
+

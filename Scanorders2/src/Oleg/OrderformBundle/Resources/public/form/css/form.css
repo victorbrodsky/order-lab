@@ -12,7 +12,7 @@
 }
 
 .flash-notice {
-  color: #0081c2;
+  color: #FF6600;   //#0081c2;
   font-size: 200%;
   margin-top: 3%;
 }
@@ -71,7 +71,7 @@
 .form-control-modif {
     display: inline;
     height: 30px;
-    width: 200px;
+    width: 50%;
 }
 
 .header {
@@ -245,6 +245,15 @@
     float:right;
     /*width: 20%;*/
 }
+
+.safary-fix {
+    overflow: hidden;
+}
+
+.combobox-width {
+    min-width: 50%;
+}
+
 
 /*.glyphicon-folder-open, .glyphicon-folder-close{*/
     /*background-image: url("glyphicons-halflings-white.png");*/

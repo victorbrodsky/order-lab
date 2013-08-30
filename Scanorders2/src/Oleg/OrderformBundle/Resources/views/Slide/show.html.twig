@@ -42,58 +42,65 @@
      </div>
 
 
+    {% for scan in entity.scan %}
     <div class="panel panel-patient">
         <div class="panel-heading" align="left">
-            <h3 class="text-info">Scan</h3>
+            <h3 class="text-info">Scan ID:{{ scan.id }}</h3>
         </div>
         <div class="panel-body">
+
             <table class="table table-hover table-condensed">
                 <tbody>
                 <tr>
                     <th class="span6">Mag</th>
-                    <td class="span6">{{ entity.scan.mag }}</td>
+
+                        <td class="span6">{{ scan.mag }}</td>
+
                 </tr>
                 <tr>
                     <th class="span6">Scanregion</th>
-                    <td class="span6">{{ entity.scan.scanregion }}</td>
+                    <td class="span6">{{ scan.scanregion }}</td>
                 </tr>
                 <tr>
                     <th class="span6">Note</th>
-                    <td class="span6">{{ entity.scan.note }}</td>
+                    <td class="span6">{{ scan.note }}</td>
                 </tr>
                 <tr>
                     <th class="span6">Status</th>
-                    <td class="span6">{{ entity.scan.status }}</td>
+                    <td class="span6">{{ scan.status }}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    {% endfor %}
 
 
+    {% for stain in entity.stain %}
     <div class="panel panel-patient">
         <div class="panel-heading" align="left">
-            <h3 class="text-info">Stain</h3>
+            <h3 class="text-info">Stain ID:{{ stain.id }}</h3>
         </div>
         <div class="panel-body">
             <table class="table table-hover table-condensed">
                 <tbody>
                 <tr>
                     <th class="span6">Stain</th>
-                    <td class="span6">{{ entity.stain.name }}</td>
+                    <td class="span6">{{ stain.name }}</td>
                 </tr>
                 <tr>
                     <th class="span6">Stainer</th>
-                    <td class="span6">{{ entity.stain.stainer }}</td>
+                    <td class="span6">{{ stain.stainer }}</td>
                 </tr>
                 <tr>
                     <th class="span6">Date</th>
-                    <td class="span6">{{ entity.stain.date|date('Y-m-d H:i:s') }}</td>
+                    <td class="span6">{{ stain.date|date('Y-m-d H:i:s') }}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    {% endfor %}
 
     {#<ul class="record_actions">#}
     {#<li>#}

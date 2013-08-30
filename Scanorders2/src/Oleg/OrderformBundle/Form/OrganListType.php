@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class StainListType extends AbstractType
+class OrganListType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -21,7 +21,6 @@ class StainListType extends AbstractType
             ->add('original', null, array('attr' => array('class' => 'combobox combobox-width')))
         ;
 
-
         $builder->add( 'createdate', 'date', array(
             'label'=>'Creation Date:',
             'widget' => 'single_text',
@@ -29,7 +28,6 @@ class StainListType extends AbstractType
             'format' => 'MM-dd-yyyy',
             'attr' => array('class' => 'datepicker'),
         ));
-
     }
     
     /**
@@ -38,7 +36,7 @@ class StainListType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\StainList'
+            'data_class' => 'Oleg\OrderformBundle\Entity\OrganList'
         ));
     }
 
@@ -47,6 +45,6 @@ class StainListType extends AbstractType
      */
     public function getName()
     {
-        return 'oleg_orderformbundle_stainlist';
+        return 'oleg_orderformbundle_organlist';
     }
 }

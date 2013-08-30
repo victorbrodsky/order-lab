@@ -20,10 +20,20 @@ class Specimen
      */
     protected $id;
 
+//    /**
+//     * @ORM\Column(name="proceduretype", type="string", nullable=true, length=300)
+//     */
+//    protected $proceduretype;
+//    /**
+//     * @ORM\OneToOne(targetEntity="ProcedureList", cascade={"persist"})
+//     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id")
+//     **/
+//    private $proceduretype;
     /**
-     * @ORM\Column(name="proceduretype", type="string", nullable=true, length=300)   
+     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="specimen", cascade={"persist"})
+     * @ORM\JoinColumn(name="procedurelist_id", referencedColumnName="id", nullable=true)
      */
-    protected $proceduretype;   
+    protected $proceduretype;
     
     /**
      * Link to a paper or abstract file

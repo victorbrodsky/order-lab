@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StainListRepository")
- * @ORM\Table(name="stainlist")
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureListRepository")
+ * @ORM\Table(name="ProcedureList")
  */
-class StainList
+class ProcedureList
 {
     
     /**
@@ -48,25 +48,25 @@ class StainList
 
 
     /**
-     * @ORM\OneToMany(targetEntity="StainList", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="ProcedureList", mappedBy="original")
      **/
     private $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     private $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Stain", mappedBy="stainlist")
+     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="procedurelist")
      */
-    protected $stain;
+    protected $specimen;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->stain = new ArrayCollection();
+        $this->specimen = new ArrayCollection();
     }
 
     /**
@@ -83,7 +83,7 @@ class StainList
      * Set name
      *
      * @param string $name
-     * @return StainList
+     * @return ProcedureList
      */
     public function setName($name)
     {
@@ -106,7 +106,7 @@ class StainList
      * Set type
      *
      * @param string $type
-     * @return StainList
+     * @return ProcedureList
      */
     public function setType($type)
     {
@@ -131,7 +131,7 @@ class StainList
      * Set createdate
      *
      * @param \DateTime $createdate
-     * @return StainList
+     * @return ProcedureList
      */
     public function setCreatedate($createdate)
     {
@@ -154,7 +154,7 @@ class StainList
      * Set creator
      *
      * @param string $creator
-     * @return StainList
+     * @return ProcedureList
      */
     public function setCreator($creator)
     {
@@ -173,14 +173,13 @@ class StainList
         return $this->creator;
     }
 
-
     /**
      * Add synonyms
      *
-     * @param \Oleg\OrderformBundle\Entity\StainList $synonyms
-     * @return StainList
+     * @param \Oleg\OrderformBundle\Entity\ProcedureList $synonyms
+     * @return ProcedureList
      */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
+    public function addSynonym(\Oleg\OrderformBundle\Entity\ProcedureList $synonyms)
     {
         $this->synonyms[] = $synonyms;
     
@@ -190,9 +189,9 @@ class StainList
     /**
      * Remove synonyms
      *
-     * @param \Oleg\OrderformBundle\Entity\StainList $synonyms
+     * @param \Oleg\OrderformBundle\Entity\ProcedureList $synonyms
      */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
+    public function removeSynonym(\Oleg\OrderformBundle\Entity\ProcedureList $synonyms)
     {
         $this->synonyms->removeElement($synonyms);
     }
@@ -210,10 +209,10 @@ class StainList
     /**
      * Set original
      *
-     * @param \Oleg\OrderformBundle\Entity\StainList $original
-     * @return StainList
+     * @param \Oleg\OrderformBundle\Entity\ProcedureList $original
+     * @return ProcedureList
      */
-    public function setOriginal(\Oleg\OrderformBundle\Entity\StainList $original = null)
+    public function setOriginal(\Oleg\OrderformBundle\Entity\ProcedureList $original = null)
     {
         $this->original = $original;
     
@@ -223,7 +222,7 @@ class StainList
     /**
      * Get original
      *
-     * @return \Oleg\OrderformBundle\Entity\StainList 
+     * @return \Oleg\OrderformBundle\Entity\ProcedureList 
      */
     public function getOriginal()
     {
@@ -237,40 +236,38 @@ class StainList
         return $res;
     }
 
-
     
 
-
     /**
-     * Add stain
+     * Add specimen
      *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
-     * @return StainList
+     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @return ProcedureList
      */
-    public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
     {
-        $this->stain[] = $stain;
+        $this->specimen[] = $specimen;
     
         return $this;
     }
 
     /**
-     * Remove stain
+     * Remove specimen
      *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
      */
-    public function removeStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    public function removeSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
     {
-        $this->stain->removeElement($stain);
+        $this->specimen->removeElement($specimen);
     }
 
     /**
-     * Get stain
+     * Get specimen
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getStain()
+    public function getSpecimen()
     {
-        return $this->stain;
+        return $this->specimen;
     }
 }

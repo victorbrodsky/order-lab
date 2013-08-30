@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StainListRepository")
- * @ORM\Table(name="stainlist")
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrganListRepository")
+ * @ORM\Table(name="organlist")
  */
-class StainList
+class OrganList
 {
     
     /**
@@ -48,25 +48,25 @@ class StainList
 
 
     /**
-     * @ORM\OneToMany(targetEntity="StainList", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="OrganList", mappedBy="original")
      **/
     private $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     private $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Stain", mappedBy="stainlist")
+     * @ORM\OneToMany(targetEntity="OrganList", mappedBy="organlist")
      */
-    protected $stain;
+    protected $part;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->stain = new ArrayCollection();
+        $this->part = new ArrayCollection();
     }
 
     /**
@@ -83,7 +83,7 @@ class StainList
      * Set name
      *
      * @param string $name
-     * @return StainList
+     * @return OrganList
      */
     public function setName($name)
     {
@@ -106,7 +106,7 @@ class StainList
      * Set type
      *
      * @param string $type
-     * @return StainList
+     * @return OrganList
      */
     public function setType($type)
     {
@@ -131,7 +131,7 @@ class StainList
      * Set createdate
      *
      * @param \DateTime $createdate
-     * @return StainList
+     * @return OrganList
      */
     public function setCreatedate($createdate)
     {
@@ -154,7 +154,7 @@ class StainList
      * Set creator
      *
      * @param string $creator
-     * @return StainList
+     * @return OrganList
      */
     public function setCreator($creator)
     {
@@ -173,14 +173,13 @@ class StainList
         return $this->creator;
     }
 
-
     /**
      * Add synonyms
      *
-     * @param \Oleg\OrderformBundle\Entity\StainList $synonyms
-     * @return StainList
+     * @param \Oleg\OrderformBundle\Entity\OrganList $synonyms
+     * @return OrganList
      */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
+    public function addSynonym(\Oleg\OrderformBundle\Entity\OrganList $synonyms)
     {
         $this->synonyms[] = $synonyms;
     
@@ -190,9 +189,9 @@ class StainList
     /**
      * Remove synonyms
      *
-     * @param \Oleg\OrderformBundle\Entity\StainList $synonyms
+     * @param \Oleg\OrderformBundle\Entity\OrganList $synonyms
      */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
+    public function removeSynonym(\Oleg\OrderformBundle\Entity\OrganList $synonyms)
     {
         $this->synonyms->removeElement($synonyms);
     }
@@ -210,10 +209,10 @@ class StainList
     /**
      * Set original
      *
-     * @param \Oleg\OrderformBundle\Entity\StainList $original
-     * @return StainList
+     * @param \Oleg\OrderformBundle\Entity\OrganList $original
+     * @return OrganList
      */
-    public function setOriginal(\Oleg\OrderformBundle\Entity\StainList $original = null)
+    public function setOriginal(\Oleg\OrderformBundle\Entity\OrganList $original = null)
     {
         $this->original = $original;
     
@@ -223,7 +222,7 @@ class StainList
     /**
      * Get original
      *
-     * @return \Oleg\OrderformBundle\Entity\StainList 
+     * @return \Oleg\OrderformBundle\Entity\OrganList 
      */
     public function getOriginal()
     {
@@ -237,40 +236,36 @@ class StainList
         return $res;
     }
 
-
-    
-
-
     /**
-     * Add stain
+     * Add part
      *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
-     * @return StainList
+     * @param \Oleg\OrderformBundle\Entity\OrganList $part
+     * @return OrganList
      */
-    public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    public function addPart(\Oleg\OrderformBundle\Entity\OrganList $part)
     {
-        $this->stain[] = $stain;
+        $this->part[] = $part;
     
         return $this;
     }
 
     /**
-     * Remove stain
+     * Remove part
      *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+     * @param \Oleg\OrderformBundle\Entity\OrganList $part
      */
-    public function removeStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+    public function removePart(\Oleg\OrderformBundle\Entity\OrganList $part)
     {
-        $this->stain->removeElement($stain);
+        $this->part->removeElement($part);
     }
 
     /**
-     * Get stain
+     * Get part
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getStain()
+    public function getPart()
     {
-        return $this->stain;
+        return $this->part;
     }
 }

@@ -20,11 +20,12 @@ class PartRepository extends EntityRepository
         $em = $this->_em;
         
         $helper = new FormHelper();        
-        $key = $part->getSourceOrgan();
-        if( isset($key) && $key >= 0 ) {
-            $sourceOrgan = $helper->getSourceOrgan();
-            $part->setSourceOrgan( $sourceOrgan[$key] );
-        }
+
+//        $key = $part->getSourceOrgan();
+//        if( isset($key) && $key >= 0 ) {
+//            $sourceOrgan = $helper->getSourceOrgan();
+//            $part->setSourceOrgan( $sourceOrgan[$key] );
+//        }
         
         $key = $part->getName();
         if( isset($key) && $key >= 0 ) {

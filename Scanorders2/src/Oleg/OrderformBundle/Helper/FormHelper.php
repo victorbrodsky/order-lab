@@ -748,6 +748,12 @@ Translational Research"
         
         return $arr;
     }
+
+    public function getProcedure() {
+        $arr = array( 'Biopsy', 'Excision', 'Fine Needle Aspiration' );
+
+        return $arr;
+    }
     
     public function getBlock() {        
         $arr = array();
