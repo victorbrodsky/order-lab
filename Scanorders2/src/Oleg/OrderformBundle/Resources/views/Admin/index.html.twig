@@ -4,6 +4,10 @@
 
     <h3 class="text-info">Admin Manager</h3>
 
+    <p>
+        <a href="{{ path('generate_all') }}">Generate All</a>
+    </p>
+
     <br>
 
     <h3 class="text-info">Stains</h3>
@@ -18,7 +22,7 @@
 
     <h3 class="text-info">Organs</h3>
     <p>
-    <a href="{{ path('stainlist') }}">List  Organs</a>
+    <a href="{{ path('organlist') }}">List  Organs</a>
     </p>
     <p>
         <a href="{{ path('generate_organ') }}">Generate Organs</a>
@@ -33,6 +37,34 @@
     </p>
     <p>
         <a href="{{ path('generate_procedure') }}">Generate Procedures</a>
+    </p>
+
+
+    <br>
+    <hr>
+
+    <h3 class="text-info">Status Type</h3>
+    <p>
+        <a href="{{ path('statustype') }}">List  Status Types</a>
+    </p>
+    {#<p>#}
+        {#<a href="{{ path('generate_procedure') }}">Generate Status Types</a>#}
+    {#</p>#}
+
+    <br>
+
+    <h3 class="text-info">Status Group</h3>
+    <p>
+        <a href="{{ path('statusgroup') }}">List  Status Groupes</a>
+    </p>
+    {#<p>#}
+    {#<a href="{{ path('generate_procedure') }}">Generate Status Types</a>#}
+    {#</p>#}
+
+    <br>
+    <h3 class="text-info">Statuses</h3>
+    <p>
+        <a href="{{ path('status') }}">Statuses (will be attached to OrderInfo)</a>
     </p>
 
 {% endblock %}

@@ -61,13 +61,13 @@
         {#{% for entity in entities %}#}
         {% for entity in pagination  %}
             
-            {% if entity.status == 'active' %}
+            {% if entity.status.name == 'Submitted' %}
                 <tr class="activetr" >
-            {% elseif entity.status == 'cancel' %}
+            {% elseif entity.status.name == 'Canceled' %}
                 <tr class="canceltr" >
-            {% elseif entity.status == 'completed' %}
+            {% elseif entity.status.name == 'Filled: Scanned' %}
                 <tr class="completedtr" >
-            {% elseif entity.status == 'uncompleted' %}
+            {% elseif entity.status.name == 'Not Submitted' %}
                 <tr class="uncompletedtr" >
             {% else %}
                 <tr>

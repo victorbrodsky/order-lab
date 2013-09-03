@@ -9,7 +9,10 @@ namespace Oleg\OrderformBundle\Helper;
 class EmailUtil {
     
     public function sendEmail( $email, $entity, $text = null ) {
-        
+
+        if( !$email || $email == "" ) {
+            return false;
+        }
         ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
         ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
         //ini_set( 'smtp_port', 25 );
@@ -29,7 +32,8 @@ class EmailUtil {
         $message = wordwrap($message, 70, "\r\n");
         // Send
         mail($email, 'Scan Order Confirmation', $message);
-        
+
+        return true;
     }
     
 }

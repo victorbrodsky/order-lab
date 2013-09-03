@@ -312,7 +312,10 @@ class MultyScanOrderController extends Controller {
 
             if (isset($_POST['btnSave'])) {
                 //echo "save";
-                $entity->setStatus('save');
+                //$entity->setStatus('save');
+                $status = $em->getRepository('OlegOrderformBundle:Status')->setStatus('Not Submitted');
+                //$entity->setStatus("active");
+                $entity->setStatus($status);
             }
 
             //exit();

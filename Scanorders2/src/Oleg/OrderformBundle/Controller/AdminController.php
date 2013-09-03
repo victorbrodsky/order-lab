@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
 use Oleg\OrderformBundle\Entity\ProcedureList;
+use Oleg\OrderformBundle\Entity\StatusType;
+use Oleg\OrderformBundle\Entity\StatusGroup;
+use Oleg\OrderformBundle\Entity\Status;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -38,6 +41,43 @@ class AdminController extends Controller
     /**
      * Populate DB
      *
+     * @Route("/genall", name="generate_all")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateAllAction()
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $count_stain = $this->generateStains();
+        $count_organ = $this->generateOrgans();
+        $count_procedure = $this->generateProcedures();
+        $count_statustype = $this->generateStatusType();
+        $count_statusgroup = $this->generateStatusGroups();
+        $count_status = $this->generateStatuses();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Generated Tables: '.
+            $count_stain. ' Stains, '.
+            $count_organ. ' Organs, '.
+            $count_procedure. ' Procedures, '.
+            $count_statustype. ' Status Types, '.
+            $count_statusgroup. ' Status Groups '.
+            $count_status. ' Statuses '.
+            ' (Note: -1 means that this table is already exists)'
+        );
+
+        return $this->redirect($this->generateUrl('admin_index'));
+    }
+
+
+    /**
+     * Populate DB
+     *
      * @Route("/genstain", name="generate_stain")
      * @Method("GET")
      * @Template()
@@ -49,15 +89,17 @@ class AdminController extends Controller
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-        $helper = new FormHelper();
-        $stains = $helper->getStains();
+        $count = $this->generateStains();
+        if( $count >= 0 ) {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Created '.$count. ' stain records'
+            );
 
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+            return $this->redirect($this->generateUrl('stainlist'));
 
-        if( $entities ) {
+        } else {
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -66,27 +108,6 @@ class AdminController extends Controller
 
             return $this->redirect($this->generateUrl('admin_index'));
         }
-
-        $count = 0;
-        foreach( $stains as $stain ) {
-            $stainList = new StainList();
-            $stainList->setCreator( $username );
-            $stainList->setCreatedate( new \DateTime() );
-            $stainList->setName( $stain );
-            $stainList->setType('original');
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($stainList);
-            $em->flush();
-            $count++;
-        }
-
-        $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    'Created '.$count. ' stain records'
-                );
-
-        return $this->redirect($this->generateUrl('stainlist'));
 
     }
 
@@ -105,10 +126,18 @@ class AdminController extends Controller
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:OrganList')->findAll();
+        $count = $this->generateOrgans();
 
-        if( $entities ) {
+        if( $count >= 0 ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Created '.$count. ' organ records'
+            );
+
+            return $this->redirect($this->generateUrl('organlist'));
+
+        } else {
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -116,6 +145,120 @@ class AdminController extends Controller
             );
 
             return $this->redirect($this->generateUrl('admin_index'));
+        }
+
+    }
+
+
+
+    /**
+     * Populate DB
+     *
+     * @Route("/genprocedure", name="generate_procedure")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateProcedureAction()
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegOrderformBundle:ProcedureList')->findAll();
+
+        $count = $this->generateProcedures();
+
+        if( $count >= 0 ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Created '.$count. ' procedure records'
+            );
+
+            return $this->redirect($this->generateUrl('procedurelist'));
+        } else {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'This table is already exists!'
+            );
+
+            return $this->redirect($this->generateUrl('admin_index'));
+        }
+
+//        $helper = new FormHelper();
+//        $organs = $helper->getProcedure();
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $count = 0;
+//        foreach( $organs as $organ ) {
+//            $list = new ProcedureList();
+//            $list->setCreator( $username );
+//            $list->setCreatedate( new \DateTime() );
+//            $list->setName( $organ );
+//            $list->setType('original');
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($list);
+//            $em->flush();
+//            $count++;
+//        }
+//
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            'Created '.$count. ' procedure records'
+//        );
+//
+//        return $this->redirect($this->generateUrl('procedurelist'));
+
+    }
+
+
+    //return -1 if failed
+    //return number of generated records
+    public function generateStains() {
+
+        $helper = new FormHelper();
+        $stains = $helper->getStains();
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+
+        if( $entities ) {
+
+            return -1;
+        }
+
+        $count = 0;
+        foreach( $stains as $stain ) {
+            $stainList = new StainList();
+            $stainList->setCreator( $username );
+            $stainList->setCreatedate( new \DateTime() );
+            $stainList->setName( $stain );
+            $stainList->setType('original');
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($stainList);
+            $em->flush();
+            $count++;
+        }
+
+        return $count;
+    }
+
+    public function generateOrgans() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:OrganList')->findAll();
+
+        if( $entities ) {
+
+            return -1;
         }
 
         $helper = new FormHelper();
@@ -137,42 +280,18 @@ class AdminController extends Controller
             $count++;
         }
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Created '.$count. ' organ records'
-        );
 
-        return $this->redirect($this->generateUrl('organlist'));
-
+        return $count;
     }
 
-
-
-    /**
-     * Populate DB
-     *
-     * @Route("/genprocedure", name="generate_procedure")
-     * @Method("GET")
-     * @Template()
-     */
-    public function generateProcedureAction()
-    {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+    public function generateProcedures() {
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegOrderformBundle:ProcedureList')->findAll();
 
         if( $entities ) {
 
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'This table is already exists!'
-            );
-
-            return $this->redirect($this->generateUrl('admin_index'));
+           return -1;
         }
 
         $helper = new FormHelper();
@@ -194,13 +313,127 @@ class AdminController extends Controller
             $count++;
         }
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Created '.$count. ' procedure records'
+        return $count;
+    }
+
+    public function generateStatusType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:StatusType')->findAll();
+
+        if( $entities ) {
+
+            return -1;
+        }
+
+        $type1 = new StatusType();
+        $type1->setName("Regular");
+        $em->persist($type1);
+
+        $type2 = new StatusType();
+        $type2->setName("Filled");
+        $em->persist($type2);
+
+        $type3 = new StatusType();
+        $type3->setName("On Hold");
+        $em->persist($type3);
+
+        $em->flush();
+
+        return 3;
+    }
+
+    public function generateStatusGroups() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:StatusGroup')->findAll();
+
+        if( $entities ) {
+
+            return -1;
+        }
+
+        $group1 = new StatusGroup();
+        $group1->setName("User");
+        $em->persist($group1);
+
+        $group2 = new StatusGroup();
+        $group2->setName("Admin");
+        $em->persist($group2);
+
+        $em->flush();
+
+        return 2;
+    }
+
+
+    public function generateStatuses() {
+
+        $statuses = array(
+            "Submitted", "Not Submitted", "Canceled", "Amended",
+            "On Hold: Slides Received", "On Hold: Awaiting Slides",
+            "Filled: Scanned", "Filled: Not Scanned", "Filled: Some Scanned", "Filled: Scanned & Returned",
+            "Filled: Not Scanned & Returned", "Filled: Some Scanned & Returned",
         );
 
-        return $this->redirect($this->generateUrl('procedurelist'));
+        $em = $this->getDoctrine()->getManager();
 
+        $count = 0;
+        foreach( $statuses as $statusStr ) {
+
+            $status = new Status();
+
+            //Regular
+            switch( $statusStr )
+            {
+
+                case "Submitted":
+                    $status->setName("Submitted");
+                    $status->setAction("Submit");
+                    break;
+                case "Not Submitted":
+                    $status->setName("Not Submitted");
+                    $status->setAction("On Hold");
+                    break;
+                case "Canceled":
+                    $status->setName("Canceled");
+                    $status->setAction("Cancel");
+                    break;
+                case "Amended":
+                    $status->setName("Amended");
+                    $status->setAction("Amend");
+                    break;
+                default:
+                    break;
+            }
+
+            $status->setType( $em->getRepository('OlegOrderformBundle:StatusType')->findOneByName('Regular') );
+            $status->setGroup( $em->getRepository('OlegOrderformBundle:StatusGroup')->findOneByName('User') );
+
+            //Filled
+            if( strpos($statusStr,'Filled') !== false ) {
+                $status->setName($statusStr);
+                $status->setAction($statusStr);
+                $status->setType( $em->getRepository('OlegOrderformBundle:StatusType')->findOneByName('Filled') );
+                $status->setGroup( $em->getRepository('OlegOrderformBundle:StatusGroup')->findOneByName('Admin') );
+            }
+
+            //On Hold
+            if( strpos($statusStr,'On Hold') !== false ) {
+                $status->setName($statusStr);
+                $status->setAction($statusStr);
+                $status->setType( $em->getRepository('OlegOrderformBundle:StatusType')->findOneByName('On Hold') );
+                $status->setGroup( $em->getRepository('OlegOrderformBundle:StatusGroup')->findOneByName('Admin') );
+            }
+
+            $em->persist($status);
+            $em->flush();
+
+            $count++;
+
+        } //foreach
+
+        return $count;
     }
 
 }

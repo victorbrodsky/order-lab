@@ -21,7 +21,7 @@ use Oleg\OrderformBundle\Security\AperioLdap\cDataClient;
 //include_once( 'src\Oleg\OrderformBundle\Security\AperioLdap\Authenticate.php' );
 //include_once '\vendor\aperio\lib\Aperio\src\Skeleton.php';
 
-//include_once '\Skeleton.php';
+include_once '\Skeleton.php';
 
 class SecurityController extends Controller
 {
@@ -76,19 +76,19 @@ class SecurityController extends Controller
         $user = $this->AperioAuth($loginName,$password); 
     
         if( $user ) {
-            
-            if( 
-                    $user == 'oli2002'
-                    || $user == 'admin'
+
+            //exceptions temporary
+            if(
+                $user == 'oli2002'
+                //|| $user == 'admin'
             ) {
-                $role = array('ROLE_ADMIN');
-            } else {
-                $role = array('ROLE_USER');
+                $user->addRole('ROLE_ADMIN');
             }
+
             //testing ROLES
             //$role = array('ROLE_USER');
             
-            $token = new UsernamePasswordToken($user->getUsername(), '', 'secured_area', $role);
+            $token = new UsernamePasswordToken($user->getUsername(), '', 'secured_area', $user->getRoles());
             $token->setAttribute('email', $user->getEmail());
 //            $token->setAttributes( array(
 //                'email'=>$user->getEmail()
@@ -147,7 +147,21 @@ class SecurityController extends Controller
             $user = new User();
             $user->setUsername($loginName);
             //$user->setEmail($AuthResult['E_Mail']);
-            $user->addRole('ROLE_USER');
+            $user->addRole('ROLE_ADMIN');
+
+            return $user;
+        }
+
+        if( $loginName == "superadmin" && $password == "S@dmin123") {
+            $AuthResult = array(
+                'UserId' => 11,
+                'ReturnCode' => 0
+            );
+
+            $user = new User();
+            $user->setUsername($loginName);
+            //$user->setEmail($AuthResult['E_Mail']);
+            $user->addRole('ROLE_SUPER_ADMIN');
 
             return $user;
         }

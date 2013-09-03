@@ -13,8 +13,8 @@ class FilterType extends AbstractType
         
         $search = array(
             'all' => 'All',
-            'active' => 'Active',
-            'completed' => 'Completed',
+            'active' => 'Submitted',
+            'completed' => 'Canceled',
             'uncompleted' => 'Uncompleted',
             'cancel' => 'Cancel'
             

@@ -16,12 +16,19 @@ class OrderInfoRepository extends EntityRepository
 {
     
     //make correct object
-    public function processEntity( $entity, $type ) {  
+    public function processEntity( $entity, $type ) {
         
 //        echo "orderifno repos id=".$entity->getId()."<br>";
 //        echo "orderifno repos provider=".$entity->getProvider()."<br>";
 
-        $entity->setStatus("active"); 
+        $em = $this->_em;
+
+        //set Status with Type and Group
+        //$status = $em->getRepository('OlegOrderformBundle:Status')->setStatus('Submit');
+        $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
+        //$entity->setStatus("active");
+        $entity->setStatus($status);
+
         $entity->setType($type);
 
         $helper = new FormHelper();

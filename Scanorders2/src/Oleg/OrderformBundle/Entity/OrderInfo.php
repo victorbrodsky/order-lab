@@ -39,13 +39,24 @@ class OrderInfo
      */
     private $pathologyService;
 
+//    /**
+//     * status - status of the order i.e. complete, in process, returned ...
+//     * @var string
+//     *
+//     * @ORM\Column(name="status", nullable=true, type="string", length=100)
+//     */
+//    private $status;
+//    /**
+//     * @ORM\OneToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"}, orphanRemoval=true)
+//     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", onDelete="CASCADE")
+//     **/
+//    private $status;
     /**
-     * status - status of the order i.e. complete, in process, returned ...
-     * @var string
-     *
-     * @ORM\Column(name="status", nullable=true, type="string", length=100)
+     * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
      */
-    private $status;
+    protected $status;
+
     
     /**
      * type - type of the order: single, multi, edu, res

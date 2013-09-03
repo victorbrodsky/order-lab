@@ -361,11 +361,9 @@ class ScanOrderController extends Controller {
 
             $name = $form_stain["name"]->getData();
             
-            echo "stain name=".$name."<br>";
-                      
-            print_r($request);
-            
-            echo $stain;
+//            echo "stain name=".$name."<br>";
+//            print_r($request);
+//            echo $stain;
             
 //            echo $entity;
 //            echo $procedure;
@@ -373,7 +371,7 @@ class ScanOrderController extends Controller {
 //            echo "proc count=".count($entity->getSpecimen())."<br>";
 //            echo "orderinfo part count=".count($part->getOrderInfo())."<br>";
 //            echo "part count=".count($entity->getPart())."<br>";
-            exit();
+//            exit();
 
             $em->persist($entity);
             $em->flush();
@@ -639,13 +637,31 @@ class ScanOrderController extends Controller {
         //$editForm = $this->createForm(new OrderInfoType(), $entity);
         //$deleteForm = $this->createDeleteForm($id);
         
-        $entity->setStatus($status);
-        $em->persist($entity);
-        $em->flush();
-        
-        
+        //$entity->setStatus($status);
+        //$status = $em->getRepository('OlegOrderformBundle:Status')->setStatus($status);
+        $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($status);
+
+        if( $status_entity ) {
+
+            $entity->setStatus($status_entity);
+            $em->persist($entity);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Status of Order #'.$id.' has been changed to "'.$status.'"'
+            );
+
+        } else {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Status: "'.$status.'" is not found'
+            );
+
+        }
+
         return $this->redirect($this->generateUrl('index'));
-            
     }
 
     /**
