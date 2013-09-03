@@ -79,14 +79,91 @@ function init() {
         $('.datepicker').datepicker();
     }
 
-    //$('.combobox').combobox();
+//    $(".combobox").combobox();
 
     //resolve
     $(".combobox").select2({
         width: 'element',
-        dropdownAutoWidth: true,
+        dropdownAutoWidth: true,  
+        //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
+        
     });
+       
+ 
+////////////////keep user input but can't get it on controller/////////////////////
+//     function format(state) {
+//        alert(state.text); 
+//        if (!state.id) return state.text; // optgroup
+//        return state.text;
+//    }
+//    $(".combobox").select2({
+//      placeholder:"Enter any tag",
+//      createSearchChoice: function(term, data) { 
+//          //alert(term);
+//          var myVar = $("#start").find('.myClass').val();
+//          if ($(data).filter(function() { 
+//              //alert(term);
+//              return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};
+//          } 
+//      },
+//      selectOnBlur: true,
+//      formatSelection: format,
+//      formatSelectionTooBig: function (limit) { return "Only one tag"; },
+//    });
+/////////////########################################################///////////////
+
+    // new dynamic tags work even after select2 init o/
+    //tags.push({id: "cool", text: "cool"});
+  
+    
+//    $('.combobox').select2({
+//        //placeholder: 'Please select',
+//        //width: 200,
+//        selectOnBlur: true,
+//        matcher: function(term, text) {
+////            $.fn.select2.defaults.matcher.apply(this, arguments);
+//            return true;          
+//        },     
+////        sortResults: function(results) {
+////            if (results.length > 1) results.pop();
+////            return results;
+////        }
+//    });
+
+          
+    
+//    $(".combobox").select2({
+//        formatNoMatches: function(term) {
+//            alert("term="+term);
+////        $('.select2-input').keyup(function(e) {
+////        if(e.keyCode == 13) {
+////            $('#my_modal').modal({show: true , backdrop : true , keyboard: true});
+////                    // etc......
+////        }
+////    });
+//            return "Press enter to do something";
+//        }
+//    });
+    
+//    $("#e23").select2({
+//        width: 'element',
+//        dropdownAutoWidth: true,
+//        tags:["red", "green", "blue"],
+//        
+//    });
+//     $("#e23").select2({
+//        minimumInputLength: 1,
+//        query: function (query) {
+//            var data = {results: []}, i, j, s;
+//            for (i = 1; i < 5; i++) {
+//                s = "";
+//                for (j = 0; j < i; j++) {s = s + query.term;}
+//                data.results.push({id: query.term + i, text: s});
+//            }
+//            query.callback(data);
+//        }
+//    });
 
 }
 

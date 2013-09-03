@@ -837,9 +837,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
             if (select) {
                 // these options are not allowed when attached to a select because they are picked up off the element itself
-                // Modified by Oleg to keep user input text
                 $.each(["id", "multiple", "ajax", "query", "createSearchChoice", "initSelection", "data", "tags"], function () {
-//                $.each(["id", "multiple", "ajax", "query", "initSelection", "data", "tags"], function () {
                     if (this in opts) {
                         throw new Error("Option '" + this + "' is not allowed for Select2 when attached to a <select> element.");
                     }
@@ -1555,7 +1553,7 @@ the specific language governing permissions and limitations under the Apache Lic
             var maxSelSize = this.getMaximumSelectionSize();
             if (maxSelSize >=1) {
                 data = this.data();
-                if ($.isArray(data) && data.length >= maxSelSize && checkFormatter(opts.alertTooBig, "formatSelectionTooBig")) {
+                if ($.isArray(data) && data.length >= maxSelSize && checkFormatter(opts.formatSelectionTooBig, "formatSelectionTooBig")) {
                     render("<li class='select2-selection-limit'>" + opts.formatSelectionTooBig(maxSelSize) + "</li>");
                     return;
                 }
@@ -1618,10 +1616,9 @@ the specific language governing permissions and limitations under the Apache Lic
 
                 // save context, if any
                 this.context = (data.context===undefined) ? null : data.context;
-                // create a default choice and prepend it to the list                
+                // create a default choice and prepend it to the list
                 if (this.opts.createSearchChoice && search.val() !== "") {
                     def = this.opts.createSearchChoice.call(self, search.val(), data.results);
-                    //alert(def['text']);
                     if (def !== undefined && def !== null && self.id(def) !== undefined && self.id(def) !== null) {
                         if ($(data.results).filter(
                             function () {
@@ -1781,7 +1778,7 @@ the specific language governing permissions and limitations under the Apache Lic
                 "   <span class='select2-chosen'>&nbsp;</span><abbr class='select2-search-choice-close'></abbr>",
                 "   <span class='select2-arrow'><b></b></span>",
                 "</a>",
-                "<input class='select2-focusser select2-offscreen' type='text'/>",             
+                "<input class='select2-focusser select2-offscreen' type='text'/>",
                 "<div class='select2-drop select2-display-none'>",
                 "   <div class='select2-search'>",
                 "       <input type='text' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' class='select2-input'/>",
@@ -2263,7 +2260,7 @@ the specific language governing permissions and limitations under the Apache Lic
             }
 
             val = arguments[0];
-            
+
             if (arguments.length > 1) {
                 triggerChange = arguments[1];
             }
@@ -2282,7 +2279,7 @@ the specific language governing permissions and limitations under the Apache Lic
                 }
             } else {
                 // val is an id. !val is true for [undefined,null,'',0] - 0 is legal
-                if (!val && val !== 0) {                   
+                if (!val && val !== 0) {
                     this.clear(triggerChange);
                     return;
                 }
@@ -2308,7 +2305,7 @@ the specific language governing permissions and limitations under the Apache Lic
         },
 
         // single
-        data: function(value) {           
+        data: function(value) {
             var data,
                 triggerChange = false;
 
@@ -2642,7 +2639,8 @@ the specific language governing permissions and limitations under the Apache Lic
         },
 
         // multi
-        clearSearch: function () {            
+        clearSearch: function () {
+            alert("clearSearch");
             var placeholder = this.getPlaceholder(),
                 maxWidth = this.getMaxSearchWidth();
 

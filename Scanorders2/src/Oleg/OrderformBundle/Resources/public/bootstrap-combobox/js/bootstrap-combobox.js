@@ -66,7 +66,7 @@
         }
         map[option.text()] = option.val()
         source.push(option.text())
-        if (option.attr('selected')) {
+        if (option.prop('selected')) {
           selected = option.text()
           selectedValue = option.val()
         }
@@ -100,7 +100,7 @@
       this.clearTarget()
       this.triggerChange()
       this.clearElement()
-    } else {
+    } else {       
       if (this.shown) {
         this.hide()
       } else {
@@ -194,7 +194,6 @@
           break
 
         default:
-          //removed by Oleg to allow add items
           this.clearTarget()
           this.lookup()
       }

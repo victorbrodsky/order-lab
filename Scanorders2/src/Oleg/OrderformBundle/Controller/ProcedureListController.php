@@ -92,6 +92,7 @@ class ProcedureListController extends Controller
     {
         $entity = new ProcedureList();
         $form   = $this->createCreateForm($entity);
+        //$form = $this->createForm(new ProcedureListType(), $entity);
 
         return array(
             'entity' => $entity,

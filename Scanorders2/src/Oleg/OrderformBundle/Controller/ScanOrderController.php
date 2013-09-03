@@ -359,13 +359,21 @@ class ScanOrderController extends Controller {
             $slide->addStain($stain);
             $entity->addStain($stain);
 
+            $name = $form_stain["name"]->getData();
+            
+            echo "stain name=".$name."<br>";
+                      
+            print_r($request);
+            
+            echo $stain;
+            
 //            echo $entity;
 //            echo $procedure;
 //            echo "orderinfo proc count=".count($procedure->getOrderInfo())."<br>";
 //            echo "proc count=".count($entity->getSpecimen())."<br>";
 //            echo "orderinfo part count=".count($part->getOrderInfo())."<br>";
 //            echo "part count=".count($entity->getPart())."<br>";
-            //exit();
+            exit();
 
             $em->persist($entity);
             $em->flush();

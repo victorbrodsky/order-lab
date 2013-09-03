@@ -18,7 +18,7 @@ class StainType extends AbstractType
 
 //        $helper = new FormHelper();
 //        $builder->add('name', 'choice', array(
-//            'choices' => $this->stains, //$helper->getStains(),
+//            'choices' => $helper->getStains(),
 //            'data' => 0,
 //            'max_length' => 200,
 //            'required' => true,
@@ -32,6 +32,12 @@ class StainType extends AbstractType
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width')
         ));
+        
+//        $builder->add('name', 'hidden', array(
+//            'label' => '* Stain:',
+//            //'required' => true,
+//            'attr' => array('class' => 'combobox combobox-width', 'type' => 'hidden')
+//        ));
 
 
         $factory  = $builder->getFormFactory();

@@ -59,7 +59,7 @@ class ProcedureList
     private $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="procedurelist")
+     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="proceduretype")
      */
     protected $specimen;
 

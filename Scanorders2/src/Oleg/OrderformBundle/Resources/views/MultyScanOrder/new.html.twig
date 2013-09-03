@@ -8,8 +8,27 @@
     {% set multy = 'multy' %}
 {% endif %}
 
+{#use this form for single order edit #}
+{% set formpath = 'singleorder_create' %}
+{% set headername = 'Single-Slide' %}
+
+{% if multy == 'clinical' %}
+    {% set formpath = 'clinical_create' %}
+    {% set headername = 'Clinical Multi-Slide' %}
+{% endif %}
+
+{% if multy == 'educational' %}
+    {% set formpath = 'edu_create' %}
+    {% set headername = 'Educational Multi-Slide' %}
+{% endif %}
+
+{% if multy == 'research' %}
+    {% set formpath = 'res_create' %}
+    {% set headername = 'Research Multi-Slide' %}
+{% endif %}
+
 {% block title %}
-    Clinical Multi-Slide Scan Order
+    {{ headername  }} Scan Order
 {% endblock %}
 
 {% block content %}
@@ -20,21 +39,8 @@
         {#&#123;&#35;{{ form.vars.value.id }}&#35;&#125;#}
     {#{% endif %}#}
 
-{% set formpath = 'clinical_create' %}
-{% set headername = 'Clinical' %}
-
-{% if multy == 'educational' %}
-    {% set formpath = 'edu_create' %}
-    {% set headername = 'Educational' %}
-{% endif %}
-
-{% if multy == 'research' %}
-    {% set formpath = 'res_create' %}
-    {% set headername = 'Research' %}
-{% endif %}
-
 <h3 class="text-info">
-    {{ headername  }} Multi-Slide Scan Order
+    {{ headername  }} Scan Order
     {% if form.vars.value.id != "" %}
         #{{ form.vars.value.id }}
     {% endif %}
@@ -171,7 +177,7 @@
                         {#</div>#}
 
                         {{ myform.orderinfo_panel_header(
-                        'specimen', type, procedureCount, patient.specimen|length, uid,
+                        'procedure', type, procedureCount, patient.specimen|length, uid,
                         patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
                         }}
 
@@ -370,7 +376,7 @@
 
     {% if type == 'new' or type == 'edit' %}
 
-        <button id="next_button" type="button" class="btn btn-default"
+        <button id="next_button" type="button" class="btn btn-success"
                 data-toggle="collapse" data-target="#orderinfo_param">Next
         </button>
 

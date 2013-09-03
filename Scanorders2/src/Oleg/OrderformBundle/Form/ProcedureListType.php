@@ -18,7 +18,7 @@ class ProcedureListType extends AbstractType
             ->add('name')
             ->add('type')
             ->add('creator')
-            ->add('original', null, array('attr' => array('class' => 'combobox combobox-width')))
+            ->add('original', null, array('attr' => array('class' => 'combobox combobox-width')))          
         ;
 
 

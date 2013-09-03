@@ -21,8 +21,8 @@
     {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'#}
     {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/fonts/*' filter='cssrewrite'#}
     {% stylesheets
-        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'
         '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/select2/select2.css' filter='cssrewrite'
+        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'     
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -42,11 +42,11 @@
         
     {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
     {# TODO: use 'bundles/acme_foo/css/*' style#}    
-    {#{% stylesheets #}
-        {#'@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 #}
-    {#%}#}
-        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
+{#    {% stylesheets #}
+{#        '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 #}
+{#    %}#}
+{#        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+{#    {% endstylesheets %}#}
 
     <title>
         {% block title %}
@@ -99,18 +99,19 @@
             '@OlegOrderformBundle/Resources/public/jquery/*'
             '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
             '@OlegOrderformBundle/Resources/public/form/js/*'
-            '@OlegOrderformBundle/Resources/public/datepicker/js/*'
-            '@OlegOrderformBundle/Resources/public/select2/select2.js'
+            '@OlegOrderformBundle/Resources/public/datepicker/js/*' 
+            '@OlegOrderformBundle/Resources/public/select2/select2.js'                 
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
         {# Bootstrap Combobox #}
-        {#{% javascripts                   #}
-            {#'@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    #}
-        {#%}#}
-            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-        {#{% endjavascripts %}         #}
+{#        {% javascripts        #}
+{#            '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/bootstrap-typeahead.js'            #}
+{#            '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/bootstrap-combobox.js'                         #}
+{#        %}#}
+{#            <script type="text/javascript" src="{{ asset_url }}"></script>#}
+{#        {% endjavascripts %}         #}
         {# Bootstrap Combobox #}
 
     </div>

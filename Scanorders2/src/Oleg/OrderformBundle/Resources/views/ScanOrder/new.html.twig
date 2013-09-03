@@ -17,8 +17,8 @@
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_start(form) }}
-
+    {{ form_start(form) }}        
+        
         {{ form_errors(form) }} 
         {{ form_errors(form_patient) }}
         {{ form_errors(form_procedure) }}
@@ -29,7 +29,7 @@
         {{ form_errors(form_scan) }}
         {{ form_errors(form_stain) }}
 
-
+        
         <div  class="panel panel-patient">
             <div class="panel-heading">
                 <div class="row">
@@ -163,5 +163,6 @@
 
     {{ form_end(form) }}
     </form>
+              
     
 {% endblock %} 

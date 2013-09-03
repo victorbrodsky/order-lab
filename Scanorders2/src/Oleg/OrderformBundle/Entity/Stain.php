@@ -202,4 +202,10 @@ class Stain
     {
         return $this->orderinfo;
     }
+    
+    public function __toString() {
+        return "Stain: name=".$this->name;
+    }
+           
+    
 }
