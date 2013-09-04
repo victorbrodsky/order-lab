@@ -33,6 +33,9 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
 
         return $this->render('OlegOrderformBundle:Admin:index.html.twig');
     }

@@ -12,6 +12,9 @@ http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/
 # Production mode:
 http://collage.med.cornell.edu/order/
 
+# Admin page (Requires admin role):
+http://collage.med.cornell.edu/order/admin
+
 # Note: For production mode execute the following command to clean cache and fix assetic links to js and css
 (read: Dumping Asset Files in the dev environment http://symfony.com/doc/current/cookbook/assetic/asset_management.html):
 php app/console assetic:dump --env=prod --no-debug
@@ -56,3 +59,6 @@ git push -u origin iss51
 # To create local branch from remote repo
 git fetch origin
 git checkout --track origin/iss51
+# Or:
+git remote update (note: this is the same as git fetch --all)
+git pull

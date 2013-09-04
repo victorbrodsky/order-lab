@@ -9,4 +9,4 @@
 /bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~
-/.idea
+/.idea/
