@@ -19,14 +19,14 @@ class BlockRepository extends EntityRepository
         
         $em = $this->_em;
 
-        $helper = new FormHelper();
-        $key = $block->getName();
-
-        if( isset($key) && $key >= 0 ) {
-            $name = $helper->getBlock();
-            $block->setName( $name[$key] );
-            //echo "name =" .  $name[$key];
-        }
+//        $helper = new FormHelper();
+//        $key = $block->getName();
+//
+//        if( isset($key) && $key >= 0 ) {
+//            $name = $helper->getBlock();
+//            $block->setName( $name[$key] );
+//            //echo "name =" .  $name[$key];
+//        }
         //exit();
 
         if( $part == null || $part->getId() == null) {
@@ -70,6 +70,16 @@ class BlockRepository extends EntityRepository
 
        //anyway we should get only one block found 
        return $block_res;
+    }
+
+
+    public function presetEntity( $part ) {
+
+        $part->setDiseaseType("Non-Neoplastic");
+        $part->setName("A");
+
+        return $part;
+
     }
     
 }

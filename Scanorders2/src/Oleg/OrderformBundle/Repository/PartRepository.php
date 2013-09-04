@@ -19,19 +19,12 @@ class PartRepository extends EntityRepository
         
         $em = $this->_em;
         
-        $helper = new FormHelper();        
-
-//        $key = $part->getSourceOrgan();
+//        $helper = new FormHelper();
+//        $key = $part->getName();
 //        if( isset($key) && $key >= 0 ) {
-//            $sourceOrgan = $helper->getSourceOrgan();
-//            $part->setSourceOrgan( $sourceOrgan[$key] );
+//            $name = $helper->getPart();
+//            $part->setName( $name[$key] );
 //        }
-        
-        $key = $part->getName();
-        if( isset($key) && $key >= 0 ) {
-            $name = $helper->getPart();
-            $part->setName( $name[$key] );
-        }
         
         if( $accession == null || $accession->getId() == null ) {
             $em->persist($part);
@@ -69,5 +62,13 @@ class PartRepository extends EntityRepository
         $em->persist($part_found);
         return $part_found; 
     }
-    
+
+    public function presetEntity( $part ) {
+
+        $part->setDiseaseType("Non-Neoplastic");
+
+        return $part;
+
+    }
+
 }

@@ -20,21 +20,9 @@ $(document).ready(function() {
        $("#optional_button").show();
     });
 
-    //priority options
-    $('#priority_option').collapse({
-        toggle: false
-    })
-    $('#oleg_orderformbundle_orderinfotype_priority').change(function(e) {
-        e.preventDefault();  
-        $('#priority_option').collapse('toggle');
-    });
-
-    var checked = $('form input[type=radio]:checked').val();
-    if( checked == 1 ) {
-//        alert(checked);
-        $('#priority_option').collapse('toggle');
-    }
-
+    //priority and disease type options
+    priorityOption();
+    originOption();
 
     
     //tab
@@ -73,6 +61,8 @@ $(document).ready(function() {
 
 
 function init() {
+
+    originOptionMulti()
 
 //    $(".combobox").combobox();
 
@@ -253,11 +243,12 @@ function getForm( name, id, idsorig, ids, idsm ) {
 
     //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
 
-    //increment by 1 current object id
-    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
-
     var idsu = ids.join("_");
     var idsc = ids.join(",");
+
+    //increment by 1 current object id
+    var formbody = getFormBody( name, idsu, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
+
 
     if( name == "scan" || name == "stain" ) {
         var addbtn = "";
@@ -286,10 +277,16 @@ function getForm( name, id, idsorig, ids, idsm ) {
     return formhtml;
 }
 
-function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
 //    var collectionHolder =  $('#'+name+'-data');
-    var collectionHolder =  $('#patient-data');
+
+    if( name != "part" ) {
+        var collectionHolder =  $('#patient-data');
+    } else {
+        console.log('#formpanel_part_'+idsu);
+        var collectionHolder =  $('#formpanel_part_'+idsu);
+    }
 
     // Get the data-prototype explained earlier
     var prototype = collectionHolder.data('prototype-'+name);
@@ -461,6 +458,73 @@ function setNavBar() {
     $('#'+id).addClass('active');
 }
 
+
+function priorityOption() {
+    $('#priority_option').collapse({
+        toggle: false
+    })
+    $('#oleg_orderformbundle_orderinfotype_priority').change(function(e) {
+        e.preventDefault();
+        $('#priority_option').collapse('toggle');
+    });
+
+    var checked = $('form input[type=radio]:checked').val();
+    if( checked == 1 ) {
+        $('#priority_option').collapse('toggle');
+    }
+}
+
+function originOption() {
+
+    $('#origin_option').collapse({
+        toggle: false
+    })
+
+    //multi id:
+    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_1_diseaseType
+
+    $('#oleg_orderformbundle_parttype_diseaseType').change(function(e) {
+    //$('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
+        e.preventDefault();
+        $('#origin_option').collapse('toggle');
+    });
+
+    var checked = $('form input[type=radio]:checked').val();
+    if( checked == 1 ) {
+        $('#origin_option').collapse('toggle');
+    }
+
+}
+
+
+function originOptionMulti( patient, specimen, accession, part ) {
+
+    $('#origin_option_multi_'+uid).collapse({
+        toggle: false
+    })
+
+    //multi id:
+    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_1_diseaseType
+    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_origin
+
+    var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+    console.log('#origin_option_multi_'+uid);
+
+    $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').bind().change(function(e) {
+        //$('div[id^="oleg_orderformbundle_parttype_"]').change(function(e) {
+        e.preventDefault();
+        $('#origin_option_multi_'+uid).collapse('toggle');
+    });
+
+    var checked = $('form input[type=radio]:checked').val();
+    if( checked == 1 ) {
+        $('#origin_option_multi_'+uid).collapse('toggle');
+    }
+
+}
 
 //function onCwid(){
 //    window.open("http://weill.cornell.edu/its/identity-security/identity/cwid/")

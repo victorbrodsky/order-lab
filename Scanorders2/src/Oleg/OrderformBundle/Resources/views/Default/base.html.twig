@@ -68,8 +68,10 @@
         <div class="header">
 
             {% block header %}
-                {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
-                {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+                {% if security == 'true' %}
+                    {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+                    {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+                {% endif %}
             {% endblock %}
 
         </div>

@@ -366,6 +366,8 @@ class MultyScanOrderController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new OrderInfo();
         $username = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($username);
@@ -386,6 +388,7 @@ class MultyScanOrderController extends Controller {
         $procedure->addAccession($accession);
 
         $part = new Part();
+        $part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $accession->addPart($part);
 
         $block = new Block();

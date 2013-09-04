@@ -759,24 +759,30 @@ Translational Research"
         $arr = array();
         
         for( $i=1; $i<=400; $i++ ) {
-            array_push($arr, $i);
+            //array_push($arr, $i);
+            $arr[$i] = $i;
         }
         
         return $arr;
     }
 
+    // Generate 100 Parts: A to CW
     public function getPart() {        
         $arr = array();
-        $letters = array();
         $letters = range('A', 'Z');
         $count = 0;
-        for( $i=0; $i<=100; $i++ ) {               
+        //echo "START<br>";
+        for( $i=0; $i<=100; $i++ ) {
+            //echo "i=".$i.", index=". $i%26 .", count=".$count.", arr=".$letters[$i%26]."<br>";
             if( $count == 0 ) {
-                array_push( $arr, $letters[$i%26] );
-                //$arr[$letters[$i%26]]  = $letters[$i%26];
+//                array_push( $arr, $letters[$i%26] );
+                $arr[$letters[$i%26]]  = $letters[$i%26];
+                //echo $letters[$i%26]."<br>";
             } else {
-                array_push( $arr, $arr[$count-1].$letters[$i%26] );
-                //$arr[$letters[$i%26]]  = $arr[$count-1].$letters[$i%26];
+//              array_push( $arr, $arr[$count-1].$letters[$i%26] );
+                $letter = $letters[$count-1].$letters[$i%26];
+                $arr[$letter]  = $letter;
+                //echo $letter."<br>";
             }       
             if(  ($i % 26) == 25 ) $count++; //1,2,3,4...26
         }          

@@ -29,7 +29,7 @@ class BlockType extends AbstractType
                 'max_length'=>'3', 
                 'choices' => $helper->getBlock(),
                 'required'=> true,
-                'data' => 0,
+                //'data' => 0,
                 'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
         ));
         
@@ -47,55 +47,55 @@ class BlockType extends AbstractType
         }
 
 
-        $factory  = $builder->getFormFactory();
-        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
-
-                $form = $event->getForm();
-                $data = $event->getData();
-
-                //echo "class=".get_class($data)."<br>";
-                //echo "parent=".get_parent_class($data)."<br>";
-
-                //if( $data instanceof Stain ) {
-                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Block' || get_class($data) == 'Oleg\OrderformBundle\Entity\Block' ) {
-                    $name = $data->getName();
-                    //echo $data;
-
-                    $helper = new FormHelper();
-                    $arr = $helper->getBlock();
-
-                    $param = array(
-                        'label'=>'Block Name:',
-                        'max_length'=>'3',
-                        'choices' => $arr,
-                        'required'=> true,
-                        'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
-                        'auto_initialize' => false,
-                    );
-
-                    $counter = 0;
-                    foreach( $arr as $var ){
-                        //echo "<br>".$var."?".$name;
-                        if( trim( $var ) == trim( $name ) ){
-                            $key = $counter;
-                            //echo " key=".$key;
-                            $param['data'] = $key;
-                        }
-                        $counter++;
-                    }
-
-                    // field name, field type, data, options
-                    $form->add(
-                        $factory->createNamed(
-                            'name',
-                            'choice',
-                            null,
-                            $param
-                        ));
-                }
-
-            }
-        );
+//        $factory  = $builder->getFormFactory();
+//        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+//
+//                $form = $event->getForm();
+//                $data = $event->getData();
+//
+//                //echo "class=".get_class($data)."<br>";
+//                //echo "parent=".get_parent_class($data)."<br>";
+//
+//                //if( $data instanceof Stain ) {
+//                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Block' || get_class($data) == 'Oleg\OrderformBundle\Entity\Block' ) {
+//                    $name = $data->getName();
+//                    //echo $data;
+//
+//                    $helper = new FormHelper();
+//                    $arr = $helper->getBlock();
+//
+//                    $param = array(
+//                        'label'=>'Block Name:',
+//                        'max_length'=>'3',
+//                        'choices' => $arr,
+//                        'required'=> true,
+//                        'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
+//                        'auto_initialize' => false,
+//                    );
+//
+//                    $counter = 0;
+//                    foreach( $arr as $var ){
+//                        //echo "<br>".$var."?".$name;
+//                        if( trim( $var ) == trim( $name ) ){
+//                            $key = $counter;
+//                            //echo " key=".$key;
+//                            $param['data'] = $key;
+//                        }
+//                        $counter++;
+//                    }
+//
+//                    // field name, field type, data, options
+//                    $form->add(
+//                        $factory->createNamed(
+//                            'name',
+//                            'choice',
+//                            null,
+//                            $param
+//                        ));
+//                }
+//
+//            }
+//        );
         
         
     }

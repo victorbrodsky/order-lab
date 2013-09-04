@@ -48,21 +48,21 @@ class SlideType extends AbstractType
         $builder->add('microscopicdescr', 'textarea', array(
                 'max_length'=>10000,
                 'required'=>false,
-                'label'=>'Microscopic Description',
+                'label'=>'Microscopic Description:',
                 'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add('specialstain', 'text', array(
                 'max_length'=>100,
                 'required'=>false,
-                'label'=>'Special Stain Results',
+                'label'=>'Special Stain Results:',
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add('relevantscan', 'text', array(
                 'max_length'=>100,
                 'required'=>false,
-                'label'=>'Relevant Scanned Images',
+                'label'=>'Relevant Scanned Images:',
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         

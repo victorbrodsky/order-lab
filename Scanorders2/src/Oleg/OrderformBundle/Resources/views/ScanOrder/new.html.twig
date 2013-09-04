@@ -120,7 +120,8 @@
                   {{ formmacros.field(form_part.sourceOrgan) }}
                   {{ formmacros.field(form_part.description) }}
                   {{ formmacros.field(form_part.diffDiagnosis) }}
-                  {{ formmacros.field(form_part.diseaseType) }}
+                  {#{{ formmacros.field(form_part.diseaseType) }}#}
+                  {{ formmacros.disease(form_part) }}
               </div>
 
 {#              <div class="tab-pane" id="block"> {{ form_rest(form_block) }}</div>           #}

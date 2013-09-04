@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Entity\StatusGroupRepository")
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StatusGroupRepository")
  * @ORM\Table(name="statusgroup")
  */
 class StatusGroup

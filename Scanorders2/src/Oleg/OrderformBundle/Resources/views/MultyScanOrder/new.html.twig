@@ -97,13 +97,13 @@
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       #}
      "
-     data-prototype-part="
+     data-prototype-part_11111="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType)|e }}
+        {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}
      "
      data-prototype-block="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}
@@ -132,19 +132,6 @@
         {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
         {#{% set patientCountNext = patientCount + 1 %}#}
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient">
-            {#<div class="panel-heading" align="left">#}
-                {#<div id="form_body_toggle_patient_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_patient_{{ uid }}"></div>#}
-                {#Patient {{ patientCount+1 }}#}
-                {#{% if type == 'new' or type == 'edit' %}#}
-                    {#<div class="form-btn-options">#}
-                        {#{% if form.patient|length ==  (patientCount + 1) %}#}
-                        {#<button id="form_add_btn_patient_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('patient', {{ patientCount }}, 0, 0, 0, 0, 0)">Add</button>#}
-                        {#{% endif %}#}
-                        {#<button id="patient_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn-xs btn_margin">Delete</button>#}
-                    {#</div>#}
-                {#{% endif %}#}
-            {#</div>#}
-
             {{ myform.orderinfo_panel_header(
             'patient', type, patientCount, form.patient|length, uid,
             patientCount, 0, 0, 0, 0, 0, 0, 0)
@@ -163,19 +150,6 @@
                 {% for specimen in patient.specimen %}
                     {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                     <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
-                        {#<div class="panel-heading" align="left">#}
-                            {#<div id="form_body_toggle_specimen_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_procedure_{{ uid }}"></div>#}
-                            {#Procedure {{ procedureCount+1 }}#}
-                            {#{% if type == 'new' or type == 'edit' %}#}
-                                {#<div class="form-btn-options">#}
-                                    {#{% if patient.specimen|length ==  (procedureCount + 1) %}#}
-                                    {#<button id="form_add_btn_specimen_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('procedure', {{ patientCount }}, {{ procedureCount }}, 0, 0, 0, 0)">Add</button>#}
-                                    {#{% endif %}#}
-                                    {#<button id="procedure_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
-                                {#</div>#}
-                            {#{% endif %}#}
-                        {#</div>#}
-
                         {{ myform.orderinfo_panel_header(
                         'procedure', type, procedureCount, patient.specimen|length, uid,
                         patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
@@ -190,19 +164,6 @@
                             {% for accession in specimen.accession %}
                                 {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                                 <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
-                                    {#<div class="panel-heading" align="left">#}
-                                        {#<div id="form_body_toggle_accession_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_accession_{{ uid }}"></div>#}
-                                        {#Accession {{ accessionCount+1 }}#}
-                                        {#{% if type == 'new' or type == 'edit' %}#}
-                                            {#<div class="form-btn-options">#}
-                                                {#{% if specimen.accession|length ==  (accessionCount + 1) %}#}
-                                                {#<button id="form_add_btn_accession_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('accession', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, 0, 0, 0)">Add</button>#}
-                                                {#{% endif %}#}
-                                                {#<button id="accession_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
-                                            {#</div>#}
-                                        {#{% endif %}#}
-                                    {#</div>#}
-
                                     {{ myform.orderinfo_panel_header(
                                     'accession', type, accessionCount, specimen.accession|length, uid,
                                     patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
@@ -216,20 +177,18 @@
                                         {% set partCount = 0 %}
                                         {% for part in accession.part %}
                                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                                            <div id="formpanel_part_{{ uid }}" class="panel panel-part">
-                                                {#<div class="panel-heading" align="left">#}
-                                                    {#<div id="form_body_toggle_part_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_part_{{ uid }}"></div>#}
-                                                    {#Part {{ partCount+1 }}#}
-                                                    {#{% if type == 'new' or type == 'edit' %}#}
-                                                        {#<div class="form-btn-options">#}
-                                                            {#{% if accession.part|length ==  (partCount + 1) %}#}
-                                                            {#<button id="form_add_btn_part_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('part', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, 0, 0)">Add</button>#}
-                                                            {#{% endif %}#}
-                                                            {#<button id="part_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
-                                                        {#</div>#}
-                                                    {#{% endif %}#}
-                                                {#</div>#}
+                                            <div id="formpanel_part_{{ uid }}" class="panel panel-part"
 
+                                                 data-prototype-part="
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}
+        {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, patientCount, procedureCount, accessionCount, partCount)|e }}
+     "
+
+                                                    >
                                                 {{ myform.orderinfo_panel_header(
                                                 'part', type, partCount, accession.part|length, uid,
                                                 patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
@@ -241,26 +200,14 @@
                                                     {{ myform.field(part.description) }}
                                                     {{ myform.field(part.diagnosis) }}
                                                     {{ myform.field(part.diffDiagnosis) }}
-                                                    {{ myform.field(part.diseaseType) }}
+                                                    {#{{ myform.field(part.diseaseType) }}#}
+                                                    {{ myform.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
 
                                                     {#block#}
                                                     {% set blockCount = 0 %}
                                                     {% for block in part.block %}
                                                         {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
                                                         <div id="formpanel_block_{{ uid }}" class="panel panel-block">
-                                                                {#<div class="panel-heading" align="left">#}
-                                                                    {#<div id="form_body_toggle_block_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_block_{{ uid }}"></div>#}
-                                                                    {#Block {{ blockCount+1 }}#}
-                                                                    {#{% if type == 'new' or type == 'edit' %}#}
-                                                                        {#<div class="form-btn-options">#}
-                                                                            {#{% if part.block|length ==  (blockCount + 1) %}#}
-                                                                            {#<button id="form_add_btn_block_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('block', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, 0)">Add</button>#}
-                                                                            {#{% endif %}#}
-                                                                            {#<button id="block_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
-                                                                        {#</div>#}
-                                                                    {#{% endif %}#}
-                                                                {#</div>#}
-
                                                                 {{ myform.orderinfo_panel_header(
                                                                 'block', type, blockCount, part.block|length, uid,
                                                                 patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
@@ -275,19 +222,6 @@
                                                                     {% for slide in block.slide %}
                                                                         {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                                         <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
-                                                                            {#<div class="panel-heading" align="left">#}
-                                                                                {#<div id="form_body_toggle_slide_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_slide_{{ uid }}"></div>#}
-                                                                                {#Slide {{ slideCount+1 }}#}
-                                                                                {#{% if type == 'new' or type == 'edit' %}#}
-                                                                                    {#<div class="form-btn-options">#}
-                                                                                        {#{% if block.slide|length ==  (slideCount + 1) %}#}
-                                                                                        {#<button id="form_add_btn_slide_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="addSameForm('slide', {{ patientCount }}, {{ procedureCount }}, {{ accessionCount }}, {{ partCount }}, {{ blockCount }}, {{ slideCount }})">Add</button>#}
-                                                                                        {#{% endif %}#}
-                                                                                        {#<button id="slide_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
-                                                                                    {#</div>#}
-                                                                                {#{% endif %}#}
-                                                                            {#</div>#}
-
                                                                             {{ myform.orderinfo_panel_header(
                                                                             'slide', type, slideCount, block.slide|length, uid,
                                                                             patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)

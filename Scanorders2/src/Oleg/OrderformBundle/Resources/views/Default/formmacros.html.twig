@@ -92,4 +92,47 @@
 </div>
 
 {% endmacro %}
+
+
+
+{% macro disease(form) %}
+
+    {% import _self as formmacros %}
+
+    {{ formmacros.field(form.diseaseType) }}
+
+    {#  optional for origin  #}
+    <div id="origin_option" class="collapse">
+
+        <div class="well span10" aling='center'>
+
+            {{ formmacros.field(form.origin) }}
+
+        </div>
+
+    </div>
+
+{% endmacro %}
+
+{% macro diseaseMulti(form, patient, specimen, accession, part ) %}
+
+    {% import _self as formmacros %}
+
+    {{ formmacros.field(form.diseaseType) }}
+
+    {% set uid = patient~'_'~specimen~'_'~accession~'_'~part~'_0_0_0_0' %}
+
+    {#  optional for origin  #}
+    {#id = origin_option_multi_patient_0_specimen_0_accession_0_part_0_diseaseType#}
+    <div id="origin_option_multi_{{ uid }}" class="collapse">
+
+        <div class="well span10" aling='center'>
+
+            {{ formmacros.field(form.origin) }}
+
+        </div>
+
+    </div>
+
+{% endmacro %}
                  

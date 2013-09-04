@@ -424,6 +424,8 @@ class ScanOrderController extends Controller {
 //            $service = $services[0];
 //        }
 
+        $em = $this->getDoctrine()->getManager();
+
         //echo "service=".$service."<br>";
         $entity->setPathologyService($service);
 
@@ -438,7 +440,8 @@ class ScanOrderController extends Controller {
         $accession = new Accession();      
         $form_accession   = $this->createForm(new AccessionType(), $accession);
          
-        $part = new Part();      
+        $part = new Part();
+        $part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $form_part   = $this->createForm(new PartType(), $part);
             
         $block = new Block();      

@@ -18,11 +18,13 @@ class ScanType extends AbstractType
         
         //$builder->add( 'status', 'hidden', array('data' => 'submitted') ); 
         
-        $builder->add('scanregion', 'text', array(
+        $builder->add('scanregion', 'choice', array(
                 'max_length'=>200,
-                'required'=>false,
-                'label' => 'Region to scan',
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'required'=>true,
+                'label' => 'Region to scan:',
+                'choices' => array("Entire Slide"=>"Entire Slide", "Any one of the levels"=>"Any one of the levels", "Region circled by marker" => "Region circled by marker"),
+                //'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class' => 'combobox')
         ));
 
         $builder->add( 'mag', 

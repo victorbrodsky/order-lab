@@ -35,17 +35,26 @@ class PartType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__block__',
             )); 
-        }      
-        
-        $builder->add('name', 'choice', array(        
+        }
+
+        //name
+        $builder->add('name', 'choice', array(
             'choices' => $helper->getPart(),
-            'required'=>true,
-            'label'=>'Part Name:',
-            'max_length'=>'3',
-            'data' => 0,
-//            'attr' => array('style' => 'width:70px'),
+            'required' => true,
+            'label' => 'Part Name:',
+            'max_length' => '3',
             'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
-        ));      
+        ));
+
+//        $builder->add('name', 'choice', array(
+//            'choices' => $helper->getPart(),
+//            'required'=>true,
+//            'label'=>'Part Name:',
+//            'max_length'=>'3',
+//            //'data' => 0,
+////            'attr' => array('style' => 'width:70px'),
+//            'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
+//        ));
         
 //        $builder->add( 'sourceOrgan', 'text', array(
 //                'label'=>'Source Organ:', 
@@ -88,72 +97,36 @@ class PartType extends AbstractType
                 'attr' => array('class'=>'form-control'),
         ));
         
-        $builder->add( 'diseaseType', 'text', array(
-                'label'=>'Disease Type:', 
-                'max_length'=>'100', 
-                'required'=>false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+//        $builder->add( 'diseaseType', 'text', array(
+//                'label'=>'Disease Type:',
+//                'max_length'=>'100',
+//                'required'=>false,
+//                'attr' => array('class'=>'form-control form-control-modif'),
+//        ));
+        $builder->add( 'diseaseType', 'choice', array(
+            'label'=>'Disease Type:',
+            'required'=>true,
+            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic"),
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type', 'required' => 'required', 'disabled'),
+            //'data' => 'Male',
         ));
-        
+
+        $builder->add( 'origin', 'choice', array(
+            'label'=>'Origin:',
+            'required'=>false,
+            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type'),
+        ));
+
 //        $builder->add( 'accession', new AccessionType(), array(
 //            'label'=>' ',
 //            'required'=>false,
 //            //'hidden'=>true,
 //        ));
-
-
-        $factory  = $builder->getFormFactory();
-        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
-
-                $form = $event->getForm();
-                $data = $event->getData();
-
-                if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Part' || get_class($data) == 'Oleg\OrderformBundle\Entity\Part' ) {
-
-                    $name = $data->getName();
-                    $source = $data->getSourceOrgan();
-
-                    $helper = new FormHelper();
-                    $arr = $helper->getPart();
-                    $sourceArr = $helper->getSourceOrgan();
-
-                    //name
-                    $param = array(
-                        'choices' => $arr,
-                        'required'=>true,
-                        'label'=>'Part Name:',
-                        'max_length'=>'3',
-                        'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
-                        'auto_initialize' => false,
-                    );
-
-                    $counter = 0;
-                    $key = 0;
-                    foreach( $arr as $var ){
-                        //echo "<br>".$var."?".$name;
-                        if( trim( $var ) == trim( $name ) ){
-                            $key = $counter;
-                            //echo " key=".$key;
-                            //$param['data'] = $key;
-                            break;
-                        }
-                        $counter++;
-                    }
-                    $param['data'] = $key;
-
-                    // field name, field type, data, options
-                    $form->add(
-                        $factory->createNamed(
-                            'name',
-                            'choice',
-                            null,
-                            $param
-                        ));
-
-                }
-
-            }
-        );
 
     }
 

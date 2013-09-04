@@ -75,8 +75,13 @@ class Part
     /**
      * @ORM\Column(type="string", nullable=true, length=100)
      */
-    protected $diseaseType; 
-    
+    protected $diseaseType;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, length=100)
+     */
+    protected $origin;
+
     /**
      * One Part has Many slides
      * Accession might have many slide s
@@ -166,6 +171,15 @@ class Part
         $this->diseaseType = $diseaseType;
     }
 
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
 
 
     /**
