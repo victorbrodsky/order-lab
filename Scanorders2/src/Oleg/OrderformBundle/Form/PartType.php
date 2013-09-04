@@ -68,14 +68,14 @@ class PartType extends AbstractType
         ));
         
         $builder->add( 'description', 'textarea', array(
-                'label'=>'Description :', 
+                'label'=>'Gross Description:',
                 'max_length'=>'10000', 
                 'required'=>false,
                 'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add( 'diagnosis', 'textarea', array(
-                'label'=>'Diagnosis :',
+                'label'=>'Diagnosis:',
                 'max_length'=>'10000', 
                 'required'=>false,
                 'attr' => array('class'=>'form-control'),
@@ -149,37 +149,6 @@ class PartType extends AbstractType
                             null,
                             $param
                         ));
-
-
-//                    //source Oragn
-//                    $sourceparam = array(
-//                        'choices' => $sourceArr,
-//                        'label'=>'Source Organ:',
-//                        'max_length'=>'100',
-//                        'choices' => $helper->getSourceOrgan(),
-//                        'required'=>false,
-//                        'attr' => array('class' => 'combobox combobox-width'), // 'style' => 'width:345px'),
-//                        'auto_initialize' => false,
-//                    );
-//
-//                    $counter = 0;
-//                    foreach( $sourceArr as $var ){
-//                        if( trim( $var ) == trim( $source ) ){
-//                            $key = $counter;
-//                            $sourceparam['data'] = $key;
-//                            break;
-//                        }
-//                        $counter++;
-//                    }
-//
-//                    // field name, field type, data, options
-//                    $form->add(
-//                        $factory->createNamed(
-//                            'sourceOrgan',
-//                            'choice',
-//                            null,
-//                            $sourceparam
-//                        ));
 
                 }
 

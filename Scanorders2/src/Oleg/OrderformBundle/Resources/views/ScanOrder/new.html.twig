@@ -92,7 +92,7 @@
             <ul class="nav nav-tabs" id="optional_param_tab">
                 <li class="active"><a href="#patient">Patient</a></li>
                 <li><a href="#procedure">Procedure</a></li>
-                <li><a href="#accession">Accession</a></li>
+                {#<li><a href="#accession">Accession</a></li>#}
                 <li><a href="#part">Part</a></li>
 {#                <li><a href="#block">Block</a></li>             #}
 {#                <li><a href="#stain">Stain</a></li>#}
@@ -113,9 +113,9 @@
                   {{ formmacros.field(form_procedure.proceduretype) }}
                   {{ formmacros.field(form_procedure.paper) }}
               </div>
-              <div class="tab-pane" id="accession">
-                  {{ formmacros.field(form_accession.date) }}
-              </div>
+              {#<div class="tab-pane" id="accession">#}
+                  {#{{ formmacros.field(form_accession.date) }}#}
+              {#</div>#}
               <div class="tab-pane" id="part">
                   {{ formmacros.field(form_part.sourceOrgan) }}
                   {{ formmacros.field(form_part.description) }}

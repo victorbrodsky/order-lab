@@ -28,6 +28,7 @@ use Oleg\OrderformBundle\Form\ScanType;
 use Oleg\OrderformBundle\Entity\Stain;
 use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
+use Oleg\OrderformBundle\Entity\Status;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
@@ -56,15 +57,21 @@ class ScanOrderController extends Controller {
         }
         
         $em = $this->getDoctrine()->getManager();
-        
-              
-        $form = $this->createForm(new FilterType(), null);         
+
+        //$statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+        //$data = $qb->getArrayResult();
+        //$statuses = $query_status->getResult();
+
+//        $em = $this->getDoctrine()->getManager();
+//        $query_status = $em->createQuery('SELECT s.name FROM OlegOrderformBundle:Status s');    //->setParameter('price', '19.99');
+//        $statusesArr = $query_status->getResult();
+//        $statuses = $this->array_column($statusesArr, 'name');
+//        print_r($statuses);
+
+        //create filters
+        $form = $this->createForm(new FilterType( $this->getFilter() ), null);
         $form->bind($request);
 
-        if( $this->get('request')->request->get('search') ) {
-            
-        }
-        
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
         //by user
@@ -79,11 +86,6 @@ class ScanOrderController extends Controller {
         $filter = $form->get('filter')->getData();
         $service = $form->get('service')->getData();
 
-        //filter           
-        if( $filter && $filter != 'all'  ) {     
-            $criteria['status']= $filter;
-        }
-
         //service
         //echo "service=".$service;
         //exit();
@@ -97,21 +99,6 @@ class ScanOrderController extends Controller {
             }
             $showprovider = 'true';
         }
-
-//        $pre_query = $repository->createQueryBuilder('order')
-//                    ->orderBy('or.orderdate', 'DESC');
-//        $query = $pre_query->getQuery();     
-//        $entities = $query->getResult();
-//        //findAll();
-//        $limit = 10;
-//        $num_pages = 1; // some calculation of what page you're currently on
-//        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->
-//                    findBy(
-//                            $criteria,
-//                            array('orderdate'=>'desc'),
-//                            $limit, // limit (doctrine)
-//                            $limit * ($num_pages - 1) // offset (doctrine)
-//                    );
 
         $orderby = "";
 
@@ -137,33 +124,45 @@ class ScanOrderController extends Controller {
             }
             $count++;
         }
-      
-        //paginator
-        //, COUNT(orderinfo.slide) as slides
-//        $limit = 15;
-        //$dql1 = "SELECT orderinfo FROM OlegOrderformBundle:OrderInfo orderinfo ".$criteriastr.$orderby;
-        
-//        $dql = "SELECT orderinfo FROM "
-//                . "OlegOrderformBundle:OrderInfo orderinfo "
-//                . "LEFT JOIN OlegOrderformBundle:Slide slide "
-//                . "ON slide.orderinfo = orderinfo.id"
-//                //. "OlegOrderformBundle:Accession accession "           
-//                . $criteriastr.$orderby;
-        
+
         $dql =  $repository->createQueryBuilder("orderinfo");
-        
-        //echo "<br>criteriastr=".$criteriastr."<br>";
-        
-//        if( $criteriastr != "" ) {
-//            $dql->where($criteriastr);
-//        }
+
+        //filter DB
+        if( $filter && $filter > 0 ) {
+            $dql->innerJoin("orderinfo.status", "status");
+            $criteriastr .= "status.id=" . $filter;
+        }
+
+        //filter special cases
+        if( $filter && is_string($filter) ) {
+
+            $dql->innerJoin("orderinfo.status", "status");
+
+            switch( $filter ) {
+
+                case "All Filled":
+                    $criteriastr .= "status.name LIKE '%Filled%'";
+                    break;
+                case "All Filled and Returned":
+                    $criteriastr .= "status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
+                    break;
+                case "All Filled and Not Returned":
+                    $criteriastr .= "status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
+                    break;
+                case "All Not Filled":
+                    $criteriastr .= "status.name NOT LIKE '%Filled%'";
+                    break;
+                case "All On Hold":
+                    $criteriastr .= "status.name LIKE '%On Hold%'";
+                    break;
+                default:
+                    ;
+            }
+
+        }
+
         $criteriafull = "";
-        if( $search && $search != '' ) {
-//            $dql->innerJoin("orderinfo.slide", "slide");
-//            $dql->innerJoin("slide.accession", "accession");           
-//            $criteriafull = "slide.orderinfo = orderinfo.id AND slide.accession = accession.id AND accession.accession LIKE '%". 
-//                           $search ."%'";    
-                                  
+        if( $search && $search != "" ) {
             $dql->innerJoin("orderinfo.accession", "accession");           
             $criteriafull = "accession.accession LIKE '%" . $search . "%'";    
             
@@ -195,8 +194,6 @@ class ScanOrderController extends Controller {
             $limit/*limit per page*/
         );
 
-        //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
-        
         //check for active user requests
         $reqs = array();
         if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {                     
@@ -204,7 +201,6 @@ class ScanOrderController extends Controller {
         }
         
         return array(
-            //'entities' => $entities,
             'form' => $form->createView(),
             'showprovider' => $showprovider,
             'pagination' => $pagination,
@@ -693,5 +689,33 @@ class ScanOrderController extends Controller {
                 'orderid' => $orderid            
             ));
     }
-    
+
+    public function getFilter() {
+        $em = $this->getDoctrine()->getManager();
+        $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+
+        //add special cases
+        $specials = array(
+            "All" => "All",
+            "All Filled" => "All Filled",
+            "All Filled and Returned" => "All Filled and Returned",
+            "All Filled and Not Returned" => "All Filled and Not Returned",
+            "All Not Filled" => "All Not Filled",
+            "All On Hold" => "All On Hold"
+        );
+
+        $filterType = array();
+        foreach( $specials as $key => $value ) {
+            $filterType[$key] = $value;
+        }
+
+        //add statuses
+        foreach( $statuses as $status ) {
+            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
+            $filterType[$status->getId()] = $status->getName();
+        }
+
+        return $filterType;
+    }
+
 }

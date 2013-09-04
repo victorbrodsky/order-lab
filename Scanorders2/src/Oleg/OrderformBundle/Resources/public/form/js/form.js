@@ -74,20 +74,14 @@ $(document).ready(function() {
 
 function init() {
 
-    //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
-    if( $(".datepicker")[0] ) {
-        $('.datepicker').datepicker();
-    }
-
 //    $(".combobox").combobox();
 
     //resolve
-    $(".combobox").select2({
+    $("select.combobox").select2({
         width: 'element',
-        dropdownAutoWidth: true,  
+        dropdownAutoWidth: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
-        
     });
        
  
@@ -164,6 +158,12 @@ function init() {
 //            query.callback(data);
 //        }
 //    });
+
+
+    //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
+    if( $(".datepicker")[0] ) {
+        $('.datepicker').datepicker();
+    }
 
 }
 

@@ -95,7 +95,7 @@
      "
      data-prototype-accession="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       #}
      "
      data-prototype-part="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
@@ -210,7 +210,7 @@
 
                                     <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
                                             {{ myform.field(accession.accession) }}
-                                            {{ myform.field(accession.date) }}                                       
+                                            {#{{ myform.field(accession.date) }}                                       #}
                                        
                                         {#part#}
                                         {% set partCount = 0 %}

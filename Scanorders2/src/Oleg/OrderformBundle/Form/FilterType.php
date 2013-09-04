@@ -8,23 +8,23 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FilterType extends AbstractType
 {
+
+    protected $statuses;
+
+    public function __construct( $statuses = null )
+    {
+        $this->statuses = $statuses;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {                              
-        
-        $search = array(
-            'all' => 'All',
-            'active' => 'Submitted',
-            'completed' => 'Canceled',
-            'uncompleted' => 'Uncompleted',
-            'cancel' => 'Cancel'
-            
-        );
-        
+
         $builder->add( 'filter', 'choice', array(  
                 'label' => 'Filter by Order Status:',
                 'max_length'=>50,
-                'choices' => $search,
-                'required' => true,
+                //'choices' =>$this->statuses,  // $this->statuses->name, //$search,
+                'choices' => $this->statuses,
+                'required' => false,
                 //'multiple' => true,
                 //'expanded' => true,
                 'attr' => array('class' => 'combobox combobox-width')

@@ -26,14 +26,14 @@ class AccessionType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif','style' => 'width:130px', 'required' => 'required', 'title' => 'Example: S12-12345'),
         ));      
         
-        $builder->add('date','date',array(
-            'widget' => 'single_text',
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker'),
-            'required' => false,
-            //'data' => new \DateTime(),
-            'label'=>'Accession Date:',
-        ));
+//        $builder->add('date','date',array(
+//            'widget' => 'single_text',
+//            'format' => 'MM-dd-yyyy',
+//            'attr' => array('class' => 'datepicker'),
+//            'required' => false,
+//            //'data' => new \DateTime(),
+//            'label'=>'Accession Date:',
+//        ));
         
         if( $this->multy ) {   
             
