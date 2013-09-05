@@ -33,7 +33,7 @@ class BlockType extends AbstractType
                 'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
         ));
         
-        if( $this->multy ) { //always multy; remove it later on
+        if( $this->multy ) {
             $builder->add('slide', 'collection', array(
                 'type' => new SlideType($this->multy),
                 'allow_add' => true,

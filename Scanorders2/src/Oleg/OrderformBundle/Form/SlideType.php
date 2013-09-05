@@ -8,7 +8,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SlideType extends AbstractType
 {
-    
+
+    protected $multy;
+
+    public function __construct( $multy = false )
+    {
+        $this->multy = $multy;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {      
         $builder->add( 'id', 'hidden' );
@@ -36,14 +43,16 @@ class SlideType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__scan__',
         ));
-                    
-        $builder->add('diagnosis', 'textarea', array(
-                'max_length'=>10000,
-                'required'=>false,
-                'label'=>'Diagnosis / Reason for scans:',
-                'attr' => array('class'=>'form-control'),
-                //'attr'=>array('readonly'=>true)
-        ));
+
+//        if( !$this->multy ) {
+//            $builder->add('diagnosis', 'textarea', array(
+//                    'max_length'=>10000,
+//                    'required'=>false,
+//                    'label'=>'Diagnosis / Reason for scans:',
+//                    'attr' => array('class'=>'form-control'),
+//                    //'attr'=>array('readonly'=>true)
+//            ));
+//        }
         
         $builder->add('microscopicdescr', 'textarea', array(
                 'max_length'=>10000,

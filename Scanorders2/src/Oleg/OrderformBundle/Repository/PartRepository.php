@@ -65,7 +65,7 @@ class PartRepository extends EntityRepository
 
     public function presetEntity( $part ) {
 
-        $part->setDiseaseType("Non-Neoplastic");
+        //$part->setDiseaseType("Non-Neoplastic");
 
         return $part;
 

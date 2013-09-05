@@ -20,7 +20,7 @@ class AccessionType extends AbstractType
     {  
         
         $builder->add( 'accession', 'text', array(
-                'label'=>'* Accession Number:', 
+                'label'=>'* Accession Number [or Label]:',
                 'max_length'=>100,
                 'required'=>true,
                 'attr' => array('class'=>'form-control form-control-modif','style' => 'width:130px', 'required' => 'required', 'title' => 'Example: S12-12345'),

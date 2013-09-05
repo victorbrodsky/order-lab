@@ -42,11 +42,34 @@
 <h3 class="text-info">
     {{ headername  }} Scan Order
     {% if form.vars.value.id != "" %}
-        #{{ form.vars.value.id }}
+        #{{ form.vars.value.id }} ({{ form.vars.value.status }})
     {% endif %}
 </h3>
 
-<form action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
+    {#action buttons#}
+    {% if type == 'edit' or type == 'show'  %}
+        {###############  USER ACTIONS #################}
+        {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
+            <a class="btn btn-danger" onclick="return confirm('Are you sure?');"
+                   href="{{ path('scanorder_status', { 'id': form.vars.value.id , 'status': 'Cancel' }) }}">Cancel</a>
+        {% endif %}
+
+        {#TODO: Make path to Amend in Controller#}
+        {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
+        and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"
+        and form.vars.value.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') %}
+            <a class="btn btn-info" onclick="return confirm('Are you sure?');"
+                   href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Submit' }) }}">Submit</a>
+        {% endif %}
+
+        {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and form.vars.value.status.type.name != "Filled" or is_granted('ROLE_SUPER_ADMIN') %}
+            <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
+                   href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Amend' }) }}">Amend</a>
+        {% endif %}
+    {% endif %}
+
+
+<form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
 {#{{ form_start(form) }}#}
 
 {#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
@@ -97,19 +120,19 @@
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       #}
      "
-     data-prototype-part_11111="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}
-        {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}
-     "
+     {#data-prototype-part_1111="#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}#}
+        {#{{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
+     {#"#}
      data-prototype-block="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}
      "
      data-prototype-slide="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.diagnosis)|e }}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.diagnosis)|e }}#}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialstain)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantscan)|e }}
@@ -190,8 +213,8 @@
 
                                                     >
                                                 {{ myform.orderinfo_panel_header(
-                                                'part', type, partCount, accession.part|length, uid,
-                                                patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
+                                                    'part', type, partCount, accession.part|length, uid,
+                                                    patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
                                                 }}
 
                                                 <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
@@ -228,7 +251,9 @@
                                                                             }}
 
                                                                             <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
-                                                                                {{ myform.field(slide.diagnosis) }}
+                                                                                {% if multy == 'single' %}
+                                                                                    {{ myform.field(slide.diagnosis) }}
+                                                                                {% endif %}
                                                                                 {{ myform.field(slide.microscopicdescr) }}
                                                                                 {{ myform.field(slide.specialstain) }}
                                                                                 {{ myform.field(slide.relevantscan) }}

@@ -7,10 +7,11 @@
 {% block content %} 
 {% block body -%}
 
-    <h5 class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</h5>
+    <span class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</span>
 
     {% if is_granted('ROLE_ADMIN') and security == 'true' %}              
         {% if userreqs is defined %}
+            |
             {% if userreqs | length == 0 %}
                 <span class="text-success">Active User Requests:{{ userreqs | length }}</span>
             {% else %}

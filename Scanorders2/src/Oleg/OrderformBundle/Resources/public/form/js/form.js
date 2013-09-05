@@ -10,6 +10,11 @@ $(document).ready(function() {
 
     init();
 
+    originOptionMulti( new Array("0","0","0","0") );
+
+    //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
+    checkValidate();
+
     //hide buttons
     $("#orderinfo").hide();
 
@@ -62,7 +67,7 @@ $(document).ready(function() {
 
 function init() {
 
-    originOptionMulti()
+    //originOptionMulti();
 
 //    $(".combobox").combobox();
 
@@ -77,19 +82,19 @@ function init() {
  
 ////////////////keep user input but can't get it on controller/////////////////////
 //     function format(state) {
-//        alert(state.text); 
+//        alert(state.text);
 //        if (!state.id) return state.text; // optgroup
 //        return state.text;
 //    }
 //    $(".combobox").select2({
 //      placeholder:"Enter any tag",
-//      createSearchChoice: function(term, data) { 
+//      createSearchChoice: function(term, data) {
 //          //alert(term);
 //          var myVar = $("#start").find('.myClass').val();
-//          if ($(data).filter(function() { 
+//          if ($(data).filter(function() {
 //              //alert(term);
 //              return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};
-//          } 
+//          }
 //      },
 //      selectOnBlur: true,
 //      formatSelection: format,
@@ -107,8 +112,8 @@ function init() {
 //        selectOnBlur: true,
 //        matcher: function(term, text) {
 ////            $.fn.select2.defaults.matcher.apply(this, arguments);
-//            return true;          
-//        },     
+//            return true;
+//        },
 ////        sortResults: function(results) {
 ////            if (results.length > 1) results.pop();
 ////            return results;
@@ -189,6 +194,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     //bind listener to the toggle button
     bindToggleBtn( name + '_' + ids.join("_") );
     bindDeleteBtn( name + '_' + ids.join("_") );
+    originOptionMulti(ids);
 
     //create children nested forms
     var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -215,6 +221,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //add all element to listeners again, the same as in ready
     init();
+    //originOptionMulti(patientid, procedureid, accessionid, partid);
+
 }
 
 function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
@@ -231,7 +239,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 
     var uid = prevName+"_"+idsu;
     var holder = "#form_body_"+uid;
-    console.log(name+": add childs to="+holder+" uid="+idsu);
+    //console.log(name+": add childs to="+holder+" uid="+idsu);
 
     $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );
     bindToggleBtn( name + '_' + ids.join("_") );
@@ -281,17 +289,24 @@ function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, b
 
 //    var collectionHolder =  $('#'+name+'-data');
 
+    //console.log("name="+name);
+
     if( name != "part" ) {
         var collectionHolder =  $('#patient-data');
     } else {
-        console.log('#formpanel_part_'+idsu);
-        var collectionHolder =  $('#formpanel_part_'+idsu);
+        //formpanel_part_0_0_0_0_0_0_0_0
+        var dataholder = "#formpanel_part_0_0_0_0_0_0_0_0"; //fixed data holder
+        //console.log(dataholder);
+        var collectionHolder =  $(dataholder);
     }
 
     // Get the data-prototype explained earlier
     var prototype = collectionHolder.data('prototype-'+name);
+    //console.log("prototype="+prototype);
 
+    //console.log("before replace patient...");
     var newForm = prototype.replace(/__patient__/g, patientid);
+    //console.log("before replace specimen... NewForm="+newForm);
     newForm = newForm.replace(/__specimen__/g, procedureid);
     newForm = newForm.replace(/__accession__/g, accessionid);
     newForm = newForm.replace(/__part__/g, partid);
@@ -300,7 +315,21 @@ function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, b
     newForm = newForm.replace(/__scan__/g, scanid);
     newForm = newForm.replace(/__stain__/g, stainid);
 
-    //console.log("prot name= "+name+", form="+newForm);
+    //part "part_0_origintag"
+    var newpartid = partid;
+    newForm = newForm.replace(/_part_0_origintag/g, "_part_"+newpartid+"_origintag");
+
+//    if( name == "part" ) {
+//    var dataholder = "formpanel_part_0_0_0_0_0_0_0_0"; //fixed data holder for part
+//    var collectionHolder =  $(dataholder);
+//    var prototype_part = collectionHolder.data('prototype-part');
+////    }
+//    console.log("before replace part...");
+//    newForm = newForm.prototype_part.replace(/__part__/g, partid);
+
+    //if( name == "part" ) {
+        //console.log("prot name= "+name+", form="+newForm);
+    //}
 
     return newForm;
 }
@@ -498,33 +527,136 @@ function originOption() {
 }
 
 
-function originOptionMulti( patient, specimen, accession, part ) {
+function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 
-    $('#origin_option_multi_'+uid).collapse({
-        toggle: false
-    })
+//    var uid = "";   //'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+//    var holder = "";    //'#origin_option_multi_'+uid;
 
-    //multi id:
-    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
-    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
-    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_1_diseaseType
-    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_origin
+    var patient = ids[0];
+    var specimen = ids[1];
+    var accession = ids[2];
+    var part = ids[3];
 
     var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
-    console.log('#origin_option_multi_'+uid);
+    var holder = '#origin_option_multi_'+uid+'_origintag';
+    //console.log("on change:"+'#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType_0');
+
+    //var curid = "";
+
+    //id of Neoplastic radio button: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
+
+    //set not required
+    $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').attr('required', false);
 
     $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').bind().change(function(e) {
-        //$('div[id^="oleg_orderformbundle_parttype_"]').change(function(e) {
-        e.preventDefault();
-        $('#origin_option_multi_'+uid).collapse('toggle');
+//    $('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
+        curid = $(this).attr('id');
+        //alert("click id="+curid);
+        //console.log("click id="+curid);
+
+        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+        var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
+        //patient_0_specimen_0_accession_0_part_0_diseaseType
+        var arr2 = arr1[1].split("_");
+        //get ids
+        var patient = arr2[1];
+        var specimen = arr2[3];
+        var accession = arr2[5];
+        var part = arr2[7];
+
+        uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+        holder = '#origin_option_multi_'+uid+'_origintag';
+        //console.log(holder);
+
+        //e.preventDefault();
+
+        //toggle if Neoplastic is choosen id = *diseaseType_0
+
+        var neoplasticId = "#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0";
+        var neoplasticIfChecked = $(neoplasticId).is(':checked');
+//        console.log("neoplasticId:"+neoplasticId+", neoplasticIfChecked="+neoplasticIfChecked);
+
+        if( neoplasticIfChecked ) {
+//            console.log("toggle!!!!!!!!!!!!!!!!!");
+//            $(holder).collapse('show');
+//            $(holder).collapse({
+//                toggle:true
+//            });
+            $(holder).show('slow');
+        }
+        else {
+//            console.log("close?????????????????");
+//            $(holder).collapse('hide');
+//            $(holder).collapse({
+//                toggle:false
+//            });
+            $(holder).hide('slow');
+        }
+
     });
 
-    var checked = $('form input[type=radio]:checked').val();
-    if( checked == 1 ) {
-        $('#origin_option_multi_'+uid).collapse('toggle');
-    }
+    //if( curid.indexOf("diseaseType") != -1 ) {
+//        $(holder).collapse({
+//            toggle: false
+//        })
+    //}
+
+//    var checked = $('form input[type=radio]:checked').val();
+//    if( checked == 1 ) {
+//        //if( curid.indexOf("diseaseType") != -1 ) {
+//            //$(holder).collapse('toggle');
+//        //}
+//    }
+
+    //validate();
+
+
+    //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
+    //checkValidate(ids);
 
 }
+
+function checkValidate() {
+
+    function add() {
+
+        if( this.name.indexOf("diseaseType") != -1 ) {
+
+            var curid = $(this).attr('id');
+
+
+            if($('#'+curid).is(':checked')) {
+                //console.log("checked! add id="+curid);
+
+                //1) oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+                var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
+                //2) patient_0_specimen_0_accession_0_part_0_diseaseType
+                var arr2 = arr1[1].split("_");
+                //3) get ids
+                var patient = arr2[1];
+                var specimen = arr2[3];
+                var accession = arr2[5];
+                var part = arr2[7];
+                uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+                holder = '#origin_option_multi_'+uid+'_origintag';
+
+                if( curid.indexOf("diseaseType_0") != -1 ) {
+                    //console.log("toggle="+holder);
+                    //console: toggle=#origin_option_multi_patient_0_specimen_0_accession_0_part_0
+                    //real id: origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag
+                    $(holder).collapse('toggle');
+                }
+            }
+
+        }
+    }
+
+    var form = $('#multy_form'), remaining = {}, errors = [];
+
+    form.find(':radio').each(add);
+
+}
+
 
 //function onCwid(){
 //    window.open("http://weill.cornell.edu/its/identity-security/identity/cwid/")

@@ -42,7 +42,7 @@
 
                 <div class="row">
                     <div class="col-xs-6" align="right">
-                        {{ form_label(form_accession.accession, '* Accession+Part+Block') }}
+                        {{ form_label(form_accession.accession, "* Accession Number [or Label], Part, Block:") }}
                     </div>
                     <div class="col-xs-6" align="left">
                         {{ form_widget(form_accession.accession) }} {{ form_widget(form_part.name) }} {{ form_widget(form_block.name) }}
@@ -132,7 +132,7 @@
               {#</div>#}
 
               <div class="tab-pane" id="slide">
-                  {{ formmacros.field(form_slide.diagnosis) }}
+                  {#{{ formmacros.field(form_slide.diagnosis) }}#}
                   {{ formmacros.field(form_slide.microscopicdescr) }}
                   {{ formmacros.field(form_slide.specialstain) }}
                   {{ formmacros.field(form_slide.relevantscan) }}
