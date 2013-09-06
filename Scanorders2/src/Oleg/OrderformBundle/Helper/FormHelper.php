@@ -750,7 +750,7 @@ Translational Research"
     }
 
     public function getProcedure() {
-        $arr = array( 'Biopsy', 'Excision', 'Fine Needle Aspiration', 'Biopsy Excision FNA' );
+        $arr = array( 'Biopsy', 'Excision', 'Fine Needle Aspiration' );
 
         return $arr;
     }

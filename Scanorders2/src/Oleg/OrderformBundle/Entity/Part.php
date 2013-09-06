@@ -40,16 +40,7 @@ class Part
     //*********************************************// 
     // optional fields
     //*********************************************//     
-    
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=100)
-//     */
-//    protected $sourceOrgan;
-//    /**
-//     * @ORM\OneToOne(targetEntity="OrganList", cascade={"persist"})
-//     * @ORM\JoinColumn(name="organ_id", referencedColumnName="id")
-//     **/
-//    private $sourceOrgan;
+
     /**
      * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="part", cascade={"persist"})
      * @ORM\JoinColumn(name="organlist_id", referencedColumnName="id", nullable=true)
@@ -64,13 +55,18 @@ class Part
     /**
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
-    protected $diagnosis; 
+    protected $diagnosis;
              
     
+//    /**
+//     * @ORM\Column(type="text", nullable=true, length=10000)
+//     */
+//    protected $diffDiagnoses;
     /**
-     * @ORM\Column(type="text", nullable=true, length=10000)
+     * @param \Doctrine\Common\Collections\Collection $property
+     * @ORM\OneToMany(targetEntity="DiffDiagnoses", mappedBy="part", cascade={"persist"})
      */
-    protected $diffDiagnosis;
+    protected $diffDiagnoses;
     
     /**
      * @ORM\Column(type="string", nullable=true, length=100)
@@ -83,18 +79,13 @@ class Part
     protected $origin;
 
     /**
-     * One Part has Many slides
-     * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="part", cascade={"persist"})
-     */
-    //protected $slide;
-    
-    /**
      * One Part has Many blocks
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="Block", mappedBy="part")
      */
     protected $block;
+
+
     
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="part")
@@ -105,6 +96,7 @@ class Part
         //$this->slide = new ArrayCollection();
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
+        $this->diffDiagnoses = new ArrayCollection();
     }
     
     public function getId() {
@@ -129,10 +121,6 @@ class Part
 
     public function getDiagnosis() {
         return $this->diagnosis;
-    }
-
-    public function getDiffDiagnosis() {
-        return $this->diffDiagnosis;
     }
 
     public function getDiseaseType() {
@@ -163,9 +151,9 @@ class Part
         $this->diagnosis = $diagnosis;
     }
 
-    public function setDiffDiagnosis($diffDiagnosis) {
-        $this->diffDiagnosis = $diffDiagnosis;
-    }
+//    public function setDiffDiagnoses($diffDiagnoses) {
+//        $this->diffDiagnoses = $diffDiagnoses;
+//    }
 
     public function setDiseaseType($diseaseType) {
         $this->diseaseType = $diseaseType;
@@ -180,47 +168,6 @@ class Part
     {
         return $this->origin;
     }
-
-
-    /**
-     * Add slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return Part
-     */
-//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        if( !$this->slide->contains($slide) ) {
-//            $slide->setPart($this);
-//            $this->slide[] = $slide;
-//        }
-//
-//        return $this;
-//    }
-
-    /**
-     * Remove slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     */
-//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        $this->slide->removeElement($slide);
-//    }
-
-    /**
-     * Get slide
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-//    public function getSlide()
-//    {
-//        return $this->slide;
-//    }
-//    public function setSlide(\Doctrine\Common\Collections\ArrayCollection $slide)
-//    {
-//        $this->slide = $slide;
-//    }
 
     /**
      * Add block
@@ -324,4 +271,46 @@ class Part
     {
         return $this->orderinfo;
     }
+
+
+    /**
+     * Add diffDiagnoses
+     *
+     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
+     * @return Part
+     */
+    public function addDiffDiagnoses(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    {
+        if( !$this->diffDiagnoses->contains($diffDiagnoses) ) {
+            $diffDiagnoses->setPart($this);
+            $this->diffDiagnoses[] = $diffDiagnoses;
+        }
+    
+        return $this;
+    }
+    public function addDiffDiagnos(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    {
+         $this->addDiffDiagnoses($diffDiagnoses);
+
+        return $this;
+    }
+
+    /**
+     * Remove diffDiagnoses
+     *
+     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
+     */
+    public function removeDiffDiagnoses(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    {
+        $this->diffDiagnoses->removeElement($diffDiagnoses);
+    }
+    public function removeDiffDiagnos(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    {
+        $this->removeDiffDiagnoses($diffDiagnoses);
+    }
+
+    public function getDiffDiagnoses() {
+        return $this->diffDiagnoses;
+    }
+
 }

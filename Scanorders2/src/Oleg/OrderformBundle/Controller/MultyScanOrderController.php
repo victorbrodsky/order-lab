@@ -17,6 +17,7 @@ use Oleg\OrderformBundle\Form\SpecimenType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Entity\DiffDiagnoses;
 use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
@@ -236,7 +237,13 @@ class MultyScanOrderController extends Controller {
                             } else {
                                 continue;
                             }
-                            //echo $part_count++." !!!!!!!!!!part = ". $part. "<br>";
+//                            echo "part = ". $part. "<br>";
+//                            echo "diffDiag count = " . count($part->getDiffDiagnoses()) . "<br>";
+//                            foreach( $part->getDiffDiagnoses() as $diag ) {
+//                                echo "diag=".$diag->getName()."<br>";
+//                                $em->persist($diag);
+//                            }
+                            //exit();
                             //Block
                             //$count=0;
                             foreach( $part->getBlock() as $block ) {
@@ -388,8 +395,13 @@ class MultyScanOrderController extends Controller {
         $procedure->addAccession($accession);
 
         $part = new Part();
-        $part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
+        //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $accession->addPart($part);
+
+        $diffDiagnoses = new DiffDiagnoses();
+        $part->addDiffDiagnoses($diffDiagnoses);
+        $diffDiagnoses2 = new DiffDiagnoses();
+        $part->addDiffDiagnoses($diffDiagnoses2);
 
         $block = new Block();
         $part->addBlock($block);
@@ -524,6 +536,7 @@ class MultyScanOrderController extends Controller {
                             $accession->removePart($part);
                             continue;
                         }
+                        //echo "diff diagnoses=".count($part->getDiffDiagnoses())."<br>";
 
                         //block
                         foreach( $part->getBlock() as $block ) {

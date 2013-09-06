@@ -35,23 +35,23 @@
 
     {#ID={{ form.vars.value.id }}#}
     {#{% if type == 'edit' or type == 'show' %}#}
-        {#ID={{ form_widget(form.id) }}#}
-        {#&#123;&#35;{{ form.vars.value.id }}&#35;&#125;#}
+    {#ID={{ form_widget(form.id) }}#}
+    {#&#123;&#35;{{ form.vars.value.id }}&#35;&#125;#}
     {#{% endif %}#}
 
-<h3 class="text-info">
-    {{ headername  }} Scan Order
-    {% if form.vars.value.id != "" %}
-        #{{ form.vars.value.id }} ({{ form.vars.value.status }})
-    {% endif %}
-</h3>
+    <h3 class="text-info">
+        {{ headername  }} Scan Order
+        {% if form.vars.value.id != "" %}
+            #{{ form.vars.value.id }} ({{ form.vars.value.status }})
+        {% endif %}
+    </h3>
 
     {#action buttons#}
     {% if type == 'edit' or type == 'show'  %}
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
             <a class="btn btn-danger" onclick="return confirm('Are you sure?');"
-                   href="{{ path('scanorder_status', { 'id': form.vars.value.id , 'status': 'Cancel' }) }}">Cancel</a>
+               href="{{ path('scanorder_status', { 'id': form.vars.value.id , 'status': 'Cancel' }) }}">Cancel</a>
         {% endif %}
 
         {#TODO: Make path to Amend in Controller#}
@@ -59,20 +59,20 @@
         and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"
         and form.vars.value.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') %}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
-                   href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Submit' }) }}">Submit</a>
+               href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Submit' }) }}">Submit</a>
         {% endif %}
 
         {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and form.vars.value.status.type.name != "Filled" or is_granted('ROLE_SUPER_ADMIN') %}
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
-                   href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Amend' }) }}">Amend</a>
+               href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Amend' }) }}">Amend</a>
         {% endif %}
     {% endif %}
 
 
-<form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
-{#{{ form_start(form) }}#}
+    <form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
+    {#{{ form_start(form) }}#}
 
-{#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
+    {#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
 
     {% if type == 'show' %}
         {{ myform.orderinfo_panel(form, "Scan Order Info") }}
@@ -103,50 +103,50 @@
         </div>
     {% endif %}
 
-<div id="patient-data" 
-     data-prototype-patient="
-        {{ myform.field(form.patient.vars.prototype.mrn)|e }} 
+    <div id="patient-data"
+         data-prototype-patient="
+        {{ myform.field(form.patient.vars.prototype.mrn)|e }}
         {{ myform.field(form.patient.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.age)|e }}
         {{ myform.field(form.patient.vars.prototype.sex)|e }}
         {{ myform.field(form.patient.vars.prototype.dob)|e }}
-        {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}  
+        {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}
      "
-     data-prototype-procedure="
+         data-prototype-procedure="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper)|e }}
      "
-     data-prototype-accession="
+         data-prototype-accession="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       #}
      "
-     {#data-prototype-part_1111="#}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}#}
-        {#{{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
-     {#"#}
-     data-prototype-block="
+            {#data-prototype-part_1111="#}
+            {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
+            {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}#}
+            {#{{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
+            {#"#}
+         data-prototype-block="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}
      "
-     data-prototype-slide="
+         data-prototype-slide="
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.diagnosis)|e }}#}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialstain)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantscan)|e }}
      "
-     data-prototype-stain="
+         data-prototype-stain="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
      "
 
-     data-prototype-scan="
+         data-prototype-scan="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}
      "
-        >
+            >
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
 
     {#patient#}
@@ -172,156 +172,189 @@
                 {% set procedureCount = 0 %}
                 {% for specimen in patient.specimen %}
                     {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                    <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
-                        {{ myform.orderinfo_panel_header(
-                        'procedure', type, procedureCount, patient.specimen|length, uid,
-                        patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
-                        }}
+                <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
+                    {{ myform.orderinfo_panel_header(
+                    'procedure', type, procedureCount, patient.specimen|length, uid,
+                    patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
+                    }}
 
-                        <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">                            
-                            {{ myform.field(specimen.proceduretype) }}
-                            {{ myform.field(specimen.paper) }}
+                    <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
+                        {{ myform.field(specimen.proceduretype) }}
+                        {{ myform.field(specimen.paper) }}
 
-                            {#accession#}
-                            {% set accessionCount = 0 %}
-                            {% for accession in specimen.accession %}
-                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                                <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
-                                    {{ myform.orderinfo_panel_header(
-                                    'accession', type, accessionCount, specimen.accession|length, uid,
-                                    patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
-                                    }}
+                        {#accession#}
+                        {% set accessionCount = 0 %}
+                        {% for accession in specimen.accession %}
+                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                            <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
+                                {{ myform.orderinfo_panel_header(
+                                'accession', type, accessionCount, specimen.accession|length, uid,
+                                patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
+                                }}
 
-                                    <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
-                                            {{ myform.field(accession.accession) }}
-                                            {#{{ myform.field(accession.date) }}                                       #}
-                                       
-                                        {#part#}
-                                        {% set partCount = 0 %}
-                                        {% for part in accession.part %}
-                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                                            <div id="formpanel_part_{{ uid }}" class="panel panel-part"
+                                <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
+                                    {{ myform.field(accession.accession) }}
+                                    {#{{ myform.field(accession.date) }}                                       #}
 
-                                                 data-prototype-part="
+                                    {#part#}
+                                    {% set partCount = 0 %}
+                                    {% for part in accession.part %}
+                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
+                                        {% set diffdiag_holder ='<div id="diffdiagnoses_'~uid~'"></div>' %}
+                                        <div id="formpanel_part_{{ uid }}" class="panel panel-part"
+
+                                             data-prototype-part="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnosis)|e }}#}
+        {{  diffdiag_holder|e }}
         {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, patientCount, procedureCount, accessionCount, partCount)|e }}
-     "
+        "
+                                             data-prototype-diffdiagnoses="
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}#}
+        {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}
+        "
+     >
+                                            {{ myform.orderinfo_panel_header(
+                                            'part', type, partCount, accession.part|length, uid,
+                                            patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
+                                            }}
 
-                                                    >
-                                                {{ myform.orderinfo_panel_header(
-                                                    'part', type, partCount, accession.part|length, uid,
-                                                    patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
-                                                }}
+                                            <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
+                                                {{ myform.field(part.name) }}
+                                                {{ myform.field(part.sourceOrgan) }}
+                                                {{ myform.field(part.description) }}
+                                                {{ myform.field(part.diagnosis) }}
+                                                {#{{ myform.field(part.diffDiagnosis) }}#}
 
-                                                <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
-                                                    {{ myform.field(part.name) }}
-                                                    {{ myform.field(part.sourceOrgan) }}
-                                                    {{ myform.field(part.description) }}
-                                                    {{ myform.field(part.diagnosis) }}
-                                                    {{ myform.field(part.diffDiagnosis) }}
-                                                    {#{{ myform.field(part.diseaseType) }}#}
-                                                    {{ myform.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
+                                                {############ different diagnoses input collection #############}
+                                                <div id="diffdiagnoses_{{ uid }}">
+                                                    {% if part.diffDiagnoses|length > 0 %}
+                                                        {#{{ myform.collectionInput(diffDiagnoses.name,patientCount,procedureCount,accessionCount,partCount) }}#}
 
-                                                    {#block#}
-                                                    {% set blockCount = 0 %}
-                                                    {% for block in part.block %}
-                                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
-                                                        <div id="formpanel_block_{{ uid }}" class="panel panel-block">
-                                                                {{ myform.orderinfo_panel_header(
-                                                                'block', type, blockCount, part.block|length, uid,
-                                                                patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
-                                                                }}
-
-                                                                <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
-                                                                    {{ myform.field(block.name) }}
-
-
-                                                                    {#slide#}
-                                                                    {% set slideCount = 0 %}
-                                                                    {% for slide in block.slide %}
-                                                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
-                                                                        <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
-                                                                            {{ myform.orderinfo_panel_header(
-                                                                            'slide', type, slideCount, block.slide|length, uid,
-                                                                            patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
-                                                                            }}
-
-                                                                            <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
-                                                                                {% if multy == 'single' %}
-                                                                                    {{ myform.field(slide.diagnosis) }}
-                                                                                {% endif %}
-                                                                                {{ myform.field(slide.microscopicdescr) }}
-                                                                                {{ myform.field(slide.specialstain) }}
-                                                                                {{ myform.field(slide.relevantscan) }}
-
-
-                                                                                {#scan and stain#}
-                                                                                {% set scanCount = 0 %}
-                                                                                {% set stainCount = 0 %}
-
-                                                                                {#stain#}
-                                                                                {% for stain in slide.stain %}
-                                                                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~scanCount~'_'~stainCount %}
-                                                                                    <div id="formpanel_stain_{{ uid }}" class="panel panel-stain">
-                                                                                        {{ myform.orderinfo_panel_header(
-                                                                                            'stain', type, stainCount, slide.stain|length, uid,
-                                                                                            patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
-                                                                                        }}
-                                                                                        <div id="form_body_stain_{{ uid }}" class="panel-body collapse in">
-                                                                                            {{ myform.field(stain.name) }}
-                                                                                        </div>
-                                                                                        {#{% set stainCount = stainCount + 1 %}#}
-                                                                                    </div> {#end of stain#}
-                                                                                {% endfor %}
-
-                                                                                {#scan   #}
-                                                                                {% for scan in slide.scan %}
-                                                                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~scanCount~'_'~stainCount %}
-                                                                                    <div id="formpanel_scan_{{ uid }}" class="panel panel-scan">
-                                                                                        {{ myform.orderinfo_panel_header(
-                                                                                        'scan', type, scanCount, slide.scan|length, uid,
-                                                                                        patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
-                                                                                        }}
-                                                                                        <div id="form_body_scan_{{ uid }}" class="panel-body collapse in">
-                                                                                            {{ myform.field(scan.mag) }}
-                                                                                            {{ myform.field(scan.scanregion) }}
-                                                                                            {{ myform.field(scan.note) }}
-                                                                                        </div>
-                                                                                        {#{% set scanCount = scanCount + 1 %}#}
-                                                                                    </div> {#end of scan#}
-                                                                                {% endfor %}
-
-
-                                                                            </div>
-                                                                        </div> {#end of slide#}
-                                                                    {% set slideCount = slideCount + 1 %}
-                                                                {% endfor %}
-
-
+                                                        <p>
+                                                        <div class="row" id="fields">
+                                                            <div class="col-xs-6" align="right">
+                                                                {#Different Diagnoses:#}
+                                                                {{ form_label(part.diffDiagnoses[0].name) }}
                                                             </div>
-                                                            {% set blockCount = blockCount + 1 %}
-                                                        </div> {#end of block#}
-                                                    {% endfor %}
+                                                            <div class="col-xs-6" align="left">
+                                                                <div id="diffdiagnoses_field_{{ uid }}">
+                                                                    {% for diffDiagnoses in part.diffDiagnoses %}
+                                                                        {#{{ form_errors(diffDiagnoses.name) }}#}
+                                                                        {{ form_widget(diffDiagnoses.name) }}
+                                                                        {#{{ form_rest(diffDiagnoses) }}#}
+                                                                    {% endfor %}
+                                                                    <button id="b1" onClick="addDiffdiagField('diffdiagnoses', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        </p>
 
-
-
+                                                    {% endif %}
                                                 </div>
-                                            </div> {#end of part#}
-                                            {% set partCount = partCount + 1 %}
-                                        {% endfor %}
+
+                                                {#{{ myform.field(part.diseaseType) }}#}
+                                                {{ myform.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
+
+                                                {#block#}
+                                                {% set blockCount = 0 %}
+                                                {% for block in part.block %}
+                                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
+                                                    <div id="formpanel_block_{{ uid }}" class="panel panel-block">
+                                                        {{ myform.orderinfo_panel_header(
+                                                        'block', type, blockCount, part.block|length, uid,
+                                                        patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
+                                                        }}
+
+                                                        <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
+                                                            {{ myform.field(block.name) }}
 
 
-                                    </div>
-                                </div> {#end of accession#}
-                                {% set accessionCount = accessionCount + 1 %}
-                            {% endfor %}
+                                                            {#slide#}
+                                                            {% set slideCount = 0 %}
+                                                            {% for slide in block.slide %}
+                                                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
+                                                                <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
+                                                                    {{ myform.orderinfo_panel_header(
+                                                                    'slide', type, slideCount, block.slide|length, uid,
+                                                                    patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
+                                                                    }}
+
+                                                                    <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
+                                                                        {% if multy == 'single' %}
+                                                                            {{ myform.field(slide.diagnosis) }}
+                                                                        {% endif %}
+                                                                        {{ myform.field(slide.microscopicdescr) }}
+                                                                        {{ myform.field(slide.specialstain) }}
+                                                                        {{ myform.field(slide.relevantscan) }}
 
 
-                        </div>
+                                                                        {#scan and stain#}
+                                                                        {% set scanCount = 0 %}
+                                                                        {% set stainCount = 0 %}
+
+                                                                        {#stain#}
+                                                                        {% for stain in slide.stain %}
+                                                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~scanCount~'_'~stainCount %}
+                                                                            <div id="formpanel_stain_{{ uid }}" class="panel panel-stain">
+                                                                                {{ myform.orderinfo_panel_header(
+                                                                                'stain', type, stainCount, slide.stain|length, uid,
+                                                                                patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
+                                                                                }}
+                                                                                <div id="form_body_stain_{{ uid }}" class="panel-body collapse in">
+                                                                                    {{ myform.field(stain.name) }}
+                                                                                </div>
+                                                                                {#{% set stainCount = stainCount + 1 %}#}
+                                                                            </div> {#end of stain#}
+                                                                        {% endfor %}
+
+                                                                        {#scan   #}
+                                                                        {% for scan in slide.scan %}
+                                                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~scanCount~'_'~stainCount %}
+                                                                            <div id="formpanel_scan_{{ uid }}" class="panel panel-scan">
+                                                                                {{ myform.orderinfo_panel_header(
+                                                                                'scan', type, scanCount, slide.scan|length, uid,
+                                                                                patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
+                                                                                }}
+                                                                                <div id="form_body_scan_{{ uid }}" class="panel-body collapse in">
+                                                                                    {{ myform.field(scan.mag) }}
+                                                                                    {{ myform.field(scan.scanregion) }}
+                                                                                    {{ myform.field(scan.note) }}
+                                                                                </div>
+                                                                                {#{% set scanCount = scanCount + 1 %}#}
+                                                                            </div> {#end of scan#}
+                                                                        {% endfor %}
+
+
+                                                                    </div>
+                                                                </div> {#end of slide#}
+                                                                {% set slideCount = slideCount + 1 %}
+                                                            {% endfor %}
+
+
+                                                        </div>
+                                                        {% set blockCount = blockCount + 1 %}
+                                                    </div> {#end of block#}
+                                                {% endfor %}
+
+
+
+                                            </div>
+                                        </div> {#end of part#}
+                                        {% set partCount = partCount + 1 %}
+                                    {% endfor %}
+
+
+                                </div>
+                            </div> {#end of accession#}
+                            {% set accessionCount = accessionCount + 1 %}
+                        {% endfor %}
+
+
+                    </div>
                     </div>{#end of specimen #}
                     {% set procedureCount = procedureCount + 1 %}
                 {% endfor %} {# specimen loop #}
@@ -358,9 +391,9 @@
     {% endif %}
 
     {#{{ form_rest(form.id) }}#}
-    
-{#{{ form_end(form) }}#}
-</form>
-    
+
+    {#{{ form_end(form) }}#}
+    </form>
+
 {% endblock %}
   

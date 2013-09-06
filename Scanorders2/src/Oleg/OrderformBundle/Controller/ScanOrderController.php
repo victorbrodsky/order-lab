@@ -441,7 +441,7 @@ class ScanOrderController extends Controller {
         $form_accession   = $this->createForm(new AccessionType(), $accession);
          
         $part = new Part();
-        $part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
+        //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $form_part   = $this->createForm(new PartType(), $part);
             
         $block = new Block();      

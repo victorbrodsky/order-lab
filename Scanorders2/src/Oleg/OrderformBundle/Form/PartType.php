@@ -90,13 +90,23 @@ class PartType extends AbstractType
                 'attr' => array('class'=>'form-control'),
         ));
         
-        $builder->add( 'diffDiagnosis', 'textarea', array(
-                'label'=>'Differential Diagnoses:', 
-                'max_length'=>'10000', 
-                'required'=>false,
-                'attr' => array('class'=>'form-control'),
+//        $builder->add( 'diffDiagnosis', 'textarea', array(
+//                'label'=>'Differential Diagnoses:',
+//                'max_length'=>'10000',
+//                'required'=>false,
+//                'attr' => array('class'=>'form-control'),
+//        ));
+        $builder->add('diffDiagnoses', 'collection', array(
+            'type' => new DiffDiagnosesType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Diagnosis:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__diffDiagnoses__',
         ));
-        
+
 //        $builder->add( 'diseaseType', 'text', array(
 //                'label'=>'Disease Type:',
 //                'max_length'=>'100',

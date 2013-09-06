@@ -63,7 +63,17 @@
 {% endmacro %}
 
 
-{% macro orderinfo_panel_header(name, type, count, toatlLength, uid, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount) %}
+{% macro orderinfo_panel_header(
+    name, type, count, toatlLength, uid,
+    patientCount,
+    procedureCount,
+    accessionCount,
+    partCount,
+    blockCount,
+    slideCount,
+    scanCount,
+    stainCount
+) %}
 
 <div class="panel-heading" align="left">
     <div id="form_body_toggle_{{ name }}_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}"></div>
@@ -135,4 +145,31 @@
     </div>
 
 {% endmacro %}
+
+
+
+{% macro collectionInput(name, patient, specimen, accession, part) %}
+
+    {% import _self as formmacros %}
+
+    {#{% set uid = name~'_patient_'~patient~'_specimen_'~specimen~'_accession_'~accession~'_part_'~part %}#}
+
+    <p>
+    <div class="row" id="fields">
+        {{ form_errors(name) }}
+        <div class="col-xs-6" align="right">
+            {{ form_label(name) }}
+        </div>
+        <div class="col-xs-6" align="left">
+            {#<div id="{{ uid }}">#}
+                {{ form_widget(name) }}
+            {#</div>#}
+            {#<button id="b1" onClick="addDiffdiagField('diffDiagnoses', '{{ patient }}', '{{ specimen }}', '{{ accession }}', '{{ part }}')" class="btn btn-sm btn-info" type="button">+</button>#}
+        </div>
+        {{ form_rest(name) }}
+    </div>
+    </p>
+
+{% endmacro %}
+
                  
