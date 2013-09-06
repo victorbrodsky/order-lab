@@ -400,8 +400,8 @@ class MultyScanOrderController extends Controller {
 
         $diffDiagnoses = new DiffDiagnoses();
         $part->addDiffDiagnoses($diffDiagnoses);
-        $diffDiagnoses2 = new DiffDiagnoses();
-        $part->addDiffDiagnoses($diffDiagnoses2);
+        //$diffDiagnoses2 = new DiffDiagnoses();
+        //$part->addDiffDiagnoses($diffDiagnoses2);
 
         $block = new Block();
         $part->addBlock($block);

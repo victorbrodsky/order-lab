@@ -247,7 +247,9 @@
                                                                         {{ form_widget(diffDiagnoses.name) }}
                                                                         {#{{ form_rest(diffDiagnoses) }}#}
                                                                     {% endfor %}
-                                                                    <button id="b1" onClick="addDiffdiagField('diffdiagnoses', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                                                                    {% if type == 'new' or type == 'edit' %}
+                                                                        <button id="b1" onClick="addDiffdiagField('diffdiagnoses', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                                                                    {% endif %}
                                                                 </div>
                                                             </div>
                                                         </div>
