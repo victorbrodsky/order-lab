@@ -9,15 +9,16 @@
 
     {#<span class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</span>#}
 
-    {% if is_granted('ROLE_ADMIN') and security == 'true' %}              
+    {% if is_granted('ROLE_ADMIN') and security == 'true' %}  
+        <a href="{{ path('admin_index') }}">Admin</a> |
         {% if userreqs is defined %}
             {% if userreqs | length == 0 %}
-                <span class="text-success">Active User Requests:{{ userreqs | length }}</span>
+                <span class="text-success">Active User Requests:{{ userreqs | length }}</span> |
             {% else %}
-                <span class="text-danger">Active User Requests:{{ userreqs | length }}</span>
-            {% endif %}           
+                <span class="text-danger">Active User Requests:{{ userreqs | length }}</span> |
+            {% endif %}  
         {% else %}
-            <span class="text-success">Active User Requests:0</span>
+            <span class="text-success">Active User Requests:0</span> |
         {% endif %}
         <a href="{{ path('accountrequest') }}">All User Requests</a>
     {% endif %}

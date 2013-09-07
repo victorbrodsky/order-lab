@@ -71,7 +71,7 @@
 .form-control-modif {
     display: inline;
     height: 30px;
-    width: 50%;
+    width: 50% !important;
 }
 
 .header {

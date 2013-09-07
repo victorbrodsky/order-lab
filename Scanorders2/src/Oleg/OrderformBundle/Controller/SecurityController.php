@@ -21,7 +21,7 @@ use Oleg\OrderformBundle\Security\AperioLdap\cDataClient;
 //include_once( 'src\Oleg\OrderformBundle\Security\AperioLdap\Authenticate.php' );
 //include_once '\vendor\aperio\lib\Aperio\src\Skeleton.php';
 
-include_once '\Skeleton.php';
+//include_once '\Skeleton.php';
 
 class SecurityController extends Controller
 {
@@ -182,7 +182,8 @@ class SecurityController extends Controller
 
         //echo " skip login=".$loginName.", pass=". $password." <br>";
 
-        if( 1 ) {            
+        if( 1 ) { 
+            include_once '\Skeleton.php';
             //$DataServerURL = "http://127.0.0.1:86";
             $DataServerURL = GetDataServerURL();
             $client = new \Aperio_Aperio($DataServerURL);//,"","","","");

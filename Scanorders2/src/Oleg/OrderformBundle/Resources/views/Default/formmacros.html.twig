@@ -171,5 +171,29 @@
     </p>
 
 {% endmacro %}
-
-                 
+    
+    
+{% macro collectionFirstInput(name, type, patientCount, procedureCount, accessionCount, partCount) %}
+    
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {#get label: Different Diagnoses:#}
+            {{ form_label(name) }}
+        </div>
+        <div class="col-xs-6" align="left">
+{#            <div id="diffdiagnoses_field_{{ uid }}">#}
+{#                {% for diffDiagnoses in part.diffDiagnoses %}#}
+                    {#{{ form_errors(diffDiagnoses.name) }}#}
+                    {{ form_widget(name) }}
+                    {#{{ form_rest(diffDiagnoses) }}#}
+{#                {% endfor %}#}
+                {% if type == 'new' or type == 'edit' %}
+                    <button id="b1" onClick="addDiffdiagField('diffdiagnoses', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                {% endif %}
+{#            </div>#}
+        </div>
+    </div>
+    </p>
+    
+   {% endmacro %}              
