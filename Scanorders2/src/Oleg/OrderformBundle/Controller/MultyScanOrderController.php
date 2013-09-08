@@ -237,12 +237,7 @@ class MultyScanOrderController extends Controller {
                             } else {
                                 continue;
                             }
-//                            echo "part = ". $part. "<br>";
-//                            echo "diffDiag count = " . count($part->getDiffDiagnoses()) . "<br>";
-//                            foreach( $part->getDiffDiagnoses() as $diag ) {
-//                                echo "diag=".$diag->getName()."<br>";
-//                                $em->persist($diag);
-//                            }
+                            
                             //exit();
                             //Block
                             //$count=0;
@@ -399,9 +394,7 @@ class MultyScanOrderController extends Controller {
         $accession->addPart($part);
 
         $diffDiagnoses = new DiffDiagnoses();
-        $part->addDiffDiagnoses($diffDiagnoses);
-        //$diffDiagnoses2 = new DiffDiagnoses();
-        //$part->addDiffDiagnoses($diffDiagnoses2);
+        $part->addDiffDiagnoses($diffDiagnoses);       
 
         $block = new Block();
         $part->addBlock($block);

@@ -29,6 +29,10 @@
         {{ form_errors(form_scan) }}
         {{ form_errors(form_stain) }}
 
+        <div id="formpanel_part_0_0_0_0_0_0_0_0"
+             data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDiagnoses.vars.prototype.name)|e }}"
+        >
+        </div>  
         
         <div  class="panel panel-patient">
             <div class="panel-heading">
@@ -119,7 +123,11 @@
               <div class="tab-pane" id="part">
                   {{ formmacros.field(form_part.sourceOrgan) }}
                   {{ formmacros.field(form_part.description) }}
-                  {{ formmacros.field(form_part.diffDiagnoses) }}
+                  {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
+                  {% if form_part.diffDiagnoses|length > 0 %}  
+                    {{ formmacros.collectionInput(form_part, 'new', 'single', 0, 0, 0, 0) }}
+                  {% endif %}
+                  
                   {#{{ formmacros.field(form_part.diseaseType) }}#}
                   {{ formmacros.disease(form_part) }}
               </div>

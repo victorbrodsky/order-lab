@@ -146,54 +146,37 @@
 
 {% endmacro %}
 
-
-
-{% macro collectionInput(name, patient, specimen, accession, part) %}
-
-    {% import _self as formmacros %}
-
-    {#{% set uid = name~'_patient_'~patient~'_specimen_'~specimen~'_accession_'~accession~'_part_'~part %}#}
-
-    <p>
-    <div class="row" id="fields">
-        {{ form_errors(name) }}
-        <div class="col-xs-6" align="right">
-            {{ form_label(name) }}
-        </div>
-        <div class="col-xs-6" align="left">
-            {#<div id="{{ uid }}">#}
-                {{ form_widget(name) }}
-            {#</div>#}
-            {#<button id="b1" onClick="addDiffdiagField('diffDiagnoses', '{{ patient }}', '{{ specimen }}', '{{ accession }}', '{{ part }}')" class="btn btn-sm btn-info" type="button">+</button>#}
-        </div>
-        {{ form_rest(name) }}
-    </div>
-    </p>
-
-{% endmacro %}
     
     
-{% macro collectionFirstInput(name, type, patientCount, procedureCount, accessionCount, partCount) %}
-    
+{% macro collectionInput(part, type, formtype, patientCount, procedureCount, accessionCount, partCount) %}
+     
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
-            {#get label: Different Diagnoses:#}
-            {{ form_label(name) }}
+            {#Different Diagnoses:#}
+            {% if part.diffDiagnoses|length > 0 %}
+                {{ form_label(part.diffDiagnoses[0].name) }}
+            {% else %}
+                {{ form_label(part.diffDiagnoses.name) }}
+            {% endif %}
+            
+            
         </div>
         <div class="col-xs-6" align="left">
-{#            <div id="diffdiagnoses_field_{{ uid }}">#}
-{#                {% for diffDiagnoses in part.diffDiagnoses %}#}
+{#                                                                <div id="diffdiagnoses_field_{{ uid }}">#}
+                {% for diffDiagnoses in part.diffDiagnoses %}
                     {#{{ form_errors(diffDiagnoses.name) }}#}
-                    {{ form_widget(name) }}
+                    {{ form_widget(diffDiagnoses.name) }}
                     {#{{ form_rest(diffDiagnoses) }}#}
-{#                {% endfor %}#}
+                {% endfor %}
                 {% if type == 'new' or type == 'edit' %}
-                    <button id="b1" onClick="addDiffdiagField('diffdiagnoses', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                    <button onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                    <button onClick="delDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-danger" type="button">-</button>
                 {% endif %}
-{#            </div>#}
+{#                                                                </div>#}
         </div>
     </div>
     </p>
     
-   {% endmacro %}              
+{% endmacro %} 
+    

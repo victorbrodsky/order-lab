@@ -29,6 +29,7 @@ use Oleg\OrderformBundle\Entity\Stain;
 use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Status;
+use Oleg\OrderformBundle\Entity\DiffDiagnoses;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
@@ -441,8 +442,10 @@ class ScanOrderController extends Controller {
         $form_accession   = $this->createForm(new AccessionType(), $accession);
          
         $part = new Part();
+        $diffDiagnoses = new DiffDiagnoses();
+        $part->addDiffDiagnoses($diffDiagnoses);    
         //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
-        $form_part   = $this->createForm(new PartType(), $part);
+        $form_part   = $this->createForm(new PartType(), $part);              
             
         $block = new Block();      
         $form_block   = $this->createForm(new BlockType(), $block);

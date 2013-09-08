@@ -201,8 +201,8 @@
                                     {% for part in accession.part %}
                                         {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
                                         
-                                        {% set uidNext = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~(partCount+1)~'_'~0~'_'~0~'_'~0~'_'~0 %}                                       
-                                        {% set diffdiag_holder ='<div id="diffdiagnoses_'~uidNext~'"></div>' %}
+{#                                        {% set uidNext = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~(partCount+1)~'_'~0~'_'~0~'_'~0~'_'~0 %}                                       #}
+{#                                        {% set diffdiag_holder ='<div id="diffdiagnoses_'~uidNext~'"></div>' %}#}
                                     
                                         <div id="formpanel_part_{{ uid }}" class="panel panel-part"
                                              data-prototype-part="
@@ -214,7 +214,7 @@
 {#        {{  diffdiag_holder|e }}#}
 {#        {{ myform.collectionFirstInput(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name, type, patientCount, procedureCount, accessionCount, partCount)|e }}#}
 {#        {{ myform.collectionFirstInput(diffDiagName, type, patientCount, procedureCount, accessionCount, partCount)|e }}                                     #}
-        {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, patientCount, procedureCount, accessionCount, partCount)|e }}
+        {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}
         "
                                              data-prototype-diffdiagnoses="
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}#}
@@ -234,33 +234,9 @@
                                                 {#{{ myform.field(part.diffDiagnosis) }}#}
 
                                                 {############ different diagnoses input collection #############}
-{#                                                <div id="diffdiagnoses_{{ uid }}">#}
-                                                    {% if part.diffDiagnoses|length > 0 %}
-                                                        {#{{ myform.collectionInput(diffDiagnoses.name,patientCount,procedureCount,accessionCount,partCount) }}#}
-
-                                                        <p>
-                                                        <div class="row">
-                                                            <div class="col-xs-6" align="right">
-                                                                {#Different Diagnoses:#}
-                                                                {{ form_label(part.diffDiagnoses[0].name) }}
-                                                            </div>
-                                                            <div class="col-xs-6" align="left">
-{#                                                                <div id="diffdiagnoses_field_{{ uid }}">#}
-                                                                    {% for diffDiagnoses in part.diffDiagnoses %}
-                                                                        {#{{ form_errors(diffDiagnoses.name) }}#}
-                                                                        {{ form_widget(diffDiagnoses.name) }}
-                                                                        {#{{ form_rest(diffDiagnoses) }}#}
-                                                                    {% endfor %}
-                                                                    {% if type == 'new' or type == 'edit' %}
-                                                                        <button id="b1" onClick="addDiffdiagField('diffdiagnoses', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
-                                                                    {% endif %}
-{#                                                                </div>#}
-                                                            </div>
-                                                        </div>
-                                                        </p>
-
-                                                    {% endif %}
-{#                                                </div>#}
+                                                {% if part.diffDiagnoses|length > 0 %}                                                     
+                                                    {{ myform.collectionInput(part, type, 'multi', patientCount, procedureCount, accessionCount, partCount) }}                                              
+                                                {% endif %}
 
                                                 {#{{ myform.field(part.diseaseType) }}#}
                                                 {{ myform.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
@@ -290,9 +266,9 @@
                                                                     }}
 
                                                                     <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
-                                                                        {% if multy == 'single' %}
-                                                                            {{ myform.field(slide.diagnosis) }}
-                                                                        {% endif %}
+{#                                                                        {% if multy == 'single' %}#}
+{#                                                                            {{ myform.field(slide.diagnosis) }}#}
+{#                                                                        {% endif %}#}
                                                                         {{ myform.field(slide.microscopicdescr) }}
                                                                         {{ myform.field(slide.specialstain) }}
                                                                         {{ myform.field(slide.relevantscan) }}

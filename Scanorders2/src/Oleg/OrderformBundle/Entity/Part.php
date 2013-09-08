@@ -288,10 +288,13 @@ class Part
     
         return $this;
     }
-    public function addDiffDiagnos(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    //public function addDiffDiagnos(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    public function addDiffDiagnos($diffDiagnoses)
     {
-         $this->addDiffDiagnoses($diffDiagnoses);
-
+        if( $diffDiagnoses != null ) {
+            $this->addDiffDiagnoses($diffDiagnoses);
+        }
+         
         return $this;
     }
 
