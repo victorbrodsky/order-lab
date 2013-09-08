@@ -27,7 +27,7 @@ $(document).ready(function() {
 
     //priority and disease type options
     priorityOption();
-    //originOption();
+    originOption();
    
     //tab
     $('#optional_param_tab a').click(function (e) {
@@ -528,23 +528,28 @@ function priorityOption() {
 
 function originOption() {
 
-    $('#origin_option').collapse({
+    var holder = "#origin_option";
+
+    $(holder).collapse({
         toggle: false
     })
 
-    //multi id:
-    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
-    // oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_1_diseaseType
+    $('#oleg_orderformbundle_parttype_diseaseType_0').on('click', function(e) {
+        $(holder).collapse('show');
+    });
+    
+    $('#oleg_orderformbundle_parttype_diseaseType_1').on('click', function(e) {
+        $(holder).collapse('hide');
+    });
+    
 
-    $('#oleg_orderformbundle_parttype_diseaseType').change(function(e) {
-    //$('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
-        e.preventDefault();
-        $('#origin_option').collapse('toggle');
+    $('#oleg_orderformbundle_parttype_diseaseType_placeholder').on('click', function(e) {      
+        $(holder).collapse('hide');
     });
 
     var checked = $('form input[type=radio]:checked').val();
     if( checked == 1 ) {
-        $('#origin_option').collapse('toggle');
+        $(holder).collapse('toggle');
     }
 
 }
@@ -562,7 +567,7 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 
     var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
     var holder = '#origin_option_multi_'+uid+'_origintag';
-    console.log("on change:"+'#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType_0');
+    //console.log("on change:"+'#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType_0');
 
     //var curid = "";
 
@@ -573,9 +578,9 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 
     $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').change(function(e) {
 //    $('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
-        curid = $(this).attr('id');
+        var curid = $(this).attr('id');
         //alert("click id="+curid);
-        console.log("click id="+curid);
+        //console.log("click id="+curid);
 
         //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
         var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
@@ -600,42 +605,15 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 //        console.log("neoplasticId:"+neoplasticId+", neoplasticIfChecked="+neoplasticIfChecked);
 
         if( neoplasticIfChecked ) {
-            console.log("toggle!!!!!!!!!!!!!!!!!");
-//            $(holder).collapse('show');
-//            $(holder).collapse({
-//                toggle:true
-//            });
-            $(holder).show('slow');
+            //console.log("toggle!!!!!!!!!!!!!!!!!");
+            $(holder).collapse('show');
         }
         else {
-            console.log("close?????????????????");
-//            $(holder).collapse('hide');
-//            $(holder).collapse({
-//                toggle:false
-//            });
-            $(holder).hide('slow');
+            //console.log("close?????????????????");
+            $(holder).collapse('hide');
         }
 
     });
-
-    //if( curid.indexOf("diseaseType") != -1 ) {
-//        $(holder).collapse({
-//            toggle: false
-//        })
-    //}
-
-//    var checked = $('form input[type=radio]:checked').val();
-//    if( checked == 1 ) {
-//        //if( curid.indexOf("diseaseType") != -1 ) {
-//            //$(holder).collapse('toggle');
-//        //}
-//    }
-
-    //validate();
-
-
-    //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
-    //checkValidate(ids);
 
 }
 
@@ -774,7 +752,8 @@ function getDiffdiagField( name, patient, specimen, accession, part, diffdiag ) 
     newForm = newForm.replace(/__part__/g, part);
     newForm = newForm.replace(/__diffDiagnoses__/g, diffdiag);
     //newForm = "<p>"+newForm+"</p>";
-    //console.log("newForm="+newForm);
+    //newForm = "<br>"+newForm;
+    console.log("newForm="+newForm);
     return newForm;
 }
 

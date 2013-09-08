@@ -71,7 +71,7 @@
 .form-control-modif {
     display: inline;
     height: 30px;
-    width: 50% !important;
+    width: 70%;
 }
 
 .header {
@@ -107,9 +107,9 @@
     width: 100%;
 }
 
-/*.action-button {
-    float: left;
-}*/
+.option_info_panel {
+    padding-right: 1%;
+}
 
 #next_button {
     margin-top: 2%; 
