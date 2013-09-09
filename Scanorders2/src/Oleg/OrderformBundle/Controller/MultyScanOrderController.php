@@ -189,6 +189,7 @@ class MultyScanOrderController extends Controller {
             //Patient
             //$pat_count = 0;
             $uniquePatients = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity->getPatient() );
+            //$uniquePatients = $entity->getPatient();
             foreach( $uniquePatients as $patient ) {    //$entity->getPatient() as $patient ) {
                 if( !$patient->getId() ) {
                     //echo " pat id null <br>";

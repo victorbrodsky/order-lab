@@ -89,7 +89,7 @@ class PatientRepository extends EntityRepository
 
         //return $patients;
 
-        print_r($patients);
+        //print_r($patients);
 
         $mrns = array();
         $uniquePatients = array();
@@ -113,7 +113,9 @@ class PatientRepository extends EntityRepository
 
         }
 
-        print_r($uniquePatients);
+        //print_r($uniquePatients);
+
+        echo "exit patient count = " . count($uniquePatients) . "<br>";
 
         return $uniquePatients;
 
