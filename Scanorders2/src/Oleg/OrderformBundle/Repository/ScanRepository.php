@@ -31,11 +31,15 @@ class ScanRepository extends EntityRepository
             //echo "set name";
             $in_entity->setMag( $mags[$key] );
         }
+        
+        //TODO: change to object Status.php
+        $in_entity->setStatus("Submitted");
 
         //create new
         $em = $this->_em;
         $em->persist($in_entity);
-
+        echo "unit of work size=".$em->getUnitOfWork()->size()."<br>";
+        $em->flush($in_entity);
 
         return $in_entity;
     }

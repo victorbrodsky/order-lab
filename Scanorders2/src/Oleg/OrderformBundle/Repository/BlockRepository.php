@@ -15,7 +15,7 @@ class BlockRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $block, $part=null ) {  
+    public function processEntity( $block, $part=null, $orderinfo ) {  
         
         $em = $this->_em;
 
@@ -30,10 +30,12 @@ class BlockRepository extends EntityRepository
         //exit();
 
         if( $part == null || $part->getId() == null) {
-            $em->persist($block);
+            //$em->persist($block);
             //$em->flush();
             //echo "return block ################################<br>";
 
+            //return $block;
+            $block = $this->setResult( $block, $orderinfo );
             return $block;
         }
 
@@ -52,9 +54,11 @@ class BlockRepository extends EntityRepository
         $block_found =  $query->getResult();
                   
         if( $block_found == null ) {
-            $em->persist($block); //persisting this block cause the slide assign id
+            //$em->persist($block); //persisting this block cause the slide assign id
             //$em->flush();
             //echo "return block 2 ################################<br>";
+            //return $block;
+            $block = $this->setResult( $block, $orderinfo );
             return $block;
         }
 
@@ -62,24 +66,40 @@ class BlockRepository extends EntityRepository
 //        echo "block count=".count($block_found)."<br>";
 //        exit();
 
+        //it should be only 1 block, so return the first one (single one).
         $block_res = $block_found[0];
+        
         //copy all children to existing entity
-        foreach( $block->getSlide() as $slide ) {
-            $block_res->addSlide($slide);
-        }
+//        foreach( $block->getSlide() as $slide ) {
+//            $block_res->addSlide($slide);
+//        }
 
        //anyway we should get only one block found 
-       return $block_res;
+       //return $block_res;
+       $block = $this->setResult( $block_res, $orderinfo );
+       return $block;
     }
-
-
-    public function presetEntity( $part ) {
-
-        $part->setDiseaseType("Non-Neoplastic");
-        $part->setName("A");
-
-        return $part;
-
+    
+    public function setResult( $block, $orderinfo ) {
+        
+        $em = $this->_em;
+        $em->persist($block); 
+        
+        $slides = $block->getSlide();      
+        foreach( $slides as $slide ) {         
+            if( !$slide->getId() ) {
+                $block->removeSlide( $slide );
+                $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $orderinfo );               
+                $block->addSlide($slide);                                                                                                                             
+                $orderinfo->addSlide($slide);
+            } else {
+                continue;
+            }         
+        }
+                 
+        $em->flush($block);
+        
+        return $block;
     }
     
 }

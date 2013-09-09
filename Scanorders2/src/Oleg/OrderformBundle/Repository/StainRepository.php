@@ -18,30 +18,10 @@ class StainRepository extends EntityRepository
     //Make changes: 0 to H&E.
     public function processEntity( $in_entity ) { 
 
-    if(0) {
-        $helper = new FormHelper();
-
-        $stains = $helper->getStains();
-
-        $key = $in_entity->getName();
-
-        if( isset($key) && $key >= 0 ) {
-
-            $stain = $stains[$key];
-            $in_entity->setName( $stain );
-
-//            if( $stain ) {
-//                $in_entity->setName( $stain );
-//            } else {
-//                $in_entity->setName( $key );
-//            }
-
-        }
-     }
-
         //create new
         $em = $this->_em;
         $em->persist($in_entity);
+        $em->flush($in_entity);
 
         return $in_entity;
     }

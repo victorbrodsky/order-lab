@@ -61,7 +61,40 @@ class OrderInfoRepository extends EntityRepository
 //        echo "pathservice=".$entity->getPathologyService();
 //        exit();
         
-        return $entity; 
+//        $patients = $entity->getPatient();
+//        foreach( $patients as $patient ){
+//            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );
+//        }
+        
+        //$em->persist($in_entity);
+        //$em->flush();
+        
+        //return $entity;
+        $entity = $this->setResult( $entity );
+        return $entity;
+    }
+    
+    public function setResult( $entity ) {
+        
+        $em = $this->_em;
+        $em->persist($entity);      
+        
+        $patients = $entity->getPatient();
+        //echo "patients count=".count($patients)."<br>";
+        
+        foreach( $patients as $patient ) {
+            if( !$patient->getId() ) {
+                //echo $patient;
+                $entity->removePatient( $patient );
+                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity );
+                $entity->addPatient($patient);               
+            } else {
+                continue;
+            }
+        }
+        
+        $em->flush();         
+        return $entity;
     }
        
 }

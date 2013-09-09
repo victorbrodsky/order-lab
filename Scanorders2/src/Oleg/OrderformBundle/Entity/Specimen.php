@@ -176,16 +176,17 @@ class Specimen
     }
 
     public function __toString() {
-        $acc_info = "(";
-        $count = 0;
-        foreach( $this->accession as $accession ) {
-            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-            $acc_info .= $count.":" . $accession. "; ";
-            $count++;
-        }
-        $acc_info .= ")";
-
-        return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype()." Accession count=".count($this->getAccession())." (".$acc_info.")<br>";
+//        $acc_info = "(";
+//        $count = 0;
+//        foreach( $this->accession as $accession ) {
+//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+//            $acc_info .= $count.":" . $accession. "; ";
+//            $count++;
+//        }
+//        $acc_info .= ")";
+//
+//        return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype()." Accession count=".count($this->getAccession())." (".$acc_info.")<br>";
+        return 'Procedure: id=' . $this->getId() . "<br>";
     }
 
 

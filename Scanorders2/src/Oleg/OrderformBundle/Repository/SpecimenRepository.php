@@ -14,15 +14,16 @@ class SpecimenRepository extends EntityRepository
 {
     
     //Patient and Accession number is the key to check uniqueness for single slide order
-    public function processEntity( $in_entity, $accessions=null ) {
+    public function processEntity( $in_entity, $accessions=null, $orderinfo ) {
         
         $em = $this->_em;              
 
         //can't check uniqueness without accession number
         if( $accessions == null ) {
-            $em->persist($in_entity);
+            //$em->persist($in_entity);
             //echo "return by accession = null <br>";
-            return $in_entity;
+            //return $in_entity;
+            return $this->setResult($in_entity, $orderinfo);
         }
         
         //check if the patient exists
@@ -51,20 +52,50 @@ class SpecimenRepository extends EntityRepository
         
         if( $accession_found == null || $accession_found->getSpecimen() == null ) {
             //echo "return by accession not found 2<br>";
-            $em->persist($in_entity);
-            return $in_entity;
-
+            //$em->persist($in_entity);
+            //return $in_entity;
+            return $this->setResult($in_entity, $orderinfo);
         } else {
             $specimen = $accession_found->getSpecimen();
 
             //copy all children to existing entity
-            foreach( $in_entity->getAccession() as $accession ) {
-                $specimen->addAccession( $accession );
-            }
+//            foreach( $in_entity->getAccession() as $accession ) {
+//                $specimen->addAccession( $accession );
+//            }
 
-            $em->persist($specimen);
-            return $specimen;
+            //$em->persist($specimen);
+            //return $specimen;
+            return $this->setResult($specimen, $orderinfo);         
         }
+    }
+    
+    public function setResult( $specimen, $orderinfo ) {
+        
+        $em = $this->_em;
+        $em->persist($specimen); 
+        
+        $accessions = $specimen->getAccession();
+        echo "accession count=".count($accessions)."<br>";
+        foreach( $accessions as $accession ) {
+            echo $accession;
+        }
+        
+        foreach( $accessions as $accession ) {
+            if( !$accession->getId() ) {
+                echo "accession1=".$accession."<br>";
+                $specimen->removeAccession( $accession );
+                $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo );
+                echo "accession2=".$accession."<br>";
+                $specimen->addAccession($accession);
+                $orderinfo->addAccession($accession);
+            } else {
+                continue;
+            }
+        }
+        
+        
+        $em->flush($specimen);
+        return $specimen;
     }
     
 }

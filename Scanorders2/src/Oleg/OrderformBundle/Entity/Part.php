@@ -131,8 +131,9 @@ class Part
         $this->id = $id;
     }
 
-    public function setAccession($accession) {
+    public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null) {
         $this->accession = $accession;
+        return $this;
     }
 
     public function setName($name) {

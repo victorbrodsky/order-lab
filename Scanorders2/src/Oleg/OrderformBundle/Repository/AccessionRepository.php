@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class AccessionRepository extends EntityRepository {
     
     //this function will create an accession if it doesn't exist or return the existing accession object
-    public function processEntity( $accession ) {
+    public function processEntity( $accession, $orderinfo ) {
 
         $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
 
@@ -21,20 +21,45 @@ class AccessionRepository extends EntityRepository {
 
         if( !$entity ) {        
             //create new accession
-            $em->persist($accession);
-            return $accession;
+            //$em->persist($accession);
+            return $this->setResult( $accession, $orderinfo );          
         }
 
         //copy all children to existing entity
-        foreach( $accession->getPart() as $part ) {
-            $entity->addPart( $part );
-        }
+//        foreach( $accession->getPart() as $part ) {
+//            $entity->addPart( $part );
+//        }
 //        foreach( $accession->getSlide() as $slide ) {
 //            $entity->addSlide( $slide );
 //        }
 
-        $em->persist($entity);
-        return $entity;
+//        $em->persist($entity);
+//        return $entity;
+        
+        return $this->setResult( $entity, $orderinfo );        
+    }
+    
+    public function setResult( $accession, $orderinfo ) {
+        
+        $em = $this->_em;
+        $em->persist($accession); 
+        echo "accession=".$accession."<br>";
+        
+        $parts = $accession->getPart();
+        foreach( $parts as $part ) {
+            if( !$part->getId() ) {
+                $accession->removePart( $part );
+                $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession, $orderinfo );
+                $accession->addPart($part);
+                $orderinfo->addPart($part);
+            } else {
+                continue;
+            }
+        }
+                  
+        $em->flush($accession);
+        
+        return $accession;
     }
     
 }

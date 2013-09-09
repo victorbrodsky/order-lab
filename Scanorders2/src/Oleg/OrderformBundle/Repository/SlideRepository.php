@@ -9,19 +9,47 @@ use Doctrine\ORM\EntityRepository;
 class SlideRepository extends EntityRepository {
     
     //Make new - no requirements for uniqueness.
-    public function processEntity( $entity ) {
+    public function processEntity( $entity, $orderinfo ) {
           
-        //$entity->getScan()->setStatus("submitted");
-        foreach( $entity->getScan()  as $scan ) {
-            $scan->setStatus("submitted");
-        }
-
         //create new           
-        $em = $this->_em;
-        $em->persist($entity);
-
-        return $entity;
+//        $em = $this->_em;
+//        $em->persist($entity);
         
+        return $this->setResult( $entity, $orderinfo );
+    }
+    
+    public function setResult( $slide, $orderinfo ) {
+        
+        $em = $this->_em;
+        $em->persist($slide);
+        
+        $scans = $slide->getScan();
+        foreach( $scans as $scan ) {          
+            if( !$scan->getId() ) {
+                $slide->removeScan( $scan );
+                $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
+                $slide->addScan($scan);
+                $orderinfo->addScan($scan);
+            } else {
+                continue;
+            }
+        } //scan
+
+        $stains = $slide->getStain();
+        foreach( $stains as $stain ) {
+            if( !$stain->getId() ) {
+                $slide->removeStain( $stain );
+                $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
+                $slide->addStain($stain);
+                $orderinfo->addStain($stain);
+            } else {
+                continue;
+            }
+        } //stain
+               
+        $em->flush($slide);
+        
+        return $slide;
     }
     
 }

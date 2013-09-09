@@ -123,8 +123,7 @@ class Block
      */
     public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
     {
-        $this->part = $part;
-    
+        $this->part = $part;   
         return $this;
     }
 
@@ -141,14 +140,15 @@ class Block
     public function __toString()
     {
         //return "Block: id=".$this->id.", name".$this->name."<br>";
-        $slide_info = "(";
-        $count = 0;
-        foreach( $this->slide as $slide ) {
-            $slide_info .= $count.":" . $slide. "; ";
-            $count++;
-        }
-        $slide_info .= ")";
-        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
+//        $slide_info = "(";
+//        $count = 0;
+//        foreach( $this->slide as $slide ) {
+//            $slide_info .= $count.":" . $slide. "; ";
+//            $count++;
+//        }
+//        $slide_info .= ")";
+//        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
+        return "Block: id=".$this->id.", name=".$this->name."<br>";
     }
 
     /**

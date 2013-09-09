@@ -15,7 +15,7 @@ class PartRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $part, $accession=null ) {  
+    public function processEntity( $part, $accession=null, $orderinfo ) {  
         
         $em = $this->_em;
         
@@ -27,8 +27,10 @@ class PartRepository extends EntityRepository
 //        }
         
         if( $accession == null || $accession->getId() == null ) {
-            $em->persist($part);
+            //$em->persist($part);
             //$em->flush();
+            //return $part;
+            $part = $this->setResult( $part, $orderinfo );
             return $part;
         }
         
@@ -40,27 +42,56 @@ class PartRepository extends EntityRepository
         
         
         if( $part_found == null ) {
-            $em->persist($part);
+            //$em->persist($part);
             //$em->flush();
+            //return $part;
+            $part = $this->setResult( $part, $orderinfo );
             return $part;
         }
         
         if( $part_found->getName() != $part->getName() ) {
-            $em->persist($part);
+            //$em->persist($part);
             //$em->flush();
+            //return $part;
+            $part = $this->setResult( $part, $orderinfo );
             return $part;
         }
 
         //copy all children to existing entity
-        foreach( $part->getBlock() as $block ) {
-            $part_found->addBlock( $block );                   
-        }
+//        foreach( $part->getBlock() as $block ) {
+//            $part_found->addBlock( $block );                   
+//        }
 //        foreach( $part->getSlide() as $slide ) {
 //            $part_found->addSlide( $slide );
 //        }
 
-        $em->persist($part_found);
-        return $part_found; 
+//        $em->persist($part_found);
+//        return $part_found; 
+        $part = $this->setResult( $part_found, $orderinfo );
+        return $part;
+    }
+    
+    public function setResult( $part, $orderinfo ) {
+        
+        $em = $this->_em;
+        $em->persist($part);
+        
+        $blocks = $part->getBlock();    
+        
+        foreach( $blocks as $block ) {
+            if( !$block->getId() ) {
+                $part->removeBlock( $block );
+                $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part, $orderinfo );
+                $part->addBlock($block);
+                $orderinfo->addBlock($block);
+            } else {
+                continue;
+            }
+        }      
+        
+        $em->flush($part);
+        
+        return $part;
     }
 
     public function presetEntity( $part ) {

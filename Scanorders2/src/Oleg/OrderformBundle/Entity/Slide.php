@@ -206,12 +206,7 @@ class Slide
 //    {
 //        return $this->stain;
 //    }
-//
-//     public function __toString() {
-//        return "Slide: id=".$this->getId().", mag=".$this->getScan()->getMag().", stain=".$this->getStain()->getName()."<br>";
-//    }
-    
-
+//  
 //    /**
 //     * Set scan
 //     *
@@ -362,5 +357,10 @@ class Slide
     public function getStain()
     {
         return $this->stain;
+    }
+    
+    
+    public function __toString() {
+        return "Slide: id=".$this->getId().", diagnosis=".$this->getDiagnosis()."<br>";
     }
 }

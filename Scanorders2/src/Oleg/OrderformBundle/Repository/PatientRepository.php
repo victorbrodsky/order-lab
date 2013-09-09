@@ -14,9 +14,9 @@ use Symfony\Component\Serializer\Exception\LogicException;
 class PatientRepository extends EntityRepository
 {
     //make sure the uniqueness entity. Make new or return id of existing.
-    public function processEntity( $in_entity ) {
+    public function processEntity( $in_entity, $orderinfo ) {
 
-        $em = $this->_em;
+        $em = $this->_em;      
 
         if( strpos( $in_entity->getMrn(), 'NOMRNPROVIDED' ) !== false ) {
             //throw new LogicException('MRN cannot contain NOMRNPROVIDED string');
@@ -61,20 +61,46 @@ class PatientRepository extends EntityRepository
         $entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
         $em = $this->_em;
 
-        if( null === $entity ) {        
-            //create new                                                
-            $em->persist($in_entity);                            
-            return $in_entity;
+        //create new, cause old entity was not found in db 
+        if( null === $entity ) {                                        
+            //$em->persist($in_entity);                            
+            //return $in_entity;
+            //echo "new patient<br>";
+            return $this->setResult( $in_entity, $orderinfo );         
         } 
 
         //copy all children to existing entity
-        foreach( $in_entity->getSpecimen() as $specimen ) {
-            $entity->addSpecimen( $specimen );
+//        foreach( $in_entity->getSpecimen() as $specimen ) {
+//            $entity->addSpecimen( $specimen );
+//        }
+
+        //$em->persist($entity);
+
+        //return $entity;
+        //echo "existing patient<br>";
+        return $this->setResult( $entity, $orderinfo );     
+    }
+    
+    public function setResult( $patient, $orderinfo ) {
+        
+        $em = $this->_em;
+        $em->persist($patient);
+        
+        
+        $specimens = $patient->getSpecimen();
+        foreach( $specimens as $specimen ) {
+            if( !$specimen->getId() ) {          
+                $patient->removeSpecimen( $specimen );
+                $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, $specimen->getAccession(), $orderinfo );              
+                $patient->addSpecimen($specimen);
+                $orderinfo->addSpecimen($specimen);
+            } else {
+                continue;
+            }
         }
-
-        $em->persist($entity);
-
-        return $entity;
+         
+        $em->flush($patient);
+        return $patient;
     }
     
 }

@@ -186,6 +186,8 @@ class MultyScanOrderController extends Controller {
 //            echo $entity;
             //exit();
             
+if(0){
+            
             //Patient
             //$pat_count = 0;
             foreach( $entity->getPatient() as $patient ) {
@@ -311,19 +313,18 @@ class MultyScanOrderController extends Controller {
             //echo "<br>End of loop<br>";
             //echo $entity;
             //exit();
-
-            if (isset($_POST['btnSave'])) {
-                //echo "save";
-                //$entity->setStatus('save');
-                $status = $em->getRepository('OlegOrderformBundle:Status')->setStatus('Not Submitted');
-                //$entity->setStatus("active");
+}//if(0)
+            
+            if (isset($_POST['btnSave'])) {              
+                $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             
                 $entity->setStatus($status);
             }
 
+            //echo "entity=".$entity;
             //exit();
 
-            $em->persist($entity);
-            $em->flush();
+            //$em->persist($entity);
+            //$em->flush();
 
             if (isset($_POST['btnSubmit'])) {
                 //email
@@ -389,8 +390,7 @@ class MultyScanOrderController extends Controller {
         $accession = new Accession();
         $procedure->addAccession($accession);
 
-        $part = new Part();
-        //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
+        $part = new Part();      
         $accession->addPart($part);
 
         $diffDiagnoses = new DiffDiagnoses();
@@ -486,7 +486,7 @@ class MultyScanOrderController extends Controller {
         //echo "<br>orderinfo count=".count( $entities )."<br>";
 
         if( count( $entities ) == 0 ) {
-            throw $this->createNotFoundException('Unable to find entity.');
+            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         } else {
             $entity = $entities[0];
         }
