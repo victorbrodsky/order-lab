@@ -58,14 +58,19 @@ class PatientRepository extends EntityRepository
 
         //exit();
         
-        $entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
+        //$entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
+        $entity = $this->findOneByMrn($in_entity->getMrn());
         $em = $this->_em;
+        //echo "entity=".$entity;
 
         if( null === $entity ) {        
-            //create new                                                
+            //create new
+            //echo "new<br>";
             $em->persist($in_entity);                            
             return $in_entity;
-        } 
+        } else {
+            //echo "old<br>";
+        }
 
         //copy all children to existing entity
         foreach( $in_entity->getSpecimen() as $specimen ) {
@@ -75,6 +80,43 @@ class PatientRepository extends EntityRepository
         $em->persist($entity);
 
         return $entity;
+    }
+
+    //remove duplicate entities from persistent, not DB (i.e. user creates two patients with the same MRN in multi form)
+    public function removeDuplicateEntities( $patients ) {
+
+        echo "patient count = " . count($patients) . "<br>";
+
+        //return $patients;
+
+        print_r($patients);
+
+        $mrns = array();
+        $uniquePatients = array();
+        $count = 0;
+
+        foreach( $patients as $patient ) {
+            echo $patient;
+
+            $mrn = $patient->getMrn();
+
+            if( $mrn != null && $mrn != "" ) {
+
+                if( count($mrns) == 0 || !in_array($mrn,$mrns) ) {
+                    $mrns[] = $mrn;
+                    $uniquePatients[] = $patient;
+                }
+
+            }
+
+            $count++;
+
+        }
+
+        print_r($uniquePatients);
+
+        return $uniquePatients;
+
     }
     
 }
