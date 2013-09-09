@@ -18,6 +18,8 @@ use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\DiffDiagnoses;
+use Oleg\OrderformBundle\Entity\RelevantScans;
+use Oleg\OrderformBundle\Entity\SpecialStains;
 use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
@@ -400,6 +402,12 @@ if(0){
         $part->addBlock($block);
 
         $slide = new Slide();
+
+        $specialStains = new SpecialStains();
+        $relevantScans = new RelevantScans();
+        $slide->addRelevantScan($relevantScans);
+        $slide->addSpecialStain($specialStains);
+
         $block->addSlide($slide);
 
         $scan = new Scan();
@@ -449,7 +457,6 @@ if(0){
     }
 
 
-
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      * @Route("/edit/{id}", name="multy_edit", requirements={"id" = "\d+"})
@@ -466,7 +473,6 @@ if(0){
 
         $em = $this->getDoctrine()->getManager();
 
-
         //TODO: is it possible to filter orderinfo by JOINs?
         //INNER JOIN orderinfo.specimen specimen
         $query = $em->createQuery('
@@ -478,8 +484,8 @@ if(0){
             INNER JOIN orderinfo.part part
             INNER JOIN orderinfo.block block
             INNER JOIN orderinfo.slide slide
-            WHERE orderinfo.id = :id
-        ')->setParameter('id', $id);
+            WHERE orderinfo.id = :id'
+        )->setParameter('id', $id);
 
         $entities = $query->getResult();
 
@@ -487,6 +493,10 @@ if(0){
 
         if( count( $entities ) == 0 ) {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+        }
+
+        if( count( $entities ) == 0 ) {
+            throw $this->createNotFoundException('More than one OrderInfo entity found.');
         } else {
             $entity = $entities[0];
         }

@@ -61,18 +61,38 @@ class SlideType extends AbstractType
                 'attr' => array('class'=>'form-control'),
         ));
         
-        $builder->add('specialstain', 'text', array(
-                'max_length'=>100,
-                'required'=>false,
-                'label'=>'Special Stain Results:',
-                'attr' => array('class'=>'form-control form-control-modif'),
+//        $builder->add('specialstain', 'text', array(
+//                'max_length'=>100,
+//                'required'=>false,
+//                'label'=>'Special Stain Results:',
+//                'attr' => array('class'=>'form-control form-control-modif'),
+//        ));
+        $builder->add('specialStains', 'collection', array(
+            'type' => new SpecialStainsType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Special Stain Results:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__specialStains__',
         ));
         
-        $builder->add('relevantscan', 'text', array(
-                'max_length'=>100,
-                'required'=>false,
-                'label'=>'Relevant Scanned Images:',
-                'attr' => array('class'=>'form-control form-control-modif'),
+//        $builder->add('relevantscan', 'text', array(
+//                'max_length'=>100,
+//                'required'=>false,
+//                'label'=>'Relevant Scanned Images:',
+//                'attr' => array('class'=>'form-control form-control-modif'),
+//        ));
+        $builder->add('relevantScans', 'collection', array(
+            'type' => new RelevantScansType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Relevant Scanned Images:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__relevantScans__',
         ));
         
         //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false)); 

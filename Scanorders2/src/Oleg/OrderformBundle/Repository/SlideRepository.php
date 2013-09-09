@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 class SlideRepository extends EntityRepository {
     
     //Make new - no requirements for uniqueness.
-    public function processEntity( $entity, $orderinfo ) {
+    public function processEntity( $entity, $orderinfo=null ) {
           
         //create new           
 //        $em = $this->_em;
@@ -18,10 +18,14 @@ class SlideRepository extends EntityRepository {
         return $this->setResult( $entity, $orderinfo );
     }
     
-    public function setResult( $slide, $orderinfo ) {
+    public function setResult( $slide, $orderinfo=null ) {
         
         $em = $this->_em;
         $em->persist($slide);
+
+        if( $orderinfo == null ) {
+            return $slide;
+        }
         
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {          
@@ -47,7 +51,7 @@ class SlideRepository extends EntityRepository {
             }
         } //stain
                
-        $em->flush($slide);
+        //$em->flush($slide);
         
         return $slide;
     }

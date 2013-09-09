@@ -21,7 +21,7 @@ class StainRepository extends EntityRepository
         //create new
         $em = $this->_em;
         $em->persist($in_entity);
-        $em->flush($in_entity);
+        //$em->flush($in_entity);
 
         return $in_entity;
     }

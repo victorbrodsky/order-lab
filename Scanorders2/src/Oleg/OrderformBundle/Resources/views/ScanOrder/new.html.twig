@@ -154,8 +154,14 @@
               <div class="tab-pane" id="slide">
                   {#{{ formmacros.field(form_slide.diagnosis) }}#}
                   {{ formmacros.field(form_slide.microscopicdescr) }}
-                  {{ formmacros.field(form_slide.specialstain) }}
-                  {{ formmacros.field(form_slide.relevantscan) }}
+                  {#{{ formmacros.field(form_slide.specialStains) }}#}
+                  {% if form_slide.specialStains|length > 0 %}
+                      {{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 0, 0, 0, 0, 0) }}
+                  {% endif %}
+                  {#{{ formmacros.field(form_slide.relevantScans) }}#}
+                  {% if form_slide.relevantScans|length > 0 %}
+                      {{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 0, 0, 0, 0, 0) }}
+                  {% endif %}
               </div>
 
                 <div class="tab-pane" id="scan">

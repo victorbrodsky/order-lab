@@ -178,5 +178,31 @@
     </div>
     </p>
     
-{% endmacro %} 
+{% endmacro %}
+
+
+{% macro collInput(coll, type, formtype, patientCount, procedureCount, accessionCount, partCount, slideCount) %}
+
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {% if coll|length > 0 %}
+                {{ form_label(coll[0].name) }}
+            {% else %}
+                {{ form_label(coll.name) }}
+            {% endif %}
+        </div>
+        <div class="col-xs-6" align="left">
+            {% for col in coll %}
+                {{ form_widget(col.name) }}
+            {% endfor %}
+            {% if type == 'new' or type == 'edit' %}
+                <button onClick="addCollField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                <button onClick="delCollField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-danger" type="button">-</button>
+            {% endif %}
+        </div>
+    </div>
+    </p>
+
+{% endmacro %}
     

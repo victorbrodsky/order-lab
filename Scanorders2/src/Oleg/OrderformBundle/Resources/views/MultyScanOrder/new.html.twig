@@ -134,8 +134,8 @@
          data-prototype-slide="
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.diagnosis)|e }}#}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialstain)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantscan)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans)|e }}
      "
          data-prototype-stain="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
@@ -270,8 +270,19 @@
 {#                                                                            {{ myform.field(slide.diagnosis) }}#}
 {#                                                                        {% endif %}#}
                                                                         {{ myform.field(slide.microscopicdescr) }}
-                                                                        {{ myform.field(slide.specialstain) }}
-                                                                        {{ myform.field(slide.relevantscan) }}
+
+
+                                                                        {#{{ myform.field(slide.specialStains) }}#}
+                                                                        {############ specialStains input collection #############}
+                                                                        {% if slide.specialStains|length > 0 %}
+                                                                            {{ myform.collInput(slide.specialStains, type, 'multi', patientCount, procedureCount, accessionCount, partCount, slideCount) }}
+                                                                        {% endif %}
+
+                                                                        {#{{ myform.field(slide.relevantScans) }}#}
+                                                                        {############ relevantScans input collection #############}
+                                                                        {% if slide.relevantScans|length > 0 %}
+                                                                            {{ myform.collInput(slide.relevantScans, type, 'multi', patientCount, procedureCount, accessionCount, partCount, slideCount) }}
+                                                                        {% endif %}
 
 
                                                                         {#scan and stain#}

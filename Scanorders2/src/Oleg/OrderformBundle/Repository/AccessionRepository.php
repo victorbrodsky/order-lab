@@ -13,11 +13,12 @@ use Doctrine\ORM\EntityRepository;
 class AccessionRepository extends EntityRepository {
     
     //this function will create an accession if it doesn't exist or return the existing accession object
-    public function processEntity( $accession, $orderinfo ) {
-
-        $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
+    public function processEntity( $accession, $orderinfo=null ) {
 
         $em = $this->_em;
+        $accession = $em->getRepository('OlegOrderformBundle:Part')->removeDuplicateEntities( $accession );
+
+        $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
 
         if( !$entity ) {        
             //create new accession
@@ -26,9 +27,9 @@ class AccessionRepository extends EntityRepository {
         }
 
         //copy all children to existing entity
-//        foreach( $accession->getPart() as $part ) {
-//            $entity->addPart( $part );
-//        }
+        foreach( $accession->getPart() as $part ) {
+            $entity->addPart( $part );
+        }
 //        foreach( $accession->getSlide() as $slide ) {
 //            $entity->addSlide( $slide );
 //        }
@@ -39,11 +40,15 @@ class AccessionRepository extends EntityRepository {
         return $this->setResult( $entity, $orderinfo );        
     }
     
-    public function setResult( $accession, $orderinfo ) {
+    public function setResult( $accession, $orderinfo=null ) {
         
         $em = $this->_em;
         $em->persist($accession); 
-        echo "accession=".$accession."<br>";
+        //echo "accession=".$accession."<br>";
+
+        if( $orderinfo == null ) {
+            return $accession;
+        }
         
         $parts = $accession->getPart();
         foreach( $parts as $part ) {
@@ -57,10 +62,39 @@ class AccessionRepository extends EntityRepository {
             }
         }
                   
-        $em->flush($accession);
+        //$em->flush($accession);
         
         return $accession;
     }
-    
+
+    //filter out duplicate virtual (in form, not in DB) accessions from specimen
+    public function removeDuplicateEntities( $specimen ) {
+
+        $accessions = $specimen->getAccession();
+
+        if( count($accessions) == 1 ) {
+            return $specimen;
+        }
+
+        $accessionNums = array();
+
+        foreach( $accessions as $accession ) {
+
+            $accNum = $accession->getAccession();
+
+            if( count($accessionNums) == 0 || !in_array($accNum, $accessionNums) ) {
+                $accessionNums[] = $accNum;
+                //persist the rest of entities, because they will be added to DB.
+                $em = $this->_em;
+                $em->persist($accession);
+            } else {
+                $specimen->removeAccession($accession);
+            }
+
+        }
+
+        return $specimen;
+    }
+
 }
 ?>

@@ -15,7 +15,7 @@ class BlockRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $block, $part=null, $orderinfo ) {  
+    public function processEntity( $block, $part=null, $orderinfo=null ) {
         
         $em = $this->_em;
 
@@ -70,9 +70,9 @@ class BlockRepository extends EntityRepository
         $block_res = $block_found[0];
         
         //copy all children to existing entity
-//        foreach( $block->getSlide() as $slide ) {
-//            $block_res->addSlide($slide);
-//        }
+        foreach( $block->getSlide() as $slide ) {
+            $block_res->addSlide($slide);
+        }
 
        //anyway we should get only one block found 
        //return $block_res;
@@ -83,7 +83,11 @@ class BlockRepository extends EntityRepository
     public function setResult( $block, $orderinfo ) {
         
         $em = $this->_em;
-        $em->persist($block); 
+        $em->persist($block);
+
+        if( $orderinfo == null ) {
+            return $block;
+        }
         
         $slides = $block->getSlide();      
         foreach( $slides as $slide ) {         
@@ -97,9 +101,38 @@ class BlockRepository extends EntityRepository
             }         
         }
                  
-        $em->flush($block);
+        //$em->flush($block);
         
         return $block;
+    }
+
+    //filter out duplicate virtual (in form, not in DB) blocks from a part
+    //since we check the block for this particular part, then use just block's name (?!)
+    public function removeDuplicateEntities( $part ) {
+
+        $blocks = $part->getBlock();
+
+        if( count($blocks) == 1 ) {
+            return $part;
+        }
+
+        $names = array();
+
+        foreach( $blocks as $block ) {
+
+            $thisName = $block->getName();
+
+            if( count($names) == 0 || !in_array($thisName, $names) ) {
+                $names[] = $thisName;
+                //persist the rest of entities, because they will be added to DB.
+                $em = $this->_em;
+                $em->persist($block);
+            } else {
+                $part->removeBlock($block);
+            }
+        }
+
+        return $part;
     }
     
 }

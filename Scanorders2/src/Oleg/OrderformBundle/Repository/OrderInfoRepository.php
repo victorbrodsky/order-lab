@@ -19,9 +19,13 @@ class OrderInfoRepository extends EntityRepository
     public function processEntity( $entity, $type ) {
         
 //        echo "orderifno repos id=".$entity->getId()."<br>";
-//        echo "orderifno repos provider=".$entity->getProvider()."<br>";
+//        echo "orderifno repos provider=".$entity->getProvider()."<br>";\
 
         $em = $this->_em;
+
+        //one way to solev multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
+        //$entity = $this->removeDuplicateEntities($entity);
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
 
         //set Status with Type and Group
         //$status = $em->getRepository('OlegOrderformBundle:Status')->setStatus('Submit');
@@ -68,10 +72,10 @@ class OrderInfoRepository extends EntityRepository
         
         //$em->persist($in_entity);
         //$em->flush();
-        
+
+
         //return $entity;
-        $entity = $this->setResult( $entity );
-        return $entity;
+        return $this->setResult( $entity );
     }
     
     public function setResult( $entity ) {
@@ -87,14 +91,17 @@ class OrderInfoRepository extends EntityRepository
                 //echo $patient;
                 $entity->removePatient( $patient );
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity );
-                $entity->addPatient($patient);               
+                $entity->addPatient($patient);
             } else {
                 continue;
             }
         }
-        
+
+        //echo "before orderinfo exit<br>";
+        //exit();
+
         $em->flush();         
         return $entity;
     }
-       
+
 }

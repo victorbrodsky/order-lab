@@ -54,15 +54,25 @@ class Slide
      */
     protected $microscopicdescr;
     
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=100)
+//     */
+//    protected $specialstain;
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)
+     * @param \Doctrine\Common\Collections\Collection $property
+     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="slide", cascade={"persist"})
      */
-    protected $specialstain;
+    protected $specialStains;
     
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=100)
+//     */
+//    protected $relevantscan;
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)
+     * @param \Doctrine\Common\Collections\Collection $property
+     * @ORM\OneToMany(targetEntity="RelevantScans", mappedBy="slide", cascade={"persist"})
      */
-    protected $relevantscan;
+    protected $relevantScans;
     
     /**
      * @ORM\Column(type="string", nullable=true, length=200)
@@ -119,6 +129,8 @@ class Slide
         $this->orderinfo = new ArrayCollection();
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
+        $this->specialStains = new ArrayCollection();
+        $this->relevantScans = new ArrayCollection();
     }
     
     public function getId() {
@@ -143,14 +155,6 @@ class Slide
 
     public function setMicroscopicdescr($microscopicdescr) {
         $this->microscopicdescr = $microscopicdescr;
-    }
-
-    public function getSpecialstain() {
-        return $this->specialstain;
-    }
-
-    public function setSpecialstain($specialstain) {
-        $this->specialstain = $specialstain;
     }
 
     public function getRelevantscan() {
@@ -362,5 +366,78 @@ class Slide
     
     public function __toString() {
         return "Slide: id=".$this->getId().", diagnosis=".$this->getDiagnosis()."<br>";
+    }
+
+    /**
+     * Add specialStains
+     *
+     * @param \Oleg\OrderformBundle\Entity\SpecialStains $specialStains
+     * @return Slide
+     */
+    public function addSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
+    {
+        if( !$this->specialStains->contains($specialStains) ) {
+            $specialStains->setSlide($this);
+            $this->specialStains[] = $specialStains;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove specialStains
+     *
+     * @param \Oleg\OrderformBundle\Entity\SpecialStains $specialStains
+     */
+    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
+    {
+        $this->specialStains->removeElement($specialStains);
+    }
+
+    /**
+     * Get specialStains
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSpecialStains()
+    {
+        return $this->specialStains;
+    }
+    
+
+    /**
+     * Add relevantScans
+     *
+     * @param \Oleg\OrderformBundle\Entity\RelevantScans $relevantScans
+     * @return Slide
+     */
+    public function addRelevantScan(\Oleg\OrderformBundle\Entity\RelevantScans $relevantScans)
+    {
+        if( !$this->relevantScans->contains($relevantScans) ) {
+            $relevantScans->setSlide($this);
+            $this->relevantScans[] = $relevantScans;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove relevantScans
+     *
+     * @param \Oleg\OrderformBundle\Entity\RelevantScans $relevantScans
+     */
+    public function removeRelevantScan(\Oleg\OrderformBundle\Entity\RelevantScans $relevantScans)
+    {
+        $this->relevantScans->removeElement($relevantScans);
+    }
+
+    /**
+     * Get relevantScans
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRelevantScans()
+    {
+        return $this->relevantScans;
     }
 }

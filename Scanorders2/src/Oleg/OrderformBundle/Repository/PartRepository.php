@@ -15,9 +15,11 @@ class PartRepository extends EntityRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $part, $accession=null, $orderinfo ) {  
+    public function processEntity( $part, $accession=null, $orderinfo=null ) {
         
         $em = $this->_em;
+
+        $part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
         
 //        $helper = new FormHelper();
 //        $key = $part->getName();
@@ -58,9 +60,9 @@ class PartRepository extends EntityRepository
         }
 
         //copy all children to existing entity
-//        foreach( $part->getBlock() as $block ) {
-//            $part_found->addBlock( $block );                   
-//        }
+        foreach( $part->getBlock() as $block ) {
+            $part_found->addBlock( $block );
+        }
 //        foreach( $part->getSlide() as $slide ) {
 //            $part_found->addSlide( $slide );
 //        }
@@ -75,7 +77,11 @@ class PartRepository extends EntityRepository
         
         $em = $this->_em;
         $em->persist($part);
-        
+
+        if( $orderinfo == null ) {
+            return $part;
+        }
+
         $blocks = $part->getBlock();    
         
         foreach( $blocks as $block ) {
@@ -89,9 +95,40 @@ class PartRepository extends EntityRepository
             }
         }      
         
-        $em->flush($part);
+        //$em->flush($part);
         
         return $part;
+    }
+
+    //filter out duplicate virtual (in form, not in DB) parts from accession
+    //unique part can be identified by the accession and part name => same part has the same accession number and part name;
+    //since we check the part for this particular accession, then use just part's name (?!)
+    public function removeDuplicateEntities( $accession ) {
+
+        $parts = $accession->getPart();
+
+        if( count($parts) == 1 ) {
+            return $accession;
+        }
+
+        $names = array();
+
+        foreach( $parts as $part ) {
+
+            $thisName = $part->getName();
+
+            if( count($names) == 0 || !in_array($thisName, $names) ) {
+                $names[] = $thisName;
+                //persist the rest of entities, because they will be added to DB.
+                $em = $this->_em;
+                $em->persist($part);
+            } else {
+                $accession->removePart($part);
+            }
+
+        }
+
+        return $accession;
     }
 
     public function presetEntity( $part ) {

@@ -30,6 +30,8 @@ use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Status;
 use Oleg\OrderformBundle\Entity\DiffDiagnoses;
+use Oleg\OrderformBundle\Entity\RelevantScans;
+use Oleg\OrderformBundle\Entity\SpecialStains;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
@@ -450,7 +452,13 @@ class ScanOrderController extends Controller {
         $block = new Block();      
         $form_block   = $this->createForm(new BlockType(), $block);
         
-        $slide = new Slide();      
+        $slide = new Slide();
+
+        $specialStains = new SpecialStains();
+        $relevantScans = new RelevantScans();
+        $slide->addRelevantScan($relevantScans);
+        $slide->addSpecialStain($specialStains);
+
         $form_slide   = $this->createForm(new SlideType(), $slide);
 
         $scan = new Scan();

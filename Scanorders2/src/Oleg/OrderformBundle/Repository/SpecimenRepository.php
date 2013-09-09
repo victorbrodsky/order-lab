@@ -14,30 +14,22 @@ class SpecimenRepository extends EntityRepository
 {
     
     //Patient and Accession number is the key to check uniqueness for single slide order
-    public function processEntity( $in_entity, $accessions=null, $orderinfo ) {
+    public function processEntity( $in_entity, $accessions=null, $orderinfo=null ) {
         
-        $em = $this->_em;              
+        $em = $this->_em;
 
-        //can't check uniqueness without accession number
+        $in_entity = $em->getRepository('OlegOrderformBundle:Accession')->removeDuplicateEntities( $in_entity );
+
+        //1) can't check uniqueness without accession number
         if( $accessions == null ) {
             //$em->persist($in_entity);
             //echo "return by accession = null <br>";
             //return $in_entity;
-            return $this->setResult($in_entity, $orderinfo);
+            return $this->setResult($in_entity, $accessions, $orderinfo);
         }
-        
-        //check if the patient exists
-//        $patient = $em->getRepository('OlegOrderformBundle:Patient')->findOneBy( array(
-//                'mrn' => $in_entity->getPatient()->getMrn()
-//        ));
-//        if( $patient == null ) {
-//            echo "return by patient = null <br>";
-//            $em->persist($in_entity);
-//            return $in_entity;
-//        }
 
         $accession_found = null;
-        //if at least one accession belongs to a procedure, then use this procedure
+        //2) if at least one accession belongs to a procedure, then potentially we can use this procedure
         foreach( $accessions as $accession ) {
             //if accession exists then return procedure for this accession; otherwise, create a new
             $accession_found_this = $em->getRepository('OlegOrderformBundle:Accession')->findOneBy( array(
@@ -58,34 +50,45 @@ class SpecimenRepository extends EntityRepository
         } else {
             $specimen = $accession_found->getSpecimen();
 
-            //copy all children to existing entity
-//            foreach( $in_entity->getAccession() as $accession ) {
-//                $specimen->addAccession( $accession );
+            //check patient MRN => TODO: it doesn't work correctly! Don't use it ?!
+//            if( $in_entity->getPatient() || $in_entity->getPatient()->getMrn() != "" || $specimen->getPatient()->getMrn() == $in_entity->getPatient()->getMrn() ) {
+//                //the same MRN => same Patient => the same specimen
+//                return $this->setResult($specimen, $orderinfo);
+//            } else {
+//                //create a new specimen provided by form
+//                return $this->setResult($in_entity, $orderinfo);
 //            }
+
+            //copy all children to existing entity
+            foreach( $in_entity->getAccession() as $accession ) {
+                $specimen->addAccession( $accession );
+            }
 
             //$em->persist($specimen);
             //return $specimen;
-            return $this->setResult($specimen, $orderinfo);         
+            return $this->setResult($specimen, $orderinfo);
         }
     }
     
-    public function setResult( $specimen, $orderinfo ) {
+    public function setResult( $specimen, $orderinfo=null ) {
         
         $em = $this->_em;
-        $em->persist($specimen); 
+        $em->persist($specimen);
+
+        if( $orderinfo == null ) {
+            return $specimen;
+        }
         
         $accessions = $specimen->getAccession();
-        echo "accession count=".count($accessions)."<br>";
-        foreach( $accessions as $accession ) {
-            echo $accession;
-        }
+//        echo "accession count=".count($accessions)."<br>";
+//        foreach( $accessions as $accession ) {
+//            echo $accession;
+//        }
         
         foreach( $accessions as $accession ) {
             if( !$accession->getId() ) {
-                echo "accession1=".$accession."<br>";
                 $specimen->removeAccession( $accession );
                 $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo );
-                echo "accession2=".$accession."<br>";
                 $specimen->addAccession($accession);
                 $orderinfo->addAccession($accession);
             } else {
@@ -94,8 +97,78 @@ class SpecimenRepository extends EntityRepository
         }
         
         
-        $em->flush($specimen);
+        //$em->flush($specimen);
         return $specimen;
+    }
+
+    //filter out duplicate virtual (in form, not in DB) specimens from provided patient
+    public function removeDuplicateEntities( $patient ) {
+
+        $specimens = $patient->getSpecimen();
+
+        if( count($specimens) == 1 ) {
+            //echo "only 1 specimen count0=".count($patient->getSpecimen())."<br>";
+            //exit();
+            return $patient;
+        }
+
+        //echo "specimen count1=".count($patient->getSpecimen())."<br>";
+
+        $count = 0;
+        foreach( $specimens as $specimen ) {
+
+            //echo $specimen;
+
+            //1) check if accession is given
+            $accessions = $specimen->getAccession();
+            if( $accessions == null || count($accessions) == 0 ) {
+                //can't check for duplicate without accession => don't remove this specimen => keep this specimen as unique
+                //echo "cant check for duplicate without accession <br>";
+                continue;
+            }
+
+            //2) check if at least one accession belongs to another (second) specimen, then we can potentially use this first specimen and remove the second one.
+            $accession_found = null;
+            foreach( $accessions as $accession ) {
+
+                //if accession exists then return procedure for this accession; otherwise, create a new
+                if( ($count+1) < count($specimens) ) { //make sure index exists and no need to check the last specimen
+
+                    //if( in_array($accession, $specimens[$count+1]->getAccession() ) ) {
+                    foreach( $specimens[$count+1]->getAccession() as $accNext ) {
+                        //echo "compare: ".$accession->getAccession() ."?". $accNext->getAccession()."<br>";
+                        if( $accession->getAccession() == $accNext->getAccession() ) {
+                            $accession_found = $accession;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $em = $this->_em;
+
+            if( $accession_found == null || $accession_found->getSpecimen() == null ) {
+                //don't remove
+                //echo "no common accessions found <br>";
+                //persist the rest of specimens, because they will be added to DB.
+                $em->persist($specimen);
+            } else {
+                //now check if the next specimen (potentially to be removed) has the same MRN
+                if( $specimens[$count+1]->getPatient()->getMrn() == $specimen->getPatient()->getMrn() ) {
+                    $patient->removeSpecimen( $specimens[$count+1] );
+                    //echo "remove specimen=".$specimen[$count+1];
+                } else {
+                    $em->persist($specimen);
+                }
+            }
+
+            $count++;
+        }
+
+        //echo "specimen count2=".count($patient->getSpecimen())."<br>";
+        //exit();
+
+        return $patient;
     }
     
 }
