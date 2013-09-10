@@ -114,7 +114,7 @@
      "
          data-prototype-procedure="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper.file)|e }}
      "
          data-prototype-accession="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
@@ -193,7 +193,7 @@
 
                     <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
                         {{ myform.field(specimen.proceduretype) }}
-                        {{ myform.field(specimen.paper) }}
+                        {{ myform.field(specimen.paper.file) }}
 
                         {#accession#}
                         {% set accessionCount = 0 %}

@@ -35,11 +35,20 @@ class Specimen
      */
     protected $proceduretype;
     
+//    /**
+//     * Link to a paper or abstract file
+//     * @ORM\Column(name="paper", type="string", nullable=true, length=1000)
+//     */
+//    protected $paper;
+//    /**
+//     * @ORM\OneToOne(targetEntity="Document", inversedBy="specimen", cascade={"persist"})
+//     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id", nullable=true)
+//     */
     /**
-     * Link to a paper or abstract file
-     * @ORM\Column(name="paper", type="string", nullable=true, length=1000)
-     */
-    protected $paper;   
+    * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
+    * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
+    */
+    protected $paper;
     
     /**
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="specimen")

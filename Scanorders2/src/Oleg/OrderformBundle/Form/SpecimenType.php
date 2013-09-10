@@ -33,12 +33,14 @@ class SpecimenType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
         
-        $builder->add( 'paper', 'file', array(
-                'label'=>'Paper:', 
-                'required'=>false,
-                'attr' => array('class'=>'form-control form-control-modif'),
-        ));
-        
+//        $builder->add( 'paper', 'file', array(
+//                'label'=>'Paper:',
+//                'required'=>false,
+//                'attr' => array('class'=>'form-control form-control-modif'),
+//        ));
+        $builder->add( 'paper', new DocumentType(), array('label'=>' ') );
+
+
         if( $this->multy ) {          
             $builder->add('accession', 'collection', array(
                 'type' => new AccessionType($this->multy),

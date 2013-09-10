@@ -27,6 +27,7 @@ use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Stain;
+use Oleg\OrderformBundle\Entity\Document;
 
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Form\EducationalType;
@@ -384,6 +385,8 @@ if(0){
         //$entity->addPatient($patient2);
 
         $procedure = new Specimen();
+        //$paper = new Document();
+        //$procedure->setPaper($paper);
         $patient->addSpeciman($procedure);
 
         //$procedure2 = new Specimen();
