@@ -17,7 +17,7 @@ class DiffDiagnosesType extends AbstractType
     {
 
         $builder->add('name', 'text', array(
-            'label' => 'Different Diagnoses:',
+            'label' => 'Differential Diagnoses:',
             'required' => false,
             //'attr' => array('class' => 'combobox combobox-width')
             'attr' => array('class'=>'form-control form-control-modif')

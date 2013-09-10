@@ -149,7 +149,9 @@
     
     
 {% macro collectionInput(part, type, formtype, patientCount, procedureCount, accessionCount, partCount) %}
-     
+
+    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_diffDiagnoses' %}
+
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
@@ -170,8 +172,8 @@
                     {#{{ form_rest(diffDiagnoses) }}#}
                 {% endfor %}
                 {% if type == 'new' or type == 'edit' %}
-                    <button onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
-                    <button onClick="delDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-danger" type="button">-</button>
+                    <button id="{{ addBtnId }}" onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                    {#<button onClick="delDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-danger" type="button">-</button>#}
                 {% endif %}
 {#                                                                </div>#}
         </div>
@@ -181,7 +183,16 @@
 {% endmacro %}
 
 
-{% macro collInput(coll, type, formtype, patientCount, procedureCount, accessionCount, partCount, slideCount) %}
+{#
+coll:       coll field
+type:       new, edit or show
+formtype:   single or multi
+ident:      specialStains or relevantScans
+*Count:     object id
+#}
+{% macro collInput(coll, type, formtype, ident, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
+
+    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~ident %}
 
     <p>
     <div class="row">
@@ -197,8 +208,8 @@
                 {{ form_widget(col.name) }}
             {% endfor %}
             {% if type == 'new' or type == 'edit' %}
-                <button onClick="addCollField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
-                <button onClick="delCollField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-danger" type="button">-</button>
+                <button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                {#<button id="{{ delbtnId }}" onClick="delCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-danger" type="button">-</button>#}
             {% endif %}
         </div>
     </div>

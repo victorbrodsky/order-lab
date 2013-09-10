@@ -282,9 +282,11 @@ class Part
      */
     public function addDiffDiagnoses(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
     {
-        if( !$this->diffDiagnoses->contains($diffDiagnoses) ) {
-            $diffDiagnoses->setPart($this);
-            $this->diffDiagnoses[] = $diffDiagnoses;
+        if( $diffDiagnoses != null ) {
+            if( !$this->diffDiagnoses->contains($diffDiagnoses) ) {
+                $diffDiagnoses->setPart($this);
+                $this->diffDiagnoses[] = $diffDiagnoses;
+            }
         }
     
         return $this;

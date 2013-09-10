@@ -132,15 +132,17 @@ class PatientRepository extends EntityRepository
 
             $mrn = $patient->getMrn();
 
-            if( count($mrns) == 0 || !in_array($mrn, $mrns) ) {
-                $mrns[] = $mrn;
-                //persist the rest of entities, because they will be added to DB.
-                $em = $this->_em;
-                $em->persist($patient);
-            } else {
-                $entity->removePatient($patient);
+            if( $mrn != null && $mrn != "" ) {
+                if( count($mrns) == 0 || !in_array($mrn, $mrns) ) {
+                    $mrns[] = $mrn;
+                    //persist the rest of entities, because they will be added to DB.
+                    $em = $this->_em;
+                    $em->persist($patient);
+                } else {
+                    //echo "remove pat:".$patient;
+                    $entity->removePatient($patient);
+                }
             }
-
         }
 
         return $entity;

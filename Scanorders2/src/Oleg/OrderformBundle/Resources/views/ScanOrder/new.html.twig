@@ -29,8 +29,10 @@
         {{ form_errors(form_scan) }}
         {{ form_errors(form_stain) }}
 
-        <div id="formpanel_part_0_0_0_0_0_0_0_0"
+        <div id="form-prototype-data"
              data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDiagnoses.vars.prototype.name)|e }}"
+             data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.name)|e }}"
+             data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.name)|e }}"
         >
         </div>  
         
@@ -156,11 +158,11 @@
                   {{ formmacros.field(form_slide.microscopicdescr) }}
                   {#{{ formmacros.field(form_slide.specialStains) }}#}
                   {% if form_slide.specialStains|length > 0 %}
-                      {{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 0, 0, 0, 0, 0) }}
+                      {{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 'specialStains', 0, 0, 0, 0, 0, 0) }}
                   {% endif %}
                   {#{{ formmacros.field(form_slide.relevantScans) }}#}
                   {% if form_slide.relevantScans|length > 0 %}
-                      {{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 0, 0, 0, 0, 0) }}
+                      {{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}
                   {% endif %}
               </div>
 

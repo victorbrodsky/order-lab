@@ -19,9 +19,9 @@ class SpecimenType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
-        $builder
-            ->add('proceduretype')
-            ->add('paper');
+//        $builder
+//            ->add('proceduretype');
+//            ->add('paper');
         
 //        $builder->add( 'proceduretype', 'text', array(
 //                'label'=>'Procedure Type:',
@@ -33,9 +33,9 @@ class SpecimenType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
         
-        $builder->add( 'paper', 'text', array(
+        $builder->add( 'paper', 'file', array(
                 'label'=>'Paper:', 
-                'max_length'=>300,'required'=>false,
+                'required'=>false,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         

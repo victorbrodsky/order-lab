@@ -37,7 +37,7 @@ class Specimen
     
     /**
      * Link to a paper or abstract file
-     * @ORM\Column(name="paper", type="string", nullable=true, length=300)
+     * @ORM\Column(name="paper", type="string", nullable=true, length=1000)
      */
     protected $paper;   
     

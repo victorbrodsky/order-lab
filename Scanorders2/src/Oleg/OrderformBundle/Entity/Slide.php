@@ -374,11 +374,13 @@ class Slide
      * @param \Oleg\OrderformBundle\Entity\SpecialStains $specialStains
      * @return Slide
      */
-    public function addSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
+    public function addSpecialStain( $specialStains )
     {
-        if( !$this->specialStains->contains($specialStains) ) {
-            $specialStains->setSlide($this);
-            $this->specialStains[] = $specialStains;
+        if( $specialStains != null ) {
+            if( !$this->specialStains->contains($specialStains) ) {
+                $specialStains->setSlide($this);
+                $this->specialStains[] = $specialStains;
+            }
         }
     
         return $this;
@@ -411,11 +413,13 @@ class Slide
      * @param \Oleg\OrderformBundle\Entity\RelevantScans $relevantScans
      * @return Slide
      */
-    public function addRelevantScan(\Oleg\OrderformBundle\Entity\RelevantScans $relevantScans)
+    public function addRelevantScan( $relevantScans )
     {
-        if( !$this->relevantScans->contains($relevantScans) ) {
-            $relevantScans->setSlide($this);
-            $this->relevantScans[] = $relevantScans;
+        if( $relevantScans != null ) {
+            if( !$this->relevantScans->contains($relevantScans) ) {
+                $relevantScans->setSlide($this);
+                $this->relevantScans[] = $relevantScans;
+            }
         }
     
         return $this;
