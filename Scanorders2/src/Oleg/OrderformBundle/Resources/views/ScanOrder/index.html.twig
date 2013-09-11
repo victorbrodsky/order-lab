@@ -7,9 +7,8 @@
 {% block content %} 
 {% block body -%}
 
-    {#<span class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</span>#}
-
-    {% if is_granted('ROLE_ADMIN') and security == 'true' %}  
+    {% if is_granted('ROLE_ADMIN') and security == 'true' %}
+        <span class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</span> |
         <a href="{{ path('admin_index') }}">Admin</a> |
         {% if userreqs is defined %}
             {% if userreqs | length == 0 %}

@@ -9,11 +9,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SlideType extends AbstractType
 {
 
-    protected $multy;
+    protected $params;
+    protected $entity;
 
-    public function __construct( $multy = false )
+    public function __construct( $params=null, $entity = null )
     {
-        $this->multy = $multy;
+        $this->params = $params;
+        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -16,7 +16,7 @@
     {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
-    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form_procedure) }}>
     {{ form_start(form) }}        
         
         {{ form_errors(form) }} 
@@ -62,6 +62,8 @@
                 {{ formmacros.field(form_part.diagnosis) }}
 
                 {{ formmacros.field(form_scan.note) }}
+
+                {#{{ form_widget(form_paper) }}#}
 
             </div>
         </div>

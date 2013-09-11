@@ -12,7 +12,7 @@
 }
 
 .flash-notice {
-  color: #FF6600;   //#0081c2;
+  color: #FF6600;
   font-size: 200%;
   margin-top: 3%;
 }
@@ -109,6 +109,7 @@
 
 .option_info_panel {
     padding-right: 1%;
+    padding-left: 1%;
 }
 
 #next_button {

@@ -104,7 +104,7 @@ class PatientRepository extends EntityRepository
             if( !$specimen->getId() ) {          
                 $patient->removeSpecimen( $specimen );
                 //echo "specimen0: ".$specimen."<br>";
-                $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, $specimen->getAccession(), $orderinfo );
+                $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, null, $specimen->getAccession(), $orderinfo );
                 //echo "specimen1: ".$specimen."<br>";
                 $patient->addSpecimen($specimen);
                 $orderinfo->addSpecimen($specimen);
@@ -112,7 +112,8 @@ class PatientRepository extends EntityRepository
                 continue;
             }
         }
-         
+
+        //exit();
         //$em->flush($patient);
         return $patient;
     }

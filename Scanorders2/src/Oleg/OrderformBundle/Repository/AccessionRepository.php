@@ -23,6 +23,7 @@ class AccessionRepository extends EntityRepository {
         if( !$entity ) {        
             //create new accession
             //$em->persist($accession);
+            //echo "new accession";
             return $this->setResult( $accession, $orderinfo );          
         }
 
@@ -36,14 +37,15 @@ class AccessionRepository extends EntityRepository {
 
 //        $em->persist($entity);
 //        return $entity;
-        
+
+        //echo "db accession <br>";
         return $this->setResult( $entity, $orderinfo );        
     }
     
     public function setResult( $accession, $orderinfo=null ) {
         
         $em = $this->_em;
-        $em->persist($accession); 
+        $em->persist($accession);
         //echo "accession=".$accession."<br>";
 
         if( $orderinfo == null ) {

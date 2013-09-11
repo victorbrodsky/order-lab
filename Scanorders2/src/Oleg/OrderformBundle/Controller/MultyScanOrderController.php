@@ -146,7 +146,13 @@ class MultyScanOrderController extends Controller {
             //$entity->setEducational(null);
         }
 
-        $form = $this->createForm(new OrderInfoType($type, null, $entity ), $entity);
+        $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
+
+//        echo "controller create=";
+//        print_r($params);
+//        echo "<br>";
+
+        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
         $form->bind($request);
         //$form->handleRequest($request);
 
@@ -210,7 +216,7 @@ if(0){
                     if( !$specimen->getId() ) {
                         //echo " specimen id null <br>";
                         $patient->removeSpecimen( $specimen );
-                        $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, $specimen->getAccession() );
+                        $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, null, $specimen->getAccession() );
                         $patient->addSpecimen($specimen);
                         $entity->addSpecimen($specimen);
                     } else {
@@ -450,7 +456,8 @@ if(0){
 //        }
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType(true, $service, $entity), $entity );
+        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
+        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
         
         return array(          
             'form' => $form->createView(),
@@ -578,10 +585,18 @@ if(0){
         }
 
         //echo "show id=".$entity->getId()."<br>";
-        $form   = $this->createForm( new OrderInfoType(true, null, $entity), $entity, array('disabled' => $disable) );
+        //use always multy because we use nested forms to display single and multy slide orders
+        $single_multy = $entity->getType();
 
-//        echo "type=".$entity->getType();
-//        exit();
+        if( $single_multy == 'single' ) {
+            $single_multy = 'multy';
+        }
+
+        $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null);
+        $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
+
+        //echo "type=".$entity->getType();
+        //exit();
 
 //        $id = $form["id"]->getData();
 //        $provider = $form["provider"]->getData();

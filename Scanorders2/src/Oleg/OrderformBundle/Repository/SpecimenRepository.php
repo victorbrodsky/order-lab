@@ -14,7 +14,8 @@ class SpecimenRepository extends EntityRepository
 {
     
     //Patient and Accession number is the key to check uniqueness for single slide order
-    public function processEntity( $in_entity, $accessions=null, $orderinfo=null ) {
+    //input patient requires for single slide order, when objects are provided separately and specimen does not have patient
+    public function processEntity( $in_entity, $patient, $accessions=null, $orderinfo=null ) {
         
         $em = $this->_em;
 
@@ -24,6 +25,7 @@ class SpecimenRepository extends EntityRepository
         if( $accessions == null ) {
             //$em->persist($in_entity);
             //echo "return by accession = null <br>";
+            //exit();
             //return $in_entity;
             return $this->setResult($in_entity, $accessions, $orderinfo);
         }
@@ -44,29 +46,43 @@ class SpecimenRepository extends EntityRepository
         
         if( $accession_found == null || $accession_found->getSpecimen() == null ) {
             //echo "return by accession not found 2<br>";
+            //exit();
             //$em->persist($in_entity);
             //return $in_entity;
             return $this->setResult($in_entity, $orderinfo);
         } else {
             $specimen = $accession_found->getSpecimen();
 
-            //check patient MRN => TODO: it doesn't work correctly! Don't use it ?!
-//            if( $in_entity->getPatient() || $in_entity->getPatient()->getMrn() != "" || $specimen->getPatient()->getMrn() == $in_entity->getPatient()->getMrn() ) {
-//                //the same MRN => same Patient => the same specimen
-//                return $this->setResult($specimen, $orderinfo);
-//            } else {
-//                //create a new specimen provided by form
-//                return $this->setResult($in_entity, $orderinfo);
-//            }
+            //echo "check specimen by mrn <br>";
 
-            //copy all children to existing entity
-            foreach( $in_entity->getAccession() as $accession ) {
-                $specimen->addAccession( $accession );
+            //check patient MRN => TODO: it doesn't work correctly! Don't use it ?!
+            //echo "mrn = ".$patient->getMrn()."<br>";
+            //echo "found mrn = " . $specimen->getPatient()->getMrn() . "<br>";
+            if( $patient && $patient->getMrn() != "" && ($specimen->getPatient()->getMrn() == $patient->getMrn()) ) {
+                //the same MRN => same Patient => the same specimen
+
+                //copy all children to existing entity
+                foreach( $in_entity->getAccession() as $accession ) {
+                    $specimen->addAccession( $accession );
+                }
+                //echo "same specimen";
+                //exit();
+                return $this->setResult($specimen, $orderinfo);
+            } else {
+                //echo "new specimen";
+                //exit();
+                //create a new specimen provided by form
+                return $this->setResult($in_entity, $orderinfo);
             }
 
-            //$em->persist($specimen);
-            //return $specimen;
-            return $this->setResult($specimen, $orderinfo);
+//            //copy all children to existing entity
+//            foreach( $in_entity->getAccession() as $accession ) {
+//                $specimen->addAccession( $accession );
+//            }
+//
+//            //$em->persist($specimen);
+//            //return $specimen;
+//            return $this->setResult($specimen, $orderinfo);
         }
     }
     
@@ -86,6 +102,7 @@ class SpecimenRepository extends EntityRepository
 //        }
         
         foreach( $accessions as $accession ) {
+            //echo $accession;
             if( !$accession->getId() ) {
                 $specimen->removeAccession( $accession );
                 $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo );
@@ -96,7 +113,7 @@ class SpecimenRepository extends EntityRepository
             }
         }
         
-        
+        //exit();
         //$em->flush($specimen);
         return $specimen;
     }
@@ -105,9 +122,9 @@ class SpecimenRepository extends EntityRepository
     public function removeDuplicateEntities( $patient ) {
 
         $specimens = $patient->getSpecimen();
-
-        if( count($specimens) == 1 ) {
-            //echo "only 1 specimen count0=".count($patient->getSpecimen())."<br>";
+        //echo "specimen count=".count($specimens)."<br>";
+        if( count($specimens) <= 1 ) {
+            //echo "only 0 or 1 specimen found=".count($specimens)."<br>";
             //exit();
             return $patient;
         }
@@ -153,12 +170,14 @@ class SpecimenRepository extends EntityRepository
                 //persist the rest of specimens, because they will be added to DB.
                 $em->persist($specimen);
             } else {
-                //now check if the next specimen (potentially to be removed) has the same MRN
-                if( $specimens[$count+1]->getPatient()->getMrn() == $specimen->getPatient()->getMrn() ) {
-                    $patient->removeSpecimen( $specimens[$count+1] );
-                    //echo "remove specimen=".$specimen[$count+1];
-                } else {
-                    $em->persist($specimen);
+                //now check if the next specimen (potentially to be removed) has the same MRN, don't check if MRN = "" => new dummy mrn will be generated
+                if( $specimen->getPatient()->getMrn() != null && $specimen->getPatient()->getMrn() != "" ) {
+                    if( $specimens[$count+1]->getPatient()->getMrn() == $specimen->getPatient()->getMrn() ) {
+                        $patient->removeSpecimen( $specimens[$count+1] );
+                        //echo "remove specimen=".$specimen[$count+1];
+                    } else {
+                        $em->persist($specimen);
+                    }
                 }
             }
 

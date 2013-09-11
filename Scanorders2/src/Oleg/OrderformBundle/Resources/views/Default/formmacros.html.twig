@@ -104,7 +104,7 @@
 {% endmacro %}
 
 
-
+{#used by single form#}
 {% macro disease(form) %}
 
     {% import _self as formmacros %}
@@ -122,8 +122,20 @@
 
     </div>
 
+    {#  optional for primaryOrgan  #}
+    <div id="primaryOrgan" class="collapse">
+
+        <div class="well" aling='center'>
+
+            {{ formmacros.field(form.primaryOrgan) }}
+
+        </div>
+
+    </div>
+
 {% endmacro %}
 
+{#used by multy form#}
 {% macro diseaseMulti(form, patient, specimen, accession, part ) %}
 
     {% import _self as formmacros %}
@@ -139,6 +151,17 @@
         <div class="well" aling='center'>
 
             {{ formmacros.field(form.origin) }}
+
+        </div>
+
+    </div>
+
+
+    <div id="primaryOrgan_option_multi_{{ uid }}_primaryOrgan" class="collapse">
+
+        <div class="well" aling='center'>
+
+            {{ formmacros.field(form.primaryOrgan) }}
 
         </div>
 
@@ -214,6 +237,27 @@ ident:      specialStains or relevantScans
         </div>
     </div>
     </p>
+
+{% endmacro %}
+
+
+{% macro field_paperurl( paper ) %}
+
+    {% if paper.vars.value.path is defined %}
+
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {{ form_label(paper.name) }}
+            </div>
+            <div class="col-xs-6" align="left">
+                {#{{ form_widget(field) }}#}
+                <a href="../../../../web/uploads/documents/{{ paper.vars.value.path }}" target="_blank">{{ paper.vars.value.name }}</a>
+            </div>
+        </div>
+        </p>
+
+    {% endif %}
 
 {% endmacro %}
     

@@ -28,10 +28,11 @@ use Oleg\OrderformBundle\Form\ScanType;
 use Oleg\OrderformBundle\Entity\Stain;
 use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
-use Oleg\OrderformBundle\Entity\Status;
+use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Entity\DiffDiagnoses;
 use Oleg\OrderformBundle\Entity\RelevantScans;
 use Oleg\OrderformBundle\Entity\SpecialStains;
+use Oleg\OrderformBundle\Form\DocumentType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
@@ -223,34 +224,48 @@ class ScanOrderController extends Controller {
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
-        
+
+        $params = array('type'=>'single', 'cicle'=>'create', 'service'=>null);
+
+//        echo "controller create=";
+//        print_r($params);
+//        echo "<br>";
+
         //echo "scanorder createAction";
         $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType(null, null, $entity), $entity);
+        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
         $form->bind($request);
               
         $patient = new Patient();      
-        $form_patient = $this->createForm(new PatientType(), $patient);
+        $form_patient = $this->createForm(new PatientType($params), $patient);
         $form_patient->bind($request);
-        
+
         $procedure = new Specimen();
-        $form_procedure = $this->createForm(new SpecimenType(), $procedure);
+        $form_procedure = $this->createForm(new SpecimenType($params), $procedure);
         $form_procedure->bind($request);
+
+//        $files = $this->getRequest()->files;
+//        print_r($files);
+//        $paper = $procedure->getPaper();
+//        echo "PAPER=".$paper."<br>";
+//        $paper = new Document();
+//        $form_paper = $this->createForm(new DocumentType(), $paper);
+//        $form_paper->bind($request);
         
         $accession = new Accession();
-        $form_accession = $this->createForm(new AccessionType(), $accession);
+        $form_accession = $this->createForm(new AccessionType($params), $accession);
         $form_accession->bind($request);
         
         $part = new Part();
-        $form_part = $this->createForm(new PartType(), $part);
+        $form_part = $this->createForm(new PartType($params), $part);
         $form_part->bind($request);
         
         $block = new Block();
-        $form_block = $this->createForm(new BlockType(), $block);
+        $form_block = $this->createForm(new BlockType($params), $block);
         $form_block->bind($request);
 
         $slide = new Slide();
-        $form_slide = $this->createForm(new SlideType(), $slide);
+        $form_slide = $this->createForm(new SlideType($params), $slide);
         $form_slide->bind($request);
 
         $scan = new Scan();
@@ -306,7 +321,13 @@ class ScanOrderController extends Controller {
             $form_scan->isValid() &&
             $form_stain->isValid()
         ) {
-            $em = $this->getDoctrine()->getManager();                            
+            $em = $this->getDoctrine()->getManager();
+
+            //echo $paper;
+            //$paper->upload();
+            //$em->persist($paper);
+            //$em->flush();
+            //exit();
                         
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "single" );
             
@@ -317,9 +338,11 @@ class ScanOrderController extends Controller {
             //$em->persist($entity);          
             //$em->flush();
             
-            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, array($accession) );
+            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, $patient, array($accession) );
             $patient->addSpecimen($procedure);
             $entity->addSpecimen($procedure);
+
+            //$procedure->setPaper($paper);
             //$em->persist($patient); 
             //$em->persist($procedure);
             //$em->flush();
@@ -432,25 +455,30 @@ class ScanOrderController extends Controller {
         //echo "service=".$service."<br>";
         $entity->setPathologyService($service);
 
-        $form   = $this->createForm( new OrderInfoType("multy",$service, $entity), $entity );
+        $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service);
+        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         $patient = new Patient();      
-        $form_patient   = $this->createForm(new PatientType(), $patient);
-        
-        $procedure = new Specimen();  //TODO: rename specimen to procedure    
-        $form_procedure = $this->createForm(new SpecimenType(), $procedure);
-        
-        $accession = new Accession();      
-        $form_accession   = $this->createForm(new AccessionType(), $accession);
+        $form_patient   = $this->createForm(new PatientType($params), $patient);
+
+        $procedure = new Specimen();
+
+        $form_procedure = $this->createForm(new SpecimenType($params), $procedure);
+
+        //$paper = new Document();
+        //$form_paper = $this->createForm(new DocumentType(), $paper);
+
+        $accession = new Accession();
+        $form_accession   = $this->createForm(new AccessionType($params), $accession);
          
         $part = new Part();
         $diffDiagnoses = new DiffDiagnoses();
         $part->addDiffDiagnoses($diffDiagnoses);    
         //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
-        $form_part   = $this->createForm(new PartType(), $part);              
+        $form_part   = $this->createForm(new PartType($params), $part);
             
         $block = new Block();      
-        $form_block   = $this->createForm(new BlockType(), $block);
+        $form_block   = $this->createForm(new BlockType($params), $block);
         
         $slide = new Slide();
 
@@ -459,13 +487,13 @@ class ScanOrderController extends Controller {
         $slide->addRelevantScan($relevantScans);
         $slide->addSpecialStain($specialStains);
 
-        $form_slide   = $this->createForm(new SlideType(), $slide);
+        $form_slide   = $this->createForm(new SlideType($params), $slide);
 
         $scan = new Scan();
-        $form_scan   = $this->createForm(new ScanType(), $scan);
+        $form_scan   = $this->createForm(new ScanType($params), $scan);
 
         $stain = new Stain();
-        $form_stain   = $this->createForm(new StainType(), $stain);
+        $form_stain   = $this->createForm(new StainType($params), $stain);
         
         return array(          
             'form' => $form->createView(),
@@ -477,6 +505,7 @@ class ScanOrderController extends Controller {
             'form_slide' => $form_slide->createView(),
             'form_scan' => $form_scan->createView(),
             'form_stain' => $form_stain->createView(),
+            //'form_paper' => $form_paper->createView()
         );
     }
 
@@ -502,7 +531,7 @@ class ScanOrderController extends Controller {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         }
 
-        $showForm = $this->createForm(new OrderInfoType(null, null, $entity), $entity, array('disabled' => true));
+        $showForm = $this->createForm(new OrderInfoType(null,$entity), $entity, array('disabled' => true));
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -534,7 +563,7 @@ class ScanOrderController extends Controller {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         }
 
-        $editForm = $this->createForm(new OrderInfoType(null, null, $entity), $entity);
+        $editForm = $this->createForm(new OrderInfoType(null,$entity), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -567,7 +596,7 @@ class ScanOrderController extends Controller {
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrderInfoType(null, null, $entity), $entity);
+        $editForm = $this->createForm(new OrderInfoType(null,$entity), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {

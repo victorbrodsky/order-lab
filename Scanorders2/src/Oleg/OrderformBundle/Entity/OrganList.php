@@ -63,6 +63,11 @@ class OrganList
      */
     protected $part;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Part", mappedBy="primaryOrgan")
+     */
+    protected $partprimary;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();

@@ -26,25 +26,25 @@ class Document
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected  $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      */
-    private $name;
+    protected  $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $path;
+    protected  $path;
 
-    private $temp;
+    protected  $temp;
 
     /**
      * @Assert\File(maxSize="6000000")
      */
-    private $file;
+    protected  $file;
 
 
     public function getAbsolutePath()
@@ -110,9 +110,16 @@ class Document
     public function preUpload()
     {
         if (null !== $this->getFile()) {
+
+            //echo "upload file=".$this->getFile()."<br>";
+            //echo "original name=".$this->getFile()->getClientOriginalName()."<br>";
+            //exit();
+            $this->name = $this->getFile()->getClientOriginalName();
+
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = $filename.'.'.$this->getFile()->guessExtension();
+            //echo "preUpload path=".$this->path."<br>";
         }
     }
 
@@ -122,6 +129,8 @@ class Document
      */
     public function upload()
     {
+        //echo "upload <br>";
+
         if (null === $this->getFile()) {
             return;
         }

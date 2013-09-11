@@ -13,13 +13,46 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 class DocumentType extends AbstractType
 {
 
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
+    {
+        $this->params = $params;
+        $this->entity = $entity;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-         $builder->add('file', 'file', array(
-             'label'=>'Paper:',
-             'required'=>false,
-         ));
+
+//        echo " => new, create or edit set file ";
+//
+//        echo " exit document type ";
+
+//        $builder->add('file', 'file', array(
+//            'label'=>'Paper:',
+//            'required'=>false,
+//        ));
+
+        //echo "cicle=".$this->params['cicle'];
+        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+
+            //echo " => new, create or edit set file ";
+            $builder->add('file', 'file', array(
+                'label'=>'Relevant Paper or Abstract:',
+                'required'=>false,
+            ));
+
+        } else {
+
+            //echo "show set name ";
+            $builder->add('name', 'text', array(
+                'label'=>'Relevant Paper or Abstract:',
+                'required'=>false,
+            ));
+
+        }
 
     }
 

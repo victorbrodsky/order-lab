@@ -46,6 +46,12 @@ class Part
      * @ORM\JoinColumn(name="organlist_id", referencedColumnName="id", nullable=true)
      */
     protected $sourceOrgan;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
+     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
+     */
+    protected $primaryOrgan;
     
     /**
      * @ORM\Column(type="string", nullable=true, length=10000)
@@ -151,6 +157,23 @@ class Part
     public function setDiagnosis($diagnosis) {
         $this->diagnosis = $diagnosis;
     }
+
+    /**
+     * @param mixed $primaryOrgan
+     */
+    public function setPrimaryOrgan($primaryOrgan)
+    {
+        $this->primaryOrgan = $primaryOrgan;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryOrgan()
+    {
+        return $this->primaryOrgan;
+    }
+
 
 //    public function setDiffDiagnoses($diffDiagnoses) {
 //        $this->diffDiagnoses = $diffDiagnoses;

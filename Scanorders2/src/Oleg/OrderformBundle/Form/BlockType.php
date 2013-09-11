@@ -12,12 +12,14 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class BlockType extends AbstractType
 {
-    
-    protected $multy;
-    
-    public function __construct( $multy = false )
+
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
     {
-        $this->multy = $multy;
+        $this->params = $params;
+        $this->entity = $entity;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -32,10 +34,10 @@ class BlockType extends AbstractType
                 //'data' => 0,
                 'attr' => array('class' => 'combobox', 'style' => 'width:70px'),
         ));
-        
-        if( $this->multy ) {
+
+        if( $this->params['type'] != 'single' ) {
             $builder->add('slide', 'collection', array(
-                'type' => new SlideType($this->multy),
+                'type' => new SlideType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,

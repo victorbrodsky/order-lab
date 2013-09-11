@@ -8,16 +8,22 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SpecimenType extends AbstractType
 {
-    
-    protected $multy;
 
-    public function __construct( $multy = false )
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
     {
-        $this->multy = $multy;
+        $this->params = $params;
+        $this->entity = $entity;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+//        echo "specimen params=";
+//        print_r($this->params);
+//        echo "<br>";
         
 //        $builder
 //            ->add('proceduretype');
@@ -38,12 +44,13 @@ class SpecimenType extends AbstractType
 //                'required'=>false,
 //                'attr' => array('class'=>'form-control form-control-modif'),
 //        ));
-        $builder->add( 'paper', new DocumentType(), array('label'=>' ') );
+
+        $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
 
 
-        if( $this->multy ) {          
+        if( $this->params['type'] != 'single' ) {
             $builder->add('accession', 'collection', array(
-                'type' => new AccessionType($this->multy),
+                'type' => new AccessionType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,

@@ -10,16 +10,23 @@ use Symfony\Component\Form\FormEvent;
 
 class PatientType extends AbstractType
 {
-    protected $multy;
 
-    public function __construct( $multy = false )
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
     {
-        $this->multy = $multy;
+        $this->params = $params;
+        $this->entity = $entity;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+
+//        echo "patient params=";
+//        print_r($this->params);
+//        echo "<br>";
+
         $builder->add( 'mrn', 'text', array(
                 'label'=>'MRN:',
                 'max_length'=>100,
@@ -68,9 +75,9 @@ class PatientType extends AbstractType
                 'attr' => array('class'=>'form-control'),
         )); 
            
-        if( $this->multy ) {
+        if( $this->params['type'] != 'single' ) {
             $builder->add('specimen', 'collection', array(
-                'type' => new SpecimenType($this->multy),
+                'type' => new SpecimenType($this->params),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

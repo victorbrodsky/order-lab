@@ -11,9 +11,11 @@ $(document).ready(function() {
     init();
 
     originOptionMulti( new Array("0","0","0","0") );
+    primaryOrganOptionMulti( new Array("0","0","0","0") );
 
     //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
     checkValidate();
+    checkValidatePrimaryOrgan();
 
     //hide buttons
     $("#orderinfo").hide();
@@ -28,6 +30,7 @@ $(document).ready(function() {
     //priority and disease type options
     priorityOption();
     originOption();
+    primaryOrganOption();
    
     //tab
     $('#optional_param_tab a').click(function (e) {
@@ -65,8 +68,6 @@ $(document).ready(function() {
 
 
 function init() {
-
-    //originOptionMulti();    
 
 //    $(".combobox").combobox();
 
@@ -207,6 +208,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindToggleBtn( name + '_' + ids.join("_") );
     bindDeleteBtn( name + '_' + ids.join("_") );
     originOptionMulti(ids);
+    primaryOrganOptionMulti(ids);
 
     //create children nested forms
     var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -233,7 +235,6 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //add all element to listeners again, the same as in ready
     init();
-    //originOptionMulti(patientid, procedureid, accessionid, partid);
 
 }
 
@@ -267,6 +268,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
     bindToggleBtn( name + '_' + ids.join("_") );
     bindDeleteBtn( name + '_' + ids.join("_") );
     originOptionMulti(ids);
+    primaryOrganOptionMulti(ids);
 }
 
 //input: current form ids
@@ -315,7 +317,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
 
 function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    //console.log("name="+name);
+    console.log("name="+name+",patient="+patientid+ ",specimen="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
 
     var collectionHolder =  $('#form-prototype-data');
 
@@ -336,6 +338,7 @@ function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, b
 
 
     //replace origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag with correct ids
+    //origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag
     var newOriginId = "origin_option_multi_patient_"+patientid+"_specimen_"+procedureid+"_accession_"+accessionid+"_part_"+partid+"_origintag";
     newForm = newForm.replace(/origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag/g, newOriginId);
 
@@ -513,6 +516,7 @@ function priorityOption() {
     }
 }
 
+//use for new: add listeners for disease type holder for Single Form
 function originOption() {
 
     var holder = "#origin_option";
@@ -528,6 +532,8 @@ function originOption() {
     $('#oleg_orderformbundle_parttype_diseaseType_1').on('click', function(e) {
         $(holder).collapse('hide');
     });
+
+
     
 
     $('#oleg_orderformbundle_parttype_diseaseType_placeholder').on('click', function(e) {      
@@ -541,7 +547,7 @@ function originOption() {
 
 }
 
-
+//use for new: add listeners for disease type holder for Multy Form
 function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 
 //    var uid = "";   //'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
@@ -566,8 +572,7 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
     $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').change(function(e) {
 //    $('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
         var curid = $(this).attr('id');
-        //alert("click id="+curid);
-        //console.log("click id="+curid);
+        console.log("click id="+curid);
 
         //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
         var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
@@ -583,20 +588,26 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
         holder = '#origin_option_multi_'+uid+'_origintag';
         //console.log(holder);
 
-        //e.preventDefault();
+        e.preventDefault();
 
         //toggle if Neoplastic is choosen id = *diseaseType_0
 
-        var neoplasticId = "#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0";
-        var neoplasticIfChecked = $(neoplasticId).is(':checked');
+        //var neoplasticId = "#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0";
+        //var neoplasticIfChecked = $(neoplasticId).is(':checked');
 //        console.log("neoplasticId:"+neoplasticId+", neoplasticIfChecked="+neoplasticIfChecked);
 
-        if( neoplasticIfChecked ) {
-            //console.log("toggle!!!!!!!!!!!!!!!!!");
+        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0").is(':checked') ) {
+            console.log("toggle!!!!!!!!!!!!!!!!!");
             $(holder).collapse('show');
         }
-        else {
-            //console.log("close?????????????????");
+
+        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_1").is(':checked') ) {
+            console.log("1 close?????????????????");
+            $(holder).collapse('hide'); //TODO: why does it open the origin radio boxes?
+        }
+
+        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_placeholder").is(':checked') ) {
+            console.log("placeholder close?????????????????");
             $(holder).collapse('hide');
         }
 
@@ -604,6 +615,7 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 
 }
 
+//use for show: toggle origin well when Neoplastic is selected
 function checkValidate() {
 
     function add() {
@@ -626,13 +638,14 @@ function checkValidate() {
                 var accession = arr2[5];
                 var part = arr2[7];
                 uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
-                holder = '#origin_option_multi_'+uid+'_origintag';
+                //holder = '#origin_option_multi_'+uid+'_origintag';
 
                 if( curid.indexOf("diseaseType_0") != -1 ) {
-                    //console.log("toggle="+holder);
-                    //console: toggle=#origin_option_multi_patient_0_specimen_0_accession_0_part_0
-                    //real id: origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag
-                    $(holder).collapse('toggle');
+                    //use parent of this symfony's origin id=oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_3_origin
+                    var holder = '#oleg_orderformbundle_orderinfotype_'+uid+'_origin';
+                    var originElement = $(holder).parent().parent().parent().parent();
+                    //console.log("loop validate toggle="+holder);
+                    $(originElement).collapse('show');
                 }
             }
 

@@ -12,21 +12,23 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class PartType extends AbstractType
 {
-    
-    protected $multy;
-    
-    public function __construct( $multy = false )
+
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
     {
-        $this->multy = $multy;
+        $this->params = $params;
+        $this->entity = $entity;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $helper = new FormHelper();  
         
-        if( $this->multy ) {          
+        if( $this->params['type'] != 'single' ) {
             $builder->add('block', 'collection', array(
-                'type' => new BlockType($this->multy),
+                'type' => new BlockType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -130,6 +132,11 @@ class PartType extends AbstractType
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type'),
+        ));
+
+        $builder->add('primaryOrgan', null, array(
+            'label' => 'Primary Site of Origin:',
+            'attr' => array('class' => 'combobox combobox-width')
         ));
 
 //        $builder->add( 'accession', new AccessionType(), array(

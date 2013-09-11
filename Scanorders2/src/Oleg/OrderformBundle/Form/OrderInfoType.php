@@ -12,31 +12,38 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class OrderInfoType extends AbstractType
 {
-    
-    protected $multy;
-    protected $service;
+
     protected $entity;
+    protected $params;
     
-    public function __construct( $multy = null, $service = null, $entity = null )
+//    public function __construct( $type = null, $service = null, $entity = null )
+    //params: type: single or clinical, educational, research
+    //params: cicle: new, edit, show
+    //params: service: pathology service
+    //params: entity: entity itself
+    public function __construct( $params=null, $entity=null )
     {
-        $this->multy = $multy;
-        $this->service = trim($service);
-        $this->entity = $entity;
+        if( $params ) $this->params = $params;
+        if( $entity ) $this->entity = $entity;
     }
         
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+
+//        echo "orderinfo params=";
+//        print_r($this->params);
+//        echo "<br>";
+
         $helper = new FormHelper();
 
 //        $builder->add( 'id' );//, 'hidden' );
 
         $builder->add( 'type', 'hidden' ); 
         
-        if( $this->multy ) {
+        if( $this->params['type'] != 'single' ) {
             $builder->add('patient', 'collection', array(
-                'type' => new PatientType($this->multy),
+                'type' => new PatientType($this->params),    //$this->type),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -47,14 +54,14 @@ class OrderInfoType extends AbstractType
             ));
         }
 
-        //echo "<br>type=".$this->multy."<br>";
+        //echo "<br>type=".$this->type."<br>";
 
-        if( $this->multy == 'educational' ) {
+        if( $this->params['type'] == 'educational' ) {
             //echo " add type educational ";
             $builder->add( 'educational', new EducationalType(), array('label'=>'Educational:') );
         }
 
-        if( $this->multy == 'research' ) {
+        if( $this->params['type'] == 'research' ) {
             //echo " add type research ";
             $builder->add( 'research', new ResearchType(), array('label'=>'Research:') );
         }
@@ -80,7 +87,7 @@ class OrderInfoType extends AbstractType
         if( $this->entity->getPathologyService() && $this->entity->getPathologyService() != "" ) { //show, edit
             $thisname = trim( $this->entity->getPathologyService() );
         } else {  //new
-            $thisname = trim($this->service);
+            $thisname = trim($this->params['service']);
         }
 
         $counter = 0;
