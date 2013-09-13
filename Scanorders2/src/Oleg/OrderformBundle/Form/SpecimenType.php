@@ -45,7 +45,7 @@ class SpecimenType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif'),
 //        ));
 
-        $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
+//        $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
 
 
         if( $this->params['type'] != 'single' ) {

@@ -24,7 +24,7 @@ class SlideType extends AbstractType
         
         //$builder->add( 'stain', new StainType(), array('label'=>'Stain:') ); \
         $builder->add('stain', 'collection', array(
-            'type' => new StainType(),
+            'type' => new StainType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

@@ -273,9 +273,10 @@ class ScanOrderController extends Controller {
         $form_scan->bind($request);
 
         $stain = new Stain();
-        $form_stain = $this->createForm(new StainType(), $stain);
+        $form_stain = $this->createForm(new StainType($params), $stain);
         $form_stain->bind($request);
-        
+
+
         if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
@@ -455,7 +456,7 @@ class ScanOrderController extends Controller {
         //echo "service=".$service."<br>";
         $entity->setPathologyService($service);
 
-        $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service);
+        $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service, 'user'=>$username, 'em'=>$em);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         $patient = new Patient();      
@@ -490,7 +491,7 @@ class ScanOrderController extends Controller {
         $form_slide   = $this->createForm(new SlideType($params), $slide);
 
         $scan = new Scan();
-        $form_scan   = $this->createForm(new ScanType($params), $scan);
+        $form_scan   = $this->createForm(new ScanType(), $scan);
 
         $stain = new Stain();
         $form_stain   = $this->createForm(new StainType($params), $stain);

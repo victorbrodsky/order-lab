@@ -71,14 +71,116 @@ function init() {
 
 //    $(".combobox").combobox();
 
+    regularCombobox();
+
+    customCombobox();
+
     //resolve
-    $("select.combobox").select2({
-        width: 'element',
-        dropdownAutoWidth: true
-        //selectOnBlur: true,
-        //containerCssClass: 'combobox-width'
-    });
-       
+//    $("select.combobox").select2({
+//        width: 'element',
+//        dropdownAutoWidth: true
+//        //selectOnBlur: true,
+//        //containerCssClass: 'combobox-width'
+//    });
+
+
+//    $("#tags").select2({
+//        createSearchChoice:function(term, data) {
+//            if ($(data).filter(function() {
+//                return this.text.localeCompare(term)===0;
+//            }).length===0) {return {id:term, text:term};}
+//        },
+//        multiple: false,
+//        selectOnBlur: true,
+//        //data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}],
+//        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+//            url: "http://api.rottentomatoes.com/api/public/v1.0/movies.json",
+//            dataType: 'jsonp',
+//            data: function (term, page) {
+//                return {
+//                    q: term, // search term
+//                    page_limit: 10,
+//                    apikey: "ju6z9mjyajq2djue3gbvv26trrrff" // please do not use so this example keeps working
+//                };
+//            },
+//            results: function (data, page) { // parse the results into the format expected by Select2.
+//// since we are using custom formatting functions we do not need to alter remote JSON data
+//                return {results: data.movies};
+//            }
+//        }
+//    });
+
+    //use FOSJsRoutingBundle
+
+//    $(".ajax-combobox").select2({
+//        placeholder: "Search",
+//        //minimumInputLength: 1,
+//        width: 'element',
+//        dropdownAutoWidth: true,
+//        selectOnBlur: true,
+//        createSearchChoice:function(term, data) {
+//            if ($(data).filter(function() {
+//                return this.text.localeCompare(term)===0;
+//            }).length===0) {return {id:term, text:term};}
+//        },
+//        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+//            url: "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/multi/getdata/stain",
+//            dataType: 'json',
+//            data: function (term) {
+//                //console.log("term="+term);
+//                return {
+//                    name: term // search term
+//                };
+//            },
+//            results: function (data) { // parse the results into the format expected by Select2.
+//                // since we are using custom formatting functions we do not need to alter remote JSON data
+//                //console.log("data="+data[0].text);
+//                return {results: data};
+//            }
+//        },
+//        formatResult: function (name) {
+//            //console.log("name="+name.text);
+//            return name.text;
+//        }
+//        //formatSelection: movieFormatSelection, // omitted for brevity, see the source of this page
+//        //dropdownCssClass: "bigdrop" // apply css that makes the dropdown taller
+//        //escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+//    });
+
+//    $("#tags111").select2({
+////        createSearchChoice:function(term, data) {
+////            console.log("term="+term+", data="+data);
+////            return data;
+////            if ($(data).filter(function() {
+////                return this.text.localeCompare(term)===0;
+////                //return true;
+////            }).length===0) {
+////                return {id:term, text:term};
+////            }
+////        },
+//        placeholder: "Search",
+//        minimumInputLength: 1,
+//        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+//            url: "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/multi/getdata/stain",
+//            dataType: 'json',
+//            data: function (term) {
+//                return {
+//                    name: term // search term
+//                };
+//            },
+//            results: function (data) { // parse the results into the format expected by Select2.
+//                // since we are using custom formatting functions we do not need to alter remote JSON data
+//                console.log("data="+data.text);
+//                return {results: data.text};
+//            }
+//        },
+//        //formatResult: movieFormatResult, // omitted for brevity, see the source of this page
+//        //formatSelection: movieFormatSelection, // omitted for brevity, see the source of this page
+//        //dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+//        //escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+//    });
+
+
  
 ////////////////keep user input but can't get it on controller/////////////////////
 //     function format(state) {
@@ -86,7 +188,7 @@ function init() {
 //        if (!state.id) return state.text; // optgroup
 //        return state.text;
 //    }
-//    $(".combobox").select2({
+//    $("#tags").select2({
 //      placeholder:"Enter any tag",
 //      createSearchChoice: function(term, data) {
 //          //alert(term);
@@ -103,7 +205,7 @@ function init() {
 /////////////########################################################///////////////
 
     // new dynamic tags work even after select2 init o/
-    //tags.push({id: "cool", text: "cool"});
+//    tags.push({id: "cool", text: "cool"});
   
     
 //    $('.combobox').select2({

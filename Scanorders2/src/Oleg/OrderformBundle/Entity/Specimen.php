@@ -44,11 +44,11 @@ class Specimen
 //     * @ORM\OneToOne(targetEntity="Document", inversedBy="specimen", cascade={"persist"})
 //     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id", nullable=true)
 //     */
-    /**
-    * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
-    * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
-    */
-    protected $paper;
+//    /**
+//    * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
+//    * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
+//    */
+//    protected $paper;
     
     /**
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="specimen")
@@ -92,28 +92,28 @@ class Specimen
         $this->proceduretype = $proceduretype;
     }
 
-    /**
-     * Set paper
-     *
-     * @param string $paper
-     * @return Specimen
-     */
-    public function setPaper($paper)
-    {
-        $this->paper = $paper;
-    
-        return $this;
-    }
-
-    /**
-     * Get paper
-     *
-     * @return string 
-     */
-    public function getPaper()
-    {
-        return $this->paper;
-    }
+//    /**
+//     * Set paper
+//     *
+//     * @param string $paper
+//     * @return Specimen
+//     */
+//    public function setPaper($paper)
+//    {
+//        $this->paper = $paper;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get paper
+//     *
+//     * @return string
+//     */
+//    public function getPaper()
+//    {
+//        return $this->paper;
+//    }
 
     /**
      * Add accession

@@ -9,99 +9,54 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 
 class StainType extends AbstractType
 {
 
+    protected $params;
+    protected $user;
+
+    public function __construct( $params=null, $entity = null )
+    {
+        $this->params = $params;
+        $this->entity = $entity;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $helper = new FormHelper();
-//        $builder->add('name', 'choice', array(
-//            'choices' => $helper->getStains(),
-//            'data' => 0,
-//            'max_length' => 200,
-//            'required' => true,
-//            'label' => '* Stain:',
-//            'attr' => array('class' => 'combobox combobox-width', 'required' => 'required', 'disabled')
-////            'attr' => array('class'=>'select2combo','required' => 'required')
-//        ));
+//        echo "stain params=";
+//        echo $this->params['user'];
+//        echo "<br>";
 
-        $builder->add('name', null, array(
-            'label' => '* Stain:',
-            'required' => true,
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
+        //preloaded original combobox
+//        $builder->add('name', null, array(
+//            'label' => '* Stain:',
+//            'required' => true,
+//            'attr' => array('class' => 'combobox combobox-width')
+//        ));
         
-//        $builder->add('name', 'hidden', array(
+//        $builder->add('name', 'text', array(
 //            'label' => '* Stain:',
 //            //'required' => true,
-//            'attr' => array('class' => 'combobox combobox-width', 'type' => 'hidden')
+//            'attr' => array('class' => 'ajax-combobox', 'type' => 'hidden')
 //        ));
 
 
-        $factory  = $builder->getFormFactory();
-        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $attr = array('class' => 'ajax-combobox', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
 
-            $form = $event->getForm();
-            $data = $event->getData();
+        $builder->add('name', 'stain_selector', array(
+            'label' => '* Stain:',
+            'required' => true,
+            'attr' => $attr
+        ));
 
-//            echo "class=".get_class($data)."<br>";
-//            echo "parent=".get_parent_class($data)."<br>";
 
-            if(0) {
-            //if( get_parent_class($data) == 'Oleg\OrderformBundle\Entity\Stain' || get_class($data) == 'Oleg\OrderformBundle\Entity\Stain' ) {
-
-                $name = $data->getName();
-                //echo "name === ".$name;
-
-                $helper = new FormHelper();
-                $arr = $helper->getStains();
-                //echo "stain count = " . count($arr);
-                //exit;
-
-                $param = array(
-                    'choices' => $arr,
-                    'max_length' => 200,
-                    'required' => true,
-                    'label' => '* Stain:',
-                    'attr' => array('class' => 'combobox combobox-width', 'required' => 'required', 'disabled' ),
-//                        'attr' => array('required' => 'required'),
-                    'auto_initialize' => false,
-                );
-
-                $counter = 0;
-                $key = 0;
-                foreach( $arr as $var ){
-                    //echo "<br>".$var."?".$name;
-                    if( trim( $var ) == trim( $name ) ){
-                        $key = $counter;
-                        //echo " key=".$key;
-                        //$param['data'] = $key;
-                        break;
-                    }
-                    $counter++;
-                }
-                $param['data'] = $key;
-
-                 $form->add(
-                     $factory->createNamed(
-                        'name',
-                        'choice',
-                        null,
-                        $param
-                 ));
-
-            }
-
-        });
-
-        
-//        $builder->add('stainer', 'text', array(
-//            'label'=>'Stainer:',
-//            'max_length'=>200,
-//            'required'=>false
-//        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -109,6 +64,14 @@ class StainType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Stain'
         ));
+
+//        $resolver->setRequired(array(
+//            'em',
+//        ));
+//
+//        $resolver->setAllowedTypes(array(
+//            'em' => 'Doctrine\Common\Persistence\ObjectManager',
+//        ));
     }
 
     public function getName()

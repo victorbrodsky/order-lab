@@ -62,7 +62,12 @@ class Part
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
     protected $diagnosis;
-             
+
+    /**
+     * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
+     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
+     */
+    protected $paper;
     
 //    /**
 //     * @ORM\Column(type="text", nullable=true, length=10000)
@@ -156,6 +161,18 @@ class Part
 
     public function setDiagnosis($diagnosis) {
         $this->diagnosis = $diagnosis;
+    }
+
+    public function setPaper($paper)
+    {
+        $this->paper = $paper;
+
+        return $this;
+    }
+
+    public function getPaper()
+    {
+        return $this->paper;
     }
 
     /**

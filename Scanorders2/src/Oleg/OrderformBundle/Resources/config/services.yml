@@ -2,14 +2,22 @@ parameters:
     webservice_user_provider.class: Oleg\OrderformBundle\Security\User\WebserviceUserProvider
 
 services:
-    webservice_user_provider:
-        class: "%webservice_user_provider.class%"
 
-    wsse.security.authentication.provider:
-            class:  Oleg\OrderformBundle\Security\Authentication\Provider\WsseProvider
-            arguments: ["", "%kernel.cache_dir%/security/nonces"]
+    #custom selector fields
+    order_form.type.stain_selector:
+        class: Oleg\OrderformBundle\Form\CustomType\StainSelectorType
+        arguments: ["@doctrine.orm.entity_manager","@security.context"]
+        tags:
+            - { name: form.type, alias: stain_selector }
+
+
+#    webservice_user_provider:
+#            class: "%webservice_user_provider.class%"
 #
-    wsse.security.authentication.listener:
-        class:  Oleg\OrderformBundle\Security\Firewall\WsseListener
-        arguments: ["@security.context", "@security.authentication.manager"]
-        
+#    wsse.security.authentication.provider:
+#            class:  Oleg\OrderformBundle\Security\Authentication\Provider\WsseProvider
+#            arguments: ["", "%kernel.cache_dir%/security/nonces"]
+#
+#    wsse.security.authentication.listener:
+#        class:  Oleg\OrderformBundle\Security\Firewall\WsseListener
+#        arguments: ["@security.context", "@security.authentication.manager"]

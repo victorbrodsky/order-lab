@@ -139,6 +139,8 @@ class PartType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
+        $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
+
 //        $builder->add( 'accession', new AccessionType(), array(
 //            'label'=>' ',
 //            'required'=>false,

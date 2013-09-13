@@ -16,7 +16,7 @@
     {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
     
-    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form_procedure) }}>
+    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form_part) }}>
     {{ form_start(form) }}        
         
         {{ form_errors(form) }} 
@@ -28,6 +28,10 @@
         {{ form_errors(form_slide) }}
         {{ form_errors(form_scan) }}
         {{ form_errors(form_stain) }}
+
+
+        {#Combobox: <input type='hidden' class='ajax-combobox' style='width:300px'/>#}
+
 
         <div id="form-prototype-data"
              data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDiagnoses.vars.prototype.name)|e }}"
@@ -62,8 +66,6 @@
                 {{ formmacros.field(form_part.diagnosis) }}
 
                 {{ formmacros.field(form_scan.note) }}
-
-                {#{{ form_widget(form_paper) }}#}
 
             </div>
         </div>
@@ -131,13 +133,13 @@
               </div>
               <div class="tab-pane" id="procedure">
                   {{ formmacros.field(form_procedure.proceduretype) }}
-                  {{ formmacros.field(form_procedure.paper.file) }}
               </div>
               {#<div class="tab-pane" id="accession">#}
                   {#{{ formmacros.field(form_accession.date) }}#}
               {#</div>#}
               <div class="tab-pane" id="part">
                   {{ formmacros.field(form_part.sourceOrgan) }}
+                  {{ formmacros.field(form_part.paper.file) }}
                   {{ formmacros.field(form_part.description) }}
                   {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
                   {% if form_part.diffDiagnoses|length > 0 %}                  

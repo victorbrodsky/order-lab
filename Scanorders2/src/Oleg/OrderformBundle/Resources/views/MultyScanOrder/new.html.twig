@@ -113,17 +113,19 @@
         {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}
      "
 
-     {% if type == 'show' %}
-         data-prototype-procedure="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper.name)|e }}
-     "
-     {% else  %}
-         data-prototype-procedure="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.paper.file)|e }}
-     "
-     {% endif %}
+         data-prototype-procedure="{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}"
+
+     {#{% if type == 'show' %}#}
+         {#data-prototype-procedure="#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.name)|e }}#}
+     {#"#}
+     {#{% else  %}#}
+         {#data-prototype-procedure="#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.file)|e }}#}
+     {#"#}
+     {#{% endif %}#}
 
          data-prototype-accession="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
@@ -133,6 +135,11 @@
          data-prototype-part="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
+        {% if type == 'show' %}
+            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.name)|e }}
+        {% else  %}
+            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.file)|e }}
+        {% endif %}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
         {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}
@@ -203,12 +210,12 @@
                     <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
                         {{ myform.field(specimen.proceduretype) }}
 
-                        {% if type == 'show' %}
-                            {#<a href="../../../../web/uploads/documents/{{ specimen.paper.vars.value.path }}" target="_blank">{{ specimen.paper.vars.value.name }}</a>#}
-                            {{ myform.field_paperurl(specimen.paper) }}
-                        {% else %}
-                            {{ myform.field(specimen.paper.file) }}
-                        {% endif %}
+                        {#{% if type == 'show' %}#}
+                            {#&#123;&#35;<a href="../../../../web/uploads/documents/{{ specimen.paper.vars.value.path }}" target="_blank">{{ specimen.paper.vars.value.name }}</a>&#35;&#125;#}
+                            {#{{ myform.field_paperurl(specimen.paper) }}#}
+                        {#{% else %}#}
+                            {#{{ myform.field(specimen.paper.file) }}#}
+                        {#{% endif %}#}
 
                         {#accession#}
                         {% set accessionCount = 0 %}
@@ -241,6 +248,14 @@
                                             <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
                                                 {{ myform.field(part.name) }}
                                                 {{ myform.field(part.sourceOrgan) }}
+
+                                                {% if type == 'show' %}
+                                                    {#<a href="../../../../web/uploads/documents/{{ specimen.paper.vars.value.path }}" target="_blank">{{ specimen.paper.vars.value.name }}</a>#}
+                                                    {{ myform.field_paperurl(part.paper) }}
+                                                {% else %}
+                                                    {{ myform.field(part.paper.file) }}
+                                                {% endif %}
+
                                                 {{ myform.field(part.description) }}
                                                 {{ myform.field(part.diagnosis) }}
                                                 {#{{ myform.field(part.diffDiagnosis) }}#}
