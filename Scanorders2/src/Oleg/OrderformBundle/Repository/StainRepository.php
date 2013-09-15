@@ -26,4 +26,18 @@ class StainRepository extends EntityRepository
         return $in_entity;
     }
     
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Stain')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }

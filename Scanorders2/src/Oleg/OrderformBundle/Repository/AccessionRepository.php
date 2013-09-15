@@ -43,18 +43,18 @@ class AccessionRepository extends EntityRepository {
     }
     
     public function setResult( $accession, $orderinfo=null ) {
-        
+               
+        //echo "accession=".$accession."<br>";
         $em = $this->_em;
         $em->persist($accession);
-        //echo "accession=".$accession."<br>";
-
+                
         if( $orderinfo == null ) {
             return $accession;
         }
         
         $parts = $accession->getPart();
         foreach( $parts as $part ) {
-            if( !$part->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part) ) {              
                 $accession->removePart( $part );
                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession, $orderinfo );
                 $accession->addPart($part);
@@ -74,6 +74,9 @@ class AccessionRepository extends EntityRepository {
 
         $accessions = $specimen->getAccession();
 
+//        echo "accession count=".count($accessions)."<br>";
+//        exit();
+        
         if( count($accessions) == 1 ) {
             return $specimen;
         }
@@ -82,6 +85,7 @@ class AccessionRepository extends EntityRepository {
 
         foreach( $accessions as $accession ) {
 
+            //echo "accession=".$accession."<br>";
             $accNum = $accession->getAccession();
 
             if( count($accessionNums) == 0 || !in_array($accNum, $accessionNums) ) {
@@ -96,6 +100,20 @@ class AccessionRepository extends EntityRepository {
         }
 
         return $specimen;
+    }
+    
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Accession')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

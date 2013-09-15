@@ -88,22 +88,24 @@ class SpecimenRepository extends EntityRepository
     
     public function setResult( $specimen, $orderinfo=null ) {
         
+        //echo "specimen set result<br>";
+        
         $em = $this->_em;
-        $em->persist($specimen);
-
+        $em->persist($specimen);   
+        
         if( $orderinfo == null ) {
             return $specimen;
         }
-        
+                               
         $accessions = $specimen->getAccession();
-//        echo "accession count=".count($accessions)."<br>";
+        //echo "accession count=".count($accessions)."<br>";
 //        foreach( $accessions as $accession ) {
 //            echo $accession;
 //        }
         
         foreach( $accessions as $accession ) {
             //echo $accession;
-            if( !$accession->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Accession')->notExists($accession) ) {               
                 $specimen->removeAccession( $accession );
                 $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo );
                 $specimen->addAccession($accession);
@@ -188,6 +190,20 @@ class SpecimenRepository extends EntityRepository
         //exit();
 
         return $patient;
+    }
+    
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Specimen')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
 }

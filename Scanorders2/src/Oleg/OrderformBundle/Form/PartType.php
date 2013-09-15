@@ -47,35 +47,20 @@ class PartType extends AbstractType
             'max_length' => '3',
             'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
         ));
-
-//        $builder->add('name', 'choice', array(
-//            'choices' => $helper->getPart(),
-//            'required'=>true,
-//            'label'=>'Part Name:',
-//            'max_length'=>'3',
-//            //'data' => 0,
-////            'attr' => array('style' => 'width:70px'),
-//            'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
+                      
+//        $builder->add('sourceOrgan', null, array(
+//            'label' => 'Source Organ:',
+//            'attr' => array('class' => 'combobox combobox-width')
 //        ));
-        
-//        $builder->add( 'sourceOrgan', 'text', array(
-//                'label'=>'Source Organ:', 
-//                'max_length'=>'100', 
-//                'required'=>false
-//        ));
-//        $builder->add( 'sourceOrgan',
-//                'choice', array(
-//                'label'=>'Source Organ:',
-//                'max_length'=>'100',
-//                'choices' => $helper->getSourceOrgan(),
-//                'required'=>false,
-//                'attr' => array('class' => 'combobox combobox-width'), // 'style' => 'width:345px'),
-////                'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
-//                //'data' => 0,
-//        ));
-        $builder->add('sourceOrgan', null, array(
-            'label' => 'Source Organ:',
-            'attr' => array('class' => 'combobox combobox-width')
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
+        $builder->add('sourceOrgan', 'custom_selector', array(
+            'label' => 'Source Organ:',           
+            'attr' => $attr,
+            'classtype' => 'sourceOrgan'
         ));
         
         $builder->add( 'description', 'textarea', array(
@@ -134,9 +119,19 @@ class PartType extends AbstractType
             'attr' => array('class' => 'horizontal_type'),
         ));
 
-        $builder->add('primaryOrgan', null, array(
-            'label' => 'Primary Site of Origin:',
-            'attr' => array('class' => 'combobox combobox-width')
+//        $builder->add('primaryOrgan', null, array(
+//            'label' => 'Primary Site of Origin:',
+//            'attr' => array('class' => 'combobox combobox-width')
+//        ));
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
+        $builder->add('primaryOrgan', 'custom_selector', array(
+            'label' => 'Primary Site of Origin:',           
+            'attr' => $attr,
+            'classtype' => 'sourceOrgan'
         ));
 
         $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );

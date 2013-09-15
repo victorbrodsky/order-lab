@@ -12,20 +12,43 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class ScanType extends AbstractType
 {
+      
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
+    {
+        $this->params = $params;
+        $this->entity = $entity;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $helper = new FormHelper();
         
         //$builder->add( 'status', 'hidden', array('data' => 'submitted') ); 
         
-        $builder->add('scanregion', 'choice', array(
-                'max_length'=>200,
-                'required'=>true,
-                'label' => 'Region to scan:',
-                'choices' => array("Entire Slide"=>"Entire Slide", "Any one of the levels"=>"Any one of the levels", "Region circled by marker" => "Region circled by marker"),
-                //'attr' => array('class'=>'form-control form-control-modif'),
-                'attr' => array('class' => 'combobox')
+//        $builder->add('scanregion', 'choice', array(
+//                'max_length'=>200,
+//                'required'=>true,
+//                'label' => 'Region to scan:',
+//                'choices' => array("Entire Slide"=>"Entire Slide", "Any one of the levels"=>"Any one of the levels", "Region circled by marker" => "Region circled by marker"),
+//                //'attr' => array('class'=>'form-control form-control-modif'),
+//                'attr' => array('class' => 'combobox')
+//        ));
+        
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $attr = array('class' => 'ajax-combobox-scanregion', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
+
+        $builder->add('scanregion', 'custom_selector', array(
+            'label' => 'Region to scan:',           
+            'attr' => $attr,
+            'classtype' => 'scanRegion'
         ));
+        
 
         $builder->add( 'mag', 
                 'choice', array(  

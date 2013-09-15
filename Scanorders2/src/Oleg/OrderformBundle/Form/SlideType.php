@@ -36,7 +36,7 @@ class SlideType extends AbstractType
         
 //        $builder->add( 'scan', new ScanType(), array('label'=>'Scan:') );
         $builder->add('scan', 'collection', array(
-            'type' => new ScanType(),
+            'type' => new ScanType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

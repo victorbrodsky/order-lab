@@ -29,7 +29,7 @@ class SlideRepository extends EntityRepository {
         
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {          
-            if( !$scan->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Scan')->notExists($scan) ) {
                 $slide->removeScan( $scan );
                 $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
                 $slide->addScan($scan);
@@ -41,7 +41,7 @@ class SlideRepository extends EntityRepository {
 
         $stains = $slide->getStain();
         foreach( $stains as $stain ) {
-            if( !$stain->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Stain')->notExists($stain) ) {
                 $slide->removeStain( $stain );
                 $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
                 $slide->addStain($stain);
@@ -54,6 +54,20 @@ class SlideRepository extends EntityRepository {
         //$em->flush($slide);
         
         return $slide;
+    }
+    
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Slide')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
 }

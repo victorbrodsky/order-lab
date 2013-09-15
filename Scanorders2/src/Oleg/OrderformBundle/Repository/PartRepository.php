@@ -85,7 +85,7 @@ class PartRepository extends EntityRepository
         $blocks = $part->getBlock();    
         
         foreach( $blocks as $block ) {
-            if( !$block->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block) ) {
                 $part->removeBlock( $block );
                 $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part, $orderinfo );
                 $part->addBlock($block);
@@ -131,6 +131,20 @@ class PartRepository extends EntityRepository
         return $accession;
     }
 
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Part')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public function presetEntity( $part ) {
 
         //$part->setDiseaseType("Non-Neoplastic");

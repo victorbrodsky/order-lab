@@ -25,28 +25,29 @@ class SpecimenType extends AbstractType
 //        print_r($this->params);
 //        echo "<br>";
         
-//        $builder
-//            ->add('proceduretype');
-//            ->add('paper');
-        
 //        $builder->add( 'proceduretype', 'text', array(
 //                'label'=>'Procedure Type:',
 //                'max_length'=>300,'required'=>false,
 //                'attr' => array('class'=>'form-control form-control-modif'),
 //        ));
-        $builder->add('proceduretype', null, array(
-            'label' => 'Procedure Type:',
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
-        
-//        $builder->add( 'paper', 'file', array(
-//                'label'=>'Paper:',
-//                'required'=>false,
-//                'attr' => array('class'=>'form-control form-control-modif'),
+//        $builder->add('proceduretype', null, array(
+//            'label' => 'Procedure Type:',
+//            'attr' => array('class' => 'combobox combobox-width')
 //        ));
+        
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
 
-//        $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
-
+        $builder->add('proceduretype', 'custom_selector', array(
+            'label' => 'Procedure Type:',           
+            'attr' => $attr,
+            'classtype' => 'procedureType'
+        ));
+            
+        
 
         if( $this->params['type'] != 'single' ) {
             $builder->add('accession', 'collection', array(

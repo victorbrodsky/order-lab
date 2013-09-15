@@ -5,10 +5,10 @@ services:
 
     #custom selector fields
     order_form.type.stain_selector:
-        class: Oleg\OrderformBundle\Form\CustomType\StainSelectorType
+        class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
         arguments: ["@doctrine.orm.entity_manager","@security.context"]
         tags:
-            - { name: form.type, alias: stain_selector }
+            - { name: form.type, alias: custom_selector }
 
 
 #    webservice_user_provider:

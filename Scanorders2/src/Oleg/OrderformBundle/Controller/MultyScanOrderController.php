@@ -624,50 +624,50 @@ if(0){
         return $has;
     }
 
-    //test ajax json data controller
-    /**
-     * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/getdata/{term}", name="getdata")
-     * @Method("POST")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
-     */
-    public function getStainsAction($term) {
-
-        //$request = $this->get('request');
-        //$name=$request->request->get('formName');
-
-        $em = $this->getDoctrine()->getManager();
-
-//        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
-//        $output = array();
-//        foreach ($entities as $member) {
-//            $output[] = array(
-//                'id' => $member->getId(),
-//                'text' => $member->getname(),
-//            );
-//        }
-
-        $query = $em->createQuery(
-            'SELECT stain.id as id, stain.name as text
-            FROM OlegOrderformBundle:StainList stain'
-        );
-        $output = $query->getResult();
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-
-//        $arr = array('1','me', 'who');
+//    //test ajax json data controller
+//    /**
+//     * Displays a form to create a new OrderInfo + Scan entities.
+//     * @Route("/getdata/{term}", name="getdata")
+//     * @Method("POST")
+//     * @Method("GET")
+//     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+//     */
+//    public function getStainsAction($term) {
 //
-//        $res = array("id"=>1, "text"=>$arr);
+//        //$request = $this->get('request');
+//        //$name=$request->request->get('formName');
 //
-//        $return=$res1;
+//        $em = $this->getDoctrine()->getManager();
 //
-//        $return=json_encode($return);//jscon encode the array
-//        return new Response($return,200,array('Content-Type'=>'application/json'));//make sure it has the correct content type
-    }
+////        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
+////        $output = array();
+////        foreach ($entities as $member) {
+////            $output[] = array(
+////                'id' => $member->getId(),
+////                'text' => $member->getname(),
+////            );
+////        }
+//
+//        $query = $em->createQuery(
+//            'SELECT stain.id as id, stain.name as text
+//            FROM OlegOrderformBundle:StainList stain'
+//        );
+//        $output = $query->getResult();
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//
+////        $arr = array('1','me', 'who');
+////
+////        $res = array("id"=>1, "text"=>$arr);
+////
+////        $return=$res1;
+////
+////        $return=json_encode($return);//jscon encode the array
+////        return new Response($return,200,array('Content-Type'=>'application/json'));//make sure it has the correct content type
+//    }
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.

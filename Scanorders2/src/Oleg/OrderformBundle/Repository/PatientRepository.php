@@ -89,28 +89,31 @@ class PatientRepository extends EntityRepository
     }
     
     public function setResult( $patient, $orderinfo = null ) {
-
+              
         $em = $this->_em;
         $em->persist($patient);
-
+        
         if( $orderinfo == null ) {
             return $patient;
         }
-
-        //echo "specimen count in patient=".count($patient->getSpecimen())."<br>";
-        
+             
         $specimens = $patient->getSpecimen();
-        foreach( $specimens as $specimen ) {
-            if( !$specimen->getId() ) {          
+        //echo "specimen count in patient=".count($specimens)."<br>";
+             
+        foreach( $specimens as $specimen ) {   
+                            
+            if( $em->getRepository('OlegOrderformBundle:Specimen')->notExists($specimen) ) {     //specimen new               
                 $patient->removeSpecimen( $specimen );
                 //echo "specimen0: ".$specimen."<br>";
                 $specimen = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $specimen, null, $specimen->getAccession(), $orderinfo );
                 //echo "specimen1: ".$specimen."<br>";
                 $patient->addSpecimen($specimen);
                 $orderinfo->addSpecimen($specimen);
-            } else {
-                continue;
+            } else {         //specimen from DB     
+                //echo "specimen from DB continue id=".$specimen->getId()."<br>";
+                continue;              
             }
+            
         }
 
         //exit();
@@ -149,4 +152,18 @@ class PatientRepository extends EntityRepository
         return $entity;
     }
 
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Patient')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }

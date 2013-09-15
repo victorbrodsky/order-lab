@@ -45,15 +45,16 @@ class StainType extends AbstractType
 
 
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox', 'type' => 'hidden');    //new
+            $attr = array('class' => 'ajax-combobox-stain', 'type' => 'hidden');    //new
         } else {
             $attr = array('class' => 'combobox combobox-width');    //show
         }
 
-        $builder->add('name', 'stain_selector', array(
+        $builder->add('name', 'custom_selector', array(
             'label' => '* Stain:',
             'required' => true,
-            'attr' => $attr
+            'attr' => $attr,
+            'classtype' => 'stain'
         ));
 
 

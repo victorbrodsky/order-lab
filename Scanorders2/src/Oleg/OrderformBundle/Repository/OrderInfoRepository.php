@@ -37,17 +37,17 @@ class OrderInfoRepository extends EntityRepository
 
         $helper = new FormHelper();
         
-        $slideDelivery = $helper->getSlideDelivery();
-        $key = $entity->getSlideDelivery();
-        if( isset($key) && $key >= 0 ) {
-            $entity->setSlideDelivery( trim($slideDelivery[$key]) );
-        }
-        
-        $returnSlide = $helper->getReturnSlide();
-        $key = $entity->getReturnSlide();
-        if( isset($key) && $key >= 0 ) {
-            $entity->setReturnSlide( trim($returnSlide[$key]) );
-        }
+//        $slideDelivery = $helper->getSlideDelivery();
+//        $key = $entity->getSlideDelivery();
+//        if( isset($key) && $key >= 0 ) {
+//            $entity->setSlideDelivery( trim($slideDelivery[$key]) );
+//        }
+//        
+//        $returnSlide = $helper->getReturnSlide();
+//        $key = $entity->getReturnSlide();
+//        if( isset($key) && $key >= 0 ) {
+//            $entity->setReturnSlide( trim($returnSlide[$key]) );
+//        }
              
         $key = $entity->getPathologyService();   
         if( isset($key) && $key >= 0 ) {
@@ -87,7 +87,7 @@ class OrderInfoRepository extends EntityRepository
         //echo "patients count=".count($patients)."<br>";
         
         foreach( $patients as $patient ) {
-            if( !$patient->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient) ) {
                 //echo $patient;
                 $entity->removePatient( $patient );
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity );

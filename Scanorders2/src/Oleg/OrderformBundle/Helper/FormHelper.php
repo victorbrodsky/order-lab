@@ -755,6 +755,12 @@ Translational Research"
         return $arr;
     }
     
+    public function getScanRegion() {          
+        $arr = array("Entire Slide"=>"Entire Slide", "Any one of the levels"=>"Any one of the levels", "Region circled by marker" => "Region circled by marker");
+    
+        return $arr;
+    }
+                
     public function getBlock() {        
         $arr = array();
         

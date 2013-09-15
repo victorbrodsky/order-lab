@@ -17,17 +17,7 @@ class BlockRepository extends EntityRepository
     //this function will create an entity if it doesn't exist or return the existing entity object
     public function processEntity( $block, $part=null, $orderinfo=null ) {
         
-        $em = $this->_em;
-
-//        $helper = new FormHelper();
-//        $key = $block->getName();
-//
-//        if( isset($key) && $key >= 0 ) {
-//            $name = $helper->getBlock();
-//            $block->setName( $name[$key] );
-//            //echo "name =" .  $name[$key];
-//        }
-        //exit();
+        $em = $this->_em;             
 
         if( $part == null || $part->getId() == null) {
             //$em->persist($block);
@@ -35,8 +25,7 @@ class BlockRepository extends EntityRepository
             //echo "return block ################################<br>";
 
             //return $block;
-            $block = $this->setResult( $block, $orderinfo );
-            return $block;
+            return $this->setResult( $block, $orderinfo );            
         }
 
         //Check if the part has the block with the same name    
@@ -58,8 +47,7 @@ class BlockRepository extends EntityRepository
             //$em->flush();
             //echo "return block 2 ################################<br>";
             //return $block;
-            $block = $this->setResult( $block, $orderinfo );
-            return $block;
+            return $this->setResult( $block, $orderinfo );         
         }
 
 //        echo " block_found is not null ";
@@ -76,8 +64,7 @@ class BlockRepository extends EntityRepository
 
        //anyway we should get only one block found 
        //return $block_res;
-       $block = $this->setResult( $block_res, $orderinfo );
-       return $block;
+       return $this->setResult( $block_res, $orderinfo );
     }
     
     public function setResult( $block, $orderinfo ) {
@@ -91,7 +78,7 @@ class BlockRepository extends EntityRepository
         
         $slides = $block->getSlide();      
         foreach( $slides as $slide ) {         
-            if( !$slide->getId() ) {
+            if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide) ) {
                 $block->removeSlide( $slide );
                 $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $orderinfo );               
                 $block->addSlide($slide);                                                                                                                             
@@ -133,6 +120,20 @@ class BlockRepository extends EntityRepository
         }
 
         return $part;
+    }
+    
+    public function notExists($entity) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }      
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:Block')->findOneById($id);       
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
 }
