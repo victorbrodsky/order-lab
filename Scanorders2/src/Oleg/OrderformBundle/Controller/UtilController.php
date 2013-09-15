@@ -18,7 +18,7 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 class UtilController extends Controller {
       
     /**
-     * @Route("/getstain", name="get-stain")
+     * @Route("/stain", name="get-stain")
      * @Method("GET")
      */
     public function getStainsAction() {
@@ -39,7 +39,7 @@ class UtilController extends Controller {
     
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/getprocedure", name="get-procedure")
+     * @Route("/procedure", name="get-procedure")
      * @Method("GET")
      */
     public function getProcedureAction() {
@@ -59,7 +59,7 @@ class UtilController extends Controller {
     }
     
     /**
-     * @Route("/getorgan", name="get-organ")
+     * @Route("/organ", name="get-organ")
      * @Method("GET")
      */
     public function getOrgansAction() {
@@ -80,7 +80,7 @@ class UtilController extends Controller {
         
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/getscanregion", name="get-scanregion")
+     * @Route("/scanregion", name="get-scanregion")
      * @Method("GET")
      */
     public function getScanRegionAction() {
@@ -114,7 +114,7 @@ class UtilController extends Controller {
     
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/getslidedelivery", name="get-slidedelivery")
+     * @Route("/delivery", name="get-slidedelivery")
      * @Method("GET")
      */
     public function getSlideDeliveryAction() {
@@ -139,7 +139,7 @@ class UtilController extends Controller {
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/getreturnslide", name="get-returnslide")
+     * @Route("/return", name="get-returnslide")
      * @Method("GET")
      */
     public function getReturnSlideAction() {

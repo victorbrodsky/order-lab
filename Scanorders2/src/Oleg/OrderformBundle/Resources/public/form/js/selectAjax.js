@@ -6,8 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var Stains = [];
-
 function regularCombobox() {
     //resolve
     $("select.combobox").select2({
@@ -18,15 +16,59 @@ function regularCombobox() {
     });
 }
 
-
 function customCombobox() {
-
+  
     //initAjaxData();
     //var url = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/multi/getdata/stain";
+    
+//    var comboboxes = new Array("stain","procedure","organ","scanregion","delivery","return");
+//    
+//    for( var i in comboboxes ) {   
+//        
+//        var prefix = comboboxes[i];
+//        var target = ".ajax-combobox-"+prefix;
+//        
+//        var url = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/"+prefix;
+//        
+//        console.log("prefix="+prefix+", target="+target);
+//        
+//        $.ajax(url).success(function(data) {
+//            json = eval(data);
+//            stainsData = eval(data);
+//            console.log("prefix2="+prefix+", target2="+target);
+//            $(target).select2({
+//                placeholder: "Search",
+//                width: 'element',
+//                dropdownAutoWidth: true,
+//                selectOnBlur: true,
+//                dataType: 'json',
+//                quietMillis: 100,
+//                data: data,
+//                createSearchChoice:function(term, data) {
+//                    //console.log(data.length);
+//                    if ($(data).filter(function() {
+//                        return this.text.localeCompare(term)===0;
+//                    }).length===0) {
+//    //                    var newitem = [];
+//    //                    newitem['id']=data.length;    //= array("id":data.length, "text":term);
+//    //                    newitem['text']=term;
+//    //                    data.push(newitem);
+//                        return {id:term, text:term};
+//                    }
+//                }
+//
+//            });
+//
+//            //$(".ajax-combobox-"+comb).select2('data', {id: 1, text: 'H&E'});
+//        });
+//    
+//    } //for
+    
     //#############  stains  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/getstain";
+    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/stain";
     $.ajax(stainUrl).success(function(data) {
         json = eval(data);
+        stainsData = eval(data);
         $(".ajax-combobox-stain").select2({
             placeholder: "Search",
             width: 'element',
@@ -34,11 +76,18 @@ function customCombobox() {
             selectOnBlur: true,
             dataType: 'json',
             quietMillis: 100,
-            data: data,
+            data: stainsData,
             createSearchChoice:function(term, data) {
+//                console.log(stainsData.length);
+//                var newitem = [];
+//                newitem['id']=stainsData.length;    //= array("id":data.length, "text":term);
+//                newitem['text']=term;
+//                stainsData.push(newitem);
                 if ($(data).filter(function() {
                     return this.text.localeCompare(term)===0;
-                }).length===0) {return {id:term, text:term};}
+                }).length===0) {                 
+                    return {id:term, text:term};
+                }               
             }
 
         });
@@ -47,7 +96,7 @@ function customCombobox() {
     });
 
     //#############  procedure types  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/getprocedure";
+    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/procedure";
     $.ajax(stainUrl).success(function(data) {
         json = eval(data);
         $(".ajax-combobox-procedure").select2({
@@ -69,7 +118,7 @@ function customCombobox() {
     
     
     //#############  source organs  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/getorgan";
+    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/organ";
     $.ajax(stainUrl).success(function(data) {
         json = eval(data);
         $(".ajax-combobox-organ").select2({
@@ -91,7 +140,7 @@ function customCombobox() {
     
     
     //#############  scan regions  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/getscanregion";
+    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/scanregion";
     $.ajax(stainUrl).success(function(data) {
         json = eval(data);
         $(".ajax-combobox-scanregion").select2({
@@ -114,7 +163,7 @@ function customCombobox() {
     
     
     //#############  slide delivery  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/getslidedelivery";
+    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/delivery";
     $.ajax(stainUrl).success(function(data) {
         json = eval(data);
         $(".ajax-combobox-delivery").select2({
@@ -136,7 +185,7 @@ function customCombobox() {
     });
     
     //#############  return slides to  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/getreturnslide";
+    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/return";
     $.ajax(stainUrl).success(function(data) {
         json = eval(data);
         $(".ajax-combobox-return").select2({
