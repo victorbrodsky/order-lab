@@ -50,7 +50,10 @@ class UtilController extends Controller {
             'SELECT proc.id as id, proc.name as text
             FROM OlegOrderformBundle:ProcedureList proc'
         );
+
+        $empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
+        array_unshift($output, $empty);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -70,7 +73,10 @@ class UtilController extends Controller {
             'SELECT proc.id as id, proc.name as text
             FROM OlegOrderformBundle:OrganList proc'
         );
+
+        $empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
+        array_unshift($output, $empty);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

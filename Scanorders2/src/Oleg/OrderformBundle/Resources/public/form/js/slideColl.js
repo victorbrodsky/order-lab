@@ -51,6 +51,8 @@ function addCollField( ident, type, patient, specimen, accession, part, block, s
         var btnDel = '&nbsp;<button id="'+delbtnId+'" onClick="delCollField(\''+ident+'\',' + "\'"+type+"\'," + patient + ',' +specimen+','+accession+','+part+','+block+','+slide+')" class="btn btn-sm btn-danger" type="button">-</button>';
         $("#"+addbtnId).after(btnDel);
     }
+
+    expandTextarea();
 }
 
 

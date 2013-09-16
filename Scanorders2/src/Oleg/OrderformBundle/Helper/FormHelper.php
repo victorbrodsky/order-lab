@@ -712,8 +712,8 @@ Translational Research"
     
     
     public function getMags() {        
-        $arr1 = array( '20X'=>'20X', '40X'=>'40X' );
-        $arr = array( '20X', '40X' );
+        $arr = array( '20X'=>'20X', '40X'=>'40X' );
+        //$arr = array( '20X', '40X' );
         
         return $arr;
     }
@@ -737,7 +737,7 @@ Translational Research"
             "I will write S on the slide & submit as a consult",
             "I will write S4 on the slide & submit as a consult",
             "I will email slidescan@med.cornell.edu about it",
-            "Please e-mail me to set the time & pick up slides",     
+            "Please e-mail me to set the time & pick up slides",
         );
         
         return $arr;
@@ -756,7 +756,11 @@ Translational Research"
     }
     
     public function getScanRegion() {          
-        $arr = array("Entire Slide"=>"Entire Slide", "Any one of the levels"=>"Any one of the levels", "Region circled by marker" => "Region circled by marker");
+        $arr = array(
+            "Entire Slide",
+            "Any one of the levels",
+            "Region circled by marker"
+        );
     
         return $arr;
     }

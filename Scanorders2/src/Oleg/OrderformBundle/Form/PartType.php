@@ -60,6 +60,7 @@ class PartType extends AbstractType
         $builder->add('sourceOrgan', 'custom_selector', array(
             'label' => 'Source Organ:',           
             'attr' => $attr,
+            'required' => false,
             'classtype' => 'sourceOrgan'
         ));
         
@@ -67,14 +68,14 @@ class PartType extends AbstractType
                 'label'=>'Gross Description:',
                 'max_length'=>'10000', 
                 'required'=>false,
-                'attr' => array('class'=>'form-control'),
+                'attr' => array('class'=>'textarea form-control'),
         ));
         
         $builder->add( 'diagnosis', 'textarea', array(
                 'label'=>'Diagnosis:',
                 'max_length'=>'10000', 
                 'required'=>false,
-                'attr' => array('class'=>'form-control'),
+                'attr' => array('class'=>'textarea form-control'),
         ));
         
 //        $builder->add( 'diffDiagnosis', 'textarea', array(
@@ -131,6 +132,7 @@ class PartType extends AbstractType
         $builder->add('primaryOrgan', 'custom_selector', array(
             'label' => 'Primary Site of Origin:',           
             'attr' => $attr,
+            'required' => false,
             'classtype' => 'sourceOrgan'
         ));
 

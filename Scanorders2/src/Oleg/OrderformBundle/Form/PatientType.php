@@ -72,7 +72,7 @@ class PatientType extends AbstractType
                 'label'=>'Clinical History:', 
                 'max_length'=>10000,
                 'required'=>false,
-                'attr' => array('class'=>'form-control'),
+                'attr' => array('class'=>'textarea form-control'),
         )); 
            
         if( $this->params['type'] != 'single' ) {

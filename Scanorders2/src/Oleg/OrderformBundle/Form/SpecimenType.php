@@ -42,7 +42,8 @@ class SpecimenType extends AbstractType
         }
 
         $builder->add('proceduretype', 'custom_selector', array(
-            'label' => 'Procedure Type:',           
+            'label' => 'Procedure Type:',
+            'required' => false,
             'attr' => $attr,
             'classtype' => 'procedureType'
         ));

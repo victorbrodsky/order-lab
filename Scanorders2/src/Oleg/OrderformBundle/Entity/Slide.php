@@ -110,12 +110,12 @@ class Slide
 //    protected $scan;
 
     /**
-     * @ORM\OneToMany(targetEntity="Scan", mappedBy="slide")
+     * @ORM\OneToMany(targetEntity="Scan", mappedBy="slide", cascade={"persist"})
      */
     protected $scan;
 
     /**
-     * @ORM\OneToMany(targetEntity="Stain", mappedBy="slide")
+     * @ORM\OneToMany(targetEntity="Stain", mappedBy="slide", cascade={"persist"})
      */
     protected $stain;
     

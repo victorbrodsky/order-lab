@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
+
 function regularCombobox() {
     //resolve
     $("select.combobox").select2({
@@ -63,148 +65,17 @@ function customCombobox() {
 //        });
 //    
 //    } //for
-    
-    //#############  stains  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/stain";
-    $.ajax(stainUrl).success(function(data) {
-        json = eval(data);
-        stainsData = eval(data);
-        $(".ajax-combobox-stain").select2({
-            placeholder: "Search",
-            width: 'element',
-            dropdownAutoWidth: true,
-            selectOnBlur: true,
-            dataType: 'json',
-            quietMillis: 100,
-            data: stainsData,
-            createSearchChoice:function(term, data) {
-//                console.log(stainsData.length);
-//                var newitem = [];
-//                newitem['id']=stainsData.length;    //= array("id":data.length, "text":term);
-//                newitem['text']=term;
-//                stainsData.push(newitem);
-                if ($(data).filter(function() {
-                    return this.text.localeCompare(term)===0;
-                }).length===0) {                 
-                    return {id:term, text:term};
-                }               
-            }
 
-        });
+    //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 
-        $(".ajax-combobox-stain").select2('data', {id: 1, text: 'H&E'});
-    });
+    getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
+    getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
+    getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
+    getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
+    getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
+    getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
 
-    //#############  procedure types  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/procedure";
-    $.ajax(stainUrl).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-procedure").select2({
-            placeholder: "Procedure Type",
-            width: 'element',
-            dropdownAutoWidth: true,
-            selectOnBlur: true,
-            dataType: 'json',
-            quietMillis: 100,
-            data: data,
-            createSearchChoice:function(term, data) {
-                if ($(data).filter(function() {
-                    return this.text.localeCompare(term)===0;
-                }).length===0) {return {id:term, text:term};}
-            }
 
-        });      
-    });
-    
-    
-    //#############  source organs  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/organ";
-    $.ajax(stainUrl).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-organ").select2({
-            placeholder: "Source Organ",
-            width: 'element',
-            dropdownAutoWidth: true,
-            selectOnBlur: true,
-            dataType: 'json',
-            quietMillis: 100,
-            data: data,
-            createSearchChoice:function(term, data) {
-                if ($(data).filter(function() {
-                    return this.text.localeCompare(term)===0;
-                }).length===0) {return {id:term, text:term};}
-            }
-
-        });      
-    });
-    
-    
-    //#############  scan regions  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/scanregion";
-    $.ajax(stainUrl).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-scanregion").select2({
-            placeholder: "Region to scan",
-            width: 'element',
-            dropdownAutoWidth: true,
-            selectOnBlur: true,
-            dataType: 'json',
-            quietMillis: 100,
-            data: data,
-            createSearchChoice:function(term, data) {
-                if ($(data).filter(function() {
-                    return this.text.localeCompare(term)===0;
-                }).length===0) {return {id:term, text:term};}
-            }
-
-        });
-        $(".ajax-combobox-scanregion").select2('data', {id: 1, text: 'Entire Slide'});
-    });
-    
-    
-    //#############  slide delivery  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/delivery";
-    $.ajax(stainUrl).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-delivery").select2({
-            placeholder: "Slide Delivery",
-            width: 'element',
-            dropdownAutoWidth: true,
-            selectOnBlur: true,
-            dataType: 'json',
-            quietMillis: 100,
-            data: data,
-            createSearchChoice:function(term, data) {
-                if ($(data).filter(function() {
-                    return this.text.localeCompare(term)===0;
-                }).length===0) {return {id:term, text:term};}
-            }
-
-        }); 
-        $(".ajax-combobox-delivery").select2('data', {id: 1, text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
-    });
-    
-    //#############  return slides to  ##############//
-    var stainUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/util/return";
-    $.ajax(stainUrl).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-return").select2({
-            placeholder: "Return Slides to",
-            width: 'element',
-            dropdownAutoWidth: true,
-            selectOnBlur: true,
-            dataType: 'json',
-            quietMillis: 100,
-            data: data,
-            createSearchChoice:function(term, data) {
-                if ($(data).filter(function() {
-                    return this.text.localeCompare(term)===0;
-                }).length===0) {return {id:term, text:term};}
-            }
-
-        });
-        $(".ajax-combobox-return").select2('data', {id: 1, text: "Filing Room"});
-    });
 }
 
 //    //console.log("Stains="+dataStore.getStains());
@@ -285,3 +156,200 @@ function customCombobox() {
 //
 //    });
 //}
+
+
+//#############  stains  ##############//
+function getComboboxStain(urlCommon, ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"stain";
+
+    //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_0_stain_0_name
+    console.log("stain id="+id);
+
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        //stainsData = eval(data);
+        var target = ".ajax-combobox-stain";
+        var targetid = id+"stain_0_name";
+        $(target).select2({
+            //placeholder: "Search",
+            width: 'element',
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {
+                    return {id:term, text:term};
+                }
+            }
+
+        });
+
+        $(targetid).select2('data', {id: 1, text: 'H&E'});
+
+        //single form: s2id_oleg_orderformbundle_staintype_name
+        $("#s2id_oleg_orderformbundle_staintype_name").select2('data', {id: 1, text: 'H&E'});
+    });
+}
+
+//#############  scan regions  ##############//
+function getComboboxScanregion(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"scanregion";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        $(".ajax-combobox-scanregion").select2({
+            //placeholder: "Region to scan",
+            width: 'element',
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+        $(id+"scan_0_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+        //single form: s2id_oleg_orderformbundle_staintype_name
+        $("#s2id_oleg_orderformbundle_scantype_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+    });
+}
+
+//#############  procedure types  ##############//
+function getComboboxProcedure(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"procedure";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        $(".ajax-combobox-procedure").select2({
+            placeholder: "Procedure Type",
+            width: 'element',
+            dropdownAutoWidth: true,
+            allowClear: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+    });
+}
+
+
+//#############  source organs  ##############//
+function getComboboxOrgan(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"organ";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        $(".ajax-combobox-organ").select2({
+            placeholder: "Source Organ",
+            width: 'element',
+            dropdownAutoWidth: true,
+            allowClear: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+    });
+}
+
+//#############  slide delivery  ##############//
+function getComboboxDelivery(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"delivery";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        $(".ajax-combobox-delivery").select2({
+            //placeholder: "Slide Delivery",
+            width: 'element',
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+        $(".ajax-combobox-delivery").select2('data', {id: 1, text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
+    });
+}
+
+//#############  return slides to  ##############//
+function getComboboxReturn(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"return";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        $(".ajax-combobox-return").select2({
+            //placeholder: "Return Slides to",
+            width: 'element',
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+        $(".ajax-combobox-return").select2('data', {id: 1, text: "Filing Room"});
+    });
+}
+
+
+
+function initComboboxJs(ids) {
+
+    //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
+    getComboboxStain(urlCommon,ids);
+    getComboboxScanregion(urlCommon,ids);
+    getComboboxProcedure(urlCommon,ids);
+    getComboboxOrgan(urlCommon,ids);
+//    getComboboxDelivery(urlCommon,ids);
+//    getComboboxReturn(urlCommon,ids);
+
+    //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_1_stain_0_name
+    //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_1_scan_0_scanregion
+    //console.log("target id="+id);
+    //var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    //var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+
+    //$(id+"stain_0_name").select2('data', {id: 1, text: 'H&E'});
+    //$(id+"scan_0_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+    //$(id+"delivery").select2('data', {id: 1, text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
+    //$(id+"return").select2('data', {id: 1, text: "Filing Room"});
+}

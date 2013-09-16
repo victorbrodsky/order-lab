@@ -60,7 +60,7 @@ class SlideType extends AbstractType
                 'max_length'=>10000,
                 'required'=>false,
                 'label'=>'Microscopic Description:',
-                'attr' => array('class'=>'form-control'),
+                'attr' => array('class'=>'textarea form-control'),
         ));
         
 //        $builder->add('specialstain', 'text', array(

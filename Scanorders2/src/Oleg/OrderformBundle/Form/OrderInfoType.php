@@ -154,7 +154,7 @@ class OrderInfoType extends AbstractType
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('slideDelivery', 'custom_selector', array(
             'label' => '* Slide Delivery:',           
@@ -175,7 +175,7 @@ class OrderInfoType extends AbstractType
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('returnSlide', 'custom_selector', array(
             'label' => '* Return Slides to:',           
@@ -201,141 +201,6 @@ class OrderInfoType extends AbstractType
             'label'     => 'Return slide(s) by this date even if not scanned',
             'required'  => false,
         ));
-
-        
-if(0) {
-        //fill out choices with pre set data PRE_SET_DATA
-        $factory  = $builder->getFormFactory();
-        $builder->addEventListener( FormEvents::PRE_SET_DATA, function(FormEvent $event) use($factory){
-
-            $form = $event->getForm();
-            $data = $event->getData();
-
-                echo "class=".get_class($data)."<br>";
-                echo "parent=".get_parent_class($data)."<br>";
-
-            //exit();
-
-            //if( $data instanceof Stain ) {
-            //TODO: fix it. Here the listenere always executes this block (because of some preset data on new form?)
-            //read: http://symfony.com/doc/current/cookbook/form/dynamic_form_modification.html
-            if( get_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) { //} || get_parent_class($data) == 'Oleg\OrderformBundle\Entity\OrderInfo' ) {
-
-                //$pathservice = $data->getPathologyService();
-                $return = $data->getReturnSlide();
-                $delivery = $data->getSlideDelivery();
-                $priority = $data->getPriority();
-
-                $helper = new FormHelper();
-
-                $pathserviceArr = $helper->getPathologyService();
-                $deliveryArr = $helper->getSlideDelivery();
-                $returnArr = $helper->getReturnSlide();
-                $priorityArr = $helper->getPriority();
-
-                //delivery
-                $delivery_param = array(
-                    'label'=>'* Slide Delivery:',
-                    'max_length'=>200,
-                    'choices' => $deliveryArr,
-                    'required'=>true,
-                    'attr' => array('class' => 'combobox combobox-width', 'required' => 'required'),
-                    'auto_initialize' => false,
-                );
-
-                $key = 0;
-                $counter = 0;
-                foreach( $deliveryArr as $var ){
-                    if( trim( $var ) == trim( $delivery ) ){
-                        $key = $counter;
-                        //$delivery_param['data'] = $key;
-                        break;
-                    }
-                    $counter++;
-                }
-                $delivery_param['data'] = $key;
-
-                // field name, field type, data, options
-                $form->add(
-                    $factory->createNamed(
-                        'slideDelivery',
-                        'choice',
-                        null,
-                        $delivery_param
-                ));
-
-
-                //return
-                $return_param = array(
-                    'label'=>'* Return Slides to:',
-                    'max_length'=>200,
-                    'choices' => $helper->getReturnSlide(),
-                    'required'=>true,
-                    'attr' => array('class' => 'combobox combobox-width', 'required' => 'required'),
-                    'auto_initialize' => false,
-                );
-
-                $key = 0;
-                $counter = 0;
-                foreach( $returnArr as $var ){
-                    if( trim( $var ) == trim( $return ) ){
-                        $key = $counter;
-                        //$return_param['data'] = $key;
-                        break;
-                    }
-                    $counter++;
-                }
-                $return_param['data'] = $key;
-
-                // field name, field type, data, options
-                $form->add(
-                    $factory->createNamed(
-                        'returnSlide',
-                        'choice',
-                        null,
-                        $return_param
-                    ));
-
-
-                //priority
-                $priority_param = array(
-                    'label' => '* Priority:',
-                    //'max_length'=>200,
-                    'required' => true,
-                    'choices' => $priorityArr,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'data' => 0,
-                    'attr' => array('class' => 'horizontal_type', 'required' => 'required'),
-                    'auto_initialize' => false,
-                );
-
-                $key = 0;
-                $counter = 0;
-                foreach( $priorityArr as $var ){
-                    //echo "<br>".$var."?".$pathservice;
-                    if( trim( $var ) == trim( $priority ) ){
-                        $key = $counter;
-                        //$priority_param['data'] = $key;
-                        break;
-                    }
-                    $counter++;
-                }
-                $priority_param['data'] = $key;
-
-                // field name, field type, data, options
-                $form->add(
-                    $factory->createNamed(
-                        'priority',
-                        'choice',
-                        null,
-                        $priority_param
-                    ));
-
-            }
-
-        });
-}
         
     }
 

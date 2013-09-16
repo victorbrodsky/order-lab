@@ -18,22 +18,36 @@ class ScanRepository extends EntityRepository
     //Make changes.
     public function processEntity( $in_entity ) { 
         
-        $helper = new FormHelper();
+//        $helper = new FormHelper();
 
-        $mags = $helper->getMags();
-
-        $key = $in_entity->getMag();
-
-        //echo " key=".$key."<br>";
-        //echo " value=".$mags[$key]."<br>";
-
-        if( isset($key) && $key >= 0 ) {
-            //echo "set name";
-            $in_entity->setMag( $mags[$key] );
-        }
+//        $mags = $helper->getMags();
+//
+//        $key = $in_entity->getMag();
+//
+//        echo " key=".$key."<br>";
+//        echo " value=".$mags[$key]."<br>";
+//
+//        if( isset($key) && $key >= 0 ) {
+//            echo "set name";
+//            $in_entity->setMag( $mags[$key] );
+//        }
         
         //TODO: change to object Status.php
         $in_entity->setStatus("Submitted");
+
+        //Region To Scan
+        $key = $in_entity->getScanRegion();
+        if( is_numeric($key) ) {
+            $helper = new FormHelper();
+            $scanRegions = $helper->getScanRegion();
+            if( isset($key) && $key >= 0 ) {
+                $in_entity->setScanRegion( trim($scanRegions[$key]) );
+            }
+        }
+
+//        echo "key=".$key."<br>";
+//        echo "scanRegions=".$in_entity->getScanRegion()."<br>";
+//        exit();
 
         //create new
         $em = $this->_em;

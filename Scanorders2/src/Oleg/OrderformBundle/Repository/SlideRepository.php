@@ -26,32 +26,13 @@ class SlideRepository extends EntityRepository {
         if( $orderinfo == null ) {
             return $slide;
         }
-        
-        $scans = $slide->getScan();
-        foreach( $scans as $scan ) {          
-            if( $em->getRepository('OlegOrderformBundle:Scan')->notExists($scan) ) {
-                $slide->removeScan( $scan );
-                $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
-                $slide->addScan($scan);
-                $orderinfo->addScan($scan);
-            } else {
-                continue;
-            }
-        } //scan
 
-        $stains = $slide->getStain();
-        foreach( $stains as $stain ) {
-            if( $em->getRepository('OlegOrderformBundle:Stain')->notExists($stain) ) {
-                $slide->removeStain( $stain );
-                $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
-                $slide->addStain($stain);
-                $orderinfo->addStain($stain);
-            } else {
-                continue;
-            }
-        } //stain
-               
-        //$em->flush($slide);
+        //Note: stcan and stain are persisted by Slide entity annotations
+
+        $scans = $slide->getScan();
+        foreach( $scans as $scan ) {
+            $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
+        }
         
         return $slide;
     }

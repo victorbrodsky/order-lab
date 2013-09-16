@@ -49,7 +49,6 @@ class StainType extends AbstractType
         } else {
             $attr = array('class' => 'combobox combobox-width');    //show
         }
-
         $builder->add('name', 'custom_selector', array(
             'label' => '* Stain:',
             'required' => true,

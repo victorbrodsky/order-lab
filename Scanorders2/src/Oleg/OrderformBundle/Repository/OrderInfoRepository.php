@@ -36,18 +36,22 @@ class OrderInfoRepository extends EntityRepository
         $entity->setType($type);
 
         $helper = new FormHelper();
-        
-//        $slideDelivery = $helper->getSlideDelivery();
-//        $key = $entity->getSlideDelivery();
-//        if( isset($key) && $key >= 0 ) {
-//            $entity->setSlideDelivery( trim($slideDelivery[$key]) );
-//        }
-//        
-//        $returnSlide = $helper->getReturnSlide();
-//        $key = $entity->getReturnSlide();
-//        if( isset($key) && $key >= 0 ) {
-//            $entity->setReturnSlide( trim($returnSlide[$key]) );
-//        }
+
+        $key = $entity->getSlideDelivery();
+        if (is_numeric($key)) {
+            $slideDelivery = $helper->getSlideDelivery();
+            if( isset($key) && $key >= 0 ) {
+                $entity->setSlideDelivery( trim($slideDelivery[$key]) );
+            }
+        }
+
+        $key = $entity->getReturnSlide();
+        if (is_numeric($key)) {
+            $returnSlide = $helper->getReturnSlide();
+            if( isset($key) && $key >= 0 ) {
+                $entity->setReturnSlide( trim($returnSlide[$key]) );
+            }
+        }
              
         $key = $entity->getPathologyService();   
         if( isset($key) && $key >= 0 ) {
@@ -61,8 +65,8 @@ class OrderInfoRepository extends EntityRepository
             $entity->setPriority( trim($priority[$key]) );
         }
 
-        //echo "key=".$key."<br>";
-//        echo "pathservice=".$entity->getPathologyService();
+//        echo "key=".$key."<br>";
+//        echo "getSlideDelivery=".$entity->getSlideDelivery()."<br>";
 //        exit();
         
 //        $patients = $entity->getPatient();

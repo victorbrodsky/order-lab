@@ -8,7 +8,9 @@ $(document).ready(function() {
 
     setNavBar();
 
-    init();
+    initAdd();
+
+    customCombobox();
 
     originOptionMulti( new Array("0","0","0","0") );
     primaryOrganOptionMulti( new Array("0","0","0","0") );
@@ -62,200 +64,15 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
-
-
 });
 
 
-function init() {
+function initAdd() {
+
+    expandTextarea();
 
 //    $(".combobox").combobox();
-
     regularCombobox();
-
-    customCombobox();
-
-    //resolve
-//    $("select.combobox").select2({
-//        width: 'element',
-//        dropdownAutoWidth: true
-//        //selectOnBlur: true,
-//        //containerCssClass: 'combobox-width'
-//    });
-
-
-//    $("#tags").select2({
-//        createSearchChoice:function(term, data) {
-//            if ($(data).filter(function() {
-//                return this.text.localeCompare(term)===0;
-//            }).length===0) {return {id:term, text:term};}
-//        },
-//        multiple: false,
-//        selectOnBlur: true,
-//        //data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}],
-//        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
-//            url: "http://api.rottentomatoes.com/api/public/v1.0/movies.json",
-//            dataType: 'jsonp',
-//            data: function (term, page) {
-//                return {
-//                    q: term, // search term
-//                    page_limit: 10,
-//                    apikey: "ju6z9mjyajq2djue3gbvv26trrrff" // please do not use so this example keeps working
-//                };
-//            },
-//            results: function (data, page) { // parse the results into the format expected by Select2.
-//// since we are using custom formatting functions we do not need to alter remote JSON data
-//                return {results: data.movies};
-//            }
-//        }
-//    });
-
-    //use FOSJsRoutingBundle
-
-//    $(".ajax-combobox").select2({
-//        placeholder: "Search",
-//        //minimumInputLength: 1,
-//        width: 'element',
-//        dropdownAutoWidth: true,
-//        selectOnBlur: true,
-//        createSearchChoice:function(term, data) {
-//            if ($(data).filter(function() {
-//                return this.text.localeCompare(term)===0;
-//            }).length===0) {return {id:term, text:term};}
-//        },
-//        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
-//            url: "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/multi/getdata/stain",
-//            dataType: 'json',
-//            data: function (term) {
-//                //console.log("term="+term);
-//                return {
-//                    name: term // search term
-//                };
-//            },
-//            results: function (data) { // parse the results into the format expected by Select2.
-//                // since we are using custom formatting functions we do not need to alter remote JSON data
-//                //console.log("data="+data[0].text);
-//                return {results: data};
-//            }
-//        },
-//        formatResult: function (name) {
-//            //console.log("name="+name.text);
-//            return name.text;
-//        }
-//        //formatSelection: movieFormatSelection, // omitted for brevity, see the source of this page
-//        //dropdownCssClass: "bigdrop" // apply css that makes the dropdown taller
-//        //escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-//    });
-
-//    $("#tags111").select2({
-////        createSearchChoice:function(term, data) {
-////            console.log("term="+term+", data="+data);
-////            return data;
-////            if ($(data).filter(function() {
-////                return this.text.localeCompare(term)===0;
-////                //return true;
-////            }).length===0) {
-////                return {id:term, text:term};
-////            }
-////        },
-//        placeholder: "Search",
-//        minimumInputLength: 1,
-//        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
-//            url: "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/multi/getdata/stain",
-//            dataType: 'json',
-//            data: function (term) {
-//                return {
-//                    name: term // search term
-//                };
-//            },
-//            results: function (data) { // parse the results into the format expected by Select2.
-//                // since we are using custom formatting functions we do not need to alter remote JSON data
-//                console.log("data="+data.text);
-//                return {results: data.text};
-//            }
-//        },
-//        //formatResult: movieFormatResult, // omitted for brevity, see the source of this page
-//        //formatSelection: movieFormatSelection, // omitted for brevity, see the source of this page
-//        //dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
-//        //escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-//    });
-
-
- 
-////////////////keep user input but can't get it on controller/////////////////////
-//     function format(state) {
-//        alert(state.text);
-//        if (!state.id) return state.text; // optgroup
-//        return state.text;
-//    }
-//    $("#tags").select2({
-//      placeholder:"Enter any tag",
-//      createSearchChoice: function(term, data) {
-//          //alert(term);
-//          var myVar = $("#start").find('.myClass').val();
-//          if ($(data).filter(function() {
-//              //alert(term);
-//              return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};
-//          }
-//      },
-//      selectOnBlur: true,
-//      formatSelection: format,
-//      formatSelectionTooBig: function (limit) { return "Only one tag"; },
-//    });
-/////////////########################################################///////////////
-
-    // new dynamic tags work even after select2 init o/
-//    tags.push({id: "cool", text: "cool"});
-  
-    
-//    $('.combobox').select2({
-//        //placeholder: 'Please select',
-//        //width: 200,
-//        selectOnBlur: true,
-//        matcher: function(term, text) {
-////            $.fn.select2.defaults.matcher.apply(this, arguments);
-//            return true;
-//        },
-////        sortResults: function(results) {
-////            if (results.length > 1) results.pop();
-////            return results;
-////        }
-//    });
-
-          
-    
-//    $(".combobox").select2({
-//        formatNoMatches: function(term) {
-//            alert("term="+term);
-////        $('.select2-input').keyup(function(e) {
-////        if(e.keyCode == 13) {
-////            $('#my_modal').modal({show: true , backdrop : true , keyboard: true});
-////                    // etc......
-////        }
-////    });
-//            return "Press enter to do something";
-//        }
-//    });
-    
-//    $("#e23").select2({
-//        width: 'element',
-//        dropdownAutoWidth: true,
-//        tags:["red", "green", "blue"],
-//        
-//    });
-//     $("#e23").select2({
-//        minimumInputLength: 1,
-//        query: function (query) {
-//            var data = {results: []}, i, j, s;
-//            for (i = 1; i < 5; i++) {
-//                s = "";
-//                for (j = 0; j < i; j++) {s = s + query.term;}
-//                data.results.push({id: query.term + i, text: s});
-//            }
-//            query.callback(data);
-//        }
-//    });
-
 
     //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
     if( $(".datepicker")[0] ) {
@@ -274,7 +91,7 @@ function deleteItem(id) {
     return false;
 }
 
-//main input form from html button
+//main input form from html button: add parent form
 function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
     console.log("")
@@ -311,6 +128,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindDeleteBtn( name + '_' + ids.join("_") );
     originOptionMulti(ids);
     primaryOrganOptionMulti(ids);
+    initComboboxJs(ids);
 
     //create children nested forms
     var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -336,10 +154,11 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     $('#form_add_btn_'+name+'_'+uid).remove();
 
     //add all element to listeners again, the same as in ready
-    init();
+    initAdd();
 
 }
 
+//add children forms triggered by parent form
 function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
     //idsu: +1 for the parent object (parentName)
@@ -371,6 +190,8 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
     bindDeleteBtn( name + '_' + ids.join("_") );
     originOptionMulti(ids);
     primaryOrganOptionMulti(ids);
+    initComboboxJs(ids);
+    expandTextarea();
 }
 
 //input: current form ids
@@ -804,6 +625,7 @@ function addDiffdiagField( name, type, patient, specimen, accession, part ) {
         $("#"+addbtnId).after(btnDel);
     }
 
+    expandTextarea();
 }
 
 //add different diagnoses input field first time by JS
@@ -855,7 +677,6 @@ function addDiffdiagFieldFirstTime( name, ids ) {
      //$('#'+addto).after(newForm);
     //$('#'+addto).append(newForm);
     grandParent.after(finalForm);
-    
 }
 
 //get input field only
@@ -939,3 +760,16 @@ function remDelBtnDiffDiag(ident, patient, specimen, accession, part, collInt) {
 //    window.open("http://weill.cornell.edu/its/identity-security/identity/cwid/")
 //}
 
+function expandTextarea() {
+//    var $element = $('.textarea').get(0);
+    var elements = document.getElementsByClassName('textarea');
+    for (var i = 0; i < elements.length; ++i) {
+        var element = elements[i];
+        element.addEventListener('keyup', function() {
+            this.style.overflow = 'hidden';
+            //this.style.height = 0;
+            this.style.height = this.scrollHeight + 'px';
+        }, false);
+    }
+
+}

@@ -3,12 +3,13 @@
     Author     : oli2002
 */
 
-.horizontal_type {
-    padding-bottom: 5%;
-}
+/*.horizontal_type {*/
+    /*padding-bottom: 1%;*/
+/*}*/
 .horizontal_type LABEL, .horizontal_type INPUT {
     display: inline;
     padding-right: 5%;
+    padding-left: 5px;
 }
 
 .flash-notice {
@@ -212,12 +213,12 @@
 }
 
 .panel-slide {
-    border-color: #155183; //35478C
+    border-color: #FF9933;
 }
 .panel-slide .panel-heading {
     color: #ffffff;
-    background-color: #155183;
-    border-color: #155183;
+    background-color: #FF9933;
+    border-color: #FF9933;
     border-top-left-radius: 0px;
 }
 

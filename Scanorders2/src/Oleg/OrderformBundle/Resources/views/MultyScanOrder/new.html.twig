@@ -293,11 +293,27 @@
                                                                     }}
 
                                                                     <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
+
+                                                                        {#scan and stain#}
+                                                                        {% set scanCount = 0 %}
+                                                                        {% set stainCount = 0 %}
+
+                                                                        {#stain#}
+                                                                        {% for stain in slide.stain %}
+                                                                            {{ myform.field(stain.name) }}
+                                                                        {% endfor %}
+
+                                                                        {#scan#}
+                                                                        {% for scan in slide.scan %}
+                                                                            {{ myform.field(scan.mag) }}
+                                                                            {{ myform.field(scan.scanregion) }}
+                                                                            {{ myform.field(scan.note) }}
+                                                                        {% endfor %}
+
 {#                                                                        {% if multy == 'single' %}#}
 {#                                                                            {{ myform.field(slide.diagnosis) }}#}
 {#                                                                        {% endif %}#}
                                                                         {{ myform.field(slide.microscopicdescr) }}
-
 
                                                                         {#{{ myform.field(slide.specialStains) }}#}
                                                                         {############ specialStains input collection #############}
@@ -310,44 +326,6 @@
                                                                         {% if slide.relevantScans|length > 0 %}
                                                                             {{ myform.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
                                                                         {% endif %}
-
-
-                                                                        {#scan and stain#}
-                                                                        {% set scanCount = 0 %}
-                                                                        {% set stainCount = 0 %}
-
-                                                                        {#stain#}
-                                                                        {% for stain in slide.stain %}
-                                                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~scanCount~'_'~stainCount %}
-                                                                            <div id="formpanel_stain_{{ uid }}" class="panel panel-stain">
-                                                                                {{ myform.orderinfo_panel_header(
-                                                                                'stain', type, stainCount, slide.stain|length, uid,
-                                                                                patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
-                                                                                }}
-                                                                                <div id="form_body_stain_{{ uid }}" class="panel-body collapse in">
-                                                                                    {{ myform.field(stain.name) }}
-                                                                                </div>
-                                                                                {#{% set stainCount = stainCount + 1 %}#}
-                                                                            </div> {#end of stain#}
-                                                                        {% endfor %}
-
-                                                                        {#scan   #}
-                                                                        {% for scan in slide.scan %}
-                                                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~scanCount~'_'~stainCount %}
-                                                                            <div id="formpanel_scan_{{ uid }}" class="panel panel-scan">
-                                                                                {{ myform.orderinfo_panel_header(
-                                                                                'scan', type, scanCount, slide.scan|length, uid,
-                                                                                patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, scanCount, stainCount)
-                                                                                }}
-                                                                                <div id="form_body_scan_{{ uid }}" class="panel-body collapse in">
-                                                                                    {{ myform.field(scan.mag) }}
-                                                                                    {{ myform.field(scan.scanregion) }}
-                                                                                    {{ myform.field(scan.note) }}
-                                                                                </div>
-                                                                                {#{% set scanCount = scanCount + 1 %}#}
-                                                                            </div> {#end of scan#}
-                                                                        {% endfor %}
-
 
                                                                     </div>
                                                                 </div> {#end of slide#}

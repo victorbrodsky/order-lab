@@ -16,11 +16,11 @@ class SpecialStainsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('name', 'text', array(
+        $builder->add('name', 'textarea', array(
             'label' => 'Result of Special Stains:',
             'required' => false,
             //'attr' => array('class' => 'combobox combobox-width')
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'textarea form-control form-control-modif')
         ));
 
     }

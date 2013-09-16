@@ -23,10 +23,6 @@ class SpecimenRepository extends EntityRepository
 
         //1) can't check uniqueness without accession number
         if( $accessions == null ) {
-            //$em->persist($in_entity);
-            //echo "return by accession = null <br>";
-            //exit();
-            //return $in_entity;
             return $this->setResult($in_entity, $accessions, $orderinfo);
         }
 
@@ -45,44 +41,22 @@ class SpecimenRepository extends EntityRepository
         }
         
         if( $accession_found == null || $accession_found->getSpecimen() == null ) {
-            //echo "return by accession not found 2<br>";
-            //exit();
-            //$em->persist($in_entity);
-            //return $in_entity;
             return $this->setResult($in_entity, $orderinfo);
         } else {
             $specimen = $accession_found->getSpecimen();
 
-            //echo "check specimen by mrn <br>";
-
-            //check patient MRN => TODO: it doesn't work correctly! Don't use it ?!
-            //echo "mrn = ".$patient->getMrn()."<br>";
-            //echo "found mrn = " . $specimen->getPatient()->getMrn() . "<br>";
+            //check patient MRN
             if( $patient && $patient->getMrn() != "" && ($specimen->getPatient()->getMrn() == $patient->getMrn()) ) {
                 //the same MRN => same Patient => the same specimen
-
                 //copy all children to existing entity
                 foreach( $in_entity->getAccession() as $accession ) {
                     $specimen->addAccession( $accession );
                 }
-                //echo "same specimen";
-                //exit();
                 return $this->setResult($specimen, $orderinfo);
             } else {
-                //echo "new specimen";
-                //exit();
-                //create a new specimen provided by form
                 return $this->setResult($in_entity, $orderinfo);
             }
 
-//            //copy all children to existing entity
-//            foreach( $in_entity->getAccession() as $accession ) {
-//                $specimen->addAccession( $accession );
-//            }
-//
-//            //$em->persist($specimen);
-//            //return $specimen;
-//            return $this->setResult($specimen, $orderinfo);
         }
     }
     
