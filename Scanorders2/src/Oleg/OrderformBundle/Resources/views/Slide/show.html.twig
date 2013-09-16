@@ -29,12 +29,20 @@
                         <td class="span6">{{ entity.microscopicdescr }}</td>
                     </tr>
                     <tr>
-                        <th class="span6">Specialstain</th>
-                        <td class="span6">{{ entity.specialstain }}</td>
+                        <th class="span6">Specialstains</th>
+                        <td class="span6">
+                            {% for specialstain in entity.SpecialStains %}
+                                <p>{{ specialstain }}</p>
+                            {% endfor %}
+                        </td>
                     </tr>
                     <tr>
-                        <th class="span6">Relevantscan</th>
-                        <td class="span6">{{ entity.relevantscan }}</td>
+                        <th class="span6">Relevantscans</th>
+                        <td class="span6">
+                            {% for relevantscan in entity.relevantScans %}
+                                <p>{{ relevantscan }}</p>
+                            {% endfor %}
+                        </td>
                     </tr>
                 </tbody>
             </table>

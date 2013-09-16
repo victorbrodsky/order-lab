@@ -26,7 +26,7 @@ class Scan {
     protected $mag;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true, length=500)
      */
     protected $scanregion;
     

@@ -32,7 +32,8 @@ class ScanType extends AbstractType
             $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('scanregion', 'custom_selector', array(
-            'label' => 'Region to scan:',           
+            'label' => 'Region to scan:',
+            'max_length'=>500,
             'attr' => $attr,
             'classtype' => 'scanRegion'
         ));
