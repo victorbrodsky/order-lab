@@ -109,11 +109,14 @@
         {{ myform.field(form.patient.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.age)|e }}
         {{ myform.field(form.patient.vars.prototype.sex)|e }}
-        {{ myform.field(form.patient.vars.prototype.dob)|e }}
+        {{ myform.fielddate(form.patient.vars.prototype.dob)|e }}
         {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}
      "
 
-         data-prototype-procedure="{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}"
+         data-prototype-procedure="
+         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
+         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}
+         "
 
      {#{% if type == 'show' %}#}
          {#data-prototype-procedure="#}
@@ -127,10 +130,10 @@
      {#"#}
      {#{% endif %}#}
 
-         data-prototype-accession="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       #}
-     "
+         {#data-prototype-accession="#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}#}
+        {#&#123;&#35;{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.date)|e }}       &#35;&#125;#}
+     {#"#}
 
          data-prototype-part="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
@@ -153,10 +156,11 @@
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}
      "
          data-prototype-slide="
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.diagnosis)|e }}#}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}
+        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains)|e }}#}
-        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans)|e }}#}
      "
          data-prototype-relevantscans="
         {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.name)|e }}
@@ -166,15 +170,15 @@
         {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains.vars.prototype.name)|e }}
         "
 
-         data-prototype-stain="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
-     "
+         {#data-prototype-stain="#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}#}
+     {#"#}
 
-         data-prototype-scan="
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}
-        {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}
-     "
+         {#data-prototype-scan="#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}#}
+        {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}#}
+     {#"#}
             >
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}
 
@@ -194,7 +198,7 @@
                 {{ myform.field(patient.name) }}
                 {{ myform.field(patient.age) }}
                 {{ myform.field(patient.sex) }}
-                {{ myform.field(patient.dob) }}
+                {{ myform.fielddate(patient.dob) }}
                 {{ myform.field(patient.clinicalHistory) }}
 
                 {#specimen/procedure#}
@@ -208,28 +212,22 @@
                     }}
 
                     <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
-                        {{ myform.field(specimen.proceduretype) }}
-
-                        {#{% if type == 'show' %}#}
-                            {#&#123;&#35;<a href="../../../../web/uploads/documents/{{ specimen.paper.vars.value.path }}" target="_blank">{{ specimen.paper.vars.value.name }}</a>&#35;&#125;#}
-                            {#{{ myform.field_paperurl(specimen.paper) }}#}
-                        {#{% else %}#}
-                            {#{{ myform.field(specimen.paper.file) }}#}
-                        {#{% endif %}#}
+                        {#{{ myform.field(specimen.proceduretype) }}#}
 
                         {#accession#}
                         {% set accessionCount = 0 %}
                         {% for accession in specimen.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                            <div id="formpanel_accession_{{ uid }}" class="panel panel-accession">
-                                {{ myform.orderinfo_panel_header(
-                                'accession', type, accessionCount, specimen.accession|length, uid,
-                                patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)
-                                }}
+                            {#<div id="formpanel_accession_{{ uid }}" class="panel panel-accession">#}
+                                {#{{ myform.orderinfo_panel_header(#}
+                                {#'accession', type, accessionCount, specimen.accession|length, uid,#}
+                                {#patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)#}
+                                {#}}#}
 
-                                <div id="form_body_accession_{{ uid }}" class="panel-body collapse in">
+                                {#<div id="form_body_accession_{{ uid }}" class="panel-body collapse in">#}
                                     {{ myform.field(accession.accession) }}
                                     {#{{ myform.field(accession.date) }}                                       #}
+                                    {{ myform.field(specimen.proceduretype) }}
 
                                     {#part#}
                                     {% set partCount = 0 %}
@@ -346,8 +344,8 @@
                                     {% endfor %}
 
 
-                                </div>
-                            </div> {#end of accession#}
+                                {#</div>#}
+                            {#</div> &#123;&#35;end of accession&#35;&#125;#}
                             {% set accessionCount = accessionCount + 1 %}
                         {% endfor %}
 

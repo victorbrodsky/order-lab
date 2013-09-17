@@ -12,9 +12,9 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\OrganList;
+use Oleg\OrderformBundle\Entity\PathServiceList;
 
-class SourceOrganTransformer implements DataTransformerInterface
+class PathServiceTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
@@ -67,7 +67,7 @@ class SourceOrganTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:OrganList')->findOneById($text);
+            $entity = $this->em->getRepository('OlegOrderformBundle:PathServiceList')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -90,11 +90,11 @@ class SourceOrganTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:OrganList')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($name);
         
         if( null === $entity ) {
 
-            $newEntity = new OrganList();
+            $newEntity = new PathServiceList();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('user-added');

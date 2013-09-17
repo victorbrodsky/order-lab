@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\PathServiceTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -56,6 +57,9 @@ class CustomSelectorType extends AbstractType {
                 break;         
             case "sourceOrgan":
                 $transformer = new SourceOrganTransformer($this->om, $username);
+                break;
+            case "pathologyService":
+                $transformer = new PathServiceTransformer($this->om, $username);
                 break;
             case "scanRegion":
                 $transformer = new StringTransformer($this->om, $username);

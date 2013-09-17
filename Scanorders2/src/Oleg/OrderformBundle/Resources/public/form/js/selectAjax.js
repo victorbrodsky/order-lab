@@ -74,7 +74,7 @@ function customCombobox() {
     getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
     getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
     getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
-
+    getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
 
 }
 
@@ -236,7 +236,7 @@ function getComboboxProcedure(urlCommon,ids) {
             placeholder: "Procedure Type",
             width: 'element',
             dropdownAutoWidth: true,
-            allowClear: true,
+            //allowClear: true,
             selectOnBlur: true,
             dataType: 'json',
             quietMillis: 100,
@@ -263,7 +263,7 @@ function getComboboxOrgan(urlCommon,ids) {
             placeholder: "Source Organ",
             width: 'element',
             dropdownAutoWidth: true,
-            allowClear: true,
+            //allowClear: true,
             selectOnBlur: true,
             dataType: 'json',
             quietMillis: 100,
@@ -298,9 +298,9 @@ function getComboboxDelivery(urlCommon,ids) {
                     return this.text.localeCompare(term)===0;
                 }).length===0) {return {id:term, text:term};}
             }
-
         });
         $(".ajax-combobox-delivery").select2('data', {id: 1, text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
+        //$(".ajax-combobox-delivery").select2('val', 0);
     });
 }
 
@@ -330,7 +330,35 @@ function getComboboxReturn(urlCommon,ids) {
     });
 }
 
+//#############  pathology service  ##############//
+function getComboboxPathService(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"pathservice";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        $(".ajax-combobox-pathservice").select2({
+            placeholder: "Pathology Service",
+            width: 'element',
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+        });
 
+        $.ajax(urlCommon+"userpathservice").success(function(data) {
+            //console.log(data['id']);
+            $('.ajax-combobox-pathservice').select2('val', data['id']);
+        });
+
+    });
+}
 
 function initComboboxJs(ids) {
 
@@ -339,6 +367,7 @@ function initComboboxJs(ids) {
     getComboboxScanregion(urlCommon,ids);
     getComboboxProcedure(urlCommon,ids);
     getComboboxOrgan(urlCommon,ids);
+    getComboboxPathService(urlCommon,ids);
 //    getComboboxDelivery(urlCommon,ids);
 //    getComboboxReturn(urlCommon,ids);
 

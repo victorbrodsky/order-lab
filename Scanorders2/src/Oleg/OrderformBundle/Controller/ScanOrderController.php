@@ -98,8 +98,22 @@ class ScanOrderController extends Controller {
             $helper = new FormHelper();
             $email = $this->get('security.context')->getToken()->getAttribute('email');
             $userService = $helper->getUserPathology($email);
+
+            if( !$userService ) {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'You are not assign to any pathology service; All orders are shown.'
+                );
+            }
+
+            //get id
+            $query = $em->createQuery(
+                'SELECT p FROM OlegOrderformBundle:PathServiceList p WHERE p.name LIKE :name'
+            )->setParameter('name', '%'.$userService.'%');
+            $pathService = $query->getResult();
+
             if( $userService && $userService != ''  ) {
-                $criteria['pathologyService']= trim($userService);
+                $criteria['pathologyService']= $pathService[0]->getId();
             }
             $showprovider = 'true';
         }
@@ -437,7 +451,9 @@ class ScanOrderController extends Controller {
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
-        
+
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new OrderInfo();
         $username = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($username);
@@ -446,15 +462,8 @@ class ScanOrderController extends Controller {
         $helper = new FormHelper();
         $email = $this->get('security.context')->getToken()->getAttribute('email');
         $service = $helper->getUserPathology($email);
-//        if( $service ) {
-//            $services = explode("/", $service);
-//            $service = $services[0];
-//        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        //echo "service=".$service."<br>";
-        $entity->setPathologyService($service);
+        //$pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName( $service );
+        //$entity->setPathologyService($pathService);
 
         $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service, 'user'=>$username, 'em'=>$em);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );

@@ -32,12 +32,17 @@ class OrderInfo
      */
     private $orderdate;
     
+//    /**
+//     * @var string
+//     *
+//     * @ORM\Column(name="pathologyService", nullable=true, type="string", length=500)
+//     */
+//    private $pathologyService;
     /**
-     * @var string
-     *
-     * @ORM\Column(name="pathologyService", nullable=true, type="string", length=500)
+     * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="pathservicelist_id", referencedColumnName="id", nullable=true)
      */
-    private $pathologyService;
+    protected $pathologyService;
 
 //    /**
 //     * status - status of the order i.e. complete, in process, returned ...

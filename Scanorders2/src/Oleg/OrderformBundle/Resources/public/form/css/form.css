@@ -256,6 +256,9 @@
     min-width: 50%;
 }
 
+.form_body_toggle_btn {
+    padding-right: 1%;
+}
 
 /*.glyphicon-folder-open, .glyphicon-folder-close{*/
     /*background-image: url("glyphicons-halflings-white.png");*/

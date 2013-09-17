@@ -53,11 +53,11 @@ class OrderInfoRepository extends EntityRepository
             }
         }
              
-        $key = $entity->getPathologyService();   
-        if( isset($key) && $key >= 0 ) {
-            $pathologyService = $helper->getPathologyService();
-            $entity->setPathologyService( trim($pathologyService[$key]) );
-        }
+//        $key = $entity->getPathologyService();
+//        if( isset($key) && $key >= 0 ) {
+//            $pathologyService = $helper->getPathologyService();
+//            $entity->setPathologyService( trim($pathologyService[$key]) );
+//        }
 
         $key = $entity->getPriority();
         if( isset($key) && $key >= 0 ) {

@@ -455,11 +455,8 @@ if(0){
         $helper = new FormHelper();
         $email = $this->get('security.context')->getToken()->getAttribute('email');
         $service = $helper->getUserPathology($email);
-//        if( $service ) {
-//            $services = explode("/", $service);
-//            $service = $services[0];
-//        }
-        $entity->setPathologyService($service);
+//        $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName( $service );
+//        $entity->setPathologyService($pathService);
 
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );

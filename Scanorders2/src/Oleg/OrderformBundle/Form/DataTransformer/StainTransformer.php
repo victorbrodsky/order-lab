@@ -96,7 +96,7 @@ class StainTransformer implements DataTransformerInterface
             $stain = new StainList();
             $stain->setName($name);
             $stain->setCreatedate(new \DateTime());
-            $stain->setType('user');
+            $stain->setType('user-added');
             $stain->setCreator($this->user);
 
             $this->em->persist($stain);

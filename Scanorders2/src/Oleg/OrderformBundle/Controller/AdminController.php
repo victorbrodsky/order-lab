@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
 use Oleg\OrderformBundle\Entity\ProcedureList;
+use Oleg\OrderformBundle\Entity\PathServiceList;
 use Oleg\OrderformBundle\Entity\StatusType;
 use Oleg\OrderformBundle\Entity\StatusGroup;
 use Oleg\OrderformBundle\Entity\Status;
@@ -61,6 +62,7 @@ class AdminController extends Controller
         $count_statustype = $this->generateStatusType();
         $count_statusgroup = $this->generateStatusGroups();
         $count_status = $this->generateStatuses();
+        $count_pathservice = $this->generatePathServices();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -71,6 +73,7 @@ class AdminController extends Controller
             $count_statustype. ' Status Types, '.
             $count_statusgroup. ' Status Groups '.
             $count_status. ' Statuses '.
+            $count_pathservice. ' Pathology Services '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -202,7 +205,7 @@ class AdminController extends Controller
 //            $list->setCreator( $username );
 //            $list->setCreatedate( new \DateTime() );
 //            $list->setName( $organ );
-//            $list->setType('original');
+//            $list->setType('default');
 //
 //            $em = $this->getDoctrine()->getManager();
 //            $em->persist($list);
@@ -216,6 +219,43 @@ class AdminController extends Controller
 //        );
 //
 //        return $this->redirect($this->generateUrl('procedurelist'));
+
+    }
+
+
+    /**
+     * Populate DB
+     *
+     * @Route("/genpathservice", name="generate_pathservice")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generatePathServiceAction()
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $count = $this->generateStains();
+        if( $count >= 0 ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Created '.$count. ' stain records'
+            );
+
+            return $this->redirect($this->generateUrl('stainlist'));
+
+        } else {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'This table is already exists!'
+            );
+
+            return $this->redirect($this->generateUrl('admin_index'));
+        }
 
     }
 
@@ -243,7 +283,7 @@ class AdminController extends Controller
             $stainList->setCreator( $username );
             $stainList->setCreatedate( new \DateTime() );
             $stainList->setName( $stain );
-            $stainList->setType('original');
+            $stainList->setType('default');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stainList);
@@ -275,7 +315,7 @@ class AdminController extends Controller
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
             $list->setName( $organ );
-            $list->setType('original');
+            $list->setType('default');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($list);
@@ -308,7 +348,7 @@ class AdminController extends Controller
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
             $list->setName( $organ );
-            $list->setType('original');
+            $list->setType('default');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($list);
@@ -435,6 +475,38 @@ class AdminController extends Controller
             $count++;
 
         } //foreach
+
+        return $count;
+    }
+
+    public function generatePathServices() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
+
+        if( $entities ) {
+
+            return -1;
+        }
+
+        $helper = new FormHelper();
+        $services = $helper->getPathologyService();
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 0;
+        foreach( $services as $service ) {
+            $list = new PathServiceList();
+            $list->setCreator( $username );
+            $list->setCreatedate( new \DateTime() );
+            $list->setName( $service );
+            $list->setType('default');
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($list);
+            $em->flush();
+            $count++;
+        }
 
         return $count;
     }

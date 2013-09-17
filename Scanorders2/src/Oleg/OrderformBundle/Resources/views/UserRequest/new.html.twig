@@ -9,7 +9,7 @@
 {% block content %}
 
     <h3 class="text-info">Request an Aperio eSlide Manager Account</h3>
-
+    <br>
     <form action="{{ path('accountrequest_create') }}" method="post" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
@@ -36,6 +36,7 @@
                     
         {{ form_rest(form) }}
 
+        <br>
         <p>
             <button class="btn btn-info" type="submit">Submit account request</button>
         </p>

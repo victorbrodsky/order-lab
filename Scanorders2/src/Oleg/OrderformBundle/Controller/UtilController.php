@@ -27,8 +27,9 @@ class UtilController extends Controller {
 
         $query = $em->createQuery(
             'SELECT stain.id as id, stain.name as text
-            FROM OlegOrderformBundle:StainList stain'
-        );
+            FROM OlegOrderformBundle:StainList stain WHERE stain.type = :type'
+        )->setParameter('type', 'default');
+
         $output = $query->getResult();
 
         $response = new Response();
@@ -48,8 +49,8 @@ class UtilController extends Controller {
 
         $query = $em->createQuery(
             'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:ProcedureList proc'
-        );
+            FROM OlegOrderformBundle:ProcedureList proc WHERE proc.type = :type'
+        )->setParameter('type', 'default');
 
         $empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
@@ -71,8 +72,8 @@ class UtilController extends Controller {
 
         $query = $em->createQuery(
             'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:OrganList proc'
-        );
+            FROM OlegOrderformBundle:OrganList proc WHERE proc.type = :type'
+        )->setParameter('type', 'default');
 
         $empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
@@ -83,7 +84,44 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
-        
+
+    /**
+     * @Route("/pathservice", name="get-pathservice")
+     * @Method("GET")
+     */
+    public function getPathServiceAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT proc.id as id, proc.name as text
+            FROM OlegOrderformBundle:PathServiceList proc WHERE proc.type = :type'
+        )->setParameter('type', 'default');
+
+        $empty = array("id"=>0,"text"=>"");
+        $output = $query->getResult();
+        array_unshift($output, $empty);
+
+        //echo "count=".count($output)."<br>";
+        //print_r($output);
+
+//        $res = array();
+//        foreach( $output as $out ) {
+//            echo $out['text'];
+////            if( trim($out['text']) == trim("Gynecologic Pathology / Perinatal Pathology / Autopsy") ) {
+////                $res[] = array("id"=>$out['id'],"text"=>$out['text'], "selected"=>true);
+////            } else {
+////                $res[] = array("id"=>$out['id'],"text"=>$out['text']);
+////            }
+//            array_push($res,array("id"=>$out['id'],"text"=>$out['text']));
+//        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      * @Route("/scanregion", name="get-scanregion")
@@ -162,6 +200,36 @@ class UtilController extends Controller {
             $count++;
         }
         
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+    /**
+     * @Route("/userpathservice", name="get-userpathservice")
+     * @Method("GET")
+     */
+    public function getUserPathServiceAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get pathology service for this user by email
+        $helper = new FormHelper();
+        $email = $this->get('security.context')->getToken()->getAttribute('email');
+        $service = $helper->getUserPathology($email);
+
+        $output = array();
+        if( $service ) {
+            $query = $em->createQuery(
+                'SELECT p.id as id, p.name as text
+                FROM OlegOrderformBundle:PathServiceList p WHERE p.name LIKE :name'
+            )->setParameter('name', '%'.$service.'%');
+            $res = $query->getResult();
+            $output = $res[0];
+        }
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));

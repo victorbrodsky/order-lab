@@ -97,7 +97,7 @@ class ProcedureTransformer implements DataTransformerInterface
             $newEntity = new ProcedureList();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
-            $newEntity->setType('user');
+            $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
 
             $this->em->persist($newEntity);

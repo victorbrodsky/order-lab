@@ -131,7 +131,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     initComboboxJs(ids);
 
     //create children nested forms
-    var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
+    //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
+    var nameArray = ['patient', 'procedure', 'part', 'block', 'slide' ];
     var length = nameArray.length
     var index = nameArray.indexOf(name);
     //console.log("index="+index+" len="+length);
@@ -216,17 +217,16 @@ function getForm( name, id, idsorig, ids, idsm ) {
         var itemCount = (id+1);
     }
 
-//    var diffdiag = "";
-//    if( name == "part" ) {
-//        var diffdiag = '<div id="diffdiagnoses_'+idsu+'"></div>';
-//        //console.log("diffdiag="+diffdiag);
-//    }
+    var title = name;
+    if( name == "procedure" ) {
+        title = "accession";
+    }
 
     var formhtml =
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
             '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
-            '&nbsp;' + capitaliseFirstLetter(name) + ' ' + itemCount +
+            '&nbsp;' + capitaliseFirstLetter(title) + ' ' + itemCount +
             '<div class="form-btn-options">' +
             addbtn +
             deletebtn +

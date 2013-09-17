@@ -75,33 +75,40 @@ class OrderInfoType extends AbstractType
 
 
         //pathologyService
-        $pathServices = $helper->getPathologyService();
-        $pathParam = array(
+//        $pathServices = $helper->getPathologyService();
+//        $pathParam = array(
+//            'label' => 'Pathology Service:',
+//            'max_length'=>200,
+//            'choices' => $pathServices,
+//            'required'=>false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//        );
+//        if( $this->entity->getPathologyService() && $this->entity->getPathologyService() != "" ) { //show, edit
+//            $thisname = trim( $this->entity->getPathologyService() );
+//        } else {  //new
+//            $thisname = trim($this->params['service']);
+//        }
+//        $counter = 0;
+//        foreach( $pathServices as $var ){
+//            if( trim( $var ) == $thisname ) {
+//                $key = $counter;
+//                $pathParam['data'] = $key;
+//                break;
+//            }
+//            $counter++;
+//        }
+//        $builder->add( 'pathologyService', 'choice', $pathParam );
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
+        $builder->add('pathologyService', 'custom_selector', array(
             'label' => 'Pathology Service:',
-            'max_length'=>200,
-            'choices' => $pathServices,
-            'required'=>false,
-            'attr' => array('class' => 'combobox combobox-width'),
-        );
-
-        if( $this->entity->getPathologyService() && $this->entity->getPathologyService() != "" ) { //show, edit
-            $thisname = trim( $this->entity->getPathologyService() );
-        } else {  //new
-            $thisname = trim($this->params['service']);
-        }
-
-        $counter = 0;
-        foreach( $pathServices as $var ){
-            if( trim( $var ) == $thisname ) {
-                $key = $counter;
-                $pathParam['data'] = $key;
-                break;
-            }
-            $counter++;
-        }
-
-        $builder->add( 'pathologyService', 'choice', $pathParam );
-
+            'attr' => $attr,
+            'required' => false,
+            'classtype' => 'pathologyService'
+        ));
         
         //priority                    
         $priorityArr = $helper->getPriority();
