@@ -227,6 +227,55 @@
 {% endmacro %}
 
 
+{% macro clinicalHistoryInput(fields) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {#LENGTH:{{ fields|length }}#}
+            {% if fields|length > 0 %}
+                {{ form_label(fields[0].clinicalHistory) }}
+            {% else %}
+                {#{{ form_label(fields.clinicalHistory) }}#}
+            {% endif %}
+        </div>
+        <div class="col-xs-6" align="left">
+            {% for field in fields %}
+                {{ form_widget(field.clinicalHistory) }}
+            {% endfor %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
+
+{% macro paperInput(fields,type) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {% if fields|length > 0 %}
+                {% if type == 'show' %}
+                    {{ form_label(fields[0].name) }}
+                {% else %}
+                    {{ form_label(fields[0].file) }}
+                {% endif %}
+            {% else %}
+                {#{{ form_label(fields.clinicalHistory) }}#}
+            {% endif %}
+        </div>
+        <div class="col-xs-6" align="left">
+            {% for field in fields %}
+                {% if type == 'show' %}
+                    <a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>
+                {% else %}
+                    {{ form_widget(field.file) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
+
 {#
 coll:       coll field
 type:       new, edit or show

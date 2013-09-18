@@ -30,6 +30,7 @@ use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Entity\DiffDiagnoses;
+use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\RelevantScans;
 use Oleg\OrderformBundle\Entity\SpecialStains;
 use Oleg\OrderformBundle\Form\DocumentType;
@@ -468,7 +469,9 @@ class ScanOrderController extends Controller {
         $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service, 'user'=>$username, 'em'=>$em);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
-        $patient = new Patient();      
+        $patient = new Patient();
+        $clinicalHistory = new ClinicalHistory();
+        $patient->addClinicalHistory($clinicalHistory);
         $form_patient   = $this->createForm(new PatientType($params), $patient);
 
         $procedure = new Specimen();
@@ -483,7 +486,9 @@ class ScanOrderController extends Controller {
          
         $part = new Part();
         $diffDiagnoses = new DiffDiagnoses();
-        $part->addDiffDiagnoses($diffDiagnoses);    
+        $part->addDiffDiagnoses($diffDiagnoses);
+        $file = new Document();
+        $part->addPaper($file);
         //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $form_part   = $this->createForm(new PartType($params), $part);
             

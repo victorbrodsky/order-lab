@@ -68,13 +68,23 @@ class PatientType extends AbstractType
                 'attr' => array('class' => 'datepicker'),
         ));
         
-        $builder->add( 'clinicalHistory', 'textarea', array(
-                'label'=>'Clinical History:', 
-                'max_length'=>10000,
-                'required'=>false,
-                'attr' => array('class'=>'textarea form-control'),
-        )); 
-           
+//        $builder->add( 'clinicalHistory', 'textarea', array(
+//                'label'=>'Clinical History:',
+//                'max_length'=>10000,
+//                'required'=>false,
+//                'attr' => array('class'=>'textarea form-control'),
+//        ));
+        $builder->add('clinicalHistory', 'collection', array(
+            'type' => new ClinicalHistoryType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Clinical History:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__clinicalHistory__',
+        ));
+
         if( $this->params['type'] != 'single' ) {
             $builder->add('specimen', 'collection', array(
                 'type' => new SpecimenType($this->params),

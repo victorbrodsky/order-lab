@@ -13,6 +13,7 @@ use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Form\PatientType;
+use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\Specimen;
 use Oleg\OrderformBundle\Form\SpecimenType;
 use Oleg\OrderformBundle\Entity\Accession;
@@ -392,12 +393,13 @@ if(0){
         $patient = new Patient();
         $entity->addPatient($patient);
 
+        $clinicalHistory = new ClinicalHistory();
+        $patient->addClinicalHistory($clinicalHistory);
+
         //$patient2 = new Patient();
         //$entity->addPatient($patient2);
 
         $procedure = new Specimen();
-        //$paper = new Document();
-        //$procedure->setPaper($paper);
         $patient->addSpeciman($procedure);
 
         //$procedure2 = new Specimen();
@@ -410,7 +412,10 @@ if(0){
         $accession->addPart($part);
 
         $diffDiagnoses = new DiffDiagnoses();
-        $part->addDiffDiagnoses($diffDiagnoses);       
+        $part->addDiffDiagnoses($diffDiagnoses);
+
+        $file = new Document();
+        $part->addPaper($file);
 
         $block = new Block();
         $part->addBlock($block);

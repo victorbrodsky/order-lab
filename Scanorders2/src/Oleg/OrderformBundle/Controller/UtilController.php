@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -234,6 +235,61 @@ class UtilController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
         return $response;
+    }
+
+
+    /**
+     * @Route("/checkmrn", name="get-checkmrn")
+     * @Method("POST")
+     * //@Method("GET")
+     */
+    public function checkMrnAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $request = $this->getRequest();
+
+        $request->isXmlHttpRequest();           // is it an Ajax request?
+        $mrn = $request->request->get('mrn');   // get a $_POST parameter
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$mrn = 9;
+
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findByMrn($mrn);
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findById($mrn);
+
+
+        $query = $em->createQuery(
+            'SELECT p.id as id, p.name as name
+            FROM OlegOrderformBundle:Patient p WHERE p.mrn = :mrn'
+        //)->setParameter('mrn', "'".$mrn."'");
+        )->setParameter('mrn', $mrn);
+        //$entity = $query->getResult();
+
+        //echo $entity;
+
+        //$output = array("id"=>1,"text"=>"hello");
+        $output = $entity;
+
+        if(1){//} !$entity || count($entity) == 0 ) {
+            $output = array("id"=>0, "name"=>$mrn);
+        }
+
+//        if( count($entity) > 1 ) {
+//            $output = $entity[0];
+//        }
+
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+
+
+//        return  new JsonResponse($output);
     }
     
 }

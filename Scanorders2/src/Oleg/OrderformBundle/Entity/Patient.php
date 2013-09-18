@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use JsonSerializable;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -15,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="patient")
  * 
  */
-class Patient
+class Patient implements JsonSerializable
 {
     
     /**
@@ -50,8 +51,13 @@ class Patient
      */
     protected $dob;
     
+//    /**
+//     * @ORM\Column(type="text", nullable=true, length=10000)
+//     */
+//    protected $clinicalHistory;
     /**
-     * @ORM\Column(type="text", nullable=true, length=10000)
+     * @param \Doctrine\Common\Collections\Collection $property
+     * @ORM\OneToMany(targetEntity="ClinicalHistory", mappedBy="patient", cascade={"persist"})
      */
     protected $clinicalHistory;
         
@@ -77,7 +83,7 @@ class Patient
     {
         $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();
-   
+        $this->clinicalHistory = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -206,29 +212,6 @@ class Patient
     }
 
     /**
-     * Set clinicalHistory
-     *
-     * @param string $clinicalHistory
-     * @return Patient
-     */
-    public function setClinicalHistory($clinicalHistory)
-    {
-        $this->clinicalHistory = $clinicalHistory;
-    
-        return $this;
-    }
-
-    /**
-     * Get clinicalHistory
-     *
-     * @return string 
-     */
-    public function getClinicalHistory()
-    {
-        return $this->clinicalHistory;
-    } 
-
-    /**
      * Add specimen
      *
      * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
@@ -331,4 +314,52 @@ class Patient
         return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)." (".$specimen_info.")<br>";
     }
     
+
+    /**
+     * Add clinicalHistory
+     *
+     * @param \Oleg\OrderformBundle\Entity\ClinicalHistory $clinicalHistory
+     * @return Patient
+     */
+    public function addClinicalHistory($clinicalHistory)
+    {
+        if( $clinicalHistory != null ) {
+            if( !$this->clinicalHistory->contains($clinicalHistory) ) {
+                $clinicalHistory->setPatient($this);
+                $this->clinicalHistory[] = $clinicalHistory;
+            }
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove clinicalHistory
+     *
+     * @param \Oleg\OrderformBundle\Entity\ClinicalHistory $clinicalHistory
+     */
+    public function removeClinicalHistory(\Oleg\OrderformBundle\Entity\ClinicalHistory $clinicalHistory)
+    {
+        $this->clinicalHistory->removeElement($clinicalHistory);
+    }
+
+    /**
+     * Get clinicalHistory
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getClinicalHistory()
+    {
+        return $this->clinicalHistory;
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'name' => $this->name,
+            'id'=> $this->id,
+            'age'=> $this->age,
+            'sex'=> $this->sex,
+        );
+    }
 }

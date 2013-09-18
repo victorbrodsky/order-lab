@@ -46,6 +46,11 @@ class Document
      */
     protected  $file;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Part", inversedBy="paper")
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)
+     */
+    protected $part;
 
     public function getAbsolutePath()
     {
@@ -233,4 +238,27 @@ class Document
     }
 
 
+
+    /**
+     * Set part
+     *
+     * @param \Oleg\OrderformBundle\Entity\Part $part
+     * @return Document
+     */
+    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    {
+        $this->part = $part;
+    
+        return $this;
+    }
+
+    /**
+     * Get part
+     *
+     * @return \Oleg\OrderformBundle\Entity\Part 
+     */
+    public function getPart()
+    {
+        return $this->part;
+    }
 }

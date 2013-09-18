@@ -22,7 +22,6 @@ class AccessionRepository extends EntityRepository {
 
         if( !$entity ) {        
             //create new accession
-            //$em->persist($accession);
             //echo "new accession";
             return $this->setResult( $accession, $orderinfo );          
         }
@@ -31,12 +30,6 @@ class AccessionRepository extends EntityRepository {
         foreach( $accession->getPart() as $part ) {
             $entity->addPart( $part );
         }
-//        foreach( $accession->getSlide() as $slide ) {
-//            $entity->addSlide( $slide );
-//        }
-
-//        $em->persist($entity);
-//        return $entity;
 
         //echo "db accession <br>";
         return $this->setResult( $entity, $orderinfo );        

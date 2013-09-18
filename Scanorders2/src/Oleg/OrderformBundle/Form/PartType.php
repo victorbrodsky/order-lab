@@ -136,13 +136,17 @@ class PartType extends AbstractType
             'classtype' => 'sourceOrgan'
         ));
 
-        $builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
-
-//        $builder->add( 'accession', new AccessionType(), array(
-//            'label'=>' ',
-//            'required'=>false,
-//            //'hidden'=>true,
-//        ));
+        //$builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
+        $builder->add('paper', 'collection', array(
+            'type' => new DocumentType($this->params),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__paper__',
+        ));
 
     }
 

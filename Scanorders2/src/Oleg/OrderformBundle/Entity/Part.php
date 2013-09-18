@@ -63,9 +63,13 @@ class Part
      */
     protected $diagnosis;
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
+//     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
+//     */
+//    protected $paper;
     /**
-     * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
-     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="part", cascade={"persist"})
      */
     protected $paper;
     
@@ -104,7 +108,7 @@ class Part
     protected $orderinfo; 
     
     public function __construct() {
-        //$this->slide = new ArrayCollection();
+        $this->paper = new ArrayCollection();
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
         $this->diffDiagnoses = new ArrayCollection();
@@ -161,18 +165,6 @@ class Part
 
     public function setDiagnosis($diagnosis) {
         $this->diagnosis = $diagnosis;
-    }
-
-    public function setPaper($paper)
-    {
-        $this->paper = $paper;
-
-        return $this;
-    }
-
-    public function getPaper()
-    {
-        return $this->paper;
     }
 
     /**
@@ -359,4 +351,64 @@ class Part
         return $this->diffDiagnoses;
     }
 
+    /**
+     * Add paper
+     *
+     * @param \Oleg\OrderformBundle\Entity\Document $paper
+     * @return Part
+     */
+    public function addPaper($paper)
+    {
+        if( $paper != null ) {
+            if( !$this->paper->contains($paper) ) {
+                $paper->setPart($this);
+                $this->paper[] = $paper;
+            }
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove paper
+     *
+     * @param \Oleg\OrderformBundle\Entity\Document $paper
+     */
+    public function removePaper(\Oleg\OrderformBundle\Entity\Document $paper)
+    {
+        $this->paper->removeElement($paper);
+    }
+
+    /**
+     * Get paper
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPaper()
+    {
+        return $this->paper;
+    }
+
+    /**
+     * Add diffDiagnoses
+     *
+     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
+     * @return Part
+     */
+    public function addDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    {
+        $this->diffDiagnoses[] = $diffDiagnoses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove diffDiagnoses
+     *
+     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
+     */
+    public function removeDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    {
+        $this->diffDiagnoses->removeElement($diffDiagnoses);
+    }
 }

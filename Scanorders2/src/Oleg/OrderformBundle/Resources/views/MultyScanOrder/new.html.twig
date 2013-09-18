@@ -104,13 +104,17 @@
     {% endif %}
 
     <div id="form-prototype-data"
+
+        {% if type != 'show' %}
+
          data-prototype-patient="
         {{ myform.field(form.patient.vars.prototype.mrn)|e }}
         {{ myform.field(form.patient.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.age)|e }}
         {{ myform.field(form.patient.vars.prototype.sex)|e }}
         {{ myform.fielddate(form.patient.vars.prototype.dob)|e }}
-        {{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}
+        {#{{ myform.field(form.patient.vars.prototype.clinicalHistory)|e }}#}
+        {{ myform.field(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}
      "
 
          data-prototype-procedure="
@@ -138,11 +142,11 @@
          data-prototype-part="
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
-        {% if type == 'show' %}
-            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.name)|e }}
-        {% else  %}
-            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.file)|e }}
-        {% endif %}
+        {#{% if type == 'show' %}#}
+            {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.name)|e }}#}
+        {#{% else  %}#}
+            {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}
+        {#{% endif %}#}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
         {{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
         {{ myform.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}
@@ -169,6 +173,7 @@
          data-prototype-specialstains="
         {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains.vars.prototype.name)|e }}
         "
+        {% endif %}
 
          {#data-prototype-stain="#}
         {#{{ myform.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}#}
@@ -195,11 +200,14 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
                 {{ myform.field(patient.mrn) }}
+                <button id="form_check_mrn_{{ uid }}" type="button" class="btn btn-xs btn_margin"
+                        onclick="checkMrn('patient',{{ patientCount }},0, 0, 0, 0, 0, 0, 0)">Check</button>
+
                 {{ myform.field(patient.name) }}
                 {{ myform.field(patient.age) }}
                 {{ myform.field(patient.sex) }}
                 {{ myform.fielddate(patient.dob) }}
-                {{ myform.field(patient.clinicalHistory) }}
+                {{ myform.clinicalHistoryInput(patient.clinicalHistory) }}
 
                 {#specimen/procedure#}
                 {% set procedureCount = 0 %}
@@ -233,10 +241,7 @@
                                     {% set partCount = 0 %}
                                     {% for part in accession.part %}
                                         {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                                        
-{#                                        {% set uidNext = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~(partCount+1)~'_'~0~'_'~0~'_'~0~'_'~0 %}                                       #}
-{#                                        {% set diffdiag_holder ='<div id="diffdiagnoses_'~uidNext~'"></div>' %}#}
-                                    
+
                                         <div id="formpanel_part_{{ uid }}" class="panel panel-part">
                                             {{ myform.orderinfo_panel_header(
                                             'part', type, partCount, accession.part|length, uid,
@@ -246,24 +251,13 @@
                                             <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
                                                 {{ myform.field(part.name) }}
                                                 {{ myform.field(part.sourceOrgan) }}
-
-                                                {% if type == 'show' %}
-                                                    {#<a href="../../../../web/uploads/documents/{{ specimen.paper.vars.value.path }}" target="_blank">{{ specimen.paper.vars.value.name }}</a>#}
-                                                    {{ myform.field_paperurl(part.paper) }}
-                                                {% else %}
-                                                    {{ myform.field(part.paper.file) }}
-                                                {% endif %}
-
+                                                {{ myform.paperInput(part.paper,type) }}
                                                 {{ myform.field(part.description) }}
                                                 {{ myform.field(part.diagnosis) }}
-                                                {#{{ myform.field(part.diffDiagnosis) }}#}
-
                                                 {############ different diagnoses input collection #############}
                                                 {% if part.diffDiagnoses|length > 0 %}                                                     
                                                     {{ myform.collectionInput(part, type, 'multi', patientCount, procedureCount, accessionCount, partCount) }}                                              
                                                 {% endif %}
-
-                                                {#{{ myform.field(part.diseaseType) }}#}
                                                 {{ myform.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
 
                                                 {#block#}
