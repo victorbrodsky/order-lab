@@ -65,7 +65,8 @@ class PatientType extends AbstractType
                 'widget' => 'single_text',
                 'required'=>false,
                 'format' => 'MM-dd-yyyy',
-                'attr' => array('class' => 'datepicker'),
+//                'attr' => array('class' => 'datepicker form-control', 'b-datepicker'=>'', 'ng-model'=>'date'),
+                'attr' => array('class' => 'datepicker form-control', 'b-datepicker'=>'', 'ng-model'=>'date', 'style'=>'margin-top: 0;'),
         ));
         
 //        $builder->add( 'clinicalHistory', 'textarea', array(

@@ -1,5 +1,7 @@
 {#macro for form label input inline#}
 
+{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
+
 {% macro field( field ) %}
     <p>
     <div class="row">
@@ -24,7 +26,23 @@
             {{ form_label(field) }}
         </div>
         <div class="col-xs-6" align="left" class="form_body_toggle_btn">
-            {{ form_widget(field) }}<span class="add-on"><i class="glyphicon glyphicon-calendar"></i></span>
+            {#<div ng-app="myApp" ng-controller="Ctrl">#}
+                {#&#123;&#35;<div class="input-append">&#35;&#125;#}
+                    {#<div class="input-group">{{ form_widget(field) }}<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div>#}
+                    {#&#123;&#35;<div class="input-group">{{ form_widget(field) }}<button type="button" class="btn" data-toggle="datepicker"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div>&#35;&#125;#}
+                {#&#123;&#35;</div>&#35;&#125;#}
+            {#</div>#}
+
+            {#<div ng-app="myApp" ng-controller="Ctrl">#}
+                <div class="input-group">
+                    {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
+                    {{ form_widget(field) }}
+                    <span class="input-group-addon btn" data-toggle="datepicker" type="button">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </span>
+                </div>
+            {#</div>#}
+
         </div>
         {{ form_rest(field) }}
     </div>

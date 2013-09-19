@@ -1,56 +1,30 @@
-{% block collection_widget %}
-{% spaceless %}
-    <div class="collection">
-        {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': block('collection_item_widget') }) %}
+{% block choice_widget %}
+    {% spaceless %}
+        {% if expanded %}
+            {{ block('choice_widget_expanded') }}
+        {% else %}
+            {{ block('choice_widget_collapsed') }}
         {% endif %}
-        <div {{ block('widget_container_attributes') }}>
-            {{ form_errors(form) }}
-            <ul>
-            {% for rows in form %}
-                <li>
-                {% set fieldNum = 1 %}
-                {% for row in rows %}
-                    <div class="field{{ fieldNum }}">
-                    {{ form_label(row) }}
-                    {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
-                    </div>
-                    {% set fieldNum = fieldNum + 1 %}
-                {% endfor %}
-                    <a class="remove" title="Remove" href="javascript:void()">
-                        <span>Delete</span>
-                    </a>
-                    <div class="clear"></div>
-                </li>
-            {% endfor %}
-            </ul>
-            {{ form_rest(form) }}
-        </div>
-        <div class="clear"></div>
-        <a class="add" title="Add" href="javascript:void()">
-            <div style="display: none;"></div>
-            <span>Add</span>
-        </a>
-    </div>
-    <div class="clear"></div>
-{% endspaceless %}
-{% endblock collection_widget %}
+    {% endspaceless %}
+{% endblock choice_widget %}
 
-{% block collection_item_widget %}
-{% spaceless %}
-    <li>
-    {% set fieldNum = 1 %}
-    {% for row in prototype %}
-        <div class="field{{ fieldNum }}">
-        {{ form_label(row) }}
-        {{ form_widget(row, { 'attr': { 'class': 'test' }}) }}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                {#<label style="display: inline;">#}
+                {#<span style="white-space: nowrap;">#}
+                <div class="radio_inline">
+                    {{ form_widget(child) }}
+                    {{ form_label(child) }}
+                </div>
+                {#</span>#}
+                {#</label>#}
+            {% endfor %}
+
         </div>
-        {% set fieldNum = fieldNum + 1 %}
-    {% endfor %}
-        <a class="remove" title="Remove" href="javascript:void()">
-            <span>Delete</span>
-        </a>
-        <div class="clear"></div>
-    </li>
-{% endspaceless %}
-{% endblock collection_item_widget %}
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+

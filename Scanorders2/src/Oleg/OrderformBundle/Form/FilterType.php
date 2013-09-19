@@ -27,14 +27,14 @@ class FilterType extends AbstractType
                 'required' => false,
                 //'multiple' => true,
                 //'expanded' => true,
-                'attr' => array('class' => 'combobox combobox-width')
+                'attr' => array('class' => 'combobox combobox-width', 'style'=>'width:60%')
         ));                       
         
         $builder->add('search', 'text', array(
                 'max_length'=>200,
                 'required'=>false,
                 'label'=>'Search:',
-            'attr' => array('class'=>'form-control form-control-modif'),
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'width:60%'),
         ));
 
         $builder->add('service', 'checkbox', array(

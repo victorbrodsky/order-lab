@@ -14,7 +14,7 @@ function regularCombobox() {
     $("select.combobox").select2({
         //width: combobox_width,
         //width: combobox_width,
-        //dropdownAutoWidth: true
+        dropdownAutoWidth: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });

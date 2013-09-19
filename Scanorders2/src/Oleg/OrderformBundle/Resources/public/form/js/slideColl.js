@@ -90,8 +90,6 @@ function addCollFieldFirstTime( ident, ids ) {
     var btnAdd = '<button id="'+addbtnId+'" onClick="addCollField(\''+ident+'\',' + "\'multi\'," + patient + ',' +specimen+','+accession+','+part+','+block+','+slide+')" class="btn btn-sm btn-info" type="button">+</button>';
 //    var btnDel = '<button id="'+delbtnId+'" onClick="delCollField(\''+ident+'\',' + "\'multi\'," + patient + ',' +specimen+','+accession+','+part+','+block+','+slide+')" class="btn btn-sm btn-danger" type="button">-</button>';
 
-    newForm = newForm + btnAdd;
-
     var name = "Results of Special Stains:";
     if( ident == "relevantScans" ) {
         name = "Relevant Scanned Images:";
@@ -103,7 +101,14 @@ function addCollFieldFirstTime( ident, ids ) {
         '<b>'+name+'</b>' +
         '</div>' +
         '<div class="col-xs-6" align="left">' +
-        newForm +
+        '<div style="float:left; width:100%">' +
+            '<div class="fieldInputColl">' +
+                newForm +
+            '</div>'+
+            '<div class="addDelBtnColl">' +
+                btnAdd +
+            '</div>'+
+        '</div>'+
         '</div>'+
         '</div></p>';
 

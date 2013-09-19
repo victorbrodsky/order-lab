@@ -74,11 +74,12 @@ function initAdd() {
 //    $(".combobox").combobox();
     regularCombobox();
 
+    initDatepicker();
+
     //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
     if( $(".datepicker")[0] ) {
         $('.datepicker').datepicker();
     }
-
 }
 
 //confirm delete
@@ -664,15 +665,22 @@ function addDiffdiagFieldFirstTime( name, ids ) {
     //var delPart = part - 1;
     //var btnDel = '<button onClick="delDiffdiagField(\'diffdiagnoses\',' + "\'multi\'," + patient + ',' +specimen+','+accession+','+part+')" class="btn btn-sm btn-danger" type="button">-</button>';
     
-    newForm = newForm + btnAdd;
+//    newForm = newForm + btnAdd;
     
     //create form with bs3 rows
     var finalForm = '<p><div class="row">'+
                         '<div class="col-xs-6" align="right">'+
                             '<b>Differential Diagnoses:</b>' +
                         '</div>' +
-                        '<div class="col-xs-6" align="left">' +                                
-                            newForm +                                   
+                        '<div class="col-xs-6" align="left">' +
+                        '<div style="float:left; width:100%">' +
+                            '<div class="fieldInputColl">' +
+                                newForm +
+                            '</div>'+
+                            '<div class="addDelBtnColl">' +
+                                btnAdd +
+                            '</div>'+
+                        '</div>'+
                         '</div>'+
                     '</div></p>';
     
@@ -773,5 +781,30 @@ function expandTextarea() {
             this.style.height = this.scrollHeight + 'px';
         }, false);
     }
+
+}
+
+
+function initDatepicker() {
+    console.log("init datepicker");
+    angular.module('OrdeInfoDates', [])
+        .controller('Ctrl', ['$scope', function ($scope) {
+
+        }])
+        .directive('bDatepicker', function () {
+            return {
+                restrict: 'A',
+                link: function (scope, el, attr) {
+                    el.datepicker();
+                    var component = el.siblings('[data-toggle="datepicker"]');
+                    if (component.length) {
+                        component.on('click', function () {
+                            el.trigger('focus');
+                        });
+                    }
+                }
+            };
+        }
+    );
 
 }

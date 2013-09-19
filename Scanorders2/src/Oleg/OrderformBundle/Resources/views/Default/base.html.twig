@@ -3,6 +3,8 @@
 
 <head>
 
+    {% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
+
     {% if security is not defined %}
         {% set security = 'true' %}
     {% endif %}
@@ -77,6 +79,7 @@
         </div>
 
         <div class="order-content">
+            <div ng-app="OrdeInfoDates" ng-controller="Ctrl">
 
             {% for flashMessage in app.session.flashbag.get('notice') %}
                 <div class="flash-notice">
@@ -86,6 +89,7 @@
 
             {% block content %}{% endblock %}
 
+            </div>
         </div>
 
         <div class="footer">
@@ -96,6 +100,7 @@
                 <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
             {% endblock %}
         </div>
+
 
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/*'
@@ -110,6 +115,12 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
+
+        <!-- required libraries -->
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
+        <script src="//mgcrea.github.com/angular-strap/js/angular-strap.js"></script>
+
 
         {# Bootstrap Combobox #}
 {#        {% javascripts        #}

@@ -198,7 +198,8 @@ class OrderInfoType extends AbstractType
         $builder->add('scandeadline','date',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker'),
+//            'attr' => array('class' => 'datepicker form-control'),
+            'attr' => array('class' => 'datepicker form-control', 'b-datepicker'=>'', 'ng-model'=>'date', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $scandeadline,
             'label'=>'Scan Deadline:',
