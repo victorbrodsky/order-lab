@@ -611,9 +611,9 @@ function addDiffdiagField( name, type, patient, specimen, accession, part ) {
     //console.log("diffdiagInt="+diffdiagInt);
 
     var newForm = getDiffdiagField( name, patient, specimen, accession, part, diffdiagInt );
- 
+
     var addto = "#" + prefix + uid + "_diffDiagnoses_" + (diffdiagInt-1) + "_name";
-    //console.log("addto="+addto);
+    console.log("addto="+addto);
     $(addto).after(newForm);
 
     //add del btn if length == 0

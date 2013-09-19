@@ -19,13 +19,23 @@ class AccessionType extends AbstractType
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {  
-        
+    {
+
+        $attr = array('class'=>'form-control form-control-modif', 'required' => 'required', 'title' => 'Example: S12-12345');
+
+        if( $this->params['type'] == 'single') {
+            $attr['style'] = 'width:100%';
+        } else {
+            //$attr_width = 'style' => 'width:130px';
+        }
+
+
         $builder->add( 'accession', 'text', array(
                 'label'=>'* Accession Number [or Label]:',
                 'max_length'=>100,
                 'required'=>true,
-                'attr' => array('class'=>'form-control form-control-modif','style' => 'width:130px', 'required' => 'required', 'title' => 'Example: S12-12345'),
+                //'attr' => array('class'=>'form-control form-control-modif','style' => 'width:130px', 'required' => 'required', 'title' => 'Example: S12-12345'),
+                'attr' => $attr,
         ));      
         
 //        $builder->add('date','date',array(

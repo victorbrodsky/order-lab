@@ -6,13 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var combobox_width = '100%'; //'element'
 var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 
 function regularCombobox() {
     //resolve
     $("select.combobox").select2({
-        width: 'element',
-        dropdownAutoWidth: true
+        //width: combobox_width,
+        //width: combobox_width,
+        //dropdownAutoWidth: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
@@ -82,7 +84,7 @@ function customCombobox() {
 //
 //    $(".ajax-combobox111").select2({
 //        placeholder: "Search",
-//        width: 'element',
+//        width: combobox_width,
 //        dropdownAutoWidth: true,
 //        selectOnBlur: true,
 //        //data: dataStore.getStains(),
@@ -174,7 +176,7 @@ function getComboboxStain(urlCommon, ids) {
         var targetid = id+"stain_0_name";
         $(target).select2({
             //placeholder: "Search",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             selectOnBlur: true,
             dataType: 'json',
@@ -206,7 +208,7 @@ function getComboboxScanregion(urlCommon,ids) {
         json = eval(data);
         $(".ajax-combobox-scanregion").select2({
             //placeholder: "Region to scan",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             selectOnBlur: true,
             dataType: 'json',
@@ -234,7 +236,7 @@ function getComboboxProcedure(urlCommon,ids) {
         json = eval(data);
         $(".ajax-combobox-procedure").select2({
             placeholder: "Procedure Type",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             //allowClear: true,
             selectOnBlur: true,
@@ -261,7 +263,7 @@ function getComboboxOrgan(urlCommon,ids) {
         json = eval(data);
         $(".ajax-combobox-organ").select2({
             placeholder: "Source Organ",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             //allowClear: true,
             selectOnBlur: true,
@@ -287,7 +289,7 @@ function getComboboxDelivery(urlCommon,ids) {
         json = eval(data);
         $(".ajax-combobox-delivery").select2({
             //placeholder: "Slide Delivery",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             selectOnBlur: true,
             dataType: 'json',
@@ -313,7 +315,7 @@ function getComboboxReturn(urlCommon,ids) {
         json = eval(data);
         $(".ajax-combobox-return").select2({
             //placeholder: "Return Slides to",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             selectOnBlur: true,
             dataType: 'json',
@@ -339,7 +341,7 @@ function getComboboxPathService(urlCommon,ids) {
         json = eval(data);
         $(".ajax-combobox-pathservice").select2({
             placeholder: "Pathology Service",
-            width: 'element',
+            width: combobox_width,
             dropdownAutoWidth: true,
             selectOnBlur: true,
             dataType: 'json',

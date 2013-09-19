@@ -40,12 +40,19 @@ class PartType extends AbstractType
         }
 
         //name
+        $attr = array('class' => 'combobox', 'required' => 'required', 'disabled');
+
+        if( $this->params['type'] == 'single') {
+            $attr['style'] = 'width:100%;';
+        } else {
+            $attr['style'] = 'width:100%';
+        }
         $builder->add('name', 'choice', array(
             'choices' => $helper->getPart(),
             'required' => true,
             'label' => 'Part Name:',
             'max_length' => '3',
-            'attr' => array('class' => 'combobox', 'style' => 'width:70px', 'required' => 'required', 'disabled')
+            'attr' => $attr
         ));
                       
 //        $builder->add('sourceOrgan', null, array(

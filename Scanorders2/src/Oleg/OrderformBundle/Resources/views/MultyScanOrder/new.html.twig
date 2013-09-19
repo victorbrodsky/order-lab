@@ -153,6 +153,7 @@
         "
 
          data-prototype-diffdiagnoses="
+
         {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}
         "
 
@@ -200,8 +201,7 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
                 {{ myform.field(patient.mrn) }}
-                <button id="form_check_mrn_{{ uid }}" type="button" class="btn btn-xs btn_margin"
-                        onclick="checkMrn('patient',{{ patientCount }},0, 0, 0, 0, 0, 0, 0)">Check</button>
+                {#<button id="form_check_mrn_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="checkMrn('patient',{{ patientCount }},0, 0, 0, 0, 0, 0, 0)">Check</button>#}
 
                 {{ myform.field(patient.name) }}
                 {{ myform.field(patient.age) }}

@@ -71,8 +71,21 @@
 /*end of sign in*/
 .form-control-modif {
     display: inline;
-    height: 30px;
-    width: 70%;
+    height: 27px;
+    //width: 70%;
+}
+
+.fieldInputColl {
+    float: left;
+    width: 80%;
+    position: relative;
+}
+.addDelBtnColl {
+    float: right;
+    width: 20%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .header {
@@ -252,9 +265,10 @@
     overflow: hidden;
 }
 
-.combobox-width {
-    min-width: 50%;
-}
+/*.combobox-width {*/
+    /*//min-width: 50%;*/
+    /*width: 100%;*/
+/*}*/
 
 .form_body_toggle_btn {
     padding-right: 1%;

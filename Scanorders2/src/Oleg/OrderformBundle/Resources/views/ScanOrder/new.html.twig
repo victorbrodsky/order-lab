@@ -55,7 +55,17 @@
                         {{ form_label(form_accession.accession, "* Accession Number [or Label], Part, Block:") }}
                     </div>
                     <div class="col-xs-6" align="left">
-                        {{ form_widget(form_accession.accession) }} {{ form_widget(form_part.name) }} {{ form_widget(form_block.name) }}
+                        <div style="float:left; width:100%">
+                            <div style="float:left; width:50%">
+                                {{ form_widget(form_accession.accession) }}
+                            </div>
+                            <div style="float:left; width:25%">
+                            {{ form_widget(form_part.name) }}
+                            </div>
+                            <div style="float:left; width:25%">
+                            {{ form_widget(form_block.name) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

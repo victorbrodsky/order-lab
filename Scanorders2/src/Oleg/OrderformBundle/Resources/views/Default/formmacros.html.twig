@@ -209,17 +209,21 @@
             
         </div>
         <div class="col-xs-6" align="left">
-{#                                                                <div id="diffdiagnoses_field_{{ uid }}">#}
+
+            <div style="float:left; width:100%">
                 {% for diffDiagnoses in part.diffDiagnoses %}
-                    {#{{ form_errors(diffDiagnoses.name) }}#}
+                    {{ form_errors(diffDiagnoses.name) }}
+                    <div class="fieldInputColl">
                     {{ form_widget(diffDiagnoses.name) }}
-                    {#{{ form_rest(diffDiagnoses) }}#}
+                    </div>
                 {% endfor %}
                 {% if type == 'new' or type == 'edit' %}
-                    <button id="{{ addBtnId }}" onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
-                    {#<button onClick="delDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-danger" type="button">-</button>#}
+                    <div class="addDelBtnColl">
+                        <button id="{{ addBtnId }}" onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                    </div>
                 {% endif %}
-{#                                                                </div>#}
+            </div>
+
         </div>
     </div>
     </p>
@@ -297,13 +301,20 @@ ident:      specialStains or relevantScans
             {% endif %}
         </div>
         <div class="col-xs-6" align="left">
-            {% for col in coll %}
-                {{ form_widget(col.name) }}
-            {% endfor %}
-            {% if type == 'new' or type == 'edit' %}
-                <button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>
-                {#<button id="{{ delbtnId }}" onClick="delCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-danger" type="button">-</button>#}
-            {% endif %}
+
+            <div style="float:left; width:100%">
+                {% for col in coll %}
+                    <div class="fieldInputColl">
+                        {{ form_widget(col.name) }}
+                    </div>
+                {% endfor %}
+                {% if type == 'new' or type == 'edit' %}
+                    <div class="addDelBtnColl">
+                        <button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                    </div>
+                {% endif %}
+            </div>
+
         </div>
     </div>
     </p>

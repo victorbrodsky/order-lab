@@ -31,7 +31,7 @@ class PatientType extends AbstractType
                 'label'=>'MRN:',
                 'max_length'=>100,
                 'required'=>false,
-                'attr' => array('class'=>'form-control form-control-modif', 'style' => 'width:250px'),
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'name', 'text', array(
