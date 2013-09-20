@@ -20,7 +20,7 @@ class DiffDiagnosesType extends AbstractType
             'label' => 'Differential Diagnoses:',
             'required' => false,
             //'attr' => array('class' => 'combobox combobox-width')
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif','style'=>'height: 34px;')    //height: 34px keep the same size as button
         ));
 
     }

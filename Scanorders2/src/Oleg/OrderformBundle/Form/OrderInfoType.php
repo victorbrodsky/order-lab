@@ -121,7 +121,7 @@ class OrderInfoType extends AbstractType
             'expanded' => true,
             'data' => 0,
             'attr' => array('class' => 'horizontal_type', 'required' => 'required'),
-            'auto_initialize' => false,
+//            'auto_initialize' => false,
         );
         $priority = $this->entity->getPriority();
         $key = 0;

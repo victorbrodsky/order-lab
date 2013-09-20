@@ -96,7 +96,7 @@ class PartType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Diagnosis:",
+            'label' => false,   //"Diagnosis:",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__diffDiagnoses__',

@@ -1,8 +1,7 @@
 {#macro for form label input inline#}
 
-{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
-
 {% macro field( field ) %}
+    {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
     <div class="row">
         {{ form_errors(field) }}
@@ -212,7 +211,8 @@
     
 {% macro collectionInput(part, type, formtype, patientCount, procedureCount, accessionCount, partCount) %}
 
-    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_diffDiagnoses' %}
+    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_diffDiagnoses_0_diffDiagnoses' %}
+    {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_diffDiagnoses_0_diffDiagnoses' %}
 
     <p>
     <div class="row">
@@ -232,14 +232,31 @@
                 {% for diffDiagnoses in part.diffDiagnoses %}
                     {{ form_errors(diffDiagnoses.name) }}
                     <div class="fieldInputColl">
-                    {{ form_widget(diffDiagnoses.name) }}
+                    {#{{ form_widget(diffDiagnoses.name) }}#}
+
+                        <div class="input-group" id="{{ inputGroupId }}">
+                            {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
+                            {{ form_widget(diffDiagnoses.name) }}
+                            <span
+                                  id="{{ addBtnId }}"
+                                  onClick="addDiffdiagField('diffDiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')"
+                                  class="input-group-addon btn" type="button">
+                                  <i class="glyphicon glyphicon-plus-sign"></i>
+                            </span>
+                            {#<span#}
+                                {#onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')"#}
+                                {#class="input-group-addon btn" type="button">#}
+                                {#<i class="glyphicon glyphicon-minus-sign"></i>#}
+                            {#</span>#}
+                        </div>
+
                     </div>
                 {% endfor %}
-                {% if type == 'new' or type == 'edit' %}
-                    <div class="addDelBtnColl">
-                        <button id="{{ addBtnId }}" onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>
-                    </div>
-                {% endif %}
+                {#{% if type == 'new' or type == 'edit' %}#}
+                    {#<div class="addDelBtnColl">#}
+                        {#<button id="{{ addBtnId }}" onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>#}
+                    {#</div>#}
+                {#{% endif %}#}
             </div>
 
         </div>

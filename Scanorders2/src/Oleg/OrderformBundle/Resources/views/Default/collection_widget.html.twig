@@ -1,13 +1,3 @@
-{% block choice_widget %}
-    {% spaceless %}
-        {% if expanded %}
-            {{ block('choice_widget_expanded') }}
-        {% else %}
-            {{ block('choice_widget_collapsed') }}
-        {% endif %}
-    {% endspaceless %}
-{% endblock choice_widget %}
-
 
 {% block choice_widget_expanded %}
     {% spaceless %}
@@ -26,5 +16,6 @@
         </div>
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
+
 
 

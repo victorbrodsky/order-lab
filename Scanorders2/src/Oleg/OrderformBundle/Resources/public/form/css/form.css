@@ -80,22 +80,22 @@
 /*end of sign in*/
 .form-control-modif {
     display: inline;
-    height: 27px;
+    height: 27px; //keep the same as combobox
     //width: 70%;
 }
 
-.fieldInputColl {
-    float: left;
-    width: 50%;
-    position: relative;
-}
-.addDelBtnColl {
-    float: right;
-    width: 50%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
+/*.fieldInputColl {*/
+    /*float: left;*/
+    /*width: 50%;*/
+    /*position: relative;*/
+/*}*/
+/*.addDelBtnColl {*/
+    /*float: right;*/
+    /*width: 50%;*/
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+/*}*/
 
 .header {
     float: left;
