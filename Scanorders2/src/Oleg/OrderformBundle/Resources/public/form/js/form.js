@@ -600,7 +600,7 @@ function addDiffdiagField( name, type, patient, specimen, accession, part ) {
     if( type == "single" ) {
        prefix = "oleg_orderformbundle_parttype";
        uid = '';
-   }
+    }
 
     //ger diffdiag count from id
     var partialId = prefix + uid + "_diffDiagnoses";
@@ -610,7 +610,7 @@ function addDiffdiagField( name, type, patient, specimen, accession, part ) {
     //console.log("elements length="+elements.length);
 
     diffdiagInt = elements.length;
-    console.log("diffdiagInt="+diffdiagInt);
+    //console.log("diffdiagInt="+diffdiagInt);
 
     var newForm = getDiffdiagField( name, patient, specimen, accession, part, diffdiagInt );
 
@@ -619,33 +619,41 @@ function addDiffdiagField( name, type, patient, specimen, accession, part ) {
 
     //inputGroupId_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_diffDiagnoses
     //inputGroupId_patient_0_specimen_0_accession_0_part_0_diffDiagnoses
-    var addto = "#" + prefix + uid + "_diffDiagnoses_" + (diffdiagInt-1) + ending;
+//    var addto = "#" + prefix + uid + "_diffDiagnoses_" + (diffdiagInt-1) + ending;
+//
+//    if( diffdiagInt == 1 ) {
+//        //get last element id
+//        var addto = "#"+elements[0].id;
+//    }
 
+    //add to last input field
+    var addto = elements[elements.length-1].id
+    //console.log("form addto="+addto);
+    $("#"+addto).after(newForm);
+
+    //add '-' button for the first input field if it is not existed yet
     if( diffdiagInt == 1 ) {
-        //get last element id
-        var addto = "#"+elements[0].id;
+        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_4_name
+        var firstPartialId = "oleg_orderformbundle_orderinfotype_" + uid + "_" + name + "_";
+        var partialInputElements = $('[id^='+firstPartialId+']');
+        var addId = partialInputElements[0].id;
+
+        var currFiledCollId = getCollId(name, addId);
+        var btnDel = getDelBtn(name, type, patient, specimen, accession, part, currFiledCollId);
+
+        console.log("!!!! add '-' to the first input field: addId="+addId);
+        $("#"+addId).after(btnDel);
     }
 
-    console.log("addto="+addto);
-    $(addto).after(newForm);
-
-    //check if + button should be removed or added for the previous input field
     //remove + for the previous button all the time
-    //addbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_diffDiagnoses
-    var remid = "addbtn_"+uid+ending+"_"+(diffdiagInt-1)+ending;
-    //console.log("remid="+remid);
-    $('#'+remid).remove();
-
-    //add - button for the first input field
-    if( diffdiagInt == 1 ) {
-//        var delbtnId = 'delbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+name;
-//        var btnDel = '<span id="'+delbtnId+'" onClick="delDiffdiagField(\''+name+'\',' + "\'"+type+"\'," + patient + ',' +specimen+','+accession+','+part+','+diffdiagInt+')" ' +
-//            'class="input-group-addon btn" type="button"><i class="glyphicon glyphicon-minus-sign"></i></button></span>';
-        var btnDel = getDelBtn(name, type, patient, specimen, accession, part, diffdiagInt-1);
-        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_name
-        var addId = "oleg_orderformbundle_orderinfotype_"+uid+ending+"_0_name";
-        //console.log("addId="+addId);
-        $("#"+addId).after(btnDel);
+    //get array of all + buttons and remove the first one
+    //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_3_diffDiagnoses
+    var lastAddBtnPartialId = "addbtn_" + uid + "_" + name + "_";
+    //console.log("lastAddBtnPartialId="+lastAddBtnPartialId);
+    var lastAddBtnPartialElement = $('[id^='+lastAddBtnPartialId+']');
+    console.log("remove first + remid="+lastAddBtnPartialElement[0].id);
+    if( lastAddBtnPartialElement.id != "undefined" ) {
+        lastAddBtnPartialElement[0].remove();
     }
 
     expandTextarea();
@@ -730,16 +738,7 @@ function getDiffdiagField( name, patient, specimen, accession, part, diffdiag ) 
 
     var header = '<div class="input-group" id="'+inputGroupId+'">';
 
-//    var ident = "diffDiagnoses";
-//    var addbtnId = 'addbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident+'_'+diffdiag+'_'+ident;
-//    var btnAdd = '<span id="'+addbtnId+'" onClick="addDiffdiagField(\''+ident+'\',' + "\'multi\'," + patient + ',' +specimen+','+accession+','+part+')"'+
-//                 'class="input-group-addon btn" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-plus-sign"></i></span>';
     var btnAdd = getAddBtn(name, "multi", patient, specimen, accession, part, diffdiag);
-
-//    var delbtnId = 'delbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident;
-//    var type = "multi";
-//    var btnDel = '<span id="'+delbtnId+'" onClick="delDiffdiagField(\''+ident+'\',' + "\'"+type+"\'," + patient + ',' +specimen+','+accession+','+part+','+diffdiag+')" ' +
-//                 'class="input-group-addon btn" type="button"><i class="glyphicon glyphicon-minus-sign"></i></button></span>';
 
     var btnDel = getDelBtn(name, "multi", patient, specimen, accession, part, diffdiag);
 
@@ -751,6 +750,10 @@ function getDiffdiagField( name, patient, specimen, accession, part, diffdiag ) 
     return newForm;
 }
 
+
+//delete input field and modify +/- buttons accordingly:
+//1) delete the field: remove "-" button for the first field if it's not only one field
+//2) delete the last field: add "+" button to the previous field
 function delDiffdiagField( name, type, patient, specimen, accession, part, diffdiag ) {
     
     //console.log("name="+name+",type="+type+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part);
@@ -774,63 +777,130 @@ function delDiffdiagField( name, type, patient, specimen, accession, part, diffd
     //console.log("elements length="+elements.length);
 
     diffdiagInt = elements.length - 1;
-    console.log("diffdiagInt="+diffdiagInt+", diffdiag="+diffdiag);
+    console.log("length="+elements.length+",diffdiagInt="+diffdiagInt+", diffdiag="+diffdiag);
 
+    //don't delete if there is only one field
     if( diffdiagInt == 0 ) {
         return false;
     }
 
-    //delete without asking confirmation if teh input field is empty
+    //delete without asking confirmation if the input field is empty
     //remove id: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_name
     //inputGroupId_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_4_diffDiagnoses
     var delId = partialId+diffdiag+'_diffDiagnoses';
-    //console.log("delId="+delId);
+    console.log("inputGroupId delId="+delId);
 
     //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_name
-    var textId = "oleg_orderformbundle_orderinfotype_" + uid + "_diffDiagnoses_" + diffdiag + "_name";
+    var textId = "oleg_orderformbundle_orderinfotype_" + uid + "_" + name + "_" + diffdiag + "_name";  //TODO: use variable instead of "name"
     var text = $('#'+textId).val();
     //console.log("textId="+textId);
 
+    console.log("text="+text);
+    var remove = false;
+    if( text === undefined || text == "" || text.trim() == "undefined" ) {
+        remove = true;
+    } else {
+        if( confirm("Are you sure?") || text == "" ) {
+            remove = true;
+        }
+    }
 
-    /////////////////////// add + button to the previous input field only if the last input field is being deleted //////////////////////////////
+    if( remove == true ) {
+
+        //1) remove input and all buttons
+        console.log("remove field with id="+delId);
+        $('#'+delId).remove();
+
+        //case 1: check and remove "-" button for the first field if it's not only one field
+        if( diffdiagInt == 1 ) {
+            console.log("!!! remove'-'");
+
+            //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_3_diffDiagnoses
+            var lastDelBtnPartialId = "delbtn_" + uid + "_" + name + "_";
+            var lastDelBtnPartialElement = $('[id^='+lastDelBtnPartialId+']');
+            lastDelBtnPartialElement.remove();
+        }
+
+        if(0) {
+        //case 2: add + button to the last input field only if the last input field is being deleted
+        var lastElementId = elements[diffdiagInt].id;
+        console.log(lastElementId+" ?= " + delId);
+        if( lastElementId == delId ) {
+            //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses
+            if( diffdiagInt == 1 ) {
+                var attToId = "oleg_orderformbundle_orderinfotype_" + uid + "_diffDiagnoses_" + "0" + "_name";  //TODO: use variable
+            } else {
+                var attToId = "delbtn_"+uid+"_"+name+"_"+(diffdiag-1)+'_'+name;
+            }
+
+            var addBtn = getAddBtn(name, type, patient, specimen, accession, part, diffdiag-1);
+            console.log("attToId="+attToId);
+            $("#"+attToId).after(addBtn);
+        }
+        } else {
+        //case 2: add + button to the last input field if it is not existed yet
+            //+ button id
+            //get collection id
+            var elements = $('[id^='+partialId+']');
+            var lastElementId = elements[elements.length-1].id;
+            var currFiledCollId = getCollId(name, lastElementId);
+
+            var lastAddBtnId = "addbtn_"+uid+"_"+name+"_"+currFiledCollId+'_'+name;
+            if( $("#"+lastAddBtnId).length > 0 ) {
+                //don't add because it already exists
+                console.log("don't add because it already exists, length="+$("#"+lastAddBtnId).length);
+            } else {
+                //add + button
+                if( diffdiagInt == 1 ) {
+                    var attToId = "oleg_orderformbundle_orderinfotype_" + uid + "_diffDiagnoses_" + currFiledCollId + "_name";  //TODO: use variable
+                } else {
+                    var attToId = "delbtn_"+uid+"_"+name+"_"+currFiledCollId+'_'+name;
+                }
+                var addBtn = getAddBtn(name, type, patient, specimen, accession, part, currFiledCollId);
+                console.log("add + button: attToId="+attToId);
+                $("#"+attToId).after(addBtn);
+            }
+
+        }
+
+    }
+
+    /////////////////////// 2) add + button to the previous input field only if the last input field is being deleted //////////////////////////////
     //get current element:
     //get index of current element
     //var inputElement = $("#"+textId);
     //var colHolder = $("#"+textId).parent();
     //var indexInput = $("div").index(inputElement);
-    var element = elements[diffdiagInt-1];
-    //console.log("element id="+element.id);
-    //if id of deleted element is equal to id of the last element => add + to the last element
-    var lastElementId = elements[diffdiagInt].id;
-    console.log(lastElementId+" ?= " + delId);
-    if( lastElementId == delId ) {
-        //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses
-        if( diffdiagInt == 1 ) {
-            var attToId = "oleg_orderformbundle_orderinfotype_" + uid + "_diffDiagnoses_" + "0" + "_name";
-        } else {
-            var attToId = "delbtn_"+uid+"_"+name+"_"+(diffdiag-1)+'_'+name;
-        }
+//    var element = elements[diffdiagInt-1];
+//    //console.log("element id="+element.id);
+//    //if id of deleted element is equal to id of the last element => add + to the last element
+//    var lastElementId = elements[diffdiagInt].id;
+//    console.log(lastElementId+" ?= " + delId);
+//    if( lastElementId == delId ) {
+//        //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses
+//        if( diffdiagInt == 1 ) {
+//            var attToId = "oleg_orderformbundle_orderinfotype_" + uid + "_diffDiagnoses_" + "0" + "_name";  //TODO: use variable
+//        } else {
+//            var attToId = "delbtn_"+uid+"_"+name+"_"+(diffdiag-1)+'_'+name;
+//        }
+//
+//        var addBtn = getAddBtn(name, type, patient, specimen, accession, part, diffdiag-1);
+//        console.log("attToId="+attToId);
+//        $("#"+attToId).after(addBtn);
+//    }
 
-        var addBtn = getAddBtn(name, type, patient, specimen, accession, part, diffdiag-1);
-        console.log("attToId="+attToId);
-        $("#"+attToId).after(addBtn);
-    }
 
-    //////////////////////////// remove - button for the only one field /////////////////////////////////////////////////////
-    if( diffdiagInt == 1 ) {
-        remDelBtnDiffDiag("diffDiagnoses", type, patient, specimen, accession, part, diffdiagInt-1);
-        //return false;
-    }
 
-    if( text == "" ) {
-        remDelBtnDiffDiag("diffDiagnoses", patient, specimen, accession, part, diffdiag, diffdiagInt);
-        $('#'+delId).remove();
-    } else {
-        if( confirm("Are you sure?") || text == "" ) {
-            remDelBtnDiffDiag("diffDiagnoses", patient, specimen, accession, part, diffdiag, diffdiagInt);
-            $('#'+delId).remove();
-        }
-    }
+
+//    //////////////////////////// 1) check and remove "-" button for the first field if it's not only one field /////////////////////////////////////////////////////
+//    if( diffdiagInt == 1 ) {
+//        console.log("!!! remove'-'");
+//
+//        //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_3_diffDiagnoses
+//        var lastDelBtnPartialId = "delbtn_" + uid + "_" + name + "_";
+//        var lastDelBtnPartialElement = $('[id^='+lastDelBtnPartialId+']');
+//        lastDelBtnPartialElement.remove();
+//    }
 
 //    if( diffdiagInt == (diffdiag+1) ) {
 //        var delId = partialId+(diffdiag-1)+'_diffDiagnoses';
@@ -842,6 +912,15 @@ function delDiffdiagField( name, type, patient, specimen, accession, part, diffd
     return false;
 }
 
+function getCollId(name, collId) {
+    //console.log("lastElementId="+lastElementId);
+    var lastElementIdArr=collId.split(name+"_");
+    var lastPart = lastElementIdArr[1];
+    //console.log("lastPart="+lastPart);
+    var currFiledCollIdArr = lastPart.split("_");
+    return currFiledCollIdArr[0];
+}
+
 function remDelBtnDiffDiag(ident, type, patient, specimen, accession, part, collInt) {
 
     //remove - button for the last field
@@ -849,7 +928,7 @@ function remDelBtnDiffDiag(ident, type, patient, specimen, accession, part, coll
     //if( collInt == 0 ) {
         //remove - button
         var delbtnId = 'delbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident+'_'+collInt+'_'+ident;
-        //console.log("delbtnId="+delbtnId);
+        console.log("delbtnId="+delbtnId);
         $('#'+delbtnId).remove();
     //}
 }
