@@ -283,3 +283,6 @@
     padding-right: 1%;
 }
 
+.textarea {
+    min-height:55px;
+}

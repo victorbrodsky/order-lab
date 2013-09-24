@@ -8,6 +8,9 @@
 
 var combobox_width = '100%'; //'element'
 var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
+var type = $("#formtype").val();
+var cicle = $("#formcicle").val();
+//console.log("type="+type+", cicle="+cicle);
 
 function regularCombobox() {
     //resolve
@@ -70,13 +73,15 @@ function customCombobox() {
 
     //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 
-    getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
-    getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-    getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
-    getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
-    getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
-    getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
-    getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+    if( cicle != "show" ) {
+        getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+    }
 
 }
 
@@ -163,18 +168,24 @@ function customCombobox() {
 //#############  stains  ##############//
 function getComboboxStain(urlCommon, ids) {
     var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    //var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
     var url = urlCommon+"stain";
 
-    //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_0_stain_0_name
+    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_0_stain_0_name
+    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_0_stain_0_name
     //console.log("stain id="+id);
 
     $.ajax(url).success(function(data) {
         json = eval(data);
         //stainsData = eval(data);
-        var target = ".ajax-combobox-stain";
         var targetid = id+"stain_0_name";
-        $(target).select2({
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_staintype_name";
+        }
+        //var target = "#oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_0_stain_0_name";
+        //console.log("targetid="+targetid);
+        $(targetid).select2({
             //placeholder: "Search",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -192,21 +203,24 @@ function getComboboxStain(urlCommon, ids) {
 
         });
 
+        //console.log("targetid="+targetid);
         $(targetid).select2('data', {id: 1, text: 'H&E'});
-
-        //single form: s2id_oleg_orderformbundle_staintype_name
-        $("#s2id_oleg_orderformbundle_staintype_name").select2('data', {id: 1, text: 'H&E'});
     });
 }
 
 //#############  scan regions  ##############//
 function getComboboxScanregion(urlCommon,ids) {
     var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
     var url = urlCommon+"scanregion";
     $.ajax(url).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-scanregion").select2({
+        //json = eval(data);
+        var targetid = id+"scan_0_scanregion";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_scantype_scanregion";
+        }
+        //console.log("targetid="+targetid);
+        $(targetid).select2({
             //placeholder: "Region to scan",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -229,12 +243,17 @@ function getComboboxScanregion(urlCommon,ids) {
 
 //#############  procedure types  ##############//
 function getComboboxProcedure(urlCommon,ids) {
-    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1];    //+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
     var url = urlCommon+"procedure";
     $.ajax(url).success(function(data) {
-        json = eval(data);
-        $(".ajax-combobox-procedure").select2({
+        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_proceduretype
+        var targetid = id+"proceduretype";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_specimentype_proceduretype";
+        }
+        //console.log("targetid="+targetid);
+        $(targetid).select2({
             placeholder: "Procedure Type",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -256,12 +275,18 @@ function getComboboxProcedure(urlCommon,ids) {
 
 //#############  source organs  ##############//
 function getComboboxOrgan(urlCommon,ids) {
-    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];   //+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
     var url = urlCommon+"organ";
     $.ajax(url).success(function(data) {
+
         json = eval(data);
-        $(".ajax-combobox-organ").select2({
+        //oleg_orderformbundle_orderinfotype_patient_0_specimen_1_accession_0_part_0_sourceOrgan
+        var targetid = id+"sourceOrgan";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_parttype_sourceOrgan";
+        }
+        $(targetid).select2({
             placeholder: "Source Organ",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -277,17 +302,44 @@ function getComboboxOrgan(urlCommon,ids) {
             }
 
         });
+
+        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_primaryOrgan
+        var targetid = id+"primaryOrgan";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_parttype_primaryOrgan";
+        }
+        $(targetid).select2({
+            placeholder: "Source Organ",
+            width: combobox_width,
+            dropdownAutoWidth: true,
+            //allowClear: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+
     });
 }
 
+
+
 //#############  slide delivery  ##############//
 function getComboboxDelivery(urlCommon,ids) {
-    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    //var uid = "";   //'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"delivery";
     $.ajax(url).success(function(data) {
         json = eval(data);
-        $(".ajax-combobox-delivery").select2({
+        //oleg_orderformbundle_orderinfotype_slideDelivery
+        var targetid = id+"slideDelivery";
+        $(targetid).select2({
             //placeholder: "Slide Delivery",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -308,12 +360,14 @@ function getComboboxDelivery(urlCommon,ids) {
 
 //#############  return slides to  ##############//
 function getComboboxReturn(urlCommon,ids) {
-    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    //var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"return";
     $.ajax(url).success(function(data) {
         json = eval(data);
-        $(".ajax-combobox-return").select2({
+        //oleg_orderformbundle_orderinfotype_returnSlide
+        var targetid = id+"returnSlide";
+        $(targetid).select2({
             //placeholder: "Return Slides to",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -334,12 +388,14 @@ function getComboboxReturn(urlCommon,ids) {
 
 //#############  pathology service  ##############//
 function getComboboxPathService(urlCommon,ids) {
-    var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    //var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"pathservice";
     $.ajax(url).success(function(data) {
         json = eval(data);
-        $(".ajax-combobox-pathservice").select2({
+        //oleg_orderformbundle_orderinfotype_pathologyService
+        var targetid = id+"pathologyService";
+        $(targetid).select2({
             placeholder: "Pathology Service",
             width: combobox_width,
             dropdownAutoWidth: true,
@@ -355,8 +411,8 @@ function getComboboxPathService(urlCommon,ids) {
         });
 
         $.ajax(urlCommon+"userpathservice").success(function(data) {
-            //console.log(data['id']);
-            $('.ajax-combobox-pathservice').select2('val', data['id']);
+            console.log("userpathservice="+data['id']);
+            $(targetid).select2('val', data['id']);
         });
 
     });
@@ -373,11 +429,11 @@ function initComboboxJs(ids) {
 //    getComboboxDelivery(urlCommon,ids);
 //    getComboboxReturn(urlCommon,ids);
 
-    //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_1_stain_0_name
-    //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_1_scan_0_scanregion
+    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_1_stain_0_name
+    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_1_scan_0_scanregion
     //console.log("target id="+id);
     //var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    //var id= "#s2id_oleg_orderformbundle_orderinfotype_"+uid+"_";
+    //var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
 
     //$(id+"stain_0_name").select2('data', {id: 1, text: 'H&E'});
     //$(id+"scan_0_scanregion").select2('data', {id: 1, text: 'Entire Slide'});

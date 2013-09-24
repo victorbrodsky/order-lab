@@ -13,6 +13,8 @@
 
     {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
+
+    <input type="hidden" id="formtype" value="single" />
     
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form_part) }}>
     {{ form_start(form) }}
@@ -207,6 +209,5 @@
 
     {{ form_end(form) }}
     </form>
-              
-    
-{% endblock %} 
+
+{% endblock %}

@@ -952,7 +952,7 @@ function expandTextarea() {
 
 function initDatepicker() {
     //console.debug("init datepicker");
-    //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
+    //datepicker. caused minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js? add: date = date + "";
     if( $(".datepicker")[0] ) {
         $('.datepicker').datepicker();
     }

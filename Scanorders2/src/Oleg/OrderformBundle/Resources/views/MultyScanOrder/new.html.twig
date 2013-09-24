@@ -69,6 +69,9 @@
     {% endif %}
 
 
+    <input type="hidden" id="formtype" value="multi" />
+    <input type="hidden" id="formcicle" value="{{ type }}" />
+
     <form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
 
