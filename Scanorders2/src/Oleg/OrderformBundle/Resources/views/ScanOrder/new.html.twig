@@ -150,8 +150,8 @@
                   {{ formmacros.paperInput(form_part.paper,'new') }}
                   {{ formmacros.field(form_part.description) }}
                   {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
-                  {% if form_part.diffDiagnoses|length > 0 %}                  
-                        {{ formmacros.collectionInput(form_part, 'new', 'single', 0, 0, 0, 0) }}                 
+                  {% if form_part.diffDiagnoses|length > 0 %}
+                        {{ formmacros.collectionInput(form_part.diffDiagnoses, 'diffDiagnoses', 'new', 'single', 0, 0, 0, 0, 0, 0) }}
                   {% endif %}
                   
                   {#{{ formmacros.field(form_part.diseaseType) }}#}
@@ -174,7 +174,8 @@
                   {% endif %}
                   {#{{ formmacros.field(form_slide.relevantScans) }}#}
                   {% if form_slide.relevantScans|length > 0 %}
-                      {{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}
+                      {#{{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}#}
+                      {{ formmacros.collectionInput(form_slide.relevantScans, 'relevantScans', 'new', 'single', 0, 0, 0, 0, 0, 0) }}
                   {% endif %}
               </div>
 

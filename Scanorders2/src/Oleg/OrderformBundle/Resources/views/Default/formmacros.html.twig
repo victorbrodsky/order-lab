@@ -208,20 +208,20 @@
 {% endmacro %}
 
     
-    
-{% macro collectionInput(part, type, formtype, patientCount, procedureCount, accessionCount, partCount) %}
+{#####################  Collection Input Field  ########################}
+{% macro collectionInput(objectForm, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
 
-    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_diffDiagnoses_0_diffDiagnoses' %}
-    {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_diffDiagnoses_0_diffDiagnoses' %}
+    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
+    {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
 
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
             {#Different Diagnoses:#}
-            {% if part.diffDiagnoses|length > 0 %}
-                {{ form_label(part.diffDiagnoses[0].name) }}
+            {% if objectForm|length > 0 %}
+                {{ form_label(objectForm[0].name) }}
             {% else %}
-                {{ form_label(part.diffDiagnoses.name) }}
+                {{ form_label(objectForm.name) }}
             {% endif %}
             
             
@@ -229,34 +229,25 @@
         <div class="col-xs-6" align="left">
 
             <div style="float:left; width:100%">
-                {% for diffDiagnoses in part.diffDiagnoses %}
+                {% for diffDiagnoses in objectForm %}
                     {{ form_errors(diffDiagnoses.name) }}
                     <div class="fieldInputColl">
-                    {#{{ form_widget(diffDiagnoses.name) }}#}
 
                         <div class="input-group" id="{{ inputGroupId }}">
                             {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
                             {{ form_widget(diffDiagnoses.name) }}
-                            <span
-                                  id="{{ addBtnId }}"
-                                  onClick="addDiffdiagField('diffDiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')"
-                                  class="input-group-addon btn" type="button">
-                                  <i class="glyphicon glyphicon-plus-sign"></i>
-                            </span>
-                            {#<span#}
-                                {#onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')"#}
-                                {#class="input-group-addon btn" type="button">#}
-                                {#<i class="glyphicon glyphicon-minus-sign"></i>#}
-                            {#</span>#}
+                            {% if type == 'new' or type == 'edit' %}
+                                <span
+                                      id="{{ addBtnId }}"
+                                      onClick="addDiffdiagField('{{ objectName }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')"
+                                      class="input-group-addon btn" type="button">
+                                      <i class="glyphicon glyphicon-plus-sign"></i>
+                                </span>
+                            {% endif %}
                         </div>
 
                     </div>
                 {% endfor %}
-                {#{% if type == 'new' or type == 'edit' %}#}
-                    {#<div class="addDelBtnColl">#}
-                        {#<button id="{{ addBtnId }}" onClick="addDiffdiagField('diffdiagnoses', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}')" class="btn btn-sm btn-info" type="button">+</button>#}
-                    {#</div>#}
-                {#{% endif %}#}
             </div>
 
         </div>

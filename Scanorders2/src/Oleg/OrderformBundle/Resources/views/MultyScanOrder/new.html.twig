@@ -224,7 +224,7 @@
                                                 {{ formmacros.field(part.diagnosis) }}
                                                 {############ different diagnoses input collection #############}
                                                 {% if part.diffDiagnoses|length > 0 %}                                                     
-                                                    {{ formmacros.collectionInput(part, type, 'multi', patientCount, procedureCount, accessionCount, partCount) }}                                              
+                                                    {{ formmacros.collectionInput(part.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
                                                 {% endif %}
                                                 {{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
 
@@ -284,7 +284,8 @@
                                                                         {#{{ formmacros.field(slide.relevantScans) }}#}
                                                                         {############ relevantScans input collection #############}
                                                                         {% if slide.relevantScans|length > 0 %}
-                                                                            {{ formmacros.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
+                                                                            {#{{ formmacros.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}#}
+                                                                            {{ formmacros.collectionInput(slide.relevantScans, 'relevantScans', type, 'multi', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
                                                                         {% endif %}
 
                                                                     </div>

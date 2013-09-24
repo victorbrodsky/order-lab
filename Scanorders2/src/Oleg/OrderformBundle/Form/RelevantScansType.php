@@ -20,7 +20,7 @@ class RelevantScansType extends AbstractType
             'label' => 'Relevant Scanned Images:',
             'required' => false,
             //'attr' => array('class' => 'combobox combobox-width')
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'height: 34px;')
         ));
 
     }
