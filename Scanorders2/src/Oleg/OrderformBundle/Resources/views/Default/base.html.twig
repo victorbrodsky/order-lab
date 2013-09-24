@@ -77,7 +77,6 @@
         </div>
 
         <div class="order-content">
-            <div ng-app="OrdeInfoDates" ng-controller="Ctrl">
 
             {% for flashMessage in app.session.flashbag.get('notice') %}
                 <div class="flash-notice">
@@ -113,11 +112,6 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-
-
-        <!-- required libraries -->
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
-        <script src="//mgcrea.github.com/angular-strap/js/angular-strap.js"></script>
 
 
         {# Bootstrap Combobox #}

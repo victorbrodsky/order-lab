@@ -167,7 +167,7 @@ function getComboboxStain(urlCommon, ids) {
     var url = urlCommon+"stain";
 
     //s2id_oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_block_0_slide_0_stain_0_name
-    console.log("stain id="+id);
+    //console.log("stain id="+id);
 
     $.ajax(url).success(function(data) {
         json = eval(data);

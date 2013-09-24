@@ -66,7 +66,7 @@ $(document).ready(function() {
 
 });
 
-
+//add all element to listeners again, the same as in ready
 function initAdd() {
 
     expandTextarea();
@@ -76,10 +76,6 @@ function initAdd() {
 
     initDatepicker();
 
-    //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
-    if( $(".datepicker")[0] ) {
-        $('.datepicker').datepicker();
-    }
 }
 
 //confirm delete
@@ -94,8 +90,6 @@ function deleteItem(id) {
 
 //main input form from html button: add parent form (always type='multi')
 function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
-
-    console.log("")
 
     var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;  //+"_"+diffdiag+"_"+specstain+"_"+image;
 
@@ -130,6 +124,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     originOptionMulti(ids);
     primaryOrganOptionMulti(ids);
     initComboboxJs(ids);
+    initAdd();
 
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -154,10 +149,6 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     var uid = idsorig.join("_");
     //console.log("remove="+'#form_add_btn_'+name+'_'+uid);
     $('#form_add_btn_'+name+'_'+uid).remove();
-
-    //add all element to listeners again, the same as in ready
-    initAdd();
-
 }
 
 //add children forms triggered by parent form
@@ -194,7 +185,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
     originOptionMulti(ids);
     primaryOrganOptionMulti(ids);
     initComboboxJs(ids);
-    expandTextarea();
+    initAdd();
 }
 
 //input: current form ids
@@ -242,7 +233,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
 
 function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    console.log("name="+name+",patient="+patientid+ ",specimen="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
+    //console.log("name="+name+",patient="+patientid+ ",specimen="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
 
     var collectionHolder =  $('#form-prototype-data');
 
@@ -453,18 +444,22 @@ function originOption() {
     })
 
     $('#oleg_orderformbundle_parttype_diseaseType_0').on('click', function(e) {
+        //console.log("1 open!!!!!!!!!!!!!!");
         $(holder).collapse('show');
     });
     
     $('#oleg_orderformbundle_parttype_diseaseType_1').on('click', function(e) {
-        $(holder).collapse('hide');
+        //console.log("1 close?????????????????");
+        if( $(holder).is(':visible') ) {
+            $(holder).collapse('hide');
+        }
     });
 
-
-    
-
-    $('#oleg_orderformbundle_parttype_diseaseType_placeholder').on('click', function(e) {      
-        $(holder).collapse('hide');
+    $('#oleg_orderformbundle_parttype_diseaseType_placeholder').on('click', function(e) {
+        //console.log("1 close?????????????????");
+        if( $(holder).is(':visible') ) {
+            $(holder).collapse('hide');
+        }
     });
 
     var checked = $('form input[type=radio]:checked').val();
@@ -499,7 +494,7 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
     $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').change(function(e) {
 //    $('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
         var curid = $(this).attr('id');
-        console.log("click id="+curid);
+        //console.log("click id="+curid);
 
         //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
         var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
@@ -521,21 +516,25 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
 
         //var neoplasticId = "#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0";
         //var neoplasticIfChecked = $(neoplasticId).is(':checked');
-//        console.log("neoplasticId:"+neoplasticId+", neoplasticIfChecked="+neoplasticIfChecked);
+//       //console.log("neoplasticId:"+neoplasticId+", neoplasticIfChecked="+neoplasticIfChecked);
 
         if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0").is(':checked') ) {
-            console.log("toggle!!!!!!!!!!!!!!!!!");
+            //console.log("toggle!!!!!!!!!!!!!!!!!");
             $(holder).collapse('show');
         }
 
         if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_1").is(':checked') ) {
-            console.log("1 close?????????????????");
-            $(holder).collapse('hide'); //TODO: why does it open the origin radio boxes?
+            //console.log("1 close?????????????????");
+            if( $(holder).is(':visible') ) {
+                $(holder).collapse('hide');
+            }
         }
 
-        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_placeholder").is(':checked') ) {
-            console.log("placeholder close?????????????????");
-            $(holder).collapse('hide');
+        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_2").is(':checked') ) {
+            //console.log("placeholder close?????????????????");
+            if( $(holder).is(':visible') ) {
+                $(holder).collapse('hide');
+            }
         }
 
     });
@@ -585,12 +584,12 @@ function checkValidate() {
 
 }
 
-////////////////// different diagnoses ////////////////////////
+////////////////// different diagnoses (uses as generic collection field) ////////////////////////
 
 //By html form: add different diagnoses input field
 function addDiffdiagField( name, type, patient, specimen, accession, part, block, slide ) {
 
-   console.log("Add: name="+name+",type="+type+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
+   //console.log("Add: name="+name+",type="+type+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
 
     //var prefix = "oleg_orderformbundle_orderinfotype_";
     var prefix = "inputGroupId_";
@@ -618,12 +617,12 @@ function addDiffdiagField( name, type, patient, specimen, accession, part, block
 
     //ger diffdiag count from id
     var partialId = prefix + partialUid + "_"+name;
-    console.log("partialId="+partialId);
+    //console.log("partialId="+partialId);
     //inputGroupId_patient_0_specimen_0_accession_0_part_1_block_0_slide_0_diffDiagnoses
     //inputGroupId_patient_0_specimen_0_accession_0_part_0_block_1_slide_0_diffDiagnoses_0_diffDiagnoses
     
     var elements = $('[id^='+partialId+']');
-    console.log("elements length="+elements.length);
+    //console.log("elements length="+elements.length);
 
     diffdiagInt = elements.length;
     //console.log("diffdiagInt="+diffdiagInt);
@@ -635,14 +634,14 @@ function addDiffdiagField( name, type, patient, specimen, accession, part, block
 
     //add to last input field
     var addto = elements[elements.length-1].id
-    console.log("form addto="+addto);
+    //console.log("form addto="+addto);
     $("#"+addto).after(newForm);
 
     //add '-' button for the first input field if it is not existed yet
     if( diffdiagInt == 1 ) {
         //id of the input field: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_4_name
         var firstPartialId = fieldPrefix + "_" + typeuid +  name + "_";
-        console.log("firstPartialId="+firstPartialId);
+        //console.log("firstPartialId="+firstPartialId);
         var partialInputElements = $('[id^='+firstPartialId+']');
         var addId = partialInputElements[0].id;
 
@@ -657,9 +656,9 @@ function addDiffdiagField( name, type, patient, specimen, accession, part, block
     //get array of all + buttons and remove the first one
     //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_3_diffDiagnoses
     var lastAddBtnPartialId = "addbtn_" + partialUid + "_" + name + "_";
-    console.log("lastAddBtnPartialId="+lastAddBtnPartialId);
+    //console.log("lastAddBtnPartialId="+lastAddBtnPartialId);
     var lastAddBtnPartialElement = $('[id^='+lastAddBtnPartialId+']');
-    console.log("remove first + remid="+lastAddBtnPartialElement[0].id);
+   //console.log("remove first + remid="+lastAddBtnPartialElement[0].id);
     if( lastAddBtnPartialElement.id != "undefined" ) {
         lastAddBtnPartialElement[0].remove();
     }
@@ -680,7 +679,7 @@ function addDiffdiagFieldFirstTime( name, ids ) {
     var currFiledCollId = 0;
     var noDelBtn = true;
 
-    console.log("name="+name+",ids="+ids+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
+   //console.log("name="+name+",ids="+ids+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
 
     if( name == "part" ) {
         var ident = "diffDiagnoses";
@@ -719,13 +718,13 @@ function addDiffdiagFieldFirstTime( name, ids ) {
     //get addto dimamically: get parent and attach input to this parent
     //id=oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_2_diagnosis
     //var prevId = 'oleg_orderformbundle_orderinfotype_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_diagnosis'; //TODO: add block, slide
-    console.log("prevId="+prevId);
+   //console.log("prevId="+prevId);
 
     //get parent
     var parent = $('#'+prevId).parent();
-    console.log( "parent=" + parent.attr('class') );
+   //console.log( "parent=" + parent.attr('class') );
     var grandParent = parent.parent();
-    console.log( "grandParent="+grandParent.attr('class') );
+   //console.log( "grandParent="+grandParent.attr('class') );
 
      //$('#'+addto).after(newForm);
     //$('#'+addto).append(newForm);
@@ -765,7 +764,7 @@ function getDiffdiagField( name, type, patient, specimen, accession, part, block
     }
 
     var inputGroupId = 'inputGroupId_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+ending;
-    console.log("inputGroupId="+inputGroupId);
+   //console.log("inputGroupId="+inputGroupId);
 
     var header = '<div class="input-group" id="'+inputGroupId+'">';
 
@@ -811,12 +810,15 @@ function delDiffdiagField( name, type, patient, specimen, accession, part, block
         if( name == "diffDiagnoses" ) {
             fieldPrefix = "oleg_orderformbundle_parttype";
         }
+        if( name == "relevantScans" ) {
+            fieldPrefix = "oleg_orderformbundle_slidetype";
+        }
         typeuid = '';
     }
    
     //ger diffdiag count from id
     var partialId = prefix+fullUid+"_"+name+"_";
-    console.log("partialId="+partialId);
+   //console.log("partialId="+partialId);
     
     var elements = $('[id^='+partialId+']');
     //console.log("elements length="+elements.length);
@@ -833,7 +835,7 @@ function delDiffdiagField( name, type, patient, specimen, accession, part, block
     //remove id: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_name
     //inputGroupId_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_4_diffDiagnoses
     var delId = partialId + diffdiag + '_' + name;
-    console.log("inputGroupId delId="+delId);
+   //console.log("inputGroupId delId="+delId);
 
     //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_name
     var textId = fieldPrefix + "_" + typeuid + name + "_" + diffdiag + "_name";  //TODO: use variable instead of "name"
@@ -875,7 +877,7 @@ function delDiffdiagField( name, type, patient, specimen, accession, part, block
         var lastAddBtnId = "addbtn_"+fullUid+"_"+name+"_"+currFiledCollId+'_'+name;
         if( $("#"+lastAddBtnId).length > 0 ) {
             //don't add because it already exists
-            console.log("don't add because it already exists, length="+$("#"+lastAddBtnId).length);
+           //console.log("don't add because it already exists, length="+$("#"+lastAddBtnId).length);
         } else {
             //add + button
             if( diffdiagInt == 1 ) {
@@ -884,7 +886,7 @@ function delDiffdiagField( name, type, patient, specimen, accession, part, block
                 var attToId = "delbtn_" + fullUid + "_" + name + "_" + currFiledCollId + '_' + name;
             }
             var addBtn = getAddBtn(name, type, patient, specimen, accession, part, block, slide, currFiledCollId);
-            console.log("add + button: attToId="+attToId);
+           //console.log("add + button: attToId="+attToId);
             $("#"+attToId).after(addBtn);
         }
 
@@ -910,7 +912,7 @@ function remDelBtnDiffDiag_TODEL(ident, type, patient, specimen, accession, part
     //if( collInt == 0 ) {
         //remove - button
         var delbtnId = 'delbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident+'_'+collInt+'_'+ident;
-        console.log("delbtnId="+delbtnId);
+       //console.log("delbtnId="+delbtnId);
         $('#'+delbtnId).remove();
     //}
 }
@@ -949,25 +951,13 @@ function expandTextarea() {
 
 
 function initDatepicker() {
-    console.log("init datepicker");
-    angular.module('OrdeInfoDates', [])
-        .controller('Ctrl', ['$scope', function ($scope) {
-
-        }])
-        .directive('bDatepicker', function () {
-            return {
-                restrict: 'A',
-                link: function (scope, el, attr) {
-                    el.datepicker();
-                    var component = el.siblings('[data-toggle="datepicker"]');
-                    if (component.length) {
-                        component.on('click', function () {
-                            el.trigger('focus');
-                        });
-                    }
-                }
-            };
-        }
-    );
-
+    //console.debug("init datepicker");
+    //datepicker. TODO: cause minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js?
+    if( $(".datepicker")[0] ) {
+        $('.datepicker').datepicker();
+    }
+    $(".input-group-addon").click(function() {
+        $(this).siblings('.datepicker').datepicker('show')
+    });
 }
+

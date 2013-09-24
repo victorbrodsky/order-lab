@@ -9,7 +9,7 @@
 //use for new: add listeners for disease type holder for Single Form
 function primaryOrganOption() {
 
-    console.log("listen for metastatic");
+    //console.log("listen for metastatic");
 
     var holder = "#primaryOrgan";
 
@@ -18,19 +18,23 @@ function primaryOrganOption() {
     })
 
     $('#oleg_orderformbundle_parttype_origin_0').on('click', function(e) {
-        console.log("0 close?????????????????");
-        $(holder).collapse('hide');
+        //console.log("0 close?????????????????");
+        if( $(holder).is(':visible') ) {
+            $(holder).collapse('hide');
+        }
     });
 
     $('#oleg_orderformbundle_parttype_origin_1').on('click', function(e) {
-        console.log("1 toggle!!!!!!!!!!!!!!!!!");
+        //console.log("1 toggle!!!!!!!!!!!!!!!!!");
         $(holder).collapse('show');
     });
 
-    $('#oleg_orderformbundle_parttype_origin_placeholder').on('click', function(e) {
-        console.log("placeholder close?????????????????");
-        $(holder).collapse('hide');
-    });
+//    $('#oleg_orderformbundle_parttype_origin_placeholder').on('click', function(e) {
+//        console.log("placeholder close?????????????????");
+//        if( $(holder).is(':visible') ) {
+//            $(holder).collapse('hide');
+//        }
+//    });
 
     var checked = $('form input[type=radio]:checked').val();
     if( checked == 1 ) {
@@ -53,7 +57,7 @@ function primaryOrganOptionMulti( ids ) { //patient, specimen, accession, part )
     $('#oleg_orderformbundle_orderinfotype_'+uid+'_origin').change(function(e) {
         var curid = $(this).attr('id');
         //id: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_1_part_0_origin
-        console.log("click id="+curid);
+        //console.log("click id="+curid);
 
         var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
         var arr2 = arr1[1].split("_");
@@ -76,20 +80,24 @@ function primaryOrganOptionMulti( ids ) { //patient, specimen, accession, part )
 
         e.preventDefault();
 
+        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_origin_0").is(':checked') ) {
+            //console.log("1 close?????????????????");
+            if( $(originElement).is(':visible') ) {
+                //console.log("1 close?????????????????");
+                $(originElement).collapse('hide');
+            }
+        }
+
         if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_origin_1").is(':checked') ) {
-            console.log("toggle id="+holder);
+            //console.log("toggle id="+holder);
             $(originElement).collapse('show');
         }
 
-        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_origin_0").is(':checked') ) {
-            console.log("1 close?????????????????");
-            $(originElement).collapse('hide');
-        }
 
-        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_origin_placeholder").is(':checked') ) {
-            console.log("placeholder close?????????????????");
-            $(originElement).collapse('hide');
-        }
+//        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_origin_placeholder").is(':checked') ) {
+//            console.log("placeholder close?????????????????");
+//            $(originElement).collapse('hide');
+//        }
 
     });
 
@@ -109,7 +117,7 @@ function checkValidatePrimaryOrgan() {
 
 
             if($('#'+curid).is(':checked')) {
-                console.log("Metastatic checked! add id="+curid);
+                //console.log("Metastatic checked! add id="+curid);
 
                 //1) oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
                 var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
@@ -127,7 +135,7 @@ function checkValidatePrimaryOrgan() {
                     //use parent of this symfony's origin id=primaryOrgan_option_multi_patient_0_specimen_0_accession_0_part_0_primaryOrgan
                     var holder = '#oleg_orderformbundle_orderinfotype_'+uid+'_primaryOrgan';
                     var originElement = $(holder).parent().parent().parent().parent();
-                    console.log("loop validate toggle="+holder);
+                    //console.log("loop validate toggle="+holder);
                     $(originElement).collapse('show');
                 }
             }

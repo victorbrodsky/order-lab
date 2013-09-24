@@ -52,8 +52,8 @@ class PatientType extends AbstractType
         $builder->add( 'sex', 'choice', array(
                 'label'=>'Sex:', 
                 'max_length'=>20,
-                'required'=>false,
-                'choices' => array("Male"=>"Male", "Female"=>"Female"),
+                'required'=>true,
+                'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
                 'multiple' => false,
                 'expanded' => true,
                 'attr' => array('class' => 'horizontal_type')
@@ -65,8 +65,7 @@ class PatientType extends AbstractType
                 'widget' => 'single_text',
                 'required'=>false,
                 'format' => 'MM-dd-yyyy',
-//                'attr' => array('class' => 'datepicker form-control', 'b-datepicker'=>'', 'ng-model'=>'date'),
-                'attr' => array('class' => 'datepicker form-control', 'b-datepicker'=>'', 'ng-model'=>'date', 'style'=>'margin-top: 0;'),
+                'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
         ));
         
 //        $builder->add( 'clinicalHistory', 'textarea', array(

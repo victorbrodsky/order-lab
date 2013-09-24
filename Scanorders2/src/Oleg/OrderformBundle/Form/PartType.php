@@ -110,8 +110,8 @@ class PartType extends AbstractType
 //        ));
         $builder->add( 'diseaseType', 'choice', array(
             'label'=>'Type of Disease:',
-            'required'=>false,
-            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic"), //, "None"=>"None"),
+            //'required'=>false,
+            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type'), //'required' => '0', 'disabled'
@@ -120,7 +120,7 @@ class PartType extends AbstractType
 
         $builder->add( 'origin', 'choice', array(
             'label'=>'Origin:',
-            'required'=>false,
+            //'required'=>false,
             'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
             'multiple' => false,
             'expanded' => true,
