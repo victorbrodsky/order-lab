@@ -115,7 +115,10 @@ class MultyScanOrderController extends Controller {
      */
     public function multyCreateAction(Request $request)
     { 
-        
+
+//        echo "multi new controller !!!! <br>";
+//        exit();
+
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig'
 
@@ -387,7 +390,16 @@ if(0){
         $em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
-        $username = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( 1 ) {
+            $username = $user->getUsername();
+            $email = $user->getEmail();
+        } else {
+            $username = $user;
+            $email = $this->get('security.context')->getToken()->getAttribute('email');
+        }
+
         $entity->setProvider($username);
 
         $patient = new Patient();
@@ -458,7 +470,7 @@ if(0){
 
         //get pathology service for this user by email
         $helper = new FormHelper();
-        $email = $this->get('security.context')->getToken()->getAttribute('email');
+        //$email = $this->get('security.context')->getToken()->getAttribute('email');
         $service = $helper->getUserPathology($email);
 //        $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName( $service );
 //        $entity->setPathologyService($pathService);

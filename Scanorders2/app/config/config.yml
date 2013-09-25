@@ -5,12 +5,6 @@ imports:
 #    - { resource: "@DapsLdapBundle/Resources/config/services.yml"}
 #    - { resource: "@OlegOrderformBundle/Resources/config/fr3dlap_service.yml" }
 
-#fos user bundle
-#fos_user:
-#    db_driver: orm
-#    firewall_name: main
-#    user_class: Oleg\OrderformBundle\Entity\User
-
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
@@ -130,3 +124,4 @@ knp_paginator:
     template:
         pagination: KnpPaginatorBundle:Pagination:sliding.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+

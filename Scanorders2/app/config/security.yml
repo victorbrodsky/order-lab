@@ -1,14 +1,13 @@
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+#        Symfony\Component\Security\Core\User\User: plaintext
 #        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
-        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
+#        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
 #        Daps\LdapBundle\Security\User\LdapUser: plaintext
-#        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext
-#        FOS\UserBundle\Model\UserInterface: sha512
+        FOS\UserBundle\Model\UserInterface: sha512
+#        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext #Active directory does not support encrypted password yet
 
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
         ROLE_ADMIN:       [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
@@ -20,11 +19,19 @@ security:
 #            id: daps_ldap_user_provider   
 #        ldap:
 #            id: imag_ldap.security.user.provider
-#        my_active_directory_provider:
-#            id: ztec.security.active.directory.user.provider
 #        fos_userbundle:
 #            id: fos_user.user_provider.username
-            
+#        my_active_directory_provider :
+#                  id: ztec.security.active.directory.user.provider
+        chain_provider:
+            chain:
+                providers: [fos_userbundle, fr3d_ldapbundle]
+        fr3d_ldapbundle:
+            id: fr3d_ldap.security.user.provider
+        fos_userbundle:
+            id: fos_user.user_provider.username
+#            id: fos_user.user_manager
+
         in_memory:
             memory:
                 users:
@@ -32,9 +39,34 @@ security:
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
-        dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+       main:    #FR3DLdap
+             pattern:    ^/
+             fr3d_ldap:  ~
+             form_login:
+                 always_use_default_target_path: false
+                 provider:    chain_provider
+#                 default_target_path: /
+                 use_referer: true
+             logout:     true
+             anonymous:  true
+
+    access_control:
+     - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/admin/, role: ROLE_ADMIN }
+
+#    firewalls:
+#       #FOSUser
+#       main:
+#          pattern:    ^/
+#          form_login:
+#            provider: fos_userbundle
+#            csrf_provider: form.csrf_provider
+#          logout:       true
+#          anonymous:    true
+
+#        dev:
+#            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+#            security: false
 
 #        login:
 #            pattern:  ^/demo/secured/login$
@@ -42,9 +74,9 @@ security:
 #            pattern:  ^/login$
 #            security: true           
 
-        login_firewall:
-            pattern:    ^/login$
-            anonymous:  ~          
+#        login_firewall:
+#            pattern:    ^/login$
+#            anonymous:  ~
 
         #Oleg: custom auth provider
 #        wsse_secured:
@@ -53,22 +85,28 @@ security:
 #            form_login: 
 #                provider: webservice
             
-        secured_area:
+#        secured_area:
+#            pattern:    ^/
+#            form_login:
+#                check_path: login_check
+#                login_path: login
+
+#           (ztec ldap active directory)
 #            active_directory: #Sames parameters as form_login
 #                check_path: login_check
 #                login_path: login
           
-            pattern:    ^/
-            anonymous: ~           
-#            form-login-ldap: true             
+#            pattern:    ^/
+#            anonymous: ~
+#            form-login-ldap: true
 #            form_login:
 #              provider: webservice
 #                login_path:  login
 #                check_path:  login_check
 ##                always_use_default_target_path: true           
-            logout:
-                path:   logout
-                target: /
+#            logout:
+#                path:   logout
+#                target: /
 
 #        secured_area:
 #            pattern:    ^/demo/secured/

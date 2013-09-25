@@ -12,7 +12,7 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
-//$loader->add( 'FR3D', __DIR__.'/../vendor/bundles' );
+$loader->add( 'FR3D', __DIR__.'/../vendor/bundles' );
 
 //autoload Aperio authentication
 $loader->add( 'Aperio_' , __DIR__.'/../vendor/aperio/lib' );

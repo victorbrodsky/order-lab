@@ -53,9 +53,9 @@ class UtilController extends Controller {
             FROM OlegOrderformBundle:ProcedureList proc WHERE proc.type = :type'
         )->setParameter('type', 'default');
 
-        $empty = array("id"=>0,"text"=>"");
+        //$empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
-        array_unshift($output, $empty);
+        //array_unshift($output, $empty);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -76,9 +76,9 @@ class UtilController extends Controller {
             FROM OlegOrderformBundle:OrganList proc WHERE proc.type = :type'
         )->setParameter('type', 'default');
 
-        $empty = array("id"=>0,"text"=>"");
+        //$empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
-        array_unshift($output, $empty);
+        //array_unshift($output, $empty);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -99,9 +99,9 @@ class UtilController extends Controller {
             FROM OlegOrderformBundle:PathServiceList proc WHERE proc.type = :type'
         )->setParameter('type', 'default');
 
-        $empty = array("id"=>0,"text"=>"");
+        //$empty = array("id"=>0,"text"=>"");
         $output = $query->getResult();
-        array_unshift($output, $empty);
+        //array_unshift($output, $empty);
 
         //echo "count=".count($output)."<br>";
         //print_r($output);

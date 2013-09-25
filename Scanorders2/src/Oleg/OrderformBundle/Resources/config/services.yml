@@ -1,5 +1,55 @@
 parameters:
-    webservice_user_provider.class: Oleg\OrderformBundle\Security\User\WebserviceUserProvider
+#    webservice_user_provider.class: Oleg\OrderformBundle\Security\User\WebserviceUserProvider
+
+#    ztec.security.active_directory.settings:
+#                account_suffix : a.wcmc-ad.net  #riper.fr # without the @ at the beginning
+#                base_dn : dc=a,dc=wcmc-ad,dc=net  #DC=RIPER,DC=FR #The DN of the domain
+#                domain_controllers : [ a.wcmc-ad.net ] #[ baudrive.kim.riper.fr ] #Servers to use for ldap connexion (Random)
+#                admin_username: svc_aperio_spectrum #Null to use the userConnexion
+#                admin_password: Aperi0,123  #Null to use the userConnexion
+#                real_primarygroup : true #For Linux compatibility.
+#                use_ssl : false #Set it true need configuration of the server to be usefull
+#                use_tls : false #Set it true need configuration of the server to be usefull
+#                recursive_grouproles: false #recursive group roles
+
+#                username_validation_pattern: /^[a-z0-9-.]+$/i #Regex that check the final username value (extracted from patterns below). Must be complient with you Active directory acceptance.
+#                username_patterns: #username is extracted from the string the user put into the login form
+#                  - /([^@]*)@a.wcmc-ad.net/i  # like toto@riper.fr
+#                  - /wcmc-ad\\(.*)/i #like RIPER\toto
+#                  - /wcmc-ad.net\\(.*)/i #like RIEPER.FR\toto
+#                  - /(.*)/i #like toto
+
+fr3d_ldap:
+    driver:
+       host:          a.wcmc-ad.net
+       username:      svc_aperio_spectrum     # Optional
+       password:      Aperi0,123              # Optional
+       accountDomainName: a.wcmc-ad.net
+#       accountDomainNameShort: LOCAL
+#       bindRequiresDn:      true   # Optional
+#       baseDn:              ou=users, dc=host, dc=foo   # Optional
+#       accountFilterFormat: (&(uid=%s)) # Optional. sprintf format %s will be the username
+#       optReferrals:        false  # Optional
+#       useSsl:              true   # Enable SSL negotiation. Optional
+#       useStartTls:         true   # Enable TLS negotiation. Optional
+    user:
+            baseDn: dc=a,dc=wcmc-ad,dc=net
+            filter: (&(ObjectClass=Person))
+            attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
+              - { ldap_attr: entryUUID,   user_method: setUsername }
+              - { ldap_attr: cn,   user_method: setName }
+#               - { ldap_attr: uid,  user_method: setUsername } # Default
+#               - { ldap_attr: cn,   user_method: setName }     # Optional
+    #           - { ldap_attr: ...,  user_method: ... }         # Optional
+    #   service:
+    #       user_manager: fos_user.user_manager          # Overrides default user manager
+    #       ldap_manager: fr3d_ldap.ldap_manager.default # Overrides default ldap manager
+
+#fos user bundle
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Oleg\OrderformBundle\Entity\User
 
 services:
 
@@ -21,3 +71,7 @@ services:
 #    wsse.security.authentication.listener:
 #        class:  Oleg\OrderformBundle\Security\Firewall\WsseListener
 #        arguments: ["@security.context", "@security.authentication.manager"]
+
+
+
+

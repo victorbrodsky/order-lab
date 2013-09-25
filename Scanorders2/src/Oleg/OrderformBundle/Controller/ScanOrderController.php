@@ -456,12 +456,21 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
-        $username = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( 1 ) {
+            $username = $user->getUsername();
+            $email = $user->getEmail();
+        } else {
+            $username = $user;
+            $email = $this->get('security.context')->getToken()->getAttribute('email');
+        }
+        //echo "email=".$email.", username=".$username."<br>";
+
         $entity->setProvider($username);
 
         //get pathology service for this user by email
         $helper = new FormHelper();
-        $email = $this->get('security.context')->getToken()->getAttribute('email');
         $service = $helper->getUserPathology($email);
         //$pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName( $service );
         //$entity->setPathologyService($pathService);

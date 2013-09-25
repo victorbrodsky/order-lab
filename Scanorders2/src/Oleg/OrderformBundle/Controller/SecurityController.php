@@ -34,6 +34,7 @@ class SecurityController extends Controller
     {
 //        echo "login controller";
 //        exit();
+
         $request = $this->getRequest();
         $session = $request->getSession();
 
@@ -68,7 +69,10 @@ class SecurityController extends Controller
      * @Template("OlegOrderformBundle:ScanOrder:new_orig.html.twig")
      */
     public function loginCheckAction( Request $request )
-    {                         
+    {
+//        echo "login check";
+//        exit();
+
         //Aperio authentication         
         $loginName = $this->get('request')->request->get('_username');
         $password = $this->get('request')->request->get('_password');
@@ -136,8 +140,8 @@ class SecurityController extends Controller
         return $this->redirect($this->generateUrl('login'));
     }       
     
-    private function AperioAuth( $loginName, $password ) {    
-        
+    private function AperioAuth( $loginName, $password ) {
+
         if( $loginName == "admin" && $password == "@dmin123") {
             $AuthResult = array(
                 'UserId' => 11,
