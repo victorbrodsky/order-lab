@@ -26,10 +26,11 @@ security:
         chain_provider:
             chain:
                 providers: [fos_userbundle, fr3d_ldapbundle]
-        fr3d_ldapbundle:
-            id: fr3d_ldap.security.user.provider
         fos_userbundle:
             id: fos_user.user_provider.username
+        fr3d_ldapbundle:
+            id: fr3d_ldap.security.user.provider
+
 #            id: fos_user.user_manager
 
         in_memory:
@@ -52,7 +53,7 @@ security:
 
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/admin/, role: ROLE_ADMIN }
+#     - { path: ^/admin/, role: ROLE_ADMIN }
 
 #    firewalls:
 #       #FOSUser

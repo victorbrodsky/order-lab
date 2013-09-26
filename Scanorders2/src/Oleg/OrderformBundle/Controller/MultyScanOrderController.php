@@ -346,7 +346,9 @@ if(0){
 
             if (isset($_POST['btnSubmit'])) {
                 //email
-                $email = $this->get('security.context')->getToken()->getAttribute('email');
+                //$email = $this->get('security.context')->getToken()->getAttribute('email');
+                $user = $this->get('security.context')->getToken()->getUser();
+                $email = $user->getEmail();
 
                 $emailUtil = new EmailUtil();
                 $emailUtil->sendEmail( $email, $entity, null );

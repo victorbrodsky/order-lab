@@ -22,7 +22,7 @@ parameters:
 fr3d_ldap:
     driver:
        host:          a.wcmc-ad.net
-       username:      svc_aperio_spectrum     # Optional
+       username:      svc_aperio_spectrum@a.wcmc-ad.net     # Optional
        password:      Aperi0,123              # Optional
        accountDomainName: a.wcmc-ad.net
 #       accountDomainNameShort: LOCAL
@@ -34,11 +34,17 @@ fr3d_ldap:
 #       useStartTls:         true   # Enable TLS negotiation. Optional
     user:
             baseDn: dc=a,dc=wcmc-ad,dc=net
-            filter: (&(ObjectClass=Person))
+            filter: (&(ObjectClass=user))
             attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-              - { ldap_attr: entryUUID,   user_method: setUsername }
-              - { ldap_attr: cn,   user_method: setName }
-#               - { ldap_attr: uid,  user_method: setUsername } # Default
+                - { ldap_attr: cn,   user_method: setUsername }
+                - { ldap_attr: mail,   user_method: setEmail }
+#                - { ldap_attr: telephoneNumber,   user_method: setPhone }
+#                - { ldap_attr: objectGUID,   user_method: setName }
+#                - { ldap_attr: dn,   user_method: setDn }
+#                - { ldap_attr: uid,  user_method: setName }
+
+#              - { ldap_attr: cn,   user_method: setUsername }
+#               - { ldap_attr: uid,  user_method: setName } # Default
 #               - { ldap_attr: cn,   user_method: setName }     # Optional
     #           - { ldap_attr: ...,  user_method: ... }         # Optional
     #   service:
@@ -50,6 +56,8 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Oleg\OrderformBundle\Entity\User
+#    group:
+#        group_class: Oleg\OrderformBundle\Entity\Group
 
 services:
 

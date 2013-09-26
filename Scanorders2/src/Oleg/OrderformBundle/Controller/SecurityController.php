@@ -70,8 +70,6 @@ class SecurityController extends Controller
      */
     public function loginCheckAction( Request $request )
     {
-//        echo "login check";
-//        exit();
 
         //Aperio authentication         
         $loginName = $this->get('request')->request->get('_username');
@@ -141,6 +139,9 @@ class SecurityController extends Controller
     }       
     
     private function AperioAuth( $loginName, $password ) {
+
+        echo "Aperio Auth !!!";
+        exit();
 
         if( $loginName == "admin" && $password == "@dmin123") {
             $AuthResult = array(

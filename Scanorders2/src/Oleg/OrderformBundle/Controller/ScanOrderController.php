@@ -97,7 +97,8 @@ class ScanOrderController extends Controller {
         $showprovider = 'false';
         if( $service && $service == 1  ) {
             $helper = new FormHelper();
-            $email = $this->get('security.context')->getToken()->getAttribute('email');
+            //$email = $this->get('security.context')->getToken()->getAttribute('email');
+            $email = $user->getEmail();
             $userService = $helper->getUserPathology($email);
 
             if( !$userService ) {
@@ -414,8 +415,9 @@ class ScanOrderController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            
-            $email = $this->get('security.context')->getToken()->getAttribute('email');
+            //$email = $this->get('security.context')->getToken()->getAttribute('email');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $email = $user->getEmail();
 
             $emailUtil = new EmailUtil();
             $emailUtil->sendEmail( $email, $entity, null );
@@ -568,7 +570,7 @@ class ScanOrderController extends Controller {
     /**
      * Displays a form to edit an existing OrderInfo entity.
      *
-     * @Route("/{id}/edit", name="scanorder_edit")
+     * @Route("/{id}/edit", name="scanorder_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -600,7 +602,7 @@ class ScanOrderController extends Controller {
     /**
      * Edits an existing OrderInfo entity.
      *
-     * @Route("/{id}", name="scanorder_update")
+     * @Route("/{id}", name="scanorder_update", requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
      */
@@ -639,7 +641,7 @@ class ScanOrderController extends Controller {
     /**
      * Deletes a OrderInfo entity.
      *
-     * @Route("/{id}", name="scanorder_delete")
+     * @Route("/{id}", name="scanorder_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -676,7 +678,7 @@ class ScanOrderController extends Controller {
     }
     
     /**
-     * @Route("/{id}/{status}/status", name="scanorder_status")
+     * @Route("/{id}/{status}/status", name="scanorder_status", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */

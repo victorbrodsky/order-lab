@@ -34,9 +34,9 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         return $this->render('OlegOrderformBundle:Admin:index.html.twig');
     }
@@ -52,9 +52,9 @@ class AdminController extends Controller
     public function generateAllAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
@@ -91,9 +91,9 @@ class AdminController extends Controller
     public function generateStainAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $count = $this->generateStains();
         if( $count >= 0 ) {
@@ -128,9 +128,9 @@ class AdminController extends Controller
     public function generateOrganAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $count = $this->generateOrgans();
 
@@ -167,9 +167,9 @@ class AdminController extends Controller
     public function generateProcedureAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
 //        $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegOrderformBundle:ProcedureList')->findAll();
@@ -233,9 +233,9 @@ class AdminController extends Controller
     public function generatePathServiceAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $count = $this->generateStains();
         if( $count >= 0 ) {

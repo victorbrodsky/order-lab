@@ -62,7 +62,7 @@
              
 <body>
 
-    <div class="container page-content">
+    <div class="container page-content col-xs-12">
 
 
         <div class="header">
@@ -86,7 +86,7 @@
 
             {% block content %}{% endblock %}
 
-            </div>
+            {#</div>#}
         </div>
 
         <div class="footer">
@@ -97,7 +97,6 @@
                 <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
             {% endblock %}
         </div>
-
 
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/*'
