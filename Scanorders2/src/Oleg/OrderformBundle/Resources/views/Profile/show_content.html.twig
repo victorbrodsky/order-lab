@@ -1,0 +1,34 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+
+<div class="fos_user_user_show">
+    <p>{{ 'profile.show.username'|trans }}: {{ user.username }}</p>
+    <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
+    {#<p>Groups:#}
+        {#{% for group in user.groups %}#}
+             {#<p>{{ group }}</p>#}
+        {#{% endfor %}#}
+    {#</p>#}
+
+    <p>
+    <h3 class="text-info"><p>Roles:</h3>
+        {% for role in user.roles %}
+    <p>{{ role }}</p>
+    {% endfor %}
+    </p>
+
+    <p>
+    <h3 class="text-info"><p>Pathology Services:</h3>
+        {% for pathologyService in user.pathologyServices %}
+    <p>{{ pathologyService }}</p>
+    {% endfor %}
+    </p>
+
+    <a class="btn btn-success" href="{{ path('fos_user_profile_edit') }}">Edit</a>
+
+</div>
+
+{% endblock %}

@@ -67,6 +67,25 @@ class User extends BaseUser
      */
     protected $phone;
 
+    /**
+     * @ORM\Column(name="firstName", type="string", nullable=true)
+     */
+    protected $firstName;
+
+    /**
+     * @ORM\Column(name="lastName", type="string", nullable=true)
+     */
+    protected $lastName;
+
+    /**
+     * @ORM\Column(name="title", type="string", nullable=true)
+     */
+    protected $title;
+
+    /**
+     * @ORM\Column(name="displayName", type="string", nullable=true)
+     */
+    protected $displayName;
     
 //    /**
 //     * Ldap Object Distinguished Name
@@ -117,22 +136,85 @@ class User extends BaseUser
 //        return $this->dn;
 //    }
 
-//    /**
-//     * @param mixed $phone
-//     */
-//    public function setPhone($phone)
-//    {
-//        $this->phone = $phone;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getPhone()
-//    {
-//        return $this->phone;
-//    }
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $displayName
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
 
 
 }

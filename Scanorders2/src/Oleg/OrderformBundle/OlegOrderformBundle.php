@@ -16,5 +16,10 @@ class OlegOrderformBundle extends Bundle
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new WsseFactory());
     }
+
+    public function getParent()
+    {
+        return 'FOSUserBundle';
+    }
     
 }

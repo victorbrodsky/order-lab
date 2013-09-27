@@ -28,8 +28,19 @@
 {#            {% if app.user %}#}
 {#            {% if user and user['username'] %}#}
             {% if is_granted('ROLE_USER') %}
-                <li id="5" class="divider-vertical order1"><a href="{{ path('logout') }}">Logout | {{ app.security.getToken().getUser() }}</a></li>
+                {#<li id="5" class="divider-vertical order1"><a href="{{ path('logout') }}">Logout | {{ app.security.getToken().getUser() }}</a></li>#}
+
+                <li id="5" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ app.security.getToken().getUser() }}<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>Logged in as {{ app.security.getToken().getUser() }}</li>
+                        <li><a href="{{ path('fos_user_profile_show') }}">My Profile</a></li>
+                        <li><a href="{{ path('logout') }}">Log Out</a></li>
+                    </ul>
+                </li>
+
             {% else %}
+                {#in theory, we should not see this#}
                 <li id="5" class="divider-vertical order1"><a href="{{ path('login') }}">Login</a></li>
             {% endif %}
                 
