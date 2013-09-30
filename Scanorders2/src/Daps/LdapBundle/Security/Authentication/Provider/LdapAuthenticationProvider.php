@@ -61,8 +61,8 @@ class LdapAuthenticationProvider extends UserAuthenticationProvider
      */
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
-        echo "LDAP check auth";
-        exit();
+        //echo "LDAP check auth";
+        //exit();
         if ("" === ($presentedPassword = $token->getCredentials())) {
             throw new BadCredentialsException('The presented password cannot be empty.');
         }

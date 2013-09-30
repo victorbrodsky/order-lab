@@ -140,8 +140,8 @@ class SecurityController extends Controller
     
     private function AperioAuth( $loginName, $password ) {
 
-        echo "Aperio Auth !!!";
-        exit();
+        //echo "Aperio Auth !!!";
+        //exit();
 
         if( $loginName == "admin" && $password == "@dmin123") {
             $AuthResult = array(

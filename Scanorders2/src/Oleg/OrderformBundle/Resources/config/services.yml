@@ -74,16 +74,13 @@ services:
             - { name: form.type, alias: custom_selector }
 
 
-#    webservice_user_provider:
-#            class: "%webservice_user_provider.class%"
-#
-#    wsse.security.authentication.provider:
-#            class:  Oleg\OrderformBundle\Security\Authentication\Provider\WsseProvider
-#            arguments: ["", "%kernel.cache_dir%/security/nonces"]
-#
-#    wsse.security.authentication.listener:
-#        class:  Oleg\OrderformBundle\Security\Firewall\WsseListener
-#        arguments: ["@security.context", "@security.authentication.manager"]
+    aperio.security.authentication.provider:
+        class:  Oleg\OrderformBundle\Security\Authentication\Provider\AperioProvider
+        arguments: ["", "%kernel.cache_dir%/security/nonces"]
+
+    aperio.security.authentication.listener:
+        class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
+        arguments: ["@security.context", "@security.authentication.manager"]
 
 
 

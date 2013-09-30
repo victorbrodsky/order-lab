@@ -173,11 +173,10 @@
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
                 {{ formmacros.field(patient.mrn) }}
                 {#<button id="form_check_mrn_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="checkMrn('patient',{{ patientCount }},0, 0, 0, 0, 0, 0, 0)">Check</button>#}
-
                 {{ formmacros.field(patient.name) }}
-                {{ formmacros.field(patient.age) }}
                 {{ formmacros.field(patient.sex) }}
                 {{ formmacros.fielddate(patient.dob) }}
+                {{ formmacros.field(patient.age) }}
                 {{ formmacros.clinicalHistoryInput(patient.clinicalHistory) }}
 
                 {#specimen/procedure#}

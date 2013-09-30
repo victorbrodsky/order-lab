@@ -16,8 +16,8 @@ private $ProxyPassword  = "";
 // constructor
 function cDataClient($DataServerURL, $ProxyHost = "", $ProxyPort = "", $ProxyUser = "", $ProxyPassword = "")
 {
-    echo "me";
-    exit();
+    //echo "me";
+    //exit();
     // initialize soap clients
     $this->DataServerURL    = $DataServerURL;
     $this->ProxyHost        = $ProxyHost;
@@ -811,8 +811,8 @@ function ListClientSystemDataGroups($SystemId)
         }
     }    
     
-    print_r($arr);
-    exit;
+    //print_r($arr);
+    //exit;
 }
 
 

@@ -43,7 +43,8 @@
         <thead>
             <tr>
                 <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
-                <th{% if pagination.isSorted('orderinfo.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Status', 'orderinfo.status') }}</th>
+                {#<th{% if pagination.isSorted('orderinfo.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Status', 'orderinfo.status') }}</th>#}
+                <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
                 {#<th{% if pagination.isSorted('orderinfo.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Order #', 'orderinfo.id') }}</th>#}
                 {#<th{% if pagination.isSorted('orderinfo.slide') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Slides #', 'orderinfo.slide') }}</th>#}

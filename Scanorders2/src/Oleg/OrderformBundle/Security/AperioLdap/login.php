@@ -46,7 +46,7 @@ if( !$ldap['bind'] )
 
 echo ldap_error( $ldap['conn'] );
 
-exit;
+//exit;
 
 }
 

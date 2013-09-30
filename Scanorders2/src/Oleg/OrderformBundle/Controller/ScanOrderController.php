@@ -146,34 +146,35 @@ class ScanOrderController extends Controller {
         }
 
         $dql =  $repository->createQueryBuilder("orderinfo");
+        $dql->innerJoin("orderinfo.status", "status");
 
         //filter DB
         if( $filter && $filter > 0 ) {
-            $dql->innerJoin("orderinfo.status", "status");
-            $criteriastr .= "status.id=" . $filter;
+//            $dql->innerJoin("orderinfo.status", "status");
+            $criteriastr .= " AND status.id=" . $filter;
         }
 
         //filter special cases
         if( $filter && is_string($filter) ) {
 
-            $dql->innerJoin("orderinfo.status", "status");
+//            $dql->innerJoin("orderinfo.status", "status");
 
             switch( $filter ) {
 
                 case "All Filled":
-                    $criteriastr .= "status.name LIKE '%Filled%'";
+                    $criteriastr .= " AND status.name LIKE '%Filled%'";
                     break;
                 case "All Filled and Returned":
-                    $criteriastr .= "status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
+                    $criteriastr .= " AND status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
                     break;
                 case "All Filled and Not Returned":
-                    $criteriastr .= "status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
+                    $criteriastr .= " AND status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
                     break;
                 case "All Not Filled":
-                    $criteriastr .= "status.name NOT LIKE '%Filled%'";
+                    $criteriastr .= " AND status.name NOT LIKE '%Filled%'";
                     break;
                 case "All On Hold":
-                    $criteriastr .= "status.name LIKE '%On Hold%'";
+                    $criteriastr .= " AND status.name LIKE '%On Hold%'";
                     break;
                 default:
                     ;
@@ -202,6 +203,8 @@ class ScanOrderController extends Controller {
         if( $orderby != "" ) {
             $dql->orderBy("orderinfo.id","DESC");
         }
+
+//        $dql->orderBy("status.name","DESC");
         
         //echo "dql=".$dql;
         

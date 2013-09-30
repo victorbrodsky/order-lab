@@ -811,8 +811,8 @@ function ListClientSystemDataGroups($SystemId)
         }
     }    
     
-    print_r($arr);
-    exit;
+    //print_r($arr);
+    //exit;
 }
 
 

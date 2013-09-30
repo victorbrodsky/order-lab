@@ -366,6 +366,7 @@ function MakeArray($Thing)
 	return $ThingArray;
 }
 
+
 //------------------------------------------------------------------
 // ADB_Authenticate - Verify that the login/password exist in the db
 //	if a match is found, then return the authentication token and 
@@ -374,31 +375,20 @@ function MakeArray($Thing)
 //------------------------------------------------------------------
 function ADB_Authenticate($UserName, $Password)
 {
-
-        //echo "!!!!!!!!!!!!!! ADB_Authenticate session=<br>";
-        //print_r($_SESSION);
-        //echo "<br>";
-        //exit();
-    
-    $DataServerURL = 'a.wcmc-ad.net';
-       
-	$client = GetSOAPSecurityClient();
+	$client = GetSOAPSecurityClient ();
 
 	// since this is usually the first call to dataserver put it in a try/catch block
 	// because it might fail if dataserver is not accessible.  If an exception occurs
 	// we can display a decent error message.
 	try
-	{                   
+	{
 		$res = $client->__soapCall(	'Logon',																	//SOAP Method Name
-                                                array(
-                                                    'soap_version'=>SOAP_1_2,
-                                                    new SoapParam($UserName, 'UserName'), 		//Parameters
-                                                    new SoapParam($Password, 'PassWord'),                                                   
-                                                    ));            
+									array('soap_version'=>SOAP_1_2,new SoapParam($UserName, 'UserName'), 		//Parameters
+									new SoapParam($Password, 'PassWord')));	
 	}
 	catch (Exception $e) 
-	{		
-                
+	{
+		$DataServerURL = GetDataServerURL();
 		trigger_error("Spectrum SOAP Error:  Unable to communicate with DataServer at $DataServerURL", E_USER_ERROR);
 	}
 
@@ -419,7 +409,6 @@ function ADB_Authenticate($UserName, $Password)
 	{
 		$ReturnArray = array('ReturnCode'=>'-1','ReturnText'=>'');
 	}
-
 
 	return $ReturnArray;
 
