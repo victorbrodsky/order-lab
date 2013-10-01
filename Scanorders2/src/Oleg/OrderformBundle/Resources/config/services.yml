@@ -73,15 +73,12 @@ services:
         tags:
             - { name: form.type, alias: custom_selector }
 
-
+    #Aperio auth
     aperio.security.authentication.provider:
         class:  Oleg\OrderformBundle\Security\Authentication\Provider\AperioProvider
-        arguments: ["", "%kernel.cache_dir%/security/nonces"]
+        arguments: ["", "@service_container"]
 
     aperio.security.authentication.listener:
         class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
         arguments: ["@security.context", "@security.authentication.manager"]
-
-
-
 

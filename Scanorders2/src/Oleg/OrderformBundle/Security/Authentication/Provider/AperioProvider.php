@@ -16,12 +16,12 @@ use Oleg\OrderformBundle\Entity\User;
 class AperioProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
-    private $cacheDir;
+    private $serviceContainer;
 
-    public function __construct(UserProviderInterface $userProvider, $cacheDir)
+    public function __construct(UserProviderInterface $userProvider, $serviceContainer)
     {
         $this->userProvider = $userProvider;
-        $this->cacheDir     = $cacheDir;
+        $this->serviceContainer = $serviceContainer;
     }
 
     public function authenticate(TokenInterface $token)
@@ -34,72 +34,66 @@ class AperioProvider implements AuthenticationProviderInterface
 //            return null;
 //        }
 
-//        $username = $token->username;
-//        if (empty($username)) {
-//            $username = 'NONE_PROVIDED';
-//        }
-
-        //echo "<br>$token->username: pass=".$token->digest."<br>";
-        //exit("AperioProvider");
+//        echo "<br>$token->username: pass=".$token->digest."<br>";
+//        exit("AperioProvider");
 
         $AuthResult = $this->AperioAuth( $token->username, $token->digest );
 
-        //echo "<br>AuthResult:<br>";
-        //print_r($AuthResult);
+//        echo "<br>AuthResult:<br>";
+//        print_r($AuthResult);
         //exit("exit AperioProvider");
 
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
-            echo "<br>Aperio got UserId!<br>";
+            //echo "<br>Aperio got UserId!<br>";
 
             //get user from DB or create a new user
+            $userManager = $this->serviceContainer->get('fos_user.user_manager');
 
-//            $em = $this->getDoctrine()->getManager();
-//            $user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername($token->username);
-//            if( !$user ) {
-//                $user = new User();
-//                $user->setUsername($token->username);
-//                $user->setEmail($AuthResult['E_Mail']);
-//                $user->addRole('ROLE_USER');
-//                $em->persist($user);
-//                $em->flush();
-//            }
-//
-//            $user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername($token->username);
+            $user = $userManager->findUserByUsername($token->username);
 
-            //$user = new User($token->username, '', array("ROLE_USER"), true, true, true, true);
-            $user = new User();
-            $user->setUsername($token->username);
-            //$user->setEmail($AuthResult['E_Mail']);
-            $user->addRole('ROLE_USER');
+            if( !$user ) {
+                $userManager = $this->serviceContainer->get('fos_user.user_manager');
+                $user = $userManager->createUser();
+                $user->setUsername($token->username);
 
-//            $authenticatedToken = new AperioUserToken($user->getRoles());
+                if( isset($AuthResult['E_Mail']) && $AuthResult['E_Mail'] != "" ) {
+                    $email = $AuthResult['E_Mail'];
+                } else {
+                    $email = "emptyemail@emptyemail.com";
+                }
+                //echo "email=".$email."<br>";
 
-            //$authenticatedToken = new UsernamePasswordToken($user->getUsername(), '', 'secured_area', $user->getRoles());
-            //$authenticatedToken->setAttribute('email', $user->getEmail());
-            //$authenticatedToken->setUser($user);
+                $user->setEmail($email);
+                $user->setPassword(''); //$token->digest);
+                $user->setEnabled(1);
+                //$rolesArr = array('ROLE_USER');
+                //$user->setRoles($rolesArr);
+                $user->addRole('ROLE_USER');
+//                $user->addRole('ROLE_ADMIN');
+                //echo "user roles count=".count($user->getRoles())."<br>";
+                //exit("before update user");
 
-            //$user = $this->userProvider->loadUserByUsername($token->getUsername());
+                $userManager->updateUser($user);
+            }
+
             $authenticatedToken = new AperioUserToken($user->getRoles());
-            //$authenticatedToken->setUser($user); //TODO: this causes infinite redirect
+//            $authenticatedToken = new UsernamePasswordToken($user->getUsername(), '', 'main', $user->getRoles());
 
-            //$this->get('security.context')->setToken($token);
-            //return $this->redirect($this->generateUrl('scanorder_new'));
+            $authenticatedToken->setAttribute('email', $user->getEmail());
+            $authenticatedToken->setUser($user);
+
+            //echo "user roles count=".count($user->getRoles())."<br>";
+
+            //print_r($user);
+            //exit("before return");
+
             return $authenticatedToken;
-
         } else {
             //exit("bad exit AperioProvider");
             throw new AuthenticationException('The Aperio authentication failed.');
         }
 
     }
-
-//    protected function validateDigest($digest, $nonce, $created, $secret)
-//    {
-//        // Validate Secret
-//        $expected = base64_encode(sha1(base64_decode($nonce).$created.$secret, true));
-//
-//        return $digest === $expected;
-//    }
 
     public function supports(TokenInterface $token)
     {

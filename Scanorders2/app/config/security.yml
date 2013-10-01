@@ -40,27 +40,27 @@ security:
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
-       main:    #FR3DLdap
-             pattern:    ^/
-             aperio:  true
-             fr3d_ldap:  ~
-             form_login:
-                 always_use_default_target_path: false
-                 provider:    chain_provider
-#                 default_target_path: /
-                 use_referer: true
-             logout:     true
-             anonymous:  true
-
-#       aperio_secured:
-#             pattern:   ^/
-#             aperio:      true
+#       main:    #FR3DLdap
+#             pattern:    ^/
+##             fr3d_ldap:  ~
+#             aperio:  true
 #             form_login:
-#                  always_use_default_target_path: false
-#                  use_referer: true
-#                  provider: fos_userbundle
+#                 always_use_default_target_path: false
+#                 provider:    chain_provider
+##                 default_target_path: /
+#                 use_referer: true
 #             logout:     true
 #             anonymous:  true
+
+       main:
+             pattern: ^/
+             aperio:  true
+             form_login:
+                  always_use_default_target_path: false
+                  provider: chain_provider
+                  use_referer: true
+             logout:     true
+             anonymous:  true
 
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }

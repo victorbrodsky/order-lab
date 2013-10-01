@@ -15,25 +15,6 @@ use Doctrine\ORM\Mapping\AttributeOverride;
  * User is a reserved keyword in SQL so you cannot use it as table name
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
- *
- * @AttributeOverrides({
- *     @AttributeOverride(name="emailCanonical",
- *         column=@ORM\Column(
- *             name="emailCanonical",
- *             type="string",
- *             length=255,
- *             nullable=true
- *         )
- *     ),
- *     @AttributeOverride(name="email",
- *         column=@ORM\Column(
- *             name="email",
- *             type="string",
- *             length=255,
- *             nullable=true
- *         )
- *     )
- * })
  */
 class User extends BaseUser
 {

@@ -6,8 +6,8 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class AperioUserToken extends AbstractToken
 {
-//    public $created;
-    public $digest;
+//    public $username;
+//    public $digest;
 //    public $nonce;
 
     public function __construct(array $roles = array())

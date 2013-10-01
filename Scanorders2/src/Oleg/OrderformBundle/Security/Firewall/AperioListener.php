@@ -57,24 +57,34 @@ class AperioListener implements ListenerInterface
 //        echo "Aperio handle<br>";
         //exit("AperioListener");
 
+        if( $this->securityContext->getToken() ){
+            return;
+        }
+
         $request = $event->getRequest();
         $username = $request->request->get('_username');
         $password = $request->request->get('_password');
 
         $token = new AperioUserToken();
-        //$user = new User($username, $password, '', array());
-        //$token->setUser($user);
-        //$token = new UsernamePasswordToken($username, $password, 'secured_area');
+//        $token = new UsernamePasswordToken($username, $password, "main");
         $token->username = $username;
         $token->digest = $password;
 
         try {
             $authToken = $this->authenticationManager->authenticate($token);
             $this->securityContext->setToken($authToken);
-            //exit("Aperio custom auth ok!");
+//            exit("Aperio custom auth ok!");
+            //$event->stopPropagation();
+//            $response = new Response();
+//            $response->setStatusCode(202);
+//            $event->setResponse($response);
             return;
         } catch (AuthenticationException $failed) {
-            //exit("Aperio custom auth failed");
+            //throw new AuthenticationException('The Aperio authentication failed:'.$failed);
+//            $response = new Response();
+//            $response->setStatusCode(403);
+//            $event->setResponse($response);
+////            exit("Aperio custom auth failed");
         }
 
     }
