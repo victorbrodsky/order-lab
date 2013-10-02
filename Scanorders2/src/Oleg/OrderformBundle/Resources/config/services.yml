@@ -1,5 +1,5 @@
 parameters:
-#    webservice_user_provider.class: Oleg\OrderformBundle\Security\User\WebserviceUserProvider
+    aperio_user_provider.class: Oleg\OrderformBundle\Security\AperioUser\AperioUserProvider
 
 #    ztec.security.active_directory.settings:
 #                account_suffix : a.wcmc-ad.net  #riper.fr # without the @ at the beginning
@@ -81,4 +81,10 @@ services:
     aperio.security.authentication.listener:
         class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
         arguments: ["@security.context", "@security.authentication.manager"]
+
+    aperio_user_provider:
+        class: "%aperio_user_provider.class%"
+        calls:
+          - [setServiceContainer, ["@service_container"]]
+#        arguments: ["@service_container"]
 

@@ -52,7 +52,7 @@ class AperioProvider implements AuthenticationProviderInterface
             $user = $userManager->findUserByUsername($token->username);
 
             if( !$user ) {
-                $userManager = $this->serviceContainer->get('fos_user.user_manager');
+                $userManager = $this->serviceContainer->get('fos_user.user_manager');   //TODO: remove it
                 $user = $userManager->createUser();
                 $user->setUsername($token->username);
 

@@ -25,11 +25,13 @@ security:
 #                  id: ztec.security.active.directory.user.provider
         chain_provider:
             chain:
-                providers: [fos_userbundle, fr3d_ldapbundle]
+                providers: [fos_userbundle, aperio_user, fr3d_ldapbundle]
         fos_userbundle:
             id: fos_user.user_provider.username
         fr3d_ldapbundle:
             id: fr3d_ldap.security.user.provider
+        aperio_user:
+            id: aperio_user_provider
 
         in_memory:
             memory:
