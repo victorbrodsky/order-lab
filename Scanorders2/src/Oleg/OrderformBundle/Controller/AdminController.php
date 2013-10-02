@@ -25,6 +25,24 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class AdminController extends Controller
 {
 
+
+
+    /**
+     * Admin Page
+     *
+     * @Route("/listusers", name="listusers")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Admin:list.html.twig")
+     */
+    public function indexUserAction()
+    {
+        $userManager = $this->container->get('fos_user.user_manager');
+        $users = $userManager->findUsers();
+
+        return $this->render('OlegOrderformBundle:Admin:index.html.twig');
+    }
+
+
     /**
      * Admin Page
      *

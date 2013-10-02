@@ -30,18 +30,18 @@ class AperioProvider implements AuthenticationProviderInterface
         //print_r($token);
         //exit("AperioProvider");
 
-//        if (!$this->supports($token)) {
-//            return null;
-//        }
+        if (!$this->supports($token)) {
+            return null;
+        }
 
 //        echo "<br>$token->username: pass=".$token->digest."<br>";
 //        exit("AperioProvider");
 
         $AuthResult = $this->AperioAuth( $token->username, $token->digest );
 
-//        echo "<br>AuthResult:<br>";
-//        print_r($AuthResult);
-        //exit("exit AperioProvider");
+        echo "<br>AuthResult:<br>";
+        print_r($AuthResult);
+        //exit("<br>exit AperioProvider");
 
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
             //echo "<br>Aperio got UserId!<br>";
@@ -59,33 +59,27 @@ class AperioProvider implements AuthenticationProviderInterface
                 if( isset($AuthResult['E_Mail']) && $AuthResult['E_Mail'] != "" ) {
                     $email = $AuthResult['E_Mail'];
                 } else {
-                    $email = "emptyemail@emptyemail.com";
+                    $email = "";    //"emptyemail@emptyemail.com";
                 }
-                //echo "email=".$email."<br>";
 
                 $user->setEmail($email);
-                $user->setPassword(''); //$token->digest);
                 $user->setEnabled(1);
-                //$rolesArr = array('ROLE_USER');
-                //$user->setRoles($rolesArr);
                 $user->addRole('ROLE_USER');
-//                $user->addRole('ROLE_ADMIN');
-                //echo "user roles count=".count($user->getRoles())."<br>";
-                //exit("before update user");
+
+                $encoder = $this->serviceContainer->get('security.encoder_factory')->getEncoder($user);
+                $encodedPass = $encoder->encodePassword($token->digest, $user->getSalt());
+                $user->setPassword($encodedPass);
 
                 $userManager->updateUser($user);
             }
 
             $authenticatedToken = new AperioUserToken($user->getRoles());
-//            $authenticatedToken = new UsernamePasswordToken($user->getUsername(), '', 'main', $user->getRoles());
 
             $authenticatedToken->setAttribute('email', $user->getEmail());
             $authenticatedToken->setUser($user);
 
-            //echo "user roles count=".count($user->getRoles())."<br>";
-
-            //print_r($user);
-            //exit("before return");
+//            print_r($user);
+//            exit("<br>Aperio auth ok: before return<br>");
 
             return $authenticatedToken;
         } else {

@@ -31,8 +31,6 @@ security:
         fr3d_ldapbundle:
             id: fr3d_ldap.security.user.provider
 
-#            id: fos_user.user_manager
-
         in_memory:
             memory:
                 users:
@@ -40,27 +38,29 @@ security:
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
-#       main:    #FR3DLdap
-#             pattern:    ^/
-##             fr3d_ldap:  ~
-#             aperio:  true
-#             form_login:
-#                 always_use_default_target_path: false
-#                 provider:    chain_provider
-##                 default_target_path: /
-#                 use_referer: true
-#             logout:     true
-#             anonymous:  true
 
-       main:
-             pattern: ^/
+       main:    #FR3DLdap
+             pattern:    ^/
+             fr3d_ldap:  ~
              aperio:  true
              form_login:
-                  always_use_default_target_path: false
-                  provider: chain_provider
-                  use_referer: true
+                 always_use_default_target_path: false
+                 provider:    chain_provider
+#                 default_target_path: /
+                 use_referer: true
              logout:     true
              anonymous:  true
+
+#       aperio_secured:
+#          pattern:    ^/
+#          aperio:  true
+#          form_login:
+#             always_use_default_target_path: false
+#             provider:    chain_provider
+##                 default_target_path: /
+#             use_referer: true
+#          logout:     true
+#          anonymous:  true
 
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }

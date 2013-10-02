@@ -1,0 +1,37 @@
+imports:
+# ldapcredentials.yml is not tracked in git for security purposes.
+# it requires the following values to be set:
+#    daps_ldap.ldap.admin.enable    -- 0 or 1, depending on whether you want to bind as an admin before authenticating a user
+#    daps_ldap.ldap.admin.dn        -- the full dn of the admin value e.g. cn=admin,dc=example,dc=com
+#    daps_ldap.ldap.admin.password  -- admin password
+#	 daps_ldap.ldap.host            -- the host value e.g. ldap://example.com
+#    daps_ldap.ldap.port            -- the port e.g. 389
+#    daps_ldap.ldap.dn              -- the dn prefix (e.g. uid)
+#    daps_ldap.ldap.username_suffix -- any additional values required to authenticate after the dn prefix e.g. dc=example,dc=com
+
+   - { resource: ldapcredentials.yml }
+
+parameters:
+    # userprovider param
+    daps_ldap_user_provider.inactive_key_value: shadowflag=1
+    # class parameters
+    daps_ldap.user_provider.class: Daps\LdapBundle\Security\User\LdapUserProvider
+    daps_ldap.authentication_provider.class: Daps\LdapBundle\Security\Authentication\Provider\LdapAuthenticationProvider
+    security.user_checker.class: Symfony\Component\Security\Core\User\UserChecker
+    daps_ldap.ldap.class: Daps\LdapBundle\Security\Ldap\Ldap
+    
+services:
+    security.user_checker:
+        class: %security.user_checker.class%
+        
+    daps_ldap_user_provider:
+        class: %daps_ldap.user_provider.class%
+        arguments: [@daps_ldap.ldap, %daps_ldap_user_provider.inactive_key_value%]
+
+    daps_ldap.security.authentication.provider:
+        class: %daps_ldap.authentication_provider.class%
+        arguments: ['', @security.user_checker , '', %security.authentication.hide_user_not_found% ]
+        
+    daps_ldap.ldap:
+        class: %daps_ldap.ldap.class%
+        arguments: [%daps_ldap.ldap.host%, %daps_ldap.ldap.port%, %daps_ldap.ldap.dn%, %daps_ldap.ldap.username_suffix%, %daps_ldap.ldap.admin.enable%, %daps_ldap.ldap.admin.dn%, %daps_ldap.ldap.admin.password%]
