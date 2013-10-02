@@ -1,5 +1,5 @@
 parameters:
-    aperio_user_provider.class: Oleg\OrderformBundle\Security\AperioUser\AperioUserProvider
+#    aperio_user_provider.class: Oleg\OrderformBundle\Security\AperioUser\AperioUserProvider
 
 #    ztec.security.active_directory.settings:
 #                account_suffix : a.wcmc-ad.net  #riper.fr # without the @ at the beginning
@@ -82,9 +82,14 @@ services:
         class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
         arguments: ["@security.context", "@security.authentication.manager"]
 
-    aperio_user_provider:
-        class: "%aperio_user_provider.class%"
-        calls:
-          - [setServiceContainer, ["@service_container"]]
-#        arguments: ["@service_container"]
+#    aperio_user_provider:
+#        class: "%aperio_user_provider.class%"
+#        calls:
+#          - [setServiceContainer, ["@service_container"]]
 
+    #override FOSUSER profile form
+    oleg_user.profile.form.type:
+        class: Oleg\OrderformBundle\Form\Type\ProfileFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: oleg_user_profile }

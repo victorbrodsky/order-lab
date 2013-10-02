@@ -39,8 +39,8 @@ class AperioProvider implements AuthenticationProviderInterface
 
         $AuthResult = $this->AperioAuth( $token->username, $token->digest );
 
-        echo "<br>AuthResult:<br>";
-        print_r($AuthResult);
+        //echo "<br>AuthResult:<br>";
+        //print_r($AuthResult);
         //exit("<br>exit AperioProvider");
 
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
@@ -121,6 +121,8 @@ class AperioProvider implements AuthenticationProviderInterface
 
         return $AuthResult;
     }
+
+
 
 }
 

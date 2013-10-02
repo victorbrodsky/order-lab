@@ -25,22 +25,43 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class AdminController extends Controller
 {
 
-
-
     /**
-     * Admin Page
-     *
      * @Route("/listusers", name="listusers")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:list.html.twig")
+     * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
     public function indexUserAction()
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
 
-        return $this->render('OlegOrderformBundle:Admin:index.html.twig');
+        return array(
+            'entities' => $users,
+        );
     }
+
+    /**
+     * @Route("/show_user", name="showuser")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Profile:show_user.html.twig")
+     */
+    public function showUserAction()
+    {
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+//        if (!is_object($user) || !$user instanceof UserInterface) {
+//            throw new AccessDeniedException('This user does not have access to this section.');
+//        }
+
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        return array(
+            'user' => $user,
+        );
+    }
+
+
+
 
 
     /**

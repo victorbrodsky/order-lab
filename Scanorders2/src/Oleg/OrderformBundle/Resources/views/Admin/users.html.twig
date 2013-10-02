@@ -1,0 +1,52 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h3 class="text-info">User Management</h3>
+
+    <p>
+        <a href="{{ path('generate_all') }}">Generate All</a>
+    </p>
+    <br>
+
+    <h3 class="text-info">User List</h3>
+    <table class="records_list table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>User</th>
+            <th>Fisrt Name</th>
+            <th>Last Name</th>
+            <th>Display Name</th>
+            <th>Email</th>
+            <th>Title</th>
+            <th>Phone</th>
+            <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('fos_user_profile_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.creator }}</td>
+                <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <a href="{{ path('stainlist_show', { 'id': entity.id }) }}">show</a>
+                    <a href="{{ path('stainlist_edit', { 'id': entity.id }) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <a href="{{ path('stainlist_new') }}">
+        Create a new entry
+    </a>
+
+    <br>
+
+{% endblock %}
+
