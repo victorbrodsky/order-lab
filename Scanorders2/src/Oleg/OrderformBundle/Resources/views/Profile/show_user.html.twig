@@ -25,7 +25,15 @@
     {% endfor %}
     </p>
 
-    <a class="btn btn-success" href="{{ path('fos_user_profile_edit') }}">Edit</a>
+    <br><br>
+    <a class="btn btn-success" href="{{ path('user_edit',{'id':user.id}) }}">Edit</a>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <br><br>
+        <p>
+            <a href="{{ path('listusers') }}">All Users</a>
+        </p>
+    {% endif %}
 
 </div>
 

@@ -14,9 +14,9 @@
     {{ formmacros.field(form.email) }}
     {{ formmacros.field(form.pathologyServices) }}
 
-    {#{% if is_granted('ROLE_ADMIN') %}#}
+    {% if is_granted('ROLE_ADMIN') %}
         {{ formmacros.field(form.roles) }}
-    {#{% endif %}#}
+    {% endif %}
 
     {#{{ form_rest(form) }}#}
     {{ form_widget(form._token) }}

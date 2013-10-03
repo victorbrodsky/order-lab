@@ -22,4 +22,6 @@ $loader->add(
     'Knp\\Bundle', __DIR__.'/../vendor/bundles'
 );
 
+$loader->add( 'PHPExcel' , __DIR__.'/../vendor/phpexcel/Classes' );
+
 return $loader;
