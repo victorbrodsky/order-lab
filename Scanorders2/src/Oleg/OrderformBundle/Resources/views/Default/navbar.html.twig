@@ -34,7 +34,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ app.security.getToken().getUser() }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>Logged in as {{ app.security.getToken().getUser() }}</li>
-                        <li><a href="{{ path('fos_user_profile_show') }}">My Profile</a></li>
+                        <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile</a></li>
                         <li><a href="{{ path('logout') }}">Log Out</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li><a href="{{ path('admin_index') }}">Admin</a></li>

@@ -40,16 +40,13 @@ class Status
      */
     protected $type;
 
+    //Group can be removed(?). It is not used for now and probably will not be used in the future.
     /**
      * @ORM\ManyToOne(targetEntity="StatusGroup", inversedBy="status", cascade={"persist"})
      * @ORM\JoinColumn(name="statusgroup_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $group;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="status")
-//     **/
-//    private $orderinfo;
     /**
      * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="status")
      */

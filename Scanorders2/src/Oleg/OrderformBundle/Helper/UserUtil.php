@@ -1,0 +1,124 @@
+<?php
+/**
+ * Created by JetBrains PhpStorm.
+ * User: oli2002
+ * Date: 10/4/13
+ * Time: 12:56 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+namespace Oleg\OrderformBundle\Helper;
+
+use Oleg\OrderformBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Entity\PathServiceList;
+
+class UserUtil {
+
+    public function generateUsersExcel($em,$username) {
+        $inputFileName = __DIR__ . '/../Helper/users.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+        //var_dump($sheetData);
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        //for each user
+        $count = 0;
+        for ($row = 2; $row <= $highestRow; $row++){
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //  Insert row data array into the database
+//            echo $row.": ";
+//            var_dump($rowData);
+//            echo "<br>";
+
+            $email = $rowData[0][11];
+            list($username, $extra) = explode("@", $email);
+            $phone = $rowData[0][8];
+            $fax = $rowData[0][12];
+            $firstName = $rowData[0][6];
+            $lastName = $rowData[0][5];
+            $title = $rowData[0][7];
+            $office = $rowData[0][10];
+            $pathlogyServices = explode("/",$rowData[0][2]);
+
+            $user = new User();
+            $user->setEmail($email);
+            $user->setEmailCanonical($email);
+            $user->setUsername($username);
+            $user->setUsernameCanonical($username);
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setDisplayName($firstName." ".$lastName);
+            $user->setPhone($phone);
+            $user->setFax($fax);
+            $user->setTitle($title);
+            $user->setOffice($office);
+            $user->setPassword("");
+
+            $pathlogyServiceEntities = new ArrayCollection();
+            foreach( $pathlogyServices as $pathlogyService ) {
+                $pathlogyService = trim($pathlogyService);
+                if( $pathlogyService != "" ) {
+                    //echo $username.": service=(".$pathlogyService.")<br>";
+                    $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
+
+                    if( $pathlogyServiceEntity ) {
+                        //$pathlogyServiceEntities[] = $pathlogyServiceEntity;
+                    } else {
+                        $pathlogyServiceEntity = new PathServiceList();
+                        $pathlogyServiceEntity->setCreator( $username );
+                        $pathlogyServiceEntity->setCreatedate( new \DateTime() );
+                        $pathlogyServiceEntity->setName( $pathlogyService );
+                        $pathlogyServiceEntity->setType('default');
+                        $em->persist($pathlogyServiceEntity);
+                        $em->flush();
+                    }
+                    $user->addPathologyServices($pathlogyServiceEntity);
+                    if( !$user->getDefaultPathService() ) {
+                        $user->setDefaultPathService($pathlogyServiceEntity->getId());  //set the first pathology service as default one
+                    }
+
+                }
+            }
+//            if( count($pathlogyServiceEntities) > 0 ) {
+//                $user->setPathologyServices($pathlogyServiceEntities);
+//            }
+
+            $user->setEnabled(true);
+            $user->setLocked(false);
+            $user->setExpired(false);
+
+            $found_user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername($username);
+            if( $found_user ) {
+                //echo $username." found ";
+                //$user = $em->merge($user);
+                //$em->flush();
+            } else {
+                //echo $username." not found ";
+                $em->persist($user);
+                $em->flush();
+                $count++;
+            }
+
+        }//for each user
+
+        return $count;
+    }
+
+}

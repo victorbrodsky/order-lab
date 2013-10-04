@@ -15,8 +15,7 @@ var cicle = $("#formcicle").val();
 function regularCombobox() {
     //resolve
     $("select.combobox").select2({
-        //width: combobox_width,
-        //width: combobox_width,
+        width: combobox_width,
         dropdownAutoWidth: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
