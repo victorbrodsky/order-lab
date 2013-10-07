@@ -1,6 +1,6 @@
 {#macro for form label input inline#}
 
-{% macro field( field ) %}
+{% macro field( field, disabled ) %}
     {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
     <div class="row">
@@ -9,7 +9,11 @@
             {{ form_label(field) }}
         </div>
         <div class="col-xs-6" align="left">
-            {{ form_widget(field) }}
+            {% if disabled == "true" %}
+                {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% else %}
+                {{ form_widget(field) }}
+            {% endif %}
         </div>
         {{ form_rest(field) }}
     </div>
@@ -53,7 +57,7 @@
 
     {% import _self as formmacros %}
 
-    {{ formmacros.field(form.provider) }}
+    {{ formmacros.field(form.provider,'true') }}
 
     {{ formmacros.field(form.pathologyService) }}
 

@@ -13,7 +13,7 @@
     {{ formmacros.field(form.username) }}
     {{ formmacros.field(form.email) }}
     {{ formmacros.field(form.pathologyServices) }}
-    {{ formmacros.field(form.defaultPathService) }}
+    {#{{ formmacros.field(form.defaultPathService) }}#}
 
     {% if is_granted('ROLE_ADMIN') %}
         {{ formmacros.field(form.roles) }}
@@ -28,7 +28,7 @@
     {{ formmacros.field(form.office) }}
     {% if is_granted('ROLE_ADMIN') %}
         {{ formmacros.field(form.locked) }}
-        {{ formmacros.field(form.expired) }}
+        {#{{ formmacros.field(form.expired) }}#}
         {{ formmacros.field(form.enabled) }}
     {% endif %}
 

@@ -1,5 +1,4 @@
 parameters:
-
 #    aperio_user_provider.class: Oleg\OrderformBundle\Security\AperioUser\AperioUserProvider
 
 #    ztec.security.active_directory.settings:
@@ -73,6 +72,11 @@ services:
         arguments: ["@doctrine.orm.entity_manager","@security.context"]
         tags:
             - { name: form.type, alias: custom_selector }
+
+    #redirect admin to index
+    login_sucess_handler:
+        class: Oleg\OrderformBundle\Security\Firewall\LoginSuccessHandler
+        arguments:  [@router, @security.context]
 
     #Aperio auth
     aperio.security.authentication.provider:

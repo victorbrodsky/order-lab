@@ -71,7 +71,7 @@ class AperioProvider implements AuthenticationProviderInterface
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 
-                if( $token->username == "svc_aperio_spectrum" ) {
+                if( $token->username == "svc_aperio_spectrum" || $token->username == "Administrator" || $token->username == "administrator" ) {
                     $user->addRole('ROLE_ADMIN');
                 }
 

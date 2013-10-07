@@ -149,7 +149,7 @@ class UserController extends Controller
     {
 
         $userutil = new UserUtil();
-        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$this->get('security.context')->getToken()->getUser());
+        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
         //exit();
         return $this->redirect($this->generateUrl('listusers'));

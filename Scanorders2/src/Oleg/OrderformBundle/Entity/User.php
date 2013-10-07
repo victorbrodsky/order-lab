@@ -48,10 +48,10 @@ class User extends BaseUser
      */
     protected $pathologyServices;
 
-    /**
-     * @ORM\Column(name="defaultPathService", type="integer", nullable=true)
-     */
-    protected $defaultPathService;
+//    /**
+//     * @ORM\Column(name="defaultPathService", type="string", nullable=true)
+//     */
+//    protected $defaultPathService;
 
     /**
      * @ORM\Column(name="phone", type="string", nullable=true)
@@ -237,21 +237,21 @@ class User extends BaseUser
         $this->pathologyServices->removeElement($pathologyServices);
     }
 
-    /**
-     * @param mixed $defaultPathService
-     */
-    public function setDefaultPathService($defaultPathService)
-    {
-        $this->defaultPathService = $defaultPathService;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultPathService()
-    {
-        return $this->defaultPathService;
-    }
+//    /**
+//     * @param mixed $defaultPathService
+//     */
+//    public function setDefaultPathService($defaultPathService)
+//    {
+//        $this->defaultPathService = $defaultPathService;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDefaultPathService()
+//    {
+//        return $this->defaultPathService;
+//    }
 
 
 //    public function __toString() {

@@ -204,6 +204,7 @@ function getComboboxStain(urlCommon, ids) {
 
         //console.log("targetid="+targetid);
         $(targetid).select2('data', {id: 1, text: 'H&E'});
+
     });
 }
 
@@ -410,12 +411,51 @@ function getComboboxPathService(urlCommon,ids) {
             }
         });
 
-        $.ajax(urlCommon+"userpathservice").success(function(data) {
-            console.log("userpathservice="+data['id']);
-            $(targetid).select2('val', data['id']);
+//        $.ajax(urlCommon+"userpathservice").success(function(data) {
+//            console.log("userpathservice="+data['id']);
+//            $(targetid).select2('val', data['id']);
+//        });
+
+    });
+
+
+    var url = urlCommon+"pathservice";
+    $.ajax(url).success(function(data) {
+        json = eval(data);
+        //oleg_orderformbundle_user_pathologyServices
+        var targetid = "#oleg_orderformbundle_user_pathologyServices";
+        $(targetid).select2({
+            placeholder: "Pathology Service",
+            allowClear: true,
+            multiple: true,
+            width: combobox_width,
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+        });
+
+        $.ajax({
+            url: urlCommon+"userpathservice",
+            type: 'POST',
+            data: {username: 'rbaergen'},
+            dataType: 'json',
+            success: function(data) {
+                //console.log("userpathservice="+data[0]['text']);
+                $(targetid).select2('data', data);
+            }
         });
 
     });
+
+
+
 }
 
 function initComboboxJs(ids) {

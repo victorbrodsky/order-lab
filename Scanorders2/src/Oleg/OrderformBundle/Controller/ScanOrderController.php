@@ -92,8 +92,9 @@ class ScanOrderController extends Controller {
         $service = $form->get('service')->getData();
 
         //service
-        //echo "service=".$service;
+        //echo "filter=".$filter;
         //exit();
+
         $showprovider = 'false';
         if( $service && $service == 1  ) {
             $helper = new FormHelper();
@@ -151,7 +152,7 @@ class ScanOrderController extends Controller {
         //filter DB
         if( $filter && $filter > 0 ) {
 //            $dql->innerJoin("orderinfo.status", "status");
-            $criteriastr .= " AND status.id=" . $filter;
+            $criteriastr .= " status.id=" . $filter;
         }
 
         //filter special cases
@@ -162,19 +163,19 @@ class ScanOrderController extends Controller {
             switch( $filter ) {
 
                 case "All Filled":
-                    $criteriastr .= " AND status.name LIKE '%Filled%'";
+                    $criteriastr .= " status.name LIKE '%Filled%'";
                     break;
                 case "All Filled and Returned":
-                    $criteriastr .= " AND status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
+                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
                     break;
                 case "All Filled and Not Returned":
-                    $criteriastr .= " AND status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
+                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
                     break;
                 case "All Not Filled":
-                    $criteriastr .= " AND status.name NOT LIKE '%Filled%'";
+                    $criteriastr .= " status.name NOT LIKE '%Filled%'";
                     break;
                 case "All On Hold":
-                    $criteriastr .= " AND status.name LIKE '%On Hold%'";
+                    $criteriastr .= " status.name LIKE '%On Hold%'";
                     break;
                 default:
                     ;
@@ -463,16 +464,14 @@ class ScanOrderController extends Controller {
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        if( 1 ) {
-            $username = $user->getUsername();
-            $email = $user->getEmail();
-        } else {
-            $username = $user;
-            $email = $this->get('security.context')->getToken()->getAttribute('email');
-        }
-        //echo "email=".$email.", username=".$username."<br>";
+        $username = $user->getUsername();
+        $email = $user->getEmail();
 
-        $entity->setProvider($username);
+        $provider = $username;
+//        if( $user->getDisplayName() ) {
+//            $provider = $username." - ".$user->getDisplayName();
+//        }
+        $entity->setProvider($provider);
 
         //get pathology service for this user by email
         $helper = new FormHelper();

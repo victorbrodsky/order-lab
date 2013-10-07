@@ -15,7 +15,7 @@ use Oleg\OrderformBundle\Entity\PathServiceList;
 
 class UserUtil {
 
-    public function generateUsersExcel($em,$username) {
+    public function generateUsersExcel($em) {
         $inputFileName = __DIR__ . '/../Helper/users.xlsx';
 
         try {
@@ -71,6 +71,14 @@ class UserUtil {
             $user->setOffice($office);
             $user->setPassword("");
 
+            if( $username == "oli2002" || $username == "vib9020" ) {
+                $user->addRole('ROLE_SUPER_ADMIN');
+            }
+
+            if( $username == "svc_aperio_spectrum" ) {
+                $user->addRole('ROLE_ADMIN');
+            }
+
             $pathlogyServiceEntities = new ArrayCollection();
             foreach( $pathlogyServices as $pathlogyService ) {
                 $pathlogyService = trim($pathlogyService);
@@ -90,9 +98,9 @@ class UserUtil {
                         $em->flush();
                     }
                     $user->addPathologyServices($pathlogyServiceEntity);
-                    if( !$user->getDefaultPathService() ) {
-                        $user->setDefaultPathService($pathlogyServiceEntity->getId());  //set the first pathology service as default one
-                    }
+//                    if( !$user->getDefaultPathService() ) {
+//                        $user->setDefaultPathService($pathlogyServiceEntity->getId());  //set the first pathology service as default one
+//                    }
 
                 }
             }

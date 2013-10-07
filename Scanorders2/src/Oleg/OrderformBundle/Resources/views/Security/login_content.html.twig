@@ -17,24 +17,27 @@
 {% endif %}
 
 {% if error %} 
-    <p class="alert alert-danger">{{ error }}</p>
+    <p class="alert alert-danger" align="middle">
+        {#{{ error }}#}
+        Bad credentials
+    </p>
 {% endif %}
  
 <br><br>    
     
 <form class="form-signin" action="{{ path('login_check') }}" method="post">
 
-<div class="row">
-<div class="col-xs-12">
+    <div class="row">
+    <div class="col-xs-12">
 
-    <p>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
+        <p>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" autofocus>
 
-    <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
-    </p>
+        <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
+        </p>
 
-</div>
-</div>
+    </div>
+    </div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 

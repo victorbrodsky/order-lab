@@ -210,25 +210,36 @@ class UtilController extends Controller {
 
     /**
      * @Route("/userpathservice", name="get-userpathservice")
-     * @Method("GET")
+     * @Method("POST")
      */
     public function getUserPathServiceAction() {
 
+        $output = array();
+
         $em = $this->getDoctrine()->getManager();
 
-        //get pathology service for this user by email
-        $helper = new FormHelper();
-        $email = $this->get('security.context')->getToken()->getAttribute('email');
-        $service = $helper->getUserPathology($email);
+        $request = $this->get('request');
+        $username   = $request->get('username');
+        //echo "username=".$username."<br>";
 
-        $output = array();
-        if( $service ) {
-            $query = $em->createQuery(
-                'SELECT p.id as id, p.name as text
-                FROM OlegOrderformBundle:PathServiceList p WHERE p.name LIKE :name'
-            )->setParameter('name', '%'.$service.'%');
-            $res = $query->getResult();
-            $output = $res[0];
+        $user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername(trim($username));
+        //echo $user;
+
+        //$user = $em->getRepository('OlegOrderformBundle:User')->find(15);
+        if( $user ) {
+            //echo "user found!";
+            $services = $user->getPathologyServices();
+            //echo "count=".count($services);
+
+            //$count=0;
+            foreach( $services as $service) {
+                $temp = array('id'=>$service->getId(), 'text'=>$service->getName());
+                $output[] = $temp;
+                //$count++;
+            }
+
+        } else {
+            //echo "no user found!";
         }
 
         $response = new Response();

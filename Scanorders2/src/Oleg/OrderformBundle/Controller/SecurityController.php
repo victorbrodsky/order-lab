@@ -13,15 +13,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Oleg\OrderformBundle\Entity\User;
-//use Oleg\OrderformBundle\Security\AperioLdap\DatabaseRoutines;
-//include_once('DatabaseRoutines.php');
-use Oleg\OrderformBundle\Security\AperioLdap\cDataClient;
-//include_once( 'src\Oleg\OrderformBundle\Security\AperioLdap\cDataClient.php' );
-//include_once '/cDataClient.php';
-//include_once( 'src\Oleg\OrderformBundle\Security\AperioLdap\Authenticate.php' );
-//include_once '\vendor\aperio\lib\Aperio\src\Skeleton.php';
-
-//include_once '\Skeleton.php';
 
 class SecurityController extends Controller
 {
