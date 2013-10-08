@@ -19,7 +19,9 @@ class OrderInfoRepository extends EntityRepository
     public function processEntity( $entity, $type ) {
         
 //        echo "orderifno repos id=".$entity->getId()."<br>";
-//        echo "orderifno repos provider=".$entity->getProvider()."<br>";\
+//        $providers = $entity->getProvider();
+//        echo "orderifno repos provider count=".count($providers).", [0]username=".$providers[0]->getUsername()."<br>";
+//        exit();
 
         $em = $this->_em;
 

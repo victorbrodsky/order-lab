@@ -107,14 +107,22 @@ class OrderInfo
     private $returnSlide;
 
     /**
-     * provider is a string with logged user name
-     * @var \stdClass
-     *
-     * @ORM\Column(name="provider", type="string", length=200)
-     * @Assert\NotBlank
+     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinTable(name="provider_orderinfo",
+     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="provider_id", referencedColumnName="id")}
+     * )
      */
     private $provider;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinTable(name="proxyuser_orderinfo",
+     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")}
+     * )
+     */
+    protected $proxyuser;
 
     /////////////////    OBJECTS    //////////////////////
 
@@ -216,6 +224,8 @@ class OrderInfo
         $this->slide = new ArrayCollection();
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
+        $this->provider = new ArrayCollection();
+        $this->proxyuser = new ArrayCollection();
     }
     
     /**
@@ -728,4 +738,50 @@ class OrderInfo
     {
         return $this->stain;
     }
+
+    public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
+    {
+        if( !$this->proxyuser->contains($proxyuser) ) {
+            $this->proxyuser[] = $proxyuser;
+        }
+
+        return $this;
+    }
+
+    public function removeProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
+    {
+        $this->proxyuser->removeElement($proxyuser);
+    }
+
+    /**
+     * @param mixed $proxyuser
+     */
+    public function setProxyuser($proxyuser)
+    {
+        $this->proxyuser = $proxyuser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProxyuser()
+    {
+        return $this->proxyuser;
+    }
+
+    public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
+    {
+        if( !$this->provider->contains($provider) ) {
+            $this->provider[] = $provider;
+        }
+
+        return $this;
+    }
+
+    public function removeProvider(\Oleg\OrderformBundle\Entity\User $provider)
+    {
+        $this->provider->removeElement($provider);
+    }
+
+
 }

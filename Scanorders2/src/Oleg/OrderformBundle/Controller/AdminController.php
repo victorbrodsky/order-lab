@@ -276,7 +276,7 @@ class AdminController extends Controller
             $stainList = new StainList();
             $stainList->setCreator( $username );
             $stainList->setCreatedate( new \DateTime() );
-            $stainList->setName( $stain );
+            $stainList->setName( trim($stain) );
             $stainList->setType('default');
 
             $em = $this->getDoctrine()->getManager();
@@ -308,7 +308,7 @@ class AdminController extends Controller
             $list = new OrganList();
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
-            $list->setName( $organ );
+            $list->setName( trim($organ) );
             $list->setType('default');
 
             $em = $this->getDoctrine()->getManager();
@@ -332,16 +332,16 @@ class AdminController extends Controller
         }
 
         $helper = new FormHelper();
-        $organs = $helper->getProcedure();
+        $procedures = $helper->getProcedure();
 
         $username = $this->get('security.context')->getToken()->getUser();
 
         $count = 0;
-        foreach( $organs as $organ ) {
+        foreach( $procedures as $procedure ) {
             $list = new ProcedureList();
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
-            $list->setName( $organ );
+            $list->setName( trim($procedure) );
             $list->setType('default');
 
             $em = $this->getDoctrine()->getManager();
@@ -498,7 +498,7 @@ class AdminController extends Controller
             $list = new PathServiceList();
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
-            $list->setName( $service );
+            $list->setName( trim($service) );
             $list->setType('default');
 
             $em = $this->getDoctrine()->getManager();

@@ -28,9 +28,8 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
-
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All%2BNot%2BFilled'))); //TODO
+            $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All Not Filled')));
         } else {
             $referer_url = $request->headers->get('referer');
             $response = new RedirectResponse($referer_url);

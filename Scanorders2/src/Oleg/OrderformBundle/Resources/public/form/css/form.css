@@ -274,10 +274,9 @@
     overflow: hidden;
 }
 
-/*.combobox-width {*/
-    /*//min-width: 50%;*/
-    /*width: 100%;*/
-/*}*/
+.combobox-width {
+    width: 100%;
+}
 
 .form_body_toggle_btn {
     padding-right: 1%;

@@ -10,6 +10,7 @@
         </div>
         <div class="col-xs-6" align="left">
             {% if disabled == "true" %}
+                {#value of disabled field will be ignored, but readonly does not work#}
                 {{ form_widget(field,{ 'disabled':'disabled' }) }}
             {% else %}
                 {{ form_widget(field) }}
@@ -57,7 +58,10 @@
 
     {% import _self as formmacros %}
 
-    {{ formmacros.field(form.provider,'true') }}
+    {{ formmacros.field(form.provider) }}
+    {#Hi {{ app.user.displayname }}#}
+
+    {{ formmacros.field(form.proxyuser) }}
 
     {{ formmacros.field(form.pathologyService) }}
 

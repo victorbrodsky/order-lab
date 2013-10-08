@@ -16,10 +16,14 @@ function regularCombobox() {
     //resolve
     $("select.combobox").select2({
         width: combobox_width,
-        dropdownAutoWidth: true
+        dropdownAutoWidth: true,
+        readonly: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
+
+    //make provider read only
+    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
 }
 
 function customCombobox() {
@@ -418,7 +422,8 @@ function getComboboxPathService(urlCommon,ids) {
 
     });
 
-
+    var usernameThis = $("#username").val();
+    console.log("username="+username);
     var url = urlCommon+"pathservice";
     $.ajax(url).success(function(data) {
         json = eval(data);
@@ -444,7 +449,7 @@ function getComboboxPathService(urlCommon,ids) {
         $.ajax({
             url: urlCommon+"userpathservice",
             type: 'POST',
-            data: {username: 'rbaergen'},
+            data: {username: usernameThis},
             dataType: 'json',
             success: function(data) {
                 //console.log("userpathservice="+data[0]['text']);

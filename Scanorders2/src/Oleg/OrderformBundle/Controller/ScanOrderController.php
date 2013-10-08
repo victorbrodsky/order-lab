@@ -73,19 +73,23 @@ class ScanOrderController extends Controller {
 //        $statuses = $this->array_column($statusesArr, 'name');
 //        print_r($statuses);
 
+        //by user
+        $user = $this->get('security.context')->getToken()->getUser();
+
         //create filters
-        $form = $this->createForm(new FilterType( $this->getFilter() ), null);
+        $form = $this->createForm(new FilterType( $this->getFilter(), $user ), null);
         $form->bind($request);
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
-        //by user
-        $user = $this->get('security.context')->getToken()->getUser();
+        $dql =  $repository->createQueryBuilder("orderinfo");
           
         $criteria = array();
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {    
-            $criteria['provider'] = $user;
-        }            
+
+        //TODO: show only my order if i'm not an admin
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            $criteria['provider'] = $user;
+//        }
         
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
@@ -96,11 +100,12 @@ class ScanOrderController extends Controller {
         //exit();
 
         $showprovider = 'false';
-        if( $service && $service == 1  ) {
-            $helper = new FormHelper();
-            //$email = $this->get('security.context')->getToken()->getAttribute('email');
-            $email = $user->getEmail();
-            $userService = $helper->getUserPathology($email);
+        if( $service != 0  ) {
+
+            //echo "service=".$service;
+            //exit();
+
+            $userService = $user->getPathologyServices();
 
             if( !$userService ) {
                 $this->get('session')->getFlashBag()->add(
@@ -109,16 +114,13 @@ class ScanOrderController extends Controller {
                 );
             }
 
-            //get id
-            $query = $em->createQuery(
-                'SELECT p FROM OlegOrderformBundle:PathServiceList p WHERE p.name LIKE :name'
-            )->setParameter('name', '%'.$userService.'%');
-            $pathService = $query->getResult();
+            $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->find($service);
 
             if( $userService && $userService != ''  ) {
-                $criteria['pathologyService']= $pathService[0]->getId();
+                $criteria['pathologyService']= $pathService->getId();
             }
             $showprovider = 'true';
+            $dql->innerJoin("orderinfo.provider", "provider");
         }
 
         $orderby = "";
@@ -146,7 +148,6 @@ class ScanOrderController extends Controller {
             $count++;
         }
 
-        $dql =  $repository->createQueryBuilder("orderinfo");
         $dql->innerJoin("orderinfo.status", "status");
 
         //filter DB
@@ -465,19 +466,11 @@ class ScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $username = $user->getUsername();
-        $email = $user->getEmail();
 
-        $provider = $username;
-//        if( $user->getDisplayName() ) {
-//            $provider = $username." - ".$user->getDisplayName();
-//        }
-        $entity->setProvider($provider);
+        $entity->addProvider($user);
 
         //get pathology service for this user by email
-        $helper = new FormHelper();
-        $service = $helper->getUserPathology($email);
-        //$pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName( $service );
-        //$entity->setPathologyService($pathService);
+        $service = $user->getPathologyServices();
 
         $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service, 'user'=>$username, 'em'=>$em);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );

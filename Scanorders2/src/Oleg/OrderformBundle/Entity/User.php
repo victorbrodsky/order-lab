@@ -88,6 +88,11 @@ class User extends BaseUser
      */
     protected $office;
 
+    /**
+     * @ORM\Column(name="createdby", type="string", nullable=true)
+     */
+    protected $createdby;
+
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
@@ -237,26 +242,34 @@ class User extends BaseUser
         $this->pathologyServices->removeElement($pathologyServices);
     }
 
-//    /**
-//     * @param mixed $defaultPathService
-//     */
-//    public function setDefaultPathService($defaultPathService)
-//    {
-//        $this->defaultPathService = $defaultPathService;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getDefaultPathService()
-//    {
-//        return $this->defaultPathService;
-//    }
+    /**
+     * @param mixed $createdby
+     */
+    public function setCreatedby($createdby = 'ldap')
+    {
+        $this->createdby = $createdby;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedby()
+    {
+        return $this->createdby;
+    }
 
 
-//    public function __toString() {
+
+    public function __toString() {
 //        return "User: ".$this->username.", email=".$this->email.", PathServiceList count=".count($this->pathologyServices)."<br>";
-//    }
+        if( $this->displayName && $this->displayName != "" ) {
+            return $this->username." - ".$this->displayName;
+        } else {
+            return $this->username;
+        }
+    }
+
+
 
 }
 

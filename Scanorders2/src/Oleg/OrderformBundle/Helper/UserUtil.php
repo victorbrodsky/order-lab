@@ -70,6 +70,7 @@ class UserUtil {
             $user->setTitle($title);
             $user->setOffice($office);
             $user->setPassword("");
+            $user->setCreatedby('excel');
 
             if( $username == "oli2002" || $username == "vib9020" ) {
                 $user->addRole('ROLE_SUPER_ADMIN');
@@ -127,6 +128,16 @@ class UserUtil {
         }//for each user
 
         return $count;
+    }
+
+    public function generateUserPathServices( $user ) {
+        $services = $user->getPathologyServices();
+        $choicesServ = array();
+        $choicesServ[0] = "My Orders";
+        foreach( $services as $service ) {
+            $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
+        }
+        return $choicesServ;
     }
 
 }

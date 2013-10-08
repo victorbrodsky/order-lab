@@ -66,14 +66,6 @@ class OrderInfoType extends AbstractType
             $builder->add( 'research', new ResearchType(), array('label'=>'Research:') );
         }
 
-        $builder->add( 'provider', 'text', array(
-                'label'=>'* Ordering Provider:', 
-                'max_length'=>'200', 
-                'required'=>true,
-                'attr' => array('required' => 'required', 'class'=>'form-control form-control-modif')
-        ));
-
-
         //pathologyService
 //        $pathServices = $helper->getPathologyService();
 //        $pathParam = array(
@@ -101,7 +93,7 @@ class OrderInfoType extends AbstractType
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('pathologyService', 'custom_selector', array(
             'label' => 'Pathology Service:',
@@ -126,7 +118,7 @@ class OrderInfoType extends AbstractType
         $priority = $this->entity->getPriority();
         $key = 0;
         $counter = 0;
-        foreach( $priorityArr as $var ){
+        foreach( $priorityArr as $var ) {
             //echo "<br>".$var."?".$pathservice;
             if( trim( $var ) == trim( $priority ) ){
                 $key = $counter;
@@ -138,26 +130,6 @@ class OrderInfoType extends AbstractType
         $priority_param['data'] = $key;
         $builder->add( 'priority', 'choice', $priority_param);
 
-//        $builder->add( 'priority', 'choice', array(
-//                'label' => '* Priority:', 
-//                //'max_length'=>200,
-//                'required' => true,
-//                'choices' => $helper->getPriority(),
-//                'data' => 0,    //'Routine',
-//                'multiple' => false,
-//                'expanded' => true,
-//                'attr' => array('class' => 'horizontal_type', 'required' => 'required')
-//        ));
-        
-//        $builder->add( 'slideDelivery', 
-//                'choice', array(  
-//                'label'=>'* Slide Delivery:',
-//                'max_length'=>200,
-//                'choices' => $helper->getSlideDelivery(),
-//                'required'=>true,
-//                'data' => 0,     
-//                'attr' => array('class' => 'combobox combobox-width', 'required' => 'required')
-//        ));
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');    //new
         } else {
@@ -207,6 +179,24 @@ class OrderInfoType extends AbstractType
         $builder->add('returnoption', 'checkbox', array(
             'label'     => 'Return slide(s) by this date even if not scanned',
             'required'  => false,
+        ));
+
+
+        $attr = array('class' => 'combobox combobox-width');
+        $builder->add('provider', 'entity', array(
+            'class' => 'OlegOrderformBundle:User',
+            'label'=>'* Ordering Provider:',
+            'required' => true,
+            'read_only' => true,    //not working => disable by twig
+            'multiple' => true,
+            'attr' => $attr,
+        ));
+        $builder->add('proxyuser', 'entity', array(
+            'class' => 'OlegOrderformBundle:User',
+            'label'=>'Proxy Order For:',
+            'required' => false,
+            'multiple' => true,
+            'attr' => $attr,
         ));
         
     }

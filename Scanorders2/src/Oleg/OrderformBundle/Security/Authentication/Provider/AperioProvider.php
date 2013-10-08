@@ -65,6 +65,7 @@ class AperioProvider implements AuthenticationProviderInterface
 
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
+                $user->setCreatedby('aperio');
                 $user->addRole('ROLE_USER');
 
                 if( $token->username == "oli2002" || $token->username == "vib9020" ) {
@@ -78,6 +79,8 @@ class AperioProvider implements AuthenticationProviderInterface
                 $encoder = $this->serviceContainer->get('security.encoder_factory')->getEncoder($user);
                 $encodedPass = $encoder->encodePassword($token->digest, $user->getSalt());
                 $user->setPassword($encodedPass);
+                //TODO: do not store password in DB. Implement AperioAuthenticationProvider as LdapAuthenticationProvider or DAOAuthenticationProvider
+                //$user->setPassword("");
 
                 $userManager->updateUser($user);
             }

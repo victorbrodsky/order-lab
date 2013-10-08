@@ -5,15 +5,18 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 class FilterType extends AbstractType
 {
 
     protected $statuses;
+    protected $user;
 
-    public function __construct( $statuses = null )
+    public function __construct( $statuses = null, $user = null )
     {
         $this->statuses = $statuses;
+        $this->user = $user;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -27,20 +30,34 @@ class FilterType extends AbstractType
                 'required' => false,
                 //'multiple' => true,
                 //'expanded' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'style'=>'width:60%')
+                'attr' => array('class' => 'combobox combobox-width')
         ));                       
         
         $builder->add('search', 'text', array(
                 'max_length'=>200,
                 'required'=>false,
                 'label'=>'Search:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'width:60%'),
+                'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add('service', 'checkbox', array(
-            'label'     => 'My service',
-            'required'  => false,
-//            'attr' => array('type' => 'checkbox')
+
+//        $services = $this->user->getPathologyServices();
+//        //echo "count services=".count($services);
+//        //exit();
+//
+//        $choicesServ = array();
+//        $choicesServ[] = 'My Orders';
+//        foreach( $services as $service ) {
+//            $choicesServ[] = "All ".$service->getName()." Orders";
+//        }
+
+        $userUtil = new UserUtil();
+
+        $builder->add('service', 'choice', array(
+            'label'     => 'Services',
+            'required'  => true,
+            'choices' => $userUtil->generateUserPathServices($this->user),
+            'attr' => array('class' => 'combobox combobox-width')
         ));
     }
 

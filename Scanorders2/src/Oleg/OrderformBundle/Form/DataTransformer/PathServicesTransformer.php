@@ -37,13 +37,11 @@ class PathServicesTransformer implements DataTransformerInterface
      */
     public function transform($entity)
     {
-
         $array = new \Doctrine\Common\Collections\ArrayCollection();
 
         if( null === $entity->toArray() ) {
             return $array;
         }
-
         return $array;
     }
 
@@ -59,14 +57,14 @@ class PathServicesTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        //echo "data transformer text=".$text."<br>";
+        echo "data transformer text=".$text."<br>";
         //exit();
 
         if (!$text) {
             return null;
         }
 
-        if( is_numeric ( $text ) ) {    //number => most probably it is id
+        if( is_numeric ( $text ) ) {    //number => most probably it is id of existing Pathology Service
 
             $entity = $this->em->getRepository('OlegOrderformBundle:PathServiceList')->findOneById($text);
 
@@ -76,7 +74,7 @@ class PathServicesTransformer implements DataTransformerInterface
 
             } else {
 
-                return $entity; //use found object
+                return array($entity); //use found object
 
             }
 
@@ -92,6 +90,7 @@ class PathServicesTransformer implements DataTransformerInterface
 
 //        echo "names=".$names."<br>";
 //        print_r($names);
+//        exit();
 
         $entities = array();
 

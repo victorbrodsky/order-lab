@@ -31,9 +31,9 @@
                 {#<li id="5" class="divider-vertical order1"><a href="{{ path('logout') }}">Logout | {{ app.security.getToken().getUser() }}</a></li>#}
 
                 <li id="5" class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ app.security.getToken().getUser() }}<b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span>&nbsp;{{ app.security.getToken().getUser().getUsername() }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>Logged in as {{ app.security.getToken().getUser() }}</li>
+                        <li>Logged in as {{ app.security.getToken().getUser().getUsername() }}</li>
                         <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile</a></li>
                         <li><a href="{{ path('logout') }}">Log Out</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
