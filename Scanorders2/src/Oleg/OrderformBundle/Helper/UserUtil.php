@@ -76,9 +76,9 @@ class UserUtil {
                 $user->addRole('ROLE_SUPER_ADMIN');
             }
 
-            if( $username == "svc_aperio_spectrum" ) {
-                $user->addRole('ROLE_ADMIN');
-            }
+//            if( $username == "svc_aperio_spectrum" ) {
+//                $user->addRole('ROLE_ADMIN');
+//            }
 
             $pathlogyServiceEntities = new ArrayCollection();
             foreach( $pathlogyServices as $pathlogyService ) {
@@ -132,11 +132,11 @@ class UserUtil {
 
     public function generateUserPathServices( $user ) {
         $services = $user->getPathologyServices();
-        $choicesServ = array();
-        $choicesServ[0] = "My Orders";
+        $choicesServ = array( "My Orders"=>"My Orders", "Orders I Personally Placed"=>"Orders I Personally Placed", "Proxy Orders Placed For Me"=>"Proxy Orders Placed For Me");
         foreach( $services as $service ) {
             $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
         }
+        //print_r($choicesServ);
         return $choicesServ;
     }
 

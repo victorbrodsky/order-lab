@@ -27,7 +27,7 @@ class FilterType extends AbstractType
                 'max_length'=>50,
                 //'choices' =>$this->statuses,  // $this->statuses->name, //$search,
                 'choices' => $this->statuses,
-                'required' => false,
+                'required' => true,
                 //'multiple' => true,
                 //'expanded' => true,
                 'attr' => array('class' => 'combobox combobox-width')

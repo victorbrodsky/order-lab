@@ -72,9 +72,9 @@ class AperioProvider implements AuthenticationProviderInterface
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 
-                if( $token->username == "svc_aperio_spectrum" || $token->username == "Administrator" || $token->username == "administrator" ) {
-                    $user->addRole('ROLE_ADMIN');
-                }
+//                if( $token->username == "svc_aperio_spectrum" || $token->username == "Administrator" || $token->username == "administrator" ) {
+//                    $user->addRole('ROLE_ADMIN');
+//                }
 
                 $encoder = $this->serviceContainer->get('security.encoder_factory')->getEncoder($user);
                 $encodedPass = $encoder->encodePassword($token->digest, $user->getSalt());

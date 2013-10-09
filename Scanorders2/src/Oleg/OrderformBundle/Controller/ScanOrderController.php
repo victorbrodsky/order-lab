@@ -83,27 +83,24 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
         $dql =  $repository->createQueryBuilder("orderinfo");
-          
-        $criteria = array();
+        $dql->innerJoin("orderinfo.provider", "provider");
 
-        //TODO: show only my order if i'm not an admin
-//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-//            $criteria['provider'] = $user;
-//        }
-        
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
         $service = $form->get('service')->getData();
 
         //service
-        //echo "filter=".$filter;
+        //echo "<br>service=".$service;
         //exit();
 
-        $showprovider = 'false';
-        if( $service != 0  ) {
+        $criteriastr = "";
 
-            //echo "service=".$service;
-            //exit();
+
+        //***************** Pathology Service filetr ***************************//
+        $showprovider = 'false';
+
+        //service filter is existing pathology service in DB
+        if( is_numeric($service)  ) {
 
             $userService = $user->getPathologyServices();
 
@@ -117,49 +114,35 @@ class ScanOrderController extends Controller {
             $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->find($service);
 
             if( $userService && $userService != ''  ) {
-                $criteria['pathologyService']= $pathService->getId();
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                $criteriastr .= " orderinfo.pathologyService=".$pathService->getId();
             }
             $showprovider = 'true';
-            $dql->innerJoin("orderinfo.provider", "provider");
+        } else {
+            //this implemented below in "User filter"
         }
+        //***************** END of Pathology Service filetr ***************************//
 
-        $orderby = "";
 
-        $params = $this->getRequest()->query->all();
-        $sort = $this->getRequest()->query->get('sort');
-
-        if( $params == null || count($params) == 0 ) {
-            $orderby = " ORDER BY orderinfo.id DESC";
-        }
-
-        if( $sort != 'orderinfo.id' ) {
-            $orderby = " ORDER BY orderinfo.id DESC";
-        }
-
-        $criteriastr = "";
-        //print_r($criteria);
-
-        $count = 0;
-        foreach( $criteria as $key => $value ){
-            $criteriastr .= "orderinfo." . $key . "='" . $value . "'";
-            if( count($criteria) > $count+1 ) {
+        //***************** Status filetr ***************************//
+        $dql->innerJoin("orderinfo.status", "status");
+        //echo "status filter = ".$filter."<br>";
+        if( $filter && is_numeric($filter) && $filter > 0 ) {
+            if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
-            $count++;
-        }
-
-        $dql->innerJoin("orderinfo.status", "status");
-
-        //filter DB
-        if( $filter && $filter > 0 ) {
-//            $dql->innerJoin("orderinfo.status", "status");
             $criteriastr .= " status.id=" . $filter;
         }
 
         //filter special cases
-        if( $filter && is_string($filter) ) {
+        if( $filter && is_string($filter) && $filter != "All" ) {
 
-//            $dql->innerJoin("orderinfo.status", "status");
+            //echo "filter=".$filter;
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
 
             switch( $filter ) {
 
@@ -183,26 +166,86 @@ class ScanOrderController extends Controller {
             }
 
         }
+        //***************** END of Status filetr ***************************//
 
-        $criteriafull = "";
+
+        //***************** Search filetr ***************************//
         if( $search && $search != "" ) {
-            $dql->innerJoin("orderinfo.accession", "accession");           
-            $criteriafull = "accession.accession LIKE '%" . $search . "%'";    
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+            $dql->innerJoin("orderinfo.accession", "accession");
+            $criteriastr .= "accession.accession LIKE '%" . $search . "%'";
             
-        }              
+        }
+        //***************** END of Search filetr ***************************//
+
+
+        //***************** User filter ***************************//
+        $dql->innerJoin("orderinfo.proxyuser", "proxyuser");
+        //show only my order if i'm not an admin and Pathology Services are not choosen
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+            //echo " role_user ";
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+            $criteriastr .= "( provider.id=".$user->getId();
+
+            //***************** Proxy User Orders *************************//
+            $criteriastr .= " OR proxyuser.id=".$user->getId()." )";
+            //***************** END of Proxy User Orders *************************//
+        }
+
+        if( $service == "My Orders" ) {
+            //show only my order if i'm not an admin and Pathology Services are not choosen
+            //Orders I Personally Placed and Proxy Orders Placed For Me
+            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+                //echo " role_user ";
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                $criteriastr .= "( provider.id=".$user->getId();
+
+                //***************** Proxy User Orders *************************//
+                $criteriastr .= " OR proxyuser.id=".$user->getId()." )";
+                //***************** END of Proxy User Orders *************************//
+            }
+        }
+        if( $service == "Orders I Personally Placed" ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+                //echo " role_user ";
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                $criteriastr .= "provider.id=".$user->getId();
+            }
+        }
+        if( $service == "Proxy Orders Placed For Me" ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+                //echo " role_user ";
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                //***************** Proxy User Orders *************************//
+                $criteriastr .= "proxyuser.id=".$user->getId();
+                //***************** END of Proxy User Orders *************************//
+            }
+        }
+        //***************** END of User filetr ***************************//
+
+
+        //echo "<br>criteriastr=".$criteriastr."<br>";
         
         if( $criteriastr != "" ) {
-            if( $criteriafull != "" ) {
-                $criteriafull .= " AND ";
-            }
-            $criteriafull .= $criteriastr;           
-        } 
-        
-        if( $criteriafull != "" ) {
-            $dql->where($criteriafull);
+            $dql->where($criteriastr);
         }
-        
-        if( $orderby != "" ) {
+
+        $params = $this->getRequest()->query->all();
+        $sort = $this->getRequest()->query->get('sort');
+        if( $params == null || count($params) == 0 ) {
+            $dql->orderBy("orderinfo.id","DESC");
+        }
+        if( $sort != 'orderinfo.id' ) {
             $dql->orderBy("orderinfo.id","DESC");
         }
 
@@ -760,7 +803,7 @@ class ScanOrderController extends Controller {
 
         //add special cases
         $specials = array(
-            "All" => "All",
+            "All" => "All Statuses",
             "All Filled" => "All Filled",
             "All Filled and Returned" => "All Filled and Returned",
             "All Filled and Not Returned" => "All Filled and Not Returned",

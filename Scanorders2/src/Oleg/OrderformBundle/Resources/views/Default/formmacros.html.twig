@@ -56,6 +56,16 @@
 
 {% macro orderinfo(form) %}
 
+    {% for provider in form.vars.value.provider %}
+        <input type="hidden" id="user_name" value="{{ provider.username }}" />
+        <input type="hidden" id="user_id" value="{{ provider.id }}" />
+    {% endfor %}
+
+    {% for proxyuser in form.vars.value.proxyuser %}
+        <input type="hidden" id="proxyuser_name" value="{{ proxyuser.username }}" />
+        <input type="hidden" id="proxyuser_id" value="{{ proxyuser.id }}" />
+    {% endfor %}
+
     {% import _self as formmacros %}
 
     {{ formmacros.field(form.provider) }}

@@ -40,7 +40,7 @@ security:
     firewalls:
 
        main:    #FR3DLdap
-             pattern:    ^/
+             pattern: ^/
              fr3d_ldap:  ~
              aperio:  true
              form_login:
@@ -65,6 +65,8 @@ security:
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/admin/, role: ROLE_ADMIN }
+     - { path: ^/util/, role: ROLE_USER }
+     - { path: ^/user/, role: ROLE_USER }
 
 #    firewalls:
 #       #FOSUser

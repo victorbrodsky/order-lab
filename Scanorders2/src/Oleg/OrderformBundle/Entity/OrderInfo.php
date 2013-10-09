@@ -376,7 +376,12 @@ class OrderInfo
      */
     public function setProvider($provider)
     {
-        $this->provider = $provider;
+        if ( is_array($provider) ) {
+            $this->provider = $provider;
+        } else {
+            $this->provider->clear();
+            $this->provider->add($provider);
+        }
     
         return $this;
     }
@@ -758,7 +763,12 @@ class OrderInfo
      */
     public function setProxyuser($proxyuser)
     {
-        $this->proxyuser = $proxyuser;
+        if ( is_array($proxyuser) ) {
+            $this->proxyuser = $proxyuser;
+        } else {
+            $this->proxyuser->clear();
+            $this->proxyuser->add($proxyuser);
+        }
     }
 
     /**

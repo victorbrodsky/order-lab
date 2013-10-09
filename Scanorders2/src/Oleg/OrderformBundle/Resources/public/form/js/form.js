@@ -82,8 +82,26 @@ function initAdd() {
 function deleteItem(id) {
     if( confirm("Are you sure?") ) {
         //var id = this.id;
-        $('#formpanel_'+id).remove();
+
+        //check if this is not the last element
+        var idArr = id.split("_");
+        var partialId = 'formpanel_'+idArr[0];
+        console.log("partialId="+partialId);
+        var elements = $('[id^='+partialId+']');
+        console.log("elements.length="+elements.length);
+        if( elements.length > 1 ) {
+            $('#formpanel_'+id).remove();
+        } else {
+            alert("You can't delete only one left " + idArr[0]);
+        }
+
         //TODO: append new "Add" button to the same object type if it's not exists
+        if( elements.length == 1 ) {
+            var name = idArr[0];
+            var addbtn = '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + id + ')">Add</button>';
+            console.log("addbtn="+addbtn);
+            //$("#"+attToId).after(addBtn);
+        }
     }
     return false;
 }

@@ -10,6 +10,10 @@ var combobox_width = '100%'; //'element'
 var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 var type = $("#formtype").val();
 var cicle = $("#formcicle").val();
+var user_name = $("#user_name").val();
+var user_id = $("#user_id").val();
+var proxyuser_name = $("#proxyuser_name").val();
+var proxyuser_id = $("#proxyuser_id").val();
 //console.log("type="+type+", cicle="+cicle);
 
 function regularCombobox() {
@@ -24,6 +28,13 @@ function regularCombobox() {
 
     //make provider read only
     $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
+
+    //preselect with current user
+    if( !proxyuser_id ) {
+        proxyuser_id = user_id;
+        proxyuser_name = user_name;
+    }
+    $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
 }
 
 function customCombobox() {
@@ -392,6 +403,8 @@ function getComboboxReturn(urlCommon,ids) {
 
 //#############  pathology service  ##############//
 function getComboboxPathService(urlCommon,ids) {
+
+    //******************* order pathology service *************************//
     //var uid = 'patient_'+ids[0]+'_specimen_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"pathservice";
@@ -422,8 +435,8 @@ function getComboboxPathService(urlCommon,ids) {
 
     });
 
-    var usernameThis = $("#username").val();
-    console.log("username="+username);
+    //******************* user pathology service *************************//
+    //console.log("user_name="+user_name);
     var url = urlCommon+"pathservice";
     $.ajax(url).success(function(data) {
         json = eval(data);
@@ -446,10 +459,11 @@ function getComboboxPathService(urlCommon,ids) {
             }
         });
 
+        //console.log("user_name="+user_name);
         $.ajax({
             url: urlCommon+"userpathservice",
             type: 'POST',
-            data: {username: usernameThis},
+            data: {username: user_name},
             dataType: 'json',
             success: function(data) {
                 //console.log("userpathservice="+data[0]['text']);

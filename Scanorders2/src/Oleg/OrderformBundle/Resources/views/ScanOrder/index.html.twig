@@ -35,7 +35,7 @@
                 {{ form_widget(form.search) }}
             </div>
             <div class="col-xs-1">
-                <button type="submit" class="btn btn-xs btn-default"><i class="icon-search"></i> Search</button>
+                <button type="submit" class="btn btn-xs btn-default"><i class="icon-search"></i>Filter</button>
             </div>
         </div>
         {{ form_rest(form) }}
@@ -45,18 +45,15 @@
         <thead>
             <tr>
                 <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
-                {#<th{% if pagination.isSorted('orderinfo.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Status', 'orderinfo.status') }}</th>#}
                 <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
-                {#<th{% if pagination.isSorted('orderinfo.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Order #', 'orderinfo.id') }}</th>#}
-                {#<th{% if pagination.isSorted('orderinfo.slide') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Slides #', 'orderinfo.slide') }}</th>#}
                 <th>Slides #</th>
-                <th{% if pagination.isSorted('orderinfo.priority') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
-                <th{% if pagination.isSorted('orderinfo.returnoption') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
-                <th{% if pagination.isSorted('orderinfo.type') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>
-                {#{% if showprovider is defined and showprovider == 'true' %}#}
-                   <th{% if pagination.isSorted('orderinfo.provider.username') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Provider', 'orderinfo.provider.username') }}</th>
-                {#{% endif %}#}
+                <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>
+                {% if showprovider is defined and showprovider == 'true' %}
+                   <th>{{ knp_pagination_sortable(pagination, 'Provider', 'provider.username') }}</th>
+                {% endif %}
                 <th>Actions</th>
             </tr>
         </thead>
@@ -99,13 +96,13 @@
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>
                 <td>{{ entity.type }}</td>
-                {#{% if showprovider is defined and showprovider == 'true' %}#}
+                {% if showprovider is defined and showprovider == 'true' %}
                     <td>
                         {% for provider in entity.provider %}
-                            {{ provider }}
+                            {{ provider.username }}
                         {% endfor %}
                     </td>
-                {#{% endif %}#}
+                {% endif %}
                 <td>  
                     
                     {{ include('OlegOrderformBundle::Default/action.html.twig') }}

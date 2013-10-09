@@ -141,9 +141,9 @@ class UserType extends AbstractType
         if( $this->roleAdmin ) {
             $builder->add('roles', 'choice', array(
                 'choices'   => array(
-                    'ROLE_SUPER_ADMIN'   => 'ROLE_SUPER_ADMIN',
-                    'ROLE_ADMIN'   => 'ROLE_ADMIN',
-                    'ROLE_USER' => 'ROLE_USER',
+                    'ROLE_SUPER_ADMIN'   => 'Administrator',
+                    'ROLE_ADMIN'   => 'Processor',
+                    'ROLE_USER' => 'Submitter',
                 ),
                 'attr'=>$attr,
     //            'property_path' => false,
