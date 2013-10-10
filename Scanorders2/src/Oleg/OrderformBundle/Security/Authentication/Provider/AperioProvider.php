@@ -66,15 +66,17 @@ class AperioProvider implements AuthenticationProviderInterface
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
-                $user->addRole('ROLE_USER');
+                $user->addRole('ROLE_USER');                //Submitter
 
                 if( $token->username == "oli2002" || $token->username == "vib9020" ) {
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 
-//                if( $token->username == "svc_aperio_spectrum" || $token->username == "Administrator" || $token->username == "administrator" ) {
-//                    $user->addRole('ROLE_ADMIN');
-//                }
+                if( $token->username == "svc_aperio_spectrum" || $token->username == "Administrator" || $token->username == "administrator" ) {
+                    //$user->addRole('ROLE_ADMIN');
+                } else {
+                    $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+                }
 
                 $encoder = $this->serviceContainer->get('security.encoder_factory')->getEncoder($user);
                 $encodedPass = $encoder->encodePassword($token->digest, $user->getSalt());

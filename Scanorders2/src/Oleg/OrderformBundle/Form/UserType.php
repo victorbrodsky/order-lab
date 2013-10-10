@@ -144,6 +144,7 @@ class UserType extends AbstractType
                     'ROLE_SUPER_ADMIN'   => 'Administrator',
                     'ROLE_ADMIN'   => 'Processor',
                     'ROLE_USER' => 'Submitter',
+                    'ROLE_ORDERING_PROVIDER' => 'Ordering Provider'
                 ),
                 'attr'=>$attr,
     //            'property_path' => false,

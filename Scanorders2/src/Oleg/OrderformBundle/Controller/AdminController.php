@@ -231,7 +231,7 @@ class AdminController extends Controller
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 
-        $count = $this->generateStains();
+        $count = $this->generatePathServices();
         if( $count >= 0 ) {
 
             $this->get('session')->getFlashBag()->add(
@@ -484,7 +484,6 @@ class AdminController extends Controller
         $entities = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
 
         if( $entities ) {
-
             return -1;
         }
 
@@ -495,16 +494,31 @@ class AdminController extends Controller
 
         $count = 0;
         foreach( $services as $service ) {
-            $list = new PathServiceList();
-            $list->setCreator( $username );
-            $list->setCreatedate( new \DateTime() );
-            $list->setName( trim($service) );
-            $list->setType('default');
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($list);
-            $em->flush();
-            $count++;
+            $pathlogyServices = explode("/",$service);
+
+            foreach( $pathlogyServices as $pathlogyService ) {
+
+                $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
+
+                if( $pathlogyServiceEntity ) {
+                    //
+                } else {
+                    //echo " ".$pathlogyService.", ";
+                    $list = new PathServiceList();
+                    $list->setCreator( $username );
+                    $list->setCreatedate( new \DateTime() );
+                    $list->setName( trim($pathlogyService) );
+                    $list->setType('default');
+
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($list);
+                    $em->flush();
+                    $count++;
+                }
+
+            }
+            //echo "<br>";
         }
 
         return $count;

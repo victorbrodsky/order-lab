@@ -48,11 +48,6 @@ class User extends BaseUser
      */
     protected $pathologyServices;
 
-//    /**
-//     * @ORM\Column(name="defaultPathService", type="string", nullable=true)
-//     */
-//    protected $defaultPathService;
-
     /**
      * @ORM\Column(name="phone", type="string", nullable=true)
      */
@@ -96,7 +91,6 @@ class User extends BaseUser
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
-        //$this->defaultPathService = 0;
         parent::__construct();
     }
 
@@ -257,8 +251,6 @@ class User extends BaseUser
     {
         return $this->createdby;
     }
-
-
 
     public function __toString() {
 //        return "User: ".$this->username.", email=".$this->email.", PathServiceList count=".count($this->pathologyServices)."<br>";

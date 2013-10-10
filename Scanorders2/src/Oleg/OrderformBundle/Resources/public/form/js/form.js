@@ -80,29 +80,44 @@ function initAdd() {
 
 //confirm delete
 function deleteItem(id) {
-    if( confirm("Are you sure?") ) {
-        //var id = this.id;
 
-        //check if this is not the last element
-        var idArr = id.split("_");
-        var partialId = 'formpanel_'+idArr[0];
-        console.log("partialId="+partialId);
-        var elements = $('[id^='+partialId+']');
-        console.log("elements.length="+elements.length);
-        if( elements.length > 1 ) {
+    //check if this is not the last element in the patient's tree
+    var idArr = id.split("_");
+    var patient = idArr[1];
+    var partialId = 'formpanel_'+idArr[0]+'_'+patient;
+    console.log("partialId="+partialId);
+    var elements = $('[id^='+partialId+']');
+    console.log("elements.length="+elements.length);
+
+    if( elements.length > 1 ) {
+
+        if( confirm("Are you sure?") ) {
             $('#formpanel_'+id).remove();
-        } else {
-            alert("You can't delete only one left " + idArr[0]);
+
+            //check if it is only one element left
+            if( (elements.length-1) == 1 ) {
+                //change "delete" to "clear"
+                var elements = $('[id^='+partialId+']');
+                console.log("rename element="+elements.attr('class'));
+                elements.prop('value', 'Clear');
+            }
+
         }
 
-        //TODO: append new "Add" button to the same object type if it's not exists
-        if( elements.length == 1 ) {
-            var name = idArr[0];
-            var addbtn = '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + id + ')">Add</button>';
-            console.log("addbtn="+addbtn);
-            //$("#"+attToId).after(addBtn);
-        }
+    } else {
+        alert("You can't delete only one left " + idArr[0]);
     }
+
+
+
+//        //TODO: append new "Add" button to the same object type if it's not exists
+//        if( elements.length == 1 ) {
+//            var name = idArr[0];
+//            var addbtn = '<button id="form_add_btn_' + name + '_' + id + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + id + ')">Add</button>';
+//            console.log("addbtn="+addbtn);
+//            //$("#"+attToId).after(addBtn);
+//        }
+
     return false;
 }
 
@@ -123,6 +138,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     var idsorig = btnids['orig'];
     var ids = btnids['ids'];
     var idsm = btnids['idsm'];
+    var idsp = btnids['idsp'];
 
     //attach form
     $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
@@ -163,10 +179,28 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
-    //remove previous form add button only for parent object
-    var uid = idsorig.join("_");
-    //console.log("remove="+'#form_add_btn_'+name+'_'+uid);
-    $('#form_add_btn_'+name+'_'+uid).remove();
+    //replace all "add" buttons of this branch with "add" buttons for the next element
+    //get this element
+    console.log("replace partialId="+partialId);
+    var thisParent = $("#"+name+ids.join("_")).parent();
+    console.log("replace thisParent="+thisParent.attr('id'));
+
+//    var partialId = "form_add_btn_"+name;
+//    console.log("replace partialId="+partialId);
+//    var elements = $('[id^='+partialId+']');
+//    console.log("replace elements.length="+elements.length);
+//    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
+//    for (var i = 0; i < elements.length; i++) {
+//        console.log("replace elements[i]="+elements[i].attr('id'));
+//        elements[i].replaceWith( addbtn );
+//    }
+//    var uid = idsorig.join("_");
+//    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
+//    console.log("replace id="+'#form_add_btn_'+name+'_'+uid);
+//    $('#form_add_btn_'+name+'_'+uid).replaceWith( addbtn );
+
+    //rename previous "clear" to "Delete"
+    $("#"+name+"_"+idsorig.join("_")).html('Delete');
 }
 
 //add children forms triggered by parent form
@@ -302,6 +336,15 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
     var scaniddm = scanid;
     var stainidm = stainid;
 
+    var patientidp = patientid;
+    var procedureidp = procedureid;
+    var accessionidp = accessionid;
+    var partidp = partid;
+    var blockidp = blockid;
+    var slideidp = slideid;
+    var scaniddp = scanid;
+    var stainidp = stainid;
+
     var orig = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
 
     switch(name)
@@ -309,48 +352,56 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
         case "patient":
             patientidm = patientid-1;
             patientid++;
+            patientidp = patientid+1;
             id = patientid;
             nextName = "procedure";
             break;
         case "procedure":
             procedureidm = procedureid-1;
             procedureid++;
+            procedureidp = procedureid+1;
             id = procedureid;
             nextName = "accession";
             break;
         case "accession":
             accessionidm = accessionid-1;
             accessionid++;
+            accessionidp = accessionid+1;
             id = accessionid;
             nextName = "part";
             break;
         case "part":
             partidm = partid-1;
             partid++;
+            partidp = partid+1;
             id = partid;
             nextName = "block";
             break;
         case "block":
             blockidm = blockid-1;
             blockid++;
+            blockidp = blockid+1;
             id = blockid;
             nextName = "slide";
             break;
         case "slide":
             slideidm = slideid-1;
             slideid++;
+            slideidp = slideid+1;
             id = slideid;
             nextName = "";
             break;
         case "scan":
             scaniddm = scanid-1;
             scanid++;
+            scaniddp = scanid+1;
             id = scanid;
             nextName = "";
             break;
         case "stain":
             stainidm = stainid-1;
             stainid++;
+            stainidp = stainid+1;
             id = stainid;
             nextName = "";
             break;
@@ -360,12 +411,14 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
 
     var idsArray = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
     var idsArrayM = [patientidm, procedureidm, accessionidm, partidm, blockidm, slideidm, scaniddm, stainidm];
+    var idsArrayP = [patientidp, procedureidp, accessionidp, partidp, blockidp, slideidp, scaniddp, stainidp];
 
     var res_array = {
         'id' : id,
         'orig' : orig,
         'ids' : idsArray,
         'idsm' : idsArrayM,
+        'idsp' : idsArrayP,
         'nextName' : nextName
     };
 
@@ -601,6 +654,8 @@ function checkValidate() {
     form.find(':radio').each(add);
 
 }
+
+
 
 ////////////////// different diagnoses (uses as generic collection field) ////////////////////////
 

@@ -57,6 +57,9 @@ class UserUtil {
             $office = $rowData[0][10];
             $pathlogyServices = explode("/",$rowData[0][2]);
 
+            //echo "<br>pathservices=".$rowData[0][2]." == ";
+            //print_r($pathlogyServices);
+
             $user = new User();
             $user->setEmail($email);
             $user->setEmailCanonical($email);
@@ -71,6 +74,7 @@ class UserUtil {
             $user->setOffice($office);
             $user->setPassword("");
             $user->setCreatedby('excel');
+            $user->addRole('ROLE_ORDERING_PROVIDER');
 
             if( $username == "oli2002" || $username == "vib9020" ) {
                 $user->addRole('ROLE_SUPER_ADMIN');
@@ -80,11 +84,11 @@ class UserUtil {
 //                $user->addRole('ROLE_ADMIN');
 //            }
 
-            $pathlogyServiceEntities = new ArrayCollection();
+//            $pathlogyServiceEntities = new ArrayCollection();
             foreach( $pathlogyServices as $pathlogyService ) {
                 $pathlogyService = trim($pathlogyService);
                 if( $pathlogyService != "" ) {
-                    //echo $username.": service=(".$pathlogyService.")<br>";
+                    //echo " (".$pathlogyService.") ";
                     $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
 
                     if( $pathlogyServiceEntity ) {
@@ -102,7 +106,6 @@ class UserUtil {
 //                    if( !$user->getDefaultPathService() ) {
 //                        $user->setDefaultPathService($pathlogyServiceEntity->getId());  //set the first pathology service as default one
 //                    }
-
                 }
             }
 //            if( count($pathlogyServiceEntities) > 0 ) {
@@ -115,9 +118,7 @@ class UserUtil {
 
             $found_user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername($username);
             if( $found_user ) {
-                //echo $username." found ";
-                //$user = $em->merge($user);
-                //$em->flush();
+                //
             } else {
                 //echo $username." not found ";
                 $em->persist($user);
@@ -127,6 +128,7 @@ class UserUtil {
 
         }//for each user
 
+        //exit();
         return $count;
     }
 

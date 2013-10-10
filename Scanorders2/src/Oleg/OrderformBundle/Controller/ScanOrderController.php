@@ -237,6 +237,7 @@ class ScanOrderController extends Controller {
         //echo "<br>criteriastr=".$criteriastr."<br>";
         
         if( $criteriastr != "" ) {
+            //TODO: use ->setParameter(1, $caravan);
             $dql->where($criteriastr);
         }
 

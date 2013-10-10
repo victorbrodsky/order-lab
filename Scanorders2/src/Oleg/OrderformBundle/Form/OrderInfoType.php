@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
+use Doctrine\ORM\EntityRepository;
 
 class OrderInfoType extends AbstractType
 {
@@ -197,6 +198,11 @@ class OrderInfoType extends AbstractType
             'required' => false,
             //'multiple' => true,
             'attr' => $attr,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->where('u.roles LIKE :roles')
+                    ->setParameter('roles', '%' . 'ROLE_ORDERING_PROVIDER' . '%');
+            },
         ));
         
     }
