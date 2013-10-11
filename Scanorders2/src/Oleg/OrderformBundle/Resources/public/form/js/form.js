@@ -80,43 +80,54 @@ function initAdd() {
 
 //confirm delete
 function deleteItem(id) {
+    //check if this is not the last element in the parent tree
+    var thisId = "formpanel_"+id;
+    //console.log("replace thisId="+thisId);
+    var thisParent = $("#"+thisId).parent();
+    //console.log("replace thisParent="+thisParent.attr('id'));
+    var elements = thisParent.children( ".panel" );
+    //console.log("replace elements.length="+elements.length);
 
-    //check if this is not the last element in the patient's tree
-    var idArr = id.split("_");
-    var patient = idArr[1];
-    var partialId = 'formpanel_'+idArr[0]+'_'+patient;
-    console.log("partialId="+partialId);
-    var elements = $('[id^='+partialId+']');
-    console.log("elements.length="+elements.length);
 
-    if( elements.length > 1 ) {
 
-        if( confirm("Are you sure?") ) {
+    if( confirm("This auction will affect this element and all its children. Are you sure?") ) {
+
+        if( elements.length > 1 ) {
+
             $('#formpanel_'+id).remove();
 
             //check if it is only one element left
             if( (elements.length-1) == 1 ) {
                 //change "delete" to "clear"
-                var elements = $('[id^='+partialId+']');
-                console.log("rename element="+elements.attr('class'));
-                elements.prop('value', 'Clear');
+                var element = thisParent.children( ".panel" );
+                //console.log("rename element="+element.attr('id'));
+                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
+                //console.log("rename delBtnToReplace="+delBtnToReplace.attr('id'));
+                delBtnToReplace.html('Amend');
             }
 
-        }
+        } else {
+            //clear the form and all children
+            var ids = id.split("_");
+            //alert("You can't delete only one left " + ids[0]);
 
-    } else {
-        alert("You can't delete only one left " + idArr[0]);
+            //console.log("id="+id);
+            //console.log("rename elements.length="+elements.length);
+            addSameForm(ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[7], ids[8]);
+
+            $('#formpanel_'+id).remove();
+
+            //make sure to rename delete button to "Clear" if it is only one element left
+            if( elements.length == 1 ) {
+                //change "delete" to "clear"
+                var element = thisParent.children( ".panel" );
+                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
+                delBtnToReplace.html('Amend');
+            }
+        }
     }
 
 
-
-//        //TODO: append new "Add" button to the same object type if it's not exists
-//        if( elements.length == 1 ) {
-//            var name = idArr[0];
-//            var addbtn = '<button id="form_add_btn_' + name + '_' + id + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + id + ')">Add</button>';
-//            console.log("addbtn="+addbtn);
-//            //$("#"+attToId).after(addBtn);
-//        }
 
     return false;
 }
@@ -126,10 +137,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;  //+"_"+diffdiag+"_"+specstain+"_"+image;
 
-    //alert("addSameForm="+uid);
-
-    //place the form in the html page
-    var holder = "#formpanel_"+name+"_"+uid;
+    //console.log("addSameForm="+name+"_"+uid);
 
     //prepare form ids and pass it as array
     //increment by 1 current object id
@@ -139,6 +147,16 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     var ids = btnids['ids'];
     var idsm = btnids['idsm'];
     var idsp = btnids['idsp'];
+
+    //place the form in the html page after the last similar element: use parent
+    //    var holder = "#formpanel_"+name+"_"+uid;
+    //formpanel_slide_0_0_0_0_0_0_0_0
+    var partialId = "formpanel_"+name+"_"+btnids['partialId'];
+    var elements = $('[id^='+partialId+']');
+    var holder = elements.eq(elements.length-1);
+    //console.log( "id="+holder.attr('id') );
+
+    //console.log("holder="+holder);
 
     //attach form
     $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
@@ -179,28 +197,27 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
-    //replace all "add" buttons of this branch with "add" buttons for the next element
-    //get this element
-    console.log("replace partialId="+partialId);
-    var thisParent = $("#"+name+ids.join("_")).parent();
-    console.log("replace thisParent="+thisParent.attr('id'));
+    //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
+    var thisId = "formpanel_"+name+"_"+ids.join("_");
+    //console.log("thisId="+thisId);
+    var thisParent = $("#"+thisId).parent();
+    var childrens = thisParent.children( ".panel" );
 
-//    var partialId = "form_add_btn_"+name;
-//    console.log("replace partialId="+partialId);
-//    var elements = $('[id^='+partialId+']');
-//    console.log("replace elements.length="+elements.length);
-//    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
-//    for (var i = 0; i < elements.length; i++) {
-//        console.log("replace elements[i]="+elements[i].attr('id'));
-//        elements[i].replaceWith( addbtn );
-//    }
-//    var uid = idsorig.join("_");
-//    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
-//    console.log("replace id="+'#form_add_btn_'+name+'_'+uid);
-//    $('#form_add_btn_'+name+'_'+uid).replaceWith( addbtn );
+    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
+    for (var i = 0; i < childrens.length; i++) {
+        var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
+        addBtnToReplace.replaceWith( addbtn );
 
-    //rename previous "clear" to "Delete"
-    $("#"+name+"_"+idsorig.join("_")).html('Delete');
+        //rename "clear" to "Delete"
+        if( childrens.length > 1 ) {
+            //console.log("childrens.length="+childrens.length);
+            var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
+            delBtnToRename.html('Delete');
+        }
+    }
+
+
+
 }
 
 //add children forms triggered by parent form
@@ -243,24 +260,27 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 //input: current form ids
 function getForm( name, id, idsorig, ids, idsm ) {
 
-    //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
-
+    var deleteStr = "Amend";
     var idsu = ids.join("_");
     var idsc = ids.join(",");
-
     //increment by 1 current object id
     var formbody = getFormBody( name, idsu, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
 
+    //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
 
     if( name == "scan" || name == "stain" ) {
         var addbtn = "";
         var deletebtn = "";
-        var itemCount = (id+2);
+        //var itemCount = (id+2);
     } else {
-        var addbtn = '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>';
-        var deletebtn = ' <button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>';
-        var itemCount = (id+1);
+        var addbtn = '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>';
+        var deletebtn = ' <button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">'+deleteStr+'</button>';
+        //var itemCount = (id+1);
     }
+
+    //get itemCount from partialId
+    var itemCount = getIdByName(name,ids) + 1;
+    //console.log('itemCount='+itemCount);
 
     var title = name;
     if( name == "procedure" ) {
@@ -345,6 +365,8 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
     var scaniddp = scanid;
     var stainidp = stainid;
 
+    var partialId = "";
+
     var orig = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
 
     switch(name)
@@ -355,6 +377,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             patientidp = patientid+1;
             id = patientid;
             nextName = "procedure";
+            partialId = "";
             break;
         case "procedure":
             procedureidm = procedureid-1;
@@ -362,6 +385,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             procedureidp = procedureid+1;
             id = procedureid;
             nextName = "accession";
+            partialId = patientid;
             break;
         case "accession":
             accessionidm = accessionid-1;
@@ -369,6 +393,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             accessionidp = accessionid+1;
             id = accessionid;
             nextName = "part";
+            partialId = patientid+"_"+procedureid;
             break;
         case "part":
             partidm = partid-1;
@@ -376,6 +401,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             partidp = partid+1;
             id = partid;
             nextName = "block";
+            partialId = patientid+"_"+procedureid+"_"+accessionid;
             break;
         case "block":
             blockidm = blockid-1;
@@ -383,6 +409,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             blockidp = blockid+1;
             id = blockid;
             nextName = "slide";
+            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid;
             break;
         case "slide":
             slideidm = slideid-1;
@@ -390,6 +417,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             slideidp = slideid+1;
             id = slideid;
             nextName = "";
+            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
             break;
         case "scan":
             scaniddm = scanid-1;
@@ -397,6 +425,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             scaniddp = scanid+1;
             id = scanid;
             nextName = "";
+            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
             break;
         case "stain":
             stainidm = stainid-1;
@@ -404,6 +433,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             stainidp = stainid+1;
             id = stainid;
             nextName = "";
+            partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
             break;
         default:
             id = 0;
@@ -419,10 +449,41 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
         'ids' : idsArray,
         'idsm' : idsArrayM,
         'idsp' : idsArrayP,
-        'nextName' : nextName
+        'nextName' : nextName,
+        'partialId' : partialId
     };
 
     return res_array;
+}
+
+function getIdByName( name, ids ) {
+    var id = -1;
+
+    switch(name)
+    {
+        case "patient":
+            id = ids[0];
+            break;
+        case "procedure":
+            id = ids[1];
+            break;
+        case "accession":
+            id = ids[2];
+            break;
+        case "part":
+            id = ids[3];
+            break;
+        case "block":
+            id = ids[4];
+            break;
+        case "slide":
+            id = ids[5];
+            break;
+        default:
+            id = 0;
+    }
+
+    return id;
 }
 
 //bind listener to the toggle button
@@ -653,355 +714,6 @@ function checkValidate() {
 
     form.find(':radio').each(add);
 
-}
-
-
-
-////////////////// different diagnoses (uses as generic collection field) ////////////////////////
-
-//By html form: add different diagnoses input field
-function addDiffdiagField( name, type, patient, specimen, accession, part, block, slide ) {
-
-   //console.log("Add: name="+name+",type="+type+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
-
-    //var prefix = "oleg_orderformbundle_orderinfotype_";
-    var prefix = "inputGroupId_";
-    var fieldPrefix = "oleg_orderformbundle_orderinfotype";
-    var partialUid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide;
-
-    //Id Generated by Symfony: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_name
-    if( name == "diffDiagnoses" ) {
-        var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
-    }
-    if( name == "relevantScans" ) {
-        var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide;
-    }
-    var typeuid = uid + "_";
-
-    if( type == "single" ) {
-        if( name == "diffDiagnoses" ) {
-            fieldPrefix = "oleg_orderformbundle_parttype";
-        }
-        if( name == "relevantScans" ) {
-            fieldPrefix = "oleg_orderformbundle_slidetype";
-        }
-        typeuid = '';
-    }
-
-    //ger diffdiag count from id
-    var partialId = prefix + partialUid + "_"+name;
-    //console.log("partialId="+partialId);
-    //inputGroupId_patient_0_specimen_0_accession_0_part_1_block_0_slide_0_diffDiagnoses
-    //inputGroupId_patient_0_specimen_0_accession_0_part_0_block_1_slide_0_diffDiagnoses_0_diffDiagnoses
-    
-    var elements = $('[id^='+partialId+']');
-    //console.log("elements length="+elements.length);
-
-    diffdiagInt = elements.length;
-    //console.log("diffdiagInt="+diffdiagInt);
-
-    var newForm = getDiffdiagField( name, type, patient, specimen, accession, part, block, slide, diffdiagInt, false );
-
-    //var ending = "_name";
-    var ending = "_"+name;
-
-    //add to last input field
-    var addto = elements[elements.length-1].id
-    //console.log("form addto="+addto);
-    $("#"+addto).after(newForm);
-
-    //add '-' button for the first input field if it is not existed yet
-    if( diffdiagInt == 1 ) {
-        //id of the input field: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_4_name
-        var firstPartialId = fieldPrefix + "_" + typeuid +  name + "_";
-        //console.log("firstPartialId="+firstPartialId);
-        var partialInputElements = $('[id^='+firstPartialId+']');
-        var addId = partialInputElements[0].id;
-
-        var currFiledCollId = getCollId(name, addId);
-        var btnDel = getDelBtn(name, type, patient, specimen, accession, part, block, slide, currFiledCollId);
-
-        //console.log("!!!! add '-' to the first input field: addId="+addId);
-        $("#"+addId).after(btnDel);
-    }
-
-    //remove + for the previous button all the time
-    //get array of all + buttons and remove the first one
-    //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_3_diffDiagnoses
-    var lastAddBtnPartialId = "addbtn_" + partialUid + "_" + name + "_";
-    //console.log("lastAddBtnPartialId="+lastAddBtnPartialId);
-    var lastAddBtnPartialElement = $('[id^='+lastAddBtnPartialId+']');
-   //console.log("remove first + remid="+lastAddBtnPartialElement[0].id);
-    if( lastAddBtnPartialElement.id != "undefined" ) {
-        lastAddBtnPartialElement[0].remove();
-    }
-
-    expandTextarea();
-}
-
-//add different diagnoses input field first time by JS
-function addDiffdiagFieldFirstTime( name, ids ) {
-
-    var patient = ids[0];
-    var specimen = ids[1];
-    var accession = ids[2];
-    var part = ids[3];
-    var block = ids[4];
-    var slide = ids[5];
-    var type = 'multi';
-    var currFiledCollId = 0;
-    var noDelBtn = true;
-
-   //console.log("name="+name+",ids="+ids+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
-
-    if( name == "part" ) {
-        var ident = "diffDiagnoses";
-        var title = "Differential Diagnoses:";
-        var prevId = 'oleg_orderformbundle_orderinfotype_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_diagnosis';
-    }
-
-    if( name == "slide" ) {
-        var ident = "relevantScans";
-        var title = "Relevant Scanned Images:";
-        var prevId = 'oleg_orderformbundle_orderinfotype_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_microscopicdescr';
-    }
-
-    var newForm = getDiffdiagField( ident, type, patient, specimen, accession, part, block, slide, currFiledCollId, noDelBtn );
-
-    //var addBtnId = 'addbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident+'_'+currFiledCollId+'_'+ident;
-    var inputGroupId = 'inputGroupId_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+currFiledCollId+'_'+ident;
-
-    //create form with bs3 rows
-    var finalForm = '<p><div class="row">'+
-
-                            '<div class="col-xs-6" align="right">'+
-                                '<b>' + title + '</b>' +
-                            '</div>' +
-
-                            '<div class="col-xs-6" align="left">' +
-
-                                '<div class="fieldInputColl">' +
-                                       newForm +
-                                '</div>'+
-
-                            '</div>'+
-                    '</div></p>';
-
-
-    //get addto dimamically: get parent and attach input to this parent
-    //id=oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_2_diagnosis
-    //var prevId = 'oleg_orderformbundle_orderinfotype_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_diagnosis'; //TODO: add block, slide
-   //console.log("prevId="+prevId);
-
-    //get parent
-    var parent = $('#'+prevId).parent();
-   //console.log( "parent=" + parent.attr('class') );
-    var grandParent = parent.parent();
-   //console.log( "grandParent="+grandParent.attr('class') );
-
-     //$('#'+addto).after(newForm);
-    //$('#'+addto).append(newForm);
-    grandParent.after(finalForm);
-}
-
-//get input field only
-function getDiffdiagField( name, type, patient, specimen, accession, part, block, slide, diffdiag, noDelBtn ) {
-
-    //inputGroupId_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_diffDiagnoses
-    var ending = "_" + name + "_" + diffdiag + "_" + name;
-
-    var dataholder = "#form-prototype-data"; //fixed data holder
-    //console.log(dataholder);
-    var collectionHolder =  $(dataholder);
-
-    if( name == "diffDiagnoses" ) {
-        var prototype = collectionHolder.data('prototype-diffdiagnoses');
-        //console.log("prototype="+prototype);
-        var newForm = prototype.replace(/__patient__/g, patient);
-        newForm = newForm.replace(/__specimen__/g, specimen);
-        newForm = newForm.replace(/__accession__/g, accession);
-        newForm = newForm.replace(/__part__/g, part);
-        newForm = newForm.replace(/__diffDiagnoses__/g, diffdiag);
-    }
-
-    if( name == "relevantScans" ) {
-        var prototype = collectionHolder.data('prototype-relevantscans');
-        //console.log("prototype="+prototype);
-        var newForm = prototype.replace(/__patient__/g, patient);
-        newForm = newForm.replace(/__specimen__/g, specimen);
-        newForm = newForm.replace(/__accession__/g, accession);
-        newForm = newForm.replace(/__part__/g, part);
-        newForm = newForm.replace(/__block__/g, block);
-        newForm = newForm.replace(/__slide__/g, slide);
-        newForm = newForm.replace(/__relevantScans__/g, diffdiag);
-    }
-
-    var inputGroupId = 'inputGroupId_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+ending;
-   //console.log("inputGroupId="+inputGroupId);
-
-    var header = '<div class="input-group" id="'+inputGroupId+'">';
-
-    var btnAdd = getAddBtn(name, type, patient, specimen, accession, part, block, slide, diffdiag);
-
-    var btnDel = "";
-    if( noDelBtn != true ) {
-        btnDel = getDelBtn(name, type, patient, specimen, accession, part, block, slide, diffdiag);
-    }
-
-    var footer = '</div>';
-
-    newForm = header + newForm + btnDel + btnAdd + footer;
-
-    //console.log("newForm="+newForm);
-    return newForm;
-}
-
-
-//delete input field and modify +/- buttons accordingly:
-//1) delete the field: remove "-" button for the first field if it's not only one field
-//2) delete the last field: add "+" button to the previous field
-function delDiffdiagField( name, type, patient, specimen, accession, part, block, slide, diffdiag ) {
-    
-    //console.log("name="+name+",type="+type+",patient="+patient+ ",specimen="+specimen+",accession="+accession+",part="+part);
-    
-    //Id Generated by Symfony: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_name
-    //var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
-    var fullUid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide;
-    if( name == "diffDiagnoses" ) {
-        var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
-    }
-    if( name == "relevantScans" ) {
-        var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide;
-    }
-    var typeuid = uid + "_";
-
-    //var prefix = "oleg_orderformbundle_orderinfotype_";
-    var prefix = "inputGroupId_";
-    var fieldPrefix = "oleg_orderformbundle_orderinfotype";
-
-    if( type == "single" ) {
-        if( name == "diffDiagnoses" ) {
-            fieldPrefix = "oleg_orderformbundle_parttype";
-        }
-        if( name == "relevantScans" ) {
-            fieldPrefix = "oleg_orderformbundle_slidetype";
-        }
-        typeuid = '';
-    }
-   
-    //ger diffdiag count from id
-    var partialId = prefix+fullUid+"_"+name+"_";
-   //console.log("partialId="+partialId);
-    
-    var elements = $('[id^='+partialId+']');
-    //console.log("elements length="+elements.length);
-
-    diffdiagInt = elements.length - 1;
-    //console.log("length="+elements.length+",diffdiagInt="+diffdiagInt+", diffdiag="+diffdiag);
-
-    //don't delete if there is only one field
-    if( diffdiagInt == 0 ) {
-        return false;
-    }
-
-    //delete without asking confirmation if the input field is empty
-    //remove id: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_name
-    //inputGroupId_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_4_diffDiagnoses
-    var delId = partialId + diffdiag + '_' + name;
-   //console.log("inputGroupId delId="+delId);
-
-    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_1_name
-    var textId = fieldPrefix + "_" + typeuid + name + "_" + diffdiag + "_name";  //TODO: use variable instead of "name"
-    var text = $('#'+textId).val();
-    //console.log("textId="+textId);
-
-    //console.log("text="+text);
-    var remove = false;
-    if( text === undefined || text == "" || text.trim() == "undefined" ) {
-        remove = true;
-    } else {
-        if( confirm("Are you sure?") || text == "" ) {
-            remove = true;
-        }
-    }
-
-    if( remove == true ) {
-
-        //1) remove input and all buttons
-        //console.log("remove field with id="+delId);
-        $('#'+delId).remove();
-
-        //case 1: check and remove "-" button for the first field if it's not only one field
-        if( diffdiagInt == 1 ) {
-            //console.log("!!! remove'-'");
-            //delbtn_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_3_diffDiagnoses
-            var lastDelBtnPartialId = "delbtn_" + fullUid + "_" + name + "_";
-            var lastDelBtnPartialElement = $('[id^='+lastDelBtnPartialId+']');
-            lastDelBtnPartialElement.remove();
-        }
-
-        //case 2: add + button to the last input field if it is not existed yet
-        //+ button id
-        //get collection id
-        var elements = $('[id^='+partialId+']');
-        var lastElementId = elements[elements.length-1].id;
-        var currFiledCollId = getCollId(name, lastElementId);
-
-        var lastAddBtnId = "addbtn_"+fullUid+"_"+name+"_"+currFiledCollId+'_'+name;
-        if( $("#"+lastAddBtnId).length > 0 ) {
-            //don't add because it already exists
-           //console.log("don't add because it already exists, length="+$("#"+lastAddBtnId).length);
-        } else {
-            //add + button
-            if( diffdiagInt == 1 ) {
-                var attToId = fieldPrefix + "_" + typeuid + name + "_" + currFiledCollId + "_name";  //TODO: use variable
-            } else {
-                var attToId = "delbtn_" + fullUid + "_" + name + "_" + currFiledCollId + '_' + name;
-            }
-            var addBtn = getAddBtn(name, type, patient, specimen, accession, part, block, slide, currFiledCollId);
-           //console.log("add + button: attToId="+attToId);
-            $("#"+attToId).after(addBtn);
-        }
-
-
-    }
-
-    return false;
-}
-
-function getCollId(name, collId) {
-    //console.log("lastElementId="+lastElementId);
-    var lastElementIdArr=collId.split(name+"_");
-    var lastPart = lastElementIdArr[1];
-    //console.log("lastPart="+lastPart);
-    var currFiledCollIdArr = lastPart.split("_");
-    return currFiledCollIdArr[0];
-}
-
-function remDelBtnDiffDiag_TODEL(ident, type, patient, specimen, accession, part, collInt) { //TODO: delete this function
-
-    //remove - button for the last field
-    //console.log("last field!!!! del collInt="+collInt);
-    //if( collInt == 0 ) {
-        //remove - button
-        var delbtnId = 'delbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident+'_'+collInt+'_'+ident;
-       //console.log("delbtnId="+delbtnId);
-        $('#'+delbtnId).remove();
-    //}
-}
-
-function getAddBtn(ident, type, patient, specimen, accession, part, block, slide, collInt) {
-    var addbtnId = 'addbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+collInt+'_'+ident;
-    var btn = '<span id="'+addbtnId+'" onClick="addDiffdiagField(\''+ident+'\',\'' + type + '\',' + patient + ',' +specimen+','+accession+','+part+','+block+','+slide+')"'+
-        'class="input-group-addon btn" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-plus-sign"></i></span>';
-    return btn;
-}
-
-function getDelBtn(ident, type, patient, specimen, accession, part, block, slide, collInt) {
-    var addbtnId = 'delbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+collInt+'_'+ident;
-    var btn = '<span id="'+addbtnId+'" onClick="delDiffdiagField(\''+ident+'\',\'' + type + '\',' + patient + ',' +specimen+','+accession+','+part+','+block+','+slide+','+collInt+')"'+
-        'class="input-group-addon btn" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-minus-sign"></i></span>';
-    return btn;
 }
 
 //function onCwid(){

@@ -138,7 +138,7 @@
     {% if type == 'new' or type == 'edit' %}
         <div class="form-btn-options">
             {% if toatlLength ==  (count + 1) %}
-                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button" class="btn btn-xs btn_margin"
+                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button" class="add_form_btn btn btn-xs btn_margin"
                         onclick="addSameForm(
                             '{{ name }}',
                             {{ patientCount }},
@@ -151,7 +151,7 @@
                             {{ stainCount }}
                         )">Add</button>
             {% endif %}
-            <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>
+            <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Amend</button>
         </div>
     {% endif %}
     {% endif %}

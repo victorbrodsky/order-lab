@@ -191,7 +191,7 @@ function getComboboxStain(urlCommon, ids) {
     //console.log("stain id="+id);
 
     $.ajax(url).success(function(data) {
-        json = eval(data);
+        //json = eval(data);
         //stainsData = eval(data);
         var targetid = id+"stain_0_name";
         if( type == "single" ) {
@@ -229,7 +229,6 @@ function getComboboxScanregion(urlCommon,ids) {
     var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
     var url = urlCommon+"scanregion";
     $.ajax(url).success(function(data) {
-        //json = eval(data);
         var targetid = id+"scan_0_scanregion";
         if( type == "single" ) {
             targetid = "#oleg_orderformbundle_scantype_scanregion";
@@ -295,7 +294,6 @@ function getComboboxOrgan(urlCommon,ids) {
     var url = urlCommon+"organ";
     $.ajax(url).success(function(data) {
 
-        json = eval(data);
         //oleg_orderformbundle_orderinfotype_patient_0_specimen_1_accession_0_part_0_sourceOrgan
         var targetid = id+"sourceOrgan";
         if( type == "single" ) {
@@ -351,7 +349,6 @@ function getComboboxDelivery(urlCommon,ids) {
     var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"delivery";
     $.ajax(url).success(function(data) {
-        json = eval(data);
         //oleg_orderformbundle_orderinfotype_slideDelivery
         var targetid = id+"slideDelivery";
         $(targetid).select2({
@@ -379,7 +376,6 @@ function getComboboxReturn(urlCommon,ids) {
     var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"return";
     $.ajax(url).success(function(data) {
-        json = eval(data);
         //oleg_orderformbundle_orderinfotype_returnSlide
         var targetid = id+"returnSlide";
         $(targetid).select2({
@@ -409,7 +405,6 @@ function getComboboxPathService(urlCommon,ids) {
     var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"pathservice";
     $.ajax(url).success(function(data) {
-        json = eval(data);
         //oleg_orderformbundle_orderinfotype_pathologyService
         var targetid = id+"pathologyService";
         $(targetid).select2({
@@ -439,7 +434,6 @@ function getComboboxPathService(urlCommon,ids) {
     //console.log("user_name="+user_name);
     var url = urlCommon+"pathservice";
     $.ajax(url).success(function(data) {
-        json = eval(data);
         //oleg_orderformbundle_user_pathologyServices
         var targetid = "#oleg_orderformbundle_user_pathologyServices";
         $(targetid).select2({
