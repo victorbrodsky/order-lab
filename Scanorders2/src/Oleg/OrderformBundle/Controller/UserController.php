@@ -148,6 +148,14 @@ class UserController extends Controller
     public function generateUsersAction()
     {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You do not have permission to visit this page'
+            );
+            return $this->redirect($this->generateUrl('index'));
+        }
+
         $userutil = new UserUtil();
         $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 

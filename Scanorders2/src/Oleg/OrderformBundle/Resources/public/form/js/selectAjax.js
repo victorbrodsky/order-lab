@@ -8,6 +8,7 @@
 
 var combobox_width = '100%'; //'element'
 var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
+//var urlCommon = "http://collage.med.cornell.edu/order/util/";
 var type = $("#formtype").val();
 var cicle = $("#formcicle").val();
 var user_name = $("#user_name").val();
@@ -26,8 +27,9 @@ function regularCombobox() {
         //containerCssClass: 'combobox-width'
     });
 
-    //make provider read only
+    //set amd make provider read only
     $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
+    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
 
     //preselect with current user
     if( !proxyuser_id ) {
@@ -192,7 +194,6 @@ function getComboboxStain(urlCommon, ids) {
 
     $.ajax(url).success(function(data) {
         //json = eval(data);
-        //stainsData = eval(data);
         var targetid = id+"stain_0_name";
         if( type == "single" ) {
             targetid = "#oleg_orderformbundle_staintype_name";
@@ -208,6 +209,8 @@ function getComboboxStain(urlCommon, ids) {
             quietMillis: 100,
             data: data,
             createSearchChoice:function(term, data) {
+                console.log("data="+data['text']);
+                console.log("data="+data[0].text);
                 if ($(data).filter(function() {
                     return this.text.localeCompare(term)===0;
                 }).length===0) {

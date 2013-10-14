@@ -103,7 +103,7 @@ function deleteItem(id) {
                 //console.log("rename element="+element.attr('id'));
                 var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
                 //console.log("rename delBtnToReplace="+delBtnToReplace.attr('id'));
-                delBtnToReplace.html('Amend');
+                delBtnToReplace.html('Clear');
             }
 
         } else {
@@ -122,7 +122,7 @@ function deleteItem(id) {
                 //change "delete" to "clear"
                 var element = thisParent.children( ".panel" );
                 var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-                delBtnToReplace.html('Amend');
+                delBtnToReplace.html('Clear');
             }
         }
     }
@@ -260,7 +260,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 //input: current form ids
 function getForm( name, id, idsorig, ids, idsm ) {
 
-    var deleteStr = "Amend";
+    var deleteStr = "Clear";
     var idsu = ids.join("_");
     var idsc = ids.join(",");
     //increment by 1 current object id

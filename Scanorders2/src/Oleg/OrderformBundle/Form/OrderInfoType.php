@@ -182,14 +182,13 @@ class OrderInfoType extends AbstractType
             'required'  => false,
         ));
 
-
         $attr = array('class' => 'combobox combobox-width');
         $builder->add('provider', 'entity', array(
             'class' => 'OlegOrderformBundle:User',
             'label'=>'* Submitter:',
             'required' => true,
             //'read_only' => true,    //not working => disable by twig
-            'multiple' => true,
+            //'multiple' => true,
             'attr' => $attr,
         ));
         $builder->add('proxyuser', 'entity', array(

@@ -57,11 +57,13 @@
 {% macro orderinfo(form) %}
 
     {% for provider in form.vars.value.provider %}
+        provider:{{ provider.username }}
         <input type="hidden" id="user_name" value="{{ provider.username }}" />
         <input type="hidden" id="user_id" value="{{ provider.id }}" />
     {% endfor %}
 
     {% for proxyuser in form.vars.value.proxyuser %}
+        proxyuser:{{ proxyuser.username }}
         <input type="hidden" id="proxyuser_name" value="{{ proxyuser.username }}" />
         <input type="hidden" id="proxyuser_id" value="{{ proxyuser.id }}" />
     {% endfor %}
@@ -138,7 +140,8 @@
     {% if type == 'new' or type == 'edit' %}
         <div class="form-btn-options">
             {#{% if toatlLength ==  (count + 1) %}#}
-                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button" class="add_form_btn btn btn-xs btn_margin"
+                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
+                        class="add_form_btn btn-xs btn btn_margin btn-default"
                         onclick="addSameForm(
                             '{{ name }}',
                             {{ patientCount }},
@@ -151,7 +154,7 @@
                             {{ stainCount }}
                         )">Add</button>
             {#{% endif %}#}
-            <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Amend</button>
+            <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>
         </div>
     {% endif %}
     {% endif %}

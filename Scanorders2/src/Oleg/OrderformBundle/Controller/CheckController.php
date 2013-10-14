@@ -16,7 +16,7 @@ use Oleg\OrderformBundle\Form\PatientType;
  * OrderInfo controller.
  *
  * @Route("/check")
- * @Template("OlegOrderformBundle:Patient:edit.html.twig")
+ * @Template("OlegOrderformBundle:Patient:edit_single.html.twig")
  */
 class CheckController extends Controller {
       
@@ -32,20 +32,36 @@ class CheckController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($id);
+        $entity->setSpecimen(new \Doctrine\Common\Collections\ArrayCollection());
 
         $form   = $this->createForm(new PatientType(), $entity);
 
-        $delete_form = $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
+//        $delete_form = $this->createFormBuilder(array('id' => $id))
+//            ->add('id', 'hidden')
+//            ->getForm();
 
         return array(
-            'entity'   => $entity,
+            //'entity'   => $entity,
             'edit_form'   => $form->createView(),
-            'delete_form' => $delete_form->createView(),
+            //'delete_form' => $delete_form->createView(),
         );
-    }
-    
 
-    
+    }
+
+
+    /**
+     * @Route("/patient2", name="get-patient2")
+     * @Method("GET")
+     */
+    public function getAction() {
+
+        $out_json = array(
+            'status' => "OK",
+            'template' => $this->getPatientAction()
+        );
+
+        return new \Symfony\Component\HttpFoundation\Response(json_encode($out_json));
+    }
+
+
 }
