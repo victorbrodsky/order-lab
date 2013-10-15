@@ -50,17 +50,32 @@ class CheckController extends Controller {
 
 
     /**
-     * @Route("/patient2", name="get-patient2")
+     * @Route("/patientdata", name="get-patientdata")
      * @Method("GET")
      */
     public function getAction() {
 
-        $out_json = array(
-            'status' => "OK",
-            'template' => $this->getPatientAction()
+        $request = $this->get('request');
+        $mrn = $request->get('mrn');
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
+
+        $element = array(
+            'inmrn'=>$mrn,
+            'id'=>$entity->getId(),
+            'mrn'=>$entity->getMrn(),
+            'name'=>$entity->getName(),
+            'sex'=>$entity->getSex(),
+            'dob'=>$entity->getDob(),
+            'age'=>$entity->getAge(),
+            'clinicalHistory'=>$entity->getClinicalHistory()[0]->getClinicalHistory(),
         );
 
-        return new \Symfony\Component\HttpFoundation\Response(json_encode($out_json));
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
     }
 
 

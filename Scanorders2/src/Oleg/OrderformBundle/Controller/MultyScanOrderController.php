@@ -201,8 +201,11 @@ class MultyScanOrderController extends Controller {
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 
 //            echo "<br>Before loop:<br>";
-//            echo $entity;
-            //exit();
+//            echo count($entity->getPatient());
+//            foreach( $entity->getPatient() as $pat ) {
+//                echo $pat->getName();
+//            }
+//            exit();
 
             if (isset($_POST['btnSave'])) {              
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             

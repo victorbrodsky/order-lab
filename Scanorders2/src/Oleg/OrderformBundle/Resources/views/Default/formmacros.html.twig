@@ -1,6 +1,6 @@
 {#macro for form label input inline#}
 
-{% macro field( field, disabled ) %}
+{% macro field( field, attr ) %}
     {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
     <div class="row">
@@ -9,7 +9,7 @@
             {{ form_label(field) }}
         </div>
         <div class="col-xs-6" align="left">
-            {% if disabled == "true" %}
+            {% if attr == "disabled" %}
                 {#value of disabled field will be ignored, but readonly does not work#}
                 {{ form_widget(field,{ 'disabled':'disabled' }) }}
             {% else %}
@@ -22,7 +22,7 @@
 {% endmacro %}
 
 
-{% macro fielddate( field ) %}
+{% macro fielddate( field, attr ) %}
     <p>
     <div class="row">
         {{ form_errors(field) }}
@@ -30,22 +30,42 @@
             {{ form_label(field) }}
         </div>
         <div class="col-xs-6" align="left" class="form_body_toggle_btn">
-            {#<div ng-app="myApp" ng-controller="Ctrl">#}
-                {#&#123;&#35;<div class="input-append">&#35;&#125;#}
-                    {#<div class="input-group">{{ form_widget(field) }}<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div>#}
-                    {#&#123;&#35;<div class="input-group">{{ form_widget(field) }}<button type="button" class="btn" data-toggle="datepicker"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div>&#35;&#125;#}
-                {#&#123;&#35;</div>&#35;&#125;#}
-            {#</div>#}
 
-            {#<div ng-app="myApp" ng-controller="Ctrl">#}
-                <div class="input-group">
-                    {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
+            <div class="input-group">
+                {#{{ form_widget(field) }}#}
+                {% if attr == "disabled" %}
+                    {#value of disabled field will be ignored, but readonly does not work#}
+                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% else %}
                     {{ form_widget(field) }}
-                    <span class="input-group-addon btn" data-toggle="datepicker" type="button">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                    </span>
-                </div>
-            {#</div>#}
+                {% endif %}
+                <span class="input-group-addon btn" data-toggle="datepicker" type="button">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+            </div>
+
+        </div>
+        {{ form_rest(field) }}
+    </div>
+    </p>
+{% endmacro %}
+
+
+{% macro fieldicon( field, icon ) %}
+    <p>
+    <div class="row">
+        {{ form_errors(field) }}
+        <div class="col-xs-6" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+
+            <div class="input-group">
+                {{ form_widget(field) }}
+                <span id="check_btn" class="input-group-addon btn" data-toggle="form-control" type="button" onclick="checkForm(this)">
+                    <i class="glyphicon {{ icon }}"></i>
+                </span>
+            </div>
 
         </div>
         {{ form_rest(field) }}
@@ -57,13 +77,11 @@
 {% macro orderinfo(form) %}
 
     {% for provider in form.vars.value.provider %}
-        provider:{{ provider.username }}
         <input type="hidden" id="user_name" value="{{ provider.username }}" />
         <input type="hidden" id="user_id" value="{{ provider.id }}" />
     {% endfor %}
 
     {% for proxyuser in form.vars.value.proxyuser %}
-        proxyuser:{{ proxyuser.username }}
         <input type="hidden" id="proxyuser_name" value="{{ proxyuser.username }}" />
         <input type="hidden" id="proxyuser_id" value="{{ proxyuser.id }}" />
     {% endfor %}
@@ -195,11 +213,11 @@
 {% endmacro %}
 
 {#used by multy form#}
-{% macro diseaseMulti(form, patient, specimen, accession, part ) %}
+{% macro diseaseMulti(form, patient, specimen, accession, part, attr ) %}
 
     {% import _self as formmacros %}
 
-    {{ formmacros.field(form.diseaseType) }}
+    {{ formmacros.field(form.diseaseType,attr) }}
 
     {% set uid = 'patient_'~patient~'_specimen_'~specimen~'_accession_'~accession~'_part_'~part %}
 
@@ -209,7 +227,7 @@
 
         <div class="well" aling='center'>
 
-            {{ formmacros.field(form.origin) }}
+            {{ formmacros.field(form.origin,attr) }}
 
         </div>
 
@@ -220,7 +238,7 @@
 
         <div class="well" aling='center'>
 
-            {{ formmacros.field(form.primaryOrgan) }}
+            {{ formmacros.field(form.primaryOrgan,attr) }}
 
         </div>
 
@@ -230,7 +248,7 @@
 
     
 {#####################  Collection Input Field  ########################}
-{% macro collectionInput(objectForm, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
+{% macro collectionInput(objectForm, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, attr) %}
 
     {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
     {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
@@ -256,7 +274,13 @@
 
                         <div class="input-group" id="{{ inputGroupId }}">
                             {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
-                            {{ form_widget(diffDiagnoses.name) }}
+                            {#{{ form_widget(diffDiagnoses.name) }}#}
+                            {% if attr == "disabled" %}
+                                {#value of disabled field will be ignored, but readonly does not work#}
+                                {{ form_widget(diffDiagnoses.name,{ 'disabled':'disabled' }) }}
+                            {% else %}
+                                {{ form_widget(diffDiagnoses.name) }}
+                            {% endif %}
                             {% if type == 'new' or type == 'edit' %}
                                 <span
                                       id="{{ addBtnId }}"
@@ -278,7 +302,7 @@
 {% endmacro %}
 
 
-{% macro clinicalHistoryInput(fields) %}
+{% macro clinicalHistoryInput(fields, attr) %}
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
@@ -291,7 +315,12 @@
         </div>
         <div class="col-xs-6" align="left">
             {% for field in fields %}
-                {{ form_widget(field.clinicalHistory) }}
+                {% if attr == "disabled" %}
+                    {#value of disabled field will be ignored, but readonly does not work#}
+                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% else %}
+                    {{ form_widget(field) }}
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -299,7 +328,7 @@
 {% endmacro %}
 
 
-{% macro paperInput(fields,type) %}
+{% macro paperInput(fields,type,attr) %}
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
@@ -318,7 +347,12 @@
                 {% if type == 'show' %}
                     <a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>
                 {% else %}
-                    {{ form_widget(field.file) }}
+                    {% if attr == "disabled" %}
+                        {#value of disabled field will be ignored, but readonly does not work#}
+                        {{ form_widget(field.file,{ 'disabled':'disabled' }) }}
+                    {% else %}
+                        {{ form_widget(field.file) }}
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </div>
@@ -390,8 +424,63 @@ ident:      specialStains or relevantScans
 {% endmacro %}
 
 
+{############################ Objects ###########################}
+
+{% macro patientForm( patient, flag, uid ) %}
+    {% import _self as formmacros %}
+    {% if flag == "check" %}
+        {% set attr="disabled" %}
+    {% else %}
+        {% set attr="" %}
+    {% endif %}
+    <div id="patient_{{ uid }}">
+        {{ formmacros.fieldicon(patient.mrn,"glyphicon-check") }}
+        {{ formmacros.field(patient.name,attr) }}
+        {{ formmacros.field(patient.sex,attr) }}
+        {{ formmacros.fielddate(patient.dob,attr) }}
+        {{ formmacros.field(patient.age,attr) }}
+        {{ formmacros.clinicalHistoryInput(patient.clinicalHistory,attr) }}
+    </div>
+{% endmacro %}
+
+{% macro accessionForm( procedure, accession, flag, uid ) %}
+    {% import _self as formmacros %}
+    {% if flag == "check" %}
+        {% set attr="disabled" %}
+    {% else %}
+        {% set attr="" %}
+    {% endif %}
+    <div id="accession_{{ uid }}">
+        {{ formmacros.fieldicon(accession.accession,"glyphicon-check") }}
+        {{ formmacros.field(procedure.proceduretype,attr) }}
+    </div>
+{% endmacro %}
+
+{% macro partForm( form, flag, uid, type, patientCount, procedureCount, accessionCount, partCount ) %}
+    {% import _self as formmacros %}
+    {% if flag == "check" %}
+        {% set attr="disabled" %}
+    {% else %}
+        {% set attr="" %}
+    {% endif %}
+    <div id="accession_{{ uid }}">
+        {{ formmacros.fieldicon(form.name,"glyphicon-check") }}
+        {{ formmacros.field(form.sourceOrgan,attr) }}
+        {{ formmacros.paperInput(form.paper,type,attr) }}
+        {{ formmacros.field(form.description,attr) }}
+        {{ formmacros.field(form.diagnosis,attr) }}
+        {% if form.diffDiagnoses|length > 0 %}
+            {{ formmacros.collectionInput(form.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0, attr) }}
+        {% endif %}
+        {{ formmacros.diseaseMulti(form, patientCount, procedureCount, accessionCount, partCount, attr) }}
+    </div>
+{% endmacro %}
+
+
+
+{#/////////////////// TO DELETE /////////////////////////////#}
 {#Single Patient form macros#}
-{% macro patientForm( patient, cicle ) %}
+{% macro patientFormFull( patient, cicle ) %}
 
     {% import _self as formmacros %}
 
@@ -410,10 +499,10 @@ ident:      specialStains or relevantScans
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
                 {{ formmacros.field(patient.mrn) }}
                 <button id="form_check_mrn_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="checkMrn('patient',{{ patientCount }},0, 0, 0, 0, 0, 0, 0)">Check</button>
-                {{ formmacros.field(patient.name) }}
-                {{ formmacros.field(patient.sex) }}
-                {{ formmacros.fielddate(patient.dob) }}
-                {{ formmacros.field(patient.age) }}
+                {{ formmacros.field(patient.name,true) }}
+                {{ formmacros.field(patient.sex,"true") }}
+                {{ formmacros.fielddate(patient.dob,"disabled") }}
+                {{ formmacros.field(patient.age,"true") }}
                 {{ formmacros.clinicalHistoryInput(patient.clinicalHistory) }}
 
                 {#specimen/procedure#}

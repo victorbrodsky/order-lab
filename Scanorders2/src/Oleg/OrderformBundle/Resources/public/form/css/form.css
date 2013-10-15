@@ -79,8 +79,8 @@
 }
 /*end of sign in*/
 .form-control-modif {
-    display: inline;
-    height: 27px; //keep the same as combobox
+    //display: inline;
+    height: 28px; //keep the same as combobox
     //width: 70%;
 }
 

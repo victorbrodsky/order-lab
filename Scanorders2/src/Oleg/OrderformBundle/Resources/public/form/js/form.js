@@ -264,7 +264,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
     var idsu = ids.join("_");
     var idsc = ids.join(",");
     //increment by 1 current object id
-    var formbody = getFormBody( name, idsu, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
+    var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
 
     //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
 
@@ -303,7 +303,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
     return formhtml;
 }
 
-function getFormBody( name, idsu, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
     //console.log("name="+name+",patient="+patientid+ ",specimen="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
 
@@ -738,11 +738,12 @@ function expandTextarea() {
 function initDatepicker() {
     //console.debug("init datepicker");
     //datepicker. caused minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js? add: date = date + "";
-    if( $(".datepicker")[0] ) {
-        $('.datepicker').datepicker();
-    }
+//    if( $(".datepicker")[0] ) {
+//        $('.datepicker').datepicker({autoclose: true});
+//    }
+    $('.datepicker').datepicker({autoclose: true});
     $(".input-group-addon").click(function() {
-        $(this).siblings('.datepicker').datepicker('show')
+        $(this).siblings('.datepicker').datepicker('show');
     });
 }
 

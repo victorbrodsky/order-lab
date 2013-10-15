@@ -31,14 +31,14 @@ class PatientType extends AbstractType
                 'label'=>'MRN:',
                 'max_length'=>100,
                 'required'=>false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class'=>'form-control'),
         ));
         
         $builder->add( 'name', 'text', array(
                 'label'=>'Name:', 
                 'max_length'=>500,
                 'required'=>false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class'=>'form-control'),
         ));
         
         
@@ -46,7 +46,7 @@ class PatientType extends AbstractType
                 'label'=>'Age:', 
                 'max_length'=>3,
                 'required'=>false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class'=>'form-control'),
         ));               
         
         $builder->add( 'sex', 'choice', array(
@@ -65,6 +65,7 @@ class PatientType extends AbstractType
                 'widget' => 'single_text',
                 'required'=>false,
                 'format' => 'MM-dd-yyyy',
+                //'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
                 'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
         ));
         
