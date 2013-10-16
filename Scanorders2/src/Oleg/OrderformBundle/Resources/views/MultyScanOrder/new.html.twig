@@ -67,7 +67,7 @@
                href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Amend' }) }}">Amend</a>
         {% endif %}
     {% endif %}
-
+    <br><br>
 
     <input type="hidden" id="formtype" value="multi" />
     <input type="hidden" id="formcicle" value="{{ type }}" />
@@ -112,28 +112,25 @@
         {% if type != 'show' %}
 
          data-prototype-patient="
-        {#{{ formmacros.field(form.patient.vars.prototype.mrn)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.name)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.age)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.sex)|e }}#}
-        {#{{ formmacros.fielddate(form.patient.vars.prototype.dob)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}#}
         {{ formmacros.patientForm(form.patient.vars.prototype,"check",uid)|e }}
-     "
+        "
+
+        data-prototype-clinicalhistory="
+        {{ formmacros.clinicalHistoryInput(form.patient.vars.prototype.clinicalHistory)|e }}
+        "
 
          data-prototype-procedure="
-         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession)|e }}#}
-         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype)|e }}#}
-         {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"disabled",uid)|e }}
+         {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid)|e }}
          "
 
          data-prototype-part="
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}
-        {{ formmacros.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}
+        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
+        {#{{ formmacros.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
+        {{ formmacros.partForm( form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, 0, 0, 0, 0 )|e }}
         "
 
          data-prototype-diffdiagnoses="
@@ -141,15 +138,17 @@
         "
 
          data-prototype-block="
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}
-     "
+        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
+        {{ formmacros.fieldicon(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
+        "
          data-prototype-slide="
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
-     "
+        "
+
          data-prototype-relevantscans="
         {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.name)|e }}
         "
@@ -175,7 +174,6 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
 
-                {#<button id="formcheck_patient_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="checkMrn(this)">Check</button>#}
                 {{ formmacros.patientForm(patient,"check",uid) }}
 
                 {#specimen/procedure#}
@@ -195,9 +193,8 @@
                         {% for accession in specimen.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
 
-                                    {#{{ formmacros.fieldicon(accession.accession,"glyphicon-check") }}#}
-                                    {#{{ formmacros.fieldicon(specimen.proceduretype,"disabled") }}#}
                                     {{ formmacros.accessionForm(specimen,accession,"check",uid) }}
+
 
                                     {#part#}
                                     {% set partCount = 0 %}
@@ -211,16 +208,6 @@
                                             }}
 
                                             <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
-                                                {#{{ formmacros.field(part.name) }}#}
-                                                {#{{ formmacros.field(part.sourceOrgan) }}#}
-                                                {#{{ formmacros.paperInput(part.paper,type) }}#}
-                                                {#{{ formmacros.field(part.description) }}#}
-                                                {#{{ formmacros.field(part.diagnosis) }}#}
-                                                {#&#123;&#35;########### different diagnoses input collection ############&#35;&#125;#}
-                                                {#{% if part.diffDiagnoses|length > 0 %}                                                     #}
-                                                    {#{{ formmacros.collectionInput(part.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}#}
-                                                {#{% endif %}#}
-                                                {#{{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}#}
 
                                                 {{ formmacros.partForm( part, "check", uid, type, patientCount, procedureCount, accessionCount, partCount ) }}
 
@@ -236,7 +223,8 @@
                                                         }}
 
                                                         <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
-                                                            {{ formmacros.field(block.name) }}
+                                                            {#{{ formmacros.field(block.name) }}#}
+                                                            {{ formmacros.fieldicon(block.name,"glyphicon-check") }}
 
 
                                                             {#slide#}

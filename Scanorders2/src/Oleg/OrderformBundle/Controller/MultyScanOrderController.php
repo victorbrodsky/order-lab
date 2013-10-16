@@ -162,7 +162,7 @@ class MultyScanOrderController extends Controller {
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
         $form->bind($request);
-        //$form->handleRequest($request);
+//        $form->handleRequest($request);
 
         //check if the orderform already exists, so it's edit case
         //TODO: edit id is empty. Why??
@@ -197,15 +197,16 @@ class MultyScanOrderController extends Controller {
             //echo "id2=".$entity->getId()."<br>";
             //exit();
 
-                       
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
-
 //            echo "<br>Before loop:<br>";
-//            echo count($entity->getPatient());
+//            echo "patient count=".count($entity->getPatient());
 //            foreach( $entity->getPatient() as $pat ) {
-//                echo $pat->getName();
+//                echo "<br>mrn=".$pat->getMrn();
+//                echo "<br>name=".$pat->getName();
+//                echo "<br>sex=".$pat->getSex();
 //            }
 //            exit();
+
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 
             if (isset($_POST['btnSave'])) {              
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             

@@ -22,20 +22,16 @@ class SpecimenType extends AbstractType
     {
 
 //        echo "specimen params=";
-//        print_r($this->params);
+//        //print_r($this->params);
+//        echo $this->params['type']." ".$this->params['cicle'];
 //        echo "<br>";
+
+        $flag = false;
+        if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
+            $flag = true;
+        }
         
-//        $builder->add( 'proceduretype', 'text', array(
-//                'label'=>'Procedure Type:',
-//                'max_length'=>300,'required'=>false,
-//                'attr' => array('class'=>'form-control form-control-modif'),
-//        ));
-//        $builder->add('proceduretype', null, array(
-//            'label' => 'Procedure Type:',
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
-        
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
             $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');    //new
         } else {
             $attr = array('class' => 'combobox combobox-width');    //show
@@ -45,6 +41,7 @@ class SpecimenType extends AbstractType
             'label' => 'Procedure Type:',
             'required' => false,
             'attr' => $attr,
+            'disabled' => $flag,
             'classtype' => 'procedureType'
         ));
             

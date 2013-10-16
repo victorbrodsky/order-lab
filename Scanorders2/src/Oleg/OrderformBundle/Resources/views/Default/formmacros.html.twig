@@ -60,11 +60,20 @@
         </div>
         <div class="col-xs-6" align="left" class="form_body_toggle_btn">
 
-            <div class="input-group">
-                {{ form_widget(field) }}
-                <span id="check_btn" class="input-group-addon btn" data-toggle="form-control" type="button" onclick="checkForm(this)">
-                    <i class="glyphicon {{ icon }}"></i>
-                </span>
+            {#<div class="input-group">#}
+                {#{{ form_widget(field) }}#}
+                {#<span id="check_btn" class="input-group-addon btn" data-toggle="form-control" type="button" onclick="checkForm(this)">#}
+                    {#<i class="glyphicon {{ icon }}"></i>#}
+                {#</span>#}
+            {#</div>#}
+
+            <div class="row ">
+                <div class="col-xs-10">
+                    {{ form_widget(field) }}
+                </div>
+                <div class="col-xs-2">
+                    <button id="check_btn" class="btn btn-default" type="button" onclick="checkForm(this)"><i class="glyphicon {{ icon }}"></i></button>
+                </div>
             </div>
 
         </div>
@@ -216,7 +225,6 @@
 {% macro diseaseMulti(form, patient, specimen, accession, part, attr ) %}
 
     {% import _self as formmacros %}
-
     {{ formmacros.field(form.diseaseType,attr) }}
 
     {% set uid = 'patient_'~patient~'_specimen_'~specimen~'_accession_'~accession~'_part_'~part %}
@@ -317,9 +325,9 @@
             {% for field in fields %}
                 {% if attr == "disabled" %}
                     {#value of disabled field will be ignored, but readonly does not work#}
-                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                    {{ form_widget(field.clinicalHistory,{ 'disabled':'disabled' }) }}
                 {% else %}
-                    {{ form_widget(field) }}
+                    {{ form_widget(field.clinicalHistory) }}
                 {% endif %}
             {% endfor %}
         </div>
@@ -428,54 +436,45 @@ ident:      specialStains or relevantScans
 
 {% macro patientForm( patient, flag, uid ) %}
     {% import _self as formmacros %}
-    {% if flag == "check" %}
-        {% set attr="disabled" %}
-    {% else %}
-        {% set attr="" %}
-    {% endif %}
+    {#{% if flag == "check" %}#}
+        {#{% set attr="disabled" %}#}
+    {#{% else %}#}
+        {#{% set attr="" %}#}
+    {#{% endif %}#}
     <div id="patient_{{ uid }}">
         {{ formmacros.fieldicon(patient.mrn,"glyphicon-check") }}
-        {{ formmacros.field(patient.name,attr) }}
-        {{ formmacros.field(patient.sex,attr) }}
-        {{ formmacros.fielddate(patient.dob,attr) }}
-        {{ formmacros.field(patient.age,attr) }}
-        {{ formmacros.clinicalHistoryInput(patient.clinicalHistory,attr) }}
+        {{ formmacros.field(patient.name) }}
+        {{ formmacros.field(patient.sex) }}
+        {{ formmacros.fielddate(patient.dob) }}
+        {{ formmacros.field(patient.age) }}
+        {{ formmacros.clinicalHistoryInput(patient.clinicalHistory) }}
     </div>
 {% endmacro %}
 
 {% macro accessionForm( procedure, accession, flag, uid ) %}
     {% import _self as formmacros %}
-    {% if flag == "check" %}
-        {% set attr="disabled" %}
-    {% else %}
-        {% set attr="" %}
-    {% endif %}
     <div id="accession_{{ uid }}">
         {{ formmacros.fieldicon(accession.accession,"glyphicon-check") }}
-        {{ formmacros.field(procedure.proceduretype,attr) }}
+        {{ formmacros.field(procedure.proceduretype) }}
     </div>
 {% endmacro %}
 
 {% macro partForm( form, flag, uid, type, patientCount, procedureCount, accessionCount, partCount ) %}
     {% import _self as formmacros %}
-    {% if flag == "check" %}
-        {% set attr="disabled" %}
-    {% else %}
-        {% set attr="" %}
-    {% endif %}
     <div id="accession_{{ uid }}">
         {{ formmacros.fieldicon(form.name,"glyphicon-check") }}
-        {{ formmacros.field(form.sourceOrgan,attr) }}
-        {{ formmacros.paperInput(form.paper,type,attr) }}
-        {{ formmacros.field(form.description,attr) }}
-        {{ formmacros.field(form.diagnosis,attr) }}
+        {{ formmacros.field(form.sourceOrgan) }}
+        {{ formmacros.paperInput(form.paper,type) }}
+        {{ formmacros.field(form.description) }}
+        {{ formmacros.field(form.diagnosis) }}
         {% if form.diffDiagnoses|length > 0 %}
-            {{ formmacros.collectionInput(form.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0, attr) }}
+            {{ formmacros.collectionInput(form.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
         {% endif %}
-        {{ formmacros.diseaseMulti(form, patientCount, procedureCount, accessionCount, partCount, attr) }}
+        {{ formmacros.diseaseMulti(form, patientCount, procedureCount, accessionCount, partCount) }}
     </div>
 {% endmacro %}
 
+{############################ END OF Objects ###########################}
 
 
 {#/////////////////// TO DELETE /////////////////////////////#}

@@ -24,6 +24,12 @@ class PartType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $flag = false;
+        if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
+            $flag = true;
+        }
+
         $helper = new FormHelper();  
         
         if( $this->params['type'] != 'single' ) {
@@ -68,6 +74,7 @@ class PartType extends AbstractType
             'label' => 'Source Organ:',           
             'attr' => $attr,
             'required' => false,
+            'disabled' => $flag,
             'classtype' => 'sourceOrgan'
         ));
         
@@ -75,6 +82,7 @@ class PartType extends AbstractType
                 'label'=>'Gross Description:',
                 'max_length'=>'10000', 
                 'required'=>false,
+                'disabled' => $flag,
                 'attr' => array('class'=>'textarea form-control'),
         ));
         
@@ -82,6 +90,7 @@ class PartType extends AbstractType
                 'label'=>'Diagnosis:',
                 'max_length'=>'10000', 
                 'required'=>false,
+                'disabled' => $flag,
                 'attr' => array('class'=>'textarea form-control'),
         ));
         
@@ -93,6 +102,7 @@ class PartType extends AbstractType
 //        ));
         $builder->add('diffDiagnoses', 'collection', array(
             'type' => new DiffDiagnosesType(),
+            'disabled' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -108,8 +118,10 @@ class PartType extends AbstractType
 //                'required'=>false,
 //                'attr' => array('class'=>'form-control form-control-modif'),
 //        ));
+//        if( $this->params['type'] == 'single') {
         $builder->add( 'diseaseType', 'choice', array(
             'label'=>'Type of Disease:',
+            'disabled' => $flag,
             //'required'=>false,
             'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
             'multiple' => false,
@@ -120,6 +132,7 @@ class PartType extends AbstractType
 
         $builder->add( 'origin', 'choice', array(
             'label'=>'Origin:',
+            'disabled' => $flag,
             //'required'=>false,
             'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
             'multiple' => false,
@@ -137,7 +150,8 @@ class PartType extends AbstractType
             $attr = array('class' => 'combobox combobox-width');    //show
         }
         $builder->add('primaryOrgan', 'custom_selector', array(
-            'label' => 'Primary Site of Origin:',           
+            'label' => 'Primary Site of Origin:',
+            'disabled' => $flag,
             'attr' => $attr,
             'required' => false,
             'classtype' => 'sourceOrgan'
@@ -146,6 +160,7 @@ class PartType extends AbstractType
         //$builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
         $builder->add('paper', 'collection', array(
             'type' => new DocumentType($this->params),
+            'disabled' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

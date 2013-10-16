@@ -160,7 +160,11 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //attach form
     $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
-    
+
+    if( name == "patient" ) {
+        addCollFieldFirstTime( "clinicalHistory", ids );
+    }
+
     if( name == "part" ) {
         addDiffdiagFieldFirstTime( name, ids );
     }
@@ -311,7 +315,7 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     // Get the data-prototype explained earlier
     var prototype = collectionHolder.data('prototype-'+name);
-    //console.log("prototype="+prototype);
+    console.log("prototype="+prototype);
 
     //console.log("before replace patient...");
     var newForm = prototype.replace(/__patient__/g, patientid);

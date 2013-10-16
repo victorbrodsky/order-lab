@@ -21,7 +21,7 @@ use Oleg\OrderformBundle\Form\PatientType;
 class CheckController extends Controller {
       
     /**
-     * @Route("/patient", name="get-patient")
+     * @Route("/patientfull", name="get-patient")
      * @Method("GET")
      */
     public function getPatientAction() {
@@ -50,7 +50,7 @@ class CheckController extends Controller {
 
 
     /**
-     * @Route("/patientdata", name="get-patientdata")
+     * @Route("/patient", name="get-patientdata")
      * @Method("GET")
      */
     public function getAction() {
@@ -61,6 +61,17 @@ class CheckController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
 
+        $clinHist = $entity->getClinicalHistory();
+        if( count($clinHist) == 0 ) {
+            $clinHistStr = "";
+            }
+        if( count($clinHist) == 1 ) {
+            $clinHistStr = $entity->getClinicalHistory()[0]->getClinicalHistory();
+        }
+        if( count($clinHist) > 1 ) {
+            $clinHistStr = "Multi Cilinical History: Not Supported";
+        }
+
         $element = array(
             'inmrn'=>$mrn,
             'id'=>$entity->getId(),
@@ -69,7 +80,7 @@ class CheckController extends Controller {
             'sex'=>$entity->getSex(),
             'dob'=>$entity->getDob(),
             'age'=>$entity->getAge(),
-            'clinicalHistory'=>$entity->getClinicalHistory()[0]->getClinicalHistory(),
+            'clinicalHistory'=>$clinHistStr
         );
 
         $response = new Response();

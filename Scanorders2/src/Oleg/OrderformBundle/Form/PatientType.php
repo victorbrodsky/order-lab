@@ -24,8 +24,14 @@ class PatientType extends AbstractType
     {
 
 //        echo "patient params=";
-//        print_r($this->params);
+//        //print_r($this->params);
+//        echo $this->params['type']." ".$this->params['cicle'];
 //        echo "<br>";
+
+        $flag = false;
+        if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
+            //$flag = true;
+        }
 
         $builder->add( 'mrn', 'text', array(
                 'label'=>'MRN:',
@@ -38,6 +44,7 @@ class PatientType extends AbstractType
                 'label'=>'Name:', 
                 'max_length'=>500,
                 'required'=>false,
+                'read_only' => $flag,
                 'attr' => array('class'=>'form-control'),
         ));
         
@@ -46,6 +53,7 @@ class PatientType extends AbstractType
                 'label'=>'Age:', 
                 'max_length'=>3,
                 'required'=>false,
+                'read_only' => $flag,
                 'attr' => array('class'=>'form-control'),
         ));               
         
@@ -56,6 +64,7 @@ class PatientType extends AbstractType
                 'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
                 'multiple' => false,
                 'expanded' => true,
+                //'disabled' => $flag,
                 'attr' => array('class' => 'horizontal_type')
                 //'data' => 'Male',             
         ));
@@ -65,6 +74,7 @@ class PatientType extends AbstractType
                 'widget' => 'single_text',
                 'required'=>false,
                 'format' => 'MM-dd-yyyy',
+                'read_only' => $flag,
                 //'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
                 'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
         ));
@@ -77,6 +87,7 @@ class PatientType extends AbstractType
 //        ));
         $builder->add('clinicalHistory', 'collection', array(
             'type' => new ClinicalHistoryType(),
+            'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

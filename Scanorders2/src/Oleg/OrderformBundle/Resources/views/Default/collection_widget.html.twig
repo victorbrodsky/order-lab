@@ -17,7 +17,7 @@
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
 
-{#required is fixed in master and v2.3 of symfony#}
+{#'required' is fixed in master and v2.3 of symfony#}
 {% block widget_attributes %}
     {% spaceless %}
         id="{{ id }}" name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}

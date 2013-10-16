@@ -399,6 +399,12 @@ class ScanOrderController extends Controller {
             
             //procedure/specimen: none
             //$procedure->addProcedure($accession);
+
+//            echo "<br>Before loop:<br>";
+//            echo "<br>name=".$patient->getName();
+//            echo "<br>sex=".$patient->getSex();
+//            exit();
+
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );                       
             $entity->addPatient($patient);
             //$em->persist($entity);          
