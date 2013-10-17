@@ -64,7 +64,7 @@ class PatientType extends AbstractType
                 'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
                 'multiple' => false,
                 'expanded' => true,
-                //'disabled' => $flag,
+                //'read_only' => $flag,
                 'attr' => array('class' => 'horizontal_type')
                 //'data' => 'Male',             
         ));
@@ -78,16 +78,22 @@ class PatientType extends AbstractType
                 //'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
                 'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
         ));
-        
-//        $builder->add( 'clinicalHistory', 'textarea', array(
+
+//        $builder->add('clinicalHistory', 'entity', array(
+//            'class' => 'OlegOrderformBundle:ClinicalHistory',
+//            'label'=>'Clinical History:',
+//            'required' => false,
+//            'property' => 'clinicalHistory',
+//        ));
+//        $builder->add( 'clinicalHistory', null, array(
 //                'label'=>'Clinical History:',
-//                'max_length'=>10000,
+//                'property' => 'clinicalHistory',
 //                'required'=>false,
-//                'attr' => array('class'=>'textarea form-control'),
+//                //'attr' => array('class'=>'textarea form-control'),
 //        ));
         $builder->add('clinicalHistory', 'collection', array(
             'type' => new ClinicalHistoryType(),
-            'read_only' => $flag,
+            //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

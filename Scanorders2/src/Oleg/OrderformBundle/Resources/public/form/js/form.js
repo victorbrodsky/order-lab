@@ -10,6 +10,8 @@ $(document).ready(function() {
 
     initAdd();
 
+    disableAllElements(); //init disable all fields
+
     customCombobox();
 
     originOptionMulti( new Array("0","0","0","0") );
@@ -88,8 +90,6 @@ function deleteItem(id) {
     var elements = thisParent.children( ".panel" );
     //console.log("replace elements.length="+elements.length);
 
-
-
     if( confirm("This auction will affect this element and all its children. Are you sure?") ) {
 
         if( elements.length > 1 ) {
@@ -127,8 +127,6 @@ function deleteItem(id) {
         }
     }
 
-
-
     return false;
 }
 
@@ -160,10 +158,6 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     //attach form
     $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
-
-    if( name == "patient" ) {
-        addCollFieldFirstTime( "clinicalHistory", ids );
-    }
 
     if( name == "part" ) {
         addDiffdiagFieldFirstTime( name, ids );
@@ -220,8 +214,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         }
     }
 
-
-
+    disableAllMulti();
 }
 
 //add children forms triggered by parent form
@@ -315,7 +308,7 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     // Get the data-prototype explained earlier
     var prototype = collectionHolder.data('prototype-'+name);
-    console.log("prototype="+prototype);
+    //console.log("prototype="+prototype);
 
     //console.log("before replace patient...");
     var newForm = prototype.replace(/__patient__/g, patientid);
@@ -738,16 +731,31 @@ function expandTextarea() {
 
 }
 
-
-function initDatepicker() {
-    //console.debug("init datepicker");
-    //datepicker. caused minor error Cannot call method 'split' of undefined; var parts = date.split(format.separator) => preset date by js? add: date = date + "";
-//    if( $(".datepicker")[0] ) {
-//        $('.datepicker').datepicker({autoclose: true});
-//    }
-    $('.datepicker').datepicker({autoclose: true});
-    $(".input-group-addon").click(function() {
-        $(this).siblings('.datepicker').datepicker('show');
-    });
+//initDatepicker: add or remove click event to the field and its siblings calendar button
+//element: null or jquery object. If null, all element with class datepicker will be assign to calendar click event
+//remove null or "remove"
+function initDatepicker(element,remove) {
+    //console.debug("init datepicker, cicle="+cicle);
+    if( cicle != "show" ) {
+        if( !element ) {
+            element = $(".datepicker");
+        }
+        //console.debug("init datepicker, cicle="+cicle+", class="+element.attr("class"));
+        if( remove == "remove" ) {
+            element.datepicker("remove");
+        } else {
+            element.datepicker({autoclose: true});
+        }
+        var icons = element.parent().find("span").each(function( index  ) {
+            //console.log( index + ": " + $( this ).attr("class") );
+            if( remove == "remove" ) {
+                $( this ).unbind("click");
+            } else {
+                $( this ).click(function() {
+                    $(this).siblings('.datepicker').datepicker('show');
+                });
+            }
+        });
+    }
 }
 

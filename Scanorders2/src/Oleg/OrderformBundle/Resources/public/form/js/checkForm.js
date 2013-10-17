@@ -43,6 +43,13 @@ function checkForm( elem ) {
 //    var scan = idsArr[8];
 //    var stain = idsArr[9];
 
+    if( element.find("i").attr("class") != "glyphicon glyphicon-check" ) {
+        setElement(element, name, null, true);
+        disableAllInsideElements(element, false);
+        invertButton(element);
+        return;
+    }
+
     //get mrn field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
     var id = "oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_mrn";
 
@@ -78,37 +85,32 @@ function checkForm( elem ) {
                 console.debug("inmrn="+ data.inmrn);
                 console.debug("data.id="+ data.id);
                 console.debug("data.name="+ data.name);
-//                //oleg_orderformbundle_orderinfotype_patient_0_name
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_mrn").val(data.mrn);
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_name").val(data.name);
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_sex").val(data.sex);
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_age").val(data.age);
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_clinicalHistory_0_clinicalHistory").val(data.clinicalHistory); //oleg_orderformbundle_orderinfotype_patient_0_clinicalHistory_0_clinicalHistory
-//
-//                //$("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_dob").prop("disabled", false);
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_dob").datepicker( 'setDate', new Date(data.dob.date) );
-//                $("#oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_dob").datepicker( 'update');
-                disableAllElements(element, true);
+                //first: set elements
                 setElement(element, name, data);
+                //second: disable or enable element. Make sure this function runs after setElement
+                disableAllInsideElements(element, true);
             } else {
                 console.debug("not found: inmrn="+ data.inmrn);
-                disableAllElements(element, false);
+                disableAllInsideElements(element, false);
             }
+            invertButton(element);
         },
         error: function () {
             console.debug("ajax error");
-            disableAllElements(element, false);
             setElement(element, name, null);
+            disableAllInsideElements(element, false);
+            invertButton(element);
         }
     });
 
 }
 
-function setElement( element, name, data ) {
+//cleanall: clean all fields
+function setElement( element, name, data, cleanall ) {
 
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
     var parent = element.parent().parent().parent().parent().parent();
-    console.log("parent.id=" + parent.attr('id'));
+    console.log("set parent.id=" + parent.attr('id'));
     var elements = parent.find('input,textarea,select');
 
     for (var i = 0; i < elements.length; i++) {
@@ -142,8 +144,8 @@ function setElement( element, name, data ) {
             //fields text and all others including textarea (i.e. clinicalHistory textarea field does not have type="textarea", so it has type undefined)
             if( type == "text" || !type ) {
                 //var field = idsArr[idsArr.length-1];
-                if( data == null  ) {
-                    if( $.inArray(field, keys) == -1 ) {
+                if( data == null  ) {   //clean fields
+                    if( $.inArray(field, keys) == -1 || cleanall) {
                         elements.eq(i).val(null);   //clean non key fields
                     } else {
                         //console.log("In array. Additional check for field=("+field+")");
@@ -182,11 +184,36 @@ function setElement( element, name, data ) {
 
 }
 
-var keys = new Array("mrn","accession","name");
-function disableAllElements( element, disabled ) {
+function disableAllElements() {
+    if( type ) {
+        if( type == 'single' ) {    //single form
+
+        } else {    //multi form
+            disableAllMulti();
+        }
+    }
+}
+
+function disableAllMulti() {
+    var check_btns = $("[id=check_btn]");
+    console.log("check_btns.length="+check_btns.length);
+    for (var i = 0; i < check_btns.length; i++) {
+        var idArr = check_btns.eq(i).attr("id").split("_");
+        if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
+            check_btns.eq(i).attr('flag', 'done');
+            disableAllInsideElements( check_btns.eq(i), true );
+        }
+    }
+}
+
+var keys = new Array("mrn","accession","name", "clinicalHistory");
+function disableAllInsideElements( element, disabled ) {
+
+    console.log("disable element.id=" + element.attr('id'));
 
     var parent = element.parent().parent().parent().parent().parent();
-    console.log("parent.id=" + parent.attr('id'));
+
+    console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find('input,textarea,select');
 
@@ -210,7 +237,7 @@ function disableAllElements( element, disabled ) {
                 //console.log("In array. Additional check for field=("+field+")");
                 if( field == "name" ) {
                     var holder = idsArr[idsArr.length-3];
-                    //console.log("holder="+holder);
+                    console.log("holder="+holder);
                     if( holder != "part" && holder != "block" ) {
                         //console.log("disable!!!!");
                         disableElement(elements.eq(i),disabled);
@@ -225,17 +252,27 @@ function disableAllElements( element, disabled ) {
 
 function disableElement(element, flag) {
     var type = element.attr('type');
+    var classs = element.attr('class');
     if( flag ) {
         //element.prop("disabled", true);
         if( type == "radio" ) {
             var type = element.attr('checked');
             if( element.is(":checked") ){
                 //do nothing for checked button
+                element.attr("disabled", false);
             } else {
                 element.attr("disabled", true);
             }
         } else {
             element.attr('readonly', true);
+            //element.off("click");
+            //element.bind('click', false);
+            if( classs && classs.indexOf("datepicker") != -1 ) {
+                console.log("disable datepicker classs="+classs);
+                //element.datepicker("remove");
+                //element.off();
+                initDatepicker(element,"remove");
+            }
         }
 
     } else {
@@ -246,7 +283,28 @@ function disableElement(element, flag) {
         if( type == "radio" ) {
             element.prop("disabled", false);
         }
+        if( classs && classs.indexOf("datepicker") != -1 ) {
+            console.log("enable datepicker classs="+classs);
+            //$(".datepicker").datepicker({autoclose: true});
+            //element.datepicker({autoclose: true});
+            initDatepicker(element);
+        }
+
     }
+}
+
+function invertButton(btn) {
+    //class="glyphicon glyphicon-check"
+    if( btn.find("i").attr("class") == "glyphicon glyphicon-check" ) {
+        //btn.removeClass("glyphicon glyphicon-check");
+        //btn.addClass("glyphicon glyphicon-remove");
+        btn.find("i").removeClass('glyphicon-check').addClass('glyphicon-remove');
+    } else {
+        //btn.removeClass("glyphicon glyphicon-remove");
+        //btn.addClass("glyphicon glyphicon-check");
+        btn.find("i").removeClass('glyphicon-remove').addClass('glyphicon-check');
+    }
+
 }
 
 //TODO: add listener for key fields. If change, disable all element

@@ -113,6 +113,7 @@
 
          data-prototype-patient="
         {{ formmacros.patientForm(form.patient.vars.prototype,"check",uid)|e }}
+        {{ formmacros.field(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}
         "
 
         data-prototype-clinicalhistory="
@@ -224,7 +225,7 @@
 
                                                         <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
                                                             {#{{ formmacros.field(block.name) }}#}
-                                                            {{ formmacros.fieldicon(block.name,"glyphicon-check") }}
+                                                            {{ formmacros.blockForm( block, "check", uid) }}
 
 
                                                             {#slide#}

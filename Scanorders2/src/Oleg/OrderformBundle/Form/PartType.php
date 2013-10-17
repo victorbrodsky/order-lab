@@ -27,7 +27,7 @@ class PartType extends AbstractType
 
         $flag = false;
         if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
-            $flag = true;
+            //$flag = true;
         }
 
         $helper = new FormHelper();  

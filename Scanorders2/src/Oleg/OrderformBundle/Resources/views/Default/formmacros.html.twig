@@ -461,7 +461,7 @@ ident:      specialStains or relevantScans
 
 {% macro partForm( form, flag, uid, type, patientCount, procedureCount, accessionCount, partCount ) %}
     {% import _self as formmacros %}
-    <div id="accession_{{ uid }}">
+    <div id="part_{{ uid }}">
         {{ formmacros.fieldicon(form.name,"glyphicon-check") }}
         {{ formmacros.field(form.sourceOrgan) }}
         {{ formmacros.paperInput(form.paper,type) }}
@@ -471,6 +471,13 @@ ident:      specialStains or relevantScans
             {{ formmacros.collectionInput(form.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
         {% endif %}
         {{ formmacros.diseaseMulti(form, patientCount, procedureCount, accessionCount, partCount) }}
+    </div>
+{% endmacro %}
+
+{% macro blockForm( form, flag, uid ) %}
+    {% import _self as formmacros %}
+    <div id="block_{{ uid }}">
+        {{ formmacros.fieldicon(form.name,"glyphicon-check") }}
     </div>
 {% endmacro %}
 

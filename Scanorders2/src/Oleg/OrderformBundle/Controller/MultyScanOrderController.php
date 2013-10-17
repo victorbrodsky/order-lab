@@ -197,14 +197,15 @@ class MultyScanOrderController extends Controller {
             //echo "id2=".$entity->getId()."<br>";
             //exit();
 
-//            echo "<br>Before loop:<br>";
-//            echo "patient count=".count($entity->getPatient());
-//            foreach( $entity->getPatient() as $pat ) {
-//                echo "<br>mrn=".$pat->getMrn();
-//                echo "<br>name=".$pat->getName();
-//                echo "<br>sex=".$pat->getSex();
-//            }
-//            exit();
+            echo "<br>Before loop:<br>";
+            echo "patient count=".count($entity->getPatient());
+            foreach( $entity->getPatient() as $pat ) {
+                echo "<br>mrn=".$pat->getMrn();
+                echo "<br>name=".$pat->getName();
+                echo "<br>sex=".$pat->getSex();
+                echo "<br>dob=".$pat->getDob();
+            }
+            exit();
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 

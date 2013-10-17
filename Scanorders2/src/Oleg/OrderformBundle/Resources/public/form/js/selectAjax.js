@@ -269,7 +269,7 @@ function getComboboxProcedure(urlCommon,ids) {
         if( type == "single" ) {
             targetid = "#oleg_orderformbundle_specimentype_proceduretype";
         }
-        console.log("proceduretype targetid="+targetid);
+        //console.log("proceduretype targetid="+targetid);
         $(targetid).select2({
             placeholder: "Procedure Type",
             width: combobox_width,

@@ -28,7 +28,7 @@ class SpecimenType extends AbstractType
 
         $flag = false;
         if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
-            $flag = true;
+            //$flag = true;
         }
         
         if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
