@@ -10,7 +10,7 @@ $(document).ready(function() {
 
     initAdd();
 
-    disableAllElements(); //init disable all fields
+    initAllElements(); //init disable all fields
 
     customCombobox();
 
@@ -214,7 +214,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         }
     }
 
-    disableAllMulti();
+    initAllMulti();
 }
 
 //add children forms triggered by parent form

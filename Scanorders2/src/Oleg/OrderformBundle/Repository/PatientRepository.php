@@ -30,36 +30,7 @@ class PatientRepository extends EntityRepository
 
         //set up unknown patient
         if( $in_entity->getMrn() == "" || $in_entity->getMrn() == null ) {
-
-            //check the last NOMRNPROVIDED MRN in DB
-            $dql = "SELECT MAX(p.mrn) as maxmrn FROM OlegOrderformBundle:Patient p WHERE p.mrn LIKE '%NOMRNPROVIDED%'";
-            $query = $em->createQuery($dql);
-
-            $lastMrn =  $query->getResult();
-
-            $lastMrnStr = $lastMrn[0]['maxmrn'];
-
-            //echo $lastMrnStr;
-            //exit();
-
-            $mrnIndexArr = explode("-",$lastMrnStr);
-            //echo "count=".count($mrnIndexArr)."<br>";
-            if( count($mrnIndexArr) > 1 ) {
-                $mrnIndex = $mrnIndexArr[1];
-            } else {
-                $mrnIndex = 0;
-            }
-
-
-            $mrnIndex = ltrim($mrnIndex,'0') + 1;
-
-            $paddedmrn = str_pad($mrnIndex,10,'0',STR_PAD_LEFT);
-
-            //echo "paddedmrn=".$paddedmrn."<br>";
-            //exit();
-
-            $in_entity->setMrn('NOMRNPROVIDED-'.$paddedmrn);
-
+            $in_entity->setMrn($this->getNextMrn());
         }
 
         //exit();
@@ -164,6 +135,29 @@ class PatientRepository extends EntityRepository
         } else {
             return false;
         }
+    }
+
+    //check the last NOMRNPROVIDED MRN in DB and construct next available MRN
+    public function getNextMrn() {
+        $em = $this->_em;
+        $dql = "SELECT MAX(p.mrn) as maxmrn FROM OlegOrderformBundle:Patient p WHERE p.mrn LIKE '%NOMRNPROVIDED%'";
+        $query = $em->createQuery($dql);
+        $lastMrn =  $query->getResult();
+        $lastMrnStr = $lastMrn[0]['maxmrn'];
+        //echo $lastMrnStr;
+        //exit();
+        $mrnIndexArr = explode("-",$lastMrnStr);
+        //echo "count=".count($mrnIndexArr)."<br>";
+        if( count($mrnIndexArr) > 1 ) {
+            $mrnIndex = $mrnIndexArr[1];
+        } else {
+            $mrnIndex = 0;
+        }
+        $mrnIndex = ltrim($mrnIndex,'0') + 1;
+        $paddedmrn = str_pad($mrnIndex,10,'0',STR_PAD_LEFT);
+        //echo "paddedmrn=".$paddedmrn."<br>";
+        //exit();
+        return 'NOMRNPROVIDED-'.$paddedmrn;
     }
     
 }

@@ -120,9 +120,10 @@ function addCollFieldFirstTime( ident, ids ) {
 
 //get input field only
 function getCollField( ident, patient, specimen, accession, part, block, slide, coll ) {
+    //console.log("coll field input:"+ident+"_"+patient+"_"+specimen+"_"+accession+"_"+part+"_"+block+"_"+slide+"_"+coll);
     //diffDiagnoses_field_0_0_0_0_0_0_0_0_diffdiag_0
     var dataholder = "#form-prototype-data"; //fixed data holder
-    //console.log(dataholder);
+    //console.log(dataholder+", ident="+ident+", coll="+coll);
     var collectionHolder =  $(dataholder);
     var prototype = collectionHolder.data('prototype-'+ident.toLowerCase());
     //console.log("prototype="+prototype);

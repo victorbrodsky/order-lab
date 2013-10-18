@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oleg\OrderformBundle\Form\PatientType;
+use Oleg\OrderformBundle\Helper\NodeFactory;
+use Oleg\OrderformBundle\Entity\ClinicalHistory;
 
 /**
  * OrderInfo controller.
@@ -19,7 +21,7 @@ use Oleg\OrderformBundle\Form\PatientType;
  * @Template("OlegOrderformBundle:Patient:edit_single.html.twig")
  */
 class CheckController extends Controller {
-      
+
     /**
      * @Route("/patientfull", name="get-patient")
      * @Method("GET")
@@ -50,9 +52,9 @@ class CheckController extends Controller {
 
 
     /**
-     * @Route("/patient", name="get-patientdata")
-     * @Method("GET")
-     */
+ * @Route("/patient", name="get-patientdata")
+ * @Method("GET")
+ */
     public function getAction() {
 
         $request = $this->get('request');
@@ -61,16 +63,27 @@ class CheckController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
 
-        $clinHist = $entity->getClinicalHistory();
-        if( count($clinHist) == 0 ) {
-            $clinHistStr = "";
-            }
-        if( count($clinHist) == 1 ) {
-            $clinHistStr = $entity->getClinicalHistory()[0]->getClinicalHistory();
+        $hist = new ClinicalHistory();
+        $hist->setClinicalHistory("new history");
+        $entity->addClinicalHistory($hist);
+
+        $clinHistories = $entity->getClinicalHistory();
+//        if( count($clinHist) == 0 ) {
+//            $clinHistStr = "";
+//        }
+//        if( count($clinHist) == 1 ) {
+//            $clinHistStr = $entity->getClinicalHistory()[0]->getClinicalHistory();
+//        }
+//        if( count($clinHist) > 1 ) {
+//            $clinHistStr = "Multi Cilinical History: Not Supported";
+//        }
+
+        $clinHistoriesJson = array();
+        foreach( $clinHistories as $clinHist ) {
+            $text = $clinHist->getclinicalHistory();
+            $clinHistoriesJson[] = $text;
         }
-        if( count($clinHist) > 1 ) {
-            $clinHistStr = "Multi Cilinical History: Not Supported";
-        }
+
 
         $element = array(
             'inmrn'=>$mrn,
@@ -80,7 +93,54 @@ class CheckController extends Controller {
             'sex'=>$entity->getSex(),
             'dob'=>$entity->getDob(),
             'age'=>$entity->getAge(),
-            'clinicalHistory'=>$clinHistStr
+            'clinicalHistory'=>$clinHistoriesJson
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * Get next available MRN from DB
+     * @Route("/mrn", name="get-mrn")
+     * @Method("GET")
+     */
+    public function getMrnAction() {
+
+//        //$em = $this->getDoctrine()->getManager();
+//        $mrn = $em->getRepository('OlegOrderformBundle:Patient')->getNextMrn();
+//
+//        $patient = new Patient();
+//        $patient->setMrn($mrn);
+//        $em->persist($patient);
+
+        $factory = NodeFactory::Instance($this->getDoctrine()->getManager());
+        $mrn = $factory->getMrn();
+
+        $element = array(
+            'mrn'=>$mrn
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * Get next available MRN from DB
+     * @Route("/accession", name="get-accession")
+     * @Method("GET")
+     */
+    public function getAccessionAction() {
+
+        //$em = $this->getDoctrine()->getManager();
+        //$mrn = $em->getRepository('OlegOrderformBundle:Patient')->getNextMrn();
+
+        $element = array(
+            'accession'=>""
         );
 
         $response = new Response();

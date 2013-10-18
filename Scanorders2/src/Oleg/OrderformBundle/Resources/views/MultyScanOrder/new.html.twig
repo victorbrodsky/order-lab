@@ -117,7 +117,8 @@
         "
 
         data-prototype-clinicalhistory="
-        {{ formmacros.clinicalHistoryInput(form.patient.vars.prototype.clinicalHistory)|e }}
+        {#{{ formmacros.clinicalHistoryInput(form.patient.vars.prototype.clinicalHistory)|e }}#}
+        {{ formmacros.field(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}
         "
 
          data-prototype-procedure="
@@ -140,7 +141,7 @@
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
-        {{ formmacros.fieldicon(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
+        {{ formmacros.fieldicon(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-remove")|e }}
         "
          data-prototype-slide="
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
