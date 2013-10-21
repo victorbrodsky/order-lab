@@ -51,9 +51,12 @@ function checkForm( elem ) {
         console.log("mrn="+mrn+", name="+name);
 
         if( !mrn ) {
-            //console.log("mrn undefinded!");
-            $('#'+inputId).popover( {content:"Please fill out MRN field"} );
-            $('#'+inputId).popover('show');
+//            //console.log("mrn undefinded!");
+//            $('#'+inputId).popover( {content:"Please fill out MRN field"} );
+//            $('#'+inputId).popover('show');
+            setKeyValue(element);
+            disableInElementBlock(element, false, "notkey");
+            invertButton(element);
             return;
         }
 
@@ -214,10 +217,18 @@ function setArrayField(element, dataArr, parent) {
         var part = idsArr[4];
         var block = idsArr[5];
         var slide = idsArr[6];
+        var coll = 0;
         console.log("set array name=" + name );
 
-        var newForm = getCollField( name, patient, procedure, accession, part, block, slide, 0 );
+        //name = "specialStains";
+        name = "clinicalHistory";
+
+        var newForm = getCollField( name, patient, procedure, accession, part, block, slide, coll );
+        //console.log("newForm="+newForm);
+
         console.log("newForm="+newForm);
+        var textStr = dataArr[i]+"</textarea>";
+        newForm = newForm.replace("</textarea>", textStr);
 
         element.after(newForm);
 
@@ -299,8 +310,9 @@ function initAllMulti() {
         var idArr = check_btns.eq(i).attr("id").split("_");
         if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
             check_btns.eq(i).attr('flag', 'done');
-            keyElement = setKeyValue(check_btns.eq(i));
-            disableElement(keyElement,true);
+            //keyElement = setKeyValue(check_btns.eq(i));
+//            disableElement(keyElement,true);
+            disableInElementBlock(check_btns.eq(i), true, "notkey");
         }
     }
 }
@@ -440,29 +452,29 @@ function setKeyValue(element) {
 
     if( name == "name" ) return;
 
-    //console.debug("mrn="+ data.mrn);
-    if( name != "accession" ) {
-        //data = new Array();
-        //data[name] = "Automatic Generated";
-        //setElementBlock(element, data, null, "key");
-        keyElement.val("Automatic Generated");
-    }
+//    //console.debug("mrn="+ data.mrn);
+//    if( name != "accession" ) {
+//        //data = new Array();
+//        //data[name] = "Automatic Generated";
+//        //setElementBlock(element, data, null, "key");
+//        keyElement.val("Automatic Generated");
+//    }
 
-//    $.ajax({
-//        url: urlCheck+name,
-//        type: 'GET',
-//        contentType: 'application/json',
-//        dataType: 'json',
-//        success: function (data) {
-//            if( data.mrn ) {
-//                console.debug("mrn="+ data.mrn);
-//                setElementBlock(element, data, null, "key");
-//            }
-//        },
-//        error: function () {
-//            console.debug("set key ajax error");
-//        }
-//    });
+    $.ajax({
+        url: urlCheck+name,
+        type: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            if( data.mrn ) {
+                console.debug("mrn="+ data.mrn);
+                setElementBlock(element, data, null, "key");
+            }
+        },
+        error: function () {
+            console.debug("set key ajax error");
+        }
+    });
 
     return keyElement;
 }

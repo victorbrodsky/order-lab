@@ -8,6 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
+use Oleg\OrderformBundle\Entity\ClinicalHistory;
+
 class PatientType extends AbstractType
 {
 
@@ -92,7 +94,7 @@ class PatientType extends AbstractType
 //                //'attr' => array('class'=>'textarea form-control'),
 //        ));
         $builder->add('clinicalHistory', 'collection', array(
-            'type' => new ClinicalHistoryType(),
+            'type' => new ClinicalHistoryType($this->params,$this->entity),
             //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,

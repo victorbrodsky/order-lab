@@ -42,8 +42,6 @@ use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 
-use Oleg\OrderformBundle\Helper\NodeFactory;
-
 //ScanOrder joins OrderInfo + Scan
 /**
  * OrderInfo controller.
@@ -284,12 +282,6 @@ class MultyScanOrderController extends Controller {
 
         $patient = new Patient();
         $entity->addPatient($patient);
-
-//        $factory = NodeFactory::Instance($this->getDoctrine()->getManager());
-//        $mrn1 = $factory->getMrn();
-//        $mrn2 = $factory->getMrn();
-//        echo $mrn1."<br>".$mrn2;
-//        exit();
 
         $clinicalHistory = new ClinicalHistory();
         $patient->addClinicalHistory($clinicalHistory);

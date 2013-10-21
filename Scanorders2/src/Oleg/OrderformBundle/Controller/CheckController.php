@@ -11,8 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oleg\OrderformBundle\Form\PatientType;
-use Oleg\OrderformBundle\Helper\NodeFactory;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
+use Oleg\OrderformBundle\Entity\Patient;
 
 /**
  * OrderInfo controller.
@@ -109,15 +109,13 @@ class CheckController extends Controller {
      */
     public function getMrnAction() {
 
-//        //$em = $this->getDoctrine()->getManager();
-//        $mrn = $em->getRepository('OlegOrderformBundle:Patient')->getNextMrn();
-//
-//        $patient = new Patient();
-//        $patient->setMrn($mrn);
-//        $em->persist($patient);
-
-        $factory = NodeFactory::Instance($this->getDoctrine()->getManager());
-        $mrn = $factory->getMrn();
+        $em = $this->getDoctrine()->getManager();
+        $mrn = $em->getRepository('OlegOrderformBundle:Patient')->getNextMrn();
+        $patient = new Patient();
+        $patient->setMrn($mrn);
+        $patient->setStatus("reserved");
+        $em->persist($patient);
+//        $em->flush();
 
         $element = array(
             'mrn'=>$mrn

@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ClinicalHistoryRepository")
  * @ORM\Table(name="clinicalHistory")
+ * @ORM\HasLifecycleCallbacks
  */
 class ClinicalHistory
 {
@@ -21,7 +22,7 @@ class ClinicalHistory
     protected $id;
 
     /**
-     * @ORM\Column(type="text", nullable=true, length=10000)
+     * @ORM\Column(type="text", length=10000)
      */
     protected $clinicalHistory;
 
@@ -36,52 +37,23 @@ class ClinicalHistory
      * @ORM\Column(type="string", nullable=true, length=100)
      */
     protected $validity;
-    
-   
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     */
+    protected $creationdate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $creator;
+
     public function getId() {
         return $this->id;
     }
-
-//    public function getName() {
-//        return $this->name;
-//    }
-//
-//    public function setId($id) {
-//        $this->id = $id;
-//    }
-//
-//    public function setName($name) {
-//        $this->name = $name;
-//    }
-
-    /**
-     * Set part
-     *
-     * @param \Oleg\OrderformBundle\Entity\Part $part
-     * @return Block
-     */
-    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
-    {
-        $this->part = $part;
-    
-        return $this;
-    }
-
-    /**
-     * Get part
-     *
-     * @return \Oleg\OrderformBundle\Entity\Part 
-     */
-    public function getPart()
-    {
-        return $this->part;
-    }
-
-    public function __toString()
-    {
-        return $this->clinicalHistory;
-    }
-
 
     /**
      * Set clinicalHistory
@@ -151,4 +123,41 @@ class ClinicalHistory
     {
         return $this->patient;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreationdate()
+    {
+        $this->creationdate = new \DateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreationdate()
+    {
+        return $this->creationdate;
+    }
+
+    /**
+     * @param mixed $creator
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+
+
+
+
 }

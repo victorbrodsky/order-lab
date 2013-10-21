@@ -434,7 +434,7 @@ ident:      specialStains or relevantScans
 
 {############################ Objects ###########################}
 
-{% macro patientForm( patient, flag, uid ) %}
+{% macro patientForm( form, patient, flag, uid ) %}
     {% import _self as formmacros %}
     {#{% if flag == "check" %}#}
         {#{% set attr="disabled" %}#}
@@ -442,7 +442,7 @@ ident:      specialStains or relevantScans
         {#{% set attr="" %}#}
     {#{% endif %}#}
     <div id="patient_{{ uid }}">
-        {{ formmacros.fieldicon(patient.mrn,"glyphicon-remove") }}
+        {{ formmacros.fieldicon(patient.mrn,"glyphicon-check") }}
         {{ formmacros.field(patient.name) }}
         {{ formmacros.field(patient.sex) }}
         {{ formmacros.fielddate(patient.dob) }}
@@ -454,7 +454,7 @@ ident:      specialStains or relevantScans
 {% macro accessionForm( procedure, accession, flag, uid ) %}
     {% import _self as formmacros %}
     <div id="accession_{{ uid }}">
-        {{ formmacros.fieldicon(accession.accession,"glyphicon-remove") }}
+        {{ formmacros.fieldicon(accession.accession,"glyphicon-check") }}
         {{ formmacros.field(procedure.proceduretype) }}
     </div>
 {% endmacro %}
@@ -462,7 +462,7 @@ ident:      specialStains or relevantScans
 {% macro partForm( form, flag, uid, type, patientCount, procedureCount, accessionCount, partCount ) %}
     {% import _self as formmacros %}
     <div id="part_{{ uid }}">
-        {{ formmacros.fieldicon(form.name,"glyphicon-remove") }}
+        {{ formmacros.fieldicon(form.name,"glyphicon-check") }}
         {{ formmacros.field(form.sourceOrgan) }}
         {{ formmacros.paperInput(form.paper,type) }}
         {{ formmacros.field(form.description) }}
@@ -477,7 +477,7 @@ ident:      specialStains or relevantScans
 {% macro blockForm( form, flag, uid ) %}
     {% import _self as formmacros %}
     <div id="block_{{ uid }}">
-        {{ formmacros.fieldicon(form.name,"glyphicon-remove") }}
+        {{ formmacros.fieldicon(form.name,"glyphicon-check") }}
     </div>
 {% endmacro %}
 

@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PatientRepository")
  * @ORM\Table(name="patient")
- * 
+ * @ORM\HasLifecycleCallbacks
  */
 class Patient implements JsonSerializable
 {
@@ -73,8 +73,19 @@ class Patient implements JsonSerializable
      * @ORM\OneToMany(targetEntity="Specimen", mappedBy="patient")
      */
     protected $specimen;
- 
 
+    /**
+     * status: use to indicate if the patient with this mrn is reserved only but not submitted
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $status;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     */
+    private $creationdate;
     
     /**
      * Constructor
@@ -352,6 +363,40 @@ class Patient implements JsonSerializable
     {
         return $this->clinicalHistory;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreationdate()
+    {
+        $this->creationdate = new \DateTime();;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreationdate()
+    {
+        return $this->creationdate;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+
 
     public function jsonSerialize()
     {
