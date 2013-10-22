@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Serializer\Exception\LogicException;
+use Oleg\OrderformBundle\Entity\Patient;
 
 /**
  * PatientRepository
@@ -13,57 +14,61 @@ use Symfony\Component\Serializer\Exception\LogicException;
  */
 class PatientRepository extends EntityRepository
 {
+
+    const STATUS_RESERVED = "reserved";
+    const STATUS_VALID = "valid";
+
     //make sure the uniqueness entity. Make new or return id of existing.
-    public function processEntity( $in_entity, $orderinfo = null ) {
+    public function processEntity( $patient, $orderinfo = null ) {
 
         //echo "enter patient rep <br>";
 
+        $patient = $this->processArrays($patient,$orderinfo);
+
         $em = $this->_em;
 
-        $in_entity = $em->getRepository('OlegOrderformBundle:Specimen')->removeDuplicateEntities( $in_entity );
+        $patient = $em->getRepository('OlegOrderformBundle:Specimen')->removeDuplicateEntities( $patient );
 
-        if( strpos( $in_entity->getMrn(), 'NOMRNPROVIDED' ) !== false ) {
-            //throw new LogicException('MRN cannot contain NOMRNPROVIDED string');
+        $found = $this->isExisted($patient); //return: 0 - not existed, 1 - existed but STATUS_RESERVED, 2 - existed and STATUS_VALID
+
+        if( !$found ) { //user entered new MRN
+
+            $patient->setStatus(self::STATUS_VALID);
+            return $this->setResult( $patient, $orderinfo );
+
+        } elseif( $found->getStatus() == self::STATUS_RESERVED  ) { //1 - existed but STATUS_RESERVED; Theoretically, this is always be true, because we have JS check
+
+            $patient->setStatus(self::STATUS_VALID);
+            return $this->setResult( $patient, $orderinfo );
+
+        } elseif( $found->getStatus() == self::STATUS_VALID  ) { //2 - existed and STATUS_VALID
+
+            //copy all children from form's entity to existing entity from DB
+            foreach( $patient->getSpecimen() as $specimen ) {
+                $found->addSpecimen( $specimen );
+            }
+            //TODO: processArray
+            foreach( $patient->getClinicalHistory() as $hist ) {
+                $found->addClinicalHistory( $hist );
+            }
+            return $this->setResult( $found, $orderinfo );
+
+        } elseif( $found == -1 ) { //MRN is not provided
+
+            $patient = $this->createPatient(self::STATUS_VALID);
+            return $this->setResult( $patient, $orderinfo );
+
+        } else {
+            throw new LogicException('Logical Error: Patient status is undefined');
         }
 
-        //echo "patient rep 1<br>";
-
-        //set up unknown patient
-        if( $in_entity->getMrn() == "" || $in_entity->getMrn() == null ) {
-            $in_entity->setMrn($this->getNextMrn());
-        }
-
-        //exit();
-        
-        $entity = $this->findOneBy(array('mrn' => $in_entity->getMrn()));
-        //$em = $this->_em;
-
-        //create new, cause old entity was not found in db 
-        if( null === $entity ) {                                        
-            //$em->persist($in_entity);                            
-            //return $in_entity;
-            //echo "new patient<br>";
-            return $this->setResult( $in_entity, $orderinfo );         
-        } 
-
-        //copy all children from form's entity to existing entity from DB
-        foreach( $in_entity->getSpecimen() as $specimen ) {
-            //$em->persist($specimen);
-            $entity->addSpecimen( $specimen );
-        }
-
-        //$em->persist($entity);
-
-        //return $entity;
-        //echo "existing patient<br>";
-        return $this->setResult( $entity, $orderinfo );     
     }
     
     public function setResult( $patient, $orderinfo = null ) {
               
         $em = $this->_em;
         $em->persist($patient);
-        
+
         if( $orderinfo == null ) {
             return $patient;
         }
@@ -93,6 +98,7 @@ class PatientRepository extends EntityRepository
     }
 
     //filter out duplicate virtual (in form, not in DB) patients
+    //after js check form, theoretically we should not have duplicate entities submitted by the form, but let's have it just in case ...
     public function removeDuplicateEntities( $entity ) {
 
         $patients = $entity->getPatient();
@@ -123,6 +129,7 @@ class PatientRepository extends EntityRepository
         return $entity;
     }
 
+    //check by ID
     public function notExists($entity) {
         $id = $entity->getId();
         if( !$id ) {
@@ -158,6 +165,49 @@ class PatientRepository extends EntityRepository
         //echo "paddedmrn=".$paddedmrn."<br>";
         //exit();
         return 'NOMRNPROVIDED-'.$paddedmrn;
+    }
+
+    //check if the STATUS_VALID patient is existed in DB
+    //return: null - not existed, entity object if existed
+    public function isExisted( $patient ) {
+
+        if( $patient->getMrn() == "" || $patient->getMrn() == null ) {
+            return -1;
+        }
+
+        return $this->findOneBy(array('mrn' => $patient->getMrn()));
+    }
+
+    public function createPatient( $status = null ) {
+        if( !$status ) {
+            $status = self::STATUS_RESERVED;
+        }
+        $em = $this->_em;
+        $mrn = $this->getNextMrn();
+        $patient = new Patient();
+        $patient->setMrn($mrn);
+        $patient->setStatus($status);
+        $em->persist($patient);
+        $em->flush();
+        return $patient;
+    }
+
+    public function processArrays($patient,$orderinfo) {
+
+        if( !$orderinfo || count($orderinfo->getProvider()) == 0 ) {
+            return $patient;
+        }
+
+        $provider = $orderinfo->getProvider()[0]; //assume orderinfo has only one provider.
+        //echo "mrn=".$patient->getMrn().", hist count=".count($patient->getClinicalHistory()).", provider=".$provider."<br>";
+
+        foreach( $patient->getClinicalHistory() as $hist ) {
+            if( count($hist->getProvider()) == 0 ) {
+                $hist->addProvider($provider);
+            }
+        }
+
+        return $patient;
     }
     
 }

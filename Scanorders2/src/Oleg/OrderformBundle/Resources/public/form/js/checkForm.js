@@ -7,7 +7,7 @@
  */
 
 var keys = new Array("mrn", "accession", "name");
-var disableEnable = new Array("clinicalHistory");
+var arrayFields = new Array("clinicalHistory");
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 console.log("urlCheck="+urlCheck);
 
@@ -36,7 +36,7 @@ function checkForm( elem ) {
         console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
         cleanFieldsInElementBlock( element, "all" );
-        disableInElementBlock(element, true, "notkey");
+        disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
         return;
 
@@ -55,7 +55,7 @@ function checkForm( elem ) {
 //            $('#'+inputId).popover( {content:"Please fill out MRN field"} );
 //            $('#'+inputId).popover('show');
             setKeyValue(element);
-            disableInElementBlock(element, false, "notkey");
+            disableInElementBlock(element, false, null, "notkey", null);
             invertButton(element);
             return;
         }
@@ -75,10 +75,11 @@ function checkForm( elem ) {
                     //first: set elements
                     setElementBlock(element, data);
                     //second: disable or enable element. Make sure this function runs after setElementBlock
-                    disableInElementBlock(element, true, "all");
+                    disableInElementBlock(element, true, "all", null, "notarrayfield");
                 } else {
-                    //console.debug("not found: inmrn="+ data.inmrn);
-                    disableInElementBlock(element, false, "all");
+                    console.debug("not found");
+                    cleanFieldsInElementBlock( element );
+                    disableInElementBlock(element, false, null, "notkey", null);
                 }
                 invertButton(element);
             },
@@ -86,7 +87,7 @@ function checkForm( elem ) {
                 console.debug("get object ajax error "+name);
                 //setElementBlock(element, null);
                 cleanFieldsInElementBlock( element );
-                disableInElementBlock(element, false, "all");
+                disableInElementBlock(element, false, "all", null, null);
                 invertButton(element);
             }
         });
@@ -165,6 +166,7 @@ function setElementBlock( element, data, cleanall, key ) {
                     if( $.isArray(data[field]) ) {
                         setArrayField( elements.eq(i), data[field], parent );
                     } else {
+                        console.log("It is not an array");
                         elements.eq(i).val(data[field]);
                     }
                 }
@@ -193,11 +195,17 @@ function setElementBlock( element, data, cleanall, key ) {
 function setArrayField(element, dataArr, parent) {
 
     for (var i = 0; i < dataArr.length; i++) {
-        //console.log("set array field id=" + element.attr("id") + ", text=" + dataArr[i] );
+
+        //var dataArr = data[field];
+        var text = dataArr[i]["text"];
+        var provider = dataArr[i]["provider"];
+        var date = dataArr[i]["date"];
+
+        console.log( "set array field text=" + text + ", provider="+provider+", date="+date + "id=" + element.attr("id") );
 
         var idsArr = parent.attr("id").split("_");
         var elementIdArr = element.attr("id").split("_");
-        console.log("set array field parent.id=" + parent.attr("id") + ", text=" + dataArr[i] );
+        console.log("set array field parent.id=" + parent.attr("id") + ", text=" + text );
         // 0        1               2           3    4      5          6        7
         //oleg_orderformbundle_orderinfotype_patient_0_clinicalHistory_0_clinicalHistory
         // 0        1               2           3    4      5   6     7     8   9  10      11      12 13
@@ -217,8 +225,8 @@ function setArrayField(element, dataArr, parent) {
         var part = idsArr[4];
         var block = idsArr[5];
         var slide = idsArr[6];
-        var coll = 0;
-        console.log("set array name=" + name );
+        var coll = i+1;
+        //console.log("set array name=" + name );
 
         //name = "specialStains";
         name = "clinicalHistory";
@@ -226,14 +234,31 @@ function setArrayField(element, dataArr, parent) {
         var newForm = getCollField( name, patient, procedure, accession, part, block, slide, coll );
         //console.log("newForm="+newForm);
 
-        console.log("newForm="+newForm);
-        var textStr = dataArr[i]+"</textarea>";
+        var textStr = text+"</textarea>";
         newForm = newForm.replace("</textarea>", textStr);
 
-        element.after(newForm);
+        var labelStr = " entered on " + date + " by "+provider + "</label>";
+        newForm = newForm.replace("</label>", labelStr);
+
+        //console.log("newForm="+newForm);
+
+        var attachElement = element.parent().parent();
+
+//        attachElement.after(newForm);
+        attachElement.before(newForm);
 
     }
 
+}
+
+function cleanArrayField( element, field ) {
+    console.log( "clean array field id=" + element.attr("id") );
+    //delete if id != 0
+    if( element.attr("id") && element.attr("id").indexOf(field+"_0_"+field) != -1 ) {
+        element.val(null);
+    } else {
+        element.parent().parent().remove();
+    }
 }
 
 //clean fields in Element Block
@@ -252,17 +277,29 @@ function cleanFieldsInElementBlock( element, all ) {
         if( id ) {
 
             if( type == "text" || !type ) {
+                var clean = false;
+                var idsArr = id.split("_");
+                var field = idsArr[idsArr.length-1];
                 if( all == "all" ) {
-                    elements.eq(i).val(null);
+                    //elements.eq(i).val(null);
+                    clean = true;
                 } else {
-                    var idsArr = elements.eq(i).attr("id").split("_");
-                    var field = idsArr[idsArr.length-1];
                     //check if the field is not key
                     if( !isKey(elements.eq(i), field) ) {
-                        elements.eq(i).val(null);
+                        //elements.eq(i).val(null);
+                        clean = true;
                     }
                 }
-
+                if( clean ) {
+                    console.log("in array field=" + field );
+                    if( $.inArray(field, arrayFields) == -1 ) {
+                        //console.log("clean not array");
+                        elements.eq(i).val(null);
+                    } else {
+                        //console.log("clean as an array");
+                        cleanArrayField( elements.eq(i), field );
+                    }
+                }
             }
 
             if( type == "radio" ) {
@@ -312,14 +349,15 @@ function initAllMulti() {
             check_btns.eq(i).attr('flag', 'done');
             //keyElement = setKeyValue(check_btns.eq(i));
 //            disableElement(keyElement,true);
-            disableInElementBlock(check_btns.eq(i), true, "notkey");
+            disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
         }
     }
 }
 
-//all: if all set to "all" => disable/enable all fields including key field
-//all: if all set to "notkey" => disable/enable all fields, but not key field (inverse key)
-function disableInElementBlock( element, disabled, all ) {
+//all: "all" => disable/enable all fields including key field
+//flagKey: "notkey" => disable/enable all fields, but not key field (inverse key)
+//flagArrayField: "notarrayfield" => disable/enable array fields
+function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
     //console.log("disable element.id=" + element.attr('id'));
 
@@ -344,16 +382,30 @@ function disableInElementBlock( element, disabled, all ) {
 
             if( all == "all" ) {
                 disableElement(elements.eq(i),disabled);
-            } else {
+            }
+
+            if( flagKey == "notkey" ) {
                 //check if the field is not key
-                if( isKey(elements.eq(i), field) && all == "notkey" ) {
-                    if( disabled ) {    //inverse disable flag for key field
+                if( isKey(elements.eq(i), field) && flagKey == "notkey" ) {
+                    if( disabled ) {    //inverse disable flagKey for key field
                         disableElement(elements.eq(i),false);
                     } else {
                         disableElement(elements.eq(i),true);
                     }
                 } else {
                     disableElement(elements.eq(i),disabled);
+                }
+            }
+
+            if( flagArrayField == "notarrayfield" ) {
+                if( $.inArray(field, arrayFields) != -1 ) {
+                    if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0_"+field) != -1 ) {
+                        if( disabled ) {    //inverse disable flag for key field
+                            disableElement(elements.eq(i),false);
+                        } else {
+                            disableElement(elements.eq(i),true);
+                        }
+                    }
                 }
             }
 
@@ -466,8 +518,8 @@ function setKeyValue(element) {
         contentType: 'application/json',
         dataType: 'json',
         success: function (data) {
-            if( data.mrn ) {
-                console.debug("mrn="+ data.mrn);
+            if( data[name] ) {
+                console.debug(name+"="+ data[name]);
                 setElementBlock(element, data, null, "key");
             }
         },

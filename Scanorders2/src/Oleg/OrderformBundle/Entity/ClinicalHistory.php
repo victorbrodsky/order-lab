@@ -4,7 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ClinicalHistoryRepository")
@@ -45,11 +45,24 @@ class ClinicalHistory
      */
     protected $creationdate;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+//     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+//     */
+//    protected $creator;
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinTable(name="provider_clinicalhist",
+     *      joinColumns={@ORM\JoinColumn(name="clinicalhist_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="provider_id", referencedColumnName="id")}
+     * )
      */
-    protected $creator;
+    private $provider;
+
+    public function __construct()
+    {
+        $this->provider = new ArrayCollection();
+    }
 
     public function getId() {
         return $this->id;
@@ -140,23 +153,36 @@ class ClinicalHistory
         return $this->creationdate;
     }
 
-    /**
-     * @param mixed $creator
-     */
-    public function setCreator($creator)
+
+    public function setProvider($provider)
     {
-        $this->creator = $creator;
+        if ( is_array($provider) ) {
+            $this->provider = $provider;
+        } else {
+            $this->provider->clear();
+            $this->provider->add($provider);
+        }
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCreator()
+    public function getProvider()
     {
-        return $this->creator;
+        return $this->provider;
     }
 
+    public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
+    {
+        if( !$this->provider->contains($provider) ) {
+            $this->provider[] = $provider;
+        }
 
+        return $this;
+    }
+
+    public function removeProvider(\Oleg\OrderformBundle\Entity\User $provider)
+    {
+        $this->provider->removeElement($provider);
+    }
 
 
 

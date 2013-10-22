@@ -196,23 +196,41 @@ class MultyScanOrderController extends Controller {
             //echo "id2=".$entity->getId()."<br>";
             //exit();
 
-            echo "<br>Before loop:<br>";
-            echo "patient count=".count($entity->getPatient());
-            foreach( $entity->getPatient() as $pat ) {
-                echo "<br>mrn=".$pat->getMrn();
-                echo "<br>name=".$pat->getName();
-                echo "<br>sex=".$pat->getSex();
-                //echo "<br>dob=".$pat->getDob();
-
-                foreach( $pat->getClinicalHistory() as $hist ) {
-                    echo "<br>hist id=".$hist->getId();
-                    echo "<br>hist text=".$hist->getClinicalHistory();
-                }
-
-            }
-            exit();
+//            echo "<br>Before loop:<br>";
+//            echo "patient count=".count($entity->getPatient());
+//            foreach( $entity->getPatient() as $pat ) {
+//                echo "<br>mrn=".$pat->getMrn();
+//                echo "<br>name=".$pat->getName();
+//                echo "<br>sex=".$pat->getSex();
+//                //echo "<br>dob=".$pat->getDob();
+//
+//                foreach( $pat->getClinicalHistory() as $hist ) {
+//                    echo "<br>hist id=".$hist->getId();
+//                    echo "<br>hist text=".$hist->getClinicalHistory();
+//                    echo "<br>hist creator=".$hist->getCreator();
+//                }
+//
+//            }
+//            exit();
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
+
+//            echo "<br>After loop:<br>";
+//            echo "patient count=".count($entity->getPatient());
+//            foreach( $entity->getPatient() as $pat ) {
+//                echo "<br>mrn=".$pat->getMrn();
+//                echo "<br>name=".$pat->getName();
+//                echo "<br>sex=".$pat->getSex();
+//                //echo "<br>dob=".$pat->getDob();
+//
+//                foreach( $pat->getClinicalHistory() as $hist ) {
+//                    echo "<br>hist id=".$hist->getId();
+//                    echo "<br>hist text=".$hist->getClinicalHistory();
+//                    echo "<br>hist Provider=".$hist->getProvider()[0];
+//                }
+//
+//            }
+//            exit();
 
             if (isset($_POST['btnSave'])) {              
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             
@@ -284,6 +302,7 @@ class MultyScanOrderController extends Controller {
         $entity->addPatient($patient);
 
         $clinicalHistory = new ClinicalHistory();
+        //$clinicalHistory->setCreator($user);
         $patient->addClinicalHistory($clinicalHistory);
 
         //$patient2 = new Patient();

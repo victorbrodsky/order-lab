@@ -334,6 +334,48 @@
     </div>
     </p>
 {% endmacro %}
+{% macro inputArrayField(fields,cicle) %}
+    {#Providers:{{ form_widget(form.patient.vars.value.clinicalHistory.vars.value.provider) }}#}
+    {% import _self as formmacros %}
+    {#{% for field in fields %}#}
+        {#{{ form_widget(field) }}#}
+    {#{% endfor %}#}
+    <p>
+    {% for field in fields %}
+        {{ formmacros.inputField(field,cicle) }}
+    {% endfor %}
+    </p>
+{% endmacro %}
+
+{#input array field with separate label#}
+{% macro inputField(field,cicle,prototype) %}
+
+    {% if prototype == "prototype" %}
+        {% set fieldThis = field.vars.prototype %}
+    {% else %}
+        {% set fieldThis = field %}
+    {% endif %}
+
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {{form_label(fieldThis.clinicalHistory)}}
+                {% if cicle == "show" %}
+                    {% if field.vars.value.creationdate != "" %}
+                        entered on
+                        {{field.vars.value.creationdate|date('Y-m-d')}}
+                    {% endif %}
+                    {% if field.vars.value.provider|length > 0 and field.vars.value.provider|first != "" %}
+                        by
+                        {{field.vars.value.provider|first}}
+                    {% endif %}
+                {% endif %}
+                <b>:</b>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(fieldThis.clinicalHistory) }}
+            </div>
+        </div>
+{% endmacro %}
 
 
 {% macro paperInput(fields,type,attr) %}
@@ -434,7 +476,7 @@ ident:      specialStains or relevantScans
 
 {############################ Objects ###########################}
 
-{% macro patientForm( form, patient, flag, uid ) %}
+{% macro patientForm( patient, flag, uid, cicle ) %}
     {% import _self as formmacros %}
     {#{% if flag == "check" %}#}
         {#{% set attr="disabled" %}#}
@@ -447,7 +489,7 @@ ident:      specialStains or relevantScans
         {{ formmacros.field(patient.sex) }}
         {{ formmacros.fielddate(patient.dob) }}
         {{ formmacros.field(patient.age) }}
-        {{ formmacros.clinicalHistoryInput(patient.clinicalHistory) }}
+        {{ formmacros.inputArrayField(patient.clinicalHistory,cicle) }}
     </div>
 {% endmacro %}
 
@@ -509,7 +551,7 @@ ident:      specialStains or relevantScans
                 {{ formmacros.field(patient.sex,"true") }}
                 {{ formmacros.fielddate(patient.dob,"disabled") }}
                 {{ formmacros.field(patient.age,"true") }}
-                {{ formmacros.clinicalHistoryInput(patient.clinicalHistory) }}
+                {{ formmacros.inputArrayField(patient.clinicalHistory) }}
 
                 {#specimen/procedure#}
                 {% set procedureCount = 0 %}

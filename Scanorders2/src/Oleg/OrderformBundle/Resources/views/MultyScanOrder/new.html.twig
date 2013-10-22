@@ -112,11 +112,11 @@
         {% if type != 'show' %}
 
          data-prototype-patient="
-         {{ formmacros.patientForm(form, form.patient.vars.prototype,"check",uid)|e }}
+         {{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type)|e }}
          {#{{ formmacros.field(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}#}
          "
 
-         data-prototype-clinicalhistory="{{ form_widget(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}"
+         data-prototype-clinicalhistory="{{ formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"prototype")|e }}"
 
          data-prototype-procedure="
          {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid)|e }}
@@ -173,7 +173,7 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
 
-                {{ formmacros.patientForm(form, patient,"check",uid) }}
+                {{ formmacros.patientForm(patient,"check",uid,type) }}
 
                 {#specimen/procedure#}
                 {% set procedureCount = 0 %}
@@ -332,8 +332,6 @@
         </div>
 
     {% endif %}
-
-    {#{{ form_rest(form.id) }}#}
 
     {#{{ form_end(form) }}#}
     </form>
