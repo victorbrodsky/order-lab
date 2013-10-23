@@ -73,8 +73,6 @@ class CheckController extends Controller {
             $clinHistoriesJson = array();
             foreach( $clinHistories as $clinHist ) {
 
-                $text = $clinHist->getClinicalHistory();
-
                 $providerStr = "";
                 if( count($clinHist->getProvider()) > 0 ) {
                     foreach( $clinHist->getProvider() as $provider ) {
@@ -92,7 +90,8 @@ class CheckController extends Controller {
                 $dateStr = $transformer->transform($clinHist->getCreationdate());
 
                 $hist = array();
-                $hist['text'] = $text;
+                $hist['id'] = $clinHist->getId();
+                $hist['text'] = $clinHist->getClinicalHistory();
                 $hist['provider'] = $providerStr;
                 $hist['date'] = $dateStr;
                 $clinHistoriesJson[] = $hist;

@@ -72,8 +72,8 @@
     <input type="hidden" id="formtype" value="multi" />
     <input type="hidden" id="formcicle" value="{{ type }}" />
 
-    <form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
-    {#{{ form_start(form) }}#}
+    {#<form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>#}
+    {{ form_start(form) }}
 
     {#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
 
@@ -333,8 +333,8 @@
 
     {% endif %}
 
-    {#{{ form_end(form) }}#}
-    </form>
+    {{ form_end(form) }}
+    {#</form>#}
 
 {% endblock %}
   

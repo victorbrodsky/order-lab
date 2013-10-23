@@ -26,7 +26,6 @@ class OrderInfoRepository extends EntityRepository
         $em = $this->_em;
 
         //one way to solev multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
-        //$entity = $this->removeDuplicateEntities($entity);
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
 
         //set Status with Type and Group

@@ -64,6 +64,13 @@ class ClinicalHistory
         $this->provider = new ArrayCollection();
     }
 
+    public function setId($id)
+    {
+        //echo "setId=".$id."<br>";
+        $this->id = $id;
+        return $this;
+    }
+
     public function getId() {
         return $this->id;
     }
@@ -183,7 +190,5 @@ class ClinicalHistory
     {
         $this->provider->removeElement($provider);
     }
-
-
 
 }

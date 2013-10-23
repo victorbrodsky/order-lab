@@ -192,11 +192,13 @@ function setElementBlock( element, data, cleanall, key ) {
 
 }
 
+//set array field such as ClinicalHistory array fields
 function setArrayField(element, dataArr, parent) {
 
     for (var i = 0; i < dataArr.length; i++) {
 
         //var dataArr = data[field];
+        var id = dataArr[i]["id"];
         var text = dataArr[i]["text"];
         var provider = dataArr[i]["provider"];
         var date = dataArr[i]["date"];
@@ -240,7 +242,13 @@ function setArrayField(element, dataArr, parent) {
         var labelStr = " entered on " + date + " by "+provider + "</label>";
         newForm = newForm.replace("</label>", labelStr);
 
-        //console.log("newForm="+newForm);
+//        var idStr = 'readonly="readonly" value="'+id+'" ';
+//        newForm = newForm.replace('readonly="readonly"', idStr);
+
+        var idStr = 'type="hidden" value="'+id+'" ';
+        newForm = newForm.replace('type="hidden"', idStr);
+
+        console.log("newForm="+newForm);
 
         var attachElement = element.parent().parent();
 

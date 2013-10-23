@@ -31,6 +31,9 @@ class ClinicalHistoryType extends AbstractType
 //        echo $label;
 //        exit();
 
+        $builder->add('id','hidden');
+        //$builder->add('id','hidden',array('required'=>false));
+
         $builder->add('clinicalHistory', 'textarea', array(
             'label' => 'Clinical History',
             'max_length'=>10000,

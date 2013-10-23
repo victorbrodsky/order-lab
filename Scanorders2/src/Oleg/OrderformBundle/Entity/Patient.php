@@ -336,13 +336,23 @@ class Patient implements JsonSerializable
     {
         if( $clinicalHistory != null ) {
             if( !$this->clinicalHistory->contains($clinicalHistory) ) {
+//            if( !$this->isExisted($this->clinicalHistory,$clinicalHistory) ) {
                 $clinicalHistory->setPatient($this);
                 $this->clinicalHistory[] = $clinicalHistory;
             }
         }
-    
+
         return $this;
     }
+
+//    public function isExisted( $clinicalHistories, $clinicalHistory ) {
+//        foreach( $clinicalHistories as $thisHist ) {
+//            if( $thisHist->getClinicalHistory() == $clinicalHistory->getClinicalHistory() ) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Remove clinicalHistory

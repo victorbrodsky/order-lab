@@ -160,8 +160,8 @@ class MultyScanOrderController extends Controller {
 //        echo "<br>";
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
-        $form->bind($request);
-//        $form->handleRequest($request);
+//        $form->bind($request);
+        $form->handleRequest($request);
 
         //check if the orderform already exists, so it's edit case
         //TODO: edit id is empty. Why??
@@ -207,7 +207,7 @@ class MultyScanOrderController extends Controller {
 //                foreach( $pat->getClinicalHistory() as $hist ) {
 //                    echo "<br>hist id=".$hist->getId();
 //                    echo "<br>hist text=".$hist->getClinicalHistory();
-//                    echo "<br>hist creator=".$hist->getCreator();
+//                    //echo "<br>hist creator=".$hist->getProvider()[0]->getUsername();
 //                }
 //
 //            }

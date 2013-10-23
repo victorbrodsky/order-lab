@@ -23,42 +23,38 @@ class PatientRepository extends EntityRepository
 
         //echo "enter patient rep <br>";
 
-        $patient = $this->processArrays($patient,$orderinfo);
+        $patient = $this->processFieldArrays($patient,$orderinfo);
 
         $em = $this->_em;
 
         $patient = $em->getRepository('OlegOrderformBundle:Specimen')->removeDuplicateEntities( $patient );
 
-        $found = $this->isExisted($patient); //return: 0 - not existed, 1 - existed but STATUS_RESERVED, 2 - existed and STATUS_VALID
+        $found = $this->isExisted($patient); //return: 1 - null, 2 - existed but STATUS_RESERVED, 3 - existed and STATUS_VALID
 
-        if( !$found ) { //user entered new MRN
-
-            $patient->setStatus(self::STATUS_VALID);
-            return $this->setResult( $patient, $orderinfo );
-
-        } elseif( $found->getStatus() == self::STATUS_RESERVED  ) { //1 - existed but STATUS_RESERVED; Theoretically, this is always be true, because we have JS check
+        if( !$found ) {                                             //Case 1 - User entered new MRN, not existed in DB
 
             $patient->setStatus(self::STATUS_VALID);
             return $this->setResult( $patient, $orderinfo );
 
-        } elseif( $found->getStatus() == self::STATUS_VALID  ) { //2 - existed and STATUS_VALID
+        } elseif( $found->getStatus() == self::STATUS_RESERVED  ) { //case 2 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
+
+            $patient->setStatus(self::STATUS_VALID);
+            return $this->setResult( $patient, $orderinfo );
+
+        } elseif( $found->getStatus() == self::STATUS_VALID  ) {    //Case 3 - existed and STATUS_VALID; User entered existed MRN
 
             //copy all children from form's entity to existing entity from DB
             foreach( $patient->getSpecimen() as $specimen ) {
                 $found->addSpecimen( $specimen );
             }
-            //TODO: processArray
-            foreach( $patient->getClinicalHistory() as $hist ) {
-                $found->addClinicalHistory( $hist );
-            }
+            //copy all array fields from form to existing patient
+            $found = $this->copyFieldArrays($patient,$found);
             return $this->setResult( $found, $orderinfo );
 
-        } elseif( $found == -1 ) { //MRN is not provided
-
+        } elseif( $found == -1 ) {                                  //Case 4 - MRN is not provided. Theoretically, this case is not possible
             $patient = $this->createPatient(self::STATUS_VALID);
             return $this->setResult( $patient, $orderinfo );
-
-        } else {
+        } else {                                                    //Case 5 - Theoretically, this case is not possible
             throw new LogicException('Logical Error: Patient status is undefined');
         }
 
@@ -110,6 +106,10 @@ class PatientRepository extends EntityRepository
         $mrns = array();
 
         foreach( $patients as $patient ) {
+
+//            foreach( $patient->getClinicalHistory() as $hist ) {
+//                echo "hist id=".$hist->getId()."<br>";
+//            }
 
             $mrn = $patient->getMrn();
 
@@ -192,22 +192,36 @@ class PatientRepository extends EntityRepository
         return $patient;
     }
 
-    public function processArrays($patient,$orderinfo) {
+    //assign user provider
+    public function processFieldArrays($patient,$orderinfo) {
 
         if( !$orderinfo || count($orderinfo->getProvider()) == 0 ) {
-            return $patient;
+            //return $patient;
         }
 
         $provider = $orderinfo->getProvider()[0]; //assume orderinfo has only one provider.
         //echo "mrn=".$patient->getMrn().", hist count=".count($patient->getClinicalHistory()).", provider=".$provider."<br>";
 
         foreach( $patient->getClinicalHistory() as $hist ) {
+            //echo "hist id=".$hist->getId()."<br>";
             if( count($hist->getProvider()) == 0 ) {
                 $hist->addProvider($provider);
             }
         }
-
+        //exit();
         return $patient;
+    }
+
+    //copy field entity if not existed from source object to destination object
+    public function copyFieldArrays( $source, $dest) {
+        $em = $this->_em;
+        foreach( $source->getClinicalHistory() as $hist ) {
+            $found = $em->getRepository('OlegOrderformBundle:ClinicalHistory')->findOneById($hist->getId());
+            if( !$found ) {
+                $dest->addClinicalHistory( $hist );
+            }
+        }
+        return $dest;
     }
     
 }
