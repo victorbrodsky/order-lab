@@ -193,6 +193,7 @@ function setElementBlock( element, data, cleanall, key ) {
 }
 
 //set array field such as ClinicalHistory array fields
+//element is an input element jquery object
 function setArrayField(element, dataArr, parent) {
 
     for (var i = 0; i < dataArr.length; i++) {
@@ -231,7 +232,7 @@ function setArrayField(element, dataArr, parent) {
         //console.log("set array name=" + name );
 
         //name = "specialStains";
-        name = "clinicalHistory";
+        //name = "clinicalHistory";
 
         var newForm = getCollField( name, patient, procedure, accession, part, block, slide, coll );
         //console.log("newForm="+newForm);
@@ -248,7 +249,7 @@ function setArrayField(element, dataArr, parent) {
         var idStr = 'type="hidden" value="'+id+'" ';
         newForm = newForm.replace('type="hidden"', idStr);
 
-        console.log("newForm="+newForm);
+        //console.log("newForm="+newForm);
 
         var attachElement = element.parent().parent();
 
@@ -527,7 +528,7 @@ function setKeyValue(element) {
         dataType: 'json',
         success: function (data) {
             if( data[name] ) {
-                console.debug(name+"="+ data[name]);
+                //console.debug(name+"="+ data[name]);
                 setElementBlock(element, data, null, "key");
             }
         },
@@ -538,5 +539,6 @@ function setKeyValue(element) {
 
     return keyElement;
 }
+
 
 //TODO: add listener for key fields. If change, disable all element

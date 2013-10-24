@@ -131,6 +131,7 @@ function deleteItem(id) {
 }
 
 //main input form from html button: add parent form (always type='multi')
+//TODO: remove add parent and use only addChildForms in loop including adding parent
 function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
     var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;  //+"_"+diffdiag+"_"+specstain+"_"+image;
@@ -236,10 +237,10 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 
     //attach children form
     $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );
+
     if( name == "part" ) {
         addDiffdiagFieldFirstTime( name, ids );
     }
-
     if( name == "slide" ) {
         //addCollFieldFirstTime( "relevantScans", ids );
         addDiffdiagFieldFirstTime( name, ids );

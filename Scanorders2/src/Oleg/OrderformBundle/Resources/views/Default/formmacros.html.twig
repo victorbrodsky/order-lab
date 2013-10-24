@@ -356,26 +356,27 @@
         {% set fieldThis = field %}
     {% endif %}
 
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                {{form_label(fieldThis.clinicalHistory)}}
-                {% if cicle == "show" %}
-                    {% if field.vars.value.creationdate != "" %}
-                        entered on
-                        {{field.vars.value.creationdate|date('Y-m-d')}}
-                    {% endif %}
-                    {% if field.vars.value.provider|length > 0 and field.vars.value.provider|first != "" %}
-                        by
-                        {{field.vars.value.provider|first}}
-                    {% endif %}
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {{form_label(fieldThis.clinicalHistory)}}
+            {% if cicle == "show" %}
+                {% if field.vars.value.creationdate != "" %}
+                    entered on
+                    {{field.vars.value.creationdate|date('Y-m-d')}}
                 {% endif %}
-                <b>:</b>
-            </div>
-            <div class="col-xs-6" align="left">
-                {{ form_widget(fieldThis.id) }}
-                {{ form_widget(fieldThis.clinicalHistory) }}
-            </div>
+                {% if field.vars.value.provider|length > 0 and field.vars.value.provider|first != "" %}
+                    by
+                    {{field.vars.value.provider|first}}
+                {% endif %}
+            {% endif %}
+            <b>:</b>
         </div>
+        <div class="col-xs-6" align="left">
+            {{ form_widget(fieldThis.id) }}
+            {{ form_widget(fieldThis.clinicalHistory) }}
+        </div>
+    </div>
+
 {% endmacro %}
 
 
@@ -477,20 +478,26 @@ ident:      specialStains or relevantScans
 
 {############################ Objects ###########################}
 
-{% macro patientForm( patient, flag, uid, cicle ) %}
+{% macro patientForm( patient, flag, uid, cicle, clinicalhistoryHtml ) %}
     {% import _self as formmacros %}
     {#{% if flag == "check" %}#}
         {#{% set attr="disabled" %}#}
     {#{% else %}#}
         {#{% set attr="" %}#}
     {#{% endif %}#}
+
     <div id="patient_{{ uid }}">
         {{ formmacros.fieldicon(patient.mrn,"glyphicon-check") }}
         {{ formmacros.field(patient.name) }}
         {{ formmacros.field(patient.sex) }}
         {{ formmacros.fielddate(patient.dob) }}
         {{ formmacros.field(patient.age) }}
-        {{ formmacros.inputArrayField(patient.clinicalHistory,cicle) }}
+        {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
+            {{ formmacros.inputArrayField(patient.clinicalHistory,cicle) }}
+        {% else  %}
+            <p>{{ clinicalhistoryHtml }}</p>
+        {% endif %}
+
     </div>
 {% endmacro %}
 

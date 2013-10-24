@@ -318,6 +318,7 @@ function addDiffdiagFieldFirstTime( name, ids ) {
     }
 
     var newForm = getDiffdiagField( ident, type, patient, specimen, accession, part, block, slide, currFiledCollId, noDelBtn );
+    //console.log("name="+name+", newForm="+newForm);
 
     //var addBtnId = 'addbtn_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_'+ident+'_'+currFiledCollId+'_'+ident;
     var inputGroupId = 'inputGroupId_patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+currFiledCollId+'_'+ident;
