@@ -23,16 +23,7 @@ class ClinicalHistoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        if( $this->entity ) {
-//            $label = 'Clinical History (Created by '.$this->entity->getPatient()[0]->getClinicalHistory()[0]->getCreator()." on ". $this->entity->getPatient()[0]->getClinicalHistory()[0]->getCreationdate()."):";
-//        } else {
-//            $label = 'Clinical History:';
-//        }
-//        echo $label;
-//        exit();
-
         $builder->add('id','hidden');
-        //$builder->add('id','hidden',array('required'=>false));
 
         $builder->add('clinicalHistory', 'textarea', array(
             'label' => 'Clinical History',

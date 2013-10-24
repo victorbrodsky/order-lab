@@ -9,7 +9,12 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
+ */
 abstract class ArrayFieldAbstract {
 
     /**
@@ -23,5 +28,80 @@ abstract class ArrayFieldAbstract {
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
      */
-    private $provider;
+    protected $provider;
+
+    /**
+     * validity - valid or not valid
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $validity;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $creationdate;
+
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreationdate()
+    {
+        $this->creationdate = new \DateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreationdate()
+    {
+        return $this->creationdate;
+    }
+
+    public function setProvider($provider)
+    {
+        $this->provider = $provider;
+
+        return $this;
+    }
+
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
+     * Set validity
+     *
+     * @param string $validity
+     * @return ClinicalHistory
+     */
+    public function setValidity($validity)
+    {
+        $this->validity = $validity;
+
+        return $this;
+    }
+
+    /**
+     * Get validity
+     *
+     * @return string
+     */
+    public function getValidity()
+    {
+        return $this->validity;
+    }
+
 }

@@ -22,8 +22,8 @@ class PatientRepository extends EntityRepository
     public function processEntity( $patient, $orderinfo = null ) {
 
         //echo "enter patient rep <br>";
-
-        $patient = $this->processFieldArrays($patient,$orderinfo);
+//        echo "patient id=".$patient->getId();
+//        exit();
 
         $em = $this->_em;
 
@@ -68,6 +68,8 @@ class PatientRepository extends EntityRepository
         if( $orderinfo == null ) {
             return $patient;
         }
+
+        $patient = $this->processFieldArrays($patient,$orderinfo);
              
         $specimens = $patient->getSpecimen();
         //echo "specimen count in patient=".count($specimens)."<br>";
@@ -202,11 +204,22 @@ class PatientRepository extends EntityRepository
         $provider = $orderinfo->getProvider()[0]; //assume orderinfo has only one provider.
         //echo "mrn=".$patient->getMrn().", hist count=".count($patient->getClinicalHistory()).", provider=".$provider."<br>";
 
-        foreach( $patient->getClinicalHistory() as $hist ) {
+        $fields = $patient->getClinicalHistory();
+        $validitySet = false;
+
+        foreach( $fields as $field ) {
             //echo "hist id=".$hist->getId()."<br>";
-            if( count($hist->getProvider()) == 0 ) {
-                $hist->addProvider($provider);
+            if( !$field->getProvider() || $field->getProvider() == "" ) {
+                $field->setProvider($provider);
             }
+
+            if( !$validitySet ) {
+                if( !$patient->getId() || !$this->hasValidity($patient) ) { //set validity for the first added field
+                    $field->setValidity(1);
+                }
+                $validitySet = true;
+            }
+
         }
         //exit();
         return $patient;
@@ -222,6 +235,16 @@ class PatientRepository extends EntityRepository
             }
         }
         return $dest;
+    }
+
+    public function hasValidity( $entity ) {
+        $fields = $entity->getClinicalHistory();
+        foreach( $fields as $field ) {
+            if( $field->getValidity() == 1 ) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

@@ -364,9 +364,13 @@
                     entered on
                     {{field.vars.value.creationdate|date('Y-m-d')}}
                 {% endif %}
-                {% if field.vars.value.provider|length > 0 and field.vars.value.provider|first != "" %}
+                {#{% if field.vars.value.provider|length > 0 and field.vars.value.provider|first != "" %}#}
+                    {#by#}
+                    {#{{field.vars.value.provider|first}}#}
+                {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
                     by
-                    {{field.vars.value.provider|first}}
+                    {{field.vars.value.provider}}
+
                 {% endif %}
             {% endif %}
             <b>:</b>
