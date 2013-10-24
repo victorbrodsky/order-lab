@@ -40,6 +40,11 @@ class Patient implements JsonSerializable
      * @ORM\Column(type="smallint", nullable=true, length=3)
      */
     protected $age;
+//    /**
+//     * @param \Doctrine\Common\Collections\Collection $property
+//     * @ORM\OneToMany(targetEntity="Age", mappedBy="patient", cascade={"persist"})
+//     */
+//    protected $age;
     
     /**
      * @ORM\Column(type="string", nullable=true, length=20)
@@ -50,11 +55,7 @@ class Patient implements JsonSerializable
      * @ORM\Column(type="date", nullable=true)
      */
     protected $dob;
-    
-//    /**
-//     * @ORM\Column(type="text", nullable=true, length=10000)
-//     */
-//    protected $clinicalHistory;
+
     /**
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="ClinicalHistory", mappedBy="patient", cascade={"persist"})

@@ -55,8 +55,8 @@ function checkForm( elem ) {
 //            $('#'+inputId).popover( {content:"Please fill out MRN field"} );
 //            $('#'+inputId).popover('show');
             setKeyValue(element);
-            disableInElementBlock(element, false, null, "notkey", null);
-            invertButton(element);
+//            disableInElementBlock(element, false, null, "notkey", null);
+//            invertButton(element);
             return;
         }
 
@@ -530,6 +530,9 @@ function setKeyValue(element) {
             if( data[name] ) {
                 //console.debug(name+"="+ data[name]);
                 setElementBlock(element, data, null, "key");
+
+                disableInElementBlock(element, false, null, "notkey", null);
+                invertButton(element);
             }
         },
         error: function () {

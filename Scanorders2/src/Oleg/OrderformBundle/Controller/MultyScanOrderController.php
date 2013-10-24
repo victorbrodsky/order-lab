@@ -302,7 +302,6 @@ class MultyScanOrderController extends Controller {
         $entity->addPatient($patient);
 
         $clinicalHistory = new ClinicalHistory();
-        //$clinicalHistory->setCreator($user);
         $patient->addClinicalHistory($clinicalHistory);
 
         //$patient2 = new Patient();
