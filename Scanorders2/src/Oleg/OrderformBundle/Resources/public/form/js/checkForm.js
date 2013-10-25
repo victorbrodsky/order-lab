@@ -356,9 +356,7 @@ function initAllMulti() {
         var idArr = check_btns.eq(i).attr("id").split("_");
         if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
             check_btns.eq(i).attr('flag', 'done');
-            //keyElement = setKeyValue(check_btns.eq(i));
-//            disableElement(keyElement,true);
-            disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
+            //disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
         }
     }
 }

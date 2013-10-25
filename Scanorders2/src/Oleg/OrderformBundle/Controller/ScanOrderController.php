@@ -30,7 +30,7 @@ use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Entity\DiffDiagnoses;
-use Oleg\OrderformBundle\Entity\ClinicalHistory;
+use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 use Oleg\OrderformBundle\Entity\RelevantScans;
 use Oleg\OrderformBundle\Entity\SpecialStains;
 use Oleg\OrderformBundle\Form\DocumentType;
@@ -526,8 +526,8 @@ class ScanOrderController extends Controller {
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         $patient = new Patient();
-        $clinicalHistory = new ClinicalHistory();
-        $patient->addClinicalHistory($clinicalHistory);
+//        $clinicalHistory = new ClinicalHistory();
+//        $patient->addClinicalHistory($clinicalHistory);
         $form_patient   = $this->createForm(new PatientType($params), $patient);
 
         $procedure = new Specimen();

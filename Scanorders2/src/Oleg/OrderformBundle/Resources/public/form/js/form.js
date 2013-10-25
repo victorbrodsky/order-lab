@@ -322,13 +322,15 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     newForm = newForm.replace(/__scan__/g, scanid);
     newForm = newForm.replace(/__stain__/g, stainid);
 
-    newForm = newForm.replace(/__clinicalHistory__/g, 0);   //add only one clinical history to the new form
+    //newForm = newForm.replace(/__clinicalHistory__/g, 0);   //add only one clinical history to the new form
     newForm = newForm.replace(/__paper__/g, 0);   //add only one clinical history to the new form
 
     //replace origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag with correct ids
     //origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag
     var newOriginId = "origin_option_multi_patient_"+patientid+"_specimen_"+procedureid+"_accession_"+accessionid+"_part_"+partid+"_origintag";
     newForm = newForm.replace(/origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag/g, newOriginId);
+
+    newForm = newForm.replace(/__[a-zA-Z0-9]+__/g, 0); //replace everything what is left __*__ by 0 => replace all array fields by 0
 
     //console.log("newForm="+newForm);
 

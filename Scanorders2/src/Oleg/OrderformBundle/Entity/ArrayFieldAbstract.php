@@ -31,8 +31,8 @@ abstract class ArrayFieldAbstract {
     protected $provider;
 
     /**
-     * validity - valid or not valid
-     * @ORM\Column(type="integer", nullable=true)
+     * validity - valid (1) or not valid
+     * @ORM\Column(type="smallint", nullable=true)
      */
     protected $validity;
 

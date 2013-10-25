@@ -27,17 +27,23 @@ class Patient implements JsonSerializable
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
      */
-    protected $mrn;   
+    protected $mrn;
     
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=500)
+//     */
     /**
-     * @ORM\Column(type="string", nullable=true, length=500)
+     * @ORM\OneToMany(targetEntity="PatientName", mappedBy="patient", cascade={"persist"})
      */
     protected $name;
     
+//    /**
+//     * @ORM\Column(type="smallint", nullable=true, length=3)
+//     */
     /**
-     * @ORM\Column(type="smallint", nullable=true, length=3)
+     * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
      */
     protected $age;
 //    /**
@@ -46,19 +52,25 @@ class Patient implements JsonSerializable
 //     */
 //    protected $age;
     
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=20)
+//     */
     /**
-     * @ORM\Column(type="string", nullable=true, length=20)
+     * @ORM\OneToMany(targetEntity="PatientSex", mappedBy="patient", cascade={"persist"})
      */
     protected $sex;
     
+//    /**
+//     * @ORM\Column(type="date", nullable=true)
+//     */
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\OneToMany(targetEntity="PatientDob", mappedBy="patient", cascade={"persist"})
      */
     protected $dob;
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="ClinicalHistory", mappedBy="patient", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PatientClinicalHistory", mappedBy="patient", cascade={"persist"})
      */
     protected $clinicalHistory;
         
@@ -95,7 +107,22 @@ class Patient implements JsonSerializable
     {
         $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();
+
+        //fields:
+        $this->mrn = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->name = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sex = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->dob = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->age = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clinicalHistory = new \Doctrine\Common\Collections\ArrayCollection();
+
+        $this->addMrn( new PatientMrn() );
+        $this->addName( new PatientName() );
+        $this->addSex( new PatientSex() );
+        $this->addDob( new PatientDob() );
+        $this->addAge( new PatientAge() );
+        $this->addClinicalHistory( new PatientClinicalHistory() );
+
     }
     
     /**
@@ -129,6 +156,23 @@ class Patient implements JsonSerializable
     public function getMrn()
     {
         return $this->mrn;
+    }
+
+    public function addMrn($mrn)
+    {
+        if( $mrn != null ) {
+            if( !$this->mrn->contains($mrn) ) {
+                $mrn->setPatient($this);
+                $this->mrn[] = $mrn;
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeMrn(\Oleg\OrderformBundle\Entity\PatientMrn $mrn)
+    {
+        $this->mrn->removeElement($mrn);
     }
 
     /**
@@ -330,7 +374,7 @@ class Patient implements JsonSerializable
     /**
      * Add clinicalHistory
      *
-     * @param \Oleg\OrderformBundle\Entity\ClinicalHistory $clinicalHistory
+     * @param \Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
      * @return Patient
      */
     public function addClinicalHistory($clinicalHistory)
@@ -358,9 +402,9 @@ class Patient implements JsonSerializable
     /**
      * Remove clinicalHistory
      *
-     * @param \Oleg\OrderformBundle\Entity\ClinicalHistory $clinicalHistory
+     * @param \Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
      */
-    public function removeClinicalHistory(\Oleg\OrderformBundle\Entity\ClinicalHistory $clinicalHistory)
+    public function removeClinicalHistory(\Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory)
     {
         $this->clinicalHistory->removeElement($clinicalHistory);
     }
@@ -417,5 +461,97 @@ class Patient implements JsonSerializable
             'age'=> $this->age,
             'sex'=> $this->sex,
         );
+    }
+
+    /**
+     * Add name
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientName $name
+     * @return Patient
+     */
+    public function addName(\Oleg\OrderformBundle\Entity\PatientName $name)
+    {
+        $this->name[] = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Remove name
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientName $name
+     */
+    public function removeName(\Oleg\OrderformBundle\Entity\PatientName $name)
+    {
+        $this->name->removeElement($name);
+    }
+
+    /**
+     * Add age
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientName $age
+     * @return Patient
+     */
+    public function addAge(\Oleg\OrderformBundle\Entity\PatientAge $age)
+    {
+        $this->age[] = $age;
+    
+        return $this;
+    }
+
+    /**
+     * Remove age
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientName $age
+     */
+    public function removeAge(\Oleg\OrderformBundle\Entity\PatientAge $age)
+    {
+        $this->age->removeElement($age);
+    }
+
+    /**
+     * Add sex
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
+     * @return Patient
+     */
+    public function addSex(\Oleg\OrderformBundle\Entity\PatientSex $sex)
+    {
+        $this->sex[] = $sex;
+    
+        return $this;
+    }
+
+    /**
+     * Remove sex
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
+     */
+    public function removeSex(\Oleg\OrderformBundle\Entity\PatientSex $sex)
+    {
+        $this->sex->removeElement($sex);
+    }
+
+    /**
+     * Add dob
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientDob $dob
+     * @return Patient
+     */
+    public function addDob(\Oleg\OrderformBundle\Entity\PatientDob $dob)
+    {
+        $this->dob[] = $dob;
+    
+        return $this;
+    }
+
+    /**
+     * Remove dob
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientDob $dob
+     */
+    public function removeDob(\Oleg\OrderformBundle\Entity\PatientDob $dob)
+    {
+        $this->dob->removeElement($dob);
     }
 }

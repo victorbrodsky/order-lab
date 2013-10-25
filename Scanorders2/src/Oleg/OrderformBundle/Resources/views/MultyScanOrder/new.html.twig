@@ -108,7 +108,12 @@
 
 
     {% if type != 'show' %}
-        {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"prototype") %}
+        {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype") %}
+        {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"key","prototype") %}
+        {% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,type,"key","prototype") %}
+        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"key","prototype") %}
+        {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"key","prototype") %}
+        {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
     {% endif %}
 
     {% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
@@ -116,15 +121,9 @@
 
       {% if type != 'show' %}
 
-         data-prototype-patient="
-         {{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type, clinicalhistoryHtml)|e }}
-         {#{{ formmacros.field(form.patient.vars.prototype.clinicalHistory.vars.prototype.clinicalHistory)|e }}#}
-         {#{{ clinicalhistoryHtml|e }}#}
-         "
+         data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type, mrnHtml,nameHtml,sexHtml,dobHtml,ageHtml,clinicalhistoryHtml)|e }}"
 
-         data-prototype-clinicalhistory=" {{ clinicalhistoryHtml|e }}
-         {#{{ formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"prototype")|e }}#}
-         "
+         data-prototype-clinicalhistory="{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
          {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid)|e }}
@@ -146,7 +145,7 @@
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
-        {{ formmacros.fieldicon(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
+        {{ formmacros.fieldIconLabel(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
         "
          data-prototype-slide="
         {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
@@ -181,7 +180,7 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
 
-                {{ formmacros.patientForm(patient,"check",uid,type, "") }}
+                {{ formmacros.patientForm(patient,"check",uid,type) }}
 
                 {#specimen/procedure#}
                 {% set procedureCount = 0 %}

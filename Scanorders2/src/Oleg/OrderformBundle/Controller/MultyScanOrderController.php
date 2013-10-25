@@ -14,6 +14,7 @@ use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
+use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\Specimen;
 use Oleg\OrderformBundle\Form\SpecimenType;
 use Oleg\OrderformBundle\Entity\Accession;
@@ -301,8 +302,8 @@ class MultyScanOrderController extends Controller {
         $patient = new Patient();
         $entity->addPatient($patient);
 
-        $clinicalHistory = new ClinicalHistory();
-        $patient->addClinicalHistory($clinicalHistory);
+//        $clinicalHistory = new ClinicalHistory();
+//        $patient->addClinicalHistory($clinicalHistory);
 
         //$patient2 = new Patient();
         //$entity->addPatient($patient2);
