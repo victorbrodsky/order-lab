@@ -35,8 +35,9 @@ class PatientType extends AbstractType
             //$flag = true;
         }
 
+        $gen_attr = array('label'=>'MRN','class'=>'Oleg\OrderformBundle\Entity\PatientMrn','type'=>null);
         $builder->add('mrn', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, 'MRN', 'Oleg\OrderformBundle\Entity\PatientMrn'),
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
             //'type' => new PatientMrnType($this->params),
             'read_only' => $flag,
             'allow_add' => true,
@@ -48,8 +49,9 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientmrn__',
         ));
 
+        $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
         $builder->add('name', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, 'Name', 'Oleg\OrderformBundle\Entity\PatientName'),
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
             'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
@@ -67,8 +69,9 @@ class PatientType extends AbstractType
 //                'attr' => array('class'=>'form-control'),
 //        ));
 
+        $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
         $builder->add('age', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, 'Age', 'Oleg\OrderformBundle\Entity\PatientAge'),
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
             'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
@@ -141,9 +144,10 @@ class PatientType extends AbstractType
 //                'required'=>false,
 //                //'attr' => array('class'=>'textarea form-control'),
 //        ));
+        $gen_attr = array('label'=>'Clinical History','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
         $builder->add('clinicalHistory', 'collection', array(
             //'type' => new PatientClinicalHistoryType($this->params),
-            'type' => new GenericFieldType($this->params, null, 'Clinical History', 'Oleg\OrderformBundle\Entity\PatientClinicalHistory'),
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
             //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,

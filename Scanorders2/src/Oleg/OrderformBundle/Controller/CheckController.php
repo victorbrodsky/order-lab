@@ -57,67 +57,132 @@ class CheckController extends Controller {
      */
     public function getAction() {
 
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $request = $this->get('request');
         $mrn = $request->get('mrn');
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
+
+//        $mrnEntity = $em->getRepository('OlegOrderformBundle:PatientMrn')->findOneByField($mrn);
+//        if( $mrnEntity ) {
+//            $entity = $mrnEntity->getPatient();
+//        } else {
+//            $entity = null;
+//        }
+
+//        $mrnEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:PatientMrn')->findOneByIdJoinedToPatient($mrn);
+//        $entity = null;
+//        if( $mrnEntity ) {
+//            echo "count patients=".count($mrnEntity->getPatient())."<br>";
+//            foreach( $mrnEntity->getPatient() as $patient ) {
+//                foreach( $patient->getName() as $name ) {
+//                    echo "Name=".$name->getField()."<br>";
+//                }
+//                $entity = $patient;
+//            }
+//        } else {
+//            echo "no result";
+//        }
+
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn($mrn);
+
+//        echo "count names=".count($entity->getName()).", ";
+//
+//        foreach( $entity->getName() as $name ) {
+//            echo "Name=".$name->getField().", ";
+//        }
+//        echo "Name=".$entity->getName()->first().", ";
 
         if( $entity ) {
             //$hist = new ClinicalHistory();
             //$hist->setClinicalHistory("new history");
             //$entity->addClinicalHistory($hist);
 
-            $clinHistories = $entity->getClinicalHistory();
-
-            $clinHistoriesJson = array();
-            foreach( $clinHistories as $clinHist ) {
-
-                $providerStr = "";
-                if( count($clinHist->getProvider()) > 0 ) {
-                    foreach( $clinHist->getProvider() as $provider ) {
-                        if( $provider->getDisplayName() != "" ) {
-                            $providerStr = $providerStr." ".$provider->getDisplayName();
-                        } else {
-                            $providerStr = $providerStr." ".$provider->getUsername();
-                        }
-                    }
-                } else {
-                    $providerStr = "unknown";
-                }
-
-                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-                $dateStr = $transformer->transform($clinHist->getCreationdate());
-
-                $hist = array();
-                $hist['id'] = $clinHist->getId();
-                $hist['text'] = $clinHist->getClinicalHistory();
-                $hist['provider'] = $providerStr;
-                $hist['date'] = $dateStr;
-                $clinHistoriesJson[] = $hist;
-
-            }
+//            $clinHistories = $entity->getClinicalHistory();
+//            $clinHistoriesJson = array();
+//            foreach( $clinHistories as $clinHist ) {
+//
+//                $providerStr = "";
+//                if( count($clinHist->getProvider()) > 0 ) {
+//                    foreach( $clinHist->getProvider() as $provider ) {
+//                        if( $provider->getDisplayName() != "" ) {
+//                            $providerStr = $providerStr." ".$provider->getDisplayName();
+//                        } else {
+//                            $providerStr = $providerStr." ".$provider->getUsername();
+//                        }
+//                    }
+//                } else {
+//                    $providerStr = "unknown";
+//                }
+//
+//                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+//                $dateStr = $transformer->transform($clinHist->getCreationdate());
+//
+//                $hist = array();
+//                $hist['id'] = $clinHist->getId();
+//                $hist['text'] = $clinHist.""; //getClinicalHistory();
+//                $hist['provider'] = $providerStr;
+//                $hist['date'] = $dateStr;
+//                $clinHistoriesJson[] = $hist;
+//
+//            }
 
             $element = array(
                 'inmrn'=>$mrn,
                 'id'=>$entity->getId(),
-                'mrn'=>$entity->getMrn(),
-                'name'=>$entity->getName(),
-                'sex'=>$entity->getSex(),
-                'dob'=>$entity->getDob(),
-                'age'=>$entity->getAge(),
-                'clinicalHistory'=>$clinHistoriesJson
+                'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
+                'name'=>$this->getArrayFieldJson($entity->getName()),
+                'sex'=>$this->getArrayFieldJson($entity->getSex()),
+                'dob'=>$this->getArrayFieldJson($entity->getDob()),
+                'age'=>$this->getArrayFieldJson($entity->getAge()),
+                'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
             );
         } else {
             $element = array();
         }
 
-
-
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($element));
         return $response;
+    }
+
+    public function getArrayFieldJson( $fields ) {
+
+        $fieldJson = array();
+        foreach( $fields as $field ) {
+
+            //echo $field."<br>";
+
+            $providerStr = "";
+            //echo "provider count=".count($field->getProvider()).", provider name=".$field->getProvider()->getUsername().", ";
+
+            $provider = $field->getProvider();
+            if( $provider->getDisplayName() != "" ) {
+                $providerStr = $providerStr." ".$provider->getDisplayName();
+            } else {
+                $providerStr = $providerStr." ".$provider->getUsername();
+            }
+
+            //echo "providerStr=".$providerStr.", ";
+
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+            $dateStr = $transformer->transform($field->getCreationdate());
+
+            $hist = array();
+            $hist['id'] = $field->getId();
+            $hist['text'] = $field."";
+            $hist['provider'] = $providerStr;
+            $hist['date'] = $dateStr;
+            $fieldJson[] = $hist;
+
+        }
+
+        return $fieldJson;
     }
 
     /**

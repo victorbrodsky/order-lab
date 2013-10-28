@@ -32,26 +32,27 @@ class PatientRepository extends EntityRepository
         $found = $this->isExisted($patient); //return: 1 - null, 2 - existed but STATUS_RESERVED, 3 - existed and STATUS_VALID
 
         if( !$found ) {                                             //Case 1 - User entered new MRN, not existed in DB
-
-            $patient->setStatus(self::STATUS_VALID);
+            //echo "case 1 <br>";
+            //$patient->setStatus(self::STATUS_VALID);
             return $this->setResult( $patient, $orderinfo );
 
         } elseif( $found->getStatus() == self::STATUS_RESERVED  ) { //case 2 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
-
-            $patient->setStatus(self::STATUS_VALID);
+            echo "case 2 <br>";
+            //$patient->setStatus(self::STATUS_VALID);
             return $this->setResult( $patient, $orderinfo );
 
         } elseif( $found->getStatus() == self::STATUS_VALID  ) {    //Case 3 - existed and STATUS_VALID; User entered existed MRN
-
+            echo "case 3 <br>";
             //copy all children from form's entity to existing entity from DB
             foreach( $patient->getSpecimen() as $specimen ) {
                 $found->addSpecimen( $specimen );
             }
             //copy all array fields from form to existing patient
-            $found = $this->copyFieldArrays($patient,$found);
-            return $this->setResult( $found, $orderinfo );
+            //$found = $this->copyFieldArrays($patient,$found);
+            return $this->setResult( $found, $orderinfo, $patient );
 
         } elseif( $found == -1 ) {                                  //Case 4 - MRN is not provided. Theoretically, this case is not possible
+            echo "case 4 <br>";
             $patient = $this->createPatient(self::STATUS_VALID);
             return $this->setResult( $patient, $orderinfo );
         } else {                                                    //Case 5 - Theoretically, this case is not possible
@@ -60,16 +61,29 @@ class PatientRepository extends EntityRepository
 
     }
     
-    public function setResult( $patient, $orderinfo = null ) {
+    public function setResult( $patient, $orderinfo = null, $original=null ) {
               
         $em = $this->_em;
+
+        $patient->setStatus(self::STATUS_VALID);
+
+//        echo "patient=".$patient."<br>";
+//        echo "count names=".count($patient->getName())."<br>";
+//        echo "patient mrn=".$patient->getMrn()->first()."<br>";
+//        echo "patient name=".$patient->getName()->first()."<br>";
+//        echo "patient sex=".$patient->getSex()->first()."<br>";
+//        echo "patient dob=".$patient->getDob()->first()."<br>";
+//        echo "patient age=".$patient->getAge()->first()."<br>";
+//        echo "patient age=".$patient->getAge()->first()."<br>";
+//        echo "patient clinHist=".$patient->getClinicalHistory()->first()."<br>";
+
         $em->persist($patient);
 
         if( $orderinfo == null ) {
             return $patient;
         }
 
-        $patient = $this->processFieldArrays($patient,$orderinfo);
+        $patient = $this->processPatientFieldArrays($patient,$orderinfo,$original);
              
         $specimens = $patient->getSpecimen();
         //echo "specimen count in patient=".count($specimens)."<br>";
@@ -90,8 +104,18 @@ class PatientRepository extends EntityRepository
             
         }
 
+//        echo "patient=".$patient."<br>";
+//        echo "count names=".count($patient->getName())."<br>";
+//        echo "patient mrn=".$patient->getMrn()->first()."<br>";
+//        echo "patient name=".$patient->getName()->first()."<br>";
+//        echo "patient sex=".$patient->getSex()->first()."<br>";
+//        echo "patient dob=".$patient->getDob()->first()."<br>";
+//        echo "patient age=".$patient->getAge()->first()."<br>";
+//        echo "patient age=".$patient->getAge()->first()."<br>";
+//        echo "patient clinHist=".$patient->getClinicalHistory()->first()."<br>";
+//        echo $patient."<br>";
         //exit();
-        //$em->flush($patient);
+
         return $patient;
     }
 
@@ -177,7 +201,20 @@ class PatientRepository extends EntityRepository
             return -1;
         }
 
-        return $this->findOneBy(array('mrn' => $patient->getMrn()));
+//        return $this->findOneBy(array('mrn' => $patient->getMrn()));
+        $em = $this->_em;
+        if( count($patient->getMrn())>0 ) {
+            $entity = null;
+            foreach( $patient->getMrn() as $mrn ) {
+                //echo "entity mrn=".$mrn->getField()."<br>";
+                $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn( $mrn->getField() );
+                return $entity; //return first patient. In theory we should have only one MRN in the submitting patient
+            }
+        } else {
+            //echo "entity null <br>";
+            $entity = null;
+        }
+        return $entity;
     }
 
     public function createPatient( $status = null ) {
@@ -195,16 +232,29 @@ class PatientRepository extends EntityRepository
     }
 
     //assign user provider
-    public function processFieldArrays($patient,$orderinfo) {
+    public function processPatientFieldArrays($patient,$orderinfo,$original=null) {
 
         if( !$orderinfo || count($orderinfo->getProvider()) == 0 ) {
             //return $patient;
         }
 
-        $provider = $orderinfo->getProvider()[0]; //assume orderinfo has only one provider.
-        //echo "mrn=".$patient->getMrn().", hist count=".count($patient->getClinicalHistory()).", provider=".$provider."<br>";
+        $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
+        //echo "mrn=".$patient->getMrn()->first().", hist count=".count($patient->getClinicalHistory()).", provider=".$provider."<br>";
 
-        $fields = $patient->getClinicalHistory();
+
+        $patient = $this->processFieldArrays($patient, $patient->getMrn(), $provider, $original);
+        $patient = $this->processFieldArrays($patient, $patient->getName(), $provider,$original);
+        $patient = $this->processFieldArrays($patient, $patient->getAge(), $provider, $original);
+        $patient = $this->processFieldArrays($patient, $patient->getSex(), $provider, $original);
+        $patient = $this->processFieldArrays($patient, $patient->getDob(), $provider, $original);
+        $patient = $this->processFieldArrays($patient, $patient->getClinicalHistory(), $provider, $original);
+
+        //exit();
+        return $patient;
+    }
+
+    //TODO: make it as a generic method (move it to util class): process single array of fields (i.e. ClinicalHistory Array of Fields)
+    public function processFieldArrays($entity, $fields, $provider, $original=null) {
         $validitySet = false;
 
         foreach( $fields as $field ) {
@@ -214,20 +264,30 @@ class PatientRepository extends EntityRepository
             }
 
             if( !$validitySet ) {
-                if( !$patient->getId() || !$this->hasValidity($patient) ) { //set validity for the first added field
+                if( !$entity->getId() || !$this->hasValidity($entity) ) { //set validity for the first added field
                     $field->setValidity(1);
                 }
                 $validitySet = true;
             }
 
+            //copy field entity if not existed from source object to destination object
+            if( $original ) {
+                $entity = copyFieldArrays( $original, $entity, $fields);
+            }
+
         }
-        //exit();
-        return $patient;
+
+        return $entity;
     }
 
     //copy field entity if not existed from source object to destination object
-    public function copyFieldArrays( $source, $dest) {
+    public function copyFieldArrays( $source, $dest, $fieldClass) {
         $em = $this->_em;
+
+        $className = get_class($fieldClass);
+        echo "className=".$className."<br>";
+        //TODO: finish this method
+
         foreach( $source->getClinicalHistory() as $hist ) {
             $found = $em->getRepository('OlegOrderformBundle:ClinicalHistory')->findOneById($hist->getId());
             if( !$found ) {
@@ -245,6 +305,22 @@ class PatientRepository extends EntityRepository
             }
         }
         return false;
+    }
+
+    public function findOneByIdJoinedToMrn($mrn)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT p, pmrn FROM OlegOrderformBundle:Patient p
+            JOIN p.mrn pmrn
+            WHERE pmrn.field = :mrn'
+            )->setParameter('mrn', $mrn);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
     }
     
 }

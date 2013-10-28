@@ -22,8 +22,12 @@ class PatientAge extends PatientArrayFieldAbstract
     protected $patient;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $field;
+
+    public function __toString() {
+        return (string)$this->field;
+    }
 
 }

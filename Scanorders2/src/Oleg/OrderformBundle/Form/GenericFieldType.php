@@ -15,14 +15,17 @@ class GenericFieldType extends AbstractType
     protected $label;
     protected $clazz;
     protected $attr;
+    protected $genAttr;
 
-    public function __construct( $params=null, $entity = null, $label=null, $clazz=null, $attr=null )
+    //public function __construct( $params=null, $entity = null, $label=null, $clazz=null, $attr=null )
+    public function __construct( $params=null, $entity = null, $genAttr=null, $attr=null )
     {
         $this->params = $params;
         $this->entity = $entity;
-        $this->label = $label;
-        $this->clazz = $clazz;
+        //$this->label = $label;
+        //$this->clazz = $clazz;
         $this->attr = $attr;
+        $this->genAttr = $genAttr;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -34,14 +37,14 @@ class GenericFieldType extends AbstractType
             $attr = $this->attr;
         }
 
-        $builder->add('field', null, array(
-            'label' => $this->label,
+        $builder->add('field', $this->genAttr['type'], array(
+            'label' => $this->genAttr['label'],
             'required' => false,
             'attr' =>$attr
         ));
 
-        $builder->add('other'.preg_replace('/\s+/', '', $this->label), new ArrayFieldType(), array(
-            'data_class' => $this->clazz
+        $builder->add('other'.preg_replace('/\s+/', '', $this->genAttr['label']), new ArrayFieldType(), array(
+            'data_class' => $this->genAttr['class']
         ));
 
     }
@@ -49,7 +52,7 @@ class GenericFieldType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => $this->clazz,
+            'data_class' => $this->genAttr['class'],
         ));
     }
 

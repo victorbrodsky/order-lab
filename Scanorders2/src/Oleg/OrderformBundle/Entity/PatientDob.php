@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
 /**
@@ -22,9 +23,15 @@ class PatientDob extends PatientArrayFieldAbstract
     protected $patient;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     protected $field;
 
+
+    public function __toString() {
+        //return $this->field;
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        return $dateStr = $transformer->transform($this->field);
+    }
 
 }

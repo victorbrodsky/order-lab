@@ -18,14 +18,14 @@ use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
 abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient",cascade={"persist"})
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
-     */
-    protected $patient;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Patient",cascade={"persist"})
+//     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $patient;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
 
@@ -55,7 +55,7 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
     /**
      * @param mixed $field
      */
-    public function setField($field)
+    public function setField($field=null)
     {
         $this->field = $field;
     }
@@ -68,5 +68,8 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field;
     }
 
+    public function __toString() {
+        return $this->field;
+    }
 
 }

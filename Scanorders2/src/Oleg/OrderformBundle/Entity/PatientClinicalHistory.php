@@ -23,7 +23,7 @@ class PatientClinicalHistory extends PatientArrayFieldAbstract
     protected $patient;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $field;
 

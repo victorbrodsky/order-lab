@@ -9,7 +9,7 @@ use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PatientArrayFieldRepository")
  * @ORM\Table(name="patientmrn")
  */
 class PatientMrn extends PatientArrayFieldAbstract

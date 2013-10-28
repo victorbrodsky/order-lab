@@ -7,8 +7,13 @@
  */
 
 var keys = new Array("mrn", "accession", "name");
-var arrayFields = new Array("clinicalHistory");
+var arrayFields = new Array("clinicalHistory"); //display as array fields
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
+
+//  0         1              2           3   4  5  6   7
+//oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
+var fieldIndex = 3;     //get 'mrn'
+var holderIndex = 5;    //get 'patient'
 console.log("urlCheck="+urlCheck);
 
 function checkForm( elem ) {
@@ -20,14 +25,14 @@ function checkForm( elem ) {
     var elementInput = element.parent().parent().find("input");  //find("input[type=text]");
     //console.log("elementInput.class="+elementInput.attr('class'));
 
-    //  0         1              2           3   4  5
-    //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_accession
+    //  0         1              2           3   4  5  6   7
+    //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
     var inputId = elementInput.attr('id');
     console.log("inputId="+inputId);
 
     var idsArr = inputId.split("_");
 
-    var name = idsArr[idsArr.length-3];
+    var name = idsArr[idsArr.length-holderIndex];
     var patient = idsArr[4];
     var key = idsArr[4];
 
@@ -62,7 +67,7 @@ function checkForm( elem ) {
 
         $.ajax({
             url: urlCheck+name,
-            type: 'GET',
+            type: 'GET',    //TODO: use POST
             data: {mrn: mrn},
             contentType: 'application/json',
             dataType: 'json',
@@ -121,12 +126,13 @@ function setElementBlock( element, data, cleanall, key ) {
         if( id ) {
 
             var idsArr = elements.eq(i).attr("id").split("_");
-            var field = idsArr[idsArr.length-1];    //default
+            var field = idsArr[idsArr.length-fieldIndex];    //default
 
             if( key == "key" ) {
                 if( $.inArray(field, keys) != -1 ) {
-                    console.log("set text field = " + data[field] );
-                    elements.eq(i).val(data[field]);
+                    console.log("set key field = " + data[field]['text'] );
+                    setArrayField( elements.eq(i), data[field], parent );
+                    //elements.eq(i).val(data[field]);
                     break;
                 }
             }
@@ -145,7 +151,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
             //fields text and all others including textarea (i.e. clinicalHistory textarea field does not have type="textarea", so it has type undefined)
             if( type == "text" || !type ) {
-                //var field = idsArr[idsArr.length-1];
+                //var field = idsArr[idsArr.length-fieldIndex];
                 if( data == null  ) {   //clean fields
 
                     if( $.inArray(field, keys) == -1 || cleanall) {
@@ -153,7 +159,7 @@ function setElementBlock( element, data, cleanall, key ) {
                     } else {
                         //console.log("In array. Additional check for field=("+field+")");
                         if( field == "name" ) {
-                            var holder = idsArr[idsArr.length-3];
+                            var holder = idsArr[idsArr.length-holderIndex];
                             //console.log("holder="+holder);
                             if( holder != "part" && holder != "block" ) {
                                 //console.log("disable!!!!");
@@ -162,7 +168,7 @@ function setElementBlock( element, data, cleanall, key ) {
                         }
                     }
                 } else {
-                    console.log("set text field = " + data[field]);
+                    console.log("set text field = " + data[field]['text']);
                     if( $.isArray(data[field]) ) {
                         setArrayField( elements.eq(i), data[field], parent );
                     } else {
@@ -173,7 +179,7 @@ function setElementBlock( element, data, cleanall, key ) {
             }
 
             if( classs && classs.indexOf("datepicker") != -1 ) {
-                //var field = idsArr[idsArr.length-1];
+                //var field = idsArr[idsArr.length-fieldIndex];
                 if( data == null ) {
                     elements.eq(i).val(null);
                 } else {
@@ -214,7 +220,7 @@ function setArrayField(element, dataArr, parent) {
         // 0        1               2           3    4      5   6     7     8   9  10      11      12 13
         //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_name
 
-        var name = elementIdArr[elementIdArr.length-3];
+        var name = elementIdArr[elementIdArr.length-holderIndex];
 
         //get entity ids based on the entity names
 //        if( classs && classs.indexOf("datepicker") != -1 ) {
@@ -261,9 +267,9 @@ function setArrayField(element, dataArr, parent) {
 }
 
 function cleanArrayField( element, field ) {
-    console.log( "clean array field id=" + element.attr("id") );
+    //console.log( "clean array field id=" + element.attr("id") );
     //delete if id != 0
-    if( element.attr("id") && element.attr("id").indexOf(field+"_0_"+field) != -1 ) {
+    if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 ) {
         element.val(null);
     } else {
         element.parent().parent().remove();
@@ -275,7 +281,7 @@ function cleanArrayField( element, field ) {
 function cleanFieldsInElementBlock( element, all ) {
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
     var parent = element.parent().parent().parent().parent().parent();
-    console.log("set parent.id=" + parent.attr('id'));
+    //console.log("clean parent.id=" + parent.attr('id'));
     var elements = parent.find('input,textarea,select');
 
     for (var i = 0; i < elements.length; i++) {
@@ -288,7 +294,7 @@ function cleanFieldsInElementBlock( element, all ) {
             if( type == "text" || !type ) {
                 var clean = false;
                 var idsArr = id.split("_");
-                var field = idsArr[idsArr.length-1];
+                var field = idsArr[idsArr.length-fieldIndex];
                 if( all == "all" ) {
                     //elements.eq(i).val(null);
                     clean = true;
@@ -300,7 +306,7 @@ function cleanFieldsInElementBlock( element, all ) {
                     }
                 }
                 if( clean ) {
-                    console.log("in array field=" + field );
+                    //console.log("in array field=" + field );
                     if( $.inArray(field, arrayFields) == -1 ) {
                         //console.log("clean not array");
                         elements.eq(i).val(null);
@@ -326,7 +332,7 @@ function isKey(element, field) {
         return false;
     } else {
         if( field == "name" ) {
-            var holder = idsArr[idsArr.length-3];
+            var holder = idsArr[idsArr.length-holderIndex];
             //console.log("holder="+holder);
             if( holder == "part" || holder == "block" ) {
                 return true
@@ -356,7 +362,7 @@ function initAllMulti() {
         var idArr = check_btns.eq(i).attr("id").split("_");
         if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
             check_btns.eq(i).attr('flag', 'done');
-            //disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
+            disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
         }
     }
 }
@@ -384,7 +390,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         var id = elements.eq(i).attr("id");
         if( id ) {
             var idsArr = elements.eq(i).attr("id").split("_");
-            var field = idsArr[idsArr.length-1];
+            var field = idsArr[idsArr.length-fieldIndex];
             //console.log("field=(" + field + ")");
 
             if( all == "all" ) {
@@ -497,7 +503,7 @@ function setKeyValue(element) {
         var id = elements.eq(i).attr("id");
         if( id ) {
             var idsArr = elements.eq(i).attr("id").split("_");
-            var field = idsArr[idsArr.length-1];
+            var field = idsArr[idsArr.length-fieldIndex];
             //console.log("set key value: field=(" + field + ")");
 
             if( $.inArray(field, keys) != -1 ) {

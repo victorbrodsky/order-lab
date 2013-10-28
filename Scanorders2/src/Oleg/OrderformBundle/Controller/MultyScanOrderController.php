@@ -181,7 +181,6 @@ class MultyScanOrderController extends Controller {
 //            return;
 //        }
 
-
         if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);

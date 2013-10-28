@@ -30,39 +30,22 @@ class Patient implements JsonSerializable
      * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
      */
     protected $mrn;
-    
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=500)
-//     */
+
     /**
      * @ORM\OneToMany(targetEntity="PatientName", mappedBy="patient", cascade={"persist"})
      */
     protected $name;
-    
-//    /**
-//     * @ORM\Column(type="smallint", nullable=true, length=3)
-//     */
+
     /**
      * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
      */
     protected $age;
-//    /**
-//     * @param \Doctrine\Common\Collections\Collection $property
-//     * @ORM\OneToMany(targetEntity="Age", mappedBy="patient", cascade={"persist"})
-//     */
-//    protected $age;
-    
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=20)
-//     */
+
     /**
      * @ORM\OneToMany(targetEntity="PatientSex", mappedBy="patient", cascade={"persist"})
      */
     protected $sex;
-    
-//    /**
-//     * @ORM\Column(type="date", nullable=true)
-//     */
+
     /**
      * @ORM\OneToMany(targetEntity="PatientDob", mappedBy="patient", cascade={"persist"})
      */
@@ -160,10 +143,10 @@ class Patient implements JsonSerializable
 
     public function addMrn($mrn)
     {
-        if( $mrn != null ) {
+        if( $mrn ) {
             if( !$this->mrn->contains($mrn) ) {
                 $mrn->setPatient($this);
-                $this->mrn[] = $mrn;
+                $this->mrn->add($mrn);
             }
         }
 
@@ -183,6 +166,7 @@ class Patient implements JsonSerializable
      */
     public function setName($name)
     {
+        echo "set name ";
         $this->name = $name;
     
         return $this;
@@ -329,7 +313,7 @@ class Patient implements JsonSerializable
      * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
      * @return Patient
      */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
     {
         if( !$this->orderinfo->contains($orderinfo) ) {
             $this->orderinfo->add($orderinfo);
@@ -358,16 +342,29 @@ class Patient implements JsonSerializable
     
     public function __toString(){
 
-        $specimen_info = "(";
-        $count = 0;
-        foreach( $this->specimen as $specimen ) {
-            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-            $specimen_info .= $count.":" . $specimen. "; ";
-            $count++;
+//        $specimen_info = "(";
+//        $count = 0;
+//        foreach( $this->specimen as $specimen ) {
+//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
+//            $specimen_info .= $count.":" . $specimen. "; ";
+//            $count++;
+//        }
+//        $specimen_info .= ")";
+//
+//        return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)." (".$specimen_info.")<br>";
+        $mrnStr  = "";
+        foreach($this->mrn as $mrn) {
+            $mrnStr = $mrnStr." ".$mrn;
         }
-        $specimen_info .= ")";
-
-        return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)." (".$specimen_info.")<br>";
+        $nameStr  = "";
+        foreach($this->name as $name) {
+            $nameStr = $nameStr." ".$name;
+        }
+        $ageStr  = "";
+        foreach($this->age as $age) {
+            $ageStr = $ageStr." ".$age;
+        }
+        return "Patient: id=".$this->id.", mrnArr=".$mrnStr.", nameArr=".$nameStr.", ageArr=".$ageStr."<br>";
     }
     
 
@@ -379,11 +376,11 @@ class Patient implements JsonSerializable
      */
     public function addClinicalHistory($clinicalHistory)
     {
-        if( $clinicalHistory != null ) {
+        if( $clinicalHistory ) {
             if( !$this->clinicalHistory->contains($clinicalHistory) ) {
 //            if( !$this->isExisted($this->clinicalHistory,$clinicalHistory) ) {
                 $clinicalHistory->setPatient($this);
-                $this->clinicalHistory[] = $clinicalHistory;
+                $this->clinicalHistory->add($clinicalHistory);
             }
         }
 
@@ -469,9 +466,14 @@ class Patient implements JsonSerializable
      * @param \Oleg\OrderformBundle\Entity\PatientName $name
      * @return Patient
      */
-    public function addName(\Oleg\OrderformBundle\Entity\PatientName $name)
+    public function addName($name)
     {
-        $this->name[] = $name;
+        if( $name ) {
+            if( !$this->name->contains($name) ) {
+                $name->setPatient($this);
+                $this->name->add($name);
+            }
+        }
     
         return $this;
     }
@@ -481,7 +483,7 @@ class Patient implements JsonSerializable
      *
      * @param \Oleg\OrderformBundle\Entity\PatientName $name
      */
-    public function removeName(\Oleg\OrderformBundle\Entity\PatientName $name)
+    public function removeName($name)
     {
         $this->name->removeElement($name);
     }
@@ -492,10 +494,15 @@ class Patient implements JsonSerializable
      * @param \Oleg\OrderformBundle\Entity\PatientName $age
      * @return Patient
      */
-    public function addAge(\Oleg\OrderformBundle\Entity\PatientAge $age)
+    public function addAge($age)
     {
-        $this->age[] = $age;
-    
+        if( $age ) {
+            if( !$this->age->contains($age) ) {
+                $age->setPatient($this);
+                $this->age->add($age);
+            }
+        }
+
         return $this;
     }
 
@@ -515,10 +522,14 @@ class Patient implements JsonSerializable
      * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
      * @return Patient
      */
-    public function addSex(\Oleg\OrderformBundle\Entity\PatientSex $sex)
+    public function addSex($sex)
     {
-        $this->sex[] = $sex;
-    
+        if( $sex ) {
+            if( !$this->sex->contains($sex) ) {
+                $sex->setPatient($this);
+                $this->sex->add($sex);
+            }
+        }
         return $this;
     }
 
@@ -538,9 +549,14 @@ class Patient implements JsonSerializable
      * @param \Oleg\OrderformBundle\Entity\PatientDob $dob
      * @return Patient
      */
-    public function addDob(\Oleg\OrderformBundle\Entity\PatientDob $dob)
+    public function addDob($dob)
     {
-        $this->dob[] = $dob;
+        if( $dob ) {
+            if( !$this->dob->contains($dob) ) {
+                $dob->setPatient($this);
+                $this->dob->add($dob);
+            }
+        }
     
         return $this;
     }
@@ -554,4 +570,10 @@ class Patient implements JsonSerializable
     {
         $this->dob->removeElement($dob);
     }
+
+
+//    public static function expose()
+//    {
+//        return get_class_vars(__CLASS__);
+//    }
 }
