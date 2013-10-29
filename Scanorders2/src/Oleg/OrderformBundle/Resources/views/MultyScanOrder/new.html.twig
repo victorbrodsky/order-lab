@@ -108,11 +108,11 @@
 
 
     {% if type != 'show' %}
-        {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype") %}
-        {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"key","prototype") %}
-        {% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,type,"key","prototype") %}
-        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"key","prototype") %}
-        {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"key","prototype") %}
+        {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"","prototype") %}
+        {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"","prototype") %}
+        {% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,type,"","prototype") %}
+        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"","prototype") %}
+        {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
     {% endif %}
 
@@ -123,7 +123,12 @@
 
          data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type, mrnHtml,nameHtml,sexHtml,dobHtml,ageHtml,clinicalhistoryHtml)|e }}"
 
-         data-prototype-clinicalhistory="{{ clinicalhistoryHtml|e }}"
+          data-prototype-patientmrn=               "{{ mrnHtml|e }}"
+          data-prototype-patientname=              "{{ nameHtml|e }}"
+          data-prototype-patientsex=               "{{ sexHtml|e }}"
+          data-prototype-patientdob=               "{{ dobHtml|e }}"
+          data-prototype-patientage=               "{{ ageHtml|e }}"
+          data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
          {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid)|e }}

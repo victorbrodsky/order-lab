@@ -155,7 +155,7 @@ class PatientType extends AbstractType
             'label' => "Clinical History:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__clinicalHistory__',
+            'prototype_name' => '__patientclinicalhistory__',
         ));
 
         if( $this->params['type'] != 'single' ) {

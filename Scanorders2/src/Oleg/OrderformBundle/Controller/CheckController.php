@@ -178,6 +178,7 @@ class CheckController extends Controller {
             $hist['text'] = $field."";
             $hist['provider'] = $providerStr;
             $hist['date'] = $dateStr;
+            $hist['validity'] = $field->getValidity();
             $fieldJson[] = $hist;
 
         }

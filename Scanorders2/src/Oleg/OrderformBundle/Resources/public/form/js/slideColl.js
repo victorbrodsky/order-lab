@@ -123,9 +123,10 @@ function getCollField( ident, patient, specimen, accession, part, block, slide, 
     //console.log("coll field input:"+ident+"_"+patient+"_"+specimen+"_"+accession+"_"+part+"_"+block+"_"+slide+"_"+coll);
     //diffDiagnoses_field_0_0_0_0_0_0_0_0_diffdiag_0
     var dataholder = "#form-prototype-data"; //fixed data holder
+    var identLowerCase = ident.toLowerCase();
     //console.log(dataholder+", ident="+ident+", coll="+coll);
     var collectionHolder =  $(dataholder);
-    var prototype = collectionHolder.data('prototype-'+ident.toLowerCase());
+    var prototype = collectionHolder.data('prototype-'+identLowerCase);
     //console.log("prototype="+prototype);
 
     var newForm = prototype.replace(/__patient__/g, patient);
@@ -135,7 +136,7 @@ function getCollField( ident, patient, specimen, accession, part, block, slide, 
     newForm = newForm.replace(/__block__/g, block);
     newForm = newForm.replace(/__slide__/g, slide);
 
-    var regex = new RegExp( '__' + ident + '__', 'g' );
+    var regex = new RegExp( '__' + identLowerCase + '__', 'g' );
     newForm = newForm.replace(regex, coll);
 
     //console.log("newForm="+newForm);

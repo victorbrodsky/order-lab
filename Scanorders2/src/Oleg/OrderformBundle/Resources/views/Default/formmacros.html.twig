@@ -99,27 +99,16 @@
 {% endmacro %}
 
 {% macro fieldicon( field ) %}
-    {#<p>#}
-    {#<div class="row">#}
-        {#{{ form_errors(field) }}        #}
-        {#<div class="col-xs-6" align="right">#}
-            {#{{ form_label(field) }}#}
-        {#</div>#}
-        {#<div class="col-xs-6" align="left" class="form_body_toggle_btn">#}
 
-            <div class="row ">
-                <div class="col-xs-10">
-                    {{ form_widget(field) }}
-                </div>
-                <div class="col-xs-2">
-                    <button id="check_btn" class="btn btn-default" type="button" onclick="checkForm(this)"><i class="glyphicon glyphicon-check"></i></button>
-                </div>
+        <div class="row ">
+            <div class="col-xs-10">
+                {{ form_widget(field) }}
             </div>
+            <div class="col-xs-2">
+                <button id="check_btn" class="btn btn-default" type="button" onclick="checkForm(this)"><i class="glyphicon glyphicon-check"></i></button>
+            </div>
+        </div>
 
-        {#</div>#}
-        {#{{ form_rest(field) }}#}
-    {#</div>#}
-    {#</p>#}
 {% endmacro %}
 
 
@@ -349,12 +338,15 @@
     
 {% endmacro %}
 
-{% macro inputArrayField(fields,cicle,fieldtype) %}
+{#holder for array of fields#}
+{% macro inputArrayField(fields,cicle,classname,fieldtype) %}
     {% import _self as formmacros %}
     <p>
+    <div class="{{ classname }}">
     {% for field in fields %}
         {{ formmacros.inputField(field,cicle,fieldtype,"") }}
     {% endfor %}
+    </div>
     </p>
 {% endmacro %}
 
@@ -504,41 +496,41 @@ ident:      specialStains or relevantScans
     <div id="patient_{{ uid }}">
 
         {% if mrnHtml is not defined or mrnHtml == "" %}
-            {{ formmacros.inputArrayField(patient.mrn,cicle,"key") }}
+            {{ formmacros.inputArrayField(patient.mrn,cicle,"patientmrn","key") }}
         {% else  %}
             <p>{{ mrnHtml }}</p>
         {% endif %}
 
         {#{{ formmacros.field(patient.name) }}#}
         {% if nameHtml is not defined or nameHtml == "" %}
-            {{ formmacros.inputArrayField(patient.name,cicle) }}
+            {{ formmacros.inputArrayField(patient.name,cicle,"patientname") }}
         {% else  %}
             <p>{{ nameHtml }}</p>
         {% endif %}
 
         {#{{ formmacros.field(patient.sex) }}#}
         {% if sexHtml is not defined or sexHtml == "" %}
-            {{ formmacros.inputArrayField(patient.sex,cicle) }}
+            {{ formmacros.inputArrayField(patient.sex,cicle,"patientsex") }}
         {% else  %}
             <p>{{ sexHtml }}</p>
         {% endif %}
 
         {#{{ formmacros.fieldDateLabel(patient.dob) }}#}
         {% if dobHtml is not defined or dobHtml == "" %}
-            {{ formmacros.inputArrayField(patient.dob,cicle,"date") }}
+            {{ formmacros.inputArrayField(patient.dob,cicle,"patientdob","date") }}
         {% else  %}
             <p>{{ dobHtml }}</p>
         {% endif %}
 
         {#{{ formmacros.field(patient.age) }}#}
         {% if ageHtml is not defined or ageHtml == "" %}
-            {{ formmacros.inputArrayField(patient.age,cicle) }}
+            {{ formmacros.inputArrayField(patient.age,cicle,"patientage") }}
         {% else  %}
             <p>{{ ageHtml }}</p>
         {% endif %}
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
-            {{ formmacros.inputArrayField(patient.clinicalHistory,cicle) }}
+            {{ formmacros.inputArrayField(patient.clinicalHistory,cicle,"patientclinicalhistory") }}
         {% else  %}
             <p>{{ clinicalhistoryHtml }}</p>
         {% endif %}
