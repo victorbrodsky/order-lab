@@ -30,7 +30,8 @@ class PatientDobType extends AbstractType
         ));
 
         $builder->add('dobothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientDob'
+            'data_class' => 'Oleg\OrderformBundle\Entity\PatientDob',
+            'label' => false
         ));
 
     }

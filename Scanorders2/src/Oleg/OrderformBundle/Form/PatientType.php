@@ -61,13 +61,6 @@ class PatientType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__patientname__',
         ));
-//        $builder->add( 'name', 'text', array(
-//                'label'=>'Name:',
-//                'max_length'=>500,
-//                'required'=>false,
-//                'read_only' => $flag,
-//                'attr' => array('class'=>'form-control'),
-//        ));
 
         $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
         $builder->add('age', 'collection', array(
@@ -81,13 +74,6 @@ class PatientType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__patientage__',
         ));
-//        $builder->add( 'age', 'text', array(
-//                'label'=>'Age:',
-//                'max_length'=>3,
-//                'required'=>false,
-//                'read_only' => $flag,
-//                'attr' => array('class'=>'form-control'),
-//        ));
 
         $builder->add('sex', 'collection', array(
             'type' => new PatientSexType($this->params, null),
@@ -99,17 +85,6 @@ class PatientType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__patientsex__',
         ));
-//        $builder->add( 'sex', 'choice', array(
-//                'label'=>'Sex:',
-//                'max_length'=>20,
-//                'required'=>true,
-//                'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
-//                'multiple' => false,
-//                'expanded' => true,
-//                //'read_only' => $flag,
-//                'attr' => array('class' => 'horizontal_type')
-//                //'data' => 'Male',
-//        ));
 
         $builder->add('dob', 'collection', array(
             'type' => new PatientDobType($this->params, null),
@@ -122,31 +97,9 @@ class PatientType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__patientdob__',
         ));
-//        $builder->add( 'dob', 'date', array(
-//                'label'=>'DOB:',
-//                'widget' => 'single_text',
-//                'required'=>false,
-//                'format' => 'MM-dd-yyyy',
-//                'read_only' => $flag,
-//                //'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
-//                'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
-//        ));
 
-//        $builder->add('clinicalHistory', 'entity', array(
-//            'class' => 'OlegOrderformBundle:ClinicalHistory',
-//            'label'=>'Clinical History:',
-//            'required' => false,
-//            'property' => 'clinicalHistory',
-//        ));
-//        $builder->add( 'clinicalHistory', null, array(
-//                'label'=>'Clinical History:',
-//                'property' => 'clinicalHistory',
-//                'required'=>false,
-//                //'attr' => array('class'=>'textarea form-control'),
-//        ));
         $gen_attr = array('label'=>'Clinical History','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
         $builder->add('clinicalHistory', 'collection', array(
-            //'type' => new PatientClinicalHistoryType($this->params),
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             //'read_only' => $flag,
             'allow_add' => true,

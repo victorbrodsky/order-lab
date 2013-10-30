@@ -241,59 +241,94 @@ class PatientRepository extends EntityRepository
         $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
         //echo "mrn=".$patient->getMrn()->first().", hist count=".count($patient->getClinicalHistory()).", provider=".$provider."<br>";
 
+        $patient = $this->processFieldArrays($patient, $provider, $original);
 
-        $patient = $this->processFieldArrays($patient, $patient->getMrn(), $provider, $original);
-        $patient = $this->processFieldArrays($patient, $patient->getName(), $provider,$original);
-        $patient = $this->processFieldArrays($patient, $patient->getAge(), $provider, $original);
-        $patient = $this->processFieldArrays($patient, $patient->getSex(), $provider, $original);
-        $patient = $this->processFieldArrays($patient, $patient->getDob(), $provider, $original);
-        $patient = $this->processFieldArrays($patient, $patient->getClinicalHistory(), $provider, $original);
-
-        //exit();
         return $patient;
     }
 
     //TODO: make it as a generic method (move it to util class): process single array of fields (i.e. ClinicalHistory Array of Fields)
-    public function processFieldArrays($entity, $fields, $provider, $original=null) {
+    public function processFieldArrays($entity, $provider, $original=null) {
         $validitySet = false;
 
-        foreach( $fields as $field ) {
-            //echo "hist id=".$hist->getId()."<br>";
-            if( !$field->getProvider() || $field->getProvider() == "" ) {
-                $field->setProvider($provider);
-            }
+        //$class_methods = get_class_methods($dest);
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+        //echo "className=".$className."<br>";
+        //$parent = $class->getParentClass();
 
-            if( !$validitySet ) {
-                if( !$entity->getId() || !$this->hasValidity($entity) ) { //set validity for the first added field
-                    $field->setValidity(1);
-                }
-                $validitySet = true;
-            }
+        $class_methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+        foreach( $class_methods as $method_name ) {
 
-            //copy field entity if not existed from source object to destination object
-            if( $original ) {
-                $entity = copyFieldArrays( $original, $entity, $fields);
-            }
+            $methodShortName = $method_name->getShortName();
 
+            if( strpos($methodShortName,'get') !== false && $methodShortName != 'getId' ) {
+
+                echo "method=".$methodShortName."=>";
+                $fields = $original->$methodShortName();
+                echo "count=".count($fields)."<br>";
+
+                if( is_object($fields) ) {
+
+                    foreach( $fields as $field ) {
+
+                        if( is_object($field) ) {
+
+                            $fieldReflection = new \ReflectionClass($field);
+                            if( $fieldReflection->hasMethod('getProvider') ) {
+
+                                $class = new \ReflectionClass($field);
+                                $parent = $class->getParentClass();
+
+                                if( $parent ) {
+                                    echo "parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>";
+                                    //echo "field id=".$field->getId()."<br>";
+                                    if( !$field->getProvider() || $field->getProvider() == "" ) {
+                                        $field->setProvider($provider);
+                                    }
+
+                                    if( !$validitySet ) {
+                                        if( !$entity->getId() || !$this->hasValidity($entity) ) { //set validity for the first added field
+                                            $field->setValidity(1);
+                                        }
+                                        $validitySet = true;
+                                    }
+
+                                    //copy field entity if not existed from source object to destination object
+                                    if( $original ) {
+                                        //echo "field=".$field."<br>";
+                                        $methodBaseName = str_replace("get", "", $methodShortName);
+                                        $entity = $this->copyField( $original, $entity, $className, $field, $methodBaseName );
+
+                                    }
+                                }
+                            }
+
+                        } //if object
+
+                    } //foreach
+                    echo "<br>";
+
+                } //if object
+
+            }
         }
 
         return $entity;
     }
 
     //copy field entity if not existed from source object to destination object
-    public function copyFieldArrays( $source, $dest, $fieldClass) {
+    public function copyField( $source, $dest, $className, $field, $methodName ) {
         $em = $this->_em;
-
-        $className = get_class($fieldClass);
-        echo "className=".$className."<br>";
-        //TODO: finish this method
-
-        foreach( $source->getClinicalHistory() as $hist ) {
-            $found = $em->getRepository('OlegOrderformBundle:ClinicalHistory')->findOneById($hist->getId());
-            if( !$found ) {
-                $dest->addClinicalHistory( $hist );
-            }
+        echo "id=".$field->getId().", field=".$field."<br>";
+        $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+        if( !$found ) {
+            echo $methodName." not found !!!!!! => add <br>";
+            $methodName = "add".$methodName;
+            $dest->$methodName( $field );
+        } else {
+            echo $methodName." entity is found in DB<br>";
         }
+
         return $dest;
     }
 

@@ -43,8 +43,13 @@ class GenericFieldType extends AbstractType
             'attr' =>$attr
         ));
 
-        $builder->add('other'.preg_replace('/\s+/', '', $this->genAttr['label']), new ArrayFieldType(), array(
-            'data_class' => $this->genAttr['class']
+//        $builder->add('other'.preg_replace('/\s+/', '', $this->genAttr['label']), new ArrayFieldType(), array(
+//            'data_class' => $this->genAttr['class'],
+//            'label' => false
+//        ));
+        $builder->add('other', new ArrayFieldType(), array(
+            'data_class' => $this->genAttr['class'],
+            'label' => false
         ));
 
     }

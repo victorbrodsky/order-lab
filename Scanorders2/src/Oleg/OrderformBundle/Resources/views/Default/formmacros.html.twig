@@ -386,6 +386,7 @@
             {% else %}
                 {{ form_widget(fieldThis.field) }}
             {% endif %}
+            {{ form_rest(fieldThis) }}
         </div>
     </div>
 
@@ -501,28 +502,24 @@ ident:      specialStains or relevantScans
             <p>{{ mrnHtml }}</p>
         {% endif %}
 
-        {#{{ formmacros.field(patient.name) }}#}
         {% if nameHtml is not defined or nameHtml == "" %}
             {{ formmacros.inputArrayField(patient.name,cicle,"patientname") }}
         {% else  %}
             <p>{{ nameHtml }}</p>
         {% endif %}
 
-        {#{{ formmacros.field(patient.sex) }}#}
         {% if sexHtml is not defined or sexHtml == "" %}
             {{ formmacros.inputArrayField(patient.sex,cicle,"patientsex") }}
         {% else  %}
             <p>{{ sexHtml }}</p>
         {% endif %}
 
-        {#{{ formmacros.fieldDateLabel(patient.dob) }}#}
         {% if dobHtml is not defined or dobHtml == "" %}
             {{ formmacros.inputArrayField(patient.dob,cicle,"patientdob","date") }}
         {% else  %}
             <p>{{ dobHtml }}</p>
         {% endif %}
 
-        {#{{ formmacros.field(patient.age) }}#}
         {% if ageHtml is not defined or ageHtml == "" %}
             {{ formmacros.inputArrayField(patient.age,cicle,"patientage") }}
         {% else  %}

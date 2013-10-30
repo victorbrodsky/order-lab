@@ -32,7 +32,8 @@ class PatientSexType extends AbstractType
         ));
 
         $builder->add('sexothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PatientSex'
+            'data_class' => 'Oleg\OrderformBundle\Entity\PatientSex',
+            'label' => false
         ));
 
     }
