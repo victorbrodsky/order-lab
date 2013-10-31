@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Entity\PatientMrn;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Oleg\OrderformBundle\Entity\Patient;
 
@@ -32,7 +33,7 @@ class PatientRepository extends EntityRepository
         $found = $this->isExisted($patient); //return: 1 - null, 2 - existed but STATUS_RESERVED, 3 - existed and STATUS_VALID
 
         if( !$found ) {                                             //Case 1 - User entered new MRN, not existed in DB
-            //echo "case 1 <br>";
+            echo "case 1 <br>";
             //$patient->setStatus(self::STATUS_VALID);
             return $this->setResult( $patient, $orderinfo );
 
@@ -173,12 +174,37 @@ class PatientRepository extends EntityRepository
     //check the last NOMRNPROVIDED MRN in DB and construct next available MRN
     public function getNextMrn() {
         $em = $this->_em;
-        $dql = "SELECT MAX(p.mrn) as maxmrn FROM OlegOrderformBundle:Patient p WHERE p.mrn LIKE '%NOMRNPROVIDED%'";
-        $query = $em->createQuery($dql);
-        $lastMrn =  $query->getResult();
-        $lastMrnStr = $lastMrn[0]['maxmrn'];
-        //echo $lastMrnStr;
-        //exit();
+
+        //$dql = "SELECT MAX(p.mrn) as maxmrn FROM OlegOrderformBundle:Patient p WHERE p.mrn LIKE '%NOMRNPROVIDED%'";
+        //$query = $em->createQuery($dql);
+
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT MAX(pmrn.field) as maxmrn FROM OlegOrderformBundle:Patient p
+            JOIN p.mrn pmrn
+            WHERE pmrn.field LIKE :mrn'
+            )->setParameter('mrn', '%NOMRNPROVIDED%');
+
+
+//        $lastMrnStr = "";
+//        $query = $this->getEntityManager()
+//            ->createQuery('
+//            SELECT p, pmrn FROM OlegOrderformBundle:Patient p
+//            JOIN p.mrn pmrn
+//            WHERE pmrn.field LIKE :mrn'
+//            )->setParameter('mrn', '%NOMRNPROVIDED%');
+//
+//        try {
+//            $lastMrnStr = $query->getSingleResult();
+//        } catch (\Doctrine\ORM\NoResultException $e) {
+//            echo "not founded ";
+//            return null;
+//        }
+
+        $lastMrn = $query->getSingleResult();
+        //$lastMrn =  $query->getResult();
+        $lastMrnStr = $lastMrn['maxmrn'];
+        //echo "lastMrnStr=".$lastMrnStr."<br>";
         $mrnIndexArr = explode("-",$lastMrnStr);
         //echo "count=".count($mrnIndexArr)."<br>";
         if( count($mrnIndexArr) > 1 ) {
@@ -222,11 +248,17 @@ class PatientRepository extends EntityRepository
             $status = self::STATUS_RESERVED;
         }
         $em = $this->_em;
-        $mrn = $this->getNextMrn();
+        $mrnValue = $this->getNextMrn();
+        //echo "mrnValue=".$mrnValue;
+        //exit();
         $patient = new Patient();
-        $patient->setMrn($mrn);
+        $mrn = new PatientMrn();
+        $mrn->setField($mrnValue);
+        //echo "<br>mrn field=".$mrn->getField()."<br>";
+        $patient->addMrn($mrn);
         $patient->setStatus($status);
         $em->persist($patient);
+        //exit();
         $em->flush();
         return $patient;
     }
@@ -263,9 +295,13 @@ class PatientRepository extends EntityRepository
 
             if( strpos($methodShortName,'get') !== false && $methodShortName != 'getId' ) {
 
-                echo "method=".$methodShortName."=>";
-                $fields = $original->$methodShortName();
-                echo "count=".count($fields)."<br>";
+                //echo "method=".$methodShortName."=>";
+                if( $original ) {
+                    $fields = $original->$methodShortName();
+                } else {
+                    $fields = $entity->$methodShortName();
+                }
+                //echo "count=".count($fields)."<br>";
 
                 if( is_object($fields) ) {
 
@@ -280,13 +316,13 @@ class PatientRepository extends EntityRepository
                                 $parent = $class->getParentClass();
 
                                 if( $parent ) {
-                                    echo "parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>";
+                                    //echo "parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>";
                                     //echo "field id=".$field->getId()."<br>";
                                     if( !$field->getProvider() || $field->getProvider() == "" ) {
-                                        $field->setProvider($provider);
+                                        $field->setProvider($provider); //set provider
                                     }
 
-                                    if( !$validitySet ) {
+                                    if( !$validitySet ) {   //TODO: fix it
                                         if( !$entity->getId() || !$this->hasValidity($entity) ) { //set validity for the first added field
                                             $field->setValidity(1);
                                         }
@@ -297,7 +333,7 @@ class PatientRepository extends EntityRepository
                                     if( $original ) {
                                         //echo "field=".$field."<br>";
                                         $methodBaseName = str_replace("get", "", $methodShortName);
-                                        $entity = $this->copyField( $original, $entity, $className, $field, $methodBaseName );
+                                        $entity = $this->copyField( $entity, $className, $field, $methodBaseName );
 
                                     }
                                 }
@@ -306,7 +342,7 @@ class PatientRepository extends EntityRepository
                         } //if object
 
                     } //foreach
-                    echo "<br>";
+                    //echo "<br>";
 
                 } //if object
 
@@ -317,16 +353,16 @@ class PatientRepository extends EntityRepository
     }
 
     //copy field entity if not existed from source object to destination object
-    public function copyField( $source, $dest, $className, $field, $methodName ) {
+    public function copyField( $dest, $className, $field, $methodName ) {
         $em = $this->_em;
-        echo "id=".$field->getId().", field=".$field."<br>";
+        //echo "id=".$field->getId().", field=".$field."<br>";
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
         if( !$found ) {
-            echo $methodName." not found !!!!!! => add <br>";
+            //echo $methodName." not found !!!!!! => add <br>";
             $methodName = "add".$methodName;
             $dest->$methodName( $field );
         } else {
-            echo $methodName." entity is found in DB<br>";
+            //echo $methodName." entity is found in DB<br>";
         }
 
         return $dest;

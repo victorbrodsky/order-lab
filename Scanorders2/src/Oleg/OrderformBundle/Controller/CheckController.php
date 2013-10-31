@@ -66,70 +66,9 @@ class CheckController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
-
-//        $mrnEntity = $em->getRepository('OlegOrderformBundle:PatientMrn')->findOneByField($mrn);
-//        if( $mrnEntity ) {
-//            $entity = $mrnEntity->getPatient();
-//        } else {
-//            $entity = null;
-//        }
-
-//        $mrnEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:PatientMrn')->findOneByIdJoinedToPatient($mrn);
-//        $entity = null;
-//        if( $mrnEntity ) {
-//            echo "count patients=".count($mrnEntity->getPatient())."<br>";
-//            foreach( $mrnEntity->getPatient() as $patient ) {
-//                foreach( $patient->getName() as $name ) {
-//                    echo "Name=".$name->getField()."<br>";
-//                }
-//                $entity = $patient;
-//            }
-//        } else {
-//            echo "no result";
-//        }
-
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn($mrn);
 
-//        echo "count names=".count($entity->getName()).", ";
-//
-//        foreach( $entity->getName() as $name ) {
-//            echo "Name=".$name->getField().", ";
-//        }
-//        echo "Name=".$entity->getName()->first().", ";
-
         if( $entity ) {
-            //$hist = new ClinicalHistory();
-            //$hist->setClinicalHistory("new history");
-            //$entity->addClinicalHistory($hist);
-
-//            $clinHistories = $entity->getClinicalHistory();
-//            $clinHistoriesJson = array();
-//            foreach( $clinHistories as $clinHist ) {
-//
-//                $providerStr = "";
-//                if( count($clinHist->getProvider()) > 0 ) {
-//                    foreach( $clinHist->getProvider() as $provider ) {
-//                        if( $provider->getDisplayName() != "" ) {
-//                            $providerStr = $providerStr." ".$provider->getDisplayName();
-//                        } else {
-//                            $providerStr = $providerStr." ".$provider->getUsername();
-//                        }
-//                    }
-//                } else {
-//                    $providerStr = "unknown";
-//                }
-//
-//                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-//                $dateStr = $transformer->transform($clinHist->getCreationdate());
-//
-//                $hist = array();
-//                $hist['id'] = $clinHist->getId();
-//                $hist['text'] = $clinHist.""; //getClinicalHistory();
-//                $hist['provider'] = $providerStr;
-//                $hist['date'] = $dateStr;
-//                $clinHistoriesJson[] = $hist;
-//
-//            }
 
             $element = array(
                 'inmrn'=>$mrn,
@@ -197,7 +136,7 @@ class CheckController extends Controller {
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
 
         $element = array(
-            'mrn'=>$patient->getMrn()
+            'mrn'=>$patient->getMrn()[0]
         );
 
         $response = new Response();

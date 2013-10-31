@@ -22,7 +22,7 @@ class PatientMrn extends PatientArrayFieldAbstract
     protected $patient;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
 

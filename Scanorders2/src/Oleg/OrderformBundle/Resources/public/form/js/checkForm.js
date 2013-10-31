@@ -9,6 +9,7 @@
 var keys = new Array("mrn", "accession", "name");
 var arrayFieldShow = new Array("clinicalHistory","age","sex"); //display as array fields
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
+var selectStr = 'input.form-control,div.horizontal_type,textarea,select';
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -38,7 +39,7 @@ function checkForm( elem ) {
 
     if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
 
-        console.log("Remove Button Cliked");
+        //console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
         cleanFieldsInElementBlock( element, "all" );
         disableInElementBlock(element, true, null, "notkey", null);
@@ -47,13 +48,13 @@ function checkForm( elem ) {
 
     } else {    //Check Button Cliked
 
-        console.log("Check Button Cliked");
+        //console.log("Check Button Cliked");
 
         //get mrn field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
         var id = "oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_mrn";
 
         var mrn = $("#"+inputId).val();
-        console.log("mrn="+mrn+", name="+name);
+        //console.log("mrn="+mrn+", name="+name);
 
         if( !mrn ) {
 //            //console.log("mrn undefinded!");
@@ -110,11 +111,13 @@ function setElementBlock( element, data, cleanall, key ) {
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
     var parent = element.parent().parent().parent().parent().parent().parent();
     //console.log("set parent.id=" + parent.attr('id'));
-    var elements = parent.find('input,textarea,select');
+
+    //var elements = parent.find('input,textarea,select');
+    var elements = parent.find(selectStr);
 
     for (var i = 0; i < elements.length; i++) {
 
-        console.log("element.id=" + elements.eq(i).attr("id"));
+        //console.log("Element.id=" + elements.eq(i).attr("id"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -128,20 +131,20 @@ function setElementBlock( element, data, cleanall, key ) {
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-fieldIndex];    //default
-            console.log("field = " + field);// + ", data text=" + data[field]['text']);
+            //console.log("field = " + field);// + ", data text=" + data[field]['text']);
 
             if( key == "key" ) {
                 if( $.inArray(field, keys) != -1 ) {
-                    console.log("set key field = " + data[field][0]['text'] );
+                    //console.log("set key field = " + data[field][0]['text'] );
                     setArrayField( elements.eq(i), data[field], parent );
                     //elements.eq(i).val(data[field]);
                     break;
                 }
             }
 
-            if( type == "radio" ) {
-                field = idsArr[idsArr.length-(fieldIndex + 1)];
-            }
+//            if( type == "radio" ) {
+//                field = idsArr[idsArr.length-(fieldIndex + 1)];
+//            }
 
             if( type == "hidden" ) {
                 field = idsArr[idsArr.length-(fieldIndex + 1)];
@@ -180,7 +183,7 @@ function setArrayField(element, dataArr, parent) {
     var classs = element.attr("class");
     var tagName = element.prop("tagName");
     var value = element.attr("value");
-    console.debug("set array field element type=" + type + ", id=" + element.attr("id"));
+    //console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length);
 
     for (var i = 0; i < dataArr.length; i++) {
 
@@ -189,9 +192,12 @@ function setArrayField(element, dataArr, parent) {
         var text = dataArr[i]["text"];
         var provider = dataArr[i]["provider"];
         var date = dataArr[i]["date"];
+        var validity = dataArr[i]["validity"];
+        var coll = i+1;
 
-        //console.log( "set array field text=" + text + ", provider="+provider+", date="+date + ", id=" + element.attr("id") );
+        //console.log( "set array field i="+i+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
+        //console.log("parent id=" + parent.attr("id"));
         var idsArr = parent.attr("id").split("_");
         var elementIdArr = element.attr("id").split("_");
         // 0        1               2           3    4      5          6        7
@@ -200,46 +206,15 @@ function setArrayField(element, dataArr, parent) {
         //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_name
 
         var addFlag = true;
-        var thisFieldIndex = fieldIndex;
-        var thisHolderIndex = holderIndex;
 
-        console.debug("in loop parent.id=" + parent.attr("id") + ", tagName=" + tagName + ", type=" + type + ", classs=" + classs + ", text=" + text );
+        //console.log("in loop parent.id=" + parent.attr("id") + ", tagName=" + tagName + ", type=" + type + ", classs=" + classs + ", text=" + text );
 
-        if( type == "hidden" ) {
-            var fieldName = elementIdArr[elementIdArr.length-(fieldIndex+1)];
-            console.log("hidden fieldName="+fieldName);
-            if( $.inArray(fieldName, arrayFieldShow) == -1 ) {
-                element.val(id);
-                console.log("set hidden value id="+id);
-                continue;
-            }
-        }
-
-        if( type == "radio" ) {
-            //id=oleg_orderformbundle_orderinfotype_patient_0_sex_0_field_0
-            thisFieldIndex = fieldIndex + 1;
-            thisHolderIndex = holderIndex + 1;
-        }
-
-        var fieldName = elementIdArr[elementIdArr.length-thisFieldIndex];
-        var holderame = elementIdArr[elementIdArr.length-thisHolderIndex];
+        var fieldName = elementIdArr[elementIdArr.length-fieldIndex];
+        var holderame = elementIdArr[elementIdArr.length-holderIndex];
         var ident = holderame+fieldName;
 
         //var attachElement = element.parent().parent().parent().parent().parent();
         var attachElement = parent.find("."+ident.toLowerCase());   //patientsex
-
-        //each radio button is an input field, so make sure to add only 1 radio field group
-        if( type == "radio" ) {
-            var radios = attachElement.find(".horizontal_type");
-            for (var ii = 0; ii < radios.length; ii++) {
-                var radioId = radios.eq(ii).attr("id");
-                //console.log("radioId="+radioId+", fieldName="+fieldName);
-                if( radioId.indexOf(fieldName+"_1_field") != -1 ) {
-                    addFlag = false;
-                    break;
-                }
-            }
-        }
 
         if( $.inArray(fieldName, arrayFieldShow) != -1 && addFlag ) { //show all fields from DB
 
@@ -252,8 +227,8 @@ function setArrayField(element, dataArr, parent) {
             var part = idsArr[4];
             var block = idsArr[5];
             var slide = idsArr[6];
-            var coll = i+1;
-            //console.log("SHOW set array ident=" + ident );
+
+            //console.log("Create patient=" + patient );
 
             //fieldName = "clinicalHistory";
 
@@ -277,7 +252,7 @@ function setArrayField(element, dataArr, parent) {
         }
 
         if( tagName == "INPUT" ) {
-            console.log("input tagName: fieldName="+fieldName);
+            //console.log("input tagName: fieldName="+fieldName);
 
             if( type == "text" ) {
 
@@ -285,27 +260,6 @@ function setArrayField(element, dataArr, parent) {
 //            var firstAttachedElement = attachElement.find('*[type="'+type+'"]').first();
                 var firstAttachedElement = attachElement.find('input').first();
                 firstAttachedElement.val(text);
-
-            } else if( type == "radio" ) {
-
-                var radioGroup = attachElement.find(".horizontal_type").first();
-                var radios = radioGroup.find("input");
-                for (var ii = 0; ii < radios.length; ii++) {
-                    var radioId = radios.eq(ii).attr("id");
-                    var value = radios.eq(ii).attr("value");
-                    if( radioId.indexOf(fieldName+"_1_field_") != -1 ) { //all added (existing) radio inputs have collection id 1
-                        if( text != "" ) {
-                            console.log("check radio (data): " + value + "?=" + text );
-                            if( value == text ) {
-                                console.log("Match!" );
-                                radios.eq(ii).prop('checked',true);
-                            }
-                        } else {
-                            console.log("check radio (data null): " + value + "?=" + text );
-                            radios.eq(ii).prop('checked',false);
-                        }
-                    }
-                }
 
             } else if( classs && classs.indexOf("datepicker") != -1 ) {
                 var firstAttachedElement = attachElement.find('input').first();
@@ -322,11 +276,72 @@ function setArrayField(element, dataArr, parent) {
         } else if ( tagName == "TEXTAREA" ) {
 
             var firstAttachedElement = attachElement.find('textarea').first();
-            console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id"));
+            //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id"));
             firstAttachedElement.val(text);
 
+        } else if ( tagName == "DIV" ) {
+            //get the first (the most recent added) group
+            var firstAttachedElement = attachElement.find('.horizontal_type').first();
+            processGroup( firstAttachedElement, text, "ignoreDisable" );
         } else {
-            console.log("logical error: undefined tagName");
+            console.log("logical error: undefined tagName="+tagName);
+        }
+
+        //set hidden id of the element
+        var directParent = element.parent().parent().parent();
+        //console.log("hidden directParent="+directParent.attr("id") + ", class="+directParent.attr("class") );
+        if( $.inArray(fieldName, arrayFieldShow) == -1 ) {
+            var hiddenElement = directParent.find('input[type=hidden]');
+            hiddenElement.val(id);
+            //console.log("set hidden "+fieldName+", set id="+id + " hiddenId="+hiddenElement.attr("id") + " hiddenClass="+hiddenElement.attr("class") );
+        }
+
+    } //for loop
+
+}
+
+//process groups such as radio button group
+function processGroup( element, text, disableFlag ) {
+
+    var elementIdArr = element.attr("id").split("_");
+    var fieldName = elementIdArr[elementIdArr.length-(fieldIndex+1)];
+
+    //var element = elementInside.parent().parent().parent();
+    //var radios = element.find("input:radio");
+
+    //console.log("process group id="+element.attr("id")+ ", class="+element.attr("class") + ", fieldName="+fieldName );
+
+    var partId = 'input[id*="'+fieldName+'_"]:radio';
+    var radios = element.find(partId);
+
+    for (var i = 0; i < radios.length; i++) {
+        var value = radios.eq(i).attr("value");
+        var localElement = radios.eq(i);
+        //console.log("radio id: " + localElement.attr("id") + ", value=" + value );
+
+        if( disableFlag == "ignoreDisable" ) {
+            if( text != "" ) {
+                //console.log("text ok, check radio (data): " + value + "?=" + text );
+                if( value == text ) {
+                    //console.log("Match!" );
+                    localElement.prop('checked',true);
+                }
+            } else {
+                //console.log("no text radio: value=" + value);
+                localElement.prop('checked',false);
+            }
+        } else  {
+            if( disableFlag ) {
+                //console.log("disable radio: value=" + value);
+                if( localElement.is(":checked") ){
+                    localElement.attr("disabled", false);
+                } else {
+                    localElement.attr("disabled", true);
+                }
+            } else {
+                //console.log("enable radio: value=" + value);
+                localElement.prop("disabled", false);
+            }
         }
 
     }
@@ -349,7 +364,7 @@ function cleanFieldsInElementBlock( element, all ) {
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
     var parent = element.parent().parent().parent().parent().parent().parent();
     //console.log("clean parent.id=" + parent.attr('id'));
-    var elements = parent.find('input,textarea,select');
+    var elements = parent.find(selectStr);
 
     for (var i = 0; i < elements.length; i++) {
 
@@ -424,7 +439,7 @@ function initAllElements() {
 
 function initAllMulti() {
     var check_btns = $("[id=check_btn]");
-    console.log("check_btns.length="+check_btns.length);
+    //console.log("check_btns.length="+check_btns.length);
     for (var i = 0; i < check_btns.length; i++) {
         var idArr = check_btns.eq(i).attr("id").split("_");
         if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
@@ -445,7 +460,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     //console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
-    var elements = parent.find('input,textarea,select');
+    var elements = parent.find(selectStr);
 
     //console.log("elements.length=" + elements.length);
 
@@ -466,7 +481,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-thisfieldIndex];
-            //console.log("field=(" + field + ")");
+            //console.log("disable field=(" + field + ")");
 
             if( all == "all" ) {
                 disableElement(elements.eq(i),disabled);
@@ -487,7 +502,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
             if( flagArrayField == "notarrayfield" ) {
                 if( $.inArray(field, arrayFieldShow) != -1 ) {
-                    //console.log("disable array id="+elements.eq(i).attr("id"));
+                    //console.log("notarrayfield (not '_0_field'): disable array id="+elements.eq(i).attr("id"));
                     if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0_field") != -1 ) {
                         if( disabled ) {    //inverse disable flag for key field
                             disableElement(elements.eq(i),false);
@@ -505,47 +520,37 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
 function disableElement(element, flag) {
 
-    if( !element ) return;
+    //if( !element ) return;
 
     var type = element.attr('type');
     var classs = element.attr('class');
+    var tagName = element.prop('tagName');
+
+    if( tagName == "DIV" ) {
+        //console.debug("radio disable classs="+classs+", id="+element.attr('id'));
+        processGroup( element, "", flag );
+        return;
+    }
+
     if( flag ) {
+
         //console.log("disable field id="+element.attr("id"));
-        //element.prop("disabled", true);
-        //console.log("disable classs="+classs);
-        if( type == "radio" ) {
-            var type = element.attr('checked');
-            if( element.is(":checked") ){
-                element.attr("disabled", false);
-            } else {
-                element.attr("disabled", true);
-            }
-        } else {
-            //console.log("disable classs="+classs);
-            element.attr('readonly', true);
-            //element.off("click");
-            //element.bind('click', false);
-            if( classs && classs.indexOf("datepicker") != -1 ) {
-                //console.log("disable datepicker classs="+classs);
-                //element.datepicker("remove");
-                //element.off();
-                initDatepicker(element,"remove");
-            }
+        element.attr('readonly', true);
+        if( classs && classs.indexOf("datepicker") != -1 ) {
+            //console.log("disable datepicker classs="+classs);
+            initDatepicker(element,"remove");
         }
 
     } else {
+
         //console.log("enable field id="+element.attr("id"));
-        //element.prop("disabled", false);
         element.attr("readonly", false);
         element.removeAttr( "readonly" );
-        //element.removeAttr( "disabled" );
         if( type == "radio" ) {
             element.prop("disabled", false);
         }
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);
-            //$(".datepicker").datepicker({autoclose: true});
-            //element.datepicker({autoclose: true});
             initDatepicker(element);
         }
 
@@ -584,7 +589,7 @@ function setKeyValue(element) {
             //console.log("set key value: field=(" + field + ")");
 
             if( $.inArray(field, keys) != -1 ) {
-                console.log("set key value: found key=(" + field + ")");
+                //console.log("set key value: found key=(" + field + ")");
                 name = field;
                 keyElement = elements.eq(i);
                 break;

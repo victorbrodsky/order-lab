@@ -233,7 +233,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 
     var uid = prevName+"_"+idsu;
     var holder = "#form_body_"+uid;
-    //console.log(name+": add childs to="+holder+" uid="+idsu);
+    //console.debug(name+": ADD CHILDS to="+holder+" uid="+idsu);
 
     //attach children form
     $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );

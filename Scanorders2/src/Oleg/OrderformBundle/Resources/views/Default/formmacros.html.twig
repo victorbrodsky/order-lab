@@ -499,37 +499,37 @@ ident:      specialStains or relevantScans
         {% if mrnHtml is not defined or mrnHtml == "" %}
             {{ formmacros.inputArrayField(patient.mrn,cicle,"patientmrn","key") }}
         {% else  %}
-            <p>{{ mrnHtml }}</p>
+            <p><div class="patientmrn">{{ mrnHtml }}</div></p>
         {% endif %}
 
         {% if nameHtml is not defined or nameHtml == "" %}
             {{ formmacros.inputArrayField(patient.name,cicle,"patientname") }}
         {% else  %}
-            <p>{{ nameHtml }}</p>
+            <p><div class="patientname">{{ nameHtml }}</div></p>
         {% endif %}
 
         {% if sexHtml is not defined or sexHtml == "" %}
             {{ formmacros.inputArrayField(patient.sex,cicle,"patientsex") }}
         {% else  %}
-            <p>{{ sexHtml }}</p>
+            <p><div class="patientsex">{{ sexHtml }}</div></p>
         {% endif %}
 
         {% if dobHtml is not defined or dobHtml == "" %}
             {{ formmacros.inputArrayField(patient.dob,cicle,"patientdob","date") }}
         {% else  %}
-            <p>{{ dobHtml }}</p>
+            <p><div class="patientdob">{{ dobHtml }}</div></p>
         {% endif %}
 
         {% if ageHtml is not defined or ageHtml == "" %}
             {{ formmacros.inputArrayField(patient.age,cicle,"patientage") }}
         {% else  %}
-            <p>{{ ageHtml }}</p>
+            <p><div class="patientage">{{ ageHtml }}</div></p>
         {% endif %}
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
             {{ formmacros.inputArrayField(patient.clinicalHistory,cicle,"patientclinicalhistory") }}
         {% else  %}
-            <p>{{ clinicalhistoryHtml }}</p>
+            <p><div class="patientclinicalhistory">{{ clinicalhistoryHtml }}</div></p>
         {% endif %}
 
     </div>

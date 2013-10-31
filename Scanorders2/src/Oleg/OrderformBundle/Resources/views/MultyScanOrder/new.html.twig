@@ -109,7 +109,7 @@
 
 
     {% if type != 'show' %}
-        {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"","prototype") %}
+        {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype") %}
         {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"","prototype") %}
         {% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,type,"","prototype") %}
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"","prototype") %}
@@ -117,7 +117,9 @@
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
     {% endif %}
 
-    {% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
+    {#            pat   spec  acc   part block slide  scan  stain       #}
+    {#{% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}#}
+    {% set uid = '__patient_____specimen_____accession_____part_____block_____slide_____scan_____stain__' %}
     <div id="form-prototype-data"
 
       {% if type != 'show' %}
