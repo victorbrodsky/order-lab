@@ -86,7 +86,7 @@ class Patient implements JsonSerializable
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($withfields=false,$validity=0)
     {
         $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();
@@ -99,12 +99,14 @@ class Patient implements JsonSerializable
         $this->age = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clinicalHistory = new \Doctrine\Common\Collections\ArrayCollection();
 
-        $this->addMrn( new PatientMrn() );
-        $this->addName( new PatientName() );
-        $this->addSex( new PatientSex() );
-        $this->addDob( new PatientDob() );
-        $this->addAge( new PatientAge() );
-        $this->addClinicalHistory( new PatientClinicalHistory() );
+        if( $withfields ) {
+            $this->addMrn( new PatientMrn($validity) );
+            $this->addName( new PatientName($validity) );
+            $this->addSex( new PatientSex($validity) );
+            $this->addDob( new PatientDob($validity) );
+            $this->addAge( new PatientAge($validity) );
+            $this->addClinicalHistory( new PatientClinicalHistory($validity) );
+        }
 
     }
     

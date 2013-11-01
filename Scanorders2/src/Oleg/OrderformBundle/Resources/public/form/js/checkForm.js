@@ -7,13 +7,13 @@
  */
 
 var keys = new Array("mrn", "accession", "name");
-var arrayFieldShow = new Array("clinicalHistory","age","sex"); //display as array fields
+var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 var selectStr = 'input.form-control,div.horizontal_type,textarea,select';
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
-var fieldIndex = 3;     //get 'mrn'
+var fieldIndex = 3;     //get 'key'
 var holderIndex = 5;    //get 'patient'
 console.log("urlCheck="+urlCheck);
 
@@ -29,18 +29,21 @@ function checkForm( elem ) {
     //  0         1              2           3   4  5  6   7
     //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
     var inputId = elementInput.attr('id');
-    console.log("inputId="+inputId);
+    //console.log("inputId="+inputId);
 
     var idsArr = inputId.split("_");
 
-    var name = idsArr[idsArr.length-holderIndex];
-    var patient = idsArr[4];
-    var key = idsArr[4];
+    var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
+    //var patient = idsArr[4];
+    //var key = idsArr[4];
+
+    var keyElement = findKeyElement(element);
 
     if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
 
         //console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
+        removeKeyFromDB(keyElement);
         cleanFieldsInElementBlock( element, "all" );
         disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
@@ -50,34 +53,30 @@ function checkForm( elem ) {
 
         //console.log("Check Button Cliked");
 
-        //get mrn field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
-        var id = "oleg_orderformbundle_orderinfotype_"+name+"_"+patient+"_mrn";
+        //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
-        var mrn = $("#"+inputId).val();
-        //console.log("mrn="+mrn+", name="+name);
+        var keyValue =keyElement.element.val();
+        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue);
 
-        if( !mrn ) {
-//            //console.log("mrn undefinded!");
-//            $('#'+inputId).popover( {content:"Please fill out MRN field"} );
+        if( !keyValue ) {
+            //console.log("key undefinded!");
+//            $('#'+inputId).popover( {content:"Please fill out key field"} );
 //            $('#'+inputId).popover('show');
-            setKeyValue(element);
-//            disableInElementBlock(element, false, null, "notkey", null);
-//            invertButton(element);
+            setKeyValue(element,keyElement.name);
+            //disableInElementBlock(element, false, null, "notkey", null);
+            //invertButton(element);
             return;
         }
 
         $.ajax({
             url: urlCheck+name,
-            type: 'GET',    //TODO: use POST
-            data: {mrn: mrn},
+            type: 'GET',
+            data: {key: keyValue},
             contentType: 'application/json',
             dataType: 'json',
             success: function (data) {
                 console.debug("get object ajax ok "+name);
                 if( data.id ) {
-                    //console.debug("inmrn="+ data.inmrn);
-                    //console.debug("data.id="+ data.id);
-                    //console.debug("data.name="+ data.name);
                     //first: set elements
                     setElementBlock(element, data);
                     //second: disable or enable element. Make sure this function runs after setElementBlock
@@ -293,7 +292,7 @@ function setArrayField(element, dataArr, parent) {
         if( $.inArray(fieldName, arrayFieldShow) == -1 ) {
             var hiddenElement = directParent.find('input[type=hidden]');
             hiddenElement.val(id);
-            //console.log("set hidden "+fieldName+", set id="+id + " hiddenId="+hiddenElement.attr("id") + " hiddenClass="+hiddenElement.attr("class") );
+            console.log("set hidden "+fieldName+", set id="+id + " hiddenId="+hiddenElement.attr("id") + " hiddenClass="+hiddenElement.attr("class") );
         }
 
     } //for loop
@@ -311,12 +310,12 @@ function processGroup( element, text, disableFlag ) {
 
     //console.log("process group id="+element.attr("id")+ ", class="+element.attr("class") + ", fieldName="+fieldName );
 
-    var partId = 'input[id*="'+fieldName+'_"]:radio';
-    var radios = element.find(partId);
+    var partId = 'input[id*="'+fieldName+'_"]:radio';   //TODO: make sure it works for other groups (as select?)
+    var members = element.find(partId);
 
-    for (var i = 0; i < radios.length; i++) {
-        var value = radios.eq(i).attr("value");
-        var localElement = radios.eq(i);
+    for (var i = 0; i < members.length; i++) {
+        var localElement = members.eq(i);
+        var value = localElement.attr("value");
         //console.log("radio id: " + localElement.attr("id") + ", value=" + value );
 
         if( disableFlag == "ignoreDisable" ) {
@@ -358,7 +357,7 @@ function cleanArrayField( element, field ) {
     }
 }
 
-//clean fields in Element Block
+//clean fields in Element Block, except key field
 //all: if set to "all" => clean all fields, including key field
 function cleanFieldsInElementBlock( element, all ) {
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
@@ -370,8 +369,10 @@ function cleanFieldsInElementBlock( element, all ) {
 
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
+        var tagName = elements.eq(i).prop('tagName');
+        console.log("clean id="+id+", type="+type+", tagName="+tagName);
 
-        if( id && type != "hidden" ) {
+        //if( id && type != "hidden" ) {
 
             if( type == "text" || !type ) {
                 var clean = false;
@@ -388,22 +389,31 @@ function cleanFieldsInElementBlock( element, all ) {
                     }
                 }
                 if( clean ) {
-                    //console.log("in array field=" + field );
+                    console.log("in array field=" + field );
                     if( $.inArray(field, arrayFieldShow) == -1 ) {
-                        //console.log("clean not array");
-                        elements.eq(i).val(null);
+                        console.log("clean not as arrayFieldShow");
+
+                        if( tagName == "DIV" ) {
+                            console.log("clean as radio");
+                            //cleanArrayField( elements.eq(i), field );
+                            processGroup( elements.eq(i), "", "ignoreDisable" );
+                        } else {
+                            elements.eq(i).val(null);
+                        }
+
                     } else {
-                        //console.log("clean as an array");
+                        console.log("clean as an arrayFieldShow");
                         cleanArrayField( elements.eq(i), field );
                     }
                 }
             }
 
-            if( type == "radio" ) {
-                elements.eq(i).prop('checked',false);
-            }
+//            if( type == "radio" ) {
+//                console.log("clean as radio");
+//                elements.eq(i).prop('checked',false);
+//            }
 
-        }
+        //}
 
     }
 }
@@ -571,15 +581,72 @@ function invertButton(btn) {
 
 }
 
-function setKeyValue(element) {
-    var name = "";
-    var keyElement = null;
+function setKeyValue( btnElement, name ) {
+
+    //console.log("name="+ name);
+
+    if( name == "name" ) return;
+
+//    if( name != "accession" ) {
+//        //data = new Array();
+//        //data[name] = "Automatic Generated";
+//        //setElementBlock(element, data, null, "key");
+//        keyElement.val("Automatic Generated");
+//    }
+
+    $.ajax({
+        url: urlCheck+name,
+        type: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            if( data ) {
+                //console.debug(name+" text="+ data[name][0]["text"]);
+                setElementBlock(btnElement, data, null, "key");
+                disableInElementBlock(btnElement, false, null, "notkey", null);
+                invertButton(btnElement);
+            }
+        },
+        error: function () {
+            console.debug("set key ajax error");
+        }
+    });
+
+    return;
+}
+
+//remove key NOTPROVIDED if it was created by check on empty key field (entity status="reserved").
+function removeKeyFromDB(element) {
+
+    var name = element.name;
+    //var keyValue =element.element.attr("value");
+    var keyValue =element.element.val();
+    //console.debug("delete name="+name +", keyvalue="+keyValue);
+
+    $.ajax({
+        url: urlCheck+name+"/check/"+keyValue,
+        type: 'DELETE',
+        contentType: 'application/json',
+        dataType: 'json',
+//        success: function (data) {
+//            //console.debug("delete key ok");
+//        },
+        error: function () {
+            console.debug("delete key ajax error");
+        }
+    });
+}
+
+function findKeyElement( element ) {
+
     var parent = element.parent().parent().parent().parent().parent().parent();
     //console.log("set key value: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find('input,select');
     //console.log("set key value: elements.length=" + elements.length);
 
+    var keyElement = null;
+    var name = "";
     for (var i = 0; i < elements.length; i++) {
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
@@ -597,37 +664,9 @@ function setKeyValue(element) {
         }
     }
 
-    if( name == "name" ) return;
+    var res = new Array;
+    res.element = keyElement;
+    res.name = name;
 
-//    //console.debug("mrn="+ data.mrn);
-//    if( name != "accession" ) {
-//        //data = new Array();
-//        //data[name] = "Automatic Generated";
-//        //setElementBlock(element, data, null, "key");
-//        keyElement.val("Automatic Generated");
-//    }
-
-    $.ajax({
-        url: urlCheck+name,
-        type: 'GET',
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function (data) {
-            if( data[name] ) {
-                //console.debug(name+"="+ data[name]);
-                setElementBlock(element, data, null, "key");
-
-                disableInElementBlock(element, false, null, "notkey", null);
-                invertButton(element);
-            }
-        },
-        error: function () {
-            console.debug("set key ajax error");
-        }
-    });
-
-    return keyElement;
+    return res;
 }
-
-
-//TODO: add listener for key fields. If change, disable all element

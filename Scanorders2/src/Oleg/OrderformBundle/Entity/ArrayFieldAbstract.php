@@ -42,6 +42,10 @@ abstract class ArrayFieldAbstract {
      */
     protected $creationdate;
 
+    public function __construct( $validity=0 )
+    {
+        $this->validity = $validity;
+    }
 
     public function setId($id)
     {

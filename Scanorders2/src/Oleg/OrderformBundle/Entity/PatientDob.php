@@ -18,7 +18,7 @@ class PatientDob extends PatientArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="dob")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $patient;
 

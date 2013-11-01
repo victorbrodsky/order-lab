@@ -2,6 +2,8 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientMrn;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -53,7 +55,7 @@ class CheckController extends Controller {
 
     /**
      * @Route("/patient", name="get-patientdata")
-     * @Method("GET")
+     * @Method("GET")   //TODO: use POST?
      */
     public function getAction() {
 
@@ -62,7 +64,7 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $mrn = $request->get('mrn');
+        $mrn = $request->get('key');
 
         $em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
@@ -71,7 +73,7 @@ class CheckController extends Controller {
         if( $entity ) {
 
             $element = array(
-                'inmrn'=>$mrn,
+                //'inmrn'=>$mrn,
                 'id'=>$entity->getId(),
                 'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
                 'name'=>$this->getArrayFieldJson($entity->getName()),
@@ -101,10 +103,12 @@ class CheckController extends Controller {
             //echo "provider count=".count($field->getProvider()).", provider name=".$field->getProvider()->getUsername().", ";
 
             $provider = $field->getProvider();
-            if( $provider->getDisplayName() != "" ) {
-                $providerStr = $providerStr." ".$provider->getDisplayName();
-            } else {
-                $providerStr = $providerStr." ".$provider->getUsername();
+            if( $provider ) {
+                if( $provider->getDisplayName() != "" ) {
+                    $providerStr = $providerStr." ".$provider->getDisplayName();
+                } else {
+                    $providerStr = $providerStr." ".$provider->getUsername();
+                }
             }
 
             //echo "providerStr=".$providerStr.", ";
@@ -132,11 +136,27 @@ class CheckController extends Controller {
      */
     public function getMrnAction() {
 
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
         $em = $this->getDoctrine()->getManager();
-        $patient = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
+        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+
+//        $entity = new Patient();
+//        $mrn = new PatientMrn(1);
+//        $mrn->setField("NOMRNPROVIDED-0000000003");
+//        $entity->addMrn($mrn);
 
         $element = array(
-            'mrn'=>$patient->getMrn()[0]
+            'id'=>$entity->getId(),
+            'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
+            'name'=>$this->getArrayFieldJson($entity->getName()),
+            'sex'=>$this->getArrayFieldJson($entity->getSex()),
+            'dob'=>$this->getArrayFieldJson($entity->getDob()),
+            'age'=>$this->getArrayFieldJson($entity->getAge()),
+            'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
         );
 
         $response = new Response();
@@ -146,11 +166,34 @@ class CheckController extends Controller {
     }
 
     /**
+     * @Route("/mrn/check/{key}", name="delete-mrn")
+     * @Method("DELETE")
+     */
+    public function deleteMrnAction($key) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
+    /**
      * Get next available MRN from DB
      * @Route("/accession", name="get-accession")
      * @Method("GET")
      */
     public function getAccessionAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
 
         //$em = $this->getDoctrine()->getManager();
         //$mrn = $em->getRepository('OlegOrderformBundle:Patient')->getNextMrn();

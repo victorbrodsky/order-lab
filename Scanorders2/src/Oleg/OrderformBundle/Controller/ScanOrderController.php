@@ -525,7 +525,7 @@ class ScanOrderController extends Controller {
         $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service, 'user'=>$username, 'em'=>$em);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
-        $patient = new Patient();
+        $patient = new Patient(true);
 //        $clinicalHistory = new ClinicalHistory();
 //        $patient->addClinicalHistory($clinicalHistory);
         $form_patient   = $this->createForm(new PatientType($params), $patient);

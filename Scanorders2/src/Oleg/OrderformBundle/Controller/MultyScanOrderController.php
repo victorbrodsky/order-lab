@@ -199,6 +199,7 @@ class MultyScanOrderController extends Controller {
 //            echo "<br>Before loop:<br>";
 //            echo "patient count=".count($entity->getPatient());
 //            foreach( $entity->getPatient() as $pat ) {
+//                echo "<br>id=".$pat->getId();
 //                echo "<br>mrn=".$pat->getMrn();
 //                echo "<br>name=".$pat->getName();
 //                echo "<br>sex=".$pat->getSex();
@@ -298,14 +299,11 @@ class MultyScanOrderController extends Controller {
 
         $entity->addProvider($user);
 
-        $patient = new Patient();
+        $patient = new Patient(true);
         $entity->addPatient($patient);
 
 //        $clinicalHistory = new ClinicalHistory();
 //        $patient->addClinicalHistory($clinicalHistory);
-
-        //$patient2 = new Patient();
-        //$entity->addPatient($patient2);
 
         $procedure = new Specimen();
         $patient->addSpeciman($procedure);

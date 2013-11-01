@@ -17,7 +17,7 @@ class PatientAge extends PatientArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="age")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $patient;
 
