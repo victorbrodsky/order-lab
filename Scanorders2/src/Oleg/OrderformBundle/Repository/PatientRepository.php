@@ -36,7 +36,7 @@ class PatientRepository extends EntityRepository
             echo "case 1 <br>";
             return $this->setResult( $patient, $orderinfo );
 
-        } elseif( $found->getStatus() ) { //case 2 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated //Case 3 - existed and STATUS_VALID; User entered existed MRN
+        } elseif( $found ) { //case 2 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated //Case 3 - existed and STATUS_VALID; User entered existed MRN
             echo "case 2 and 3 <br>";
             foreach( $patient->getSpecimen() as $specimen ) {
                 $found->addSpecimen( $specimen );
@@ -60,7 +60,9 @@ class PatientRepository extends EntityRepository
         }
 
     }
-    
+
+    //patient is a patient object found in DB
+    //original is a patient object provided by submitted form
     public function setResult( $patient, $orderinfo = null, $original=null ) {
               
         $em = $this->_em;
@@ -106,10 +108,11 @@ class PatientRepository extends EntityRepository
         }
 
 //        echo "patient=".$patient."<br>";
-//        echo "count names=".count($patient->getName())."<br>";
+        echo "count mrn=".count($patient->getMrn())."<br>";
 //        echo "patient id=".$patient->getId()."<br>";
         echo "patient mrn=".$patient->getMrn()->first()."<br>";
         echo "patient mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
+        echo "original mrn provider=".$original->getMrn()->first()->getProvider()."<br>";
 //        echo "patient name=".$patient->getName()->first()."<br>";
 //        echo "patient sex=".$patient->getSex()->first()."<br>";
 //        echo "patient dob=".$patient->getDob()->first()."<br>";
@@ -117,7 +120,7 @@ class PatientRepository extends EntityRepository
 //        echo "patient age=".$patient->getAge()->first()."<br>";
 //        echo "patient clinHist=".$patient->getClinicalHistory()->first()."<br>";
 //        echo $patient."<br>";
-        exit();
+        //exit();
 
         return $patient;
     }
@@ -244,8 +247,8 @@ class PatientRepository extends EntityRepository
         return $patient;
     }
 
-    //assign user provider
-    public function processPatientFieldArrays($patient,$orderinfo,$original=null) {
+    //copy all children from original to patient and assign a user provider
+    public function processPatientFieldArrays( $patient, $orderinfo, $original=null ) {
 
         if( !$orderinfo || count($orderinfo->getProvider()) == 0 ) {
             //return $patient;
@@ -261,7 +264,6 @@ class PatientRepository extends EntityRepository
 
     //TODO: make it as a generic method (move it to util class): process single array of fields (i.e. ClinicalHistory Array of Fields)
     public function processFieldArrays($entity, $provider, $original=null) {
-        $validitySet = false;
 
         //$class_methods = get_class_methods($dest);
         $class = new \ReflectionClass($entity);
@@ -274,9 +276,9 @@ class PatientRepository extends EntityRepository
 
             $methodShortName = $method_name->getShortName();    //getMrn
 
-            if( strpos($methodShortName,'get') !== false && $methodShortName != 'getId' ) {
+            if( strpos($methodShortName,'get') !== false ) {    //&& $methodShortName != 'getId' ) { //filter in only "get" methods
 
-                //echo "method=".$methodShortName."=>";
+                echo " method=".$methodShortName."=>";
                 if( $original ) {
                     $fields = $original->$methodShortName();
                 } else {
@@ -284,9 +286,11 @@ class PatientRepository extends EntityRepository
                 }
                 //echo "count=".count($fields)."<br>";
 
-                if( is_object($fields) ) {
+                if( is_object($fields) ) {  //for every field in array (usually, only one item exists)
 
-                    foreach( $fields as $field ) {
+                    $validitySet = false;   //indicate that validity has not been set in this field array
+
+                    foreach( $fields as $field ) {  //original fields from submitted form
 
                         if( is_object($field) ) {
 
@@ -296,41 +300,49 @@ class PatientRepository extends EntityRepository
                                 $class = new \ReflectionClass($field);
                                 $parent = $class->getParentClass();
 
-                                if( $parent ) {
-                                    echo "parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>";
+                                echo "field=".$field->getField()."<br>";
+
+                                if( $parent && $field->getField() && $field->getField() != "" ) {     //filter in all objects with parent class. assume it is "PatientArrayFieldAbstract"
+
+                                    echo "###parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>";
                                     echo "field id=".$field->getId()."<br>";
+
+                                    //set provider to the fields from submitted form
                                     if( !$field->getProvider() || $field->getProvider() == "" ) {
                                         echo "add provider <br>";
                                         $field->setProvider($provider); //set provider
                                         echo "after provider=".$field->getProvider()." <br>";
                                     }
 
+                                    //set validity to the fields from submitted form
                                     if( !$validitySet ) {
-                                        if( !$entity->getId() || !$this->hasValidity($fields) ) { //set validity for the first added field
+                                        echo "methodShortName=".$methodShortName."<br>";
+                                        if( !$entity->getId() || !$this->hasValidity($entity->$methodShortName()) ) { //set validity for the first added field
+                                            echo "Set validity to 1 <br>";
                                             $field->setValidity(1);
                                         }
-                                        $validitySet = true;
+                                        $validitySet = true;    //indicate that validity is already has been set in this field array
                                     }
 
-                                    //copy field entity if not existed from source object to destination object
+                                    //copy processed field from submitted object to found entity in DB
                                     if( $original ) {
-                                        //echo "original yes: field=".$field."<br>";
+                                        echo "original yes: field=".$field."<br>";
                                         $methodBaseName = str_replace("get", "", $methodShortName);
-                                        $entity = $this->copyField( $entity, $className, $field, $methodBaseName );
+                                        $entity = $this->copyField( $entity, $field, $className, $methodBaseName );
 
                                     }
                                 }
 
-                                echo "end mrn provider=".$entity->getMrn()->first()->getProvider().", count=".count($entity->getMrn())." <br>"; //TODO: no provider!
+                                echo " end mrn provider=".$entity->getMrn()->first()->getProvider().", count=".count($entity->getMrn());
                                 //echo "end name provider=".$entity->getName()->first()->getProvider().", count=".count($entity->getname())." <br>";
-                                echo "end provider=".$field->getProvider()." <br><br>";
+                                echo " end provider=".$field->getProvider()." <br><br>";
 
                             }
 
                         } //if object
 
                     } //foreach
-                    //echo "<br>";
+                    echo "<br>";
 
                 } //if object
 
@@ -340,24 +352,61 @@ class PatientRepository extends EntityRepository
         return $entity;
     }
 
-    //copy field entity if not existed from source object to destination object
-    public function copyField( $dest, $className, $field, $methodName ) {
+    //replace field entity if not existed from source object to destination object
+    public function copyField( $entity, $field, $className, $methodName ) {
         $em = $this->_em;
-        //echo "id=".$field->getId().", field=".$field."<br>";
+        echo "class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
-        if( !$found ) {
-            echo $methodName." not found !!!!!! => add <br>";
-            $methodName = "add".$methodName;
-            $dest->$methodName( $field );
-        } else {
-            echo $methodName." entity is found in DB<br>";
+
+        //replace
+        if( $field->getValidity() == 0 ) {
+            $field->setValidity($found->getValidity());
         }
 
-        return $dest;
+        if( $found && $field) {
+            echo "Replace provider:(".$found->getProvider()." to ".$field->getProvider().") ";
+            echo ",validity:(".$found->getValidity()." to ".$field->getValidity().") <br>";
+        } else {
+            echo "Replace provider by ".$field->getProvider()." ";
+            echo ",validity by ".$field->getValidity()." <br>";
+        }
+
+        $getMethodName = "get".$methodName;
+        echo "count0 ".$methodName."=".count($entity->$getMethodName())."<br>";
+
+        //echo "date=".$field->getCreationdate()." to ".$found->getCreationdate()." ";
+        $removeMethodName = "remove".$methodName;
+        $entity->$removeMethodName( $found );
+
+        $getMethodName = "get".$methodName;
+        echo "count1 ".$methodName."=".count($entity->$getMethodName())."<br>";
+
+        $addMethodName = "add".$methodName;
+        $entity->$addMethodName( $field );
+
+        $getMethodName = "get".$methodName;
+        echo "count2 ".$methodName."=".count($entity->$getMethodName())."<br>";
+
+//        if( !$found ) {
+//            echo $methodName." not found !!!!!! => add <br>";
+//            $methodName = "add".$methodName;
+//            $entity->$methodName( $field );
+//        } else {
+//            echo $methodName." entity is found in DB<br>";
+//            //copy provider
+//            if( !$found->getProvider() || $found->getProvider() == ""  ) {
+//                $methodName = "get".$methodName;
+//                //$provider = $entity->$methodName( $field )->getProvider();
+//                //$found->setProvider($provider);
+//            }
+//        }
+
+        return $entity;
     }
 
     public function hasValidity( $fields ) {
         foreach( $fields as $field ) {
+            echo "Validity=".$field->getValidity()."<br>";
             if( $field->getValidity() == 1 ) {
                 return true;
             }

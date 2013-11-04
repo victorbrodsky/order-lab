@@ -155,7 +155,7 @@ class Patient implements JsonSerializable
         return $this;
     }
 
-    public function removeMrn(\Oleg\OrderformBundle\Entity\PatientMrn $mrn)
+    public function removeMrn($mrn)
     {
         $this->mrn->removeElement($mrn);
     }
@@ -403,7 +403,7 @@ class Patient implements JsonSerializable
      *
      * @param \Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory
      */
-    public function removeClinicalHistory(\Oleg\OrderformBundle\Entity\PatientClinicalHistory $clinicalHistory)
+    public function removeClinicalHistory($clinicalHistory)
     {
         $this->clinicalHistory->removeElement($clinicalHistory);
     }
@@ -513,7 +513,7 @@ class Patient implements JsonSerializable
      *
      * @param \Oleg\OrderformBundle\Entity\PatientName $age
      */
-    public function removeAge(\Oleg\OrderformBundle\Entity\PatientAge $age)
+    public function removeAge($age)
     {
         $this->age->removeElement($age);
     }
@@ -540,7 +540,7 @@ class Patient implements JsonSerializable
      *
      * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
      */
-    public function removeSex(\Oleg\OrderformBundle\Entity\PatientSex $sex)
+    public function removeSex($sex)
     {
         $this->sex->removeElement($sex);
     }
@@ -568,7 +568,7 @@ class Patient implements JsonSerializable
      *
      * @param \Oleg\OrderformBundle\Entity\PatientDob $dob
      */
-    public function removeDob(\Oleg\OrderformBundle\Entity\PatientDob $dob)
+    public function removeDob($dob)
     {
         $this->dob->removeElement($dob);
     }
