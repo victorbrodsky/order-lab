@@ -535,11 +535,22 @@ ident:      specialStains or relevantScans
     </div>
 {% endmacro %}
 
-{% macro accessionForm( procedure, accession, flag, uid ) %}
+{% macro accessionForm( procedure, accession, flag, uid, cicle, accessionHtml, procedureHtml ) %}
     {% import _self as formmacros %}
     <div id="accession_{{ uid }}">
-        {{ formmacros.fieldIconLabel(accession.accession,"glyphicon-check") }}
+        {#{{ formmacros.fieldIconLabel(accession.accession,"glyphicon-check") }}#}
+        {% if accessionHtml is not defined or accessionHtml == "" %}
+            {{ formmacros.inputArrayField(accession.accession,cicle,"accessionaccession","key") }}
+        {% else  %}
+            <p><div class="accessionaccession">{{ accessionHtml }}</div></p>
+        {% endif %}
+
         {{ formmacros.field(procedure.proceduretype) }}
+        {#{% if procedureHtml is not defined or procedureHtml == "" %}#}
+            {#{{ formmacros.inputArrayField(procedure.proceduretype,cicle,"procedureproceduretype") }}#}
+        {#{% else  %}#}
+            {#<p><div class="accessionproceduretype">{{ procedureHtml }}</div></p>#}
+        {#{% endif %}#}
     </div>
 {% endmacro %}
 

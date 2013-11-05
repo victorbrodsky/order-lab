@@ -115,6 +115,11 @@
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"","prototype") %}
         {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
+
+        {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession,type,"key","prototype") %}
+        {#{% set procedureHtml = formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype) %}#}
+        {#{% set accessionHtml = "" %}#}
+        {% set procedureHtml = "" %}
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
@@ -134,10 +139,12 @@
           data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
-         {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid)|e }}
+         {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid,type,accessionHtml,procedureHtml)|e }}
          "
+         data-prototype-accessionaccession= "{{ accessionHtml|e }}"
+         data-prototype-procedureproceduretype= "{{ procedureHtml|e }}"
 
-         data-prototype-part="
+          data-prototype-part="
         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
         {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}#}
@@ -207,7 +214,8 @@
                         {% for accession in specimen.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
 
-                                    {{ formmacros.accessionForm(specimen,accession,"check",uid) }}
+                                    {#{{ formmacros.accessionForm(specimen,accession,"check",uid) }}#}
+                                    {{ formmacros.accessionForm(specimen,accession,"check",uid,type)|e }}
 
 
                                     {#part#}

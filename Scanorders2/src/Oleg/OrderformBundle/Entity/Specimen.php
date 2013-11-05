@@ -20,35 +20,11 @@ class Specimen
      */
     protected $id;
 
-//    /**
-//     * @ORM\Column(name="proceduretype", type="string", nullable=true, length=300)
-//     */
-//    protected $proceduretype;
-//    /**
-//     * @ORM\OneToOne(targetEntity="ProcedureList", cascade={"persist"})
-//     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id")
-//     **/
-//    private $proceduretype;
     /**
      * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="specimen", cascade={"persist"})
      * @ORM\JoinColumn(name="procedurelist_id", referencedColumnName="id", nullable=true)
      */
     protected $proceduretype;
-    
-//    /**
-//     * Link to a paper or abstract file
-//     * @ORM\Column(name="paper", type="string", nullable=true, length=1000)
-//     */
-//    protected $paper;
-//    /**
-//     * @ORM\OneToOne(targetEntity="Document", inversedBy="specimen", cascade={"persist"})
-//     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id", nullable=true)
-//     */
-//    /**
-//    * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
-//    * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
-//    */
-//    protected $paper;
     
     /**
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="specimen")
@@ -91,29 +67,6 @@ class Specimen
     public function setProceduretype($proceduretype) {
         $this->proceduretype = $proceduretype;
     }
-
-//    /**
-//     * Set paper
-//     *
-//     * @param string $paper
-//     * @return Specimen
-//     */
-//    public function setPaper($paper)
-//    {
-//        $this->paper = $paper;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get paper
-//     *
-//     * @return string
-//     */
-//    public function getPaper()
-//    {
-//        return $this->paper;
-//    }
 
     /**
      * Add accession
@@ -185,16 +138,6 @@ class Specimen
     }
 
     public function __toString() {
-//        $acc_info = "(";
-//        $count = 0;
-//        foreach( $this->accession as $accession ) {
-//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-//            $acc_info .= $count.":" . $accession. "; ";
-//            $count++;
-//        }
-//        $acc_info .= ")";
-//
-//        return 'Procedure: (ID=' . $this->getId() . ',type=' . $this->getProceduretype()." Accession count=".count($this->getAccession())." (".$acc_info.")<br>";
         return 'Procedure: id=' . $this->getId() . "<br>";
     }
 

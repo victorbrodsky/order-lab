@@ -86,7 +86,7 @@ class Patient implements JsonSerializable
     /**
      * Constructor
      */
-    public function __construct($withfields=false,$validity=0)
+    public function __construct( $withfields=false, $validity=0 )
     {
         $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();

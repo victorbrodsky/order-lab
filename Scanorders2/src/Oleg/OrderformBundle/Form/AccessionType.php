@@ -25,28 +25,34 @@ class AccessionType extends AbstractType
 
         if( $this->params['type'] == 'single') {
             $attr['style'] = 'width:100%';
+            $required = true;
+            $gen_attr = array('label'=>'Accession Number [or Label]:','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {
+            $required = false;
+            $gen_attr = array('label'=>'Accession Number [or Label]:','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
             //$attr_width = 'style' => 'width:130px';
         }
 
 
-        $builder->add( 'accession', 'text', array(
-                'label'=>'* Accession Number [or Label]:',
-                'max_length'=>100,
-                'required'=>true,
-                //'attr' => array('class'=>'form-control form-control-modif','style' => 'width:130px', 'required' => 'required', 'title' => 'Example: S12-12345'),
-                'attr' => $attr,
-        ));      
-        
-//        $builder->add('date','date',array(
-//            'widget' => 'single_text',
-//            'format' => 'MM-dd-yyyy',
-//            'attr' => array('class' => 'datepicker'),
-//            'required' => false,
-//            //'data' => new \DateTime(),
-//            'label'=>'Accession Date:',
+//        $builder->add( 'accession', 'text', array(
+//                'label'=>'* Accession Number [or Label]:',
+//                'max_length'=>100,
+//                'required'=>$required,
+//                //'attr' => array('class'=>'form-control form-control-modif','style' => 'width:130px', 'required' => 'required', 'title' => 'Example: S12-12345'),
+//                'attr' => $attr,
 //        ));
-        
+
+        $builder->add('accession', 'collection', array(
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Accession Number [or Label]:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__accessionaccession__',
+        ));
+
         if( $this->params['type'] != 'single' ) {
             
             $builder->add('part', 'collection', array(

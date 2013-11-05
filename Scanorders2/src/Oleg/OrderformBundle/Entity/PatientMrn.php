@@ -7,9 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
-
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PatientArrayFieldRepository")
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ArrayFieldAbstractRepository")
  * @ORM\Table(name="patientmrn")
  */
 class PatientMrn extends PatientArrayFieldAbstract

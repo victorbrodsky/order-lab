@@ -32,7 +32,7 @@ class AccessionRepository extends EntityRepository {
         }
 
         //echo "db accession <br>";
-        return $this->setResult( $entity, $orderinfo );        
+        return $this->setResult( $entity, $orderinfo, $original=null );
     }
     
     public function setResult( $accession, $orderinfo=null ) {

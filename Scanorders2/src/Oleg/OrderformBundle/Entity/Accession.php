@@ -6,11 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-//@UniqueEntity({"accession"})
-         
-//Accession is a key for all other tables such as Patient, Case, Part, Block, Slide (?) 
-//All of them have accession object (?)
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\AccessionRepository")
  * @ORM\Table(name="accession")
@@ -23,21 +19,11 @@ class Accession {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
-     * Accession string i.e. S12-99998. Must be unique.
-     * @ORM\Column(type="string", length=100, unique=true)
-     * @Assert\NotBlank
+     * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="accession", cascade={"persist"})
      */
     protected $accession;
-    
-    /**
-     * Accession create date
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="datetime", nullable=true)
-     */
-    protected $date;
     
     ///////////////////////////////////////////
     
@@ -55,34 +41,25 @@ class Accession {
     protected $part;
     
     /**
-     * Accession might have many slides
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="accession", cascade={"persist"})
-     */
-    //protected $slide;
-    
-    /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
      **/
     protected $orderinfo; 
       
-    public function __construct() {
-        $this->part = new ArrayCollection(); 
-        //$this->slide = new ArrayCollection();
+    public function __construct( $withfields=false, $validity=0 ) {
+        $this->part = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
+
+        //fields:
+        $this->accession = new \Doctrine\Common\Collections\ArrayCollection();
+
+        if( $withfields ) {
+            $this->addAccession( new AccessionAccession($validity) );
+        }
     }
       
     public function __toString()
     {
-//        $part_info = "(";
-//        $count = 0;
-//        foreach( $this->part as $part ) {
-//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-//            $part_info .= $count.":" . $part. "; ";
-//            $count++;
-//        }
-//        $part_info .= ")";
-//        return "Accession: id=".$this->id.", accession#".$this->accession.", partCount=".count($this->part)." (".$part_info.")<br>";
-        return "Accession: id=".$this->id.", accession#".$this->accession.", partCount=".count($this->part)."<br>";
+        return "Accession: id=".$this->id.", accessionCount".count($this->accession).", partCount=".count($this->part)."<br>";
     }
 
     /**
@@ -118,31 +95,25 @@ class Accession {
         return $this->accession;
     }
 
-    /**
-     * Set date
-     *
-     * @param \DateTime $date
-     * @return Accession
-     */
-    public function setDate($date)
+    public function addAccession($accession)
     {
-        $this->date = $date;
-    
+        if( $accession ) {
+            if( !$this->accession->contains($accession) ) {
+                $accession->setAccession($this);
+                $this->accession->add($accession);
+            }
+        }
+
         return $this;
     }
 
-    /**
-     * Get date
-     *
-     * @return \DateTime 
-     */
-    public function getDate()
+    public function removeAccession($accession)
     {
-        return $this->date;
+        $this->accession->removeElement($accession);
     }
 
     /**
-     * Set specimen
+     * Set specimen (parent)
      *
      * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
      * @return Accession
@@ -165,7 +136,7 @@ class Accession {
     }
 
     /**
-     * Add part
+     * Add part (child)
      *
      * @param \Oleg\OrderformBundle\Entity\Part $part
      * @return Accession
@@ -203,49 +174,6 @@ class Accession {
     {
         $this->part = $part;
     }
-
-
-    /**
-     * Add slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return Accession
-     */
-//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        if( !$this->slide->contains($slide) ) {
-//            $slide->setAccession($this);
-//            $this->slide[] = $slide;
-//        }
-//    
-//        return $this;
-//    }
-
-    /**
-     * Remove slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     */
-//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        $this->slide->removeElement($slide);
-//    }
-
-    /**
-     * Get slide
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-//    public function getSlide()
-//    {
-//        return $this->slide;
-//    }
-
-//    public function clearSlide(){
-//        foreach( $this->slide as $thisslide ) {
-//            $this->removeSlide($thisslide);
-//        }
-//    }
 
     public function clearPart(){
         foreach( $this->part as $thispart ) {

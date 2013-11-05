@@ -108,4 +108,8 @@ abstract class ArrayFieldAbstract {
         return $this->validity;
     }
 
+    public function __toString() {
+        return $this->field."";
+    }
+
 }

@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
+//use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 
 class PatientType extends AbstractType
 {
