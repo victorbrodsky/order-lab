@@ -44,35 +44,35 @@ function primaryOrganOption() {
 }
 
 //use for new: add listeners for origin type holder for Multy Form
-function primaryOrganOptionMulti( ids ) { //patient, specimen, accession, part ) {
+function primaryOrganOptionMulti( ids ) { //patient, procedure, accession, part ) {
 
     var patient = ids[0];
-    var specimen = ids[1];
+    var procedure = ids[1];
     var accession = ids[2];
     var part = ids[3];
 
-    var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+    var uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
     var holder = '#primaryOrgan_option_multi_'+uid+'_primaryOrgan';
 
     $('#oleg_orderformbundle_orderinfotype_'+uid+'_origin').change(function(e) {
         var curid = $(this).attr('id');
-        //id: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_1_part_0_origin
+        //id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_1_part_0_origin
         //console.log("click id="+curid);
 
         var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
         var arr2 = arr1[1].split("_");
         //get ids
         var patient = arr2[1];
-        var specimen = arr2[3];
+        var procedure = arr2[3];
         var accession = arr2[5];
         var part = arr2[7];
 
-        uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+        uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
 
-        //primaryOrgan_option_multi_patient_0_specimen_0_accession_0_part_0_primaryOrgan
+        //primaryOrgan_option_multi_patient_0_procedure_0_accession_0_part_0_primaryOrgan
         holder = '#primaryOrgan_option_multi_'+uid+'_primaryOrgan';
 
-        //find holder by 4th chldren id: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_1_part_0_primaryOrgan
+        //find holder by 4th chldren id: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_1_part_0_primaryOrgan
         var childId = "#oleg_orderformbundle_orderinfotype_"+uid+"_primaryOrgan";
         var originElement = $(childId).parent().parent().parent().parent();
 
@@ -110,7 +110,7 @@ function checkValidatePrimaryOrgan() {
 
         //console.log("primamry organ add id="+curid);
 
-        //origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag
+        //origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag
         if( this.name.indexOf("origin") != -1 ) {
 
             var curid = $(this).attr('id');
@@ -119,20 +119,20 @@ function checkValidatePrimaryOrgan() {
             if($('#'+curid).is(':checked')) {
                 //console.log("Metastatic checked! add id="+curid);
 
-                //1) oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+                //1) oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType
                 var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
-                //2) patient_0_specimen_0_accession_0_part_0_diseaseType
+                //2) patient_0_procedure_0_accession_0_part_0_diseaseType
                 var arr2 = arr1[1].split("_");
                 //3) get ids
                 var patient = arr2[1];
-                var specimen = arr2[3];
+                var procedure = arr2[3];
                 var accession = arr2[5];
                 var part = arr2[7];
-                uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+                uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
                 //holder = '#origin_option_multi_'+uid+'_origintag';
 
                 if( curid.indexOf("origin_1") != -1 ) {
-                    //use parent of this symfony's origin id=primaryOrgan_option_multi_patient_0_specimen_0_accession_0_part_0_primaryOrgan
+                    //use parent of this symfony's origin id=primaryOrgan_option_multi_patient_0_procedure_0_accession_0_part_0_primaryOrgan
                     var holder = '#oleg_orderformbundle_orderinfotype_'+uid+'_primaryOrgan';
                     var originElement = $(holder).parent().parent().parent().parent();
                     //console.log("loop validate toggle="+holder);

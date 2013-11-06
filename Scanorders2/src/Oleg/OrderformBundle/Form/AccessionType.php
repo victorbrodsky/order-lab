@@ -29,7 +29,7 @@ class AccessionType extends AbstractType
             $gen_attr = array('label'=>'Accession Number [or Label]:','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {
             $required = false;
-            $gen_attr = array('label'=>'Accession Number [or Label]:','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+            $gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
             //$attr_width = 'style' => 'width:130px';
         }
 

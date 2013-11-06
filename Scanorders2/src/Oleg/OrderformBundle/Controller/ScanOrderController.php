@@ -13,8 +13,8 @@ use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Form\PatientType;
-use Oleg\OrderformBundle\Entity\Specimen;
-use Oleg\OrderformBundle\Form\SpecimenType;
+use Oleg\OrderformBundle\Entity\Procedure;
+use Oleg\OrderformBundle\Form\ProcedureType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
@@ -305,8 +305,8 @@ class ScanOrderController extends Controller {
         $form_patient = $this->createForm(new PatientType($params), $patient);
         $form_patient->bind($request);
 
-        $procedure = new Specimen();
-        $form_procedure = $this->createForm(new SpecimenType($params), $procedure);
+        $procedure = new Procedure();
+        $form_procedure = $this->createForm(new ProcedureType($params), $procedure);
         $form_procedure->bind($request);
 
 //        $files = $this->getRequest()->files;
@@ -397,7 +397,7 @@ class ScanOrderController extends Controller {
                         
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "single" );
             
-            //procedure/specimen: none
+            //procedure/procedure: none
             //$procedure->addProcedure($accession);
 
 //            echo "<br>Before loop:<br>";
@@ -410,9 +410,9 @@ class ScanOrderController extends Controller {
             //$em->persist($entity);          
             //$em->flush();
             
-            $procedure = $em->getRepository('OlegOrderformBundle:Specimen')->processEntity( $procedure, $patient, array($accession) );
-            $patient->addSpecimen($procedure);
-            $entity->addSpecimen($procedure);
+            $procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntity( $procedure, $patient, array($accession) );
+            $patient->addProcedure($procedure);
+            $entity->addProcedure($procedure);
 
             //$procedure->setPaper($paper);
             //$em->persist($patient); 
@@ -462,7 +462,7 @@ class ScanOrderController extends Controller {
 //            echo $entity;
 //            echo $procedure;
 //            echo "orderinfo proc count=".count($procedure->getOrderInfo())."<br>";
-//            echo "proc count=".count($entity->getSpecimen())."<br>";
+//            echo "proc count=".count($entity->getProcedure())."<br>";
 //            echo "orderinfo part count=".count($part->getOrderInfo())."<br>";
 //            echo "part count=".count($entity->getPart())."<br>";
 //            exit();
@@ -530,9 +530,9 @@ class ScanOrderController extends Controller {
 //        $patient->addClinicalHistory($clinicalHistory);
         $form_patient   = $this->createForm(new PatientType($params), $patient);
 
-        $procedure = new Specimen();
+        $procedure = new Procedure();
 
-        $form_procedure = $this->createForm(new SpecimenType($params), $procedure);
+        $form_procedure = $this->createForm(new ProcedureType($params), $procedure);
 
         //$paper = new Document();
         //$form_paper = $this->createForm(new DocumentType(), $paper);

@@ -15,8 +15,8 @@ use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\Specimen;
-use Oleg\OrderformBundle\Form\SpecimenType;
+use Oleg\OrderformBundle\Entity\Procedure;
+use Oleg\OrderformBundle\Form\ProcedureType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
@@ -305,16 +305,16 @@ class MultyScanOrderController extends Controller {
 //        $clinicalHistory = new ClinicalHistory();
 //        $patient->addClinicalHistory($clinicalHistory);
 
-        $procedure = new Specimen();
+        $procedure = new Procedure(true);
         $patient->addSpeciman($procedure);
 
-        //$procedure2 = new Specimen();
+        //$procedure2 = new Procedure();
         //$patient->addSpeciman($procedure2);
 
-        $accession = new Accession();
+        $accession = new Accession(true);
         $procedure->addAccession($accession);
 
-        $part = new Part();      
+        $part = new Part(true);
         $accession->addPart($part);
 
         $diffDiagnoses = new DiffDiagnoses();
@@ -323,7 +323,7 @@ class MultyScanOrderController extends Controller {
         $file = new Document();
         $part->addPaper($file);
 
-        $block = new Block();
+        $block = new Block(true);
         $part->addBlock($block);
 
         $slide = new Slide();
@@ -393,12 +393,12 @@ class MultyScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         //TODO: is it possible to filter orderinfo by JOINs?
-        //INNER JOIN orderinfo.specimen specimen
+        //INNER JOIN orderinfo.procedure procedure
         $query = $em->createQuery('
             SELECT orderinfo
             FROM OlegOrderformBundle:OrderInfo orderinfo
             INNER JOIN orderinfo.patient patient
-            INNER JOIN orderinfo.specimen specimen
+            INNER JOIN orderinfo.procedure procedure
             INNER JOIN orderinfo.accession accession
             INNER JOIN orderinfo.part part
             INNER JOIN orderinfo.block block
@@ -422,7 +422,7 @@ class MultyScanOrderController extends Controller {
 
         //echo $entity;
         //echo $entity->getStatus();
-        //echo "<br>specimen count=".count( $entity->getSpecimen() );
+        //echo "<br>Procedure count=".count( $entity->getProcedure() );
 
         //patient
         foreach( $entity->getPatient() as $patient ) {
@@ -435,20 +435,20 @@ class MultyScanOrderController extends Controller {
                 continue;
             }
 
-//            echo "<br>patient has procedure count=".count( $patient->getSpecimen() )."<br>";
+//            echo "<br>patient has procedure count=".count( $patient->getProcedure() )."<br>";
 
             //procdeure
-            foreach( $patient->getSpecimen() as $specimen ) {
+            foreach( $patient->getProcedure() as $procedure ) {
 
-                if( !$this->hasOrderInfo($specimen,$id) ) {
-                    $patient->removeSpecimen($specimen);
+                if( !$this->hasOrderInfo($procedure,$id) ) {
+                    $patient->removeProcedure($procedure);
                     continue;
                 }
 
                 //accession
-                foreach( $specimen->getAccession() as $accession ) {
+                foreach( $procedure->getAccession() as $accession ) {
                     if( !$this->hasOrderInfo($accession,$id) ) {
-                        $specimen->removeAccession($accession);
+                        $procedure->removeAccession($accession);
                         continue;
                     }
 
@@ -480,7 +480,7 @@ class MultyScanOrderController extends Controller {
             }//procedure
         }//patient
 
-        //echo "<br>specimen count=".count( $entity->getSpecimen() );
+        //echo "<br>Procedure count=".count( $entity->getProcedure() );
 
         $disable = true;
 

@@ -112,15 +112,15 @@ class PatientType extends AbstractType
         ));
 
         if( $this->params['type'] != 'single' ) {
-            $builder->add('specimen', 'collection', array(
-                'type' => new SpecimenType($this->params),
+            $builder->add('procedure', 'collection', array(
+                'type' => new ProcedureType($this->params),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'label' => " ",
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__specimen__',
+                'prototype_name' => '__procedure__',
             ));  
         }
 

@@ -11,14 +11,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\AccessionRepository")
  * @ORM\Table(name="accession")
  */
-class Accession {
+class Accession extends OrderAbstract {
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+//    /**
+//     * @ORM\Id
+//     * @ORM\Column(type="integer")
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="accession", cascade={"persist"})
@@ -27,12 +27,12 @@ class Accession {
     
     ///////////////////////////////////////////
     
-    //Accession belongs to exactly one Specimen => Accession has only one Specimen
+    //Accession belongs to exactly one Procedure => Accession has only one Procedure
     /**
-     * @ORM\ManyToOne(targetEntity="Specimen", inversedBy="accession")
-     * @ORM\JoinColumn(name="specimen_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="accession")
+     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id")
      */
-    protected $specimen;
+    protected $procedure;
     
     /**
      * Accession might have many parts
@@ -40,14 +40,15 @@ class Accession {
      */
     protected $part;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
-     **/
-    protected $orderinfo; 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
+//     **/
+//    protected $orderinfo;
       
     public function __construct( $withfields=false, $validity=0 ) {
+        parent::__construct();
         $this->part = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
+        //$this->orderinfo = new ArrayCollection();
 
         //fields:
         $this->accession = new \Doctrine\Common\Collections\ArrayCollection();
@@ -62,15 +63,15 @@ class Accession {
         return "Accession: id=".$this->id.", accessionCount".count($this->accession).", partCount=".count($this->part)."<br>";
     }
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Set accession
@@ -113,26 +114,26 @@ class Accession {
     }
 
     /**
-     * Set specimen (parent)
+     * Set procedure (parent)
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
      * @return Accession
      */
-    public function setSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen = null)
+    public function setProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure = null)
     {
-        $this->specimen = $specimen;
+        $this->procedure = $procedure;
     
         return $this;
     }
 
     /**
-     * Get specimen
+     * Get procedure
      *
-     * @return \Oleg\OrderformBundle\Entity\Specimen 
+     * @return \Oleg\OrderformBundle\Entity\Procedure
      */
-    public function getSpecimen()
+    public function getProcedure()
     {
-        return $this->specimen;
+        return $this->procedure;
     }
 
     /**
@@ -188,30 +189,30 @@ class Accession {
      * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
      * @return Accession
      */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {      
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }   
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
+//        }
+//    }
+//
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+//
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
 }

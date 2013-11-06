@@ -16,15 +16,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="patient")
  * @ORM\HasLifecycleCallbacks
  */
-class Patient implements JsonSerializable
+class Patient extends OrderAbstract implements JsonSerializable
 {
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+//    /**
+//     * @ORM\Id
+//     * @ORM\Column(type="integer")
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
@@ -57,39 +57,40 @@ class Patient implements JsonSerializable
      */
     protected $clinicalHistory;
         
-    /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
-     **/
-    protected $orderinfo; 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
+//     **/
+//    protected $orderinfo;
     
     //, cascade={"persist"}
     /**
-     * Patient might have many Specimens or Procedures
+     * Patient might have many Procedures or Procedures
      * 
-     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="patient")
+     * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
      */
-    protected $specimen;
+    protected $procedure;
 
-    /**
-     * status: use to indicate if the patient with this mrn is reserved only but not submitted
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $status;
+//    /**
+//     * status: use to indicate if the patient with this mrn is reserved only but not submitted
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $status;
 
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     *
-     */
-    private $creationdate;
+//    /**
+//     * @var \DateTime
+//     * @ORM\Column(type="datetime", nullable=true)
+//     *
+//     */
+//    private $creationdate;
     
     /**
      * Constructor
      */
     public function __construct( $withfields=false, $validity=0 )
     {
-        $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->specimen = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
+        parent::__construct();
+        $this->procedure = new \Doctrine\Common\Collections\ArrayCollection();
 
         //fields:
         $this->mrn = new \Doctrine\Common\Collections\ArrayCollection();
@@ -115,10 +116,10 @@ class Patient implements JsonSerializable
      *
      * @return integer 
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Set mrn
@@ -254,120 +255,110 @@ class Patient implements JsonSerializable
     }
 
     /**
-     * Add specimen
+     * Add Procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\Procedure $Procedure
      * @return Patient
      */
-    public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        if( !$this->specimen->contains($specimen) ) {
-            $specimen->setPatient($this);
-            $this->specimen->add($specimen);
+        if( !$this->procedure->contains($procedure) ) {
+            $procedure->setPatient($this);
+            $this->procedure->add($procedure);
         }
 
         return $this;
     }
-    public function addSpeciman(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function addSpeciman(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->addSpecimen($specimen);
+        $this->addProcedure($procedure);
         return $this;
     }
 
     /**
-     * Remove specimen
+     * Remove procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\procedure $procedure
      */
-    public function removeSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->specimen->removeElement($specimen);
+        $this->procedure->removeElement($procedure);
     }
-    public function removeSpeciman(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function removeSpeciman(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->removeSpecimen($specimen);
+        $this->removeProcedure($procedure);
     }
 
     /**
-     * Get specimen
+     * Get procedure
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSpecimen()
+    public function getProcedure()
     {
-        return $this->specimen;
+        return $this->procedure;
     }
     
-    public function setSpecimen(\Doctrine\Common\Collections\ArrayCollection $specimen)
+    public function setProcedure(\Doctrine\Common\Collections\ArrayCollection $procedure)
     {
-        $this->specimen = $specimen;
+        $this->procedure = $procedure;
     }
 
-    public function clearSpecimen(){
-        foreach( $this->specimen as $thisspecimen ) {
-            $this->removeSpecimen($thisspecimen);
+    public function clearProcedure(){
+        foreach( $this->procedure as $thisprocedure ) {
+            $this->removeProcedure($thisprocedure);
         }
     }
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Patient
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
-    {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }    
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
-    
-    public function __toString(){
-
-//        $specimen_info = "(";
-//        $count = 0;
-//        foreach( $this->specimen as $specimen ) {
-//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-//            $specimen_info .= $count.":" . $specimen. "; ";
-//            $count++;
+//    /**
+//     * Add orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @return Patient
+//     */
+//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
+//    {
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
 //        }
-//        $specimen_info .= ")";
+//    }
 //
-//        return "Patient: id=".$this->id.", mrn=".$this->mrn.", orderinfoCount=".count($this->orderinfo).", specimenCount=".count($this->specimen)." (".$specimen_info.")<br>";
-        $mrnStr  = "";
-        foreach($this->mrn as $mrn) {
-            $mrnStr = $mrnStr." ".$mrn;
-        }
-        $nameStr  = "";
-        foreach($this->name as $name) {
-            $nameStr = $nameStr." ".$name;
-        }
-        $ageStr  = "";
-        foreach($this->age as $age) {
-            $ageStr = $ageStr." ".$age;
-        }
-        return "Patient: id=".$this->id.", mrnArr=".$mrnStr.", nameArr=".$nameStr.", ageArr=".$ageStr."<br>";
-    }
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+//
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
+//
+//    public function __toString(){
+//
+//        $mrnStr  = "";
+//        foreach($this->mrn as $mrn) {
+//            $mrnStr = $mrnStr." ".$mrn;
+//        }
+//        $nameStr  = "";
+//        foreach($this->name as $name) {
+//            $nameStr = $nameStr." ".$name;
+//        }
+//        $ageStr  = "";
+//        foreach($this->age as $age) {
+//            $ageStr = $ageStr." ".$age;
+//        }
+//        return "Patient: id=".$this->id.", mrnArr=".$mrnStr.", nameArr=".$nameStr.", ageArr=".$ageStr."<br>";
+//    }
     
 
     /**
@@ -418,37 +409,37 @@ class Patient implements JsonSerializable
         return $this->clinicalHistory;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreationdate()
-    {
-        $this->creationdate = new \DateTime();;
-    }
+//    /**
+//     * @ORM\PrePersist
+//     */
+//    public function setCreationdate()
+//    {
+//        $this->creationdate = new \DateTime();;
+//    }
+//
+//    /**
+//     * @return \DateTime
+//     */
+//    public function getCreationdate()
+//    {
+//        return $this->creationdate;
+//    }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreationdate()
-    {
-        return $this->creationdate;
-    }
-
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
+//    /**
+//     * @param mixed $status
+//     */
+//    public function setStatus($status)
+//    {
+//        $this->status = $status;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getStatus()
+//    {
+//        return $this->status;
+//    }
 
 
 

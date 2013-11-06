@@ -152,10 +152,10 @@ class OrderInfo
     protected $research;
        
     /**
-     * @ORM\ManyToMany(targetEntity="Specimen", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="specimen_orderinfo")
+     * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="procedure_orderinfo")
      **/
-    protected $specimen;
+    protected $procedure;
     
     /**
      * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
@@ -199,7 +199,7 @@ class OrderInfo
     public function __construct()
     {
         $this->patient = new ArrayCollection();
-        $this->specimen = new ArrayCollection();
+        $this->procedure = new ArrayCollection();
         $this->accession = new ArrayCollection();
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
@@ -523,36 +523,36 @@ class OrderInfo
     
 
     /**
-     * Add specimen
+     * Add procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\procedure $procedure
      * @return OrderInfo
      */
-    public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {         
-        if( !$this->specimen->contains($specimen) ) {            
-            $this->specimen->add($specimen);
+        if( !$this->procedure->contains($procedure) ) {            
+            $this->procedure->add($procedure);
         }   
     }
 
     /**
-     * Remove specimen
+     * Remove procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
      */
-    public function removeSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->specimen->removeElement($specimen);
+        $this->procedure->removeElement($procedure);
     }
 
     /**
-     * Get specimen
+     * Get procedure
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSpecimen()
+    public function getProcedure()
     {
-        return $this->specimen;
+        return $this->procedure;
     }
 
     /**

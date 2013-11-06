@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Oleg\OrderformBundle\Entity\AccessionArrayFieldAbstract;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ArrayFieldAbstractRepository")
+ * @ORM\Entity
  * @ORM\Table(name="accessionaccession")
  */
 class AccessionAccession extends AccessionArrayFieldAbstract

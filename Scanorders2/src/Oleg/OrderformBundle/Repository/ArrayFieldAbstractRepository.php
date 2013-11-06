@@ -8,9 +8,15 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use Oleg\OrderformBundle\Entity\PatientMrn;
+use Oleg\OrderformBundle\Entity\AccessionAccession;
+
 class ArrayFieldAbstractRepository extends EntityRepository {
 
     private $log;
+
+    const STATUS_RESERVED = "reserved";
+    const STATUS_VALID = "valid";
 
     public function __construct($em, $class)
     {
@@ -20,7 +26,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     //process single array of fields (i.e. ClinicalHistory Array of Fields)
-    public function processFieldArrays($entity, $provider, $original=null) {
+    public function processFieldArrays( $entity, $orderinfo, $original=null ) {
+
+        $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
 
         //$class_methods = get_class_methods($dest);
         $class = new \ReflectionClass($entity);
@@ -141,6 +149,103 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
         return false;
+    }
+
+    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName )
+    {
+        //echo "fieldStr=".$fieldStr." ";
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
+            JOIN c.'.$fieldName.' cfield
+            WHERE cfield.field = :field'
+            )->setParameter('field', $fieldStr);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    public function deleteIfReserved( $fieldStr, $className, $fieldName ) {
+        //echo "fieldStr=".$fieldStr." ";
+        $entity = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName);
+        if( $entity->getStatus() == self::STATUS_RESERVED ) {
+            //echo "id=".$entity->getId()." ";
+            $em = $this->_em;
+            $em->remove($entity);
+            $em->flush();
+            return true;
+        }
+        return false;
+    }
+
+    //$className: Patient
+    //$fieldName: mrn
+    public function createElement( $status = null, $provider = null, $className, $fieldName ) {
+        if( !$status ) {
+            $status = self::STATUS_RESERVED;
+        }
+        $em = $this->_em;
+        $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+        //echo "fieldValue=".$fieldValue;
+
+        $fieldEntityName = ucfirst($className).ucfirst($fieldName);
+        $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
+        $field = new $fieldClass();
+
+        $field->setField($fieldValue);
+        if( $provider ) {
+            $field->setProvider($provider);
+        }
+
+        $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
+        $entity = new $entityClass();
+        $keyAddMethod = "add".ucfirst($fieldName);
+        $entity->$keyAddMethod($field);
+        $entity->setStatus($status);
+        $em->persist($entity);
+        //exit();
+        $em->flush();
+        return $entity;
+    }
+
+    //check the last NOMRNPROVIDED MRN in DB and construct next available MRN
+    //$name: NOMRNPROVIDED
+    //$className: i.e. Patient
+    //$fieldName: i.e. mrn
+    public function getNextNonProvided( $name, $className, $fieldName ) {
+
+//        $query = $this->getEntityManager()
+//            ->createQuery('
+//            SELECT MAX(pmrn.field) as maxmrn FROM OlegOrderformBundle:Patient p
+//            JOIN p.mrn pmrn
+//            WHERE pmrn.field LIKE :mrn'
+//            )->setParameter('mrn', '%NOMRNPROVIDED%');
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
+            JOIN c.'.$fieldName.' cfield
+            WHERE cfield.field LIKE :field'
+            )->setParameter('field', '%'.$name.'%');
+
+        $lastField = $query->getSingleResult();
+        $index = 'max'.$fieldName;
+        $lastFieldStr = $lastField[$index];
+        //echo "lastFieldStr=".$lastFieldStr."<br>";
+        $fieldIndexArr = explode("-",$lastFieldStr);
+        //echo "count=".count($fieldIndexArr)."<br>";
+        if( count($fieldIndexArr) > 1 ) {
+            $fieldIndex = $fieldIndexArr[1];
+        } else {
+            $fieldIndex = 0;
+        }
+        $fieldIndex = ltrim($fieldIndex,'0') + 1;
+        $paddedfield = str_pad($fieldIndex,10,'0',STR_PAD_LEFT);
+        //echo "paddedfield=".$paddedfield."<br>";
+        //exit();
+        return $name.'-'.$paddedfield;
     }
 
 }

@@ -251,15 +251,15 @@
 {% endmacro %}
 
 {#used by multy form#}
-{% macro diseaseMulti(form, patient, specimen, accession, part, attr ) %}
+{% macro diseaseMulti(form, patient, procedure, accession, part, attr ) %}
 
     {% import _self as formmacros %}
     {{ formmacros.field(form.diseaseType,attr) }}
 
-    {% set uid = 'patient_'~patient~'_specimen_'~specimen~'_accession_'~accession~'_part_'~part %}
+    {% set uid = 'patient_'~patient~'_procedure_'~procedure~'_accession_'~accession~'_part_'~part %}
 
     {#  optional for origin  #}
-    {#id = origin_option_multi_patient_0_specimen_0_accession_0_part_0_diseaseType#}
+    {#id = origin_option_multi_patient_0_procedure_0_accession_0_part_0_diseaseType#}
     <div id="origin_option_multi_{{ uid }}_origintag" class="collapse">
 
         <div class="well" aling='center'>
@@ -287,8 +287,8 @@
 {#####################  Collection Input Field  ########################}
 {% macro collectionInput(objectForm, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, attr) %}
 
-    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
-    {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
+    {% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
+    {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
 
     <p>
     <div class="row">
@@ -435,7 +435,7 @@ ident:      specialStains or relevantScans
 #}
 {% macro collInput(coll, type, formtype, ident, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
 
-    {% set addBtnId = 'addbtn_patient_'~patientCount~'_specimen_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~ident %}
+    {% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~ident %}
 
     <p>
     <div class="row">
@@ -535,7 +535,7 @@ ident:      specialStains or relevantScans
     </div>
 {% endmacro %}
 
-{% macro accessionForm( procedure, accession, flag, uid, cicle, accessionHtml, procedureHtml ) %}
+{% macro accessionForm( procedure, accession, flag, uid, cicle, procedureHtml, accessionHtml ) %}
     {% import _self as formmacros %}
     <div id="accession_{{ uid }}">
         {#{{ formmacros.fieldIconLabel(accession.accession,"glyphicon-check") }}#}
@@ -545,12 +545,12 @@ ident:      specialStains or relevantScans
             <p><div class="accessionaccession">{{ accessionHtml }}</div></p>
         {% endif %}
 
-        {{ formmacros.field(procedure.proceduretype) }}
-        {#{% if procedureHtml is not defined or procedureHtml == "" %}#}
-            {#{{ formmacros.inputArrayField(procedure.proceduretype,cicle,"procedureproceduretype") }}#}
-        {#{% else  %}#}
-            {#<p><div class="accessionproceduretype">{{ procedureHtml }}</div></p>#}
-        {#{% endif %}#}
+        {#{{ formmacros.field(procedure.name) }}#}
+        {% if procedureHtml is not defined or procedureHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.name,cicle,"procedurename") }}
+        {% else  %}
+            <p><div class="procedurename">{{ procedureHtml }}</div></p>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -606,33 +606,33 @@ ident:      specialStains or relevantScans
                 {{ formmacros.field(patient.age,"true") }}
                 {{ formmacros.inputArrayField(patient.clinicalHistory) }}
 
-                {#specimen/procedure#}
+                {#procedure/procedure#}
                 {% set procedureCount = 0 %}
-                {% for specimen in patient.specimen %}
+                {% for procedure in patient.procedure %}
                     {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                 <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
                     {{ formmacros.orderinfo_panel_header(
-                    'procedure', cicle, procedureCount, patient.specimen|length, uid,
+                    'procedure', cicle, procedureCount, patient.procedure|length, uid,
                     patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
                     }}
 
                     <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
-                        {#{{ formmacros.field(specimen.proceduretype) }}#}
+                        {#{{ formmacros.field(procedure.name) }}#}
 
                         {#accession#}
                         {% set accessionCount = 0 %}
-                        {% for accession in specimen.accession %}
+                        {% for accession in procedure.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                             {#<div id="formpanel_accession_{{ uid }}" class="panel panel-accession">#}
                             {#{{ formmacros.orderinfo_panel_header(#}
-                            {#'accession', type, accessionCount, specimen.accession|length, uid,#}
+                            {#'accession', type, accessionCount, procedure.accession|length, uid,#}
                             {#patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)#}
                             {#}}#}
 
                             {#<div id="form_body_accession_{{ uid }}" class="panel-body collapse in">#}
                             {{ formmacros.field(accession.accession) }}
                             {#{{ formmacros.field(accession.date) }}                                       #}
-                            {{ formmacros.field(specimen.proceduretype) }}
+                            {{ formmacros.field(procedure.name) }}
 
                             {#part#}
                             {% set partCount = 0 %}
@@ -743,9 +743,9 @@ ident:      specialStains or relevantScans
 
 
                     </div>
-                    </div>{#end of specimen #}
+                    </div>{#end of procedure #}
                     {% set procedureCount = procedureCount + 1 %}
-                {% endfor %} {# specimen loop #}
+                {% endfor %} {# procedure loop #}
 
 
             </div>{# end of form_body_patient_ #}

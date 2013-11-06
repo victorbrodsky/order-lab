@@ -76,7 +76,7 @@
     <form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
 
-    {#{{ form_widget(form.patient[0].specimen[0].accession) }}#}
+    {#{{ form_widget(form.patient[0].procedure[0].accession) }}#}
 
     {% if type == 'show' %}
         {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
@@ -116,15 +116,13 @@
         {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
 
-        {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.accession,type,"key","prototype") %}
-        {#{% set procedureHtml = formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.proceduretype) %}#}
-        {#{% set accessionHtml = "" %}#}
-        {% set procedureHtml = "" %}
+        {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype") %}
+        {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
     {#{% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}#}
-    {% set uid = '__patient_____specimen_____accession_____part_____block_____slide_____scan_____stain__' %}
+    {% set uid = '__patient_____procedure_____accession_____part_____block_____slide_____scan_____stain__' %}
     <div id="form-prototype-data"
 
       {% if type != 'show' %}
@@ -139,43 +137,43 @@
           data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
-         {{ formmacros.accessionForm(form.patient.vars.prototype.specimen.vars.prototype,form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype,"check",uid,type,accessionHtml,procedureHtml)|e }}
+         {{ formmacros.accessionForm(form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,procedureHtml,accessionHtml)|e }}
          "
          data-prototype-accessionaccession= "{{ accessionHtml|e }}"
-         data-prototype-procedureproceduretype= "{{ procedureHtml|e }}"
+         data-prototype-procedurename= "{{ procedureHtml|e }}"
 
           data-prototype-part="
-        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
-        {#{{ formmacros.diseaseMulti(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
-        {{ formmacros.partForm( form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, 0, 0, 0, 0 )|e }}
+        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
+        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
+        {#{{ formmacros.diseaseMulti(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
+        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, 0, 0, 0, 0 )|e }}
         "
 
          data-prototype-diffdiagnoses="
-        {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}
+        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}
         "
 
          data-prototype-block="
-        {#{{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
-        {{ formmacros.fieldIconLabel(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
+        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
+        {{ formmacros.fieldIconLabel(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
         "
          data-prototype-slide="
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}
-        {{ formmacros.field(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
+        {{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
+        {{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.mag)|e }}
+        {{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}
+        {{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}
+        {{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}
         "
 
          data-prototype-relevantscans="
-        {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.name)|e }}
+        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.name)|e }}
         "
 
          data-prototype-specialstains="
-        {{ form_widget(form.patient.vars.prototype.specimen.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains.vars.prototype.name)|e }}
+        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains.vars.prototype.name)|e }}
         "
       {% endif %}
 
@@ -197,13 +195,13 @@
 
                 {{ formmacros.patientForm(patient,"check",uid,type) }}
 
-                {#specimen/procedure#}
+                {#procedure/procedure#}
                 {% set procedureCount = 0 %}
-                {% for specimen in patient.specimen %}
+                {% for procedure in patient.procedure %}
                     {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                 <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
                     {{ formmacros.orderinfo_panel_header(
-                    'procedure', type, procedureCount, patient.specimen|length, uid,
+                    'procedure', type, procedureCount, patient.procedure|length, uid,
                     patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
                     }}
 
@@ -211,11 +209,11 @@
 
                         {#accession#}
                         {% set accessionCount = 0 %}
-                        {% for accession in specimen.accession %}
+                        {% for accession in procedure.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
 
-                                    {#{{ formmacros.accessionForm(specimen,accession,"check",uid) }}#}
-                                    {{ formmacros.accessionForm(specimen,accession,"check",uid,type)|e }}
+                                    {#{{ formmacros.accessionForm(procedure,accession,"check",uid) }}#}
+                                    {{ formmacros.accessionForm(procedure,accession,"check",uid,type) }}
 
 
                                     {#part#}
@@ -321,9 +319,9 @@
 
 
                     </div>
-                    </div>{#end of specimen #}
+                    </div>{#end of procedure #}
                     {% set procedureCount = procedureCount + 1 %}
-                {% endfor %} {# specimen loop #}
+                {% endfor %} {# procedure loop #}
 
 
             </div>{# end of form_body_patient_ #}

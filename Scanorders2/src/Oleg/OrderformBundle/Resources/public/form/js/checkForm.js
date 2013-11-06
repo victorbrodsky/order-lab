@@ -34,6 +34,8 @@ function checkForm( elem ) {
     var idsArr = inputId.split("_");
 
     var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
+    var fieldName = idsArr[idsArr.length-fieldIndex];
+    //console.log("name="+name);
     //var patient = idsArr[4];
     //var key = idsArr[4];
 
@@ -56,13 +58,13 @@ function checkForm( elem ) {
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
         var keyValue =keyElement.element.val();
-        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue);
+        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue);
 
         if( !keyValue ) {
             //console.log("key undefinded!");
 //            $('#'+inputId).popover( {content:"Please fill out key field"} );
 //            $('#'+inputId).popover('show');
-            setKeyValue(element,keyElement.name);
+            setKeyValue(element,name+fieldName);
             //disableInElementBlock(element, false, null, "notkey", null);
             //invertButton(element);
             return;
@@ -202,7 +204,7 @@ function setArrayField(element, dataArr, parent) {
         // 0        1               2           3    4      5          6        7
         //oleg_orderformbundle_orderinfotype_patient_0_clinicalHistory_0_clinicalHistory
         // 0        1               2           3    4      5   6     7     8   9  10      11      12 13
-        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diffDiagnoses_0_name
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDiagnoses_0_name
 
         var addFlag = true;
 
@@ -583,9 +585,9 @@ function invertButton(btn) {
 
 function setKeyValue( btnElement, name ) {
 
-    //console.log("name="+ name);
+    console.log("set key value name="+ name);
 
-    if( name == "name" ) return;
+    //if( name == "name" ) return;
 
 //    if( name != "accession" ) {
 //        //data = new Array();

@@ -57,18 +57,18 @@ class CheckController extends Controller {
      * @Route("/patient", name="get-patientdata")
      * @Method("GET")   //TODO: use POST?
      */
-    public function getAction() {
+    public function getPatientAction() {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
         $request = $this->get('request');
-        $mrn = $request->get('key');
+        $key = $request->get('key');
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn($mrn);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn");   //findOneByIdJoinedToMrn($mrn);
 
         if( $entity ) {
 
@@ -131,10 +131,10 @@ class CheckController extends Controller {
 
     /**
      * Get next available MRN from DB
-     * @Route("/mrn", name="get-mrn")
+     * @Route("/patientmrn", name="create-mrn")
      * @Method("GET")
      */
-    public function getMrnAction() {
+    public function createPatientAction() {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
@@ -176,7 +176,7 @@ class CheckController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key );
+        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key,"Patient","mrn" );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -195,11 +195,45 @@ class CheckController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-        //$em = $this->getDoctrine()->getManager();
-        //$mrn = $em->getRepository('OlegOrderformBundle:Patient')->getNextMrn();
+        $request = $this->get('request');
+        $key = $request->get('key');
+
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession");
+
+        if( $entity ) {
+
+            $element = array(
+                'id'=>$entity->getId(),
+                'accession'=>$this->getArrayFieldJson($entity->getAccession()),
+            );
+        } else {
+            $element = array();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * Get next available Accession from DB
+     * @Route("/accessionaccession", name="create-accession")
+     * @Method("GET")
+     */
+    public function createAccessionAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession");
+        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
         $element = array(
-            'accession'=>""
+            'id'=>$entity->getId(),
+            'accession'=>$this->getArrayFieldJson($entity->getAccession()),
         );
 
         $response = new Response();
@@ -208,5 +242,23 @@ class CheckController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/accession/check/{key}", name="delete-accession")
+     * @Method("DELETE")
+     */
+    public function deleteAccessionAction($key) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $res = $em->getRepository('OlegOrderformBundle:Accession')->deleteIfReserved( $key,"Accession","accession" );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
 
 }

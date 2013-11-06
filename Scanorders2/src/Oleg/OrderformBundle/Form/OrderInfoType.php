@@ -43,6 +43,7 @@ class OrderInfoType extends AbstractType
         $builder->add( 'type', 'hidden' ); 
         
         if( $this->params['type'] != 'single' ) {
+            //add children
             $builder->add('patient', 'collection', array(
                 'type' => new PatientType($this->params),    //$this->type),
                 'required' => false,

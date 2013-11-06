@@ -59,14 +59,14 @@ class ProcedureList
     private $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Specimen", mappedBy="proceduretype")
+     * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="field")
      */
-    protected $specimen;
+    protected $procedure;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->specimen = new ArrayCollection();
+        $this->procedure = new ArrayCollection();
     }
 
     /**
@@ -239,35 +239,35 @@ class ProcedureList
     
 
     /**
-     * Add specimen
+     * Add procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
      * @return ProcedureList
      */
-    public function addSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->specimen[] = $specimen;
+        $this->procedure[] = $procedure;
     
         return $this;
     }
 
     /**
-     * Remove specimen
+     * Remove procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\Specimen $specimen
+     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
      */
-    public function removeSpecimen(\Oleg\OrderformBundle\Entity\Specimen $specimen)
+    public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->specimen->removeElement($specimen);
+        $this->procedure->removeElement($procedure);
     }
 
     /**
-     * Get specimen
+     * Get procedure
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSpecimen()
+    public function getProcedure()
     {
-        return $this->specimen;
+        return $this->procedure;
     }
 }

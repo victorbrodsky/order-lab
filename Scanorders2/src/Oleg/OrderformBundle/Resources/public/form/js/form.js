@@ -17,7 +17,7 @@ $(document).ready(function() {
     originOptionMulti( new Array("0","0","0","0") );
     primaryOrganOptionMulti( new Array("0","0","0","0") );
 
-    //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
+    //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0
     checkValidate();
     checkValidatePrimaryOrgan();
 
@@ -303,7 +303,7 @@ function getForm( name, id, idsorig, ids, idsm ) {
 
 function getFormBody( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    //console.log("name="+name+",patient="+patientid+ ",specimen="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
+    //console.log("name="+name+",patient="+patientid+ ",procedure="+procedureid+",accession="+accessionid+",part="+partid+",block="+blockid+",slide="+slideid);
 
     var collectionHolder =  $('#form-prototype-data');
 
@@ -313,8 +313,8 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     //console.log("before replace patient...");
     var newForm = prototype.replace(/__patient__/g, patientid);
-    //console.log("before replace specimen... NewForm="+newForm);
-    newForm = newForm.replace(/__specimen__/g, procedureid);
+    //console.log("before replace procedure... NewForm="+newForm);
+    newForm = newForm.replace(/__procedure__/g, procedureid);
     newForm = newForm.replace(/__accession__/g, accessionid);
     newForm = newForm.replace(/__part__/g, partid);
     newForm = newForm.replace(/__block__/g, blockid);
@@ -325,10 +325,10 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     //newForm = newForm.replace(/__clinicalHistory__/g, 0);   //add only one clinical history to the new form
     newForm = newForm.replace(/__paper__/g, 0);   //add only one clinical history to the new form
 
-    //replace origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag with correct ids
-    //origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag
-    var newOriginId = "origin_option_multi_patient_"+patientid+"_specimen_"+procedureid+"_accession_"+accessionid+"_part_"+partid+"_origintag";
-    newForm = newForm.replace(/origin_option_multi_patient_0_specimen_0_accession_0_part_0_origintag/g, newOriginId);
+    //replace origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag with correct ids
+    //origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag
+    var newOriginId = "origin_option_multi_patient_"+patientid+"_procedure_"+procedureid+"_accession_"+accessionid+"_part_"+partid+"_origintag";
+    newForm = newForm.replace(/origin_option_multi_patient_0_procedure_0_accession_0_part_0_origintag/g, newOriginId);
 
     newForm = newForm.replace(/__[a-zA-Z0-9]+__/g, 0); //replace everything what is left __*__ by 0 => replace all array fields by 0
 
@@ -602,23 +602,23 @@ function originOption() {
 }
 
 //use for new: add listeners for disease type holder for Multy Form
-function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
+function originOptionMulti( ids ) { //patient, procedure, accession, part ) {
 
-//    var uid = "";   //'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+//    var uid = "";   //'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
 //    var holder = "";    //'#origin_option_multi_'+uid;
 
     var patient = ids[0];
-    var specimen = ids[1];
+    var procedure = ids[1];
     var accession = ids[2];
     var part = ids[3];
 
-    var uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+    var uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
     var holder = '#origin_option_multi_'+uid+'_origintag';
     //console.log("on change:"+'#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType_0');
 
     //var curid = "";
 
-    //id of Neoplastic radio button: oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType_0
+    //id of Neoplastic radio button: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0
 
     //set not required
     //$('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').attr('required', false);
@@ -628,17 +628,17 @@ function originOptionMulti( ids ) { //patient, specimen, accession, part ) {
         var curid = $(this).attr('id');
         //console.log("click id="+curid);
 
-        //oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType
         var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
-        //patient_0_specimen_0_accession_0_part_0_diseaseType
+        //patient_0_procedure_0_accession_0_part_0_diseaseType
         var arr2 = arr1[1].split("_");
         //get ids
         var patient = arr2[1];
-        var specimen = arr2[3];
+        var procedure = arr2[3];
         var accession = arr2[5];
         var part = arr2[7];
 
-        uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+        uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
         holder = '#origin_option_multi_'+uid+'_origintag';
         //console.log(holder);
 
@@ -686,20 +686,20 @@ function checkValidate() {
             if($('#'+curid).is(':checked')) {
                 //console.log("checked! add id="+curid);
 
-                //1) oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_0_diseaseType
+                //1) oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType
                 var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
-                //2) patient_0_specimen_0_accession_0_part_0_diseaseType
+                //2) patient_0_procedure_0_accession_0_part_0_diseaseType
                 var arr2 = arr1[1].split("_");
                 //3) get ids
                 var patient = arr2[1];
-                var specimen = arr2[3];
+                var procedure = arr2[3];
                 var accession = arr2[5];
                 var part = arr2[7];
-                uid = 'patient_'+patient+'_specimen_'+specimen+'_accession_'+accession+'_part_'+part;
+                uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
                 //holder = '#origin_option_multi_'+uid+'_origintag';
 
                 if( curid.indexOf("diseaseType_0") != -1 ) {
-                    //use parent of this symfony's origin id=oleg_orderformbundle_orderinfotype_patient_0_specimen_0_accession_0_part_3_origin
+                    //use parent of this symfony's origin id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_3_origin
                     var holder = '#oleg_orderformbundle_orderinfotype_'+uid+'_origin';
                     var originElement = $(holder).parent().parent().parent().parent();
                     //console.log("loop validate toggle="+holder);
