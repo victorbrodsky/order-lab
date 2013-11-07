@@ -141,7 +141,8 @@ class CheckController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,null,"Patient","mrn");
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
 //        $entity = new Patient();
@@ -184,6 +185,9 @@ class CheckController extends Controller {
         return $response;
     }
 
+
+
+    /************************ ACCESSION *************************/
     /**
      * Get next available MRN from DB
      * @Route("/accession", name="get-accession")
@@ -200,10 +204,13 @@ class CheckController extends Controller {
 
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession");
 
+        //$procedure = $this->getDoctrine()->getRepository('OlegOrderformBundle:Procedure')->findOneByAccession($entity);
+
         if( $entity ) {
 
             $element = array(
                 'id'=>$entity->getId(),
+                'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession()),
             );
         } else {

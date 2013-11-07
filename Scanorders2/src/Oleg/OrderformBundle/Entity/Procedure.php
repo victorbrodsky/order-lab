@@ -6,19 +6,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Specimen or Case or Procedure
+ * Procedure
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureRepository")
- * @ORM\Table(name="procedure")
+ * @ORM\Table(name="procedures")
  */
-class Procedure
+class Procedure extends OrderAbstract
 {
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+//    /**
+//     * @ORM\Id
+//     * @ORM\Column(type="integer")
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    protected $id;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="procedure", cascade={"persist"})
@@ -31,13 +31,14 @@ class Procedure
     protected $name;
     
     /**
+     * parent
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="procedure")
      * @ORM\JoinColumn(name="patient_id", referencedColumnName="id")
      */
     protected $patient; 
     
     /**
-     * Procedure might have many Accession
+     * Procedure might have many Accession (children)
      * 
      * @ORM\OneToMany(targetEntity="Accession", mappedBy="procedure")
      */
@@ -50,8 +51,9 @@ class Procedure
     protected $orderinfo; 
 
     public function __construct( $withfields=false, $validity=0 ) {
+        parent::__construct();
         $this->accession = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
+        //$this->orderinfo = new ArrayCollection();
 
         //fields:
         $this->name = new \Doctrine\Common\Collections\ArrayCollection();
@@ -66,10 +68,10 @@ class Procedure
      *
      * @return integer 
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     public function getName() {
         return $this->name;
@@ -170,36 +172,36 @@ class Procedure
     }
 
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Procedure
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {    
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }   
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+//    /**
+//     * Add orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @return Procedure
+//     */
+//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
+//        }
+//    }
+//
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+//
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
 }

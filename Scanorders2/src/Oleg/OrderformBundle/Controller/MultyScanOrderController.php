@@ -302,14 +302,8 @@ class MultyScanOrderController extends Controller {
         $patient = new Patient(true);
         $entity->addPatient($patient);
 
-//        $clinicalHistory = new ClinicalHistory();
-//        $patient->addClinicalHistory($clinicalHistory);
-
         $procedure = new Procedure(true);
-        $patient->addSpeciman($procedure);
-
-        //$procedure2 = new Procedure();
-        //$patient->addSpeciman($procedure2);
+        $patient->addProcedure($procedure);
 
         $accession = new Accession(true);
         $procedure->addAccession($accession);

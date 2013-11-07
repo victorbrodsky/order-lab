@@ -57,14 +57,14 @@ class Patient extends OrderAbstract implements JsonSerializable
      */
     protected $clinicalHistory;
         
-//    /**
-//     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
-//     **/
-//    protected $orderinfo;
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
+     **/
+    protected $orderinfo;
     
     //, cascade={"persist"}
     /**
-     * Patient might have many Procedures or Procedures
+     * Patient might have many Procedures or Procedures (children)
      * 
      * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
      */
@@ -269,11 +269,6 @@ class Patient extends OrderAbstract implements JsonSerializable
 
         return $this;
     }
-    public function addSpeciman(\Oleg\OrderformBundle\Entity\Procedure $procedure)
-    {
-        $this->addProcedure($procedure);
-        return $this;
-    }
 
     /**
      * Remove procedure
@@ -283,10 +278,6 @@ class Patient extends OrderAbstract implements JsonSerializable
     public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
         $this->procedure->removeElement($procedure);
-    }
-    public function removeSpeciman(\Oleg\OrderformBundle\Entity\Procedure $procedure)
-    {
-        $this->removeProcedure($procedure);
     }
 
     /**

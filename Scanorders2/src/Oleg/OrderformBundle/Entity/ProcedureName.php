@@ -15,7 +15,7 @@ class ProcedureName extends ProcedureArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="procedure", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="name", cascade={"persist"})
      * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $procedure;

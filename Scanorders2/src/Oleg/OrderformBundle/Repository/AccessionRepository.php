@@ -13,29 +13,31 @@ use Doctrine\ORM\EntityRepository;
 class AccessionRepository extends ArrayFieldAbstractRepository {
     
     //this function will create an accession if it doesn't exist or return the existing accession object
-    public function processEntity( $accession, $orderinfo=null ) {
-
-        $em = $this->_em;
-        $accession = $em->getRepository('OlegOrderformBundle:Part')->removeDuplicateEntities( $accession );
-
-        $entity = $this->findOneBy(array('accession' => $accession->getAccession()));
-
-        if( !$entity ) {        
-            //create new accession
-            //echo "new accession";
-            return $this->setResult( $accession, $orderinfo );          
-        }
-
-        //copy all children to existing entity
-        foreach( $accession->getPart() as $part ) {
-            $entity->addPart( $part );
-        }
-
-        //echo "db accession <br>";
-        return $this->setResult( $entity, $orderinfo, $original=null );
-    }
+    //Note: since procedure and accession are linked together, accession check for uniqueness will be omitted
+//    public function processEntity1111( $accession, $orderinfo=null ) {
+//
+//        $em = $this->_em;
+//        $accession = $em->getRepository('OlegOrderformBundle:Part')->removeDuplicateEntities( $accession );
+//
+//        //$entity = $this->findOneBy(array('accession' => $accession->getAccession()));
+//        $entity = $this->isExisted($accession,"Accession","accession");
+//
+//        if( !$entity ) {
+//            //create new accession
+//            //echo "new accession";
+//            return $this->setResult( $accession, $orderinfo, $original=null );
+//        }
+//
+//        //copy all children to existing entity
+//        foreach( $accession->getPart() as $part ) {
+//            $entity->addPart( $part );
+//        }
+//
+//        //echo "db accession <br>";
+//        return $this->setResult( $entity, $orderinfo  );
+//    }
     
-    public function setResult( $accession, $orderinfo=null ) {
+    public function setResult( $accession, $orderinfo=null, $original=null ) {
                
         //echo "accession=".$accession."<br>";
         $em = $this->_em;
@@ -44,10 +46,12 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         if( $orderinfo == null ) {
             return $accession;
         }
+
+        $accession = $this->processFieldArrays($accession,$orderinfo,$original);
         
         $parts = $accession->getPart();
         foreach( $parts as $part ) {
-            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part) ) {              
+            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
                 $accession->removePart( $part );
                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession, $orderinfo );
                 $accession->addPart($part);
@@ -93,85 +97,6 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         }
 
         return $specimen;
-    }
-    
-    public function notExists($entity) {
-        $id = $entity->getId();
-        if( !$id ) {
-            return true;
-        }      
-        $em = $this->_em;
-        $found = $em->getRepository('OlegOrderformBundle:Accession')->findOneById($id);       
-        if( null === $found ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function findOneByIdJoinedToAccession( $key ) {
-        $query = $this->getEntityManager()
-            ->createQuery('
-            SELECT a, accession FROM OlegOrderformBundle:Accession a
-            JOIN a.accession accession
-            WHERE accession.field = :accession'
-            )->setParameter('accession', $key);
-
-        try {
-            return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
-        }
-    }
-
-    public function createAccession( $status = null, $provider = null ) {
-        if( !$status ) {
-            $status = self::STATUS_RESERVED;
-        }
-        $em = $this->_em;
-        $accessionValue = $this->getNextAccession();
-        //echo "mrnValue=".$mrnValue;
-
-        $accession = new AccessionAccession(1);
-        $accession->setField($accessionValue);
-        if( $provider ) {
-            $accession->setProvider($provider);
-        }
-
-        $accession = new Accession();
-        $accession->addAccession($accession);
-        $accession->setStatus($status);
-        $em->persist($accession);
-        //exit();
-        $em->flush();
-        return $accession;
-    }
-
-    //check the last NOACCESSIONPROVIDED MRN in DB and construct next available MRN
-    public function getNextAccession() {
-
-        $query = $this->getEntityManager()
-            ->createQuery('
-            SELECT MAX(accession.field) as maxaccession FROM OlegOrderformBundle:Accession a
-            JOIN a.accession accession
-            WHERE accession.field LIKE :accession'
-            )->setParameter('accession', '%NOACCESSIONPROVIDED%');
-
-        $lastMrn = $query->getSingleResult();
-        $lastMrnStr = $lastMrn['maxaccession'];
-        //echo "lastMrnStr=".$lastMrnStr."<br>";
-        $mrnIndexArr = explode("-",$lastMrnStr);
-        //echo "count=".count($mrnIndexArr)."<br>";
-        if( count($mrnIndexArr) > 1 ) {
-            $mrnIndex = $mrnIndexArr[1];
-        } else {
-            $mrnIndex = 0;
-        }
-        $mrnIndex = ltrim($mrnIndex,'0') + 1;
-        $paddedmrn = str_pad($mrnIndex,10,'0',STR_PAD_LEFT);
-        //echo "paddedmrn=".$paddedmrn."<br>";
-        //exit();
-        return 'NOACCESSIONPROVIDED-'.$paddedmrn;
     }
 
 }

@@ -6,10 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var keys = new Array("mrn", "accession", "name");
+var keys = new Array("mrn", "accession", "name");   //TODO: change to patientmrn, accessionaccession, partname ...
 var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
-var selectStr = 'input.form-control,div.horizontal_type,textarea,select';
+var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[class^="ajax-combobox-"],textarea,select';  //div.select2-container, select.combobox
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -111,7 +111,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
     var parent = element.parent().parent().parent().parent().parent().parent();
-    //console.log("set parent.id=" + parent.attr('id'));
+    console.log("set parent.id=" + parent.attr('id') + ", key="+key);
 
     //var elements = parent.find('input,textarea,select');
     var elements = parent.find(selectStr);
@@ -125,14 +125,14 @@ function setElementBlock( element, data, cleanall, key ) {
         var type = elements.eq(i).attr("type");
         var classs = elements.eq(i).attr("class");
         var value = elements.eq(i).attr("value");
-        //console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
+        console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
 
         //if( id && type != "hidden" ) {
         if( id ) {
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-fieldIndex];    //default
-            //console.log("field = " + field);// + ", data text=" + data[field]['text']);
+            console.log("field = " + field);// + ", data text=" + data[field]['text']);
 
             if( key == "key" ) {
                 if( $.inArray(field, keys) != -1 ) {
@@ -152,6 +152,7 @@ function setElementBlock( element, data, cleanall, key ) {
             }
 
             if( data == null  ) {   //clean fields
+                console.log("data is null");
                 if( $.inArray(field, keys) == -1 || cleanall) {
                     elements.eq(i).val(null);   //clean non key fields
                 } else {
@@ -166,8 +167,22 @@ function setElementBlock( element, data, cleanall, key ) {
                     }
                 }
             } else {
-                //console.log("set text field = " + data[field][0]['text']);
-                setArrayField( elements.eq(i), data[field], parent );
+
+                //get field name for select fields such as classs=select2-container ajax-combobox-procedure
+                if( classs && classs.indexOf("select2") != -1 ) {
+                    console.log("select2");
+                    var classArr = classs.split("ajax-combobox-");
+                    console.log("len="+classArr.length);
+                    var fieldArr = classArr[1].split(" ");
+                    field = fieldArr[0];
+                    console.log("new field="+field);
+                }
+
+                if( data[field] && data[field] != undefined && data[field] != "" ) {
+                    //console.log("data is not null: set text field = " + data[field][0]['text']);
+                    setArrayField( elements.eq(i), data[field], parent );
+                }
+
             }
 
         }
@@ -184,7 +199,7 @@ function setArrayField(element, dataArr, parent) {
     var classs = element.attr("class");
     var tagName = element.prop("tagName");
     var value = element.attr("value");
-    //console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length);
+    console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
 
     for (var i = 0; i < dataArr.length; i++) {
 
@@ -275,11 +290,12 @@ function setArrayField(element, dataArr, parent) {
             }
 
         } else if ( tagName == "TEXTAREA" ) {
-
             var firstAttachedElement = attachElement.find('textarea').first();
             //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id"));
             firstAttachedElement.val(text);
-
+        } else if ( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
+            console.log("select field, id="+id+",text="+text);
+            element.select2('data', {id: id, text: text});
         } else if ( tagName == "DIV" ) {
             //get the first (the most recent added) group
             var firstAttachedElement = attachElement.find('.horizontal_type').first();
@@ -372,50 +388,51 @@ function cleanFieldsInElementBlock( element, all ) {
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
         var tagName = elements.eq(i).prop('tagName');
+        var classs = elements.eq(i).attr('class');
         console.log("clean id="+id+", type="+type+", tagName="+tagName);
 
-        //if( id && type != "hidden" ) {
-
-            if( type == "text" || !type ) {
-                var clean = false;
-                var idsArr = id.split("_");
-                var field = idsArr[idsArr.length-fieldIndex];
-                if( all == "all" ) {
+        if( type == "text" || !type ) {
+            var clean = false;
+            var idsArr = id.split("_");
+            var field = idsArr[idsArr.length-fieldIndex];
+            if( all == "all" ) {
+                //elements.eq(i).val(null);
+                clean = true;
+            } else {
+                //check if the field is not key
+                if( !isKey(elements.eq(i), field) ) {
                     //elements.eq(i).val(null);
                     clean = true;
-                } else {
-                    //check if the field is not key
-                    if( !isKey(elements.eq(i), field) ) {
-                        //elements.eq(i).val(null);
-                        clean = true;
-                    }
-                }
-                if( clean ) {
-                    console.log("in array field=" + field );
-                    if( $.inArray(field, arrayFieldShow) == -1 ) {
-                        console.log("clean not as arrayFieldShow");
-
-                        if( tagName == "DIV" ) {
-                            console.log("clean as radio");
-                            //cleanArrayField( elements.eq(i), field );
-                            processGroup( elements.eq(i), "", "ignoreDisable" );
-                        } else {
-                            elements.eq(i).val(null);
-                        }
-
-                    } else {
-                        console.log("clean as an arrayFieldShow");
-                        cleanArrayField( elements.eq(i), field );
-                    }
                 }
             }
+            if( clean ) {
+                console.log("in array field=" + field );
+                if( $.inArray(field, arrayFieldShow) == -1 ) {
+                    console.log("clean not as arrayFieldShow");
+
+                    if( tagName == "DIV" && classs.indexOf("select2") == -1 ) {
+                        console.log("clean as radio");
+                        //cleanArrayField( elements.eq(i), field );
+                        processGroup( elements.eq(i), "", "ignoreDisable" );
+                    } else if( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
+                        console.log("clean as select");
+                        elements.eq(i).select2('data', null);
+                    } else {
+                        elements.eq(i).val(null);
+                    }
+
+                } else {
+                    console.log("clean as an arrayFieldShow");
+                    cleanArrayField( elements.eq(i), field );
+                }
+            }
+        }
 
 //            if( type == "radio" ) {
 //                console.log("clean as radio");
 //                elements.eq(i).prop('checked',false);
 //            }
 
-        //}
 
     }
 }
@@ -466,19 +483,19 @@ function initAllMulti() {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
-    //console.log("disable element.id=" + element.attr('id'));
+    console.log("disable element.id=" + element.attr('id'));
 
     var parent = element.parent().parent().parent().parent().parent().parent();
 
-    //console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+    console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find(selectStr);
 
-    //console.log("elements.length=" + elements.length);
+    console.log("elements.length=" + elements.length);
 
     for (var i = 0; i < elements.length; i++) {
 
-        //console.log("element.id=" + elements.eq(i).attr("id"));
+        console.log("element.id=" + elements.eq(i).attr("id"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -538,15 +555,28 @@ function disableElement(element, flag) {
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    if( tagName == "DIV" ) {
-        //console.debug("radio disable classs="+classs+", id="+element.attr('id'));
+    console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+
+    if( tagName == "DIV" && classs.indexOf("select2") == -1 ) { //only for radio group
+        console.debug("radio disable classs="+classs+", id="+element.attr('id'));
         processGroup( element, "", flag );
+        return;
+    }
+
+    if( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
+        console.debug("select disable classs="+classs+", id="+element.attr('id'));
+        //element.select2("disable", flag);
+        //if( flag ) {
+            element.select2("readonly", flag);
+//        } else {
+//            element.select2("readonly", true);
+//        }
         return;
     }
 
     if( flag ) {
 
-        //console.log("disable field id="+element.attr("id"));
+        console.log("disable field id="+element.attr("id"));
         element.attr('readonly', true);
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("disable datepicker classs="+classs);

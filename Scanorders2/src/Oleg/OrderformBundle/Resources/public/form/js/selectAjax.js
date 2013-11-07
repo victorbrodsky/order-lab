@@ -22,7 +22,7 @@ function regularCombobox() {
     $("select.combobox").select2({
         width: combobox_width,
         dropdownAutoWidth: true,
-        readonly: true
+        //readonly: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });

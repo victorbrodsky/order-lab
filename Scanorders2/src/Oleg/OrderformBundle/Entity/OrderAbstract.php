@@ -16,7 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
-abstract class OrderAbstract {
+abstract class OrderAbstract
+{
 
     /**
      * @ORM\Id
@@ -26,12 +27,7 @@ abstract class OrderAbstract {
     protected $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="patient")
-     **/
-    protected $orderinfo;
-
-    /**
-     * status: use to indicate if the patient with this mrn is reserved only but not submitted
+     * status: use to indicate if the entity with this key is reserved only but not submitted
      * @ORM\Column(type="string", nullable=true)
      */
     protected $status;
@@ -92,7 +88,6 @@ abstract class OrderAbstract {
      * Add orderinfo
      *
      * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Patient
      */
     public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
     {

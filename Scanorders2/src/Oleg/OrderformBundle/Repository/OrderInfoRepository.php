@@ -92,10 +92,10 @@ class OrderInfoRepository extends EntityRepository
         //echo "patients count=".count($patients)."<br>";
         
         foreach( $patients as $patient ) {
-            if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient) ) {
+            if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient,"Patient") ) {
                 //echo $patient;
                 $entity->removePatient( $patient );
-                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity );
+                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
                 $entity->addPatient($patient);
             } else {
                 continue;

@@ -29,21 +29,22 @@ class Accession extends OrderAbstract {
     
     //Accession belongs to exactly one Procedure => Accession has only one Procedure
     /**
+     * Parent
      * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="accession")
      * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id")
      */
     protected $procedure;
     
     /**
-     * Accession might have many parts
+     * Accession might have many parts (children)
      * @ORM\OneToMany(targetEntity="Part", mappedBy="accession")
      */
     protected $part;
     
-//    /**
-//     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
-//     **/
-//    protected $orderinfo;
+    /**
+     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="accession")
+     **/
+    protected $orderinfo;
       
     public function __construct( $withfields=false, $validity=0 ) {
         parent::__construct();

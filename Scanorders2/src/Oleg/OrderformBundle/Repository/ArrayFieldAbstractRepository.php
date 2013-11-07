@@ -25,10 +25,59 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $this->log->pushHandler(new StreamHandler('./Scanorder.log', Logger::WARNING));
     }
 
+    //make sure the uniqueness entity. Make new or return id of existing.
+    //$childName: i.e. "Procedure" for Patient
+    public function processEntity( $entity, $orderinfo = null, $className, $fieldName, $childName ) {
+
+        $em = $this->_em;
+
+        $entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
+
+        $found = $this->isExisted($entity,$className,$fieldName);
+
+        $getChildMethod = "get".ucfirst($childName);
+        $addChildMethod = "add".ucfirst($childName);
+        $getFieldMethod = "get".ucfirst($fieldName);
+
+        if( $found ) {
+            //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
+            //Case 2 - existed and STATUS_VALID; User entered existed MRN
+            //echo "case 1 and 2 <br>";
+            foreach( $entity->$getChildMethod() as $child ) {
+                $found->$addChildMethod( $child );
+            }
+            return $this->setResult( $found, $orderinfo, $entity ); //provide found object, cause we need id
+        } else {
+            if( count($entity->$getFieldMethod()) > 0 ) {
+                //Case 3 - User entered new KEY, not existed in DB
+                //echo "case 3 <br>";
+                return $this->setResult( $entity, $orderinfo );
+            } else {
+                //Case 4 - KEY is not provided.
+                //echo "case 4 <br>";
+                if( $orderinfo ) {
+                    $provider = $orderinfo->getProvider()->first();
+                } else {
+                    $provider = null;
+                }
+                //$newPatient = $this->createPatient(self::STATUS_VALID,$provider);
+                $newPatient = $this->createElement(self::STATUS_VALID,$provider,$className,$fieldName);
+                foreach( $entity->$getChildMethod() as $child ) {
+                    $newPatient->$addChildMethod( $child );
+                }
+                return $this->setResult( $newPatient, $orderinfo, $entity );
+            }
+        }
+
+    }
+
     //process single array of fields (i.e. ClinicalHistory Array of Fields)
     public function processFieldArrays( $entity, $orderinfo, $original=null ) {
 
+        $entity->setStatus(self::STATUS_VALID);
+
         $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
+        echo "provider=".$provider."<br>";
 
         //$class_methods = get_class_methods($dest);
         $class = new \ReflectionClass($entity);
@@ -246,6 +295,56 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "paddedfield=".$paddedfield."<br>";
         //exit();
         return $name.'-'.$paddedfield;
+    }
+
+    //check if the entity with its field is existed in DB
+    //$className: class name i.e. "Patient"
+    //$fieldName: key field name i.e. "mrn"
+    //return: null - not existed, entity object if existed
+    public function isExisted( $entity, $className, $fieldName ) {
+
+        if( !$entity ) {
+            //echo "patient is null <br>";
+            return null;
+        }
+
+        $fieldMethod = "get".ucfirst($fieldName);
+
+        //echo "entity field count=".count($entity->$fieldMethod())."<br>";
+
+        if( $entity->$fieldMethod() == "" || $entity->$fieldMethod() == null ) {
+            return null;
+        }
+
+        $em = $this->_em;
+        if( count($entity->$fieldMethod())>0 ) {
+            $newEntity = null;
+            foreach( $entity->$fieldMethod() as $field ) {
+                //echo "entity field=".$field->getField()."<br>";
+                //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn( $field->getField() );
+                $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($field->getField(),$className,$fieldName);
+                return $newEntity; //return first patient. In theory we should have only one KEY (i.e. mrn) in the submitting patient
+            }
+        } else {
+            //echo "entity null <br>";
+            $newEntity = null;
+        }
+        return $newEntity;
+    }
+
+    //check entity by ID
+    public function notExists($entity, $className) {
+        $id = $entity->getId();
+        if( !$id ) {
+            return true;
+        }
+        $em = $this->_em;
+        $found = $em->getRepository('OlegOrderformBundle:'.$className)->findOneById($id);
+        if( null === $found ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
