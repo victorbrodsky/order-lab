@@ -25,11 +25,11 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         //1) can't check uniqueness without accession number
         if( $accessions == null ) {
-            echo "return cause no accession provided<br>";
+            //echo "return cause no accession provided<br>";
             return $this->setResult($entity, $orderinfo);
         }
 
-        echo "accession count=".count($accessions)."<br>";
+        //echo "accession count=".count($accessions)."<br>";
 
         //$accession_found = null;
         //2) if at least one accession belongs to a procedure, then potentially we can use this procedure. Since, currently, Procedure-Accession is one element => procedure has only one accession
@@ -43,7 +43,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( $foundAccession ) {
             //case 1 - existed but empty with STATUS_RESERVED; User press check with empty Key field => new Key was generated
             //Case 2 - existed and STATUS_VALID; User entered existed Key
-            echo "case 1 and 2 <br>";
+            //echo "case 1 and 2 <br>";
             $foundProcedure = $foundAccession->getProcedure();
             //echo "0 found procedure patient count=".count($foundProcedure->getPatient())."<br>";
             foreach( $entity->getAccession() as $thisAccession ) {
@@ -51,7 +51,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             }
             return $this->setResult( $foundProcedure, $orderinfo, $entity ); //provide found object, cause we need id
         } else {
-            echo "case 3 and 4 <br>";
+            //echo "case 3 and 4 <br>";
             return $this->setResult( $entity, $orderinfo );
         }
     }
@@ -93,13 +93,13 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             }
         }
 
-        echo $procedure."<br>";
+        //echo $procedure."<br>";
         //echo "procedure name provider=".$procedure->getName()->first()->getProvider()."<br>";
         //echo "procedure name validity=".$procedure->getName()->first()->getValidity()."<br>";
-        echo "procedure accession count=".count($procedure->getAccession())."<br>";
-        echo "procedure accession provider=".$procedure->getAccession()->first()->getAccession()->first()->getProvider()."<br>";
-        echo "procedure accession validity=".$procedure->getAccession()->first()->getAccession()->first()->getValidity()."<br>";
-        echo "procedure patient MRN=".$procedure->getPatient()->getMrn()->first()."<br>";
+//        echo "procedure accession count=".count($procedure->getAccession())."<br>";
+//        echo "procedure accession provider=".$procedure->getAccession()->first()->getAccession()->first()->getProvider()."<br>";
+//        echo "procedure accession validity=".$procedure->getAccession()->first()->getAccession()->first()->getValidity()."<br>";
+//        echo "procedure patient MRN=".$procedure->getPatient()->getMrn()->first()."<br>";
 
         //exit();
         //$em->flush($procedure);

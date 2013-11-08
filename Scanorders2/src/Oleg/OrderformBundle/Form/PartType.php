@@ -46,60 +46,56 @@ class PartType extends AbstractType
         }
 
         //name
-        $attr = array('class' => 'combobox', 'required' => 'required', 'disabled');
-
-        if( $this->params['type'] == 'single') {
-            $attr['style'] = 'width:100%;';
-        } else {
-            $attr['style'] = 'width:100%';
-        }
-        $builder->add('name', 'choice', array(
-            'choices' => $helper->getPart(),
-            'required' => true,
-            'label' => 'Part Name:',
-            'max_length' => '3',
-            'attr' => $attr
-        ));
-                      
-//        $builder->add('sourceOrgan', null, array(
-//            'label' => 'Source Organ:',
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
-        } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
-        }
-        $builder->add('sourceOrgan', 'custom_selector', array(
-            'label' => 'Source Organ:',           
-            'attr' => $attr,
+        $builder->add('name', 'collection', array(
+            'type' => new PartNameType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
             'required' => false,
-            'disabled' => $flag,
-            'classtype' => 'sourceOrgan'
+            'label' => "Procedure Type:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__partname__',
         ));
-        
-        $builder->add( 'description', 'textarea', array(
-                'label'=>'Gross Description:',
-                'max_length'=>'10000', 
-                'required'=>false,
-                'disabled' => $flag,
-                'attr' => array('class'=>'textarea form-control'),
+
+        //sourceOrgan
+        $builder->add('sourceOrgan', 'collection', array(
+            'type' => new PartSourceOrganType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Source Organ:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__partsourceOrgan__',
         ));
-        
-        $builder->add( 'diagnosis', 'textarea', array(
-                'label'=>'Diagnosis:',
-                'max_length'=>'10000', 
-                'required'=>false,
-                'disabled' => $flag,
-                'attr' => array('class'=>'textarea form-control'),
+
+        //description
+        $gen_attr = array('label'=>'Gross Description','class'=>'Oleg\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
+        $builder->add('description', 'collection', array(
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Gross Description:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__partdescription__',
         ));
-        
-//        $builder->add( 'diffDiagnosis', 'textarea', array(
-//                'label'=>'Differential Diagnoses:',
-//                'max_length'=>'10000',
-//                'required'=>false,
-//                'attr' => array('class'=>'form-control'),
-//        ));
+
+        //diagnosis
+        $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDiagnosis','type'=>null);    //type=null => auto type
+        $builder->add('diagnosis', 'collection', array(
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Diagnosis:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__partdiagnosis__',
+        ));
+
+        //diffDiagnoses
         $builder->add('diffDiagnoses', 'collection', array(
             'type' => new DiffDiagnosesType(),
             'disabled' => $flag,
@@ -112,13 +108,6 @@ class PartType extends AbstractType
             'prototype_name' => '__diffDiagnoses__',
         ));
 
-//        $builder->add( 'diseaseType', 'text', array(
-//                'label'=>'Disease Type:',
-//                'max_length'=>'100',
-//                'required'=>false,
-//                'attr' => array('class'=>'form-control form-control-modif'),
-//        ));
-//        if( $this->params['type'] == 'single') {
         $builder->add( 'diseaseType', 'choice', array(
             'label'=>'Type of Disease:',
             'disabled' => $flag,
@@ -140,10 +129,6 @@ class PartType extends AbstractType
             'attr' => array('class' => 'horizontal_type'),
         ));
 
-//        $builder->add('primaryOrgan', null, array(
-//            'label' => 'Primary Site of Origin:',
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
         } else {

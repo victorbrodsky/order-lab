@@ -78,18 +78,17 @@
                     {#<a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
                     <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                 </td>
-            {#<td>{{ entity.slide.count }}</td>#}
-            <td>
-                    {#{{ entity.slide.count }}:#}
-{#                    {% for patient in entity.patient %}#}
-{#                        {{ patient.specimen }}#}
-{#                        {% for specimen in patient.specimen %}#}
-{#                            {{ specimen.proceduretype }}#}
-{#                        {%endfor%}#}
-{#                    {% endfor %}#}
+                <td>
                     {% for slide in entity.slide %}
                         <a href="{{ path('slide_show', { 'id': slide.id }) }}">
-                            <p>{{ slide.block.part.accession.accession }}&nbsp;{{slide.block.part.name}}{{slide.block.name}}</p>
+                            {% set validAccession = slide.block.part.accession.accession|first %}
+                            {% for thisAccession in slide.block.part.accession.accession  %}
+                                {% if thisAccession.validity == 1 %}
+                                    {% set validAccession = thisAccession %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <p>{{ validAccession }}&nbsp;{{slide.block.part.name}}{{slide.block.name}}</p>
                         </a>
                     {% endfor %}
                 </td>

@@ -12,18 +12,13 @@ class GenericFieldType extends AbstractType
 
     protected $params;
     protected $entity;
-    protected $label;
-    protected $clazz;
     protected $attr;
     protected $genAttr;
 
-    //public function __construct( $params=null, $entity = null, $label=null, $clazz=null, $attr=null )
     public function __construct( $params=null, $entity = null, $genAttr=null, $attr=null )
     {
         $this->params = $params;
         $this->entity = $entity;
-        //$this->label = $label;
-        //$this->clazz = $clazz;
         $this->attr = $attr;
         $this->genAttr = $genAttr;
     }
@@ -43,10 +38,6 @@ class GenericFieldType extends AbstractType
             'attr' =>$attr
         ));
 
-//        $builder->add('other'.preg_replace('/\s+/', '', $this->genAttr['label']), new ArrayFieldType(), array(
-//            'data_class' => $this->genAttr['class'],
-//            'label' => false
-//        ));
         $builder->add('other', new ArrayFieldType(), array(
             'data_class' => $this->genAttr['class'],
             'label' => false

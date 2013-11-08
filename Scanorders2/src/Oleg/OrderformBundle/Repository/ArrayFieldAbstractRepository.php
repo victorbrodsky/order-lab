@@ -42,7 +42,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $found ) {
             //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
             //Case 2 - existed and STATUS_VALID; User entered existed MRN
-            echo "case 1 and 2 <br>";
+            echo $className." case 1 and 2 <br>";
             foreach( $entity->$getChildMethod() as $child ) {
                 $found->$addChildMethod( $child );
             }
@@ -50,7 +50,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         } else {
             if( count($entity->$getFieldMethod()) > 0 ) {
                 //Case 3 - User entered new KEY, not existed in DB
-                echo "case 3 <br>";
+                echo $className." case 3 <br>";
                 return $this->setResult( $entity, $orderinfo );
             } else {
                 //Case 4 - KEY is not provided.

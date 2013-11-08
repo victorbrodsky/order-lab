@@ -59,7 +59,7 @@ class OrganList
     private $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Part", mappedBy="sourceOrgan")
+     * @ORM\OneToMany(targetEntity="PartSourceOrgan", mappedBy="field")
      */
     protected $part;
 

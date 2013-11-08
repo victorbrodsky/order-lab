@@ -65,7 +65,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
               
         $em = $this->_em;
 
-        //$patient->setStatus(self::STATUS_VALID);
+        echo "patient id=".$patient->getId()."<br>";
 
         $em->persist($patient);
 

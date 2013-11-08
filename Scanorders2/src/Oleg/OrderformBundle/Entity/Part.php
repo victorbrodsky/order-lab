@@ -13,15 +13,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="part")
  * @UniqueEntity({"accession","name"})
  */
-class Part
+class Part extends OrderAbstract
 {
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+//    /**
+//     * @ORM\Id
+//     * @ORM\Column(type="integer")
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    protected $id;
    
     /**
      * Part belongs to exactly one Accession => Part has only one Accession
@@ -30,59 +30,59 @@ class Part
      */
     protected $accession;
 
+//    /**
+//     * Name is a letter
+//     * @ORM\Column(type="string", length=3)
+//     * @Assert\NotBlank
+//     */
+//    protected $name;
     /**
-     * Name is a letter
-     * @ORM\Column(type="string", length=3) 
-     * @Assert\NotBlank  
+     * @ORM\OneToMany(targetEntity="PartName", mappedBy="part", cascade={"persist"})
      */
-    protected $name;  
+    protected $name;
     
     //*********************************************// 
     // optional fields
     //*********************************************//     
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="part", cascade={"persist"})
+//     * @ORM\JoinColumn(name="organlist_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $sourceOrgan;
     /**
-     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="part", cascade={"persist"})
-     * @ORM\JoinColumn(name="organlist_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToMany(targetEntity="PartSourceOrgan", mappedBy="part", cascade={"persist"})
      */
     protected $sourceOrgan;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
-     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
-     */
-    protected $primaryOrgan;
-    
-    /**
-     * @ORM\Column(type="string", nullable=true, length=10000)
+     * @ORM\OneToMany(targetEntity="PartDescription", mappedBy="part", cascade={"persist"})
      */
     protected $description;
-    
-    /**
-     * @ORM\Column(type="text", nullable=true, length=10000)
-     */
-    protected $diagnosis;
-
-//    /**
-//     * @ORM\OneToOne(targetEntity="Document", cascade={"persist"})
-//     * @ORM\JoinColumn(name="paper_id", referencedColumnName="id")
-//     */
-//    protected $paper;
-    /**
-     * @ORM\OneToMany(targetEntity="Document", mappedBy="part", cascade={"persist"})
-     */
-    protected $paper;
     
 //    /**
 //     * @ORM\Column(type="text", nullable=true, length=10000)
 //     */
-//    protected $diffDiagnoses;
+    /**
+     * @ORM\OneToMany(targetEntity="PartDiagnosis", mappedBy="part", cascade={"persist"})
+     */
+    protected $diagnosis;
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="Document", mappedBy="part", cascade={"persist"})
+//     */
+    /**
+     * @ORM\OneToMany(targetEntity="PartPaper", mappedBy="part", cascade={"persist"})
+     */
+    protected $paper;
+
     /**
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="DiffDiagnoses", mappedBy="part", cascade={"persist"})
      */
     protected $diffDiagnoses;
-    
+
+    /////////////////////// Type of Disease TODO: make it as separate object? /////////////////////
     /**
      * @ORM\Column(type="string", nullable=true, length=100)
      */
@@ -94,24 +94,37 @@ class Part
     protected $origin;
 
     /**
+     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
+     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
+     */
+    protected $primaryOrgan;
+    //////////////////////////////////// EOF Type of Disease /////////////////////////////////////
+
+    /**
      * One Part has Many blocks
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="Block", mappedBy="part")
      */
     protected $block;
 
-
-    
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="part")
      **/
     protected $orderinfo; 
     
     public function __construct() {
-        $this->paper = new ArrayCollection();
+        //$this->paper = new ArrayCollection();
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
         $this->diffDiagnoses = new ArrayCollection();
+
+        //fields:
+        $this->name = new ArrayCollection();
+        $this->sourceOrgan = new ArrayCollection();
+        //$this->primaryOrgan = new ArrayCollection();
+        $this->description = new ArrayCollection();
+        $this->diagnosis = new ArrayCollection();
+        $this->paper = new ArrayCollection();
     }
     
     public function getId() {
@@ -142,10 +155,6 @@ class Part
         return $this->diseaseType;
     }
 
-    public function setId($id) {
-        $this->id = $id;
-    }
-
     public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null) {
         $this->accession = $accession;
         return $this;
@@ -154,17 +163,78 @@ class Part
     public function setName($name) {
         $this->name = $name;
     }
+    public function addName($name)
+    {
+        if( $name ) {
+            if( !$this->name->contains($name) ) {
+                $name->setPart($this);
+                $this->name->add($name);
+            }
+        }
+
+        return $this;
+    }
+    public function removeName($name)
+    {
+        $this->name->removeElement($name);
+    }
+
 
     public function setSourceOrgan($sourceOrgan) {
         $this->sourceOrgan = $sourceOrgan;
+    }
+    public function addSourceOrgan($sourceOrgan)
+    {
+        if( $sourceOrgan ) {
+            if( !$this->sourceOrgan->contains($sourceOrgan) ) {
+                $sourceOrgan->setPart($this);
+                $this->sourceOrgan->add($sourceOrgan);
+            }
+        }
+
+        return $this;
+    }
+    public function removeSourceOrgan($sourceOrgan)
+    {
+        $this->sourceOrgan->removeElement($sourceOrgan);
     }
 
     public function setDescription($description) {
         $this->description = $description;
     }
+    public function addDescription($description)
+    {
+        if( $description ) {
+            if( !$this->description->contains($description) ) {
+                $description->setPart($this);
+                $this->description->add($description);
+            }
+        }
+
+        return $this;
+    }
+    public function removeDescription($description)
+    {
+        $this->description->removeElement($description);
+    }
 
     public function setDiagnosis($diagnosis) {
         $this->diagnosis = $diagnosis;
+    }
+    public function addDiagnosis($diagnosis)
+    {
+        if( $diagnosis ) {
+            if( !$this->diagnosis->contains($diagnosis) ) {
+                $diagnosis->setPart($this);
+                $this->diagnosis->add($diagnosis);
+            }
+        }
+
+        return $this;
+    }
+    public function removeDiagnosis($diagnosis)
+    {
+        $this->diagnosis->removeElement($diagnosis);
     }
 
     /**
@@ -182,10 +252,20 @@ class Part
     {
         return $this->primaryOrgan;
     }
-
-
-//    public function setDiffDiagnoses($diffDiagnoses) {
-//        $this->diffDiagnoses = $diffDiagnoses;
+//    public function addPrimaryOrgan($primaryOrgan)
+//    {
+//        if( $primaryOrgan ) {
+//            if( !$this->primaryOrgan->contains($primaryOrgan) ) {
+//                $primaryOrgan->setPart($this);
+//                $this->primaryOrgan->add($primaryOrgan);
+//            }
+//        }
+//
+//        return $this;
+//    }
+//    public function removePrimaryOrgan($primaryOrgan)
+//    {
+//        $this->primaryOrgan->removeElement($primaryOrgan);
 //    }
 
     public function setDiseaseType($diseaseType) {
@@ -272,47 +352,50 @@ class Part
     }
     
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Part
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }   
+//    /**
+//     * Add orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @return Part
+//     */
+//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
+//        }
+//    }
+//
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
+
+
+    public function setDiffDiagnoses($diffDiagnoses) {
+        $this->diffDiagnoses = $diffDiagnoses;
     }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
-
-
     /**
      * Add diffDiagnoses
      *
      * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
      * @return Part
      */
-    public function addDiffDiagnoses(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    public function addDiffDiagnoses($diffDiagnoses)
     {
         if( $diffDiagnoses != null ) {
             if( !$this->diffDiagnoses->contains($diffDiagnoses) ) {
@@ -323,29 +406,20 @@ class Part
     
         return $this;
     }
-    //public function addDiffDiagnos(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
-    public function addDiffDiagnos($diffDiagnoses)
-    {
-        if( $diffDiagnoses != null ) {
-            $this->addDiffDiagnoses($diffDiagnoses);
-        }
-         
-        return $this;
-    }
 
     /**
      * Remove diffDiagnoses
      *
      * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
      */
-    public function removeDiffDiagnoses(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+    public function removeDiffDiagnoses($diffDiagnoses)
     {
         $this->diffDiagnoses->removeElement($diffDiagnoses);
     }
-    public function removeDiffDiagnos(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
-    {
-        $this->removeDiffDiagnoses($diffDiagnoses);
-    }
+//    public function removeDiffDiagnos($diffDiagnoses)
+//    {
+//        $this->removeDiffDiagnoses($diffDiagnoses);
+//    }
 
     public function getDiffDiagnoses() {
         return $this->diffDiagnoses;
@@ -368,13 +442,12 @@ class Part
     
         return $this;
     }
-
     /**
      * Remove paper
      *
      * @param \Oleg\OrderformBundle\Entity\Document $paper
      */
-    public function removePaper(\Oleg\OrderformBundle\Entity\Document $paper)
+    public function removePaper($paper)
     {
         $this->paper->removeElement($paper);
     }
@@ -389,26 +462,26 @@ class Part
         return $this->paper;
     }
 
-    /**
-     * Add diffDiagnoses
-     *
-     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
-     * @return Part
-     */
-    public function addDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
-    {
-        $this->diffDiagnoses[] = $diffDiagnoses;
-    
-        return $this;
-    }
-
-    /**
-     * Remove diffDiagnoses
-     *
-     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
-     */
-    public function removeDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
-    {
-        $this->diffDiagnoses->removeElement($diffDiagnoses);
-    }
+//    /**
+//     * Add diffDiagnoses
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
+//     * @return Part
+//     */
+//    public function addDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+//    {
+//        $this->diffDiagnoses[] = $diffDiagnoses;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove diffDiagnoses
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
+//     */
+//    public function removeDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
+//    {
+//        $this->diffDiagnoses->removeElement($diffDiagnoses);
+//    }
 }

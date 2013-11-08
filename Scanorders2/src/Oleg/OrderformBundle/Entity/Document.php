@@ -47,7 +47,7 @@ class Document
     protected  $file;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="paper")
+     * @ORM\ManyToOne(targetEntity="PartPaper", inversedBy="field")
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)
      */
     protected $part;

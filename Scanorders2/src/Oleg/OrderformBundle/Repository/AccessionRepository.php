@@ -39,7 +39,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     
     public function setResult( $accession, $orderinfo=null, $original=null ) {
                
-        //echo "accession=".$accession."<br>";
+        echo "accession=".$accession."<br>";
         $em = $this->_em;
         $em->persist($accession);
                 
