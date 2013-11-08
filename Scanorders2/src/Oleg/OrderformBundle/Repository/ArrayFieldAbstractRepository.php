@@ -27,7 +27,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //make sure the uniqueness entity. Make new or return id of existing.
     //$childName: i.e. "Procedure" for Patient
-    public function processEntity( $entity, $orderinfo = null, $className, $fieldName, $childName ) {
+    public function processEntity( $entity, $orderinfo = null, $className, $fieldName, $childName, $parent = null ) {
 
         $em = $this->_em;
 
@@ -42,7 +42,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $found ) {
             //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
             //Case 2 - existed and STATUS_VALID; User entered existed MRN
-            //echo "case 1 and 2 <br>";
+            echo "case 1 and 2 <br>";
             foreach( $entity->$getChildMethod() as $child ) {
                 $found->$addChildMethod( $child );
             }
@@ -50,18 +50,18 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         } else {
             if( count($entity->$getFieldMethod()) > 0 ) {
                 //Case 3 - User entered new KEY, not existed in DB
-                //echo "case 3 <br>";
+                echo "case 3 <br>";
                 return $this->setResult( $entity, $orderinfo );
             } else {
                 //Case 4 - KEY is not provided.
-                //echo "case 4 <br>";
+                echo $className." case 4 <br>";
                 if( $orderinfo ) {
                     $provider = $orderinfo->getProvider()->first();
                 } else {
                     $provider = null;
                 }
                 //$newPatient = $this->createPatient(self::STATUS_VALID,$provider);
-                $newPatient = $this->createElement(self::STATUS_VALID,$provider,$className,$fieldName);
+                $newPatient = $this->createElement(self::STATUS_VALID,$provider,$className,$fieldName,$parent);
                 foreach( $entity->$getChildMethod() as $child ) {
                     $newPatient->$addChildMethod( $child );
                 }
@@ -77,7 +77,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity->setStatus(self::STATUS_VALID);
 
         $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
-        echo "provider=".$provider."<br>";
+        //echo "provider=".$provider."<br>";
 
         //$class_methods = get_class_methods($dest);
         $class = new \ReflectionClass($entity);
@@ -232,7 +232,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$className: Patient
     //$fieldName: mrn
-    public function createElement( $status = null, $provider = null, $className, $fieldName ) {
+    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null ) {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
@@ -249,12 +249,18 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $field->setProvider($provider);
         }
 
+        $field->setValidity(1);
+
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
         $entity = new $entityClass();
         $keyAddMethod = "add".ucfirst($fieldName);
         $entity->$keyAddMethod($field);
         $entity->setStatus($status);
         $em->persist($entity);
+        if( $parent && !$parent->getId() ) {
+            $em->persist($parent);
+            $entity->setParent($parent);
+        }
         //exit();
         $em->flush();
         return $entity;
@@ -304,15 +310,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function isExisted( $entity, $className, $fieldName ) {
 
         if( !$entity ) {
-            //echo "patient is null <br>";
+            echo "entity is null <br>";
             return null;
         }
 
         $fieldMethod = "get".ucfirst($fieldName);
 
-        //echo "entity field count=".count($entity->$fieldMethod())."<br>";
+        echo "entity field count=".count($entity->$fieldMethod())."<br>";
 
         if( $entity->$fieldMethod() == "" || $entity->$fieldMethod() == null ) {
+            echo "entity field get is null<br>";
             return null;
         }
 
@@ -320,13 +327,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( count($entity->$fieldMethod())>0 ) {
             $newEntity = null;
             foreach( $entity->$fieldMethod() as $field ) {
-                //echo "entity field=".$field->getField()."<br>";
+                echo "entity field=".$field->getField()."<br>";
                 //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn( $field->getField() );
                 $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($field->getField(),$className,$fieldName);
                 return $newEntity; //return first patient. In theory we should have only one KEY (i.e. mrn) in the submitting patient
             }
         } else {
-            //echo "entity null <br>";
+            echo "entity null <br>";
             $newEntity = null;
         }
         return $newEntity;

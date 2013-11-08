@@ -126,6 +126,11 @@ class Accession extends OrderAbstract {
     
         return $this;
     }
+    public function setParent($parent)
+    {
+        $this->setProcedure($parent);
+        return $this;
+    }
 
     /**
      * Get procedure
