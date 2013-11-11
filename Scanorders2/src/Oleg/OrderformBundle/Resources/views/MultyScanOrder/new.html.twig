@@ -118,6 +118,12 @@
 
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype") %}
         {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
+
+        {#{% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.name,type,"key","prototype") %}#}
+        {#{% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}#}
+        {#{% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"","prototype") %}#}
+        {#{% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}#}
+        {#{% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis,type,"","prototype") %}#}
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
@@ -149,7 +155,7 @@
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
         {#{{ formmacros.diseaseMulti(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
-        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, 0, 0, 0, 0 )|e }}
+        {#{{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml )|e }}#}
         "
 
          data-prototype-diffdiagnoses="
@@ -229,7 +235,7 @@
 
                                             <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
 
-                                                {{ formmacros.partForm( part, "check", uid, type, patientCount, procedureCount, accessionCount, partCount ) }}
+                                                {{ formmacros.partForm( part, "check", uid, type) }}
 
 
                                                 {#block#}

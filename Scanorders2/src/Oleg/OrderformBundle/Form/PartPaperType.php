@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
-class PartNameType extends AbstractType
+class PartPaperType extends AbstractType
 {
 
     protected $params;
@@ -22,23 +22,28 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $helper = new FormHelper();
-        if( $this->params['type'] == 'single') {
-            $attr['style'] = 'width:100%;';
+        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+
+            //echo " => new, create or edit set file ";
+            $builder->add('field', 'file', array(
+                'label'=>'Relevant Paper or Abstract',
+                'required'=>false,
+            ));
+
         } else {
-            $attr['style'] = 'width:100%';
+
+            //echo "show set name ";
+            $builder->add('name', 'text', array(
+                'label'=>'Relevant Paper or Abstract:',
+                'required'=>false,
+            ));
+
         }
-        $builder->add('field', 'choice', array(
-            'choices' => $helper->getPart(),
-            'required' => true,
-            'label' => 'Part Name',
-            'max_length' => '3',
-            'attr' => $attr
-        ));
+
 
 
         $builder->add('partothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartName',
+            'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
             'label' => false
         ));
 
@@ -47,12 +52,12 @@ class PartNameType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartName',
+            'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_partnametype';
+        return 'oleg_orderformbundle_partpapertype';
     }
 }

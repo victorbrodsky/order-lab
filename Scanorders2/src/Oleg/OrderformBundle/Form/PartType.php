@@ -51,7 +51,7 @@ class PartType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Procedure Type:",
+            'label' => "Part Name:",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__partname__',
@@ -95,14 +95,25 @@ class PartType extends AbstractType
             'prototype_name' => '__partdiagnosis__',
         ));
 
-        //diffDiagnoses
-        $builder->add('diffDiagnoses', 'collection', array(
-            'type' => new DiffDiagnosesType(),
-            'disabled' => $flag,
+        //paper
+        $builder->add('paper', 'collection', array(
+            'type' => new PartPaperType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => false,   //"Diagnosis:",
+            'label' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__paper__',
+        ));
+
+        //diffDiagnoses
+        $builder->add('diffDiagnoses', 'collection', array(
+            'type' => new DiffDiagnosesType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__diffDiagnoses__',
@@ -142,18 +153,6 @@ class PartType extends AbstractType
             'classtype' => 'sourceOrgan'
         ));
 
-        //$builder->add( 'paper', new DocumentType($this->params), array('label'=>' ') );
-        $builder->add('paper', 'collection', array(
-            'type' => new DocumentType($this->params),
-            'disabled' => $flag,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => " ",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__paper__',
-        ));
 
     }
 

@@ -42,8 +42,7 @@ class PartRepository extends EntityRepository
             'name' => $part->getName()
         ));
         //$part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($part->getName(),"Part","name");
-        
-        
+
         if( $part_found == null ) {
             //$em->persist($part);
             //$em->flush();

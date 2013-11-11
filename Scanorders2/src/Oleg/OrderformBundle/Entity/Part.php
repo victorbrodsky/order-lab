@@ -68,9 +68,6 @@ class Part extends OrderAbstract
      */
     protected $diagnosis;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="Document", mappedBy="part", cascade={"persist"})
-//     */
     /**
      * @ORM\OneToMany(targetEntity="PartPaper", mappedBy="part", cascade={"persist"})
      */
@@ -112,7 +109,7 @@ class Part extends OrderAbstract
      **/
     protected $orderinfo; 
     
-    public function __construct() {
+    public function __construct( $withfields=false, $validity=0 ) {
         //$this->paper = new ArrayCollection();
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
@@ -125,6 +122,15 @@ class Part extends OrderAbstract
         $this->description = new ArrayCollection();
         $this->diagnosis = new ArrayCollection();
         $this->paper = new ArrayCollection();
+
+        if( $withfields ) {
+            $this->addName( new PartName($validity) );
+            $this->addSourceOrgan( new PartSourceOrgan($validity) );
+            $this->addDescription( new PartDescription($validity) );
+            $this->addDiagnosis( new PartDiagnosis($validity) );
+            $this->addPaper( new PartPaper($validity) );
+            $this->addDiffDiagnoses( new DiffDiagnoses() );
+        }
     }
     
     public function getId() {
@@ -428,7 +434,7 @@ class Part extends OrderAbstract
     /**
      * Add paper
      *
-     * @param \Oleg\OrderformBundle\Entity\Document $paper
+     * @param \Oleg\OrderformBundle\Entity\PartPaper $paper
      * @return Part
      */
     public function addPaper($paper)
@@ -445,7 +451,7 @@ class Part extends OrderAbstract
     /**
      * Remove paper
      *
-     * @param \Oleg\OrderformBundle\Entity\Document $paper
+     * @param \Oleg\OrderformBundle\Entity\PartPaper $paper
      */
     public function removePaper($paper)
     {

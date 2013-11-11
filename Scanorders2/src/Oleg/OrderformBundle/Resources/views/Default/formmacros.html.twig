@@ -554,18 +554,54 @@ ident:      specialStains or relevantScans
     </div>
 {% endmacro %}
 
-{% macro partForm( form, flag, uid, type, patientCount, procedureCount, accessionCount, partCount ) %}
+{% macro partForm( part, flag, uid, cicle, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml ) %}
     {% import _self as formmacros %}
+
+    {%  set uidArr = uid|split('_') %}
+    {% set patientCount = uidArr[0] %}
+    {% set procedureCount = uidArr[1] %}
+    {% set accessionCount = uidArr[2] %}
+    {% set partCount = uidArr[3] %}
+
     <div id="part_{{ uid }}">
-        {{ formmacros.fieldIconLabel(form.name,"glyphicon-check") }}
-        {{ formmacros.field(form.sourceOrgan) }}
-        {{ formmacros.paperInput(form.paper,type) }}
-        {{ formmacros.field(form.description) }}
-        {{ formmacros.field(form.diagnosis) }}
-        {% if form.diffDiagnoses|length > 0 %}
-            {{ formmacros.collectionInput(form.diffDiagnoses, 'diffDiagnoses', type, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
+        {#{{ formmacros.fieldIconLabel(part.name,"glyphicon-check") }}#}
+        {% if partnameHtml is not defined or partnameHtml == "" %}
+            {{ formmacros.inputArrayField(part.name,cicle,"partname","key") }}
+        {% else  %}
+            <p><div class="partname">{{ partnameHtml }}</div></p>
         {% endif %}
-        {{ formmacros.diseaseMulti(form, patientCount, procedureCount, accessionCount, partCount) }}
+        {#{{ formmacros.field(part.sourceOrgan) }}#}
+        {% if sourceorganHtml is not defined or sourceorganHtml == "" %}
+            {{ formmacros.inputArrayField(part.sourceOrgan,cicle,"partsourceorgan") }}
+        {% else  %}
+            <p><div class="partsourceorgan">{{ sourceorganHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.paperInput(part.paper,cicle) }}#}
+        {% if paperHtml is not defined or paperHtml == "" %}
+            {{ formmacros.inputArrayField(part.paper,cicle,"partpaper") }}
+        {% else  %}
+            <p><div class="partpaper">{{ paperHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(part.description) }}#}
+        {% if descriptionHtml is not defined or descriptionHtml == "" %}
+            {{ formmacros.inputArrayField(part.description,cicle,"partdescription") }}
+        {% else  %}
+            <p><div class="partdescription">{{ descriptionHtml }}</div></p>
+        {% endif %}
+
+        {#{{ formmacros.field(part.diagnosis) }}#}
+        {% if diagnosisHtml is not defined or diagnosisHtml == "" %}
+            {{ formmacros.inputArrayField(part.diagnosis,cicle,"partdiagnosis") }}
+        {% else  %}
+            <p><div class="partdiagnosis">{{ diagnosisHtml }}</div></p>
+        {% endif %}
+
+        {% if part.diffDiagnoses|length > 0 %}
+            {{ formmacros.collectionInput(part.diffDiagnoses, 'diffDiagnoses', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
+        {% endif %}
+        {{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
     </div>
 {% endmacro %}
 

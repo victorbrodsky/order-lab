@@ -28,7 +28,7 @@ class PartSourceOrganType extends AbstractType
             $attr = array('class' => 'combobox combobox-width');    //show
         }
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Source Organ:',
+            'label' => 'Source Organ',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'sourceOrgan'

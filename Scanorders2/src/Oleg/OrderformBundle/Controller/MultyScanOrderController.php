@@ -20,7 +20,7 @@ use Oleg\OrderformBundle\Form\ProcedureType;
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Entity\DiffDiagnoses;
+//use Oleg\OrderformBundle\Entity\DiffDiagnoses;
 use Oleg\OrderformBundle\Entity\RelevantScans;
 use Oleg\OrderformBundle\Entity\SpecialStains;
 use Oleg\OrderformBundle\Form\PartType;
@@ -30,7 +30,7 @@ use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Stain;
-use Oleg\OrderformBundle\Entity\Document;
+//use Oleg\OrderformBundle\Entity\PartPaper;
 
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Form\EducationalType;
@@ -311,11 +311,11 @@ class MultyScanOrderController extends Controller {
         $part = new Part(true);
         $accession->addPart($part);
 
-        $diffDiagnoses = new DiffDiagnoses();
-        $part->addDiffDiagnoses($diffDiagnoses);
+//        $diffDiagnoses = new DiffDiagnoses();
+//        $part->addDiffDiagnoses($diffDiagnoses);
 
-        $file = new Document();
-        $part->addPaper($file);
+//        $file = new PartPaper();
+//        $part->addPaper($file);
 
         $block = new Block(true);
         $part->addBlock($block);
