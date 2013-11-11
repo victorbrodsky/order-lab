@@ -28,6 +28,7 @@ class PartPaperType extends AbstractType
             $builder->add('field', 'file', array(
                 'label'=>'Relevant Paper or Abstract',
                 'required'=>false,
+                'attr'=>array('class'=>'form-control'),
             ));
 
         } else {
@@ -36,6 +37,7 @@ class PartPaperType extends AbstractType
             $builder->add('name', 'text', array(
                 'label'=>'Relevant Paper or Abstract:',
                 'required'=>false,
+                'attr'=>array('class'=>'form-control')
             ));
 
         }

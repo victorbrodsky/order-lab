@@ -46,7 +46,7 @@ class PartType extends AbstractType
         }
 
         //name
-        $builder->add('name', 'collection', array(
+        $builder->add('partname', 'collection', array(
             'type' => new PartNameType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
@@ -54,7 +54,7 @@ class PartType extends AbstractType
             'label' => "Part Name:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__partname__',
+            'prototype_name' => '__partpartname__',
         ));
 
         //sourceOrgan

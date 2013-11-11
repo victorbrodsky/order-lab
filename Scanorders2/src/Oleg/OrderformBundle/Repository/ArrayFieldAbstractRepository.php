@@ -220,12 +220,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function deleteIfReserved( $fieldStr, $className, $fieldName ) {
         //echo "fieldStr=".$fieldStr." ";
         $entity = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName);
-        if( $entity->getStatus() == self::STATUS_RESERVED ) {
-            //echo "id=".$entity->getId()." ";
-            $em = $this->_em;
-            $em->remove($entity);
-            $em->flush();
-            return true;
+        if( $entity ) {
+            if( $entity->getStatus() == self::STATUS_RESERVED ) {
+                //echo "id=".$entity->getId()." ";
+                $em = $this->_em;
+                $em->remove($entity);
+                $em->flush();
+                return true;
+            }
         }
         return false;
     }

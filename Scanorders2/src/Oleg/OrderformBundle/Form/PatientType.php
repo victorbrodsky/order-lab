@@ -35,9 +35,10 @@ class PatientType extends AbstractType
             //$flag = true;
         }
 
+        $attr = array('class'=>'form-control keyfield');
         $gen_attr = array('label'=>'MRN','class'=>'Oleg\OrderformBundle\Entity\PatientMrn','type'=>null);
         $builder->add('mrn', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             //'type' => new PatientMrnType($this->params),
             'read_only' => $flag,
             'allow_add' => true,

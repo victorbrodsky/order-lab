@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PartRepository")
  * @ORM\Table(name="part")
- * @UniqueEntity({"accession","name"})
+ * @UniqueEntity({"accession","partname"})
  */
 class Part extends OrderAbstract
 {
@@ -39,7 +39,7 @@ class Part extends OrderAbstract
     /**
      * @ORM\OneToMany(targetEntity="PartName", mappedBy="part", cascade={"persist"})
      */
-    protected $name;
+    protected $partname;
     
     //*********************************************// 
     // optional fields
@@ -116,7 +116,7 @@ class Part extends OrderAbstract
         $this->diffDiagnoses = new ArrayCollection();
 
         //fields:
-        $this->name = new ArrayCollection();
+        $this->partname = new ArrayCollection();
         $this->sourceOrgan = new ArrayCollection();
         //$this->primaryOrgan = new ArrayCollection();
         $this->description = new ArrayCollection();
@@ -124,7 +124,7 @@ class Part extends OrderAbstract
         $this->paper = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addName( new PartName($validity) );
+            $this->addPartname( new PartName($validity) );
             $this->addSourceOrgan( new PartSourceOrgan($validity) );
             $this->addDescription( new PartDescription($validity) );
             $this->addDiagnosis( new PartDiagnosis($validity) );
@@ -141,8 +141,8 @@ class Part extends OrderAbstract
         return $this->accession;
     }
 
-    public function getName() {
-        return $this->name;
+    public function getPartname() {
+        return $this->partname;
     }
 
     public function getSourceOrgan() {
@@ -166,23 +166,23 @@ class Part extends OrderAbstract
         return $this;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function setPartname($partname) {
+        $this->partname = $partname;
     }
-    public function addName($name)
+    public function addPartname($partname)
     {
-        if( $name ) {
-            if( !$this->name->contains($name) ) {
-                $name->setPart($this);
-                $this->name->add($name);
+        if( $partname ) {
+            if( !$this->partname->contains($partname) ) {
+                $partname->setPart($this);
+                $this->partname->add($partname);
             }
         }
 
         return $this;
     }
-    public function removeName($name)
+    public function removePartname($partname)
     {
-        $this->name->removeElement($name);
+        $this->partname->removeElement($partname);
     }
 
 
@@ -354,7 +354,7 @@ class Part extends OrderAbstract
 //        }
 //        $block_info .= ")";
 //        return "Part: id=".$this->id.", name=".$this->name.", blockCount=".count($this->block)." (".$block_info.")<br>";
-        return "Part: id=".$this->id.", name=".$this->name.", blockCount=".count($this->block)."<br>";
+        return "Part: id=".$this->id.", partname=".$this->partname.", blockCount=".count($this->block)."<br>";
     }
     
 

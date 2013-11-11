@@ -21,7 +21,7 @@ class AccessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class'=>'form-control form-control-modif', 'required' => 'required', 'title' => 'Example: S12-12345');
+        $attr = array('class'=>'form-control form-control-modif keyfield', 'required' => 'required', 'title' => 'Example: S12-12345');
 
         if( $this->params['type'] == 'single') {
             $attr['style'] = 'width:100%';
@@ -43,7 +43,7 @@ class AccessionType extends AbstractType
 //        ));
 
         $builder->add('accession', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

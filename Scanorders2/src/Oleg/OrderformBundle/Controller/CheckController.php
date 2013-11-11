@@ -268,4 +268,82 @@ class CheckController extends Controller {
         return $response;
     }
 
+
+    /************************ PART *************************/
+    /**
+     * Get next available MRN from DB
+     * @Route("/part", name="get-part")
+     * @Method("GET")
+     */
+    public function getPartAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $request = $this->get('request');
+        $key = $request->get('key');
+
+        echo "key=".$key."   ";
+
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname");
+
+        //$procedure = $this->getDoctrine()->getRepository('OlegOrderformBundle:Procedure')->findOneByAccession($entity);
+
+        if( $entity ) {
+
+            $element = array(
+                'id'=>$entity->getId(),
+                'name'=>$this->getArrayFieldJson($entity->getPartname()),
+                'sourceOrgan'=>$this->getArrayFieldJson($entity->getSourceOrgan()),
+            );
+        } else {
+            $element = array();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * Get next available Part from DB
+     * @Route("/partpartname", name="create-part")
+     * @Method("GET")
+     */
+    public function createPartAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $request = $this->get('request');
+        $accession = $request->get('key');
+
+        //echo "accession=(".$accession.")   ";
+
+        if( $accession != "" ) {
+            $em = $this->getDoctrine()->getManager();
+            $name = $em->getRepository('OlegOrderformBundle:Part')->findNextPartByAccession($accession);
+            //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+        } else {
+            $name = null;
+        }
+
+        if( $name ) {
+            $element = array(
+                'id'=>0,
+                'name'=>$name
+            );
+        } else {
+            $element = null;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
 }

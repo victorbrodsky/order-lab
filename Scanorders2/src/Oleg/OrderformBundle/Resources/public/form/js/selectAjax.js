@@ -22,6 +22,9 @@ function regularCombobox() {
     $("select.combobox").select2({
         width: combobox_width,
         dropdownAutoWidth: true,
+        placeholder: "Choose an option",
+        allowClear: true,
+        //selectOnBlur: true
         //readonly: true
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
@@ -81,8 +84,8 @@ function getComboboxStain(urlCommon, ids) {
             quietMillis: 100,
             data: data,
             createSearchChoice:function(term, data) {
-                console.log("data="+data['text']);
-                console.log("data="+data[0].text);
+                //console.log("data="+data['text']);
+                //console.log("data="+data[0].text);
                 if ($(data).filter(function() {
                     return this.text.localeCompare(term)===0;
                 }).length===0) {
@@ -172,7 +175,7 @@ function getComboboxOrgan(urlCommon,ids) {
     $.ajax(url).success(function(data) {
 
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_1_accession_0_part_0_sourceOrgan
-        var targetid = id+"sourceOrgan";
+        var targetid = id+"sourceOrgan_0_field";
         if( type == "single" ) {
             targetid = "#oleg_orderformbundle_parttype_sourceOrgan";
         }

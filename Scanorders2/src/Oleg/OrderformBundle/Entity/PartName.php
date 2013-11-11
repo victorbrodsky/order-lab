@@ -15,7 +15,7 @@ class PartName extends PartArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="name", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Part", inversedBy="partname", cascade={"persist"})
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $part;

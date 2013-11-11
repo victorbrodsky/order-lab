@@ -566,9 +566,9 @@ ident:      specialStains or relevantScans
     <div id="part_{{ uid }}">
         {#{{ formmacros.fieldIconLabel(part.name,"glyphicon-check") }}#}
         {% if partnameHtml is not defined or partnameHtml == "" %}
-            {{ formmacros.inputArrayField(part.name,cicle,"partname","key") }}
+            {{ formmacros.inputArrayField(part.partname,cicle,"partpartname","key") }}
         {% else  %}
-            <p><div class="partname">{{ partnameHtml }}</div></p>
+            <p><div class="partpartname">{{ partnameHtml }}</div></p>
         {% endif %}
         {#{{ formmacros.field(part.sourceOrgan) }}#}
         {% if sourceorganHtml is not defined or sourceorganHtml == "" %}

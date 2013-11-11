@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var keys = new Array("mrn", "accession", "name");   //TODO: change to patientmrn, accessionaccession, partname ...
+var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: change to patientmrn, accessionaccession, partname ...
 var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[class^="ajax-combobox-"],textarea,select';  //div.select2-container, select.combobox
@@ -15,7 +15,7 @@ var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[c
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
 var fieldIndex = 3;     //get 'key'
 var holderIndex = 5;    //get 'patient'
-console.log("urlCheck="+urlCheck);
+//console.log("urlCheck="+urlCheck);
 
 function checkForm( elem ) {
 
@@ -23,7 +23,8 @@ function checkForm( elem ) {
 
     //console.log( "element.id=" + element.attr('id') );
 
-    var elementInput = element.parent().parent().find("input");  //find("input[type=text]");
+    //var elementInput = element.parent().parent().find("input");  //find("input[type=text]");
+    var elementInput = element.parent().parent().find(".keyfield");
     //console.log("elementInput.class="+elementInput.attr('class'));
 
     //  0         1              2           3   4  5  6   7
@@ -35,7 +36,7 @@ function checkForm( elem ) {
 
     var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
     var fieldName = idsArr[idsArr.length-fieldIndex];
-    //console.log("name="+name);
+    console.log("name="+name);
     //var patient = idsArr[4];
     //var key = idsArr[4];
 
@@ -45,7 +46,9 @@ function checkForm( elem ) {
 
         //console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
-        removeKeyFromDB(keyElement);
+        if( name != "part" && name != "block" ) {
+            removeKeyFromDB(keyElement);
+        }
         cleanFieldsInElementBlock( element, "all" );
         disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
@@ -58,13 +61,34 @@ function checkForm( elem ) {
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
         var keyValue =keyElement.element.val();
-        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue);
+        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
 
         if( !keyValue ) {
-            //console.log("key undefinded!");
+            console.log("key undefinded!");
 //            $('#'+inputId).popover( {content:"Please fill out key field"} );
 //            $('#'+inputId).popover('show');
-            setKeyValue(element,name+fieldName);
+
+            if( name == "part" || name == "block" ) {
+
+                var accessionNumberElement = getAccessionNumberElement(element);
+                var accessionNumber = accessionNumberElement.val();
+                console.log("accessionNumber="+accessionNumber);
+
+                if( !accessionNumber ) {
+                    console.log( "accessionNumber is empty. accessionNumberElement id="+accessionNumberElement.attr("id") + ", class=" + accessionNumberElement.attr("class") );
+                    accessionNumberElement.popover( {content:"Please fill out Accession Number field"} );
+                    accessionNumberElement.popover('show');
+                    //alert("Can not check "+capitaliseFirstLetter(name)+" name without Accession number");
+                    return;
+                } else {
+                    console.log("accessionNumber is not empty");
+                    setKeyValue(element,name+"partname",accessionNumber);   //TODO: fix it
+                    return;
+                }
+
+            }
+
+            setKeyValue(element,name+fieldName,"");
             //disableInElementBlock(element, false, null, "notkey", null);
             //invertButton(element);
             return;
@@ -157,7 +181,7 @@ function setElementBlock( element, data, cleanall, key ) {
                     elements.eq(i).val(null);   //clean non key fields
                 } else {
                     //console.log("In array. Additional check for field=("+field+")");
-                    if( field == "name" ) {
+                    if( field == "partname" ) {
                         var holder = idsArr[idsArr.length-holderIndex];
                         //console.log("holder="+holder);
                         if( holder != "part" && holder != "block" ) {
@@ -576,8 +600,14 @@ function disableElement(element, flag) {
 
     if( flag ) {
 
-        console.log("disable field id="+element.attr("id"));
-        element.attr('readonly', true);
+        if( type == "file" ) {
+            console.log("file disable field id="+element.attr("id"));
+            element.attr('disabled', true);
+        } else {
+            console.log("general disable field id="+element.attr("id"));
+            element.attr('readonly', true);
+        }
+
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("disable datepicker classs="+classs);
             initDatepicker(element,"remove");
@@ -585,12 +615,15 @@ function disableElement(element, flag) {
 
     } else {
 
-        //console.log("enable field id="+element.attr("id"));
-        element.attr("readonly", false);
-        element.removeAttr( "readonly" );
-        if( type == "radio" ) {
-            element.prop("disabled", false);
+        if( type == "file" ) {
+            console.log("file enable field id="+element.attr("id"));
+            element.attr('disabled', false);
+        } else {
+            //console.log("general enable field id="+element.attr("id"));
+            element.attr("readonly", false);
+            element.removeAttr( "readonly" );
         }
+
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);
             initDatepicker(element);
@@ -613,7 +646,7 @@ function invertButton(btn) {
 
 }
 
-function setKeyValue( btnElement, name ) {
+function setKeyValue( btnElement, name, parentValue ) {
 
     console.log("set key value name="+ name);
 
@@ -631,12 +664,15 @@ function setKeyValue( btnElement, name ) {
         type: 'GET',
         contentType: 'application/json',
         dataType: 'json',
+        data: {key: parentValue},
         success: function (data) {
             if( data ) {
                 //console.debug(name+" text="+ data[name][0]["text"]);
                 setElementBlock(btnElement, data, null, "key");
                 disableInElementBlock(btnElement, false, null, "notkey", null);
                 invertButton(btnElement);
+            } else {
+                console.log('set key data is null');
             }
         },
         error: function () {
@@ -701,4 +737,18 @@ function findKeyElement( element ) {
     res.name = name;
 
     return res;
+}
+
+function getAccessionNumberElement( element ) {
+    var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    console.log("get accession number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+    var accessionNumberHolder = parent.find('.accessionaccession');
+    var accessionNumberElement = parent.find('.keyfield');
+
+    return accessionNumberElement.eq(0);
+}
+
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
