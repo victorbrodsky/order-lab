@@ -24,80 +24,13 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
  */
 class CheckController extends Controller {
 
-//    /**
-//     * @Route("/patientfull", name="get-patient")
-//     * @Method("GET")
-//     */
-//    public function getPatientAction() {
-//
-//        $request = $this->get('request');
-//        $id   = $request->get('mrn');
-//        $id = "NOMRNPROVIDED-0000000001";
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($id);
-//        $entity->setSpecimen(new \Doctrine\Common\Collections\ArrayCollection());
-//
-//        $form   = $this->createForm(new PatientType(), $entity);
-//
-////        $delete_form = $this->createFormBuilder(array('id' => $id))
-////            ->add('id', 'hidden')
-////            ->getForm();
-//
-//        return array(
-//            //'entity'   => $entity,
-//            'edit_form'   => $form->createView(),
-//            //'delete_form' => $delete_form->createView(),
-//        );
-//
-//    }
-
-
-    /**
-     * @Route("/patient", name="get-patientdata")
-     * @Method("GET")   //TODO: use POST?
-     */
-    public function getPatientAction() {
-
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
-        $request = $this->get('request');
-        $key = $request->get('key');
-
-        //$em = $this->getDoctrine()->getManager();
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn");   //findOneByIdJoinedToMrn($mrn);
-
-        if( $entity ) {
-
-            $element = array(
-                //'inmrn'=>$mrn,
-                'id'=>$entity->getId(),
-                'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
-                'name'=>$this->getArrayFieldJson($entity->getName()),
-                'sex'=>$this->getArrayFieldJson($entity->getSex()),
-                'dob'=>$this->getArrayFieldJson($entity->getDob()),
-                'age'=>$this->getArrayFieldJson($entity->getAge()),
-                'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
-            );
-        } else {
-            $element = array();
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($element));
-        return $response;
-    }
-
     public function getArrayFieldJson( $fields ) {
 
+        //echo "fields count=".count($fields)."  ";
         $fieldJson = array();
         foreach( $fields as $field ) {
 
-            //echo $field."<br>";
+            //echo "field=".$field." ";
 
             $providerStr = "";
             //echo "provider count=".count($field->getProvider()).", provider name=".$field->getProvider()->getUsername().", ";
@@ -127,6 +60,46 @@ class CheckController extends Controller {
         }
 
         return $fieldJson;
+    }
+
+
+    /**
+     * @Route("/patient", name="get-patientdata")
+     * @Method("GET")   //TODO: use POST?
+     */
+    public function getPatientAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $request = $this->get('request');
+        $key = $request->get('key');
+
+        //$em = $this->getDoctrine()->getManager();
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true);   //findOneByIdJoinedToMrn($mrn);
+
+        if( $entity ) {
+
+            $element = array(
+                //'inmrn'=>$mrn,
+                'id'=>$entity->getId(),
+                'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
+                'name'=>$this->getArrayFieldJson($entity->getName()),
+                'sex'=>$this->getArrayFieldJson($entity->getSex()),
+                'dob'=>$this->getArrayFieldJson($entity->getDob()),
+                'age'=>$this->getArrayFieldJson($entity->getAge()),
+                'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
+            );
+        } else {
+            $element = array();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
     }
 
     /**
@@ -202,7 +175,7 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = $request->get('key');
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession");
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true);
 
         //$procedure = $this->getDoctrine()->getRepository('OlegOrderformBundle:Procedure')->findOneByAccession($entity);
 
@@ -286,7 +259,7 @@ class CheckController extends Controller {
 
         echo "key=".$key."   ";
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname");
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
 
         //$procedure = $this->getDoctrine()->getRepository('OlegOrderformBundle:Procedure')->findOneByAccession($entity);
 
@@ -294,8 +267,9 @@ class CheckController extends Controller {
 
             $element = array(
                 'id'=>$entity->getId(),
-                'name'=>$this->getArrayFieldJson($entity->getPartname()),
+                'partname'=>$this->getArrayFieldJson($entity->getPartname()),
                 'sourceOrgan'=>$this->getArrayFieldJson($entity->getSourceOrgan()),
+                //TODO: finish this
             );
         } else {
             $element = array();
@@ -323,18 +297,17 @@ class CheckController extends Controller {
 
         //echo "accession=(".$accession.")   ";
 
-        if( $accession != "" ) {
-            $em = $this->getDoctrine()->getManager();
-            $name = $em->getRepository('OlegOrderformBundle:Part')->findNextPartByAccession($accession);
+        $em = $this->getDoctrine()->getManager();
+        $part = $em->getRepository('OlegOrderformBundle:Part')->findNextPartByAccession($accession);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
-        } else {
-            $name = null;
-        }
 
-        if( $name ) {
+        //echo "partname=".$part->getPartname()."  ";
+
+        if( $part ) {
+            //echo "fff  ";
             $element = array(
                 'id'=>0,
-                'name'=>$name
+                'partname'=>$this->getArrayFieldJson($part->getPartname())
             );
         } else {
             $element = null;

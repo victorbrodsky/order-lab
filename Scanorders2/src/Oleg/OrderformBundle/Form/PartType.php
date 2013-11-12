@@ -25,11 +25,6 @@ class PartType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $flag = false;
-        if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
-            //$flag = true;
-        }
-
         $helper = new FormHelper();  
         
         if( $this->params['type'] != 'single' ) {
@@ -121,7 +116,6 @@ class PartType extends AbstractType
 
         $builder->add( 'diseaseType', 'choice', array(
             'label'=>'Type of Disease:',
-            'disabled' => $flag,
             //'required'=>false,
             'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
             'multiple' => false,
@@ -132,7 +126,6 @@ class PartType extends AbstractType
 
         $builder->add( 'origin', 'choice', array(
             'label'=>'Origin:',
-            'disabled' => $flag,
             //'required'=>false,
             'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
             'multiple' => false,
@@ -147,7 +140,6 @@ class PartType extends AbstractType
         }
         $builder->add('primaryOrgan', 'custom_selector', array(
             'label' => 'Primary Site of Origin:',
-            'disabled' => $flag,
             'attr' => $attr,
             'required' => false,
             'classtype' => 'sourceOrgan'

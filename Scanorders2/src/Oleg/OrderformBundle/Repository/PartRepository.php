@@ -5,6 +5,9 @@ namespace Oleg\OrderformBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
+use Oleg\OrderformBundle\Entity\Part;
+use Oleg\OrderformBundle\Entity\PartPartname;
+
 /**
  * PartRepository
  *
@@ -19,7 +22,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         
         $em = $this->_em;
 
-        $part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
+        //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
         
 //        $helper = new FormHelper();
 //        $key = $part->getName();
@@ -27,11 +30,23 @@ class PartRepository extends ArrayFieldAbstractRepository
 //            $name = $helper->getPart();
 //            $part->setName( $name[$key] );
 //        }
+
+//        if( $accession ) {
+//            echo "accession yes <br>";
+//        } else {
+//            echo "accession null <br>";
+//        }
         
-        if( $accession == null || $accession->getId() == null ) {
-            //$em->persist($part);
-            //$em->flush();
-            //return $part;
+        if( $accession->getId() == null ) { //by this point, accession object is already created
+            echo "Part Case 1: accession id null<br>";
+            //$part = $this->findNextPartByAccession( $this->getValidField($accession->getAccession()) );
+            $partname = new PartPartname();
+            $partname->setField("A");
+            $partname->setValidity(1);
+            $part->addPartname($partname);
+
+            //$part = $this->createPart();
+
             $part = $this->setResult( $part, $orderinfo );
             return $part;
         }
@@ -39,8 +54,8 @@ class PartRepository extends ArrayFieldAbstractRepository
         //check if accession already has part with the same name.
         $part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneBy( array(
             'accession' => $accession,
-            'name' => $part->getName()
-        ));
+            'partname' => $part->getPartname()
+        ));//TODO: fix it to field search
         //$part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($part->getName(),"Part","name");
 
         if( $part_found == null ) {
@@ -73,14 +88,34 @@ class PartRepository extends ArrayFieldAbstractRepository
         return $part;
     }
     
-    public function setResult( $part, $orderinfo ) {
-        
+    public function setResult( $part, $orderinfo=null, $original=null ) {
+
+        if( $part ) {
+            echo "part yes <br>";
+        } else {
+            echo "part null <br>";
+        }
+
+        echo "1 part name partname=".$part->getPartname()->first()."<br>";
+        echo "1 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
+        echo "1 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
+        echo "1 part name Diagnosis count=".count($part->getDiagnosis())."<br>";
+        echo "1 part name Diagnosis=".$part->getDiagnosis()[0].",count=".count($part->getDiagnosis())."<br>";
+        //echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+        //echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        echo "1 part=".$part."<br>";
+
+        //$part->setDiagnosis(null);  //TODO: fix fields
+        //$part->setDiffDiagnoses(null);
+
         $em = $this->_em;
         $em->persist($part);
 
         if( $orderinfo == null ) {
             return $part;
         }
+
+        $part = $this->processFieldArrays($part,$orderinfo,$original);
 
         $blocks = $part->getBlock();    
         
@@ -96,6 +131,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         }      
         
         //$em->flush($part);
+        //exit();
         
         return $part;
     }
@@ -106,6 +142,7 @@ class PartRepository extends ArrayFieldAbstractRepository
     public function removeDuplicateEntities( $accession ) {
 
         $parts = $accession->getPart();
+        //echo "<br>remove duplication: part count=".count($parts)."<br>";
 
         if( count($parts) == 1 ) {
             return $accession;
@@ -115,7 +152,8 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         foreach( $parts as $part ) {
 
-            $thisName = $part->getName();
+            echo "remove duplication: partname=".$part->getPartname()->first()."<br>";
+            $thisName = $this->getValidField($part->getPartname());
 
             if( count($names) == 0 || !in_array($thisName, $names) ) {
                 $names[] = $thisName;
@@ -132,9 +170,7 @@ class PartRepository extends ArrayFieldAbstractRepository
     }
 
     public function findNextPartByAccession( $accession ) {
-        $em = $this->_em;
-
-        if( $accession == "" ) {
+        if( !$accession || $accession == "" ) {
             return null;
         }
 
@@ -144,19 +180,41 @@ class PartRepository extends ArrayFieldAbstractRepository
         foreach( $names as $name ) {
             $query = $this->getEntityManager()
                 ->createQuery('
-            SELECT c FROM OlegOrderformBundle:Part c
-            JOIN c.partname cfield
-            JOIN c.accession a
-            WHERE cfield.field = :field AND c.accession = :accession'
+            SELECT p FROM OlegOrderformBundle:Part p
+            JOIN p.partname pfield
+            JOIN p.accession a
+            JOIN a.accession aa
+            WHERE pfield.field = :field AND aa.field = :accession'
                 )->setParameter('field', $name)->setParameter('accession', $accession);
 
             $part = $query->getResult();
 
             if( !$part ) {
-                return $name;
+//                $part = new Part();
+//                $part->setStatus(self::STATUS_RESERVED);
+//                $partname = new PartPartname();
+//                $partname->setField($name);
+//                $partname->setValidity(1);
+//                $part->addPartname($partname);
+                //$this->createPart($name);
+                return $this->createPart($name);
             }
         }
+
         return null;
+    }
+
+    public function createPart($name=null) {
+        if( !$name ) {
+            $name = "A";
+        }
+        $part = new Part();
+        $part->setStatus(self::STATUS_RESERVED);
+        $partname = new PartPartname();
+        $partname->setField($name);
+        $partname->setValidity(1);
+        $part->addPartname($partname);
+        return $part;
     }
 
 //    public function notExists($entity) {

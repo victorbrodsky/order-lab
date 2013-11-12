@@ -66,6 +66,23 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
+    //popover hide for check button
+    $('html').click(function(e) {
+        var clickedEl = $(event.target);
+        var clickedClass = clickedEl.attr("class");
+        //console.debug("html clickedClass="+clickedClass);
+
+        if( clickedClass && ( clickedClass.indexOf("glyphicon") != -1 || clickedEl.children().hasClass("glyphicon") ) ) {
+            //console.debug("html no hide");
+            //var children = clickedEl.children(".glyphicon");
+            return;
+        } else {
+            //console.debug("html hide");
+            $('.keyfield').popover('hide');
+            return;
+        }
+    });
+
 });
 
 //add all element to listeners again, the same as in ready

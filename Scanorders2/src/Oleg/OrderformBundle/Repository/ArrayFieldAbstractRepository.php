@@ -200,14 +200,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return false;
     }
 
-    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName )
+    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null )
     {
         //echo "fieldStr=".$fieldStr." ";
+
+        $onlyValid = "";
+        if( $validity ) {
+            echo " check validity ";
+            $onlyValid = " AND cfield.validity=1";
+        }
+
         $query = $this->getEntityManager()
             ->createQuery('
             SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
             JOIN c.'.$fieldName.' cfield
-            WHERE cfield.field = :field'
+            WHERE cfield.field = :field'.$onlyValid
             )->setParameter('field', $fieldStr);
 
         try {
@@ -331,7 +338,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             foreach( $entity->$fieldMethod() as $field ) {
                 echo "entity field=".$field->getField()."<br>";
                 //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn( $field->getField() );
-                $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($field->getField(),$className,$fieldName);
+                $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($field->getField(),$className,$fieldName,true);
                 return $newEntity; //return first patient. In theory we should have only one KEY (i.e. mrn) in the submitting patient
             }
         } else {
@@ -354,6 +361,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         } else {
             return false;
         }
+    }
+
+    //get only valid field
+    public function getValidField( $fields ) {
+        foreach( $fields as $field ) {
+            if( $field->getValidity() ) {
+                return $field;
+            }
+        }
+        return null;
     }
 
 }

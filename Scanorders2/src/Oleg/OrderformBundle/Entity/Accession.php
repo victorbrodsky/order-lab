@@ -61,7 +61,7 @@ class Accession extends OrderAbstract {
       
     public function __toString()
     {
-        return "Accession: id=".$this->id.", accessionCount".count($this->accession).", partCount=".count($this->part)."<br>";
+        return "Accession: id=".$this->id.", accessionCount=".count($this->accession).", accession#=".$this->accession->first().", partCount=".count($this->part)."<br>";
     }
 
 //    /**

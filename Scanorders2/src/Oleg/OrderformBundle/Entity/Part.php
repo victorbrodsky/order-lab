@@ -37,7 +37,7 @@ class Part extends OrderAbstract
 //     */
 //    protected $name;
     /**
-     * @ORM\OneToMany(targetEntity="PartName", mappedBy="part", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PartPartname", mappedBy="part", cascade={"persist"})
      */
     protected $partname;
     
@@ -60,9 +60,6 @@ class Part extends OrderAbstract
      */
     protected $description;
     
-//    /**
-//     * @ORM\Column(type="text", nullable=true, length=10000)
-//     */
     /**
      * @ORM\OneToMany(targetEntity="PartDiagnosis", mappedBy="part", cascade={"persist"})
      */
@@ -124,13 +121,25 @@ class Part extends OrderAbstract
         $this->paper = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addPartname( new PartName($validity) );
+            $this->addPartname( new PartPartname($validity) );
             $this->addSourceOrgan( new PartSourceOrgan($validity) );
             $this->addDescription( new PartDescription($validity) );
             $this->addDiagnosis( new PartDiagnosis($validity) );
             $this->addPaper( new PartPaper($validity) );
             $this->addDiffDiagnoses( new DiffDiagnoses() );
         }
+    }
+
+    public function __toString()
+    {
+        return "Part: id=".$this->id.
+        ", partname=".$this->partname->first().
+        ", sourceOrgan=".$this->sourceOrgan->first().
+        ", description=".$this->description->first().
+        //", diagnosis=".$this->diagnosis->first().
+        ", paper=".$this->paper->first().
+        //", diffDiagnoses=".$this->diffDiagnoses->first().
+        ", blockCount=".count($this->block)."<br>";
     }
     
     public function getId() {
@@ -340,57 +349,6 @@ class Part extends OrderAbstract
             $this->removeBlock($thisblock);
         }
     }
-    
-    
-
-    public function __toString()
-    {
-//        $block_info = "(";
-//        $count = 0;
-//        foreach( $this->block as $block ) {
-//            //$patient_info .= 'id='.$patient->getId().", mrn=".$patient->getMrn(). "; ";
-//            $block_info .= $count.":" . $block. "; ";
-//            $count++;
-//        }
-//        $block_info .= ")";
-//        return "Part: id=".$this->id.", name=".$this->name.", blockCount=".count($this->block)." (".$block_info.")<br>";
-        return "Part: id=".$this->id.", partname=".$this->partname.", blockCount=".count($this->block)."<br>";
-    }
-    
-
-//    /**
-//     * Add orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     * @return Part
-//     */
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        if( !$this->orderinfo->contains($orderinfo) ) {
-//            $this->orderinfo->add($orderinfo);
-//        }
-//    }
-//
-//    /**
-//     * Remove orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     */
-//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        $this->orderinfo->removeElement($orderinfo);
-//    }
-
-//    /**
-//     * Get orderinfo
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getOrderinfo()
-//    {
-//        return $this->orderinfo;
-//    }
-
 
     public function setDiffDiagnoses($diffDiagnoses) {
         $this->diffDiagnoses = $diffDiagnoses;

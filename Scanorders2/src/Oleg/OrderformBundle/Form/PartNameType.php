@@ -42,7 +42,7 @@ class PartNameType extends AbstractType
 
 
         $builder->add('partothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartName',
+            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
             'label' => false
         ));
 
@@ -51,7 +51,7 @@ class PartNameType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartName',
+            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
         ));
     }
 
