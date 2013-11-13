@@ -13,7 +13,7 @@ class PartDiagnos extends PartArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="PartDiagnos", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Part", inversedBy="diagnos", cascade={"persist"})
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $part;

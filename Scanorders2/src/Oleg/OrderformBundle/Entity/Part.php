@@ -8,21 +8,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+//* @UniqueEntity({"accession","partname"})
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PartRepository")
  * @ORM\Table(name="part")
- * @UniqueEntity({"accession","partname"})
  */
 class Part extends OrderAbstract
 {
-    
-//    /**
-//     * @ORM\Id
-//     * @ORM\Column(type="integer")
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    protected $id;
-   
+
     /**
      * Part belongs to exactly one Accession => Part has only one Accession
      * @ORM\ManyToOne(targetEntity="Accession", inversedBy="part")
@@ -96,7 +90,6 @@ class Part extends OrderAbstract
     protected $orderinfo; 
     
     public function __construct( $withfields=false, $validity=0 ) {
-        //$this->paper = new ArrayCollection();
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
         $this->diffDiagnoses = new ArrayCollection();
@@ -104,7 +97,6 @@ class Part extends OrderAbstract
         //fields:
         $this->partname = new ArrayCollection();
         $this->sourceOrgan = new ArrayCollection();
-        //$this->primaryOrgan = new ArrayCollection();
         $this->description = new ArrayCollection();
         $this->diagnos = new ArrayCollection();
         $this->paper = new ArrayCollection();
@@ -169,6 +161,7 @@ class Part extends OrderAbstract
     }
     public function addPartname($partname)
     {
+        //echo "@@@@@@@@@@@@@@@@@@ add Partname value=".$partname."<br>";
         if( $partname ) {
             if( !$this->partname->contains($partname) ) {
                 $partname->setPart($this);

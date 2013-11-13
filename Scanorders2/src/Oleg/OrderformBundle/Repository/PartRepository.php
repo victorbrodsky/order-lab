@@ -38,12 +38,12 @@ class PartRepository extends ArrayFieldAbstractRepository
 //        }
         
         if( $accession->getId() == null ) { //by this point, accession object is already created
-            echo "Part Case 1: accession id null<br>";
+            echo "###### Part Case 1: accession id null<br>";
 
-            $partname = new PartPartname();
-            $partname->setField("A");
-            $partname->setValidity(1);
-            $part->addPartname($partname);
+            //$partname = new PartPartname();
+            //$partname->setField("A");
+            //$partname->setValidity(1);
+            //$part->addPartname($partname);
 
             //$part = $this->createPart();
 
@@ -98,9 +98,10 @@ class PartRepository extends ArrayFieldAbstractRepository
             echo "part null <br>";
         }
 
-//        echo "1 part name partname=".$part->getPartname()->first()."<br>";
-//        echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-//        echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        echo "1 part name partname=".$part->getPartname()->first()."<br>";
+        echo "1 part name partname count=".count($part->getPartname())."<br>";
+        echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+        echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
 //        echo "1 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
 //        echo "1 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
 //        echo "1 part name Diagnosis count=".count($part->getDiagnosis())."<br>";
