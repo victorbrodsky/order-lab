@@ -77,7 +77,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity->setStatus(self::STATUS_VALID);
 
         $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
-        //echo "provider=".$provider."<br>";
+        echo "provider=".$provider."<br>";
 
         //$class_methods = get_class_methods($dest);
         $class = new \ReflectionClass($entity);
@@ -101,13 +101,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 } else {
                     $fields = $entity->$methodShortName();
                 }
-                //echo "count=".count($fields)."<br>";
+                echo $methodShortName." count=".count($fields)."<br>";
 
-                if( is_object($fields) ) {  //for every field in array (usually, only one item exists)
+                if( is_object($fields) || is_array($fields) ) {
+
+                    echo ( $methodShortName." is object !!! <br>" );
 
                     $validitySet = false;   //indicate that validity has not been set in this field array
 
                     foreach( $fields as $field ) {  //original fields from submitted form
+
+                        echo ( "0 field=".$field."<br>" );
 
                         if( is_object($field) ) {
 
@@ -117,21 +121,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 $class = new \ReflectionClass($field);
                                 $parent = $class->getParentClass();
 
-                                $this->log->addInfo( "field=".$field."<br>" );
+                                echo ( "1 field=".$field."<br>" );
 
                                 if( $parent && $field->getField() && $field->getField() != "" ) {     //filter in all objects with parent class. assume it is "PatientArrayFieldAbstract"
 
                                     $this->log->addInfo( "###parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>" );
                                     $this->log->addInfo( "field id=".$field->getId()."<br>" );
 
-                                    //set provider to the fields from submitted form
+                                    //############# set provider to the fields from submitted form
                                     if( !$field->getProvider() || $field->getProvider() == "" ) {
-                                        $this->log->addInfo( "add provider <br>" );
+                                        //echo( "add provider <br>" );
                                         $field->setProvider($provider); //set provider
-                                        $this->log->addInfo( "after provider=".$field->getProvider()." <br>" );
+                                        echo( "after provider=".$field->getProvider()." <br>" );
                                     }
 
-                                    //set validity to the fields from submitted form
+                                    //############# set validity to the fields from submitted form
                                     if( !$validitySet ) {
                                         $this->log->addInfo( "methodShortName=".$methodShortName."<br>" );
                                         if( !$entity->getId() || !$this->hasValidity($entity->$methodShortName()) ) { //set validity for the first added field
@@ -141,7 +145,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                         $validitySet = true;    //indicate that validity is already has been set in this field array
                                     }
 
-                                    //copy processed field from submitted object to found entity in DB
+                                    //############# copy processed field from submitted object to found entity in DB
                                     if( $original ) {
                                         $this->log->addInfo( "original yes: field=".$field."<br>" );
                                         $methodBaseName = str_replace("get", "", $methodShortName);
@@ -206,7 +210,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $onlyValid = "";
         if( $validity ) {
-            echo " check validity ";
+            //echo " check validity ";
             $onlyValid = " AND cfield.validity=1";
         }
 

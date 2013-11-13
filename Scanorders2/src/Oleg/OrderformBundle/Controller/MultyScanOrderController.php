@@ -310,12 +310,7 @@ class MultyScanOrderController extends Controller {
 
         $part = new Part(true);
         $accession->addPart($part);
-
-//        $diffDiagnoses = new DiffDiagnoses();
-//        $part->addDiffDiagnoses($diffDiagnoses);
-
-//        $file = new PartPaper();
-//        $part->addPaper($file);
+        $accession->addPart($part);
 
         $block = new Block(true);
         $part->addBlock($block);

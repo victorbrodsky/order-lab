@@ -360,6 +360,7 @@ class Patient extends OrderAbstract implements JsonSerializable
      */
     public function addClinicalHistory($clinicalHistory)
     {
+        echo "@@@@@@@@@@@@@@@@@@ add ClinicalHistory value=".$clinicalHistory."<br>";
         if( $clinicalHistory ) {
             if( !$this->clinicalHistory->contains($clinicalHistory) ) {
 //            if( !$this->isExisted($this->clinicalHistory,$clinicalHistory) ) {

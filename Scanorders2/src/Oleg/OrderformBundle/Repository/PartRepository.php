@@ -39,7 +39,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         
         if( $accession->getId() == null ) { //by this point, accession object is already created
             echo "Part Case 1: accession id null<br>";
-            //$part = $this->findNextPartByAccession( $this->getValidField($accession->getAccession()) );
+
             $partname = new PartPartname();
             $partname->setField("A");
             $partname->setValidity(1);
@@ -52,13 +52,13 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
         
         //check if accession already has part with the same name.
-        $part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneBy( array(
-            'accession' => $accession,
-            'partname' => $part->getPartname()
-        ));//TODO: fix it to field search
-        //$part_found = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($part->getName(),"Part","name");
+        $part_found = $this->findOnePartByJoinedToField(
+                            $this->getValidField($accession->getAccession()),
+                            $this->getValidField($part->getPartname())
+        );
 
         if( $part_found == null ) {
+            echo "Part Case 2: accession id is not null and part is null<br>";
             //$em->persist($part);
             //$em->flush();
             //return $part;
@@ -66,7 +66,8 @@ class PartRepository extends ArrayFieldAbstractRepository
             return $part;
         }
         
-        if( $part_found->getName() != $part->getName() ) {
+        if( $this->getValidField($part_found->getPartname()) != $this->getValidField($part->getPartname()) ) {
+            echo "Part Case 3: accession id is not null and part name is different<br>";
             //$em->persist($part);
             //$em->flush();
             //return $part;
@@ -74,6 +75,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             return $part;
         }
 
+        echo "Part Case 4: ???<br>";
         //copy all children to existing entity
         foreach( $part->getBlock() as $block ) {
             $part_found->addBlock( $block );
@@ -96,20 +98,22 @@ class PartRepository extends ArrayFieldAbstractRepository
             echo "part null <br>";
         }
 
-        echo "1 part name partname=".$part->getPartname()->first()."<br>";
-        echo "1 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
-        echo "1 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
-        echo "1 part name Diagnosis count=".count($part->getDiagnosis())."<br>";
-        echo "1 part name Diagnosis=".$part->getDiagnosis()[0].",count=".count($part->getDiagnosis())."<br>";
-        //echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-        //echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
-        echo "1 part=".$part."<br>";
+//        echo "1 part name partname=".$part->getPartname()->first()."<br>";
+//        echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+//        echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+//        echo "1 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
+//        echo "1 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
+//        echo "1 part name Diagnosis count=".count($part->getDiagnosis())."<br>";
+//        echo "1 part name Diagnosis=".$part->getDiagnosis()[0].",count=".count($part->getDiagnosis()).", provider=".$part->getDiagnosis()[0]->getProvider().", partCount=".count($part->getDiagnosis()[0]->getPart())."<br>";
+//        //echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+//        //echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+//        echo "1 part=".$part."<br>";
 
-        //$part->setDiagnosis(null);  //TODO: fix fields
+        //$part->setDiagnosis(null);  //TODO: fix fields when accession is null
         //$part->setDiffDiagnoses(null);
 
         $em = $this->_em;
-        $em->persist($part);
+        //$em->persist($part);
 
         if( $orderinfo == null ) {
             return $part;
@@ -128,10 +132,22 @@ class PartRepository extends ArrayFieldAbstractRepository
             } else {
                 continue;
             }
-        }      
-        
+        }
+
+        echo "####################################################<br>";
+        echo "2 part name partname=".$part->getPartname()->first()."<br>";
+        echo "2 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+        echo "2 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        echo "2 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
+        echo "2 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
+        echo "2 part name Diagnos count=".count($part->getDiagnos())."<br>";
+        echo "2 part name Diagnos=".$part->getDiagnos()[0].",count=".count($part->getDiagnos()).", provider=".$part->getDiagnos()[0]->getProvider().", partCount=".count($part->getDiagnos()[0]->getPart()).", validity=".$part->getDiagnos()[0]->getValidity()."<br>";
+        echo "2 part name Description=".$part->getDescription()[0].",count=".count($part->getDescription()).", provider=".$part->getDescription()[0]->getProvider().", partCount=".count($part->getDescription()[0]->getPart()).", validity=".$part->getDescription()[0]->getValidity()."<br>";
+        echo "2 part=".$part."<br>";
+        echo "####################################################<br>";
+
         //$em->flush($part);
-        //exit();
+        exit();
         
         return $part;
     }
@@ -203,6 +219,27 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         return null;
     }
+
+    public function findOnePartByJoinedToField( $accession, $partname, $validity=null ) {
+
+        $onlyValid = "";
+        if( $validity ) {
+            echo "Part check validity ";
+            $onlyValid = " AND cfield.validity=1";
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT p FROM OlegOrderformBundle:Part p
+            JOIN p.partname pfield
+            JOIN p.accession a
+            JOIN a.accession aa
+            WHERE pfield.field = :field AND aa.field = :accession'.$onlyValid
+            )->setParameter('field', $partname)->setParameter('accession', $accession);
+
+        $part = $query->getResult();
+    }
+
 
     public function createPart($name=null) {
         if( !$name ) {

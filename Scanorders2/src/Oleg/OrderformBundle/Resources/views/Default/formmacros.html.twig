@@ -361,7 +361,11 @@
 
     <div class="row">
         <div class="col-xs-6" align="right">
-            {{form_label(fieldThis.field)}}
+            {% if fieldtype == "paper" and cicle == "show" %}
+                {{form_label(fieldThis.name)}}
+            {% else %}
+                {{form_label(fieldThis.field)}}
+            {% endif %}
             {% if cicle == "show" %}
                 {% if field.vars.value.creationdate != "" %}
                     entered on
@@ -383,15 +387,26 @@
                 {{ formmacros.fieldicon(fieldThis.field) }}
             {% elseif fieldtype == "date" %}
                 {{ formmacros.fielddate(fieldThis.field) }}
+            {% elseif fieldtype == "paper" %}
+                {{ formmacros.fieldpaper(fieldThis,cicle) }}
             {% else %}
                 {{ form_widget(fieldThis.field) }}
             {% endif %}
-            {{ form_rest(fieldThis) }}
+            {% if cicle != 'show' %}
+                {{ form_rest(fieldThis) }}
+            {% endif %}
         </div>
     </div>
 
 {% endmacro %}
 
+{% macro fieldpaper(field,cicle) %}
+    {% if cicle == 'show' %}
+        <a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>
+    {% else %}
+       {{ form_widget(field.field) }}
+    {% endif %}
+{% endmacro %}
 
 {% macro paperInput(fields,type,attr) %}
     <p>
@@ -570,32 +585,32 @@ ident:      specialStains or relevantScans
         {% else  %}
             <p><div class="partpartname">{{ partnameHtml }}</div></p>
         {% endif %}
-        {#{{ formmacros.field(part.sourceOrgan) }}#}
+        {#&#123;&#35;{{ formmacros.field(part.sourceOrgan) }}&#35;&#125;#}
         {% if sourceorganHtml is not defined or sourceorganHtml == "" %}
             {{ formmacros.inputArrayField(part.sourceOrgan,cicle,"partsourceorgan") }}
         {% else  %}
             <p><div class="partsourceorgan">{{ sourceorganHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.paperInput(part.paper,cicle) }}#}
+        {#&#123;&#35;{{ formmacros.paperInput(part.paper,cicle) }}&#35;&#125;#}
         {% if paperHtml is not defined or paperHtml == "" %}
-            {{ formmacros.inputArrayField(part.paper,cicle,"partpaper") }}
+            {{ formmacros.inputArrayField(part.paper,cicle,"partpaper","paper") }}
         {% else  %}
             <p><div class="partpaper">{{ paperHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.field(part.description) }}#}
+        {#&#123;&#35;{{ formmacros.field(part.description) }}&#35;&#125;#}
         {% if descriptionHtml is not defined or descriptionHtml == "" %}
             {{ formmacros.inputArrayField(part.description,cicle,"partdescription") }}
         {% else  %}
             <p><div class="partdescription">{{ descriptionHtml }}</div></p>
         {% endif %}
 
-        {#{{ formmacros.field(part.diagnosis) }}#}
+        {#&#123;&#35;{{ formmacros.field(part.diagnosis) }}&#35;&#125;#}
         {% if diagnosisHtml is not defined or diagnosisHtml == "" %}
-            {{ formmacros.inputArrayField(part.diagnosis,cicle,"partdiagnosis") }}
+            {{ formmacros.inputArrayField(part.diagnos,cicle,"partdiagnos") }}
         {% else  %}
-            <p><div class="partdiagnosis">{{ diagnosisHtml }}</div></p>
+            <p><div class="partdiagnos">{{ diagnosisHtml }}</div></p>
         {% endif %}
 
         {% if part.diffDiagnoses|length > 0 %}
@@ -686,7 +701,7 @@ ident:      specialStains or relevantScans
                                         {{ formmacros.field(part.sourceOrgan) }}
                                         {{ formmacros.paperInput(part.paper,cicle) }}
                                         {{ formmacros.field(part.description) }}
-                                        {{ formmacros.field(part.diagnosis) }}
+                                        {{ formmacros.field(part.diagnos) }}
                                         {############ different diagnoses input collection #############}
                                         {% if part.diffDiagnoses|length > 0 %}
                                             {{ formmacros.collectionInput(part.diffDiagnoses, 'diffDiagnoses', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
@@ -735,9 +750,6 @@ ident:      specialStains or relevantScans
                                                                     {{ formmacros.field(scan.note) }}
                                                                 {% endfor %}
 
-                                                                {#                                                                        {% if multy == 'single' %}#}
-                                                                {#                                                                            {{ formmacros.field(slide.diagnosis) }}#}
-                                                                {#                                                                        {% endif %}#}
                                                                 {{ formmacros.field(slide.microscopicdescr) }}
 
                                                                 {#{{ formmacros.field(slide.specialStains) }}#}

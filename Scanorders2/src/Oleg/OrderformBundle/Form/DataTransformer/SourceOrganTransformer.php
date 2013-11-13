@@ -43,14 +43,14 @@ class SourceOrganTransformer implements DataTransformerInterface
             return "";
         }
 //
-//        return $entity->getName();
+        return $entity->getName();
 
-        $array = new \Doctrine\Common\Collections\ArrayCollection();
-
-        if( null === $entity->toArray() ) {
-            return $array;
-        }
-        return $array;
+//        $array = new \Doctrine\Common\Collections\ArrayCollection();
+//
+//        if( null === $entity->toArray() ) {
+//            return $array;
+//        }
+//        return $array;
 
     }
 

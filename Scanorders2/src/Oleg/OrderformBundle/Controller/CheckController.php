@@ -257,7 +257,7 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = $request->get('key');
 
-        echo "key=".$key."   ";
+        //echo "key=".$key."   ";
 
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
 

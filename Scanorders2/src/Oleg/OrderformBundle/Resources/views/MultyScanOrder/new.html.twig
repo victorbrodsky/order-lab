@@ -123,7 +123,7 @@
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
         {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
-        {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis,type,"","prototype") %}
+        {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnos,type,"","prototype") %}
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
@@ -218,7 +218,7 @@
                         {% for accession in procedure.accession %}
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
 
-                                    {#{{ formmacros.accessionForm(procedure,accession,"check",uid) }}#}
+                            {#{{ formmacros.accessionForm(procedure,accession,"check",uid) }}#}
                                     {{ formmacros.accessionForm(procedure,accession,"check",uid,type) }}
 
 

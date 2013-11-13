@@ -10,6 +10,7 @@ var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: cha
 var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[class^="ajax-combobox-"],textarea,select';  //div.select2-container, select.combobox
+var popoverIsSet = 0;
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -86,6 +87,7 @@ function checkForm( elem ) {
                         e.stopPropagation();
                     });
                     accessionNumberElement.popover('show');
+                    popoverIsSet = 1;
                     //alert("Can not check "+capitaliseFirstLetter(name)+" name without Accession number");
                     return;
                 } else {
@@ -763,3 +765,39 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+$(document).ready(function() {
+
+
+    //popover hide for check button
+    $('html').click(function(e) {
+
+        if( !popoverIsSet ) {
+            return;
+        }
+
+        var clickedEl = $(event.target);
+        var clickedClass = clickedEl.attr("class");
+        //console.debug("html clickedClass="+clickedClass);
+
+        if( clickedClass && ( clickedClass.indexOf("glyphicon") != -1 || clickedEl.children().hasClass("glyphicon") ) ) {
+            //console.debug("html no hide");
+            return;
+        } else {
+            var elements = $('.keyfield');
+            for( var i = 0; i < elements.length; i++ ) {
+                var element = elements.eq(i);
+                //console.debug("html hide, elem id="+element.attr("id"));
+                var origTitle = element.attr('data-original-title');
+                //console.log("origTitle=("+origTitle+")");
+                if( origTitle != "" && origTitle != undefined ) {
+                    //console.log("change title");
+                    element.attr('title', origTitle);
+                    $(".popover").remove();
+                    popoverIsSet = 0;
+                }
+            }
+            return;
+        }
+    });
+
+});

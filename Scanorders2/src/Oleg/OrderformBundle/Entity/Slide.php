@@ -39,10 +39,10 @@ class Slide
      */
     //protected $accession;  
     
-    /**
-     * @ORM\Column(type="text", nullable=true, length=10000)
-     */
-    protected $diagnosis; 
+//    /**
+//     * @ORM\Column(type="text", nullable=true, length=10000)
+//     */
+//    protected $diagnosis;
     
     
     //*********************************************// 
@@ -141,13 +141,13 @@ class Slide
         $this->id = $id;
     }
 
-    public function getDiagnosis() {
-        return $this->diagnosis;
-    }
-
-    public function setDiagnosis($diagnosis) {
-        $this->diagnosis = $diagnosis;
-    }
+//    public function getDiagnosis() {
+//        return $this->diagnosis;
+//    }
+//
+//    public function setDiagnosis($diagnosis) {
+//        $this->diagnosis = $diagnosis;
+//    }
 
     public function getMicroscopicdescr() {
         return $this->microscopicdescr;
@@ -365,7 +365,7 @@ class Slide
     
     
     public function __toString() {
-        return "Slide: id=".$this->getId().", diagnosis=".$this->getDiagnosis()."<br>";
+        return "Slide: id=".$this->getId()."<br>";
     }
 
     /**

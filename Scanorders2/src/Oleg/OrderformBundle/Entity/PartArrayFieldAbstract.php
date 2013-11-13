@@ -62,4 +62,8 @@ abstract class PartArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field;
     }
 
+    public function __toString() {
+        return $this->field."";
+    }
+
 }

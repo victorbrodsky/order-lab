@@ -30,12 +30,6 @@ class Part extends OrderAbstract
      */
     protected $accession;
 
-//    /**
-//     * Name is a letter
-//     * @ORM\Column(type="string", length=3)
-//     * @Assert\NotBlank
-//     */
-//    protected $name;
     /**
      * @ORM\OneToMany(targetEntity="PartPartname", mappedBy="part", cascade={"persist"})
      */
@@ -45,11 +39,6 @@ class Part extends OrderAbstract
     // optional fields
     //*********************************************//     
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="part", cascade={"persist"})
-//     * @ORM\JoinColumn(name="organlist_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $sourceOrgan;
     /**
      * @ORM\OneToMany(targetEntity="PartSourceOrgan", mappedBy="part", cascade={"persist"})
      */
@@ -61,9 +50,9 @@ class Part extends OrderAbstract
     protected $description;
     
     /**
-     * @ORM\OneToMany(targetEntity="PartDiagnosis", mappedBy="part", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PartDiagnos", mappedBy="part", cascade={"persist"})
      */
-    protected $diagnosis;
+    protected $diagnos;
 
     /**
      * @ORM\OneToMany(targetEntity="PartPaper", mappedBy="part", cascade={"persist"})
@@ -117,14 +106,14 @@ class Part extends OrderAbstract
         $this->sourceOrgan = new ArrayCollection();
         //$this->primaryOrgan = new ArrayCollection();
         $this->description = new ArrayCollection();
-        $this->diagnosis = new ArrayCollection();
+        $this->diagnos = new ArrayCollection();
         $this->paper = new ArrayCollection();
 
         if( $withfields ) {
             $this->addPartname( new PartPartname($validity) );
             $this->addSourceOrgan( new PartSourceOrgan($validity) );
             $this->addDescription( new PartDescription($validity) );
-            $this->addDiagnosis( new PartDiagnosis($validity) );
+            $this->addDiagnos( new PartDiagnos($validity) );
             $this->addPaper( new PartPaper($validity) );
             $this->addDiffDiagnoses( new DiffDiagnoses() );
         }
@@ -136,9 +125,9 @@ class Part extends OrderAbstract
         ", partname=".$this->partname->first().
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
-        //", diagnosis=".$this->diagnosis->first().
+        ", diagnos=".$this->diagnos[0].
         ", paper=".$this->paper->first().
-        //", diffDiagnoses=".$this->diffDiagnoses->first().
+        ", diffDiagnoses=".$this->diffDiagnoses[0].
         ", blockCount=".count($this->block)."<br>";
     }
     
@@ -162,8 +151,8 @@ class Part extends OrderAbstract
         return $this->description;
     }
 
-    public function getDiagnosis() {
-        return $this->diagnosis;
+    public function getDiagnos() {
+        return $this->diagnos;
     }
 
     public function getDiseaseType() {
@@ -200,6 +189,7 @@ class Part extends OrderAbstract
     }
     public function addSourceOrgan($sourceOrgan)
     {
+        echo "@@@@@@@@@@@@@@@@@@ add sourceOrgan value=".$sourceOrgan."<br>";
         if( $sourceOrgan ) {
             if( !$this->sourceOrgan->contains($sourceOrgan) ) {
                 $sourceOrgan->setPart($this);
@@ -219,6 +209,7 @@ class Part extends OrderAbstract
     }
     public function addDescription($description)
     {
+        echo "@@@@@@@@@@@@@@@@@@ add Description value=".$description."<br>";
         if( $description ) {
             if( !$this->description->contains($description) ) {
                 $description->setPart($this);
@@ -233,23 +224,24 @@ class Part extends OrderAbstract
         $this->description->removeElement($description);
     }
 
-    public function setDiagnosis($diagnosis) {
-        $this->diagnosis = $diagnosis;
+    public function setDiagnos($diagnos) {
+        $this->diagnos = $diagnos;
     }
-    public function addDiagnosis($diagnosis)
+    public function addDiagnos($diagnos)
     {
-        if( $diagnosis ) {
-            if( !$this->diagnosis->contains($diagnosis) ) {
-                $diagnosis->setPart($this);
-                $this->diagnosis->add($diagnosis);
+        echo "@@@@@@@@@@@@@@@@@@ add diagnos value=".$diagnos."<br>";
+        if( $diagnos ) {
+            if( !$this->diagnos->contains($diagnos) ) {
+                $diagnos->setPart($this);
+                $this->diagnos->add($diagnos);
             }
         }
 
         return $this;
     }
-    public function removeDiagnosis($diagnosis)
+    public function removeDiagnos($diagnos)
     {
-        $this->diagnosis->removeElement($diagnosis);
+        $this->diagnos->removeElement($diagnos);
     }
 
     /**

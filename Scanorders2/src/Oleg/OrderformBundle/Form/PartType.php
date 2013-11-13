@@ -77,9 +77,9 @@ class PartType extends AbstractType
             'prototype_name' => '__partdescription__',
         ));
 
-        //diagnosis
-        $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDiagnosis','type'=>null);    //type=null => auto type
-        $builder->add('diagnosis', 'collection', array(
+        //partdiagnosis
+        $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDiagnos','type'=>null);    //type=null => auto type
+        $builder->add('diagnos', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -87,7 +87,7 @@ class PartType extends AbstractType
             'label' => "Diagnosis:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__partdiagnosis__',
+            'prototype_name' => '__partdiagnos__',
         ));
 
         //paper
