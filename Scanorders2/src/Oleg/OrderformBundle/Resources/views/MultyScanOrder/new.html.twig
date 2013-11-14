@@ -107,7 +107,6 @@
         </div>
     {% endif %}
 
-
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype") %}
         {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"","prototype") %}
@@ -123,7 +122,12 @@
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
         {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,type,"","prototype") %}
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
-        {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnos,type,"","prototype") %}
+        {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
+
+        {% set diffDiagnosesForm = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
+        {% set diffDiagnosesFormFieldWidget = form_widget(diffDiagnosesForm.vars.prototype.field) %}
+        {% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesForm,type,"","prototype") %}
+
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
@@ -149,18 +153,10 @@
          data-prototype-procedurename= "{{ procedureHtml|e }}"
 
           data-prototype-part="
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.name)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper.vars.prototype.file)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diagnosis)|e }}#}
-        {#{{ formmacros.diseaseMulti(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, 0, 0, 0, 0)|e }}#}
-        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml )|e }}
+        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml )|e }}
         "
 
-         data-prototype-diffdiagnoses="
-        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDiagnoses.vars.prototype.name)|e }}
-        "
+         data-prototype-diffDisident="{{ diffDiagnosesFormFieldWidget|e }}"
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
@@ -175,7 +171,7 @@
         "
 
          data-prototype-relevantscans="
-        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.name)|e }}
+        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.field)|e }}
         "
 
          data-prototype-specialstains="

@@ -78,8 +78,8 @@ class PartType extends AbstractType
         ));
 
         //diagnosis
-        $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDiagnos','type'=>null);    //type=null => auto type
-        $builder->add('diagnos', 'collection', array(
+        $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
+        $builder->add('disident', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -87,7 +87,7 @@ class PartType extends AbstractType
             'label' => "Diagnosis:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__partdiagnos__',
+            'prototype_name' => '__partdisident__',
         ));
 
         //paper
@@ -103,16 +103,27 @@ class PartType extends AbstractType
         ));
 
         //diffDiagnoses
-        $builder->add('diffDiagnoses', 'collection', array(
-            'type' => new DiffDiagnosesType(),
+        $gen_attr = array('label'=>'Differential Diagnoses','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>null);    //type=null => auto type
+        $builder->add('diffDisident', 'collection', array(
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => false,
+            'label' => "Differential Diagnoses:",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__diffDiagnoses__',
         ));
+//        $builder->add('diffDiagnoses', 'collection', array(
+//            'type' => new DiffDiagnosesType(),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__diffDiagnoses__',
+//        ));
 
         $builder->add( 'diseaseType', 'choice', array(
             'label'=>'Type of Disease:',

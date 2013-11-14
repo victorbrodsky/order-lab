@@ -304,9 +304,9 @@ class CheckController extends Controller {
         //echo "partname=".$part->getPartname()."  ";
 
         if( $part ) {
-            //echo "fff  ";
+            //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
             $element = array(
-                'id'=>0,
+                'id'=>$part->getId(),
                 'partname'=>$this->getArrayFieldJson($part->getPartname())
             );
         } else {
@@ -316,6 +316,25 @@ class CheckController extends Controller {
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * @Route("/partname/check/{key}", name="delete-part")
+     * @Method("DELETE")
+     */
+    public function deletePartAction($key) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $res = $em->getRepository('OlegOrderformBundle:Part')->deleteIfReserved( $key,"Part","partname" );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
         return $response;
     }
 

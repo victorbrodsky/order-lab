@@ -245,12 +245,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$className: Patient
     //$fieldName: mrn
-    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null ) {
+    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null, $fieldValue = null ) {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
         $em = $this->_em;
-        $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+
+        if( !$fieldValue ) {
+            $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+        }
         //echo "fieldValue=".$fieldValue;
 
         $fieldEntityName = ucfirst($className).ucfirst($fieldName);

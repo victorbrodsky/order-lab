@@ -24,7 +24,7 @@ class PartNameType extends AbstractType
 
         $helper = new FormHelper();
 
-        $attr = array('class' => 'combobox keyfield', 'required' => 'required', 'disabled');
+        $attr = array('class' => 'combobox keyfield');
         if( $this->params['type'] == 'single') {
             $attr['style'] = 'width:100%;';
         } else {
@@ -37,7 +37,7 @@ class PartNameType extends AbstractType
             'max_length' => '3',
             'attr' => $attr,
             //'empty_value' => "Choose an option",
-            'multiple' => false
+            //'multiple' => false
         ));
 
 

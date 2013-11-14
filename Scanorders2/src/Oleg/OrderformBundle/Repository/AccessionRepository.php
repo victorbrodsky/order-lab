@@ -54,6 +54,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         foreach( $parts as $part ) {
             if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
+
+                echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
+                echo "0 accession part name partname count=".count($part->getPartname())."<br>";
+
                 $accession->removePart( $part );
                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );
                 $accession->addPart($part);

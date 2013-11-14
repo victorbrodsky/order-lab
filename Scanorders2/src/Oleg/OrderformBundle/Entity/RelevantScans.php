@@ -5,10 +5,8 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\RelevantScansRepository")
+ * @ORM\Entity
  * @ORM\Table(name="relevantScans")
  */
 class RelevantScans
@@ -24,7 +22,7 @@ class RelevantScans
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $name;
+    protected $field;
 
     /**
      * @ORM\ManyToOne(targetEntity="Slide", inversedBy="relevantScans")
@@ -36,16 +34,16 @@ class RelevantScans
         return $this->id;
     }
 
-    public function getName() {
-        return $this->name;
+    public function getField() {
+        return $this->field;
     }
 
     public function setId($id) {
         $this->id = $id;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function setField($field) {
+        $this->field = $field;
     }
 
     /**
@@ -73,7 +71,7 @@ class RelevantScans
 
     public function __toString()
     {
-        return $this->name;
+        return $this->field;
     }
 
 }

@@ -38,12 +38,12 @@ class PartRepository extends ArrayFieldAbstractRepository
 //        }
         
         if( $accession->getId() == null ) { //by this point, accession object is already created
-            echo "###### Part Case 1: accession id null<br>";
+            echo "******* Part Case 1: accession id null<br>";
 
-            //$partname = new PartPartname();
-            //$partname->setField("A");
-            //$partname->setValidity(1);
-            //$part->addPartname($partname);
+//            $partname = new PartPartname();
+//            $partname->setField("A");
+//            $partname->setValidity(1);
+//            $part->addPartname($partname);
 
             //$part = $this->createPart();
 
@@ -52,13 +52,14 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
         
         //check if accession already has part with the same name.
+        echo "******* check part uniqueness by partname and accession<br>";
         $part_found = $this->findOnePartByJoinedToField(
                             $this->getValidField($accession->getAccession()),
                             $this->getValidField($part->getPartname())
         );
 
         if( $part_found == null ) {
-            echo "Part Case 2: accession id is not null and part is null<br>";
+            echo "******* Part Case 2: accession id is not null and part is null<br>";
             //$em->persist($part);
             //$em->flush();
             //return $part;
@@ -67,7 +68,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
         
         if( $this->getValidField($part_found->getPartname()) != $this->getValidField($part->getPartname()) ) {
-            echo "Part Case 3: accession id is not null and part name is different<br>";
+            echo "******* Part Case 3: accession id is not null and part name is different<br>";
             //$em->persist($part);
             //$em->flush();
             //return $part;
@@ -75,7 +76,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             return $part;
         }
 
-        echo "Part Case 4: ???<br>";
+        echo "******* Part Case 4: ???<br>";
         //copy all children to existing entity
         foreach( $part->getBlock() as $block ) {
             $part_found->addBlock( $block );
@@ -100,21 +101,23 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         echo "1 part name partname=".$part->getPartname()->first()."<br>";
         echo "1 part name partname count=".count($part->getPartname())."<br>";
-        echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-        echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        if( count($part->getPartname()) > 0 ) {
+            echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+            echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        }
 //        echo "1 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
 //        echo "1 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
-//        echo "1 part name Diagnosis count=".count($part->getDiagnosis())."<br>";
-//        echo "1 part name Diagnosis=".$part->getDiagnosis()[0].",count=".count($part->getDiagnosis()).", provider=".$part->getDiagnosis()[0]->getProvider().", partCount=".count($part->getDiagnosis()[0]->getPart())."<br>";
+//        echo "1 part name disidentis count=".count($part->getdisidentis())."<br>";
+//        echo "1 part name disidentis=".$part->getdisidentis()[0].",count=".count($part->getdisidentis()).", provider=".$part->getdisidentis()[0]->getProvider().", partCount=".count($part->getdisidentis()[0]->getPart())."<br>";
 //        //echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
 //        //echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
 //        echo "1 part=".$part."<br>";
 
-        //$part->setDiagnosis(null);  //TODO: fix fields when accession is null
+        //$part->setdisidentis(null);  //TODO: fix fields when accession is null
         //$part->setDiffDiagnoses(null);
 
         $em = $this->_em;
-        //$em->persist($part);
+        $em->persist($part);
 
         if( $orderinfo == null ) {
             return $part;
@@ -137,13 +140,44 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         echo "####################################################<br>";
         echo "2 part name partname=".$part->getPartname()->first()."<br>";
-        echo "2 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-        echo "2 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        if( count($part->getPartname()) > 0 ) {
+            echo "2 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+            echo "2 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        }
         echo "2 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
+
+        $descr = $part->getDescription()[0];
+        if( $descr ) {
+            echo "descr yes <br>";
+        } else {
+            echo "descr null <br>";
+        }
+        echo "2 part descr->getField()=".$descr->getField()."<br>";
+        echo "2 part descr->getPart()=".$descr->getPart()."<br>";
         echo "2 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
-        echo "2 part name Diagnos count=".count($part->getDiagnos())."<br>";
-        echo "2 part name Diagnos=".$part->getDiagnos()[0].",count=".count($part->getDiagnos()).", provider=".$part->getDiagnos()[0]->getProvider().", partCount=".count($part->getDiagnos()[0]->getPart()).", validity=".$part->getDiagnos()[0]->getValidity()."<br>";
-        echo "2 part name Description=".$part->getDescription()[0].",count=".count($part->getDescription()).", provider=".$part->getDescription()[0]->getProvider().", partCount=".count($part->getDescription()[0]->getPart()).", validity=".$part->getDescription()[0]->getValidity()."<br>";
+
+        echo "2 part name disident count=".count($part->getDisident())."<br>";
+        $disident = $part->getDisident()[0];
+        if( $disident ) {
+            echo "disident yes <br>";
+        } else {
+            echo "disident null <br>";
+        }
+        echo "2 part disident->getField()=".$disident->getField()."<br>";
+        echo "2 part disident->getPart()=".$disident->getPart()."<br>";
+        //echo "2 part name disident=".$part->getdisident()[0].",count=".count($part->getdisident()).", provider=".$part->getdisident()[0]->getProvider().", partCount=".count($part->getdisident()[0]->getPart()).", validity=".$part->getdisident()[0]->getValidity()."<br>";
+        //echo "2 part name Description=".$part->getDescription()[0].",count=".count($part->getDescription()).", provider=".$part->getDescription()[0]->getProvider().", partCount=".count($part->getDescription()[0]->getPart()).", validity=".$part->getDescription()[0]->getValidity()."<br>";
+
+        echo "2 part name diffDisident count=".count($part->getdiffDisident())."<br>";
+        $diffDisident = $part->getdiffDisident()[0];
+        if( $diffDisident ) {
+            echo "diffDisident yes <br>";
+        } else {
+            echo "diffDisident null <br>";
+        }
+        echo "2 part diffDisident->getField()=".$diffDisident->getField()."<br>";
+        echo "2 part diffDisident->getPart()=".$diffDisident->getPart()."<br>";
+
         echo "2 part=".$part."<br>";
         echo "####################################################<br>";
 
@@ -207,14 +241,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             $part = $query->getResult();
 
             if( !$part ) {
-//                $part = new Part();
-//                $part->setStatus(self::STATUS_RESERVED);
-//                $partname = new PartPartname();
-//                $partname->setField($name);
-//                $partname->setValidity(1);
-//                $part->addPartname($partname);
-                //$this->createPart($name);
-                return $this->createPart($name);
+                return $this->createPart($name, $accession, null);
             }
         }
 
@@ -238,20 +265,38 @@ class PartRepository extends ArrayFieldAbstractRepository
             WHERE pfield.field = :field AND aa.field = :accession'.$onlyValid
             )->setParameter('field', $partname)->setParameter('accession', $accession);
 
-        $part = $query->getResult();
+        return $query->getResult();
     }
 
+    //use abstract method
+    public function createPart( $name=null, $accession=null, $status = null ) {
 
-    public function createPart($name=null) {
+        if( !$status ) {
+            $status = self::STATUS_RESERVED;
+        }
+
         if( !$name ) {
             $name = "A";
         }
+
         $part = new Part();
-        $part->setStatus(self::STATUS_RESERVED);
+        $part->setStatus($status);
+
         $partname = new PartPartname();
         $partname->setField($name);
         $partname->setValidity(1);
+
+//        if( $accession && !$accession->getId() ) {
+//            $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession");
+//            $em->persist($accession);
+//            $entity->setParent($accession);
+//        }
+
         $part->addPartname($partname);
+        $em = $this->_em;
+        $em->persist($part);
+        $em->flush();
+
         return $part;
     }
 

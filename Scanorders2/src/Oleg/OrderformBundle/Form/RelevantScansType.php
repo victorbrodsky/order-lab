@@ -16,7 +16,7 @@ class RelevantScansType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('name', 'text', array(
+        $builder->add('field', 'text', array(
             'label' => 'Relevant Scanned Images:',
             'required' => false,
             //'attr' => array('class' => 'combobox combobox-width')

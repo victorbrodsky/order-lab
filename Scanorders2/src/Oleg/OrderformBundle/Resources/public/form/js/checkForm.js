@@ -10,7 +10,6 @@ var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: cha
 var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[class^="ajax-combobox-"],textarea,select';  //div.select2-container, select.combobox
-var popoverIsSet = 0;
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -47,9 +46,7 @@ function checkForm( elem ) {
 
         //console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
-        if( name != "part" && name != "block" ) {
-            removeKeyFromDB(keyElement);
-        }
+        removeKeyFromDB(keyElement);
         cleanFieldsInElementBlock( element, "all" );
         disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
@@ -78,16 +75,10 @@ function checkForm( elem ) {
                 if( !accessionNumber ) {
                     //console.log( "accessionNumber is empty. accessionNumberElement id="+accessionNumberElement.attr("id") + ", class=" + accessionNumberElement.attr("class") );
                     accessionNumberElement.popover({
-                        html: true,
-                        trigger: 'manual',
                         placement:'bottom',
                         content:"Can not check "+capitaliseFirstLetter(name)+" name without Accession number"
-                    }).click(function(e) {
-                        $(this).popover('toggle');
-                        e.stopPropagation();
                     });
                     accessionNumberElement.popover('show');
-                    popoverIsSet = 1;
                     //alert("Can not check "+capitaliseFirstLetter(name)+" name without Accession number");
                     return;
                 } else {
@@ -159,7 +150,7 @@ function setElementBlock( element, data, cleanall, key ) {
         var type = elements.eq(i).attr("type");
         var classs = elements.eq(i).attr("class");
         var value = elements.eq(i).attr("value");
-        //console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
+        console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
 
         //if( id && type != "hidden" ) {
         if( id ) {
@@ -204,11 +195,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
                 //get field name for select fields such as classs=select2-container ajax-combobox-procedure
                 if( classs && classs.indexOf("select2") != -1 ) {
-                    //console.log("select2");
-                    var classArr = classs.split("ajax-combobox-");
-                    //console.log("len="+classArr.length);
-                    var fieldArr = classArr[1].split(" ");
-                    field = fieldArr[0];
+                    field = idsArr[idsArr.length-holderIndex];
                     //console.log("new field="+field);
                 }
 
@@ -253,7 +240,7 @@ function setArrayField(element, dataArr, parent) {
         // 0        1               2           3    4      5          6        7
         //oleg_orderformbundle_orderinfotype_patient_0_clinicalHistory_0_clinicalHistory
         // 0        1               2           3    4      5   6     7     8   9  10      11      12 13
-        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDiagnoses_0_name
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_0_name
 
         var addFlag = true;
 
@@ -328,8 +315,8 @@ function setArrayField(element, dataArr, parent) {
             //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id"));
             firstAttachedElement.val(text);
         } else if ( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
-            //console.log("select field, id="+id+",text="+text);
-            element.select2('data', {id: id, text: text});
+            console.log("select field, id="+id+",text="+text);
+            element.select2('data', {id: id, text: text});  //TODO: make sure it sets in correct way!!!!!
         } else if ( tagName == "DIV" ) {
             //get the first (the most recent added) group
             var firstAttachedElement = attachElement.find('.horizontal_type').first();
@@ -517,6 +504,7 @@ function initAllMulti() {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
+    return;
     //console.log("disable element.id=" + element.attr('id'));
 
     var parent = element.parent().parent().parent().parent().parent().parent();
@@ -597,14 +585,16 @@ function disableElement(element, flag) {
         return;
     }
 
-    if( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
-        //console.debug("select disable classs="+classs+", id="+element.attr('id'));
+    if( tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
+        console.debug("select disable classs="+classs+", id="+element.attr('id'));
         //element.select2("disable", flag);
-        //if( flag ) {
-            element.select2("readonly", flag);
-//        } else {
-//            element.select2("readonly", true);
-//        }
+        if( flag ) {    //disable
+            element.select2("readonly", true);
+        } else {    //enable
+            element.attr("readonly", false);
+            element.removeAttr( "readonly" );
+        }
+        //element.select2("readonly", flag);
         return;
     }
 
@@ -699,7 +689,7 @@ function removeKeyFromDB(element) {
     var name = element.name;
     //var keyValue =element.element.attr("value");
     var keyValue =element.element.val();
-    //console.debug("delete name="+name +", keyvalue="+keyValue);
+    console.debug("delete name="+name +", keyvalue="+keyValue);
 
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue,
@@ -767,15 +757,10 @@ function capitaliseFirstLetter(string)
 
 $(document).ready(function() {
 
-
     //popover hide for check button
     $('html').click(function(e) {
 
-        if( !popoverIsSet ) {
-            return;
-        }
-
-        var clickedEl = $(event.target);
+        var clickedEl = $(e.target);
         var clickedClass = clickedEl.attr("class");
         //console.debug("html clickedClass="+clickedClass);
 
@@ -792,8 +777,7 @@ $(document).ready(function() {
                 if( origTitle != "" && origTitle != undefined ) {
                     //console.log("change title");
                     element.attr('title', origTitle);
-                    $(".popover").remove();
-                    popoverIsSet = 0;
+                    $(".popover").delay(100).remove();
                 }
             }
             return;

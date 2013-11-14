@@ -42,11 +42,12 @@ class Part extends OrderAbstract
      * @ORM\OneToMany(targetEntity="PartDescription", mappedBy="part", cascade={"persist"})
      */
     protected $description;
-    
+
+    //diagnosis: disident (diagnoses causes the problem as reserved word)
     /**
-     * @ORM\OneToMany(targetEntity="PartDiagnos", mappedBy="part", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PartDisident", mappedBy="part", cascade={"persist"})
      */
-    protected $diagnos;
+    protected $disident;
 
     /**
      * @ORM\OneToMany(targetEntity="PartPaper", mappedBy="part", cascade={"persist"})
@@ -54,10 +55,9 @@ class Part extends OrderAbstract
     protected $paper;
 
     /**
-     * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="DiffDiagnoses", mappedBy="part", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PartDiffDisident", mappedBy="part", cascade={"persist"})
      */
-    protected $diffDiagnoses;
+    protected $diffDisident;
 
     /////////////////////// Type of Disease TODO: make it as separate object? /////////////////////
     /**
@@ -92,22 +92,22 @@ class Part extends OrderAbstract
     public function __construct( $withfields=false, $validity=0 ) {
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
-        $this->diffDiagnoses = new ArrayCollection();
+        $this->diffDisident = new ArrayCollection();
 
         //fields:
         $this->partname = new ArrayCollection();
         $this->sourceOrgan = new ArrayCollection();
         $this->description = new ArrayCollection();
-        $this->diagnos = new ArrayCollection();
+        $this->disident = new ArrayCollection();
         $this->paper = new ArrayCollection();
 
         if( $withfields ) {
             $this->addPartname( new PartPartname($validity) );
             $this->addSourceOrgan( new PartSourceOrgan($validity) );
             $this->addDescription( new PartDescription($validity) );
-            $this->addDiagnos( new PartDiagnos($validity) );
+            $this->addDisident( new PartDisident($validity) );
             $this->addPaper( new PartPaper($validity) );
-            $this->addDiffDiagnoses( new DiffDiagnoses() );
+            $this->addDiffDisident( new PartDiffDisident() );
         }
     }
 
@@ -117,9 +117,9 @@ class Part extends OrderAbstract
         ", partname=".$this->partname->first().
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
-        ", diagnos=".$this->diagnos[0].
+        ", disident=".$this->disident->first().
         ", paper=".$this->paper->first().
-        ", diffDiagnoses=".$this->diffDiagnoses[0].
+        ", diffDisident=".$this->diffDisident->first().
         ", blockCount=".count($this->block)."<br>";
     }
     
@@ -141,10 +141,6 @@ class Part extends OrderAbstract
 
     public function getDescription() {
         return $this->description;
-    }
-
-    public function getDiagnos() {
-        return $this->diagnos;
     }
 
     public function getDiseaseType() {
@@ -217,25 +213,6 @@ class Part extends OrderAbstract
         $this->description->removeElement($description);
     }
 
-    public function setDiagnos($diagnos) {
-        $this->diagnos = $diagnos;
-    }
-    public function addDiagnos($diagnos)
-    {
-        echo "@@@@@@@@@@@@@@@@@@ add diagnos value=".$diagnos."<br>";
-        if( $diagnos ) {
-            if( !$this->diagnos->contains($diagnos) ) {
-                $diagnos->setPart($this);
-                $this->diagnos->add($diagnos);
-            }
-        }
-
-        return $this;
-    }
-    public function removeDiagnos($diagnos)
-    {
-        $this->diagnos->removeElement($diagnos);
-    }
 
     /**
      * @param mixed $primaryOrgan
@@ -335,43 +312,27 @@ class Part extends OrderAbstract
         }
     }
 
-    public function setDiffDiagnoses($diffDiagnoses) {
-        $this->diffDiagnoses = $diffDiagnoses;
+    public function setDiffDisident($diffDisident) {
+        $this->diffDisident = $diffDisident;
     }
-    /**
-     * Add diffDiagnoses
-     *
-     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
-     * @return Part
-     */
-    public function addDiffDiagnoses($diffDiagnoses)
+    public function adddiffDisident($diffDisident)
     {
-        if( $diffDiagnoses != null ) {
-            if( !$this->diffDiagnoses->contains($diffDiagnoses) ) {
-                $diffDiagnoses->setPart($this);
-                $this->diffDiagnoses[] = $diffDiagnoses;
+        echo "@@@@@@@@@@@@@@@@@@ add diffDisident value=".$diffDisident."<br>";
+        if( $diffDisident != null ) {
+            if( !$this->diffDisident->contains($diffDisident) ) {
+                $diffDisident->setPart($this);
+                $this->diffDisident[] = $diffDisident;
             }
         }
     
         return $this;
     }
-
-    /**
-     * Remove diffDiagnoses
-     *
-     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
-     */
-    public function removeDiffDiagnoses($diffDiagnoses)
+    public function removeDiffDisident($diffDisident)
     {
-        $this->diffDiagnoses->removeElement($diffDiagnoses);
+        $this->diffDisident->removeElement($diffDisident);
     }
-//    public function removeDiffDiagnos($diffDiagnoses)
-//    {
-//        $this->removeDiffDiagnoses($diffDiagnoses);
-//    }
-
-    public function getDiffDiagnoses() {
-        return $this->diffDiagnoses;
+    public function getDiffDisident() {
+        return $this->diffDisident;
     }
 
     /**
@@ -411,26 +372,27 @@ class Part extends OrderAbstract
         return $this->paper;
     }
 
-//    /**
-//     * Add diffDiagnoses
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
-//     * @return Part
-//     */
-//    public function addDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
-//    {
-//        $this->diffDiagnoses[] = $diffDiagnoses;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove diffDiagnoses
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses
-//     */
-//    public function removeDiffDiagnose(\Oleg\OrderformBundle\Entity\DiffDiagnoses $diffDiagnoses)
-//    {
-//        $this->diffDiagnoses->removeElement($diffDiagnoses);
-//    }
+    public function getDisident() {
+        return $this->disident;
+    }
+    public function setDisident($disident) {
+        $this->disident = $disident;
+    }
+    public function addDisident($disident)
+    {
+        echo "@@@@@@@@@@@@@@@@@@ add disident value=".$disident."<br>";
+        if( $disident ) {
+            if( !$this->disident->contains($disident) ) {
+                $disident->setPart($this);
+                $this->disident->add($disident);
+            }
+        }
+        return $this;
+    }
+    public function removeDisident($disident)
+    {
+        $this->disident->removeElement($disident);
+    }
+
+
 }

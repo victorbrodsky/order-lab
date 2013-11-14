@@ -295,9 +295,9 @@
         <div class="col-xs-6" align="right">
             {#Different Diagnoses:#}
             {% if objectForm|length > 0 %}
-                {{ form_label(objectForm[0].name) }}
+                {{ form_label(objectForm[0].field) }}
             {% else %}
-                {{ form_label(objectForm.name) }}
+                {{ form_label(objectForm.field) }}
             {% endif %}
             
             
@@ -305,18 +305,18 @@
         <div class="col-xs-6" align="left">
 
             <div style="float:left; width:100%">
-                {% for diffDiagnoses in objectForm %}
-                    {{ form_errors(diffDiagnoses.name) }}
+                {% for field in objectForm %}
+                    {{ form_errors(field.field) }}
                     <div class="fieldInputColl">
 
                         <div class="input-group" id="{{ inputGroupId }}">
                             {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
-                            {#{{ form_widget(diffDiagnoses.name) }}#}
+                            {#{{ form_widget(diffDiagnoses.field) }}#}
                             {% if attr == "disabled" %}
                                 {#value of disabled field will be ignored, but readonly does not work#}
-                                {{ form_widget(diffDiagnoses.name,{ 'disabled':'disabled' }) }}
+                                {{ form_widget(field.field,{ 'disabled':'disabled' }) }}
                             {% else %}
-                                {{ form_widget(diffDiagnoses.name) }}
+                                {{ form_widget(field.field) }}
                             {% endif %}
                             {% if type == 'new' or type == 'edit' %}
                                 <span
@@ -569,7 +569,7 @@ ident:      specialStains or relevantScans
     </div>
 {% endmacro %}
 
-{% macro partForm( part, flag, uid, cicle, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml ) %}
+{% macro partForm( part, flag, uid, cicle, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml ) %}
     {% import _self as formmacros %}
 
     {%  set uidArr = uid|split('_') %}
@@ -608,14 +608,20 @@ ident:      specialStains or relevantScans
 
         {#&#123;&#35;{{ formmacros.field(part.diagnosis) }}&#35;&#125;#}
         {% if diagnosisHtml is not defined or diagnosisHtml == "" %}
-            {{ formmacros.inputArrayField(part.diagnos,cicle,"partdiagnos") }}
+            {{ formmacros.inputArrayField(part.disident,cicle,"partdisident") }}
         {% else  %}
-            <p><div class="partdiagnos">{{ diagnosisHtml }}</div></p>
+            <p><div class="partdisident">{{ diagnosisHtml }}</div></p>
         {% endif %}
 
-        {% if part.diffDiagnoses|length > 0 %}
-            {{ formmacros.collectionInput(part.diffDiagnoses, 'diffDiagnoses', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
+        {% if part.diffDisident|length > 0 %}
+            {{ formmacros.collectionInput(part.diffDisident, 'diffDisident', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
         {% endif %}
+        {#{% if diffDiagnosesHtml is not defined or diffDiagnosesHtml == "" %}#}
+            {#{{ formmacros.inputArrayField(part.diffDiagnoses,cicle,"partdiffDiagnoses") }}#}
+        {#{% else  %}#}
+            {#<p><div class="partdiffDiagnoses">{{ diffDiagnosesHtml }}</div></p>#}
+        {#{% endif %}#}
+
         {{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
     </div>
 {% endmacro %}
@@ -703,8 +709,8 @@ ident:      specialStains or relevantScans
                                         {{ formmacros.field(part.description) }}
                                         {{ formmacros.field(part.diagnos) }}
                                         {############ different diagnoses input collection #############}
-                                        {% if part.diffDiagnoses|length > 0 %}
-                                            {{ formmacros.collectionInput(part.diffDiagnoses, 'diffDiagnoses', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
+                                        {% if part.diffDisident|length > 0 %}
+                                            {{ formmacros.collectionInput(part.diffDisident, 'diffDisident', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
                                         {% endif %}
                                         {{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
 

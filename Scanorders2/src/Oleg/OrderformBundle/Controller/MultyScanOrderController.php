@@ -197,17 +197,16 @@ class MultyScanOrderController extends Controller {
             //exit();
 
 //            echo "<br>Before loop:<br>";
-//            echo "patient count=".count($entity->getPatient());
-//            foreach( $entity->getPatient() as $pat ) {
-//                echo "<br>id=".$pat->getId();
-//                echo "<br>mrn=".$pat->getMrn();
-//                echo "<br>name=".$pat->getName();
-//                echo "<br>sex=".$pat->getSex();
+//            echo "part count=".count($entity->getPart());
+//            foreach( $entity->getPart() as $part ) {
+//                echo "<br>id=".$part->getId();
+//                echo "<br>name=".$part->getPartname();
+//                echo "<br>Diagnos=".$part->getDiagnos();
 //                //echo "<br>dob=".$pat->getDob();
 //
-//                foreach( $pat->getClinicalHistory() as $hist ) {
-//                    echo "<br>hist id=".$hist->getId();
-//                    echo "<br>hist text=".$hist->getClinicalHistory();
+//                foreach( $part->getDiagnos() as $diag ) {
+//                    echo "<br>diag id=".$diag->getId();
+//                    echo "<br>diag text=".$diag->getField();
 //                    //echo "<br>hist creator=".$hist->getProvider()[0]->getUsername();
 //                }
 //
@@ -228,6 +227,22 @@ class MultyScanOrderController extends Controller {
 //                    echo "<br>hist id=".$hist->getId();
 //                    echo "<br>hist text=".$hist->getClinicalHistory();
 //                    echo "<br>hist Provider=".$hist->getProvider()[0];
+//                }
+//
+//            }
+//            exit();
+
+//            echo "part count=".count($entity->getPart());
+//            foreach( $entity->getPart() as $part ) {
+//                echo "<br>id=".$part->getId();
+//                echo "<br>name=".$part->getPartname()->first();
+//                echo "<br>Diagnos=".$part->getDiagnos()->first();
+//                //echo "<br>dob=".$pat->getDob();
+//
+//                foreach( $part->getDiagnos() as $diag ) {
+//                    echo "<br>diag id=".$diag->getId();
+//                    echo "<br>diag text=".$diag->getField();
+//                    //echo "<br>hist creator=".$hist->getProvider()[0]->getUsername();
 //                }
 //
 //            }
