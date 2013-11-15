@@ -63,8 +63,13 @@ class OrganList
      */
     protected $part;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="Part", mappedBy="primaryOrgan")
+//     */
+//    protected $partprimary;
+
     /**
-     * @ORM\OneToMany(targetEntity="Part", mappedBy="primaryOrgan")
+     * @ORM\OneToMany(targetEntity="PartDiseaseType", mappedBy="primaryOrgan")
      */
     protected $partprimary;
 

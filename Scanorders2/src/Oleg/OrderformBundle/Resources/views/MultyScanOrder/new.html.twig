@@ -128,6 +128,8 @@
         {% set diffDiagnosesFormFieldWidget = form_widget(diffDiagnosesForm.vars.prototype.field) %}
         {% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesForm,type,"","prototype") %}
 
+        {% set diseaseTypeHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"","prototype") %}
+
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
@@ -153,7 +155,7 @@
          data-prototype-procedurename= "{{ procedureHtml|e }}"
 
           data-prototype-part="
-        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml )|e }}
+        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml )|e }}
         "
 
          data-prototype-diffDisident="{{ diffDiagnosesFormFieldWidget|e }}"
@@ -292,7 +294,7 @@
                                                                         {############ relevantScans input collection #############}
                                                                         {% if slide.relevantScans|length > 0 %}
                                                                             {#{{ formmacros.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}#}
-                                                                            {{ formmacros.collectionInput(slide.relevantScans, 'relevantScans', type, 'multi', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
+                                                                            {{ formmacros.collectionInput(slide.relevantScans, 'sliderelevantScans', 'relevantScans', type, 'multi', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
                                                                         {% endif %}
 
                                                                     </div>

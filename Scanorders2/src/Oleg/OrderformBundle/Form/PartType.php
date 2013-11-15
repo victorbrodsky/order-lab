@@ -114,47 +114,51 @@ class PartType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__diffDiagnoses__',
         ));
-//        $builder->add('diffDiagnoses', 'collection', array(
-//            'type' => new DiffDiagnosesType(),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__diffDiagnoses__',
-//        ));
 
-        $builder->add( 'diseaseType', 'choice', array(
-            'label'=>'Type of Disease:',
-            //'required'=>false,
-            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type'), //'required' => '0', 'disabled'
-            //'data' => 'Male',
-        ));
 
-        $builder->add( 'origin', 'choice', array(
-            'label'=>'Origin:',
-            //'required'=>false,
-            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type'),
-        ));
-
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
-        } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
-        }
-        $builder->add('primaryOrgan', 'custom_selector', array(
-            'label' => 'Primary Site of Origin:',
-            'attr' => $attr,
+        //diseaseType
+        $gen_attr = array('label'=>'Type of Disease','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
+        $builder->add('diseaseType', 'collection', array(
+            'type' => new PartDiseaseTypeType($this->params, null, $gen_attr),
+            'allow_add' => true,
+            'allow_delete' => true,
             'required' => false,
-            'classtype' => 'sourceOrgan'
+            'label' => "Type of Disease:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__diseaseType__',
         ));
+
+//        $builder->add( 'diseaseType', 'choice', array(
+//            'label'=>'Type of Disease:',
+//            //'required'=>false,
+//            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
+//            'multiple' => false,
+//            'expanded' => true,
+//            'attr' => array('class' => 'horizontal_type'), //'required' => '0', 'disabled'
+//            //'data' => 'Male',
+//        ));
+//
+//        $builder->add( 'origin', 'choice', array(
+//            'label'=>'Origin:',
+//            //'required'=>false,
+//            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
+//            'multiple' => false,
+//            'expanded' => true,
+//            'attr' => array('class' => 'horizontal_type'),
+//        ));
+//
+//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+//            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
+//        } else {
+//            $attr = array('class' => 'combobox combobox-width');    //show
+//        }
+//        $builder->add('primaryOrgan', 'custom_selector', array(
+//            'label' => 'Primary Site of Origin:',
+//            'attr' => $attr,
+//            'required' => false,
+//            'classtype' => 'sourceOrgan'
+//        ));
 
 
     }

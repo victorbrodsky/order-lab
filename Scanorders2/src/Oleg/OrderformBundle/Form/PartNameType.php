@@ -24,24 +24,19 @@ class PartNameType extends AbstractType
 
         $helper = new FormHelper();
 
-        $attr = array('class' => 'combobox keyfield');
-        if( $this->params['type'] == 'single') {
-            $attr['style'] = 'width:100%;';
-        } else {
-            $attr['style'] = 'width:100%';
-        }
+        $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
         $builder->add('field', 'choice', array(
             'choices' => $helper->getPart(),
             'required' => false,
             'label' => 'Part Name',
-            'max_length' => '3',
+            //'max_length' => '3',
             'attr' => $attr,
             //'empty_value' => "Choose an option",
             //'multiple' => false
         ));
 
 
-        $builder->add('partothers', new ArrayFieldType(), array(
+        $builder->add('partnameothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
             'label' => false
         ));

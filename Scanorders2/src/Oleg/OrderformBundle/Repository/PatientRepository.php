@@ -17,48 +17,6 @@ use Oleg\OrderformBundle\Entity\Patient;
 class PatientRepository extends ArrayFieldAbstractRepository
 {
 
-//    //make sure the uniqueness entity. Make new or return id of existing.
-//    public function processEntity111111( $patient, $orderinfo = null ) {
-//
-//
-//        $em = $this->_em;
-//
-//        $patient = $em->getRepository('OlegOrderformBundle:Procedure')->removeDuplicateEntities( $patient );
-//
-//        $found = $this->isExisted($patient,"Patient","mrn");
-//
-//        if( $found ) {
-//            //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
-//            //Case 2 - existed and STATUS_VALID; User entered existed MRN
-//            //echo "case 1 and 2 <br>";
-//            foreach( $patient->getProcedure() as $procedure ) {
-//                $found->addProcedure( $procedure );
-//            }
-//            return $this->setResult( $found, $orderinfo, $patient ); //provide found object, cause we need id
-//        } else {
-//            if( count($patient->getMrn()) > 0 ) {
-//                //Case 3 - User entered new MRN, not existed in DB
-//                //echo "case 3 <br>";
-//                return $this->setResult( $patient, $orderinfo );
-//            } else {
-//                //Case 4 - MRN is not provided.
-//                //echo "case 4 <br>";
-//                if( $orderinfo ) {
-//                    $provider = $orderinfo->getProvider()->first();
-//                } else {
-//                    $provider = null;
-//                }
-//                //$newPatient = $this->createPatient(self::STATUS_VALID,$provider);
-//                $newPatient = $this->createElement(self::STATUS_VALID,$provider,"Patient","mrn");
-//                foreach( $patient->getProcedure() as $procedure ) {
-//                    $newPatient->addProcedure( $procedure );
-//                }
-//                return $this->setResult( $newPatient, $orderinfo, $patient );
-//            }
-//        }
-//
-//    }
-
     //patient is a patient object found in DB
     //original is a patient object provided by submitted form
     public function setResult( $patient, $orderinfo = null, $original=null ) {
@@ -72,6 +30,13 @@ class PatientRepository extends ArrayFieldAbstractRepository
         if( $orderinfo == null ) {
             return $patient;
         }
+
+        $part = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first();
+        $block = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
+        echo "@@@@@ part name partname=".$part->getPartname()->first()."<br>";
+        echo "@@@@@ part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+        echo "@@@@@ part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        echo "@@@@@ block name=".$block->getName()."<br>";
 
         $patient = $this->processFieldArrays($patient,$orderinfo,$original);
         //echo "patient after mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
@@ -152,102 +117,5 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
         return $entity;
     }
-
-//    //check entity by ID
-//    public function notExists($entity) {
-//        $id = $entity->getId();
-//        if( !$id ) {
-//            return true;
-//        }
-//        $em = $this->_em;
-//        $found = $em->getRepository('OlegOrderformBundle:Patient')->findOneById($id);
-//        if( null === $found ) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
-    //check the last NOMRNPROVIDED MRN in DB and construct next available MRN
-//    public function getNextMrn() {
-//
-//        $query = $this->getEntityManager()
-//            ->createQuery('
-//            SELECT MAX(pmrn.field) as maxmrn FROM OlegOrderformBundle:Patient p
-//            JOIN p.mrn pmrn
-//            WHERE pmrn.field LIKE :mrn'
-//            )->setParameter('mrn', '%NOMRNPROVIDED%');
-//
-//        $lastMrn = $query->getSingleResult();
-//        $lastMrnStr = $lastMrn['maxmrn'];
-//        //echo "lastMrnStr=".$lastMrnStr."<br>";
-//        $mrnIndexArr = explode("-",$lastMrnStr);
-//        //echo "count=".count($mrnIndexArr)."<br>";
-//        if( count($mrnIndexArr) > 1 ) {
-//            $mrnIndex = $mrnIndexArr[1];
-//        } else {
-//            $mrnIndex = 0;
-//        }
-//        $mrnIndex = ltrim($mrnIndex,'0') + 1;
-//        $paddedmrn = str_pad($mrnIndex,10,'0',STR_PAD_LEFT);
-//        //echo "paddedmrn=".$paddedmrn."<br>";
-//        //exit();
-//        return 'NOMRNPROVIDED-'.$paddedmrn;
-//    }
-
-//    //check if the patient with its mrn is existed in DB
-//    //return: null - not existed, entity object if existed
-//    public function isExisted( $patient ) {
-//
-//        if( !$patient ) {
-//            //echo "patient is null <br>";
-//            return null;
-//        }
-//
-//        //echo "patient mrn count=".count($patient->getMrn())."<br>";
-//
-//        if( $patient->getMrn() == "" || $patient->getMrn() == null ) {
-//            return null;
-//        }
-//
-////        return $this->findOneBy(array('mrn' => $patient->getMrn()));
-//        $em = $this->_em;
-//        if( count($patient->getMrn())>0 ) {
-//            $entity = null;
-//            foreach( $patient->getMrn() as $mrn ) {
-//                //echo "entity mrn=".$mrn->getField()."<br>";
-//                //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn( $mrn->getField() );
-//                $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($mrn->getField(),"Patient","mrn");
-//                return $entity; //return first patient. In theory we should have only one MRN in the submitting patient
-//            }
-//        } else {
-//            //echo "entity null <br>";
-//            $entity = null;
-//        }
-//        return $entity;
-//    }
-
-//    public function createPatient( $status = null, $provider = null ) {
-//        if( !$status ) {
-//            $status = self::STATUS_RESERVED;
-//        }
-//        $em = $this->_em;
-//        $mrnValue = $this->getNextMrn();
-//        //echo "mrnValue=".$mrnValue;
-//
-//        $mrn = new PatientMrn(1);
-//        $mrn->setField($mrnValue);
-//        if( $provider ) {
-//            $mrn->setProvider($provider);
-//        }
-//
-//        $patient = new Patient();
-//        $patient->addMrn($mrn);
-//        $patient->setStatus($status);
-//        $em->persist($patient);
-//        //exit();
-//        $em->flush();
-//        return $patient;
-//    }
     
 }

@@ -42,7 +42,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $found ) {
             //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
             //Case 2 - existed and STATUS_VALID; User entered existed MRN
-            echo $className." case 1 and 2 <br>";
+            echo "********* ".$className." case 1 and 2 <br>";
             foreach( $entity->$getChildMethod() as $child ) {
                 $found->$addChildMethod( $child );
             }
@@ -50,11 +50,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         } else {
             if( count($entity->$getFieldMethod()) > 0 ) {
                 //Case 3 - User entered new KEY, not existed in DB
-                echo $className." case 3 <br>";
+                echo "********* ".$className." case 3 <br>";
                 return $this->setResult( $entity, $orderinfo );
             } else {
                 //Case 4 - KEY is not provided.
-                echo $className." case 4 <br>";
+                echo "********* ".$className." case 4 <br>";
                 if( $orderinfo ) {
                     $provider = $orderinfo->getProvider()->first();
                 } else {
@@ -279,6 +279,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
         //exit();
         $em->flush();
+        //echo "Created=".$fieldEntityName."<br>";
+
         return $entity;
     }
 
@@ -373,7 +375,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //get only valid field
     public function getValidField( $fields ) {
         foreach( $fields as $field ) {
-            if( $field->getValidity() ) {
+            echo "get valid field=".$field.", validity=".$field->getValidity()."<br>";
+            if( $field->getValidity() && $field->getValidity() == 1 ) {
                 return $field;
             }
         }

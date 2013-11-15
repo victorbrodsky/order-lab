@@ -24,20 +24,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
         
-//        $helper = new FormHelper();
-//        $key = $part->getName();
-//        if( isset($key) && $key >= 0 ) {
-//            $name = $helper->getPart();
-//            $part->setName( $name[$key] );
-//        }
-
-//        if( $accession ) {
-//            echo "accession yes <br>";
-//        } else {
-//            echo "accession null <br>";
-//        }
-        
-        if( $accession->getId() == null ) { //by this point, accession object is already created
+        if( $accession->getId() == null ) { //by this point, accession object should be already created
             echo "******* Part Case 1: accession id null<br>";
 
 //            $partname = new PartPartname();
@@ -53,42 +40,61 @@ class PartRepository extends ArrayFieldAbstractRepository
         
         //check if accession already has part with the same name.
         echo "******* check part uniqueness by partname and accession<br>";
-        $part_found = $this->findOnePartByJoinedToField(
-                            $this->getValidField($accession->getAccession()),
-                            $this->getValidField($part->getPartname())
-        );
+        $validAccession = $this->getValidField( $accession->getAccession() );
+        if( count($part->getPartname()) > 1 ) {
+            $validPartname = $this->getValidField( $part->getPartname() );
+        } else {
+            $validPartname = $part->getPartname()->first();
+        }
+
+        echo "valid accession#=".$validAccession.", partname=".$validPartname."<br>";
+        //exit();
+
+        //if $validPartname does not exist in DB, then we can not check findOnePartByJoinedToField, so $part_found will be null
+        if( $validPartname->getId() == null ) {
+            $part_found = null;
+        } else {
+            $part_found = $this->findOnePartByJoinedToField( $validAccession, $validPartname );
+        }
 
         if( $part_found == null ) {
-            echo "******* Part Case 2: accession id is not null and part is null<br>";
-            //$em->persist($part);
-            //$em->flush();
-            //return $part;
-            $part = $this->setResult( $part, $orderinfo );
+            echo "******* Part Case 2: accession id is not null, but part is not found in DB<br>";
+
+            //create new part
+            $newPart = $em->getRepository('OlegOrderformBundle:Part')->createPartByPartnameAndAccession( $validAccession."" );
+
+            //copy children from provided form part $part to a newly created part $newPart
+            foreach( $part->getBlock() as $block ) {
+                $newPart->addBlock( $block );
+            }
+
+            $part = $this->setResult( $newPart, $orderinfo, $part );
             return $part;
-        }
-        
-        if( $this->getValidField($part_found->getPartname()) != $this->getValidField($part->getPartname()) ) {
-            echo "******* Part Case 3: accession id is not null and part name is different<br>";
-            //$em->persist($part);
-            //$em->flush();
-            //return $part;
-            $part = $this->setResult( $part, $orderinfo );
+        } else {
+            echo "******* Part Case 3: accession id is not null and part is existed in DB<br>";
+
+            foreach( $part->getBlock() as $block ) {
+                $part_found->addBlock( $block );
+            }
+            $part = $this->setResult( $part_found, $orderinfo, $part );
             return $part;
         }
 
-        echo "******* Part Case 4: ???<br>";
-        //copy all children to existing entity
-        foreach( $part->getBlock() as $block ) {
-            $part_found->addBlock( $block );
-        }
-//        foreach( $part->getSlide() as $slide ) {
-//            $part_found->addSlide( $slide );
+        //theoretically this situation is not possible
+//        if( $this->getValidField($part_found->getPartname()) != $this->getValidField($part->getPartname()) ) {
+//            echo "******* Part Case 3: accession id is not null, but form part name is different<br>"; //Is it possible?
+//            //create part?
+//            $part = $this->setResult( $part, $orderinfo );
+//            return $part;
 //        }
-
-//        $em->persist($part_found);
-//        return $part_found; 
-        $part = $this->setResult( $part_found, $orderinfo );
-        return $part;
+//
+//        echo "******* Part Case 4: ???<br>";
+//        //copy all children to existing entity
+//        foreach( $part->getBlock() as $block ) {
+//            $part_found->addBlock( $block );
+//        }
+//        $part = $this->setResult( $part_found, $orderinfo );
+//        return $part;
     }
     
     public function setResult( $part, $orderinfo=null, $original=null ) {
@@ -220,8 +226,8 @@ class PartRepository extends ArrayFieldAbstractRepository
         return $accession;
     }
 
-    public function findNextPartByAccession( $accession ) {
-        if( !$accession || $accession == "" ) {
+    public function findNextPartnameByAccession( $accessionNumber ) {
+        if( !$accessionNumber || $accessionNumber == "" ) {
             return null;
         }
 
@@ -236,23 +242,56 @@ class PartRepository extends ArrayFieldAbstractRepository
             JOIN p.accession a
             JOIN a.accession aa
             WHERE pfield.field = :field AND aa.field = :accession'
-                )->setParameter('field', $name)->setParameter('accession', $accession);
+                )->setParameter('field', $name)->setParameter('accession', $accessionNumber);
 
             $part = $query->getResult();
 
             if( !$part ) {
-                return $this->createPart($name, $accession, null);
+                return $name;
             }
         }
 
         return null;
     }
 
+    //create new Part by provided accession number
+    public function createPartByPartnameAndAccession( $accessionNumber ) {
+
+        if( !$accessionNumber || $accessionNumber == "" ) {
+            return null;
+        }
+
+        $em = $this->_em;
+
+        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionNumber,"Accession","accession",true);
+
+        if( !$accession ) {
+            //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
+            //                                                                                      $status, $provider, $className, $fieldName, $parent, $fieldValue
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber);
+        }
+
+        //2) find next available part name by accession number
+        $partname = $em->getRepository('OlegOrderformBundle:Part')->findNextPartnameByAccession($accessionNumber);
+
+        //3) before part create: check if part with $partname does not exists in DB
+        $partFound = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true);
+
+        if( $partFound ) {
+            return $partFound;
+        }
+
+        //3) create part object by partname and link it to the parent
+        $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname);
+
+        return $part;
+    }
+
     public function findOnePartByJoinedToField( $accession, $partname, $validity=null ) {
 
         $onlyValid = "";
         if( $validity ) {
-            echo "Part check validity ";
+            //echo "Part check validity ";
             $onlyValid = " AND cfield.validity=1";
         }
 
@@ -265,7 +304,9 @@ class PartRepository extends ArrayFieldAbstractRepository
             WHERE pfield.field = :field AND aa.field = :accession'.$onlyValid
             )->setParameter('field', $partname)->setParameter('accession', $accession);
 
-        return $query->getResult();
+        $parts = $query->getResult();
+
+        return $parts[0];
     }
 
     //use abstract method

@@ -60,22 +60,26 @@ class Part extends OrderAbstract
     protected $diffDisident;
 
     /////////////////////// Type of Disease TODO: make it as separate object? /////////////////////
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=100)
+//     */
+//    protected $diseaseType;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true, length=100)
+//     */
+//    protected $origin;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
+//     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $primaryOrgan;
+    //////////////////////////////////// EOF Type of Disease /////////////////////////////////////
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)
+     * @ORM\OneToMany(targetEntity="PartDiseaseType", mappedBy="part", cascade={"persist"})
      */
     protected $diseaseType;
-
-    /**
-     * @ORM\Column(type="string", nullable=true, length=100)
-     */
-    protected $origin;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
-     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
-     */
-    protected $primaryOrgan;
-    //////////////////////////////////// EOF Type of Disease /////////////////////////////////////
 
     /**
      * One Part has Many blocks
@@ -92,7 +96,7 @@ class Part extends OrderAbstract
     public function __construct( $withfields=false, $validity=0 ) {
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
-        $this->diffDisident = new ArrayCollection();
+
 
         //fields:
         $this->partname = new ArrayCollection();
@@ -100,6 +104,8 @@ class Part extends OrderAbstract
         $this->description = new ArrayCollection();
         $this->disident = new ArrayCollection();
         $this->paper = new ArrayCollection();
+        $this->diffDisident = new ArrayCollection();
+        $this->diseaseType = new ArrayCollection();
 
         if( $withfields ) {
             $this->addPartname( new PartPartname($validity) );
@@ -108,6 +114,7 @@ class Part extends OrderAbstract
             $this->addDisident( new PartDisident($validity) );
             $this->addPaper( new PartPaper($validity) );
             $this->addDiffDisident( new PartDiffDisident() );
+            $this->addDiseaseType( new PartDiseaseType() );
         }
     }
 
@@ -146,9 +153,31 @@ class Part extends OrderAbstract
     public function getDiseaseType() {
         return $this->diseaseType;
     }
+    public function setDiseaseType($diseaseType) {
+        $this->diseaseType = $diseaseType;
+    }
+    public function addDiseaseType($diseaseType)
+    {
+        if( $diseaseType ) {
+            if( !$this->diseaseType->contains($diseaseType) ) {
+                $diseaseType->setPart($this);
+                $this->diseaseType->add($diseaseType);
+            }
+        }
+        return $this;
+    }
+    public function removeDiseaseType($diseaseType)
+    {
+        $this->diseaseType->removeElement($diseaseType);
+    }
 
     public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null) {
         $this->accession = $accession;
+        return $this;
+    }
+    public function setParent($parent)
+    {
+        $this->setAccession($parent);
         return $this;
     }
 
@@ -214,50 +243,31 @@ class Part extends OrderAbstract
     }
 
 
-    /**
-     * @param mixed $primaryOrgan
-     */
-    public function setPrimaryOrgan($primaryOrgan)
-    {
-        $this->primaryOrgan = $primaryOrgan;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrimaryOrgan()
-    {
-        return $this->primaryOrgan;
-    }
-//    public function addPrimaryOrgan($primaryOrgan)
+//    /**
+//     * @param mixed $primaryOrgan
+//     */
+//    public function setPrimaryOrgan($primaryOrgan)
 //    {
-//        if( $primaryOrgan ) {
-//            if( !$this->primaryOrgan->contains($primaryOrgan) ) {
-//                $primaryOrgan->setPart($this);
-//                $this->primaryOrgan->add($primaryOrgan);
-//            }
-//        }
+//        $this->primaryOrgan = $primaryOrgan;
+//    }
 //
-//        return $this;
-//    }
-//    public function removePrimaryOrgan($primaryOrgan)
+//    /**
+//     * @return mixed
+//     */
+//    public function getPrimaryOrgan()
 //    {
-//        $this->primaryOrgan->removeElement($primaryOrgan);
+//        return $this->primaryOrgan;
 //    }
 
-    public function setDiseaseType($diseaseType) {
-        $this->diseaseType = $diseaseType;
-    }
-
-    public function setOrigin($origin)
-    {
-        $this->origin = $origin;
-    }
-
-    public function getOrigin()
-    {
-        return $this->origin;
-    }
+//    public function setOrigin($origin)
+//    {
+//        $this->origin = $origin;
+//    }
+//
+//    public function getOrigin()
+//    {
+//        return $this->origin;
+//    }
 
     /**
      * Add block

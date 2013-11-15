@@ -11,32 +11,7 @@ use Doctrine\ORM\EntityRepository;
  * Add your own custom repository methods below.
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
-    
-    //this function will create an accession if it doesn't exist or return the existing accession object
-    //Note: since procedure and accession are linked together, accession check for uniqueness will be omitted
-//    public function processEntity1111( $accession, $orderinfo=null ) {
-//
-//        $em = $this->_em;
-//        $accession = $em->getRepository('OlegOrderformBundle:Part')->removeDuplicateEntities( $accession );
-//
-//        //$entity = $this->findOneBy(array('accession' => $accession->getAccession()));
-//        $entity = $this->isExisted($accession,"Accession","accession");
-//
-//        if( !$entity ) {
-//            //create new accession
-//            //echo "new accession";
-//            return $this->setResult( $accession, $orderinfo, $original=null );
-//        }
-//
-//        //copy all children to existing entity
-//        foreach( $accession->getPart() as $part ) {
-//            $entity->addPart( $part );
-//        }
-//
-//        //echo "db accession <br>";
-//        return $this->setResult( $entity, $orderinfo  );
-//    }
-    
+
     public function setResult( $accession, $orderinfo=null, $original=null ) {
                
         echo "accession=".$accession."<br>";
@@ -50,15 +25,16 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $accession = $this->processFieldArrays($accession,$orderinfo,$original);
         
         $parts = $accession->getPart();
-        echo "accession part count=".count($parts)."<br>";
+        echo "after process accession=".$accession."<br>";
 
         foreach( $parts as $part ) {
             if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
+                $accession->removePart( $part );
 
                 echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
+                echo "0 accession part name partname validity=".$part->getPartname()->first()->getValidity()."<br>";
                 echo "0 accession part name partname count=".count($part->getPartname())."<br>";
 
-                $accession->removePart( $part );
                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );
                 $accession->addPart($part);
                 $orderinfo->addPart($part);

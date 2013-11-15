@@ -197,21 +197,19 @@ class MultyScanOrderController extends Controller {
             //exit();
 
 //            echo "<br>Before loop:<br>";
-//            echo "part count=".count($entity->getPart());
+//            echo "<br>part count=".count($entity->getPart())."<br>";
 //            foreach( $entity->getPart() as $part ) {
-//                echo "<br>id=".$part->getId();
-//                echo "<br>name=".$part->getPartname();
-//                echo "<br>Diagnos=".$part->getDiagnos();
-//                //echo "<br>dob=".$pat->getDob();
-//
-//                foreach( $part->getDiagnos() as $diag ) {
-//                    echo "<br>diag id=".$diag->getId();
-//                    echo "<br>diag text=".$diag->getField();
-//                    //echo "<br>hist creator=".$hist->getProvider()[0]->getUsername();
-//                }
-//
+//                echo "<br>part id=".$part->getId();
+//                echo "<br>part name=".$part->getPartname()->first();
+//                echo "<br>part validity=".$part->getPartname()->first()->getValidity();
 //            }
-//            exit();
+
+            //oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0][partname][0][field]
+            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
+            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
+            echo "part partname=".$partname."<br>";
+            echo "part description=".$description."<br>";
+            //exit();
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 

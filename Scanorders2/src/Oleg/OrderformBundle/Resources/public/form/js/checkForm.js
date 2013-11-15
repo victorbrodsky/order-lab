@@ -9,7 +9,7 @@
 var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: change to patientmrn, accessionaccession, partname ...
 var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
-var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[class^="ajax-combobox-"],textarea,select';  //div.select2-container, select.combobox
+var selectStr = 'input.form-control,div.horizontal_type,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -59,7 +59,16 @@ function checkForm( elem ) {
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
         var keyValue =keyElement.element.val();
-        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
+        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
+
+        if( name == "part" ) {
+            var parentNumberElement = getAccessionNumberElement(element);
+            var parentValue = parentNumberElement.val();    //i.e. Accession #
+        }
+
+        if( name == "block" ) {
+            //
+        }
 
         if( !keyValue ) {
             //console.log("key undefinded!");
@@ -68,22 +77,18 @@ function checkForm( elem ) {
 
             if( name == "part" || name == "block" ) {
 
-                var accessionNumberElement = getAccessionNumberElement(element);
-                var accessionNumber = accessionNumberElement.val();
-                //console.log(name+": accessionNumber="+accessionNumber);
-
-                if( !accessionNumber ) {
-                    //console.log( "accessionNumber is empty. accessionNumberElement id="+accessionNumberElement.attr("id") + ", class=" + accessionNumberElement.attr("class") );
-                    accessionNumberElement.popover({
+                if( !parentValue ) {
+                    //console.log( "parentValue is empty. parentNumberElement id="+parentNumberElement.attr("id") + ", class=" + parentNumberElement.attr("class") );
+                    parentNumberElement.popover({
                         placement:'bottom',
                         content:"Can not check "+capitaliseFirstLetter(name)+" name without Accession number"
                     });
-                    accessionNumberElement.popover('show');
+                    parentNumberElement.popover('show');
                     //alert("Can not check "+capitaliseFirstLetter(name)+" name without Accession number");
                     return;
                 } else {
-                    //console.log("accessionNumber is not empty");
-                    setKeyValue(element,name+"partname",accessionNumber);   //TODO: fix it
+                    //console.log("parentValue is not empty");
+                    setKeyValue(element,name+"partname",parentValue);   //TODO: fix it
                     return;
                 }
 
@@ -98,7 +103,7 @@ function checkForm( elem ) {
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
-            data: {key: keyValue},
+            data: {key: keyValue, parent: parentValue},
             contentType: 'application/json',
             dataType: 'json',
             success: function (data) {
@@ -143,21 +148,21 @@ function setElementBlock( element, data, cleanall, key ) {
 
     for (var i = 0; i < elements.length; i++) {
 
-        //console.log("Element.id=" + elements.eq(i).attr("id"));
+        console.log("Element.id=" + elements.eq(i).attr("id"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
         var classs = elements.eq(i).attr("class");
         var value = elements.eq(i).attr("value");
-        console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
+        //console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
 
         //if( id && type != "hidden" ) {
         if( id ) {
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-fieldIndex];    //default
-            //console.log("field = " + field);// + ", data text=" + data[field]['text']);
+            console.log("field = " + field);// + ", data text=" + data[field]['text']);
 
             if( key == "key" ) {
                 if( $.inArray(field, keys) != -1 ) {
@@ -193,15 +198,21 @@ function setElementBlock( element, data, cleanall, key ) {
                 }
             } else {
 
-                //get field name for select fields such as classs=select2-container ajax-combobox-procedure
+                //get field name for select fields i.e. procedure
                 if( classs && classs.indexOf("select2") != -1 ) {
-                    field = idsArr[idsArr.length-holderIndex];
-                    //console.log("new field="+field);
+
+                    holder = idsArr[idsArr.length-holderIndex];
+                    if( holder != "part" && holder != "block" ) {
+                        field = holder;
+                        console.log("new field="+field);
+                    }
                 }
 
                 if( data[field] && data[field] != undefined && data[field] != "" ) {
-                    //console.log("data is not null: set text field = " + data[field][0]['text']);
+                    console.log("data is not null: set text field = " + data[field][0]['text']);
                     setArrayField( elements.eq(i), data[field], parent );
+                } else {
+                    console.log("data is not null: don't set text field");
                 }
 
             }
@@ -220,7 +231,7 @@ function setArrayField(element, dataArr, parent) {
     var classs = element.attr("class");
     var tagName = element.prop("tagName");
     var value = element.attr("value");
-   //console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
+   console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
 
     for (var i = 0; i < dataArr.length; i++) {
 
@@ -249,6 +260,7 @@ function setArrayField(element, dataArr, parent) {
         var fieldName = elementIdArr[elementIdArr.length-fieldIndex];
         var holderame = elementIdArr[elementIdArr.length-holderIndex];
         var ident = holderame+fieldName;
+        console.log("ident=" + ident );
 
         //var attachElement = element.parent().parent().parent().parent().parent();
         var attachElement = parent.find("."+ident.toLowerCase());   //patientsex
@@ -289,16 +301,17 @@ function setArrayField(element, dataArr, parent) {
         }
 
         if( tagName == "INPUT" ) {
-            //console.log("input tagName: fieldName="+fieldName);
+            console.log("input tagName: fieldName="+fieldName);
 
             if( type == "text" ) {
-
+                console.log("type text, text="+text);
                 //find the last attached element to attachElement
-//            var firstAttachedElement = attachElement.find('*[type="'+type+'"]').first();
                 var firstAttachedElement = attachElement.find('input').first();
+                console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
                 firstAttachedElement.val(text);
 
             } else if( classs && classs.indexOf("datepicker") != -1 ) {
+                console.log("datepicker");
                 var firstAttachedElement = attachElement.find('input').first();
                 if( text && text != "" ) {
                     firstAttachedElement.datepicker( 'setDate', new Date(text) );
@@ -315,8 +328,12 @@ function setArrayField(element, dataArr, parent) {
             //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id"));
             firstAttachedElement.val(text);
         } else if ( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
-            console.log("select field, id="+id+",text="+text);
+
+            console.log("### select field, id="+id+",text="+text);
+            console.log("id="+element.attr("id"));
+
             element.select2('data', {id: id, text: text});  //TODO: make sure it sets in correct way!!!!!
+
         } else if ( tagName == "DIV" ) {
             //get the first (the most recent added) group
             var firstAttachedElement = attachElement.find('.horizontal_type').first();
@@ -504,7 +521,7 @@ function initAllMulti() {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
-    return;
+    return; //TODO: testing
     //console.log("disable element.id=" + element.attr('id'));
 
     var parent = element.parent().parent().parent().parent().parent().parent();
@@ -667,7 +684,7 @@ function setKeyValue( btnElement, name, parentValue ) {
         data: {key: parentValue},
         success: function (data) {
             if( data ) {
-                //console.debug(name+" text="+ data["partname"]);
+                console.debug("key value data is found");
                 setElementBlock(btnElement, data, null, "key");
                 disableInElementBlock(btnElement, false, null, "notkey", null);
                 invertButton(btnElement);

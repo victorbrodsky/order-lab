@@ -244,7 +244,7 @@ class CheckController extends Controller {
 
     /************************ PART *************************/
     /**
-     * Get next available MRN from DB
+     * Get Part from DB if existed
      * @Route("/part", name="get-part")
      * @Method("GET")
      */
@@ -256,19 +256,25 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $key = $request->get('key');
-
+        $accession = $request->get('parent'); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
+        //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key, $validity=null );
 
-        //$procedure = $this->getDoctrine()->getRepository('OlegOrderformBundle:Procedure')->findOneByAccession($entity);
+        //echo "count=".count($entity)."<br>";
+        //echo "partname=".$entity->getPartname()->first()."<br>";
 
         if( $entity ) {
-
             $element = array(
                 'id'=>$entity->getId(),
                 'partname'=>$this->getArrayFieldJson($entity->getPartname()),
                 'sourceOrgan'=>$this->getArrayFieldJson($entity->getSourceOrgan()),
+                'description'=>$this->getArrayFieldJson($entity->getDescription()),
+                'disident'=>$this->getArrayFieldJson($entity->getDisident()),
+                'paper'=>$this->getArrayFieldJson($entity->getPaper()),
+                'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
+                'diseaseType'=>$entity->getDiseaseType(),
                 //TODO: finish this
             );
         } else {
@@ -282,7 +288,7 @@ class CheckController extends Controller {
     }
 
     /**
-     * Get next available Part from DB
+     * Get next available Part from DB by giving Accession number
      * @Route("/partpartname", name="create-part")
      * @Method("GET")
      */
@@ -298,8 +304,8 @@ class CheckController extends Controller {
         //echo "accession=(".$accession.")   ";
 
         $em = $this->getDoctrine()->getManager();
-        $part = $em->getRepository('OlegOrderformBundle:Part')->findNextPartByAccession($accession);
-            //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+        $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByPartnameAndAccession($accession);
+        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
         //echo "partname=".$part->getPartname()."  ";
 
