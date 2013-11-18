@@ -214,7 +214,7 @@ function remDelBtn(ident, type, patient, procedure, accession, part, block, slid
 //By html form: add different diagnoses input field
 function addDiffdiagField( name, type, patient, procedure, accession, part, block, slide ) {
 
-    //console.log("Add: name="+name+",type="+type+",patient="+patient+ ",procedure="+procedure+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
+    console.log("Add: name="+name+",type="+type+",patient="+patient+ ",procedure="+procedure+",accession="+accession+",part="+part+",block="+block+",slide="+slide);
 
     //var prefix = "oleg_orderformbundle_orderinfotype_";
     var prefix = "inputGroupId_";
@@ -555,4 +555,48 @@ function getDelBtn(ident, type, patient, procedure, accession, part, block, slid
     var btn = '<span id="'+addbtnId+'" onClick="delDiffdiagField(\''+ident+'\',\'' + type + '\',' + patient + ',' +procedure+','+accession+','+part+','+block+','+slide+','+collInt+')"'+
         'class="input-group-addon btn" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-minus-sign"></i></span>';
     return btn;
+}
+
+//wrapper for addDiffdiagField( name, type, patient, procedure, accession, part, block, slide ) //TODO: change slideColl functions to use "this" not id
+function addCollectionField(elem) {
+    var element = $(elem);
+    console.log("element.class="+element.attr('class'));
+    var elementInput = element.parent().find("input");
+
+    console.log("elementInput.class="+elementInput.attr('class'));
+    var inputId = elementInput.attr('id');
+    console.log("inputId="+inputId);
+
+    var idsArr = inputId.split("_");
+
+    var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
+    var fieldName = idsArr[idsArr.length-fieldIndex];
+
+    console.log("name="+name+",fieldName="+fieldName);
+
+    var patient = idsArr[4];
+    var procedure = idsArr[6];
+    var accession = idsArr[8];
+    var part = idsArr[10];
+
+    if( inputId && inputId.indexOf("_slide_") != -1 ) {
+        var block = idsArr[12];
+        var slide = idsArr[14];
+    } else {
+        var block = 0;
+        var slide = 0;
+    }
+
+    //add ids to fix element according to the original script.
+    var uid = patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+fieldName+'_0_'+fieldName;
+    var addBtnId = 'addbtn_patient_'+uid;
+    var inputGroupId = 'inputGroupId_patient_'+uid;
+
+    //id="addbtn_patient_0_procedure_0_accession_0_part_1_block_0_slide_0_diffDisident_0_diffDisident"
+    element.attr('id', addBtnId);
+
+    //id="inputGroupId_patient_0_procedure_0_accession_0_part_1_block_0_slide_0_diffDisident_0_diffDisident"
+    element.parent().attr('id', inputGroupId);
+
+    addDiffdiagField( fieldName, "multi", patient, procedure, accession, part, block, slide );
 }

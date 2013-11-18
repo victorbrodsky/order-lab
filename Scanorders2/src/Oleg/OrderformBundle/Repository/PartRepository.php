@@ -19,7 +19,9 @@ class PartRepository extends ArrayFieldAbstractRepository
     
     //this function will create an entity if it doesn't exist or return the existing entity object
     public function processEntityPart( $part, $accession=null, $orderinfo=null ) {
-        
+
+        echo "<br><br>processEntityPart partname=".$part->getPartname()->first()."<br>";
+
         $em = $this->_em;
 
         //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
@@ -188,7 +190,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         echo "####################################################<br>";
 
         //$em->flush($part);
-        exit();
+        //exit();
         
         return $part;
     }
@@ -306,7 +308,12 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         $parts = $query->getResult();
 
-        return $parts[0];
+        if( $parts ) {
+            return $parts[0];
+        } else {
+            return null;
+        }
+
     }
 
     //use abstract method

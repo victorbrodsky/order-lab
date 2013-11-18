@@ -197,7 +197,8 @@ function getComboboxOrgan(urlCommon,ids) {
         });
 
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_primaryOrgan
-        var targetid = id+"primaryOrgan";
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0_primaryOrgan
+        var targetid = id+"diseaseType_0_primaryOrgan";
         if( type == "single" ) {
             targetid = "#oleg_orderformbundle_parttype_primaryOrgan";
         }

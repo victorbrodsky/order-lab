@@ -23,12 +23,12 @@ class PartDiseaseTypeType extends AbstractType
     {
 
         $builder->add( 'field', 'choice', array(
-            'label'=>'Type of Disease:',
+            'label'=>'Type of Disease',
             //'required'=>false,
             'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
             'multiple' => false,
             'expanded' => true,
-            'attr' => array('class' => 'horizontal_type'), //'required' => '0', 'disabled'
+            'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
             //'data' => 'Male',
         ));
 

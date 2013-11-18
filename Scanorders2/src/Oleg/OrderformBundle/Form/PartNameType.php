@@ -29,12 +29,11 @@ class PartNameType extends AbstractType
             'choices' => $helper->getPart(),
             'required' => false,
             'label' => 'Part Name',
-            //'max_length' => '3',
+            'max_length' => '3',
             'attr' => $attr,
-            //'empty_value' => "Choose an option",
+            'empty_value' => "Choose an option",
             //'multiple' => false
         ));
-
 
         $builder->add('partnameothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',

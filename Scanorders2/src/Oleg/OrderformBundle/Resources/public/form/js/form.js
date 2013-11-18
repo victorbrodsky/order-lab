@@ -14,12 +14,10 @@ $(document).ready(function() {
 
     customCombobox();
 
-    originOptionMulti( new Array("0","0","0","0") );
-    primaryOrganOptionMulti( new Array("0","0","0","0") );
-
-    //toggle check "Neoplastic": oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0
-    checkValidate();
-    checkValidatePrimaryOrgan();
+    //add diseaseType radio listener for new form
+    diseaseTypeListener();
+    //render diseaseType radio result for show form
+    diseaseTypeRender();
 
     //hide buttons
     $("#orderinfo").hide();
@@ -33,8 +31,8 @@ $(document).ready(function() {
 
     //priority and disease type options
     priorityOption();
-    originOption();
-    primaryOrganOption();
+    //originOption();
+    //primaryOrganOption();
    
     //tab
     $('#optional_param_tab a').click(function (e) {
@@ -174,8 +172,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     //bind listener to the toggle button
     bindToggleBtn( name + '_' + ids.join("_") );
     bindDeleteBtn( name + '_' + ids.join("_") );
-    originOptionMulti(ids);
-    primaryOrganOptionMulti(ids);
+    //originOptionMulti(ids);
+    diseaseTypeListener();
     initComboboxJs(ids);
     initAdd();
 
@@ -251,8 +249,8 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
     
     bindToggleBtn( name + '_' + ids.join("_") );
     bindDeleteBtn( name + '_' + ids.join("_") );
-    originOptionMulti(ids);
-    primaryOrganOptionMulti(ids);
+    //originOptionMulti(ids);
+    diseaseTypeListener();
     initComboboxJs(ids);
     initAdd();
 }
@@ -566,156 +564,6 @@ function priorityOption() {
     if( checked == 1 ) {
         $('#priority_option').collapse('toggle');
     }
-}
-
-//use for new: add listeners for disease type holder for Single Form
-function originOption() {
-
-    var holder = "#origin_option";
-
-    $(holder).collapse({
-        toggle: false
-    })
-
-    $('#oleg_orderformbundle_parttype_diseaseType_0').on('click', function(e) {
-        //console.log("1 open!!!!!!!!!!!!!!");
-        $(holder).collapse('show');
-    });
-    
-    $('#oleg_orderformbundle_parttype_diseaseType_1').on('click', function(e) {
-        //console.log("1 close?????????????????");
-        if( $(holder).is(':visible') ) {
-            $(holder).collapse('hide');
-        }
-    });
-
-    $('#oleg_orderformbundle_parttype_diseaseType_placeholder').on('click', function(e) {
-        //console.log("1 close?????????????????");
-        if( $(holder).is(':visible') ) {
-            $(holder).collapse('hide');
-        }
-    });
-
-    var checked = $('form input[type=radio]:checked').val();
-    if( checked == 1 ) {
-        $(holder).collapse('toggle');
-    }
-
-}
-
-//use for new: add listeners for disease type holder for Multy Form
-function originOptionMulti( ids ) { //patient, procedure, accession, part ) {
-
-//    var uid = "";   //'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
-//    var holder = "";    //'#origin_option_multi_'+uid;
-
-    var patient = ids[0];
-    var procedure = ids[1];
-    var accession = ids[2];
-    var part = ids[3];
-
-    var uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
-    var holder = '#origin_option_multi_'+uid+'_origintag';
-    //console.log("on change:"+'#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType_0');
-
-    //var curid = "";
-
-    //id of Neoplastic radio button: oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0
-
-    //set not required
-    //$('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').attr('required', false);
-
-    $('#oleg_orderformbundle_orderinfotype_'+uid+'_diseaseType').change(function(e) {
-//    $('div[id^="oleg_orderformbundle_orderinfotype_"]').change(function(e) {
-        var curid = $(this).attr('id');
-        //console.log("click id="+curid);
-
-        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType
-        var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
-        //patient_0_procedure_0_accession_0_part_0_diseaseType
-        var arr2 = arr1[1].split("_");
-        //get ids
-        var patient = arr2[1];
-        var procedure = arr2[3];
-        var accession = arr2[5];
-        var part = arr2[7];
-
-        uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
-        holder = '#origin_option_multi_'+uid+'_origintag';
-        //console.log(holder);
-
-        e.preventDefault();
-
-        //toggle if Neoplastic is choosen id = *diseaseType_0
-
-        //var neoplasticId = "#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0";
-        //var neoplasticIfChecked = $(neoplasticId).is(':checked');
-//       //console.log("neoplasticId:"+neoplasticId+", neoplasticIfChecked="+neoplasticIfChecked);
-
-        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_0").is(':checked') ) {
-            //console.log("toggle!!!!!!!!!!!!!!!!!");
-            $(holder).collapse('show');
-        }
-
-        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_1").is(':checked') ) {
-            //console.log("1 close?????????????????");
-            if( $(holder).is(':visible') ) {
-                $(holder).collapse('hide');
-            }
-        }
-
-        if( $("#oleg_orderformbundle_orderinfotype_"+uid+"_diseaseType_2").is(':checked') ) {
-            //console.log("placeholder close?????????????????");
-            if( $(holder).is(':visible') ) {
-                $(holder).collapse('hide');
-            }
-        }
-
-    });
-
-}
-
-//use for show: toggle origin well when Neoplastic is selected
-function checkValidate() {
-
-    function add() {
-
-        if( this.name.indexOf("diseaseType") != -1 ) {
-
-            var curid = $(this).attr('id');
-
-
-            if($('#'+curid).is(':checked')) {
-                //console.log("checked! add id="+curid);
-
-                //1) oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType
-                var arr1 = curid.split("oleg_orderformbundle_orderinfotype_");
-                //2) patient_0_procedure_0_accession_0_part_0_diseaseType
-                var arr2 = arr1[1].split("_");
-                //3) get ids
-                var patient = arr2[1];
-                var procedure = arr2[3];
-                var accession = arr2[5];
-                var part = arr2[7];
-                uid = 'patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part;
-                //holder = '#origin_option_multi_'+uid+'_origintag';
-
-                if( curid.indexOf("diseaseType_0") != -1 ) {
-                    //use parent of this symfony's origin id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_3_origin
-                    var holder = '#oleg_orderformbundle_orderinfotype_'+uid+'_origin';
-                    var originElement = $(holder).parent().parent().parent().parent();
-                    //console.log("loop validate toggle="+holder);
-                    $(originElement).collapse('show');
-                }
-            }
-
-        }
-    }
-
-    var form = $('#multy_form'), remaining = {}, errors = [];
-
-    form.find(':radio').each(add);
-
 }
 
 //function onCwid(){

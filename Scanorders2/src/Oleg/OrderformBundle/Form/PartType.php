@@ -112,7 +112,7 @@ class PartType extends AbstractType
             'label' => "Differential Diagnoses:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__diffDiagnoses__',
+            'prototype_name' => '__diffDisident__',
         ));
 
 

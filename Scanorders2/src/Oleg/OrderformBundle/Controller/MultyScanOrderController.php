@@ -205,11 +205,22 @@ class MultyScanOrderController extends Controller {
 //            }
 
             //oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0][partname][0][field]
+            $patientname = $form['patient'][0]['mrn'][0]['field']->getData();
+            echo "patientname=".$patientname."<br>";
+
+            $accessionname = $form['patient'][0]['procedure'][0]['accession'][0]['accession'][0]['field']->getData();
+            echo "accessionname=".$accessionname."<br>";
+
+            $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
+            echo "proceduretype=".$proceduretype."<br>";
+
             $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
-            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
             echo "part partname=".$partname."<br>";
+
+            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
             echo "part description=".$description."<br>";
-            //exit();
+
+            exit();
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 

@@ -184,37 +184,37 @@
     stainCount
 ) %}
 
-<div class="panel-heading" align="left">
-    <div id="form_body_toggle_{{ name }}_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}"></div>
-    {% if name == 'procedure' %}
-        {% set title = 'accession' %}
-    {% else %}
-        {% set title = name %}
-    {% endif %}
-    {{ title | capitalize }} {{ count+1 }}
-    {% if name != "scan" and name != "stain" %}
-    {% if type == 'new' or type == 'edit' %}
-        <div class="form-btn-options">
-            {#{% if toatlLength ==  (count + 1) %}#}
-                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
-                        class="add_form_btn btn-xs btn btn_margin btn-default"
-                        onclick="addSameForm(
-                            '{{ name }}',
-                            {{ patientCount }},
-                            {{ procedureCount }},
-                            {{ accessionCount }},
-                            {{ partCount }},
-                            {{ blockCount }},
-                            {{ slideCount }},
-                            {{ scanCount }},
-                            {{ stainCount }}
-                        )">Add</button>
-            {#{% endif %}#}
-            <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>
-        </div>
-    {% endif %}
-    {% endif %}
-</div>
+    <div class="panel-heading" align="left">
+        <div id="form_body_toggle_{{ name }}_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}"></div>
+        {% if name == 'procedure' %}
+            {% set title = 'accession' %}
+        {% else %}
+            {% set title = name %}
+        {% endif %}
+        {{ title | capitalize }} {{ count+1 }}
+        {% if name != "scan" and name != "stain" %}
+        {% if type == 'new' or type == 'edit' %}
+            <div class="form-btn-options">
+                {#{% if toatlLength ==  (count + 1) %}#}
+                    <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
+                            class="add_form_btn btn-xs btn btn_margin btn-default"
+                            onclick="addSameForm(
+                                '{{ name }}',
+                                {{ patientCount }},
+                                {{ procedureCount }},
+                                {{ accessionCount }},
+                                {{ partCount }},
+                                {{ blockCount }},
+                                {{ slideCount }},
+                                {{ scanCount }},
+                                {{ stainCount }}
+                            )">Add</button>
+                {#{% endif %}#}
+                <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>
+            </div>
+        {% endif %}
+        {% endif %}
+    </div>
 
 {% endmacro %}
 
@@ -251,41 +251,29 @@
 {% endmacro %}
 
 {#used by multy form#}
-{% macro diseaseMulti(form, patient, procedure, accession, part, attr ) %}
-
+{% macro diseaseMulti(form) %}
     {% import _self as formmacros %}
-    {{ formmacros.field(form.diseaseType,attr) }}
 
-    {% set uid = 'patient_'~patient~'_procedure_'~procedure~'_accession_'~accession~'_part_'~part %}
+    {{ form_widget(form.field) }}
+    <br>
 
-    {#  optional for origin  #}
-    {#id = origin_option_multi_patient_0_procedure_0_accession_0_part_0_diseaseType#}
-    <div id="origin_option_multi_{{ uid }}_origintag" class="collapse">
-
+    <div class="collapse originradio">
         <div class="well" aling='center'>
-
-            {{ formmacros.field(form.origin,attr) }}
-
+            {{ form_widget(form.origin) }}
         </div>
-
     </div>
 
-
-    <div id="primaryOrgan_option_multi_{{ uid }}_primaryOrgan" class="collapse">
-
+    <div class="collapse primaryorganradio">
         <div class="well" aling='center'>
-
-            {{ formmacros.field(form.primaryOrgan,attr) }}
-
+            {{ form_widget(form.primaryOrgan) }}
         </div>
-
     </div>
 
 {% endmacro %}
 
     
 {#####################  Collection Input Field  ########################}
-{% macro collectionInput(objectForm, classname, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, attr) %}
+{% macro collectionInput(objectForm, classname, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
 
     {% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
     {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
@@ -296,29 +284,22 @@
             <div class="col-xs-6" align="right">
                 {#Different Diagnoses:#}
                 {% if objectForm|length > 0 %}
-                    {{ form_label(objectForm[0].field) }}
+                    {% set thisField = objectForm[0].field %}
                 {% else %}
-                    {{ form_label(objectForm.field) }}
+                    {% set thisField = objectForm.field %}
                 {% endif %}
 
-
+                {{ form_label(thisField) }}
             </div>
+
             <div class="col-xs-6" align="left">
 
                 <div style="float:left; width:100%">
                     {% for field in objectForm %}
                         {{ form_errors(field.field) }}
                         <div class="fieldInputColl">
-
                             <div class="input-group" id="{{ inputGroupId }}">
-                                {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
-                                {#{{ form_widget(diffDiagnoses.field) }}#}
-                                {% if attr == "disabled" %}
-                                    {#value of disabled field will be ignored, but readonly does not work#}
-                                    {{ form_widget(field.field,{ 'disabled':'disabled' }) }}
-                                {% else %}
-                                    {{ form_widget(field.field) }}
-                                {% endif %}
+                                {{ form_widget(field.field) }}
                                 {% if type == 'new' or type == 'edit' %}
                                     <span
                                           id="{{ addBtnId }}"
@@ -328,7 +309,6 @@
                                     </span>
                                 {% endif %}
                             </div>
-
                         </div>
                     {% endfor %}
                 </div>
@@ -340,7 +320,8 @@
     
 {% endmacro %}
 
-{#holder for array of fields#}
+
+{######################  holder for array of fields  #################################}
 {% macro inputArrayField(fields,cicle,classname,fieldtype) %}
     {% import _self as formmacros %}
     <p>
@@ -373,9 +354,6 @@
                     entered on
                     {{field.vars.value.creationdate|date('Y-m-d')}}
                 {% endif %}
-                {#{% if field.vars.value.provider|length > 0 and field.vars.value.provider|first != "" %}#}
-                    {#by#}
-                    {#{{field.vars.value.provider|first}}#}
                 {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
                     by
                     {{field.vars.value.provider}}
@@ -391,12 +369,40 @@
                 {{ formmacros.fielddate(fieldThis.field) }}
             {% elseif fieldtype == "paper" %}
                 {{ formmacros.fieldpaper(fieldThis,cicle) }}
+            {% elseif fieldtype == "diseaseType" %}
+                {{ formmacros.diseaseMulti(fieldThis) }}
+            {% elseif fieldtype == "partdiffDisident" %}
+                {{ formmacros.fieldCollectionInput(fieldThis,cicle) }}
             {% else %}
                 {{ form_widget(fieldThis.field) }}
             {% endif %}
             {% if cicle != 'show' %}
-                {{ form_rest(fieldThis) }}
+                {#{{ form_rest(fieldThis) }}#}
             {% endif %}
+        </div>
+    </div>
+
+{% endmacro %}
+
+{############# custom array fields #############}
+{% macro fieldCollectionInput(field, cicle) %}
+
+    <div style="float:left; width:100%">
+        {#{{ form_errors(field.field) }}#}
+        <div class="fieldInputColl">
+            <div class="input-group"
+                 {#id="{{ inputGroupId }}#}
+                 ">
+                {{ form_widget(field.field) }}
+                {% if cicle == 'new' or cicle == 'edit' %}
+                    <span
+                            {#id="{{ addBtnId }}"#}
+                            onClick="addCollectionField(this)"
+                            class="input-group-addon btn" type="button">
+                          <i class="glyphicon glyphicon-plus-sign"></i>
+                    </span>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -581,52 +587,50 @@ ident:      specialStains or relevantScans
     {% set partCount = uidArr[3] %}
 
     <div id="part_{{ uid }}">
-        {#{{ formmacros.fieldIconLabel(part.name,"glyphicon-check") }}#}
+
         {% if partnameHtml is not defined or partnameHtml == "" %}
             {{ formmacros.inputArrayField(part.partname,cicle,"partpartname","key") }}
         {% else  %}
             <p><div class="partpartname">{{ partnameHtml }}</div></p>
         {% endif %}
-        {#&#123;&#35;{{ formmacros.field(part.sourceOrgan) }}&#35;&#125;#}
+
         {% if sourceorganHtml is not defined or sourceorganHtml == "" %}
             {{ formmacros.inputArrayField(part.sourceOrgan,cicle,"partsourceorgan") }}
         {% else  %}
             <p><div class="partsourceorgan">{{ sourceorganHtml }}</div></p>
         {% endif %}
 
-        {#&#123;&#35;{{ formmacros.paperInput(part.paper,cicle) }}&#35;&#125;#}
         {% if paperHtml is not defined or paperHtml == "" %}
             {{ formmacros.inputArrayField(part.paper,cicle,"partpaper","paper") }}
         {% else  %}
             <p><div class="partpaper">{{ paperHtml }}</div></p>
         {% endif %}
 
-        {#&#123;&#35;{{ formmacros.field(part.description) }}&#35;&#125;#}
         {% if descriptionHtml is not defined or descriptionHtml == "" %}
             {{ formmacros.inputArrayField(part.description,cicle,"partdescription") }}
         {% else  %}
             <p><div class="partdescription">{{ descriptionHtml }}</div></p>
         {% endif %}
 
-        {#&#123;&#35;{{ formmacros.field(part.diagnosis) }}&#35;&#125;#}
         {% if diagnosisHtml is not defined or diagnosisHtml == "" %}
             {{ formmacros.inputArrayField(part.disident,cicle,"partdisident") }}
         {% else  %}
             <p><div class="partdisident">{{ diagnosisHtml }}</div></p>
         {% endif %}
 
-        {% if part.diffDisident|length > 0 %}
-            {{ formmacros.collectionInput(part.diffDisident, 'partdiffDisident', 'diffDisident', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
-        {% endif %}
-        {#{% if diffDiagnosesHtml is not defined or diffDiagnosesHtml == "" %}#}
-            {#{{ formmacros.inputArrayField(part.diffDisident,cicle,"partdiffDisident") }}#}
-        {#{% else  %}#}
-            {#<p><div class="partdiffDisident">{{ diffDiagnosesHtml }}</div></p>#}
+        {#exception: this is a collection field with ability +/-#}
+        {#{% if part.diffDisident|length > 0 %}#}
+            {#{{ formmacros.collectionInput(part.diffDisident, 'partdiffDisident', 'diffDisident', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}#}
         {#{% endif %}#}
+        {% if diffDiagnosesHtml is not defined or diffDiagnosesHtml == "" %}
+            {{ formmacros.inputArrayField(part.diffDisident,cicle,"partdiffdisident","partdiffDisident") }}
+        {% else  %}
+            {#field will be added by JS#}
+            {#2<p><div class="partdiffdisident">{{ diffDiagnosesHtml }}</div></p>#}
+        {% endif %}
 
-        {#{{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}#}
         {% if diseaseTypeHtml is not defined or diseaseTypeHtml == "" %}
-            {{ formmacros.inputArrayField(part.diseaseType,cicle,"partdiseasetype") }}
+            {{ formmacros.inputArrayField(part.diseaseType,cicle,"partdiseasetype","diseaseType") }}
         {% else  %}
             <p><div class="partdiseasetype">{{ diseaseTypeHtml }}</div></p>
         {% endif %}
@@ -720,7 +724,7 @@ ident:      specialStains or relevantScans
                                         {% if part.diffDisident|length > 0 %}
                                             {{ formmacros.collectionInput(part.diffDisident, 'partdiffDisident','diffDisident', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
                                         {% endif %}
-                                        {{ formmacros.diseaseMulti(part, patientCount, procedureCount, accessionCount, partCount) }}
+                                        {{ formmacros.diseaseMulti(part) }}
 
                                         {#block#}
                                         {% set blockCount = 0 %}
