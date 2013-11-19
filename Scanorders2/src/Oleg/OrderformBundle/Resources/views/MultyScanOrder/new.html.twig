@@ -133,6 +133,8 @@
 
         {% set diseaseTypeHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
 
+        {% set blocknameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.blockname,type,"key","prototype") %}
+
     {% endif %}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
@@ -173,7 +175,8 @@
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
-        {{ formmacros.fieldIconLabel(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}
+        {#{{ formmacros.fieldIconLabel(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}#}
+        {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, blocknameHtml)|e }}
         "
          data-prototype-slide="
         {{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.name)|e }}
@@ -259,7 +262,7 @@
 
                                                         <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
                                                             {#{{ formmacros.field(block.name) }}#}
-                                                            {{ formmacros.blockForm( block, "check", uid) }}
+                                                            {{ formmacros.blockForm( block, "check", uid, type) }}
 
 
                                                             {#slide#}

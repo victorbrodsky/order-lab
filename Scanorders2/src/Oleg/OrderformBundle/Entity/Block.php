@@ -4,30 +4,19 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+//use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
  * @ORM\Table(name="block")
  */
-class Block
+class Block extends OrderAbstract
 {
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
-     * Name is a letter (A,B ...)
-     * @ORM\Column(type="string", length=3)
-     * @Assert\NotBlank
+     * @ORM\OneToMany(targetEntity="BlockBlockname", mappedBy="block", cascade={"persist"})
      */
-    protected $name;
+    protected $blockname;
 
 
     //////////////  OBJECTS /////////////
@@ -52,25 +41,41 @@ class Block
     protected $orderinfo; 
 
     
-    public function __construct() {
+    public function __construct( $withfields=false, $validity=0 ) {
         $this->slide = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
-    }
-   
-    public function getId() {
-        return $this->id;
+
+        //fields:
+        $this->blockname = new ArrayCollection();
+
+        if( $withfields ) {
+            $this->addBlockname( new BlockBlockname($validity) );
+        }
     }
 
-    public function getName() {
-        return $this->name;
+
+    public function getBlockname() {
+        return $this->blockname;
     }
 
-    public function setId($id) {
-        $this->id = $id;
+    public function setBlockname($blockname) {
+        $this->blockname = $blockname;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function addBlockname($blockname)
+    {
+        if( $blockname ) {
+            if( !$this->blockname->contains($blockname) ) {
+                $blockname->setBlock($this);
+                $this->blockname->add($blockname);
+            }
+        }
+
+        return $this;
+    }
+    public function removeBlockname($blockname)
+    {
+        $this->blockname->removeElement($blockname);
     }
 
     /**
@@ -148,39 +153,7 @@ class Block
 //        }
 //        $slide_info .= ")";
 //        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
-        return "Block: id=".$this->id.", name=".$this->name."<br>";
+        return "Block: id=".$this->id.", blockname=".$this->blockname->first()."<br>";
     }
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Block
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }  
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
 }

@@ -231,7 +231,7 @@
 
         <div class="well" aling='center'>
 
-            {{ formmacros.field(form.origin) }}
+            {{ formmacros.field(form.diseaseType.origin) }}
 
         </div>
 
@@ -242,7 +242,7 @@
 
         <div class="well" aling='center'>
 
-            {{ formmacros.field(form.primaryOrgan) }}
+            {{ formmacros.field(form.diseaseType.primaryOrgan) }}
 
         </div>
 
@@ -259,12 +259,14 @@
 
     <div class="collapse originradio">
         <div class="well" aling='center'>
+            {{ form_label(form.origin) }}
             {{ form_widget(form.origin) }}
         </div>
     </div>
 
     <div class="collapse primaryorganradio">
         <div class="well" aling='center'>
+            {{ form_label(form.primaryOrgan) }}
             {{ form_widget(form.primaryOrgan) }}
         </div>
     </div>
@@ -638,185 +640,17 @@ ident:      specialStains or relevantScans
     </div>
 {% endmacro %}
 
-{% macro blockForm( form, flag, uid ) %}
+{% macro blockForm( block, flag, uid, cicle, blocknameHtml ) %}
     {% import _self as formmacros %}
     <div id="block_{{ uid }}">
-        {{ formmacros.fieldIconLabel(form.name,"glyphicon-check") }}
+        {#{{ formmacros.fieldIconLabel(form.blockname,"glyphicon-check") }}#}
+        {% if blocknameHtml is not defined or blocknameHtml == "" %}
+            {{ formmacros.inputArrayField(block.blockname,cicle,"blockblockname","key") }}
+        {% else  %}
+            <p><div class="blockblockname">{{ blocknameHtml }}</div></p>
+        {% endif %}
     </div>
 {% endmacro %}
 
 {############################ END OF Objects ###########################}
 
-
-{#/////////////////// TO DELETE /////////////////////////////#}
-{#Single Patient form macros#}
-{% macro patientFormFull( patient, cicle ) %}
-
-    {% import _self as formmacros %}
-
-    {#patient#}
-    {% set patientCount = 0 %}
-    {#{% for patient in form.patient %}#}
-        {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-        {#{% set patientCountNext = patientCount + 1 %}#}
-        <div id="formpanel_patient_{{ uid }}" class="panel panel-patient">
-            {{ formmacros.orderinfo_panel_header(
-                                                    'patient', cicle, patientCount, 1, uid,
-                                                    patientCount, 0, 0, 0, 0, 0, 0, 0
-                                                )
-            }}
-
-            <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
-                {{ formmacros.field(patient.mrn) }}
-                <button id="form_check_mrn_{{ uid }}" type="button" class="btn btn-xs btn_margin" onclick="checkMrn('patient',{{ patientCount }},0, 0, 0, 0, 0, 0, 0)">Check</button>
-                {{ formmacros.field(patient.name,true) }}
-                {{ formmacros.field(patient.sex,"true") }}
-                {{ formmacros.fieldDateLabel(patient.dob,"disabled") }}
-                {{ formmacros.field(patient.age,"true") }}
-                {{ formmacros.inputArrayField(patient.clinicalHistory) }}
-
-                {#procedure/procedure#}
-                {% set procedureCount = 0 %}
-                {% for procedure in patient.procedure %}
-                    {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure">
-                    {{ formmacros.orderinfo_panel_header(
-                    'procedure', cicle, procedureCount, patient.procedure|length, uid,
-                    patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
-                    }}
-
-                    <div id="form_body_procedure_{{ uid }}" class="panel-body collapse in">
-                        {#{{ formmacros.field(procedure.name) }}#}
-
-                        {#accession#}
-                        {% set accessionCount = 0 %}
-                        {% for accession in procedure.accession %}
-                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-                            {#<div id="formpanel_accession_{{ uid }}" class="panel panel-accession">#}
-                            {#{{ formmacros.orderinfo_panel_header(#}
-                            {#'accession', type, accessionCount, procedure.accession|length, uid,#}
-                            {#patientCount, procedureCount, accessionCount, 0, 0, 0, 0, 0)#}
-                            {#}}#}
-
-                            {#<div id="form_body_accession_{{ uid }}" class="panel-body collapse in">#}
-                            {{ formmacros.field(accession.accession) }}
-                            {#{{ formmacros.field(accession.date) }}                                       #}
-                            {{ formmacros.field(procedure.name) }}
-
-                            {#part#}
-                            {% set partCount = 0 %}
-                            {% for part in accession.part %}
-                                {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~0~'_'~0~'_'~0~'_'~0 %}
-
-                                <div id="formpanel_part_{{ uid }}" class="panel panel-part">
-                                    {{ formmacros.orderinfo_panel_header(
-                                    'part', cicle, partCount, accession.part|length, uid,
-                                    patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
-                                    }}
-
-                                    <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
-                                        {{ formmacros.field(part.name) }}
-                                        {{ formmacros.field(part.sourceOrgan) }}
-                                        {{ formmacros.paperInput(part.paper,cicle) }}
-                                        {{ formmacros.field(part.description) }}
-                                        {{ formmacros.field(part.diagnos) }}
-                                        {############ different diagnoses input collection #############}
-                                        {% if part.diffDisident|length > 0 %}
-                                            {{ formmacros.collectionInput(part.diffDisident, 'partdiffDisident','diffDisident', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, 0, 0) }}
-                                        {% endif %}
-                                        {{ formmacros.diseaseMulti(part) }}
-
-                                        {#block#}
-                                        {% set blockCount = 0 %}
-                                        {% for block in part.block %}
-                                            {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
-                                            <div id="formpanel_block_{{ uid }}" class="panel panel-block">
-                                                {{ formmacros.orderinfo_panel_header(
-                                                'block', cicle, blockCount, part.block|length, uid,
-                                                patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
-                                                }}
-
-                                                <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
-                                                    {{ formmacros.field(block.name) }}
-
-
-                                                    {#slide#}
-                                                    {% set slideCount = 0 %}
-                                                    {% for slide in block.slide %}
-                                                        {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
-                                                        <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
-                                                            {{ formmacros.orderinfo_panel_header(
-                                                            'slide', cicle, slideCount, block.slide|length, uid,
-                                                            patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
-                                                            }}
-
-                                                            <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
-
-                                                                {#scan and stain#}
-                                                                {% set scanCount = 0 %}
-                                                                {% set stainCount = 0 %}
-
-                                                                {#stain#}
-                                                                {% for stain in slide.stain %}
-                                                                    {{ formmacros.field(stain.name) }}
-                                                                {% endfor %}
-
-                                                                {#scan#}
-                                                                {% for scan in slide.scan %}
-                                                                    {{ formmacros.field(scan.mag) }}
-                                                                    {{ formmacros.field(scan.scanregion) }}
-                                                                    {{ formmacros.field(scan.note) }}
-                                                                {% endfor %}
-
-                                                                {{ formmacros.field(slide.microscopicdescr) }}
-
-                                                                {#{{ formmacros.field(slide.specialStains) }}#}
-                                                                {############ specialStains input collection #############}
-                                                                {% if slide.specialStains|length > 0 %}
-                                                                    {{ formmacros.collInput(slide.specialStains, cicle, 'multi', 'specialStains', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
-                                                                {% endif %}
-
-                                                                {#{{ formmacros.field(slide.relevantScans) }}#}
-                                                                {############ relevantScans input collection #############}
-                                                                {% if slide.relevantScans|length > 0 %}
-                                                                    {#{{ formmacros.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}#}
-                                                                    {{ formmacros.collectionInput(slide.relevantScans, 'sliderelevantScans','relevantScans', cicle, 'multi', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
-                                                                {% endif %}
-
-                                                            </div>
-                                                        </div> {#end of slide#}
-                                                        {% set slideCount = slideCount + 1 %}
-                                                    {% endfor %}
-
-
-                                                </div>
-                                                {% set blockCount = blockCount + 1 %}
-                                            </div> {#end of block#}
-                                        {% endfor %}
-
-
-
-                                    </div>
-                                </div> {#end of part#}
-                                {% set partCount = partCount + 1 %}
-                            {% endfor %}
-
-
-                            {#</div>#}
-                            {#</div> &#123;&#35;end of accession&#35;&#125;#}
-                            {% set accessionCount = accessionCount + 1 %}
-                        {% endfor %}
-
-
-                    </div>
-                    </div>{#end of procedure #}
-                    {% set procedureCount = procedureCount + 1 %}
-                {% endfor %} {# procedure loop #}
-
-
-            </div>{# end of form_body_patient_ #}
-        </div> {#end of patient #}
-        {% set patientCount = patientCount + 1 %}
-    {#{% endfor %} &#123;&#35; patient loop &#35;&#125;#}
-
-{% endmacro %}

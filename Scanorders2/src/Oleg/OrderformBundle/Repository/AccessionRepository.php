@@ -32,7 +32,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 $accession->removePart( $part );
 
                 echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
-                echo "0 accession part name partname validity=".$part->getPartname()->first()->getValidity()."<br>";
+                //echo "0 accession part name partname validity=".$part->getPartname()->first()->getValidity()."<br>";
                 echo "0 accession part name partname count=".count($part->getPartname())."<br>";
 
                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );

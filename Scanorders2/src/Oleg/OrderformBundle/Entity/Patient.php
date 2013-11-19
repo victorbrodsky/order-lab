@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="patient")
  * @ORM\HasLifecycleCallbacks
  */
-class Patient extends OrderAbstract implements JsonSerializable
+class Patient extends OrderAbstract
 {
     
 //    /**
@@ -169,7 +169,6 @@ class Patient extends OrderAbstract implements JsonSerializable
      */
     public function setName($name)
     {
-        echo "set name ";
         $this->name = $name;
     
         return $this;
@@ -301,57 +300,6 @@ class Patient extends OrderAbstract implements JsonSerializable
         }
     }
 
-//    /**
-//     * Add orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     * @return Patient
-//     */
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
-//    {
-//        if( !$this->orderinfo->contains($orderinfo) ) {
-//            $this->orderinfo->add($orderinfo);
-//        }
-//    }
-//
-//    /**
-//     * Remove orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     */
-//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        $this->orderinfo->removeElement($orderinfo);
-//    }
-//
-//    /**
-//     * Get orderinfo
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getOrderinfo()
-//    {
-//        return $this->orderinfo;
-//    }
-//
-//    public function __toString(){
-//
-//        $mrnStr  = "";
-//        foreach($this->mrn as $mrn) {
-//            $mrnStr = $mrnStr." ".$mrn;
-//        }
-//        $nameStr  = "";
-//        foreach($this->name as $name) {
-//            $nameStr = $nameStr." ".$name;
-//        }
-//        $ageStr  = "";
-//        foreach($this->age as $age) {
-//            $ageStr = $ageStr." ".$age;
-//        }
-//        return "Patient: id=".$this->id.", mrnArr=".$mrnStr.", nameArr=".$nameStr.", ageArr=".$ageStr."<br>";
-//    }
-    
-
     /**
      * Add clinicalHistory
      *
@@ -360,7 +308,6 @@ class Patient extends OrderAbstract implements JsonSerializable
      */
     public function addClinicalHistory($clinicalHistory)
     {
-        echo "@@@@@@@@@@@@@@@@@@ add ClinicalHistory value=".$clinicalHistory."<br>";
         if( $clinicalHistory ) {
             if( !$this->clinicalHistory->contains($clinicalHistory) ) {
 //            if( !$this->isExisted($this->clinicalHistory,$clinicalHistory) ) {
@@ -399,50 +346,6 @@ class Patient extends OrderAbstract implements JsonSerializable
     public function getClinicalHistory()
     {
         return $this->clinicalHistory;
-    }
-
-//    /**
-//     * @ORM\PrePersist
-//     */
-//    public function setCreationdate()
-//    {
-//        $this->creationdate = new \DateTime();;
-//    }
-//
-//    /**
-//     * @return \DateTime
-//     */
-//    public function getCreationdate()
-//    {
-//        return $this->creationdate;
-//    }
-
-//    /**
-//     * @param mixed $status
-//     */
-//    public function setStatus($status)
-//    {
-//        $this->status = $status;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getStatus()
-//    {
-//        return $this->status;
-//    }
-
-
-
-    public function jsonSerialize()
-    {
-        return array(
-            'name' => $this->name,
-            'id'=> $this->id,
-            'age'=> $this->age,
-            'sex'=> $this->sex,
-        );
     }
 
     /**
@@ -556,9 +459,4 @@ class Patient extends OrderAbstract implements JsonSerializable
         $this->dob->removeElement($dob);
     }
 
-
-//    public static function expose()
-//    {
-//        return get_class_vars(__CLASS__);
-//    }
 }

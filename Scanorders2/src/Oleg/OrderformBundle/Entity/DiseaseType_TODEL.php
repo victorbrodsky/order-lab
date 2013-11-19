@@ -2,26 +2,28 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="partDiseaseType")
+ * @ORM\Table(name="diseasetype")
  */
-class PartDiseaseType extends PartArrayFieldAbstract
+class DiseaseType
 {
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="diseaseType", cascade={"persist"})
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=100)
      */
-    protected $part;
-
-    /**
-     * //serve as "diseaseType"
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $field;
+    protected $diseaseType;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=100)
@@ -34,6 +36,21 @@ class PartDiseaseType extends PartArrayFieldAbstract
      */
     protected $primaryOrgan;
 
+    /**
+     * @param mixed $diseaseType
+     */
+    public function setDiseaseType($diseaseType)
+    {
+        $this->diseaseType = $diseaseType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiseaseType()
+    {
+        return $this->diseaseType;
+    }
 
     /**
      * @param mixed $origin
@@ -65,6 +82,22 @@ class PartDiseaseType extends PartArrayFieldAbstract
     public function getPrimaryOrgan()
     {
         return $this->primaryOrgan;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
 

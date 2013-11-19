@@ -31,12 +31,12 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return $patient;
         }
 
-        $part = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first();
-        $block = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
-        echo "@@@@@ part name partname=".$part->getPartname()->first()."<br>";
-        echo "@@@@@ part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-        echo "@@@@@ part name validity=".$part->getPartname()->first()->getValidity()."<br>";
-        echo "@@@@@ block name=".$block->getName()."<br>";
+        //$part = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first();
+        //$block = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
+        //echo "@@@@@ part name partname=".$part->getPartname()->first()."<br>";
+        //echo "@@@@@ part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+        //echo "@@@@@ part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        //echo "@@@@@ block name=".$block->getName()."<br>";
 
         $patient = $this->processFieldArrays($patient,$orderinfo,$original);
         //echo "patient after mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";

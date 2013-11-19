@@ -58,19 +58,19 @@ function diseaseTypeRender() {
         var radioElementValue = radioElement.val();
 
         if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
-            //console.log("checked id="+radioElement.attr("id"));
+            console.log("checked id="+radioElement.attr("id"));
 
             var parent = radioElement.parent().parent();
             var originradio = parent.find('.originradio');
 
             originradio.collapse('show');
 
-            //console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
+            console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
 
             originradio.find('input:radio').each(function() {
 
                 var originElement = $(this);
-                //console.log("originElement id="+originElement.attr("id"));
+                console.log("originElement id="+originElement.attr("id")+", value="+originElement.val());
 
                 if( originElement.is(':checked') && originElement.val() == "Metastatic" ) {
 
@@ -85,5 +85,80 @@ function diseaseTypeRender() {
     }
 
     $(".diseaseType").find('input:radio').each(checkDiseaseType);
+}
+
+//render diseaseType by AJAX from checkForm
+function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
+
+    function checkDiseaseType() {
+        var radioElement = $(this);
+        var radioElementValue = radioElement.val();
+
+        if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
+            console.log("checked id="+radioElement.attr("id"));
+
+            var parent = radioElement.parent().parent();
+            var originradio = parent.find('.originradio');
+
+            originradio.collapse('show');
+
+            console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
+
+            originradio.find('input:radio').each(function() {
+
+                var originElement = $(this);
+                var originElementValue = originElement.val();
+                console.log("originElement id="+originElement.attr("id")+", value="+originElementValue);
+
+                if( origin == "Metastatic" && originElementValue == "Metastatic" ) {
+                    console.log("Check "+origin);
+                    originElement.prop('checked',true);
+
+                    var primaryorganradio = parent.find('.primaryorganradio');
+                    primaryorganradio.collapse('show');
+
+                    //set ajax-combobox-organ
+                    var primaryOrgan = primaryorganradio.find(".ajax-combobox-organ");
+                    primaryOrgan.select2('data', {id: primaryorgan, text: primaryorgan});
+                } else {
+                    originElement.attr("disabled", true);
+                }
+
+            });
+
+        }
+
+    }
+
+    if( element ) {
+        element.find('input:radio').each(checkDiseaseType);
+    } else {
+        $(".diseaseType").find('input:radio').each(checkDiseaseType);
+    }
+}
+
+//hide children of DiseaseType
+function hideDiseaseTypeChildren( element ) {
+
+    console.log("hide Disease Type Children");
+    var originradio = element.parent().parent().find(".originradio");
+    if( originradio.is(':visible') ) {
+        originradio.collapse('hide');
+    }
+
+    var primaryorganradio = element.parent().parent().find(".primaryorganradio");
+    if( primaryorganradio.is(':visible') ) {
+        primaryorganradio.collapse('hide');
+    }
+    //remove disable attr
+//    originradio.find("input").each(function() {
+//        //$(this).attr("disabled", false);
+//        console.log( "remove diasable id=" + $(this).attr("id") );
+//        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0_primaryOrgan
+//        $(this).removeAttr("disabled");
+//    });
+    originradio.find("input").removeAttr("disabled");
+    originradio.find("input").prop('checked',false);
+
 }
 

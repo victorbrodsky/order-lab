@@ -24,21 +24,31 @@ class BlockType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {     
-        $helper = new FormHelper();
-
-        $attr = array('class' => 'combobox');
-        if( $this->params['type'] == 'single') {
-            $attr['style'] = 'width:100%;';
-        } else {
-            $attr['style'] = 'width:100%';
-        }
-        $builder->add( 'name', 'choice', array(
-                'label'=>'Block Name:',
-                'max_length'=>'3', 
-                'choices' => $helper->getBlock(),
-                'required'=> true,
-                //'data' => 0,
-                'attr' => $attr
+//        $helper = new FormHelper();
+//        $attr = array('class' => 'combobox');
+//        if( $this->params['type'] == 'single') {
+//            $attr['style'] = 'width:100%;';
+//        } else {
+//            $attr['style'] = 'width:100%';
+//        }
+//        $builder->add( 'name', 'choice', array(
+//                'label'=>'Block Name:',
+//                'max_length'=>'3',
+//                'choices' => $helper->getBlock(),
+//                'required'=> true,
+//                //'data' => 0,
+//                'attr' => $attr
+//        ));
+        //name
+        $builder->add('blockname', 'collection', array(
+            'type' => new BlockNameType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Block Name:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__blockblockname__',
         ));
 
         if( $this->params['type'] != 'single' ) {

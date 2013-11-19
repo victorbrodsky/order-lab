@@ -4,7 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+//use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -59,23 +59,6 @@ class Part extends OrderAbstract
      */
     protected $diffDisident;
 
-    /////////////////////// Type of Disease TODO: make it as separate object? /////////////////////
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=100)
-//     */
-//    protected $diseaseType;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=100)
-//     */
-//    protected $origin;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
-//     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $primaryOrgan;
-    //////////////////////////////////// EOF Type of Disease /////////////////////////////////////
     /**
      * @ORM\OneToMany(targetEntity="PartDiseaseType", mappedBy="part", cascade={"persist"})
      */
@@ -91,12 +74,18 @@ class Part extends OrderAbstract
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="part")
      **/
-    protected $orderinfo; 
+    protected $orderinfo;
+
+    /**
+     * For some slides, the slide can be attached to the Part directly, without block
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="part")
+     */
+    protected $slide;
     
     public function __construct( $withfields=false, $validity=0 ) {
         $this->block = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
-
+        $this->slide = new ArrayCollection();
 
         //fields:
         $this->partname = new ArrayCollection();
@@ -186,7 +175,6 @@ class Part extends OrderAbstract
     }
     public function addPartname($partname)
     {
-        //echo "@@@@@@@@@@@@@@@@@@ add Partname value=".$partname."<br>";
         if( $partname ) {
             if( !$this->partname->contains($partname) ) {
                 $partname->setPart($this);
@@ -207,7 +195,6 @@ class Part extends OrderAbstract
     }
     public function addSourceOrgan($sourceOrgan)
     {
-        echo "@@@@@@@@@@@@@@@@@@ add sourceOrgan value=".$sourceOrgan."<br>";
         if( $sourceOrgan ) {
             if( !$this->sourceOrgan->contains($sourceOrgan) ) {
                 $sourceOrgan->setPart($this);
@@ -227,7 +214,6 @@ class Part extends OrderAbstract
     }
     public function addDescription($description)
     {
-        echo "@@@@@@@@@@@@@@@@@@ add Description value=".$description."<br>";
         if( $description ) {
             if( !$this->description->contains($description) ) {
                 $description->setPart($this);
@@ -241,33 +227,6 @@ class Part extends OrderAbstract
     {
         $this->description->removeElement($description);
     }
-
-
-//    /**
-//     * @param mixed $primaryOrgan
-//     */
-//    public function setPrimaryOrgan($primaryOrgan)
-//    {
-//        $this->primaryOrgan = $primaryOrgan;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getPrimaryOrgan()
-//    {
-//        return $this->primaryOrgan;
-//    }
-
-//    public function setOrigin($origin)
-//    {
-//        $this->origin = $origin;
-//    }
-//
-//    public function getOrigin()
-//    {
-//        return $this->origin;
-//    }
 
     /**
      * Add block
@@ -309,13 +268,6 @@ class Part extends OrderAbstract
         $this->block = $block;
     }
 
-
-    public function clearSlide(){
-        foreach( $this->slide as $thisslide ) {
-            $this->removeSlide($thisslide);
-        }
-    }
-
     public function clearBlock(){
         foreach( $this->block as $thisblock ) {
             $this->removeBlock($thisblock);
@@ -327,7 +279,6 @@ class Part extends OrderAbstract
     }
     public function adddiffDisident($diffDisident)
     {
-        echo "@@@@@@@@@@@@@@@@@@ add diffDisident value=".$diffDisident."<br>";
         if( $diffDisident != null ) {
             if( !$this->diffDisident->contains($diffDisident) ) {
                 $diffDisident->setPart($this);
@@ -390,7 +341,6 @@ class Part extends OrderAbstract
     }
     public function addDisident($disident)
     {
-        echo "@@@@@@@@@@@@@@@@@@ add disident value=".$disident."<br>";
         if( $disident ) {
             if( !$this->disident->contains($disident) ) {
                 $disident->setPart($this);
@@ -404,5 +354,44 @@ class Part extends OrderAbstract
         $this->disident->removeElement($disident);
     }
 
+    /**
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return Part
+     */
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        if( !$this->slide->contains($slide) ) {
+            $slide->setPart($this);
+            $this->slide[] = $slide;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     */
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    {
+        $this->slide->removeElement($slide);
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSlide()
+    {
+        return $this->slide;
+    }
+
+    public function clearSlide(){
+        foreach( $this->slide as $thisslide ) {
+            $this->removeSlide($thisslide);
+        }
+    }
 
 }

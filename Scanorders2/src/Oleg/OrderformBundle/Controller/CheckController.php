@@ -24,7 +24,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
  */
 class CheckController extends Controller {
 
-    public function getArrayFieldJson( $fields ) {
+    public function getArrayFieldJson( $fields, $childrenArr = null ) {
 
         //echo "fields count=".count($fields)."  ";
         $fieldJson = array();
@@ -55,6 +55,17 @@ class CheckController extends Controller {
             $hist['provider'] = $providerStr;
             $hist['date'] = $dateStr;
             $hist['validity'] = $field->getValidity();
+
+            if( $childrenArr ) {
+                foreach( $childrenArr as $child ) {
+                    $getMethod = "get".$child;
+                    //echo "getMethod=".$getMethod."<br>";
+                    $childValue = $field->$getMethod()."";
+                    //echo "childValue=".$childValue."<br>";
+                    $hist[$child] = $childValue;
+                }
+            }
+
             $fieldJson[] = $hist;
 
         }
@@ -266,6 +277,7 @@ class CheckController extends Controller {
         //echo "partname=".$entity->getPartname()->first()."<br>";
 
         if( $entity ) {
+
             $element = array(
                 'id'=>$entity->getId(),
                 'partname'=>$this->getArrayFieldJson($entity->getPartname()),
@@ -274,8 +286,7 @@ class CheckController extends Controller {
                 'disident'=>$this->getArrayFieldJson($entity->getDisident()),
                 'paper'=>$this->getArrayFieldJson($entity->getPaper()),
                 'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
-                'diseaseType'=>$entity->getDiseaseType(),
-                //TODO: finish this
+                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") )
             );
         } else {
             $element = array();

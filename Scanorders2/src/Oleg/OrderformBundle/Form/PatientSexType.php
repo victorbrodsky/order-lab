@@ -28,7 +28,7 @@ class PatientSexType extends AbstractType
             'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
             'multiple' => false,
             'expanded' => true,
-            'attr' => array('class' => 'horizontal_type')
+            'attr' => array('class' => 'horizontal_type patientsexclass')
         ));
 
         $builder->add('sexothers', new ArrayFieldType(), array(

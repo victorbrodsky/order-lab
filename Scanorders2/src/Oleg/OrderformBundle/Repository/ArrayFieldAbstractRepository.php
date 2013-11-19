@@ -29,9 +29,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$childName: i.e. "Procedure" for Patient
     public function processEntity( $entity, $orderinfo = null, $className, $fieldName, $childName, $parent = null ) {
 
-        $em = $this->_em;
-
-        $entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
+        //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check
+        //$em = $this->_em;
+        //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
 
         $found = $this->isExisted($entity,$className,$fieldName);
 
@@ -341,8 +341,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return null;
         }
 
-        $em = $this->_em;
         if( count($entity->$fieldMethod())>0 ) {
+            $em = $this->_em;
             $newEntity = null;
             foreach( $entity->$fieldMethod() as $field ) {
                 echo "entity field=".$field->getField()."<br>";
@@ -357,7 +357,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $newEntity;
     }
 
-    //check entity by ID
+    //check entity by ID (need for postgresql; for mssql can check by if($entity->getId()) )
     public function notExists($entity, $className) {
         $id = $entity->getId();
         if( !$id ) {

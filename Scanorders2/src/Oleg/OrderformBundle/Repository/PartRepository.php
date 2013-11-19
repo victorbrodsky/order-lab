@@ -28,14 +28,6 @@ class PartRepository extends ArrayFieldAbstractRepository
         
         if( $accession->getId() == null ) { //by this point, accession object should be already created
             echo "******* Part Case 1: accession id null<br>";
-
-//            $partname = new PartPartname();
-//            $partname->setField("A");
-//            $partname->setValidity(1);
-//            $part->addPartname($partname);
-
-            //$part = $this->createPart();
-
             $part = $this->setResult( $part, $orderinfo );
             return $part;
         }
@@ -53,7 +45,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         //exit();
 
         //if $validPartname does not exist in DB, then we can not check findOnePartByJoinedToField, so $part_found will be null
-        if( $validPartname->getId() == null ) {
+        if( !$validPartname || $validPartname->getId() == null ) {
             $part_found = null;
         } else {
             $part_found = $this->findOnePartByJoinedToField( $validAccession, $validPartname );
@@ -157,22 +149,23 @@ class PartRepository extends ArrayFieldAbstractRepository
         $descr = $part->getDescription()[0];
         if( $descr ) {
             echo "descr yes <br>";
+            echo "2 part descr->getField()=".$descr->getField()."<br>";
+            echo "2 part descr->getPart()=".$descr->getPart()."<br>";
+            echo "2 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
         } else {
             echo "descr null <br>";
         }
-        echo "2 part descr->getField()=".$descr->getField()."<br>";
-        echo "2 part descr->getPart()=".$descr->getPart()."<br>";
-        echo "2 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
 
         echo "2 part name disident count=".count($part->getDisident())."<br>";
         $disident = $part->getDisident()[0];
         if( $disident ) {
             echo "disident yes <br>";
+            echo "2 part disident->getField()=".$disident->getField()."<br>";
+            echo "2 part disident->getPart()=".$disident->getPart()."<br>";
         } else {
             echo "disident null <br>";
         }
-        echo "2 part disident->getField()=".$disident->getField()."<br>";
-        echo "2 part disident->getPart()=".$disident->getPart()."<br>";
+
         //echo "2 part name disident=".$part->getdisident()[0].",count=".count($part->getdisident()).", provider=".$part->getdisident()[0]->getProvider().", partCount=".count($part->getdisident()[0]->getPart()).", validity=".$part->getdisident()[0]->getValidity()."<br>";
         //echo "2 part name Description=".$part->getDescription()[0].",count=".count($part->getDescription()).", provider=".$part->getDescription()[0]->getProvider().", partCount=".count($part->getDescription()[0]->getPart()).", validity=".$part->getDescription()[0]->getValidity()."<br>";
 
@@ -180,11 +173,11 @@ class PartRepository extends ArrayFieldAbstractRepository
         $diffDisident = $part->getdiffDisident()[0];
         if( $diffDisident ) {
             echo "diffDisident yes <br>";
+            echo "2 part diffDisident->getField()=".$diffDisident->getField()."<br>";
+            echo "2 part diffDisident->getPart()=".$diffDisident->getPart()."<br>";
         } else {
             echo "diffDisident null <br>";
         }
-        echo "2 part diffDisident->getField()=".$diffDisident->getField()."<br>";
-        echo "2 part diffDisident->getPart()=".$diffDisident->getPart()."<br>";
 
         echo "2 part=".$part."<br>";
         echo "####################################################<br>";
@@ -347,20 +340,6 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         return $part;
     }
-
-//    public function notExists($entity) {
-//        $id = $entity->getId();
-//        if( !$id ) {
-//            return true;
-//        }
-//        $em = $this->_em;
-//        $found = $em->getRepository('OlegOrderformBundle:Part')->findOneById($id);
-//        if( null === $found ) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
     
     public function presetEntity( $part ) {
 

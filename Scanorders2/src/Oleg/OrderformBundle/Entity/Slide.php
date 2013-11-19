@@ -30,20 +30,18 @@ class Slide
      * @ORM\JoinColumn(name="block_id", referencedColumnName="id")
      */
     protected $block;
-    
+
     /**
-     * Keep info about accession, so we can get quickly how many slides in this accession
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="slide")
-     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id")
-     * @Assert\NotBlank
+     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide")
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
      */
-    //protected $accession;  
-    
+    protected $part;
+
 //    /**
-//     * @ORM\Column(type="text", nullable=true, length=10000)
+//     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide")
+//     * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
 //     */
-//    protected $diagnosis;
-    
+//    protected $type;
     
     //*********************************************// 
     // second part of the form (optional) 
@@ -53,21 +51,13 @@ class Slide
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
     protected $microscopicdescr;
-    
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=100)
-//     */
-//    protected $specialstain;
+
     /**
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="slide", cascade={"persist"})
      */
     protected $specialStains;
-    
-//    /**
-//     * @ORM\Column(type="string", nullable=true, length=100)
-//     */
-//    protected $relevantscan;
+
     /**
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="RelevantScans", mappedBy="slide", cascade={"persist"})
@@ -78,36 +68,6 @@ class Slide
      * @ORM\Column(type="string", nullable=true, length=200)
      */
     protected $barcode;
-    
-//    /**
-//     * @ORM\OneToOne(
-//     *      targetEntity="Stain",
-//     *      cascade={"persist"},
-//     *      orphanRemoval=true
-//     * )
-//     * @ORM\JoinColumn(
-//     *      name="stain_id",
-//     *      referencedColumnName="id",
-//     *      onDelete="CASCADE"
-//     * )
-//     * @Assert\NotBlank
-//     */
-//    protected $stain;
-    
-//    /**
-//     * @ORM\OneToOne(
-//     *      targetEntity="Scan",
-//     *      cascade={"persist"},
-//     *      orphanRemoval=true
-//     * )
-//     * @ORM\JoinColumn(
-//     *      name="scan_id",
-//     *      referencedColumnName="id",
-//     *      onDelete="CASCADE"
-//     * )
-//     * @Assert\NotBlank
-//     */
-//    protected $scan;
 
     /**
      * @ORM\OneToMany(targetEntity="Scan", mappedBy="slide", cascade={"persist"})
@@ -167,7 +127,6 @@ class Slide
 
     /**
      * Set block
-     *
      * @param \Oleg\OrderformBundle\Entity\Block $block
      * @return Slide
      */
@@ -180,59 +139,35 @@ class Slide
 
     /**
      * Get block
-     *
-     * @return \Oleg\OrderformBundle\Entity\Block 
      */
     public function getBlock()
     {
         return $this->block;
     }
 
-//    /**
-//     * Set stain
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\Stain $stain
-//     * @return Slide
-//     */
-//    public function setStain(\Oleg\OrderformBundle\Entity\Stain $stain = null)
-//    {
-//        $this->stain = $stain;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get stain
-//     *
-//     * @return \Oleg\OrderformBundle\Entity\Stain
-//     */
-//    public function getStain()
-//    {
-//        return $this->stain;
-//    }
-//  
-//    /**
-//     * Set scan
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-//     * @return Slide
-//     */
-//    public function setScan(\Oleg\OrderformBundle\Entity\Scan $scan = null)
-//    {
-//        $this->scan = $scan;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get scan
-//     *
-//     * @return \Oleg\OrderformBundle\Entity\Scan
-//     */
-//    public function getScan()
-//    {
-//        return $this->scan;
-//    }
+    public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
+    {
+        $this->part = $part;
+
+        return $this;
+    }
+    public function getPart()
+    {
+        return $this->part;
+    }
+
+    public function setParent($parent = null)
+    {
+        //$type = $this->getType();
+        //$this->$type = $parent;
+        $this->block = $parent;
+
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->block;
+    }
 
     /**
      * Set barcode

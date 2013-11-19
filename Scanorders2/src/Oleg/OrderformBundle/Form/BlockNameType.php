@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
-class PartNameType extends AbstractType
+class BlockNameType extends AbstractType
 {
 
     protected $params;
@@ -26,17 +26,14 @@ class PartNameType extends AbstractType
 
         $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
         $builder->add('field', 'choice', array(
-            'choices' => $helper->getPart(),
+            'choices' => $helper->getBlock(),
             'required' => false,
-            'label' => 'Part Name',
-            //'max_length' => '3',
+            'label' => 'Block Name',
             'attr' => $attr,
-            //'empty_value' => "",   //"Choose an option",
-            //'multiple' => false
         ));
 
-        $builder->add('partnameothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
+        $builder->add('blocknameothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',
             'label' => false
         ));
 
@@ -45,12 +42,12 @@ class PartNameType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
+            'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_partnametype';
+        return 'oleg_orderformbundle_blocknametype';
     }
 }

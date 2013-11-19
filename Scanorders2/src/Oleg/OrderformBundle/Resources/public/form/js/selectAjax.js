@@ -23,7 +23,7 @@ function regularCombobox() {
         width: combobox_width,
         dropdownAutoWidth: true,
         placeholder: "Choose an option",
-        allowClear: true,
+        allowClear: true
         //selectOnBlur: true
         //readonly: true
         //selectOnBlur: true,

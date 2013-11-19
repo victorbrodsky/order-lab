@@ -181,7 +181,7 @@ class MultyScanOrderController extends Controller {
 //            return;
 //        }
 
-        if(0) {
+        if(1) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
@@ -190,7 +190,7 @@ class MultyScanOrderController extends Controller {
         
         //echo "Before validation main entity:<br>";
 
-//        if( $form->isValid() ) {
+//       if( $form->isValid() ) {
         if( 1 ) {
 
             //echo "id2=".$entity->getId()."<br>";
@@ -204,23 +204,27 @@ class MultyScanOrderController extends Controller {
 //                echo "<br>part validity=".$part->getPartname()->first()->getValidity();
 //            }
 
-            //oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0][partname][0][field]
-            $patientname = $form['patient'][0]['mrn'][0]['field']->getData();
-            echo "patientname=".$patientname."<br>";
 
-            $accessionname = $form['patient'][0]['procedure'][0]['accession'][0]['accession'][0]['field']->getData();
-            echo "accessionname=".$accessionname."<br>";
-
-            $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
-            echo "proceduretype=".$proceduretype."<br>";
-
-            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
-            echo "part partname=".$partname."<br>";
-
-            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
-            echo "part description=".$description."<br>";
-
-            exit();
+//            $patientname = $form['patient'][0]['mrn'][0]['field']->getData();
+//            echo "patientname=".$patientname."<br>";
+//
+//            $accessionname = $form['patient'][0]['procedure'][0]['accession'][0]['accession'][0]['field']->getData();
+//            echo "accessionname=".$accessionname."<br>";
+//            print_r( $accessionname );
+//            echo " accessionname count=".count($form['patient'][0]['procedure'][0]['accession'][0]['accession'])."<br>";
+//
+//            $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
+//            echo "proceduretype=".$proceduretype."<br>";
+//
+//            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
+//            echo "part partname=".$partname."<br>";
+//            //print_r($partname);
+//            echo " !!!partname count=".count($form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'])."<br>";
+//
+//            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
+//            echo "part description=".$description."<br>";
+//
+//            exit();
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
 
@@ -257,7 +261,7 @@ class MultyScanOrderController extends Controller {
 //            }
 //            exit();
 
-            if (isset($_POST['btnSave'])) {              
+            if( isset($_POST['btnSave']) ) {
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             
                 $entity->setStatus($status);
             }
@@ -268,7 +272,7 @@ class MultyScanOrderController extends Controller {
             //$em->persist($entity);
             //$em->flush();
 
-            if (isset($_POST['btnSubmit'])) {
+            if( isset($_POST['btnSubmit']) ) {
                 //email
                 //$email = $this->get('security.context')->getToken()->getAttribute('email');
                 $user = $this->get('security.context')->getToken()->getUser();
@@ -333,7 +337,6 @@ class MultyScanOrderController extends Controller {
         $procedure->addAccession($accession);
 
         $part = new Part(true);
-        $accession->addPart($part);
         $accession->addPart($part);
 
         $block = new Block(true);
