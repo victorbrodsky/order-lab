@@ -129,38 +129,6 @@ class PartType extends AbstractType
             'prototype_name' => '__diseaseType__',
         ));
 
-//        $builder->add( 'diseaseType', 'choice', array(
-//            'label'=>'Type of Disease:',
-//            //'required'=>false,
-//            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
-//            'multiple' => false,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type'), //'required' => '0', 'disabled'
-//            //'data' => 'Male',
-//        ));
-//
-//        $builder->add( 'origin', 'choice', array(
-//            'label'=>'Origin:',
-//            //'required'=>false,
-//            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
-//            'multiple' => false,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type'),
-//        ));
-//
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-//            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'combobox combobox-width');    //show
-//        }
-//        $builder->add('primaryOrgan', 'custom_selector', array(
-//            'label' => 'Primary Site of Origin:',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'sourceOrgan'
-//        ));
-
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -273,9 +273,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity->$keyAddMethod($field);
         $entity->setStatus($status);
         $em->persist($entity);
-        if( $parent && !$parent->getId() ) {
+        if( $parent ) {
+            //echo "set Parent = ".$fieldName."<br>";
             $em->persist($parent);
             $entity->setParent($parent);
+        } else {
+            //echo "Parent is not set<br>";
         }
         //exit();
         $em->flush();

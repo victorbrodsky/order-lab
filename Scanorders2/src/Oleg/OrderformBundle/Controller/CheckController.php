@@ -355,4 +355,103 @@ class CheckController extends Controller {
         return $response;
     }
 
+
+    /************************ BLOCK *************************/
+    /**
+     * Get BLOCK from DB if existed
+     * @Route("/block", name="get-block")
+     * @Method("GET")
+     */
+    public function getBlockAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $request = $this->get('request');
+        $key = $request->get('key');
+        $accession = $request->get('parent'); //need accession number to check if part exists in DB
+        $partname = $request->get('parent2'); //need accession number to check if part exists in DB
+        //echo "key=".$key."   ";
+
+        //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key );
+
+        //echo "count=".count($entity)."<br>";
+        //echo "partname=".$entity->getPartname()->first()."<br>";
+
+        if( $entity ) {
+
+            $element = array(
+                'id'=>$entity->getId(),
+                'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
+            );
+        } else {
+            $element = array();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * Get next available Block from DB by giving Accession number and Part name
+     * @Route("/blockblockname", name="create-block")
+     * @Method("GET")
+     */
+    public function createBlockAction() {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $request = $this->get('request');
+        $accession = $request->get('key');
+        $partname = $request->get('key2');
+
+        //echo "accession=(".$accession.")   ";
+
+        $em = $this->getDoctrine()->getManager();
+        $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$partname);
+        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+
+        //echo "partname=".$part->getPartname()."  ";
+
+        if( $block ) {
+            //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
+            $element = array(
+                'id'=>$block->getId(),
+                'blockname'=>$this->getArrayFieldJson($block->getBlockname())
+            );
+        } else {
+            $element = null;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($element));
+        return $response;
+    }
+
+    /**
+     * @Route("/blockname/check/{key}", name="delete-block")
+     * @Method("DELETE")
+     */
+    public function deleteBlockAction($key) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $res = $em->getRepository('OlegOrderformBundle:Part')->deleteIfReserved( $key,"Block","blockname" );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
 }

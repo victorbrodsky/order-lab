@@ -124,12 +124,12 @@
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
 
-        {% set diffDiagnosesHtml = "" %}
-        {% set diffDiagnosesForm = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
-        {#{% set diffDiagnosesFormFieldWidget = form_widget(diffDiagnosesForm.vars.prototype.field) %}#}
-        {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesForm,type,"partdiffDisident","prototype") %}#}
-        {#{% set diffDiagnosesHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident,type,"partdiffDisident","prototype") %}#}
-        {#{% set diffDiagnosesHtml = formmacros.fieldCollectionInput(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype) %}#}
+
+        {% set diffDiagnosesWidget = form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) %}
+        {% set diffDiagnosesLabel = form_label(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) %}
+        {#{% set diffDiagnosesForm = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}        #}
+        {#{% set diffDiagnosesWidget = form_widget(diffDiagnosesForm.vars.prototype.field) %}#}
+        {% set diffDiagnosesHtml = formmacros.inputField2(type,"partdiffDisident","prototype",diffDiagnosesWidget,diffDiagnosesLabel) %}
 
         {% set diseaseTypeHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
 
@@ -166,12 +166,13 @@
               paperHtml,
               descriptionHtml,
               diagnosisHtml,
-              diffDiagnosesHtml,
+          diffDiagnosesHtml,
               diseaseTypeHtml
            )|e }}
         "
 
-         data-prototype-diffDisident="{{ form_widget(diffDiagnosesForm.vars.prototype.field)|e }}"
+         data-prototype-diffDisident="{{ diffDiagnosesWidget|e }}"
+         data-prototype-partdiffDisident="{{ diffDiagnosesWidget|e }}"
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
@@ -247,7 +248,7 @@
 
                                             <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
 
-                                                {{ formmacros.partForm( part, "check", uid, type) }}
+                                                {{ formmacros.partForm( part, "check", uid, type, "","","","","","","") }}
 
 
                                                 {#block#}

@@ -160,9 +160,9 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     //attach form
     $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
 
-    if( name == "part" ) {
-        addDiffdiagFieldFirstTime( name, ids );
-    }
+//    if( name == "part" ) {
+//        addDiffdiagFieldFirstTime( name, ids );
+//    }
     if( name == "slide" ) {
         //addCollFieldFirstTime( "relevantScans", ids );
         addDiffdiagFieldFirstTime( name, ids );
@@ -238,9 +238,9 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
     //attach children form
     $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );
 
-    if( name == "part" ) {
-        addDiffdiagFieldFirstTime( name, ids );
-    }
+//    if( name == "part" ) {
+//        addDiffdiagFieldFirstTime( name, ids );
+//    }
     if( name == "slide" ) {
         //addCollFieldFirstTime( "relevantScans", ids );
         addDiffdiagFieldFirstTime( name, ids );
@@ -332,7 +332,7 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     newForm = newForm.replace(/__[a-zA-Z0-9]+__/g, 0); //replace everything what is left __*__ by 0 => replace all array fields by 0
 
-    //console.log("newForm="+newForm);
+    console.log("newForm="+newForm);
 
     return newForm;
 }

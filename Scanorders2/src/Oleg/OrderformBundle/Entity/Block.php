@@ -23,7 +23,7 @@ class Block extends OrderAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)    
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $part;
     
@@ -129,6 +129,12 @@ class Block extends OrderAbstract
     public function setPart(\Oleg\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;   
+        return $this;
+    }
+
+    public function setParent($parent)
+    {
+        $this->setPart($parent);
         return $this;
     }
 

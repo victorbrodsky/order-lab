@@ -128,9 +128,9 @@ class PartRepository extends ArrayFieldAbstractRepository
         $blocks = $part->getBlock();    
         
         foreach( $blocks as $block ) {
-            if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block) ) {
+            if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block,"Block") ) {
                 $part->removeBlock( $block );
-                $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part, $orderinfo );
+                $block = $em->getRepository('OlegOrderformBundle:Block')->processBlockEntity( $block, $part, $orderinfo );
                 $part->addBlock($block);
                 $orderinfo->addBlock($block);
             } else {
@@ -262,7 +262,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         if( !$accession ) {
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
-            //                                                                                      $status, $provider, $className, $fieldName, $parent, $fieldValue
+            //                                                                     $status, $provider, $className, $fieldName, $parent, $fieldValue
             $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber);
         }
 
@@ -276,7 +276,9 @@ class PartRepository extends ArrayFieldAbstractRepository
             return $partFound;
         }
 
-        //3) create part object by partname and link it to the parent
+        //echo "create part, accession=".$accession->getAccession()->first().", partid=".$accession->getId()."<br>";
+
+        //4) create part object by partname and link it to the parent
         $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname);
 
         return $part;

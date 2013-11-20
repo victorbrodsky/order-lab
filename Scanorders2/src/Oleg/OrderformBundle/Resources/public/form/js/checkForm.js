@@ -7,7 +7,7 @@
  */
 
 var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: change to patientmrn, accessionaccession, partname ...
-var arrayFieldShow = new Array("clinicalHistory","age"); //display as array fields "sex"
+var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //display as array fields "sex"
 var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 var selectStr = 'input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
 
@@ -62,48 +62,72 @@ function checkForm( elem ) {
         console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
 
         if( name == "part" ) {
-            var parentNumberElement = getAccessionNumberElement(element);
-            var parentValue = parentNumberElement.val();    //i.e. Accession #
+            var accessionNumberElement = getAccessionNumberElement(element);
+            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
         }
 
         if( name == "block" ) {
-            //
+            var accessionNumberElement = getAccessionNumberElement(element);
+            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
+            var partNumberElement = getPartNumberElement(element);
+            var partValue = partNumberElement.select2("val"); //i.e. Part #
         }
+        console.log("accessionValue="+accessionValue+",partValue="+partValue);
 
-        if( !keyValue ) {
-            //console.log("key undefinded!");
+        if( !keyValue ||
+            keyValue && name == "part" && !accessionValue ||
+            keyValue && name == "block" && (!accessionValue || !partValue)
+        ) {
+            console.log("key undefined!");
 //            $('#'+inputId).popover( {content:"Please fill out key field"} );
 //            $('#'+inputId).popover('show');
 
             if( name == "part" || name == "block" ) {
 
-                if( !parentValue ) {
-                    //console.log( "parentValue is empty. parentNumberElement id="+parentNumberElement.attr("id") + ", class=" + parentNumberElement.attr("class") );
-                    parentNumberElement.popover({
-                        placement:'bottom',
-                        content:"Can not check "+capitaliseFirstLetter(name)+" name without Accession number"
+                if( !accessionValue || (name == "block" && !partValue) ) {
+
+                    var blockError = "";
+                    if( name == "block" ) {
+                        var blockError = " and Part number";
+                    }
+                    var messageError = "Can not check "+capitaliseFirstLetter(name)+" name without Accession number"+blockError;
+
+                    //console.log( "accessionValue is empty. parentNumberElement id="+parentNumberElement.attr("id") + ", class=" + parentNumberElement.attr("class") );
+                    accessionNumberElement.popover({
+                        placement: 'bottom',
+                        content: messageError
                     });
-                    parentNumberElement.popover('show');
+                    accessionNumberElement.popover('show');
                     //alert("Can not check "+capitaliseFirstLetter(name)+" name without Accession number");
+
+                    if( name == "block" ) {
+                        partNumberElement.popover({
+                            placement: 'bottom',
+                            content: messageError
+                        });
+                        partNumberElement.popover('show');
+                    }
+
                     return;
                 } else {
-                    //console.log("parentValue is not empty");
-                    setKeyValue(element,name+"partname",parentValue);   //TODO: fix it
+                    console.log("accessionValue is not empty");
+                    setKeyValue(element,name+fieldName,new Array(accessionValue,partValue));
                     return;
                 }
 
             }
 
-            setKeyValue(element,name+fieldName,"");
+            setKeyValue(element,name+fieldName,null);
             //disableInElementBlock(element, false, null, "notkey", null);
             //invertButton(element);
             return;
         }
 
+        console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
-            data: {key: keyValue, parent: parentValue},
+            data: {key: keyValue, parent: accessionValue, parent2: partValue},
             contentType: 'application/json',
             dataType: 'json',
             success: function (data) {
@@ -300,8 +324,8 @@ function setArrayField(element, dataArr, parent) {
             var idStr = 'type="hidden" value="'+id+'" ';
             newForm = newForm.replace('type="hidden"', idStr);
 
-            //console.log("newForm="+newForm);
-            //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+            console.log("newForm="+newForm);
+            console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
 
 //        attachElement.before(newForm);
             attachElement.prepend(newForm);
@@ -316,7 +340,7 @@ function setArrayField(element, dataArr, parent) {
             if( type == "text" ) {
                 console.log("type text, text="+text);
                 //find the last attached element to attachElement
-                var firstAttachedElement = attachElement.find('input').first();
+                var firstAttachedElement = attachElement.find('input,textarea').first();
                 console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
                 firstAttachedElement.val(text);
 
@@ -375,7 +399,7 @@ function processGroup( element, data, disableFlag ) {
     //var element = elementInside.parent().parent().parent();
     //var radios = element.find("input:radio");
 
-    console.log("process group id="+element.attr("id")+ ", class="+element.attr("class") + ", fieldName="+fieldName );
+    //console.log("process group id="+element.attr("id")+ ", class="+element.attr("class") + ", fieldName="+fieldName );
 
     var partId = 'input[id*="'+fieldName+'_"]:radio';
     var members = element.find(partId);
@@ -386,15 +410,21 @@ function processGroup( element, data, disableFlag ) {
         //console.log("radio id: " + localElement.attr("id") + ", value=" + value );
 
         if( disableFlag == "ignoreDisable" ) {  //use to set radio box
-            if( data && data != "" ) {
+
+            if( data && data != "" ) {  //set fields with data
                 //console.log("data ok, check radio (data): " + value + "?=" + data['text'] );
                 if( value == data['text'] ) {
                     //console.log("Match!" );
+                    //console.log("show and set children: disableFlag="+disableFlag+", origin="+data['origin']+", primaryorgan="+data['primaryorgan']);
                     localElement.prop('checked',true);
+                    diseaseTypeRenderCheckForm(element,data['origin'],data['primaryorgan']);    //set diseaseType group
                 }
             } else {
                 //console.log("no data radio: value=" + value);
+                //console.log("hide children: disableFlag="+disableFlag);
                 localElement.prop('checked',false);
+                hideDiseaseTypeChildren( element ); //unset and hide diseaseType group
+
             }
 
         } else  {
@@ -411,20 +441,6 @@ function processGroup( element, data, disableFlag ) {
             }
         }
 
-    }
-
-    if( cicle != "show" ) { //TODO: why this function called by show?
-        //hide diseaseType children
-        if( element.attr("class") && element.attr("class").indexOf('diseaseType') != -1 ) {
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! process Group as _diseaseType_");
-            if( disableFlag && disableFlag != "ignoreDisable" ) {
-                console.log("hide children: disableFlag="+disableFlag);
-                hideDiseaseTypeChildren( element );
-            } else {
-                console.log("show and set children: disableFlag="+disableFlag+", origin="+data['origin']+", primaryorgan="+data['primaryorgan']);
-                diseaseTypeRenderCheckForm(element,data['origin'],data['primaryorgan']);
-            }
-        }
     }
 
 }
@@ -689,25 +705,25 @@ function invertButton(btn) {
 
 }
 
-function setKeyValue( btnElement, name, parentValue ) {
+//name: field name, i.e. partpartname
+function setKeyValue( btnElement, name, parentValueArr ) {
 
-    //console.log("set key value name="+ name);
+    if( parentValueArr ) {
+        var parentValue = parentValueArr[0];
+        var parentValue2 = parentValueArr[1];
+    } else {
+        var parentValue = '';
+        var parentValue2 = '';
+    }
 
-    //if( name == "name" ) return;
-
-//    if( name != "accession" ) {
-//        //data = new Array();
-//        //data[name] = "Automatic Generated";
-//        //setElementBlock(element, data, null, "key");
-//        keyElement.val("Automatic Generated");
-//    }
+    console.log("set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
 
     $.ajax({
         url: urlCheck+name,
         type: 'GET',
         contentType: 'application/json',
         dataType: 'json',
-        data: {key: parentValue},
+        data: {key: parentValue, key2: parentValue2},
         success: function (data) {
             if( data ) {
                 console.debug("key value data is found");
@@ -784,13 +800,30 @@ function findKeyElement( element ) {
 
 function getAccessionNumberElement( element ) {
     var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    if( parent.attr('id') && parent.attr('id').indexOf("form_body_procedure") == -1 ) {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    }
+
     //console.log("get accession number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
     var accessionNumberHolder = parent.find('.accessionaccession');
-    var accessionNumberElement = parent.find('.keyfield');
+    var accessionNumberElement = accessionNumberHolder.find('.keyfield');
 
     return accessionNumberElement.eq(0);
 }
 
+function getPartNumberElement( element ) {
+    var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    if( parent.attr('id') && parent.attr('id').indexOf("form_body_part") == -1 ) {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    }
+    //console.log("get part number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+
+    var partNumberHolder = parent.find('.partpartname');
+    var partNumberElement = partNumberHolder.find('.keyfield');
+    //console.log("get part number: partNumberElement.id=" + partNumberElement.attr('id') + ", partNumberElement.class=" + partNumberElement.attr('class'));
+
+    return partNumberElement.eq(0);
+}
 
 //Helpers
 function capitaliseFirstLetter(string)

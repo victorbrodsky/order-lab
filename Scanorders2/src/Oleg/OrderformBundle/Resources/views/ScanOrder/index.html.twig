@@ -98,7 +98,15 @@
                                 {% endif %}
                             {% endfor %}
 
-                            <p>{{ validAccession }}&nbsp;{{validPartname}}{{slide.block.name}}</p>
+                            {#set valid blockname#}
+                            {% set validBlockame = slide.block.blockname|first %}
+                            {% for blockname in slide.block.blockname %}
+                                {% if blockname.validity == 1 %}
+                                    {% set validBlockame = blockname %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <p>{{ validAccession }}&nbsp;{{validPartname}}{{validBlockame}}</p>
                         </a>
                     {% endfor %}
                 </td>

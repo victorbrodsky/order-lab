@@ -90,28 +90,32 @@ function diseaseTypeRender() {
 //render diseaseType by AJAX from checkForm
 function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
 
+    if( !element.attr("class") || element.attr("class").indexOf('diseaseType') == -1 ) {
+        return;
+    }
+
     function checkDiseaseType() {
         var radioElement = $(this);
         var radioElementValue = radioElement.val();
 
         if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
-            console.log("checked id="+radioElement.attr("id"));
+            //console.log("checked id="+radioElement.attr("id"));
 
             var parent = radioElement.parent().parent();
             var originradio = parent.find('.originradio');
 
             originradio.collapse('show');
 
-            console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
+            //console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
 
             originradio.find('input:radio').each(function() {
 
                 var originElement = $(this);
                 var originElementValue = originElement.val();
-                console.log("originElement id="+originElement.attr("id")+", value="+originElementValue);
+                //console.log("originElement id="+originElement.attr("id")+", value="+originElementValue);
 
                 if( origin == "Metastatic" && originElementValue == "Metastatic" ) {
-                    console.log("Check "+origin);
+                    //console.log("Check "+origin);
                     originElement.prop('checked',true);
 
                     var primaryorganradio = parent.find('.primaryorganradio');
@@ -140,7 +144,11 @@ function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
 //hide children of DiseaseType
 function hideDiseaseTypeChildren( element ) {
 
-    console.log("hide Disease Type Children");
+    if( !element.attr("class") || element.attr("class").indexOf('diseaseType') == -1 ) {
+        return;
+    }
+
+    //console.log("hide Disease Type Children");
     var originradio = element.parent().parent().find(".originradio");
     if( originradio.is(':visible') ) {
         originradio.collapse('hide');
@@ -150,13 +158,9 @@ function hideDiseaseTypeChildren( element ) {
     if( primaryorganradio.is(':visible') ) {
         primaryorganradio.collapse('hide');
     }
+
     //remove disable attr
-//    originradio.find("input").each(function() {
-//        //$(this).attr("disabled", false);
-//        console.log( "remove diasable id=" + $(this).attr("id") );
-//        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0_primaryOrgan
-//        $(this).removeAttr("disabled");
-//    });
+    //console.log("disable and uncheck all in 'Origin'");
     originradio.find("input").removeAttr("disabled");
     originradio.find("input").prop('checked',false);
 

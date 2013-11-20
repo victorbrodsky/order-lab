@@ -15,7 +15,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntity( $block, $part=null, $orderinfo=null ) {
+    public function processBlockEntity( $block, $part=null, $orderinfo=null ) {
         
         $em = $this->_em;             
 
@@ -93,7 +93,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         
         $slides = $block->getSlide();      
         foreach( $slides as $slide ) {         
-            if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide) ) {
+            if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide,"Slide") ) {
                 $block->removeSlide( $slide );
                 $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $orderinfo );               
                 $block->addSlide($slide);                                                                                                                             
@@ -136,20 +136,6 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         return $part;
     }
-    
-    public function notExists($entity) {
-        $id = $entity->getId();
-        if( !$id ) {
-            return true;
-        }      
-        $em = $this->_em;
-        $found = $em->getRepository('OlegOrderformBundle:Block')->findOneById($id);       
-        if( null === $found ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public function findOneBlockByJoinedToField( $accession, $partname, $blockname, $validity=null ) {
 
@@ -162,10 +148,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
             ->createQuery('
             SELECT b FROM OlegOrderformBundle:Block b
             JOIN b.blockname bfield
-            JOIN b.accession a
-            JOIN a.accession aa
             JOIN b.part p
             JOIN p.partname pp
+            JOIN p.accession a
+            JOIN a.accession aa
             WHERE bfield.field = :field AND aa.field = :accession AND pp.field = :partname'.$onlyValid
             )->setParameter('field', $blockname)->setParameter('accession', $accession)->setParameter('partname', $partname);
 
@@ -177,6 +163,89 @@ class BlockRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
+    }
+
+    //create new Block by provided accession number and part name
+    public function createBlockByPartnameAccession( $accessionNumber, $partname ) {
+
+        if( !$accessionNumber || $accessionNumber == "" ) {
+            return null;
+        }
+
+        if( !$partname || $partname == "" ) {
+            return null;
+        }
+
+        $em = $this->_em;
+
+
+        //1a) Check accession
+        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionNumber,"Accession","accession",true);
+        if( !$accession ) {
+            //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
+            //                                                                                      $status, $provider, $className, $fieldName, $parent, $fieldValue
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber);
+        }
+
+        //1b) Check part
+        $part = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true);
+        if( !$part ) {
+            //1) create Part if not existed. We must create parent , because we will create an object which must be linked to its parent
+            //                                                               $status, $provider, $className, $fieldName, $parent, $fieldValue
+            $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname);
+        }
+
+        //2) find next available part name by accession number
+        $blockname = $em->getRepository('OlegOrderformBundle:Block')->findNextBlocknameByAccessionPartname($accessionNumber,$partname);
+
+        //3) before part create: check if part with $partname does not exists in DB
+        $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneByIdJoinedToField($blockname,"Block","blockname",true);
+
+        if( $blockFound ) {
+            return $blockFound;
+        }
+
+        //echo "create block, partname=".$part->getPartname()->first().", partid=".$part->getId()."<br>";
+
+        //4) create block object by blockname and link it to the parent
+        $block = $em->getRepository('OlegOrderformBundle:Block')->createElement(null,null,"Block","blockname",$part,$blockname);
+
+        return $block;
+    }
+
+    public function findNextBlocknameByAccessionPartname( $accessionNumber, $partname ) {
+        if( !$accessionNumber || $accessionNumber == "" ) {
+            return null;
+        }
+
+        if( !$partname || $partname == "" ) {
+            return null;
+        }
+
+        $helper = new FormHelper();
+        $names = $helper->getBlock();
+
+        foreach( $names as $name ) {
+            $query = $this->getEntityManager()
+                ->createQuery('
+            SELECT b FROM OlegOrderformBundle:Block b
+            JOIN b.blockname bfield
+            JOIN b.part p
+            JOIN p.partname pp
+            JOIN p.accession a
+            JOIN a.accession aa
+            WHERE bfield.field = :field AND aa.field = :accession AND pp.field = :partname'
+                )->setParameter('field', $name)->setParameter('accession', $accessionNumber)->setParameter('partname', $partname);
+
+            $block = $query->getResult();
+
+            if( !$block ) {
+                //echo "blockname="+$name;
+                return $name;
+            }
+        }
+
+        return null;
     }
     
 }
