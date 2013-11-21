@@ -18,13 +18,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Patient extends OrderAbstract
 {
-    
-//    /**
-//     * @ORM\Id
-//     * @ORM\Column(type="integer")
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
@@ -69,19 +62,6 @@ class Patient extends OrderAbstract
      * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
      */
     protected $procedure;
-
-//    /**
-//     * status: use to indicate if the patient with this mrn is reserved only but not submitted
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $status;
-
-//    /**
-//     * @var \DateTime
-//     * @ORM\Column(type="datetime", nullable=true)
-//     *
-//     */
-//    private $creationdate;
     
     /**
      * Constructor
@@ -110,16 +90,7 @@ class Patient extends OrderAbstract
         }
 
     }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
+
 
     /**
      * Set mrn

@@ -294,7 +294,7 @@ function setArrayField(element, dataArr, parent) {
         var fieldName = elementIdArr[elementIdArr.length-fieldIndex];
         var holderame = elementIdArr[elementIdArr.length-holderIndex];
         var ident = holderame+fieldName;
-        console.log("ident=" + ident );
+        //console.log("ident=" + ident + ", coll="+coll );
 
         //var attachElement = element.parent().parent().parent().parent().parent();
         var attachElement = parent.find("."+ident.toLowerCase());   //patientsex
@@ -324,8 +324,8 @@ function setArrayField(element, dataArr, parent) {
             var idStr = 'type="hidden" value="'+id+'" ';
             newForm = newForm.replace('type="hidden"', idStr);
 
-            console.log("newForm="+newForm);
-            console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+            //console.log("newForm="+newForm);
+            //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
 
 //        attachElement.before(newForm);
             attachElement.prepend(newForm);
@@ -335,17 +335,17 @@ function setArrayField(element, dataArr, parent) {
         }
 
         if( tagName == "INPUT" ) {
-            console.log("input tagName: fieldName="+fieldName);
+            //console.log("input tagName: fieldName="+fieldName);
 
             if( type == "text" ) {
-                console.log("type text, text="+text);
+                //console.log("type text, text="+text);
                 //find the last attached element to attachElement
                 var firstAttachedElement = attachElement.find('input,textarea').first();
-                console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
+                //console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
                 firstAttachedElement.val(text);
 
             } else if( classs && classs.indexOf("datepicker") != -1 ) {
-                console.log("datepicker");
+                //console.log("datepicker");
                 var firstAttachedElement = attachElement.find('input').first();
                 if( text && text != "" ) {
                     firstAttachedElement.datepicker( 'setDate', new Date(text) );
@@ -363,18 +363,18 @@ function setArrayField(element, dataArr, parent) {
             firstAttachedElement.val(text);
         } else if ( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
 
-            console.log("### select field, id="+id+",text="+text);
-            console.log("id="+element.attr("id"));
+            //console.log("### select field, id="+id+",text="+text);
+            //console.log("id="+element.attr("id"));
 
             element.select2('data', {id: text, text: text});  //TODO: make sure it sets in correct way!!!!!
 
         } else if ( tagName == "DIV" ) {
-            console.log("### set array field as DIV, id="+element.attr("id")+", text="+text );
+            //console.log("### set array field as DIV, id="+element.attr("id")+", text="+text );
             //get the first (the most recent added) group
             var firstAttachedElement = attachElement.find('.horizontal_type').first();
             processGroup( firstAttachedElement, dataArr[i], "ignoreDisable" );
         } else {
-            console.log("logical error: undefined tagName="+tagName);
+            //console.log("logical error: undefined tagName="+tagName);
         }
 
         //set hidden id of the element
@@ -645,7 +645,7 @@ function disableElement(element, flag) {
     }
 
     if( tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
-        console.debug("select disable classs="+classs+", id="+element.attr('id'));
+        //console.debug("select disable classs="+classs+", id="+element.attr('id'));
         //element.select2("disable", flag);
         if( flag ) {    //disable
             element.select2("readonly", true);
@@ -663,7 +663,7 @@ function disableElement(element, flag) {
             //console.log("file disable field id="+element.attr("id"));
             element.attr('disabled', true);
         } else {
-            //console.log("general disable field id="+element.attr("id"));
+            console.log("general disable field id="+element.attr("id"));
             element.attr('readonly', true);
         }
 
@@ -672,16 +672,22 @@ function disableElement(element, flag) {
             initDatepicker(element,"remove");
         }
 
+        //disable children buttons
+        element.parent().find("span[type=button]").attr("disabled", "disabled");
+
     } else {
 
         if( type == "file" ) {
             //console.log("file enable field id="+element.attr("id"));
             element.attr('disabled', false);
         } else {
-            //console.log("general enable field id="+element.attr("id"));
+            console.log("general enable field id="+element.attr("id"));
             element.attr("readonly", false);
             element.removeAttr( "readonly" );
         }
+
+        //enable children buttons
+        element.parent().find("span[type=button]").removeAttr("disabled");
 
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);

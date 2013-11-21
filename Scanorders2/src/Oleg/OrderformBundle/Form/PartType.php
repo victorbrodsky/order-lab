@@ -61,7 +61,7 @@ class PartType extends AbstractType
             'label' => "Source Organ:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__partsourceOrgan__',
+            'prototype_name' => '__partsourceorgan__',
         ));
 
         //description
@@ -99,7 +99,7 @@ class PartType extends AbstractType
             'label' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__paper__',
+            'prototype_name' => '__partpaper__',
         ));
 
         //diffDiagnoses
@@ -112,7 +112,7 @@ class PartType extends AbstractType
             'label' => "Differential Diagnoses:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__diffDisident__',
+            'prototype_name' => '__partdiffdisident__',
         ));
 
 
@@ -126,7 +126,7 @@ class PartType extends AbstractType
             'label' => "Type of Disease:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__diseaseType__',
+            'prototype_name' => '__partdiseaseType__',
         ));
 
     }

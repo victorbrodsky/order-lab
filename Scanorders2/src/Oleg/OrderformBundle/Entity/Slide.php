@@ -10,17 +10,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\SlideRepository")
  * @ORM\Table(name="slide")
  */
-class Slide
+class Slide extends OrderAbstract
 {
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-    
-    
+
     //*******************************// 
     // first step fields 
     //*******************************//
@@ -84,13 +76,20 @@ class Slide
      **/
     protected $orderinfo; 
     
-    public function __construct()
+    public function __construct($withfields=false, $validity=0)
     {
         $this->orderinfo = new ArrayCollection();
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
         $this->specialStains = new ArrayCollection();
         $this->relevantScans = new ArrayCollection();
+
+        if( $withfields ) {
+            $this->addRelevantScan( new RelevantScans($validity) );
+            $this->addSpecialStain( new SpecialStains($validity) );
+            $this->addScan( new Scan($validity) );
+            $this->addStain( new Stain($validity) );
+        }
     }
     
     public function getId() {
@@ -100,14 +99,6 @@ class Slide
     public function setId($id) {
         $this->id = $id;
     }
-
-//    public function getDiagnosis() {
-//        return $this->diagnosis;
-//    }
-//
-//    public function setDiagnosis($diagnosis) {
-//        $this->diagnosis = $diagnosis;
-//    }
 
     public function getMicroscopicdescr() {
         return $this->microscopicdescr;
@@ -191,40 +182,6 @@ class Slide
     {
         return $this->barcode;
     }
-
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Slide
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }  
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
-
 
     /**
      * Add scan

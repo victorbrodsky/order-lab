@@ -124,31 +124,15 @@
         {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,type,"","prototype") %}
         {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,type,"","prototype") %}
 
-
-        {#{% set diffDiagnosesWidget = form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) %}#}
-        {% set diffDiagnosesWidget = formmacros.diffDiagnosesWidget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident) %}
-        {#{% set diffDiagnosesWidget = form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) %}#}
-        {#{% set diffDiagnosesLabel = form_label(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) %}#}
-        {#{% set diffDiagnosesForm = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}        #}
-        {#{% set diffDiagnosesWidget = form_widget(diffDiagnosesForm.vars.prototype.field) %}#}
-        {% set diffDiagnosesHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident,type,"partdiffDisident","prototype",diffDiagnosesWidget) %}
-        {#{% set diffDiagnosesHtml = "" %}#}
+        {% set diffDiagnosesField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}
+        {% set diffDiagnosesWidget = formmacros.diffDiagnosesWidget(diffDiagnosesField) %}
+        {% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"") %}
 
         {% set diseaseTypeHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,type,"diseaseType","prototype") %}
 
         {% set blocknameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.blockname,type,"key","prototype") %}
 
     {% endif %}
-
-    LABEL1: {{ descriptionHtml }}
-    LABEL1: {{ descriptionHtml }}
-    <br><br>
-    {#LABEL2: {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) }}#}
-    LABEL2: {{ diffDiagnosesWidget }}
-    <br>
-    LABEL2: {{ diffDiagnosesWidget }}
-    {{ form_label(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) }}
-    {{ form_label(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident.vars.prototype.field) }}
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
     {#{% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}#}
@@ -179,13 +163,14 @@
               paperHtml,
               descriptionHtml,
               diagnosisHtml,
-          diffDiagnosesHtml,
+              diffDiagnosesHtml,
               diseaseTypeHtml
            )|e }}
         "
-
-         data-prototype-diffDisident="{{ diffDiagnosesWidget|e }}"
-         data-prototype-partdiffDisident="{{ diffDiagnosesWidget|e }}"
+          {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+          data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
+          {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+          data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
@@ -203,6 +188,8 @@
          data-prototype-relevantscans="
         {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.field)|e }}
         "
+        {#data-prototype-addsliderelevantscans="{{ formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans,#}
+        {#type,"sliderelevantScans","prototype","","","nolabel")|e }}"#}
 
          data-prototype-specialstains="
         {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains.vars.prototype.name)|e }}
@@ -323,6 +310,7 @@
                                                                         {% if slide.relevantScans|length > 0 %}
                                                                             {#{{ formmacros.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}#}
                                                                             {{ formmacros.collectionInput(slide.relevantScans, 'sliderelevantScans', 'relevantScans', type, 'multi', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
+                                                                            {#{{ formmacros.fieldCollectionInput(slide.relevantScans, type, "", "", "") }}#}
                                                                         {% endif %}
 
                                                                     </div>

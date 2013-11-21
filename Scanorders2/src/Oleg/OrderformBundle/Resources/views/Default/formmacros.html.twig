@@ -274,7 +274,7 @@
 {% endmacro %}
 
     
-{#####################  Collection Input Field  ########################}
+{#####################  Collection Input Field  (currently used only by slide) ########################}
 {% macro collectionInput(objectForm, classname, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
 
     {% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
@@ -304,9 +304,10 @@
                                 {{ form_widget(field.field) }}
                                 {% if type == 'new' or type == 'edit' %}
                                     <span
-                                          id="{{ addBtnId }}"
-                                          onClick="addDiffdiagField('{{ objectName }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')"
-                                          class="input-group-addon btn" type="button">
+                                          {#id="{{ addBtnId }}"#}
+                                          {#onClick="addDiffdiagField('{{ objectName }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')"#}
+                                          onClick="addCollectionField(this)"
+                                          class="input-group-addon btn addbtnCollField" type="button">
                                           <i class="glyphicon glyphicon-plus-sign"></i>
                                     </span>
                                 {% endif %}
@@ -324,25 +325,19 @@
 
 
 {######################  holder for array of fields  #################################}
-{% macro inputArrayField(fields,cicle,classname,fieldtype,widget,label) %}
+{% macro inputArrayField(fields,cicle,classname,fieldtype) %}
     {% import _self as formmacros %}
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-
-        {% if widget is not defined or widget == "" %}
-            {{ formmacros.inputField(field,cicle,fieldtype,"",widget,label) }}
-        {% else %}
-            {{ formmacros.inputField2(cicle,fieldtype,"",widget,label) }}
-        {% endif %}
-
+        {{ formmacros.inputField(field,cicle,fieldtype,"") }}
     {% endfor %}
     </div>
     </p>
 {% endmacro %}
 
 {#input array field with separate label#}
-{% macro inputField(field,cicle,fieldtype,prototype,widget) %}
+{% macro inputField(field,cicle,fieldtype,prototype,widget,nobtn,nolabel) %}
     {% import _self as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -353,28 +348,34 @@
 
     <div class="row">
         <div class="col-xs-6" align="right">
-            {% if fieldtype == "paper" and cicle == "show" %}
-                {{form_label(fieldThis.name)}}
+
+            {% if nolabel is defined and nolabel != "" %}
+                {#no label#}
             {% else %}
-                {% if label is not defined or label == "" %}
-                    {{form_label(fieldThis.field)}}
+                {% if fieldtype == "paper" and cicle == "show" %}
+                    {{form_label(fieldThis.name)}}
                 {% else %}
-                    {{ label }}
-                {% endif %}
-
-            {% endif %}
-            {% if cicle == "show" %}
-                {% if field.vars.value.creationdate != "" %}
-                    entered on
-                    {{field.vars.value.creationdate|date('Y-m-d')}}
-                {% endif %}
-                {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                    by
-                    {{field.vars.value.provider}}
+                    {% if label is not defined or label == "" %}
+                        {{form_label(fieldThis.field)}}
+                    {% else %}
+                        {{ label }}
+                    {% endif %}
 
                 {% endif %}
+                {% if cicle == "show" %}
+                    {% if field.vars.value.creationdate != "" %}
+                        entered on
+                        {{field.vars.value.creationdate|date('Y-m-d')}}
+                    {% endif %}
+                    {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                        by
+                        {{field.vars.value.provider}}
+
+                    {% endif %}
+                {% endif %}
+                <b>:</b>
             {% endif %}
-            <b>:</b>
+
         </div>
         <div class="col-xs-6" align="left">
             {% if fieldtype == "key" %}
@@ -386,12 +387,12 @@
             {% elseif fieldtype == "diseaseType" %}
                 {{ formmacros.diseaseMulti(fieldThis) }}
             {% elseif fieldtype == "partdiffDisident" and cicle != 'show' %}
-                {{ formmacros.fieldCollectionInput(fieldThis,cicle,widget) }}
+                {{ formmacros.fieldCollectionInput(fieldThis,cicle,prototype,widget,nobtn) }}
             {% else %}
                 {{ form_widget(fieldThis.field) }}
             {% endif %}
             {% if cicle != 'show' %}
-                {#{{ form_rest(fieldThis) }}#}
+                {{ form_rest(fieldThis) }}
             {% endif %}
         </div>
     </div>
@@ -404,30 +405,38 @@
 {% endmacro %}
 
 {############# custom array fields #############}
-{% macro fieldCollectionInput(field, cicle, widget) %}
+{% macro fieldCollectionInput(field, cicle, prototype, widget, nobtn) %}
 
-    <div style="float:left; width:100%">
-        {#{{ form_errors(field.field) }}#}
-        <div class="fieldInputColl">
-            <div class="input-group">
+    {% if nobtn is defined and nobtn != "" %}
+        {{ form_errors(field.field) }}
+        {{ widget }}
+    {% else %}
+        <div style="float:left; width:100%">
+            {{ form_errors(field.field) }}
+            <div class="fieldInputColl">
+                <div class="input-group">
+                    {% if widget is not defined or widget == "" %}
+                        {{ form_widget(field.field) }}
+                    {% else %}
+                        {{ widget }}
+                    {% endif %}
 
-                {% if widget is not defined or widget == "" %}
-                    {{ form_widget(field.field) }}
-                {% else %}
-                    {{ widget }}
-                {% endif %}
-
-
-                {% if cicle == 'new' or cicle == 'edit' %}
-                    <span
+                    {% if cicle == 'new' or cicle == 'edit' %}
+                        <span
                             onClick="addCollectionField(this)"
-                            class="input-group-addon btn" type="button">
-                      <i class="glyphicon glyphicon-plus-sign"></i>
-                </span>
-                {% endif %}
+                            class="input-group-addon btn addbtnCollField" type="button">
+                            <i class="glyphicon glyphicon-plus-sign"></i>
+                        </span>
+                        {#<span#}
+                            {#onClick="delDiffdiagField(this)"#}
+                            {#class="input-group-addon btn delbtnCollField" type="button">#}
+                            {#<i class="glyphicon glyphicon-minus-sign"></i>#}
+                        {#</span>#}
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
 {% endmacro %}
 
@@ -642,11 +651,9 @@ ident:      specialStains or relevantScans
         {% endif %}
 
         {% if diffDiagnosesHtml is not defined or diffDiagnosesHtml == "" %}
-            1{{ formmacros.inputArrayField(part.diffDisident,cicle,"partdiffdisident","partdiffDisident") }}
+            {{ formmacros.inputArrayField(part.diffDisident,cicle,"partdiffdisident","partdiffDisident") }}
         {% else  %}
-            {#2{{ formmacros.inputArrayField(part.diffDisident,cicle,"partdiffdisident","partdiffDisident",diffDiagnosesHtml) }}#}
-            {#field will be added by JS#}
-           2<p><div class="partdiffdisident">{{ diffDiagnosesHtml }}</div></p>
+           <p><div class="partdiffdisident">{{ diffDiagnosesHtml }}</div></p>
         {% endif %}
 
         {% if diseaseTypeHtml is not defined or diseaseTypeHtml == "" %}

@@ -118,10 +118,6 @@ class Part extends OrderAbstract
         ", diffDisident=".$this->diffDisident->first().
         ", blockCount=".count($this->block)."<br>";
     }
-    
-    public function getId() {
-        return $this->id;
-    }
 
     public function getAccession() {
         return $this->accession;
