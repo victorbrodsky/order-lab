@@ -399,8 +399,8 @@
 
 {% endmacro %}
 
-{#simple diffDiagnosesWidget#}
-{% macro diffDiagnosesWidget(field) %}
+{#simple field widget. i.e. diffDiagnoses field widget#}
+{% macro fieldWidget(field) %}
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
 
@@ -496,9 +496,9 @@ ident:      specialStains or relevantScans
     <div class="row">
         <div class="col-xs-6" align="right">
             {% if coll|length > 0 %}
-                {{ form_label(coll[0].name) }}
+                {{ form_label(coll[0].field) }}
             {% else %}
-                {{ form_label(coll.name) }}
+                {{ form_label(coll.field) }}
             {% endif %}
         </div>
         <div class="col-xs-6" align="left">
@@ -506,7 +506,7 @@ ident:      specialStains or relevantScans
             <div style="float:left; width:100%">
                 {% for col in coll %}
                     <div class="fieldInputColl">
-                        {{ form_widget(col.name) }}
+                        {{ form_widget(col.field) }}
                     </div>
                 {% endfor %}
                 {% if type == 'new' or type == 'edit' %}
@@ -612,11 +612,11 @@ ident:      specialStains or relevantScans
 {% macro partForm( part, flag, uid, cicle, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
     {% import _self as formmacros %}
 
-    {%  set uidArr = uid|split('_') %}
-    {% set patientCount = uidArr[0] %}
-    {% set procedureCount = uidArr[1] %}
-    {% set accessionCount = uidArr[2] %}
-    {% set partCount = uidArr[3] %}
+    {#{%  set uidArr = uid|split('_') %}#}
+    {#{% set patientCount = uidArr[0] %}#}
+    {#{% set procedureCount = uidArr[1] %}#}
+    {#{% set accessionCount = uidArr[2] %}#}
+    {#{% set partCount = uidArr[3] %}#}
 
     <div id="part_{{ uid }}">
 
@@ -675,6 +675,27 @@ ident:      specialStains or relevantScans
         {% else  %}
             <p><div class="blockblockname">{{ blocknameHtml }}</div></p>
         {% endif %}
+    </div>
+{% endmacro %}
+
+
+{% macro slideForm( slide, flag, uid, cicle, relevantScansHtml ) %}
+    {% import _self as formmacros %}
+
+    <div id="slide_{{ uid }}">
+
+        {#{{ formmacros.field(slide.vars.prototype.stain.vars.prototype.field)|e }}#}
+        {#{{ formmacros.field(slide.vars.prototype.scan.vars.prototype.field)|e }}#}
+        {#{{ formmacros.field(slide.vars.prototype.scan.vars.prototype.scanregion)|e }}#}
+        {#{{ formmacros.field(slide.vars.prototype.scan.vars.prototype.note) }}#}
+        {#{{ formmacros.field(slide.vars.prototype.microscopicdescr)|e }}#}
+
+        {% if relevantScansHtml is not defined or relevantScansHtml == "" %}
+            {{ formmacros.inputArrayField(slide.relevantScans,cicle,"sliderelevantscans","sliderelevantScans") }}
+        {% else  %}
+            <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
+        {% endif %}
+
     </div>
 {% endmacro %}
 

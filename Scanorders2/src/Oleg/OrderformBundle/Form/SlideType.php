@@ -21,7 +21,8 @@ class SlideType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {      
         $builder->add( 'id', 'hidden' );
-        
+
+        //TODO: replace by generic form type
         //$builder->add( 'stain', new StainType(), array('label'=>'Stain:') ); \
         $builder->add('stain', 'collection', array(
             'type' => new StainType($this->params),
@@ -31,10 +32,9 @@ class SlideType extends AbstractType
             'label' => " ",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__stain__',
+            'prototype_name' => '__slidestain__',
         ));
-        
-//        $builder->add( 'scan', new ScanType(), array('label'=>'Scan:') );
+
         $builder->add('scan', 'collection', array(
             'type' => new ScanType($this->params),
             'allow_add' => true,
@@ -45,16 +45,6 @@ class SlideType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__scan__',
         ));
-
-//        if( !$this->multy ) {
-//            $builder->add('diagnosis', 'textarea', array(
-//                    'max_length'=>10000,
-//                    'required'=>false,
-//                    'label'=>'Diagnosis / Reason for scans:',
-//                    'attr' => array('class'=>'form-control'),
-//                    //'attr'=>array('readonly'=>true)
-//            ));
-//        }
         
         $builder->add('microscopicdescr', 'textarea', array(
                 'max_length'=>10000,
@@ -62,13 +52,7 @@ class SlideType extends AbstractType
                 'label'=>'Microscopic Description:',
                 'attr' => array('class'=>'textarea form-control'),
         ));
-        
-//        $builder->add('specialstain', 'text', array(
-//                'max_length'=>100,
-//                'required'=>false,
-//                'label'=>'Special Stain Results:',
-//                'attr' => array('class'=>'form-control form-control-modif'),
-//        ));
+
         $builder->add('specialStains', 'collection', array(
             'type' => new SpecialStainsType(),
             'allow_add' => true,
@@ -79,22 +63,28 @@ class SlideType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__specialStains__',
         ));
-        
-//        $builder->add('relevantscan', 'text', array(
-//                'max_length'=>100,
-//                'required'=>false,
-//                'label'=>'Relevant Scanned Images:',
-//                'attr' => array('class'=>'form-control form-control-modif'),
+
+//        $builder->add('relevantScans', 'collection', array(
+//            'type' => new RelevantScansType(),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => "Relevant Scanned Images:",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__relevantScans__',
 //        ));
+        //diffDiagnoses
+        $gen_attr = array('label'=>'Relevant Scanned Images','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type
         $builder->add('relevantScans', 'collection', array(
-            'type' => new RelevantScansType(),
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
             'label' => "Relevant Scanned Images:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__relevantScans__',
+            'prototype_name' => '__sliderelevantScans__',
         ));
         
         //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false)); 

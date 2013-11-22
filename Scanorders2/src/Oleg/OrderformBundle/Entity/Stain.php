@@ -10,35 +10,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StainRepository")
  * @ORM\Table(name="stain")
  */
-class Stain
+class Stain extends SlideArrayFieldAbstract
 {
-    
+
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="stain")
+     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
      */
-    protected $id;
-
-//    /**
-//     * @ORM\Column(type="string", length=200)
-//     * @Assert\NotBlank
-//     */
-//    protected $name;
-
-//    /**
-//     * @ORM\OneToOne(targetEntity="StainList", cascade={"persist"})
-//     * @ORM\JoinColumn(name="stain_id", referencedColumnName="id")
-//     **/
-//    private $name;
+    protected $slide;
 
     /**
      * @ORM\ManyToOne(targetEntity="StainList", inversedBy="stain", cascade={"persist"})
      * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
      */
-    protected $name;
+    protected $field;
 
-    
     /**
      * @ORM\Column(type="string", nullable=true, length=200)
      */
@@ -48,55 +34,6 @@ class Stain
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $date;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="stain")
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
-     */
-    protected $slide;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="stain")
-     **/
-    protected $orderinfo;
-
-    public function __construct()
-    {
-        $this->orderinfo = new ArrayCollection();
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Stain
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
 
     /**
      * Set stainer
@@ -143,69 +80,5 @@ class Stain
     {
         return $this->date;
     }
-
-
-    /**
-     * Set slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return Stain
-     */
-    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
-    {
-        $this->slide = $slide;
-    
-        return $this;
-    }
-
-    /**
-     * Get slide
-     *
-     * @return \Oleg\OrderformBundle\Entity\Slide 
-     */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
-
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Stain
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
-    
-    public function __toString() {
-        return "Stain: name=".$this->name;
-    }
-           
     
 }

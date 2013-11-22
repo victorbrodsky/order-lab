@@ -26,36 +26,22 @@ class StainType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        echo "stain params=";
-//        echo $this->params['user'];
-//        echo "<br>";
-
-        //preloaded original combobox
-//        $builder->add('name', null, array(
-//            'label' => '* Stain:',
-//            'required' => true,
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
-        
-//        $builder->add('name', 'text', array(
-//            'label' => '* Stain:',
-//            //'required' => true,
-//            'attr' => array('class' => 'ajax-combobox', 'type' => 'hidden')
-//        ));
-
-
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-stain', 'type' => 'hidden');    //new
         } else {
             $attr = array('class' => 'combobox combobox-width');    //show
         }
-        $builder->add('name', 'custom_selector', array(
+        $builder->add('field', 'custom_selector', array(
             'label' => '* Stain:',
             'required' => true,
             'attr' => $attr,
             'classtype' => 'stain'
         ));
 
+        $builder->add('slideothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\Stain',
+            'label' => false
+        ));
 
     }
 
@@ -64,14 +50,6 @@ class StainType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Stain'
         ));
-
-//        $resolver->setRequired(array(
-//            'em',
-//        ));
-//
-//        $resolver->setAllowedTypes(array(
-//            'em' => 'Doctrine\Common\Persistence\ObjectManager',
-//        ));
     }
 
     public function getName()

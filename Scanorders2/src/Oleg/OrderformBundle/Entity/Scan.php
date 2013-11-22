@@ -3,27 +3,24 @@
 namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
  * @ORM\Table(name="scan")
  */
-class Scan {
-    
+class Scan extends SlideArrayFieldAbstract
+{
+
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
+     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
      */
-    protected $id;
+    protected $slide;
 
     /**
      * @ORM\Column(name="mag", type="string", length=50)
-     * @Assert\NotBlank
      */
-    protected $mag;
+    protected $field;
     
     /**
      * @ORM\Column(type="string", nullable=true, length=500)
@@ -47,55 +44,6 @@ class Scan {
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $scandate;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
-     */
-    protected $slide;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="scan")
-     **/
-    protected $orderinfo;
-
-    public function __construct()
-    {
-        $this->orderinfo = new ArrayCollection();
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set mag
-     *
-     * @param string $mag
-     * @return Scan
-     */
-    public function setMag($mag)
-    {
-        $this->mag = $mag;
-    
-        return $this;
-    }
-
-    /**
-     * Get mag
-     *
-     * @return string 
-     */
-    public function getMag()
-    {
-        return $this->mag;
-    }
 
     /**
      * Set scanregion
@@ -187,78 +135,6 @@ class Scan {
     public function getScandate()
     {
         return $this->scandate;
-    }
-
-
-    /**
-     * Set slide
-     *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
-     * @return Scan
-     */
-    public function setSlide(\Oleg\OrderformBundle\Entity\Slide $slide = null)
-    {
-        $this->slide = $slide;
-    
-        return $this;
-    }
-
-    /**
-     * Get slide
-     *
-     * @return \Oleg\OrderformBundle\Entity\Slide 
-     */
-    public function getSlide()
-    {
-        return $this->slide;
-    }
-
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Scan
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-//    /**
-//     * Set orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     * @return Scan
-//     */
-//    public function setOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo = null)
-//    {
-//        $this->orderinfo = $orderinfo;
-//
-//        return $this;
-//    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Oleg\OrderformBundle\Entity\OrderInfo
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
     }
 
 }

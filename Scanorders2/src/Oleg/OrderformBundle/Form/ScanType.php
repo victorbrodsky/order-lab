@@ -50,7 +50,7 @@ class ScanType extends AbstractType
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $magArr['data'] = '20X';    //new
         }
-        $builder->add( 'mag', 'choice', $magArr);
+        $builder->add( 'field', 'choice', $magArr);
         
         $builder->add('note', 'textarea', array(
                 'max_length'=>5000,
@@ -58,6 +58,11 @@ class ScanType extends AbstractType
                 'label'=>'Reason for Scan/Note:',
                 //'data' => 'Interesting case',
                 'attr' => array('class'=>'textarea form-control'),   //form-control
+        ));
+
+        $builder->add('scanothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\Scan',
+            'label' => false
         ));
 
     }

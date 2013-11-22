@@ -115,7 +115,6 @@ class PartType extends AbstractType
             'prototype_name' => '__partdiffdisident__',
         ));
 
-
         //diseaseType
         $gen_attr = array('label'=>'Type of Disease','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
         $builder->add('diseaseType', 'collection', array(

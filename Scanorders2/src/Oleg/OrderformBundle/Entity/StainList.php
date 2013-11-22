@@ -59,7 +59,7 @@ class StainList
     private $original;
 
     /**
-     * @ORM\OneToMany(targetEntity="Stain", mappedBy="name")
+     * @ORM\OneToMany(targetEntity="Stain", mappedBy="field")
      */
     protected $stain;
 

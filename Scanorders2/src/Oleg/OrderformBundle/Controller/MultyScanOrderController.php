@@ -342,20 +342,20 @@ class MultyScanOrderController extends Controller {
         $block = new Block(true);
         $part->addBlock($block);
 
-        $slide = new Slide();
+        $slide = new Slide(true);
 
-        $specialStains = new SpecialStains();
-        $relevantScans = new RelevantScans();
-        $slide->addRelevantScan($relevantScans);
-        $slide->addSpecialStain($specialStains);
+//        $specialStains = new SpecialStains();
+//        $relevantScans = new RelevantScans();
+//        $slide->addRelevantScan($relevantScans);
+//        $slide->addSpecialStain($specialStains);
 
         $block->addSlide($slide);
 
-        $scan = new Scan();
-        $slide->addScan($scan);
-
-        $stain = new Stain();
-        $slide->addStain($stain);
+//        $scan = new Scan();
+//        $slide->addScan($scan);
+//
+//        $stain = new Stain();
+//        $slide->addStain($stain);
 
 
         $request = $this->container->get('request');

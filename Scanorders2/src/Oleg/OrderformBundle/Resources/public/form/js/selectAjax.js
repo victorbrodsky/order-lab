@@ -69,9 +69,9 @@ function getComboboxStain(urlCommon, ids) {
 
     $.ajax(url).success(function(data) {
         //json = eval(data);
-        var targetid = id+"stain_0_name";
+        var targetid = id+"stain_0_field";
         if( type == "single" ) {
-            targetid = "#oleg_orderformbundle_staintype_name";
+            targetid = "#oleg_orderformbundle_staintype_field";
         }
         //var target = "#oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_0_slide_0_stain_0_name";
         //console.log("targetid="+targetid);

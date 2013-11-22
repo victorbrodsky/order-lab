@@ -87,8 +87,8 @@ class Slide extends OrderAbstract
         if( $withfields ) {
             $this->addRelevantScan( new RelevantScans($validity) );
             $this->addSpecialStain( new SpecialStains($validity) );
-            $this->addScan( new Scan($validity) );
-            $this->addStain( new Stain($validity) );
+            $this->addScan( new Scan() );
+            $this->addStain( new Stain() );
         }
     }
     
