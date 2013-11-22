@@ -162,8 +162,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     if( name == "slide" ) {
         //addCollFieldFirstTime( "relevantScans", ids );
-        addDiffdiagFieldFirstTime( name, ids );
-        addCollFieldFirstTime( "specialStains", ids );
+        //addDiffdiagFieldFirstTime( name, ids );
+        //addCollFieldFirstTime( "specialStains", ids );
     }
 
     //bind listener to the toggle button
@@ -237,8 +237,8 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 
     if( name == "slide" ) {
         //addCollFieldFirstTime( "relevantScans", ids );
-        addDiffdiagFieldFirstTime( name, ids );
-        addCollFieldFirstTime( "specialStains", ids );
+        //addDiffdiagFieldFirstTime( name, ids );
+        //addCollFieldFirstTime( "specialStains", ids );
     }
     
     bindToggleBtn( name + '_' + ids.join("_") );

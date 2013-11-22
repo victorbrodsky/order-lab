@@ -135,9 +135,13 @@
         {% set relevantScansField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans %}
         {% set relevantScansWidget = formmacros.fieldWidget(relevantScansField) %}
         {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
-        {#{% set relevantScansHtml = "" %}#}
+
+        {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains %}
+        {% set specialStainsWidget = formmacros.fieldWidget(specialStainsField) %}
+        {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
     {% endif %}
+
 
     {#            pat   spec  acc   part block slide  scan  stain       #}
     {#{% set uid = 0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}#}
@@ -191,24 +195,26 @@
         {#"#}
           data-prototype-slide="
         {{ formmacros.slideForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype, "", uid, type,
-          relevantScansHtml
+          formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.field),
+          formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.field),
+          formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion),
+          formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note),
+          formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr),
+          relevantScansHtml,
+          specialStainsHtml
           )|e }}
         "
 
-         {#data-prototype-relevantscans="#}
-        {#{{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans.vars.prototype.field)|e }}#}
-        {#"#}
-        {#data-prototype-addsliderelevantscans="{{ formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans,#}
-        {#type,"sliderelevantScans","prototype","","","nolabel")|e }}"#}
-
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","")|e }}"
+          data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","nolabel")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
           data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 
-         data-prototype-specialstains="
-        {{ form_widget(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains.vars.prototype.field)|e }}
-        "
+          {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+          data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","nolabel")|e }}"
+          {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+          data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+
       {% endif %}
 
         >
@@ -293,40 +299,7 @@
 
                                                                     <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
 
-                                                                        {#scan and stain#}
-                                                                        {% set scanCount = 0 %}
-                                                                        {% set stainCount = 0 %}
-
-                                                                        {#stain#}
-                                                                        {% for stain in slide.stain %}
-                                                                            {{ formmacros.field(stain.field) }}
-                                                                        {% endfor %}
-
-                                                                        {#scan#}
-                                                                        {% for scan in slide.scan %}
-                                                                            {{ formmacros.field(scan.field) }}
-                                                                            {{ formmacros.field(scan.scanregion) }}
-                                                                            {{ formmacros.field(scan.note) }}
-                                                                        {% endfor %}
-
-{#                                                                        {% if multy == 'single' %}#}
-{#                                                                            {{ formmacros.field(slide.diagnosis) }}#}
-{#                                                                        {% endif %}#}
-                                                                        {{ formmacros.field(slide.microscopicdescr) }}
-
-                                                                        {#{{ formmacros.field(slide.specialStains) }}#}
-                                                                        {############ specialStains input collection #############}
-                                                                        {% if slide.specialStains|length > 0 %}
-                                                                            {{ formmacros.collInput(slide.specialStains, type, 'multi', 'specialStains', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
-                                                                        {% endif %}
-
-                                                                        {#{{ formmacros.field(slide.relevantScans) }}#}
-                                                                        {############ relevantScans input collection #############}
-                                                                        {% if slide.relevantScans|length > 0 %}
-                                                                            {#{{ formmacros.collInput(slide.relevantScans, type, 'multi', 'relevantScans', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}#}
-                                                                            {{ formmacros.collectionInput(slide.relevantScans, 'sliderelevantScans', 'relevantScans', type, 'multi', patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) }}
-                                                                            {#{{ formmacros.fieldCollectionInput(slide.relevantScans, type, "", "", "") }}#}
-                                                                        {% endif %}
+                                                                        {{ formmacros.slideForm( slide, "check", uid, type ) }}
 
                                                                     </div>
                                                                 </div> {#end of slide#}

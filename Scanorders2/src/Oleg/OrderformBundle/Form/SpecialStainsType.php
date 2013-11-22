@@ -17,10 +17,14 @@ class SpecialStainsType extends AbstractType
     {
 
         $builder->add('field', 'textarea', array(
-            'label' => 'Result of Special Stains:',
+            'label' => 'Result of Special Stains',
             'required' => false,
-            //'attr' => array('class' => 'combobox combobox-width')
             'attr' => array('class'=>'textarea form-control form-control-modif')
+        ));
+
+        $builder->add('stainothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\SpecialStains',
+            'label' => false
         ));
 
     }

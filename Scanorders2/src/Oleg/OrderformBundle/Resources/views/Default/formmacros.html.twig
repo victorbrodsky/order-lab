@@ -325,19 +325,19 @@
 
 
 {######################  holder for array of fields  #################################}
-{% macro inputArrayField(fields,cicle,classname,fieldtype) %}
+{% macro inputArrayField(fields,cycle,classname,fieldtype,nobtn,nolabel) %}
     {% import _self as formmacros %}
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        {{ formmacros.inputField(field,cicle,fieldtype,"") }}
+        {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel) }}
     {% endfor %}
     </div>
     </p>
 {% endmacro %}
 
 {#input array field with separate label#}
-{% macro inputField(field,cicle,fieldtype,prototype,widget,nobtn,nolabel) %}
+{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel) %}
     {% import _self as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -352,7 +352,7 @@
             {% if nolabel is defined and nolabel != "" %}
                 {#no label#}
             {% else %}
-                {% if fieldtype == "paper" and cicle == "show" %}
+                {% if fieldtype == "paper" and cycle == "show" %}
                     {{form_label(fieldThis.name)}}
                 {% else %}
                     {% if label is not defined or label == "" %}
@@ -362,7 +362,7 @@
                     {% endif %}
 
                 {% endif %}
-                {% if cicle == "show" %}
+                {% if cycle == "show" %}
                     {% if field.vars.value.creationdate != "" %}
                         entered on
                         {{field.vars.value.creationdate|date('Y-m-d')}}
@@ -383,19 +383,34 @@
             {% elseif fieldtype == "date" %}
                 {{ formmacros.fielddate(fieldThis.field) }}
             {% elseif fieldtype == "paper" %}
-                {{ formmacros.fieldpaper(fieldThis,cicle) }}
+                {{ formmacros.fieldpaper(fieldThis,cycle) }}
             {% elseif fieldtype == "diseaseType" %}
                 {{ formmacros.diseaseMulti(fieldThis) }}
-            {% elseif fieldtype == "partdiffDisident" and cicle != 'show' %}
-                {{ formmacros.fieldCollectionInput(fieldThis,cicle,prototype,widget,nobtn) }}
+            {% elseif   fieldtype == "partdiffDisident" or
+                        fieldtype == "sliderelevantScans"
+                        and cycle != 'show' %}
+                {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn) }}
+            {% elseif fieldtype == "slidespecialStains" and cycle != 'show' %}
+                {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn) }}
             {% else %}
                 {{ form_widget(fieldThis.field) }}
             {% endif %}
-            {% if cicle != 'show' %}
+            {% if cycle != 'show' %}
                 {{ form_rest(fieldThis) }}
             {% endif %}
         </div>
     </div>
+
+    {#add + button after the field#}
+    {% if ( nobtn is defined and nobtn == "buttonbottom") and (cycle == 'new' or cycle == 'edit') %}
+        <div class="col-xs-6" align="right"></div>
+        <div class="col-xs-6" align="left" style="padding-bottom: 1%">
+            <div class="addDelBtnColl">
+                <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
+            </div>
+        </div>
+
+    {% endif %}
 
 {% endmacro %}
 
@@ -405,7 +420,7 @@
 {% endmacro %}
 
 {############# custom array fields #############}
-{% macro fieldCollectionInput(field, cicle, prototype, widget, nobtn) %}
+{% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn) %}
 
     {% if nobtn is defined and nobtn != "" %}
         {{ form_errors(field.field) }}
@@ -421,17 +436,12 @@
                         {{ widget }}
                     {% endif %}
 
-                    {% if cicle == 'new' or cicle == 'edit' %}
+                    {% if cycle == 'new' or cycle == 'edit' %}
                         <span
                             onClick="addCollectionField(this)"
                             class="input-group-addon btn addbtnCollField" type="button">
                             <i class="glyphicon glyphicon-plus-sign"></i>
                         </span>
-                        {#<span#}
-                            {#onClick="delDiffdiagField(this)"#}
-                            {#class="input-group-addon btn delbtnCollField" type="button">#}
-                            {#<i class="glyphicon glyphicon-minus-sign"></i>#}
-                        {#</span>#}
                     {% endif %}
                 </div>
             </div>
@@ -440,8 +450,34 @@
 
 {% endmacro %}
 
-{% macro fieldpaper(field,cicle) %}
-    {% if cicle == 'show' %}
+
+{% macro fieldCollectionInputTextarea(field, cycle, prototype, widget, nobtn) %}
+
+    {% if widget is defined and widget != "" %}
+        {{ form_errors(field.field) }}
+        {{ widget }}
+    {% else %}
+        <div style="float:left; width:100%">
+            <div class="fieldInputColl">
+                {% if widget is not defined or widget == "" %}
+                    {{ form_widget(field.field) }}
+                {% else %}
+                    {{ widget }}
+                {% endif %}
+            </div>
+            {#{% if cycle == 'new' or cycle == 'edit' %}#}
+                {#<div class="addDelBtnColl">#}
+                    {#<button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>#}
+                {#</div>#}
+            {#{% endif %}#}
+        </div>
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro fieldpaper(field,cycle) %}
+    {% if cycle == 'show' %}
         <a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>
     {% else %}
        {{ form_widget(field.field) }}
@@ -483,14 +519,12 @@
 
 {#
 coll:       coll field
-type:       new, edit or show
+cycle:       new, edit or show
 formtype:   single or multi
 ident:      specialStains or relevantScans
 *Count:     object id
 #}
-{% macro collInput(coll, type, formtype, ident, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
-
-    {% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~ident %}
+{% macro collInput(coll, cycle, formtype, ident) %}
 
     <p>
     <div class="row">
@@ -509,9 +543,10 @@ ident:      specialStains or relevantScans
                         {{ form_widget(col.field) }}
                     </div>
                 {% endfor %}
-                {% if type == 'new' or type == 'edit' %}
+                {% if cycle == 'new' or cycle == 'edit' %}
                     <div class="addDelBtnColl">
-                        <button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>
+                        {#<button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>#}
+                        <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
                     </div>
                 {% endif %}
             </div>
@@ -546,43 +581,43 @@ ident:      specialStains or relevantScans
 
 {############################ Objects ###########################}
 
-{% macro patientForm( patient, flag, uid, cicle, mrnHtml, nameHtml, sexHtml, dobHtml, ageHtml, clinicalhistoryHtml ) %}
+{% macro patientForm( patient, flag, uid, cycle, mrnHtml, nameHtml, sexHtml, dobHtml, ageHtml, clinicalhistoryHtml ) %}
     {% import _self as formmacros %}
 
     <div id="patient_{{ uid }}">
 
         {% if mrnHtml is not defined or mrnHtml == "" %}
-            {{ formmacros.inputArrayField(patient.mrn,cicle,"patientmrn","key") }}
+            {{ formmacros.inputArrayField(patient.mrn,cycle,"patientmrn","key") }}
         {% else  %}
             <p><div class="patientmrn">{{ mrnHtml }}</div></p>
         {% endif %}
 
         {% if nameHtml is not defined or nameHtml == "" %}
-            {{ formmacros.inputArrayField(patient.name,cicle,"patientname") }}
+            {{ formmacros.inputArrayField(patient.name,cycle,"patientname") }}
         {% else  %}
             <p><div class="patientname">{{ nameHtml }}</div></p>
         {% endif %}
 
         {% if sexHtml is not defined or sexHtml == "" %}
-            {{ formmacros.inputArrayField(patient.sex,cicle,"patientsex") }}
+            {{ formmacros.inputArrayField(patient.sex,cycle,"patientsex") }}
         {% else  %}
             <p><div class="patientsex">{{ sexHtml }}</div></p>
         {% endif %}
 
         {% if dobHtml is not defined or dobHtml == "" %}
-            {{ formmacros.inputArrayField(patient.dob,cicle,"patientdob","date") }}
+            {{ formmacros.inputArrayField(patient.dob,cycle,"patientdob","date") }}
         {% else  %}
             <p><div class="patientdob">{{ dobHtml }}</div></p>
         {% endif %}
 
         {% if ageHtml is not defined or ageHtml == "" %}
-            {{ formmacros.inputArrayField(patient.age,cicle,"patientage") }}
+            {{ formmacros.inputArrayField(patient.age,cycle,"patientage") }}
         {% else  %}
             <p><div class="patientage">{{ ageHtml }}</div></p>
         {% endif %}
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
-            {{ formmacros.inputArrayField(patient.clinicalHistory,cicle,"patientclinicalhistory") }}
+            {{ formmacros.inputArrayField(patient.clinicalHistory,cycle,"patientclinicalhistory") }}
         {% else  %}
             <p><div class="patientclinicalhistory">{{ clinicalhistoryHtml }}</div></p>
         {% endif %}
@@ -590,88 +625,90 @@ ident:      specialStains or relevantScans
     </div>
 {% endmacro %}
 
-{% macro accessionForm( procedure, accession, flag, uid, cicle, procedureHtml, accessionHtml ) %}
+
+
+{% macro accessionForm( procedure, accession, flag, uid, cycle, procedureHtml, accessionHtml ) %}
     {% import _self as formmacros %}
     <div id="accession_{{ uid }}">
         {#{{ formmacros.fieldIconLabel(accession.accession,"glyphicon-check") }}#}
         {% if accessionHtml is not defined or accessionHtml == "" %}
-            {{ formmacros.inputArrayField(accession.accession,cicle,"accessionaccession","key") }}
+            {{ formmacros.inputArrayField(accession.accession,cycle,"accessionaccession","key") }}
         {% else  %}
             <p><div class="accessionaccession">{{ accessionHtml }}</div></p>
         {% endif %}
 
         {#{{ formmacros.field(procedure.name) }}#}
         {% if procedureHtml is not defined or procedureHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.name,cicle,"procedurename") }}
+            {{ formmacros.inputArrayField(procedure.name,cycle,"procedurename") }}
         {% else  %}
             <p><div class="procedurename">{{ procedureHtml }}</div></p>
         {% endif %}
     </div>
 {% endmacro %}
 
-{% macro partForm( part, flag, uid, cicle, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
-    {% import _self as formmacros %}
 
-    {#{%  set uidArr = uid|split('_') %}#}
-    {#{% set patientCount = uidArr[0] %}#}
-    {#{% set procedureCount = uidArr[1] %}#}
-    {#{% set accessionCount = uidArr[2] %}#}
-    {#{% set partCount = uidArr[3] %}#}
+
+{% macro partForm( part, flag, uid, cycle, partnameHtml,sourceorganHtml,paperHtml,descriptionHtml,diagnosisHtml,diffDiagnosesHtml,diseaseTypeHtml ) %}
+
+    {% import _self as formmacros %}
 
     <div id="part_{{ uid }}">
 
         {% if partnameHtml is not defined or partnameHtml == "" %}
-            {{ formmacros.inputArrayField(part.partname,cicle,"partpartname","key") }}
+            {{ formmacros.inputArrayField(part.partname,cycle,"partpartname","key") }}
         {% else  %}
             <p><div class="partpartname">{{ partnameHtml }}</div></p>
         {% endif %}
 
         {% if sourceorganHtml is not defined or sourceorganHtml == "" %}
-            {{ formmacros.inputArrayField(part.sourceOrgan,cicle,"partsourceorgan") }}
+            {{ formmacros.inputArrayField(part.sourceOrgan,cycle,"partsourceorgan") }}
         {% else  %}
             <p><div class="partsourceorgan">{{ sourceorganHtml }}</div></p>
         {% endif %}
 
         {% if paperHtml is not defined or paperHtml == "" %}
-            {{ formmacros.inputArrayField(part.paper,cicle,"partpaper","paper") }}
+            {{ formmacros.inputArrayField(part.paper,cycle,"partpaper","paper") }}
         {% else  %}
             <p><div class="partpaper">{{ paperHtml }}</div></p>
         {% endif %}
 
         {% if descriptionHtml is not defined or descriptionHtml == "" %}
-            {{ formmacros.inputArrayField(part.description,cicle,"partdescription") }}
+            {{ formmacros.inputArrayField(part.description,cycle,"partdescription") }}
         {% else  %}
             <p><div class="partdescription">{{ descriptionHtml }}</div></p>
         {% endif %}
 
         {% if diagnosisHtml is not defined or diagnosisHtml == "" %}
-            {{ formmacros.inputArrayField(part.disident,cicle,"partdisident") }}
+            {{ formmacros.inputArrayField(part.disident,cycle,"partdisident") }}
         {% else  %}
             <p><div class="partdisident">{{ diagnosisHtml }}</div></p>
         {% endif %}
 
         {% if diffDiagnosesHtml is not defined or diffDiagnosesHtml == "" %}
-            {{ formmacros.inputArrayField(part.diffDisident,cicle,"partdiffdisident","partdiffDisident") }}
+            {{ formmacros.inputArrayField(part.diffDisident,cycle,"partdiffdisident","partdiffDisident") }}
         {% else  %}
            <p><div class="partdiffdisident">{{ diffDiagnosesHtml }}</div></p>
         {% endif %}
 
         {% if diseaseTypeHtml is not defined or diseaseTypeHtml == "" %}
-            {{ formmacros.inputArrayField(part.diseaseType,cicle,"partdiseasetype","diseaseType") }}
+            {{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType") }}
         {% else  %}
             <p><div class="partdiseasetype">{{ diseaseTypeHtml }}</div></p>
-            {#{{ formmacros.inputArrayField(part.diseaseType,cicle,"partdiseasetype","diseaseType") }}#}
+            {#{{ formmacros.inputArrayField(part.diseaseType,cycle,"partdiseasetype","diseaseType") }}#}
         {% endif %}
 
     </div>
+
 {% endmacro %}
 
-{% macro blockForm( block, flag, uid, cicle, blocknameHtml ) %}
+
+
+{% macro blockForm( block, flag, uid, cycle, blocknameHtml ) %}
     {% import _self as formmacros %}
     <div id="block_{{ uid }}">
         {#{{ formmacros.fieldIconLabel(form.blockname,"glyphicon-check") }}#}
         {% if blocknameHtml is not defined or blocknameHtml == "" %}
-            {{ formmacros.inputArrayField(block.blockname,cicle,"blockblockname","key") }}
+            {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname","key") }}
         {% else  %}
             <p><div class="blockblockname">{{ blocknameHtml }}</div></p>
         {% endif %}
@@ -679,24 +716,53 @@ ident:      specialStains or relevantScans
 {% endmacro %}
 
 
-{% macro slideForm( slide, flag, uid, cicle, relevantScansHtml ) %}
+
+
+{% macro slideForm( slide, flag, uid, cycle, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml, specialStainsHtml ) %}
     {% import _self as formmacros %}
 
     <div id="slide_{{ uid }}">
 
-        {#{{ formmacros.field(slide.vars.prototype.stain.vars.prototype.field)|e }}#}
-        {#{{ formmacros.field(slide.vars.prototype.scan.vars.prototype.field)|e }}#}
-        {#{{ formmacros.field(slide.vars.prototype.scan.vars.prototype.scanregion)|e }}#}
-        {#{{ formmacros.field(slide.vars.prototype.scan.vars.prototype.note) }}#}
-        {#{{ formmacros.field(slide.vars.prototype.microscopicdescr)|e }}#}
+        {% if stainHtml is not defined or stainHtml == "" %}    {#regular#}
+
+            {% for stain in slide.stain %}
+                {{ formmacros.field(stain.field) }}
+            {% endfor %}
+
+            {% for scan in slide.scan %}
+                {{ formmacros.field(scan.field) }}
+                {{ formmacros.field(scan.scanregion) }}
+                {{ formmacros.field(scan.note) }}
+            {% endfor %}
+
+        {% else  %} {#prototype#}
+            <p><div class="slidestain">{{ stainHtml }}</div></p>
+            <p><div class="slidescan">{{ scanHtml }}</div></p>
+            <p><div class="slidescanregion">{{ scanregionHtml }}</div></p>
+            <p><div class="slidenote">{{ noteHtml }}</div></p>
+        {% endif %}
+
+        {% if microscopicdescrHtml is not defined or relevantScansHtml == "" %}
+            {{ formmacros.field(slide.microscopicdescr) }}
+        {% else  %}
+            <p><div class="slidemicroscopicdescr">{{ microscopicdescrHtml }}</div></p>
+        {% endif %}
+
+        {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
+        {#                                        (fields,    cycle,     classname,             fieldtype,        nobtn,     nolabel)#}
+            {{ formmacros.inputArrayField(slide.specialStains,cycle,"slidespecialstains","slidespecialStains","buttonbottom","") }}
+        {% else  %}
+            <p><div class="slidespecialstains">{{ specialStainsHtml }}</div></p>
+        {% endif %}
 
         {% if relevantScansHtml is not defined or relevantScansHtml == "" %}
-            {{ formmacros.inputArrayField(slide.relevantScans,cicle,"sliderelevantscans","sliderelevantScans") }}
+            {{ formmacros.inputArrayField(slide.relevantScans,cycle,"sliderelevantscans","sliderelevantScans") }}
         {% else  %}
             <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
         {% endif %}
 
     </div>
+
 {% endmacro %}
 
 {############################ END OF Objects ###########################}

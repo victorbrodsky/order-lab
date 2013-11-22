@@ -43,7 +43,7 @@ class SlideType extends AbstractType
             'label' => " ",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__scan__',
+            'prototype_name' => '__slidescan__',
         ));
         
         $builder->add('microscopicdescr', 'textarea', array(
@@ -58,10 +58,10 @@ class SlideType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Special Stain Results:",
+            'label' => false,   //"Special Stain Results:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__specialStains__',
+            'prototype_name' => '__slidespecialstains__',
         ));
 
 //        $builder->add('relevantScans', 'collection', array(
@@ -84,7 +84,7 @@ class SlideType extends AbstractType
             'label' => "Relevant Scanned Images:",
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__sliderelevantScans__',
+            'prototype_name' => '__sliderelevantscans__',
         ));
         
         //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false)); 
