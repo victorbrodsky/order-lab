@@ -59,7 +59,7 @@ function checkForm( elem ) {
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
         var keyValue =keyElement.element.val();
-        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
+        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
 
         if( name == "part" ) {
             var accessionNumberElement = getAccessionNumberElement(element);
@@ -72,13 +72,13 @@ function checkForm( elem ) {
             var partNumberElement = getPartNumberElement(element);
             var partValue = partNumberElement.select2("val"); //i.e. Part #
         }
-        console.log("accessionValue="+accessionValue+",partValue="+partValue);
+        //console.log("accessionValue="+accessionValue+",partValue="+partValue);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            console.log("key undefined!");
+            //console.log("key undefined!");
 //            $('#'+inputId).popover( {content:"Please fill out key field"} );
 //            $('#'+inputId).popover('show');
 
@@ -110,7 +110,7 @@ function checkForm( elem ) {
 
                     return;
                 } else {
-                    console.log("accessionValue is not empty");
+                    //console.log("accessionValue is not empty");
                     setKeyValue(element,name+fieldName,new Array(accessionValue,partValue));
                     return;
                 }
@@ -123,7 +123,7 @@ function checkForm( elem ) {
             return;
         }
 
-        console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
+        //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
@@ -139,7 +139,7 @@ function checkForm( elem ) {
                     disableInElementBlock(element, true, "all", null, "notarrayfield");
                 } else {
                     console.debug("not found");
-                    cleanFieldsInElementBlock( element );
+                    //cleanFieldsInElementBlock( element );
                     disableInElementBlock(element, false, null, "notkey", null);
                 }
                 invertButton(element);
@@ -172,7 +172,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
     for (var i = 0; i < elements.length; i++) {
 
-        console.debug('\n\n'+"Element.id=" + elements.eq(i).attr("id"));
+        //console.debug('\n\n'+"Element.id=" + elements.eq(i).attr("id"));
 
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
@@ -184,16 +184,16 @@ function setElementBlock( element, data, cleanall, key ) {
 
         //exceptions
         if( id && id.indexOf("primaryOrgan") != -1 ) {
-            console.log("skip id="+id);
+            //console.log("skip id="+id);
             continue;
         }
 
-        //if( id && type != "hidden" ) {
+//        if( id && type != "hidden" ) {
         if( id ) {
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-fieldIndex];    //default
-            console.log("field = " + field);// + ", data text=" + data[field]['text']);
+            //console.log("field = " + field);// + ", data text=" + data[field]['text']);
 
             if( key == "key" ) {
                 if( $.inArray(field, keys) != -1 ) {
@@ -235,15 +235,15 @@ function setElementBlock( element, data, cleanall, key ) {
                     holder = idsArr[idsArr.length-holderIndex];
                     if( holder != "part" && holder != "block" ) {
                         field = holder;
-                        console.log("new field="+field);
+                        //console.log("new field="+field);
                     }
                 }
 
                 if( data[field] && data[field] != undefined && data[field] != "" ) {
-                    console.log("data is not null: set text field");    // = " + data[field][0]['text']);
+                    //console.log("data is not null: set text field");    // = " + data[field][0]['text']);
                     setArrayField( elements.eq(i), data[field], parent );
                 } else {
-                    console.log("data is not null: don't set text field");
+                    //console.log("data is not null: don't set text field");
                 }
 
                 //console.log("diseaseTypeRender");
@@ -265,7 +265,7 @@ function setArrayField(element, dataArr, parent) {
     var classs = element.attr("class");
     var tagName = element.prop("tagName");
     var value = element.attr("value");
-    console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
+    //console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
 
     for (var i = 0; i < dataArr.length; i++) {
 
@@ -277,7 +277,7 @@ function setArrayField(element, dataArr, parent) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        console.log( "set array field i="+i+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        //console.log( "set array field i="+i+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
         //console.log("parent id=" + parent.attr("id"));
         var idsArr = parent.attr("id").split("_");
@@ -445,7 +445,7 @@ function processGroup( element, data, disableFlag ) {
 
 }
 
-function cleanArrayField( element, field ) {
+function cleanArrayFieldSimple( element, field ) {
     //console.log( "clean array field id=" + element.attr("id") );
     //delete if id != 0
     if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 ) {
@@ -455,10 +455,125 @@ function cleanArrayField( element, field ) {
     }
 }
 
+//element - input field element
+function cleanArrayField( element, field ) {
+
+    if( field != "diffDisident" ) {
+        cleanArrayFieldSimple(element,field);
+        return;
+    }
+
+    //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_2_field
+    //console.log( "clean array element id=" + element.attr("id") + ", field=" + field );
+    //delete if id != 0 or its not the last element
+
+    //get row element - fieldHolder
+    if( element.is('[readonly]') ) {    //get row for gray out fields without buttons
+        var fieldHolder = element.parent().parent();
+    } else {                            //get row for enabled fields with buttons
+        //var fieldHolder = element.parent().parent().parent().parent().parent();
+        var fieldHolder = element.parent().parent().parent().parent().parent();
+    }
+
+    //console.log( "fieldHolder id=" + fieldHolder.attr("id") + ", field=" + fieldHolder.attr("class") );
+
+    var rows = fieldHolder.parent().find('.row');
+
+    //console.log( "rows.length=" + rows.length );
+
+    //if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 || rows.length == 1 ) {
+    if( rows.length == 1 ) {
+
+        element.val(null);
+
+        //change - button (if exists) by + button
+        var delBtn = element.parent().find('.delbtnCollField');
+        //console.log("work on delBtn id="+delBtn.attr("id")+",class="+delBtn.attr("class"));
+        if( delBtn.length != 0 ) {
+
+            //console.log("delBtn exists !");
+            //add + btn if not exists
+            var addBtn = element.parent().find('.addbtnCollField');
+            //console.log("work on addBtn id="+addBtn.attr("id")+",class="+addBtn.attr("class"));
+            if( addBtn.length == 0 ) {
+                delBtn.after( getAddBtn() );
+            }
+
+            delBtn.remove();
+        }
+
+        //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
+        changeIdtoIndex(element,field,0);
+
+    } else {
+        //delete hole row
+        //console.log( "delete: fieldHolder id=" + fieldHolder.attr("id") + ", class=" + fieldHolder.attr("class") );
+        fieldHolder.remove();
+    }
+}
+
+function changeIdtoIndex( element, field, index ) {
+
+    //get row element - fieldHolder
+    if( element.is('[readonly]') ) {    //get row for gray out fields without buttons
+        var fieldHolder = element.parent().parent();
+    } else {                            //get row for enabled fields with buttons
+        //var fieldHolder = element.parent().parent().parent().parent().parent();
+        var fieldHolder = element.parent().parent().parent().parent().parent();
+    }
+
+    //change id of the field to 0
+    var fieldId = element.attr("id");
+    var fieldIdOrig = fieldId;
+    var fieldName = element.attr("name");
+    //console.log("fieldId="+fieldId+", fieldName="+fieldName);
+
+    var idArr = fieldId.split("_"+field+"_");
+    var idValue = idArr[1].split("_")[0];
+    //console.log("idValue="+idValue);
+
+    //var regexId = new RegExp( field + '_' + idValue, 'g' );
+    fieldId = fieldId.replace( field + '_' + idValue, field + '_' + index);
+
+    //change name of the field to 0
+    var nameArr = fieldName.split("["+field+"]");
+    var nameValueStr = nameArr[1];
+    var nameValueArr = nameValueStr.split("[");
+    var nameValue = nameValueArr[1].split("]")[0];
+    //console.log("nameValue="+nameValue);
+
+    var strTofind = '[' + field + ']' + '[' + nameValue + ']';
+    //console.log("strTofind="+strTofind);    //strTofind=[diffDisident][6]
+    var strReplace = '[' + field + ']' + '['+index+']';
+    //console.log("strReplace="+strReplace);
+
+    fieldName = fieldName.replace(strTofind, strReplace);   //[diffDisident][0]
+
+    //console.log("fieldId="+fieldId+", fieldName="+fieldName);
+
+    element.attr('id',fieldId);
+    element.attr('name',fieldName);
+
+    //replace id of label
+    var rows = fieldHolder.parent().find('.row').first();
+    //console.log( "rows id=" + rows.attr("id") + ", class=" + rows.attr("class") );
+
+    var rowLabel = rows.first().find($('label[for='+fieldIdOrig+']'));
+    //console.log( "rowLabel id=" + rowLabel.attr("id") + ", class=" + rowLabel.attr("class") );
+
+    //var textLabel = rows.first().find($('label[for='+fieldIdOrig+']')).text();
+    //console.log( "textLabel=" + textLabel );
+
+    rowLabel.attr('id',fieldId);
+    rowLabel.attr('for',fieldId);
+
+    return;
+}
+
 //clean fields in Element Block, except key field
 //all: if set to "all" => clean all fields, including key field
 function cleanFieldsInElementBlock( element, all ) {
-    //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
+
     var parent = element.parent().parent().parent().parent().parent().parent();
     //console.log("clean parent.id=" + parent.attr('id'));
     var elements = parent.find(selectStr);
@@ -469,7 +584,7 @@ function cleanFieldsInElementBlock( element, all ) {
         var type = elements.eq(i).attr("type");
         var tagName = elements.eq(i).prop('tagName');
         var classs = elements.eq(i).attr('class');
-        console.log("clean id="+id+", type="+type+", tagName="+tagName);
+        //console.log("clean id="+id+", type="+type+", tagName="+tagName);
 
         if( type == "text" || !type ) {
             var clean = false;
@@ -486,12 +601,12 @@ function cleanFieldsInElementBlock( element, all ) {
                 }
             }
             if( clean ) {
-                console.log("in array field=" + field );
+                //console.log("in array field=" + field );
                 if( $.inArray(field, arrayFieldShow) == -1 ) {
                    //console.log("clean not as arrayFieldShow");
 
                     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) {
-                        console.log("clean as radio");
+                        //console.log("clean as radio");
                         //cleanArrayField( elements.eq(i), field );
                         processGroup( elements.eq(i), "", "ignoreDisable" );
                     } else if( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
@@ -507,12 +622,6 @@ function cleanFieldsInElementBlock( element, all ) {
                 }
             }
         }
-
-//            if( type == "radio" ) {
-//                console.log("clean as radio");
-//                elements.eq(i).prop('checked',false);
-//            }
-
 
     }
 }
@@ -563,7 +672,6 @@ function initAllMulti() {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
-    //return; //TODO: testing
     //console.log("disable element.id=" + element.attr('id'));
 
     var parent = element.parent().parent().parent().parent().parent().parent();
@@ -630,8 +738,6 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
 function disableElement(element, flag) {
 
-    //if( !element ) return;
-
     var type = element.attr('type');
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
@@ -663,7 +769,7 @@ function disableElement(element, flag) {
             //console.log("file disable field id="+element.attr("id"));
             element.attr('disabled', true);
         } else {
-            console.log("general disable field id="+element.attr("id"));
+            //console.log("general disable field id="+element.attr("id"));
             element.attr('readonly', true);
         }
 
@@ -681,7 +787,7 @@ function disableElement(element, flag) {
             //console.log("file enable field id="+element.attr("id"));
             element.attr('disabled', false);
         } else {
-            console.log("general enable field id="+element.attr("id"));
+            //console.log("general enable field id="+element.attr("id"));
             element.attr("readonly", false);
             element.removeAttr( "readonly" );
         }
@@ -722,7 +828,7 @@ function setKeyValue( btnElement, name, parentValueArr ) {
         var parentValue2 = '';
     }
 
-    console.log("set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
+    //console.log("set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
 
     $.ajax({
         url: urlCheck+name,
@@ -754,7 +860,7 @@ function removeKeyFromDB(element) {
     var name = element.name;
     //var keyValue =element.element.attr("value");
     var keyValue =element.element.val();
-    console.debug("delete name="+name +", keyvalue="+keyValue);
+    //console.debug("delete name="+name +", keyvalue="+keyValue);
 
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue,

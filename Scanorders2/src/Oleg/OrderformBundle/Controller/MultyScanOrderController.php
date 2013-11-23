@@ -190,7 +190,11 @@ class MultyScanOrderController extends Controller {
         
         //echo "Before validation main entity:<br>";
 
-//       if( $form->isValid() ) {
+       if( $form->isValid() ) {
+           echo "form is not valid ??? <br>";
+       } else {
+           echo "form is valid !!! <br>";
+       }
         if( 1 ) {
 
             //echo "id2=".$entity->getId()."<br>";

@@ -326,6 +326,9 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
 
     newForm = newForm.replace(/__[a-zA-Z0-9]+__/g, 0); //replace everything what is left __*__ by 0 => replace all array fields by 0
 
+    //remove required
+    newForm = newForm.replace(/required="required"/g, "");
+
     //console.log("newForm="+newForm);
 
     return newForm;

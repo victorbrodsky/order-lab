@@ -32,7 +32,7 @@
         <div id="form-prototype-data"
              data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDisident.vars.prototype.field)|e }}"
              data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.field)|e }}"
-             data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.name)|e }}"
+             data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.field)|e }}"
         >
         </div>  
         
@@ -59,15 +59,15 @@
                             {{ form_widget(form_part.partname) }}
                             </div>
                             <div style="float:left; width:25%">
-                            {{ form_widget(form_block.name) }}
+                            {{ form_widget(form_block.blockname) }}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{ formmacros.field(form_stain.name) }}
+                {{ formmacros.field(form_stain.field) }}
 
-                {{ formmacros.field(form_scan.mag) }}
+                {{ formmacros.field(form_scan.field) }}
 
                 {{ formmacros.field(form_part.disident) }}
 

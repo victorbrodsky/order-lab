@@ -116,13 +116,6 @@ class OrderInfo
     protected $patient;
 
     /**
-     * Order is about the slides, so include slides. 
-     * By this, we can get fast how many slides in this order
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="orderinfo")
-     */
-//    protected $slide;
-
-    /**
      * @ORM\OneToOne(
      *      targetEntity="Educational",
      *      cascade={"persist"},
@@ -181,17 +174,17 @@ class OrderInfo
      **/
     protected $slide;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Scan", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="scan_orderinfo")
-     **/
-    protected $scan;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Stain", inversedBy="orderinfo")
-     * @ORM\JoinTable(name="stain_orderinfo")
-     **/
-    protected $stain;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Scan", inversedBy="orderinfo")
+//     * @ORM\JoinTable(name="scan_orderinfo")
+//     **/
+//    protected $scan;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Stain", inversedBy="orderinfo")
+//     * @ORM\JoinTable(name="stain_orderinfo")
+//     **/
+//    protected $stain;
     
     /**
      * Constructor
@@ -204,8 +197,8 @@ class OrderInfo
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
-        $this->scan = new ArrayCollection();
-        $this->stain = new ArrayCollection();
+        //$this->scan = new ArrayCollection();
+        //$this->stain = new ArrayCollection();
         $this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
     }
@@ -656,75 +649,75 @@ class OrderInfo
 
     
 
-    /**
-     * Add scan
-     *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-     * @return OrderInfo
-     */
-    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
-    {
-        if( !$this->scan->contains($scan) ) {
-            $this->scan->add($scan);
-        }
+//    /**
+//     * Add scan
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+//     * @return OrderInfo
+//     */
+//    public function addScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+//    {
+//        if( !$this->scan->contains($scan) ) {
+//            $this->scan->add($scan);
+//        }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove scan
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\Scan $scan
+//     */
+//    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
+//    {
+//        $this->scan->removeElement($scan);
+//    }
+//
+//    /**
+//     * Get scan
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getScan()
+//    {
+//        return $this->scan;
+//    }
 
-        return $this;
-    }
-
-    /**
-     * Remove scan
-     *
-     * @param \Oleg\OrderformBundle\Entity\Scan $scan
-     */
-    public function removeScan(\Oleg\OrderformBundle\Entity\Scan $scan)
-    {
-        $this->scan->removeElement($scan);
-    }
-
-    /**
-     * Get scan
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getScan()
-    {
-        return $this->scan;
-    }
-
-    /**
-     * Add stain
-     *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
-     * @return OrderInfo
-     */
-    public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
-    {
-        if( !$this->stain->contains($stain) ) {
-            $this->stain->add($stain);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Remove stain
-     *
-     * @param \Oleg\OrderformBundle\Entity\Stain $stain
-     */
-    public function removeStain(\Oleg\OrderformBundle\Entity\Stain $stain)
-    {
-        $this->stain->removeElement($stain);
-    }
-
-    /**
-     * Get stain
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getStain()
-    {
-        return $this->stain;
-    }
+//    /**
+//     * Add stain
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+//     * @return OrderInfo
+//     */
+//    public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+//    {
+//        if( !$this->stain->contains($stain) ) {
+//            $this->stain->add($stain);
+//        }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove stain
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\Stain $stain
+//     */
+//    public function removeStain(\Oleg\OrderformBundle\Entity\Stain $stain)
+//    {
+//        $this->stain->removeElement($stain);
+//    }
+//
+//    /**
+//     * Get stain
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getStain()
+//    {
+//        return $this->stain;
+//    }
 
     public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
     {

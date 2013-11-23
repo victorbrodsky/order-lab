@@ -541,10 +541,10 @@ class ScanOrderController extends Controller {
         $form_accession   = $this->createForm(new AccessionType($params), $accession);
          
         $part = new Part();
-        $diffDiagnoses = new DiffDiagnoses();
-        $part->addDiffDiagnoses($diffDiagnoses);
-        $file = new Document();
-        $part->addPaper($file);
+        //$diffDiagnoses = new DiffDiagnoses();
+        //$part->addDiffDiagnoses($diffDiagnoses);
+        //$file = new Document();
+        //$part->addPaper($file);
         //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $form_part   = $this->createForm(new PartType($params), $part);
             
@@ -553,10 +553,10 @@ class ScanOrderController extends Controller {
         
         $slide = new Slide();
 
-        $specialStains = new SpecialStains();
-        $relevantScans = new RelevantScans();
-        $slide->addRelevantScan($relevantScans);
-        $slide->addSpecialStain($specialStains);
+        //$specialStains = new SpecialStains();
+        //$relevantScans = new RelevantScans();
+        //$slide->addRelevantScan($relevantScans);
+        //$slide->addSpecialStain($specialStains);
 
         $form_slide   = $this->createForm(new SlideType($params), $slide);
 

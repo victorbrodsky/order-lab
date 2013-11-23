@@ -13,15 +13,20 @@ use Oleg\OrderformBundle\Helper\FormHelper;
  */
 class BlockRepository extends ArrayFieldAbstractRepository
 {
-    
+
+
     //this function will create an entity if it doesn't exist or return the existing entity object
     public function processBlockEntity( $block, $part=null, $orderinfo=null ) {
-        
-        $em = $this->_em;             
+
+        echo "<br><br>processBlockEntity blockname=".$block->getBlockname()->first()."<br>";
+
+        $em = $this->_em;
+
+        //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
 
         if( $part == null || $part->getId() == null) { //by this point, part object should be already created
             echo "******* Block Case 1: part id null => WARNING!!! <br>";
-            return $this->setResult( $block, $orderinfo );            
+            return $this->setResult( $block, $orderinfo );
         }
 
         $accession = $part->getAccession();
@@ -31,8 +36,9 @@ class BlockRepository extends ArrayFieldAbstractRepository
             return $part;
         }
 
+
         //check if part already has block with the same name.
-        echo "******* check part uniqueness by partname and accession<br>";
+        echo "******* check block uniqueness by blockname, partname and accession<br>";
         $validPartname = $this->getValidField( $part->getPartname() );
         if( count($block->getBlockname()) > 1 ) {
             $validBlockname = $this->getValidField( $block->getBlockname() );
@@ -41,31 +47,30 @@ class BlockRepository extends ArrayFieldAbstractRepository
         }
 
         echo "valid partname=".$validPartname.", blockname=".$validBlockname."<br>";
-        //exit();
 
         //if $validPartname does not exist in DB, then we can not check findOnePartByJoinedToField, so $part_found will be null
         if( !$validBlockname || $validBlockname->getId() == null ) {
+            echo "block_found = null <br>";
             $block_found = null;
         } else {
             $block_found = $this->findOneBlockByJoinedToField( $this->getValidField($accession->getAccession()), $validPartname, $validBlockname );
+            echo "block_found <br>";
         }
 
-//        //Check if the part has the block with the same name
-//        $query = $em->createQuery(
-//            'SELECT b FROM OlegOrderformBundle:Block b
-//            JOIN b.part p
-//            JOIN p.accession a
-//            WHERE p = :part AND b.blockname = :bname AND a = :acc'
-//        )->setParameters( array(
-//            'part' => $part,
-//            'bname' => $block->getBlockname(),
-//            'acc' => $part->getAccession()
-//        ));
-//        $block_found =  $query->getResult();
-                  
         if( $block_found == null ) {
             echo "******* Block Case 2: part id is not null, but block is not found in DB<br>";
-            return $this->setResult( $block, $orderinfo );         
+
+            //create new block
+            $newBlock = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession( $this->getValidField($accession->getAccession())."", $validPartname."" );
+
+            //copy children from provided form block $block to a newly created block $newBlock
+            foreach( $block->getSlide() as $slide ) {
+                $newBlock->addSlide( $slide );
+            }
+
+            $block = $this->setResult( $newBlock, $orderinfo, $block );
+            return $block;
+
         } else {
             echo "******* Block Case 3: part id is not null and block is existed in DB<br>";
             //it should be only 1 block, so return the first one (single one).
@@ -102,8 +107,11 @@ class BlockRepository extends ArrayFieldAbstractRepository
                 continue;
             }         
         }
+
+        echo "block name=".$block->getBlockname()->first()."<br>";
                  
         //$em->flush($block);
+        //exit();
         
         return $block;
     }

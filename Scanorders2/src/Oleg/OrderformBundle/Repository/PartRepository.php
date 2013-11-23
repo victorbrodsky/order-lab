@@ -74,21 +74,6 @@ class PartRepository extends ArrayFieldAbstractRepository
             return $part;
         }
 
-        //theoretically this situation is not possible
-//        if( $this->getValidField($part_found->getPartname()) != $this->getValidField($part->getPartname()) ) {
-//            echo "******* Part Case 3: accession id is not null, but form part name is different<br>"; //Is it possible?
-//            //create part?
-//            $part = $this->setResult( $part, $orderinfo );
-//            return $part;
-//        }
-//
-//        echo "******* Part Case 4: ???<br>";
-//        //copy all children to existing entity
-//        foreach( $part->getBlock() as $block ) {
-//            $part_found->addBlock( $block );
-//        }
-//        $part = $this->setResult( $part_found, $orderinfo );
-//        return $part;
     }
     
     public function setResult( $part, $orderinfo=null, $original=null ) {

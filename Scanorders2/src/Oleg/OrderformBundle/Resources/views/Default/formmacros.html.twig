@@ -422,30 +422,38 @@
 {############# custom array fields #############}
 {% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn) %}
 
-    {% if nobtn is defined and nobtn != "" %}
-        {{ form_errors(field.field) }}
-        {{ widget }}
-    {% else %}
-        <div style="float:left; width:100%">
-            {{ form_errors(field.field) }}
-            <div class="fieldInputColl">
-                <div class="input-group">
-                    {% if widget is not defined or widget == "" %}
-                        {{ form_widget(field.field) }}
-                    {% else %}
-                        {{ widget }}
-                    {% endif %}
+    {{ form_errors(field.field) }}
 
-                    {% if cycle == 'new' or cycle == 'edit' %}
+    {% if nobtn is defined and nobtn != "" %}
+
+        {{ widget }}
+
+    {% else %}
+
+        <div style="float:left; width:100%">
+
+            {% if cycle == 'show' %}
+                {{ form_widget(field.field) }}
+            {% else %}
+                <div class="fieldInputColl">
+                    <div class="input-group">
+                        {% if widget is not defined or widget == "" %}
+                            {{ form_widget(field.field) }}
+                        {% else %}
+                            {{ widget }}
+                        {% endif %}
                         <span
                             onClick="addCollectionField(this)"
                             class="input-group-addon btn addbtnCollField" type="button">
                             <i class="glyphicon glyphicon-plus-sign"></i>
                         </span>
-                    {% endif %}
+
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+
         </div>
+
     {% endif %}
 
 {% endmacro %}

@@ -24,7 +24,7 @@ class PatientSexType extends AbstractType
         $builder->add( 'field', 'choice', array(
             'label'=>'Sex',
             'max_length'=>20,
-            'required'=>true,
+            //'required'=>false,
             'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
             'multiple' => false,
             'expanded' => true,
