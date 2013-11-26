@@ -181,7 +181,7 @@ class MultyScanOrderController extends Controller {
 //            return;
 //        }
 
-        if(1) {
+        if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
@@ -190,11 +190,11 @@ class MultyScanOrderController extends Controller {
         
         //echo "Before validation main entity:<br>";
 
-       if( $form->isValid() ) {
-           echo "form is not valid ??? <br>";
-       } else {
-           echo "form is valid !!! <br>";
-       }
+//       if( $form->isValid() ) {
+//           echo "form is valid !!! <br>";
+//       } else {
+//           echo "form is not valid ??? <br>";
+//       }
         if( 1 ) {
 
             //echo "id2=".$entity->getId()."<br>";
@@ -217,8 +217,8 @@ class MultyScanOrderController extends Controller {
 //            print_r( $accessionname );
 //            echo " accessionname count=".count($form['patient'][0]['procedure'][0]['accession'][0]['accession'])."<br>";
 //
-//            $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
-//            echo "proceduretype=".$proceduretype."<br>";
+            $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
+            echo "proceduretype=".$proceduretype."<br>";
 //
 //            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
 //            echo "part partname=".$partname."<br>";

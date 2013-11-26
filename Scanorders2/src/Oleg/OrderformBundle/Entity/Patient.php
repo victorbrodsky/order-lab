@@ -271,9 +271,6 @@ class Patient extends OrderAbstract
     }
 
     public function clearProcedure(){
-//        foreach( $this->procedure as $thisprocedure ) {
-//            $this->removeProcedure($thisprocedure);
-//        }
         $this->procedure->clear();
     }
 

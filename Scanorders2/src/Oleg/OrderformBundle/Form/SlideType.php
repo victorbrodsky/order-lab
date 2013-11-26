@@ -65,16 +65,6 @@ class SlideType extends AbstractType
             'prototype_name' => '__slidespecialstains__',
         ));
 
-//        $builder->add('relevantScans', 'collection', array(
-//            'type' => new RelevantScansType(),
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => "Relevant Scanned Images:",
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__relevantScans__',
-//        ));
         //diffDiagnoses
         $gen_attr = array('label'=>'Relevant Scanned Images','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type
         $builder->add('relevantScans', 'collection', array(
@@ -98,6 +88,8 @@ class SlideType extends AbstractType
             'attr' => $attr,
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('s')
+                    ->where('s.type LIKE :type')
+                    ->setParameter('type', '%' . 'default' . '%')
                     ->orderBy('s.id', 'ASC');
             },
         ));

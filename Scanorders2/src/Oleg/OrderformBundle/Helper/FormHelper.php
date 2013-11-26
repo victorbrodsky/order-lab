@@ -804,8 +804,8 @@ Translational Research"
     public function getSlideType() {
         $arr = array(
             'Permanent Section',
-            'Cytopathology',
             'Frozen Section',
+            'Cytopathology',
             'Smear',
             'Touch Prep',
             'Squash Prep',

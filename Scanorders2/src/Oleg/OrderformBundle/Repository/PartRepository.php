@@ -40,7 +40,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         if( count($part->getPartname()) == 0 ) { //empty key field
             echo "******* Part Case 1: key field is empty => createPartName only <br>";
-            //create partname
+            //create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
             $part = $this->createPartName( $part, $validAccession."" );
         }
 
@@ -71,25 +71,6 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         if( $part_found == null ) {
             echo "******* Part Case 2: part is not found in DB<br>";
-
-            //method1: create new part
-//            $newPart = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession( $validAccession );
-//            //copy children from provided form part $part to a newly created part $newPart
-//            foreach( $part->getBlock() as $block ) {
-//                $newPart->addBlock( $block );
-//            }
-//            $part = $this->setResult( $newPart, $orderinfo, $part );
-
-            //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-//            echo "partname1 count=".count($part->getPartname())."<br>";
-//            $fieldValue = $this->findNextPartnameByAccession($validAccession."");   //next partname
-//            echo "next partname  generated=".$fieldValue."<br>";
-//            $field = new PartPartname(1);
-//            $field->setField($fieldValue);
-//            $part->clearPartname();
-//            $part->addPartname( $field );
-//            echo "partname2 count=".count($part->getPartname())."<br>";
-            //$part = $this->createPartName( $part, $validAccession."" );
 
             $part = $this->setResult( $part, $orderinfo );
             return $part;
@@ -165,7 +146,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         foreach( $blocks as $block ) {
             if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block,"Block") ) {
                 $part->removeBlock( $block );
-                $block = $em->getRepository('OlegOrderformBundle:Block')->processBlockEntity( $block, $part, $orderinfo );
+                $block = $em->getRepository('OlegOrderformBundle:Block')->processEntityBlock( $block, $part, $orderinfo );
                 $part->addBlock($block);
                 $orderinfo->addBlock($block);
             } else {
@@ -302,13 +283,13 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
 
         if( !$accessions ) {
-            echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
+            //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                     $status, $provider, $className, $fieldName, $parent, $fieldValue
             $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber);
         } else {
             $accession = $accessions[0];
-            echo "accession is found in DB, accessionNumber=".$accessionNumber.", id=".$accession->getId()."<br>";
+            //echo "accession is found in DB, accessionNumber=".$accessionNumber.", id=".$accession->getId()."<br>";
             //echo "accession is found in DB, accessionNumber=".$accessionNumber."<br>";
         }
 

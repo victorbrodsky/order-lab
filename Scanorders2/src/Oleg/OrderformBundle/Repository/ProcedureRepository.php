@@ -17,15 +17,16 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //input $accessions requires for single slide order, when objects are provided separately and procedure does not have $accessions
     public function processEntityProcedure( $entity, $accessions=null, $orderinfo=null ) {
         
-        $em = $this->_em;
-
-        $entity = $em->getRepository('OlegOrderformBundle:Accession')->removeDuplicateEntities( $entity );
+        //$em = $this->_em;
+        //$entity = $em->getRepository('OlegOrderformBundle:Accession')->removeDuplicateEntities( $entity );
 
 //        $accessions = $patient->getAccession();
 
+        echo "accession ID=".$accessions->first()->getId()."<br>";
+
         //1) can't check uniqueness without accession number
         if( $accessions == null ) {
-            echo "******* Procedur Case 1: return cause no accession provided<br>";
+            echo "******* Procedure Case 1: return cause no accession provided<br>";
             return $this->setResult($entity, $orderinfo);
         }
 
@@ -41,24 +42,24 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $foundAccession = $this->isExisted($accession,"Accession","accession");
 
         if( $foundAccession ) {
-            echo "******* Procedur Case 2 & 3: Accession existed in DB<br>";
+            echo "******* Procedure Case 2 & 3: Accession existed in DB<br>";
             //case 2 - existed but empty with STATUS_RESERVED; User press check with empty Key field => new Key was generated
             //Case 3 - existed and STATUS_VALID; User entered existed Key
             $foundProcedure = $foundAccession->getProcedure();
 
             if( $foundProcedure ) {
-                echo "**** Procedur Case 2 & 3: Accession has procedure<br>";
+                echo "**** Procedure Case 2 & 3: Accession has procedure<br>";
                 foreach( $entity->getAccession() as $thisAccession ) {
                     $foundProcedure->addAccession( $thisAccession );
                 }
                 return $this->setResult( $foundProcedure, $orderinfo, $entity ); //provide found object, cause we need id
             } else {
-                echo "**** Procedur Case 2 & 3: Accession does not have procedure, so use procedure provided by form<br>";
+                echo "**** Procedure Case 2 & 3: Accession does not have procedure, so use procedure provided by form<br>";
                 return $this->setResult( $entity, $orderinfo );
             }
 
         } else {
-            echo "******* Procedur Case 4 & 5: Accession does not exists in DB<br>";
+            echo "******* Procedure Case 4 & 5: Accession does not exists in DB<br>";
             return $this->setResult( $entity, $orderinfo );
         }
     }

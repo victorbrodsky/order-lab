@@ -7,9 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="procedurename")
+ * @ORM\Table(name="procedureencounter")
  */
-class ProcedureName extends ProcedureArrayFieldAbstract
+class ProcedureEncounter extends ProcedureArrayFieldAbstract
 {
 
     /**
@@ -18,9 +18,8 @@ class ProcedureName extends ProcedureArrayFieldAbstract
      */
     protected $procedure;
 
-     /**
-     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="procedure", cascade={"persist"})
-     * @ORM\JoinColumn(name="procedurelist_id", referencedColumnName="id", nullable=true)
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
 

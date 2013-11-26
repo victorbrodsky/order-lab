@@ -193,17 +193,13 @@ function setParent(element,keyvalue) {
         keyBtn.trigger("click");
     }
 
-    waitForB( keyElement, 0 );  //wait until check button is ready (cleaned)
+    waitWhenParentIsClean( keyElement, 0 );  //wait until check button is ready (cleaned)
 
-    keyElement.element.val(keyvalue);   //set parent key field
+    //keyElement.element.val(keyvalue);   //set parent key field
+    //var keyBtn = keyElement.element.parent().parent().find('#check_btn');
+    //keyBtn.trigger("click");
 
-    //var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
-    //var keyElement = findKeyElement(element);
-    var keyBtn = keyElement.element.parent().parent().find('#check_btn');
-    keyBtn.trigger("click");
-
-
-    function waitForB( element, maxi ) {
+    function waitWhenParentIsClean( element, maxi ) {
 
         //var keyElement = findKeyElement(element);
         var keyBtn = keyElement.element.parent().parent().find('#check_btn');
@@ -217,14 +213,18 @@ function setParent(element,keyvalue) {
                     return;
                 }
                 maxi++;
-                //console.log("parent key is not clean, maxi="+maxi);
-                waitForB(element,maxi);
+                console.log("parent key is not clean, maxi="+maxi);
+                waitWhenParentIsClean(element,maxi);
             }
             else{
-                //console.log("parent key is clean");
+                console.log("parent key is clean");
+                keyElement.element.val(keyvalue);   //set parent key field
+                var keyBtn = keyElement.element.parent().parent().find('#check_btn');
+                keyBtn.trigger("click");
             }
         }, 300);
     }
+
 }
 
 

@@ -36,9 +36,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $found = $this->isExisted($entity,$className,$fieldName);
 
         $getChildMethod = "get".ucfirst($childName);
-        $addChildMethod = "add".ucfirst($childName);
+        $addChildMethod = "add".ucfirst($fieldName);
         $getFieldMethod = "get".ucfirst($fieldName);
-        $clearFieldMethod = "clear".ucfirst($fieldName);
 
         if( $found ) {
             //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
@@ -62,18 +61,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     $provider = null;
                 }
 
-                //method1: create a new object
-                //$newPatient = $this->createElement(self::STATUS_VALID,$provider,$className,$fieldName,$parent);
-                //                foreach( $entity->$getChildMethod() as $child ) {
-//                    $newPatient->$addChildMethod( $child );
-//                }
-//                return $this->setResult( $newPatient, $orderinfo, $entity );
-
                 //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-                $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
-                $field = $this->createKeyField( $fieldValue, $className, $fieldName );
-                $entity->$clearFieldMethod();
-                $entity->$addChildMethod($field);
+                $entity = $this->createKeyField( $entity, $className, $fieldName );
+                //$entity->$clearFieldMethod();
+                //$entity->$addChildMethod($field);
                 return $this->setResult( $entity, $orderinfo );
 
             }
@@ -81,12 +72,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     }
 
-    public function createKeyField( $fieldValue, $className, $fieldName ) {
+    public function createKeyField( $entity, $className, $fieldName ) {
+        $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
         $fieldEntityName = ucfirst($className).ucfirst($fieldName);
         $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
+        $clearFieldMethod = "clear".ucfirst($fieldName);
+        $addFieldMethod = "add".ucfirst($fieldName);
         $field = new $fieldClass(1);
         $field->setField($fieldValue);
-        return $field;
+        $entity->$clearFieldMethod();
+        $entity->$addFieldMethod($field);
+        return $entity;
     }
 
     //process single array of fields (i.e. ClinicalHistory Array of Fields)

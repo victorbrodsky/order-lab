@@ -12,23 +12,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Procedure extends OrderAbstract
 {
-    
-//    /**
-//     * @ORM\Id
-//     * @ORM\Column(type="integer")
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    protected $id;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="procedure", cascade={"persist"})
-//     * @ORM\JoinColumn(name="procedurelist_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $proceduretype;
     /**
      * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="procedure", cascade={"persist"})
      */
     protected $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProcedureEncounter", mappedBy="procedure", cascade={"persist"})
+     */
+    protected $encounter;
     
     /**
      * parent
@@ -44,7 +36,6 @@ class Procedure extends OrderAbstract
      */
     protected $accession;
     
-    
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="procedure")
      **/
@@ -53,26 +44,18 @@ class Procedure extends OrderAbstract
     public function __construct( $withfields=false, $validity=0 ) {
         parent::__construct();
         $this->accession = new ArrayCollection();
-        //$this->orderinfo = new ArrayCollection();
 
         //fields:
-        $this->name = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->name = new ArrayCollection();
+        $this->encounter = new ArrayCollection();
 
         if( $withfields ) {
             $this->addName( new ProcedureName($validity) );
+            $this->addEncounter( new ProcedureEncounter($validity) );
         }
-    }   
+    }
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
-
+    //Name
     public function getName() {
         return $this->name;
     }
@@ -102,6 +85,38 @@ class Procedure extends OrderAbstract
     {
         $this->name->clear();
     }
+
+    //Encounter
+    public function getEncounter() {
+        return $this->encounter;
+    }
+
+    public function setEncounter($encounter) {
+        $this->encounter = $encounter;
+    }
+
+    public function addEncounter($encounter)
+    {
+        if( $encounter ) {
+            if( !$this->encounter->contains($encounter) ) {
+                $encounter->setProcedure($this);
+                $this->encounter->add($encounter);
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeEncounter($encounter)
+    {
+        $this->encounter->removeElement($encounter);
+    }
+
+    public function clearEncounter()
+    {
+        $this->encounter->clear();
+    }
+
 
     /**
      * Add accession
@@ -167,9 +182,6 @@ class Procedure extends OrderAbstract
     }
 
     public function clearAccession(){
-//        foreach( $this->accession as $thisaccession ) {
-//            $this->removeAccession($thisaccession);
-//        }
         $this->accession->clear();
     }
 
@@ -177,37 +189,4 @@ class Procedure extends OrderAbstract
         return 'Procedure: id=' . $this->getId() . "<br>";
     }
 
-
-//    /**
-//     * Add orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     * @return Procedure
-//     */
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        if( !$this->orderinfo->contains($orderinfo) ) {
-//            $this->orderinfo->add($orderinfo);
-//        }
-//    }
-//
-//    /**
-//     * Remove orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     */
-//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        $this->orderinfo->removeElement($orderinfo);
-//    }
-//
-//    /**
-//     * Get orderinfo
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getOrderinfo()
-//    {
-//        return $this->orderinfo;
-//    }
 }

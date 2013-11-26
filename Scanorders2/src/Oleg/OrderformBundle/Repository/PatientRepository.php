@@ -43,18 +43,20 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
         $procedures = $patient->getProcedure();
         //echo "procedure count in patient=".count($procedures)."<br>";
-        //echo "0 patient->procedures count=".count($patient->getProcedure())."<br>";
+        echo "0 patient->procedures count=".count($patient->getProcedure())."<br>";
         foreach( $procedures as $procedure ) {   
                             
             if( $em->getRepository('OlegOrderformBundle:Procedure')->notExists($procedure, "Procedure") ) {     //procedure new
+            //if(1) {
                 $patient->removeProcedure( $procedure );
                 //echo "procedure0: ".$procedure."<br>";
-                $procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntityProcedure( $procedure, $procedure->getAccession(), $orderinfo );
+                //$procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntityProcedure( $procedure, $procedure->getAccession(), $orderinfo );
+                $procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntity( $procedure, $orderinfo, "Procedure", "encounter", "Accession" );
                 //echo "procedure1: ".$procedure."<br>";
                 $patient->addProcedure($procedure);
                 $orderinfo->addProcedure($procedure);
             } else {         //procedure from DB     
-                //echo "procedure from DB continue id=".$procedure->getId()."<br>";
+                echo "procedure from DB continue id=".$procedure->getId()."<br>";
                 continue;
             }
             
@@ -76,7 +78,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 //        echo "patient age=".$patient->getAge()->first()."<br>";
 //        echo "patient clinHist=".$patient->getClinicalHistory()->first()."<br>";
 //        echo $patient."<br>";
-        //echo "1 patient->procedures count=".count($patient->getProcedure())."<br>";
+        echo "1 patient->procedures count=".count($patient->getProcedure())."<br>";
         //exit();
 
         return $patient;

@@ -17,82 +17,83 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
 
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processBlockEntity( $block, $part=null, $orderinfo=null ) {
+    public function processEntityBlock( $block, $part=null, $orderinfo=null ) {
 
-        echo "<br><br>processBlockEntity blockname=".$block->getBlockname()->first()."<br>";
-
-        $em = $this->_em;
-
-        //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
-
-        if( $part == null || $part->getId() == null) { //new part number was entered
-            echo "******* Block Case 1: part id null => new part number was entered <br>";
-            return $this->setResult( $block, $orderinfo );
-        }
+        echo "<br><br>processEntityPart partname=".$part->getPartname()->first()."<br>";
 
         $accession = $part->getAccession();
-        if( $accession == null ||$accession->getId() == null ) { //new accession number was entered
-            echo "******* Block Case 1: accession id null => new accession number was entered <br>";
-            $part = $this->setResult( $block, $orderinfo );
-            return $part;
+
+        if( !$accession->getAccession() || count($accession->getAccession())==0 ) {
+            throw $this->createNotFoundException('Accession does not have an accession number.');
         }
 
+        $validAccession = $this->getValidField($accession->getAccession());
+
+        if( !$part->getPartname() || count($part->getPartname())==0 ) {
+            throw $this->createNotFoundException('Part does not have an part name.');
+        }
+
+        $validPartname = $this->getValidField( $part->getPartname() );
+
+        if( count($block->getBlockname()) == 0 ) { //empty key field
+            echo "******* Block Case 1: key field is empty => createBlockName only <br>";
+            //create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
+            $block = $this->createBlockName( $validAccession, $validPartname, $block );
+        }
+
+        $blocknamecount = count($block->getBlockname());
+        if( $blocknamecount > 1 ) {
+            echo "blockname count > 1  <br>";
+            $validBlockname = $this->getValidField( $block->getBlockname() );
+        } else if( $blocknamecount == 1 ) {
+            echo "only one partname <br>";
+            $validBlockname = $block->getBlockname()->first();
+        } else {
+            //echo "partnamecount is 0 => LOGIC WARNING !!!<br>";
+            throw $this->createNotFoundException('Part still does not have an part name.');
+        }
+
+        echo "valid accession#=".$validAccession.", partname=".$validPartname.", blockname=".$validBlockname."<br>";
 
         //check if part already has block with the same name.
         echo "******* check block uniqueness by blockname, partname and accession<br>";
-        $validPartname = $this->getValidField( $part->getPartname() );
-        if( count($block->getBlockname()) > 1 ) {
-            $validBlockname = $this->getValidField( $block->getBlockname() );
-        } else {
-            $validBlockname = $block->getBlockname()->first();
-        }
 
-        echo "valid partname=".$validPartname.", blockname=".$validBlockname."<br>";
-
-        //if $validPartname does not exist in DB, then we can not check findOnePartByJoinedToField, so $part_found will be null
-        if( !$validBlockname || $validBlockname->getId() == null ) {
-            echo "block_found = null <br>";
+        //if $validBlockname does not exist in DB, then we can not check findOneBlockByJoinedToField, so $block_found will be null
+        if( !$validBlockname || $validBlockname == "" ) {
+            echo "block_found = null => LOGIC WARNING !!!<br>";
             $block_found = null;
         } else {
-            $block_found = $this->findOneBlockByJoinedToField( $this->getValidField($accession->getAccession()), $validPartname, $validBlockname );
+            $block_found = $this->findOneBlockByJoinedToField( $validAccession, $validPartname, $validBlockname );
             echo "block_found <br>";
         }
 
         if( $block_found == null ) {
-            echo "******* Block Case 2: part id is not null, but block is not found in DB<br>";
 
-//            //method1: create new block
-//            $newBlock = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession( $this->getValidField($accession->getAccession()), $validPartname );
-//            //copy children from provided form block $block to a newly created block $newBlock
-//            foreach( $block->getSlide() as $slide ) {
-//                $newBlock->addSlide( $slide );
-//            }
-//            $block = $this->setResult( $newBlock, $orderinfo, $block );
-
-            //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-            $fieldValue = $this->findNextBlocknameByAccessionPartname( $this->getValidField($accession->getAccession()), $validPartname );  //next blockname
-            echo "next blockname  generated=".$fieldValue."<br>";
-            $field = new BlockBlockname(1);
-            $field->setField($fieldValue);
-            //$block->setBlockname( array($field) );
-            $block->clearBlockname();
-            $block->addBlockname( $field );
-            $block = $this->setResult( $block, $orderinfo );
-
-            return $block;
+            echo "******* Block Case 2: block is not found in DB<br>";
+            return $this->setResult( $block, $orderinfo );
 
         } else {
-            echo "******* Block Case 3: part id is not null and block is existed in DB<br>";
-            //it should be only 1 block, so return the first one (single one).
-            $block_res = $block_found[0];
+
+            echo "******* Block Case 3: block is existed in DB<br>";
 
             //copy all children to existing entity
             foreach( $block->getSlide() as $slide ) {
-                $block_res->addSlide($slide);
+                $block_found->addSlide($slide);
             }
-            return $this->setResult( $block_res, $orderinfo, $block );
+            return $this->setResult( $block_found, $orderinfo, $block );
+
         }
 
+    }
+
+    public function createBlockName( $accession, $part, $block ) {
+        $fieldValue = $this->findNextBlocknameByAccessionPartname($accession, $part );  //next blockname
+        echo "next blockname  generated=".$fieldValue."<br>";
+        $field = new BlockBlockname(1);
+        $field->setField($fieldValue);
+        $block->clearBlockname();
+        $block->addBlockname( $field );
+        return $block;
     }
     
     public function setResult( $block, $orderinfo=null, $original=null ) {
