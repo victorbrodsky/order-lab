@@ -427,9 +427,10 @@ class OrderInfo
 
     public function clearPatient()
     {
-        foreach( $this->patient as $thispatient ) {
-            $this->removePatient($thispatient);
-        }
+//        foreach( $this->patient as $thispatient ) {
+//            $this->removePatient($thispatient);
+//        }
+        $this->patient->clear();
     }
     
     /**

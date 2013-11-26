@@ -160,6 +160,8 @@ class Part extends OrderAbstract
         $this->accession = $accession;
         return $this;
     }
+
+
     public function setParent($parent)
     {
         $this->setAccession($parent);
@@ -183,6 +185,10 @@ class Part extends OrderAbstract
     public function removePartname($partname)
     {
         $this->partname->removeElement($partname);
+    }
+    public function clearPartname()
+    {
+        $this->partname->clear();
     }
 
 
@@ -265,9 +271,10 @@ class Part extends OrderAbstract
     }
 
     public function clearBlock(){
-        foreach( $this->block as $thisblock ) {
-            $this->removeBlock($thisblock);
-        }
+//        foreach( $this->block as $thisblock ) {
+//            $this->removeBlock($thisblock);
+//        }
+        $this->block->clear();
     }
 
     public function setDiffDisident($diffDisident) {
@@ -385,9 +392,10 @@ class Part extends OrderAbstract
     }
 
     public function clearSlide(){
-        foreach( $this->slide as $thisslide ) {
-            $this->removeSlide($thisslide);
-        }
+//        foreach( $this->slide as $thisslide ) {
+//            $this->removeSlide($thisslide);
+//        }
+        $this->slide->clear();
     }
 
 }

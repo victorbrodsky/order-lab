@@ -84,6 +84,10 @@ class Block extends OrderAbstract
     {
         $this->blockname->removeElement($blockname);
     }
+    public function clearBlockname()
+    {
+        $this->blockname->clear();
+    }
 
 
     public function getSectionsource() {
@@ -149,9 +153,10 @@ class Block extends OrderAbstract
     }
     
     public function clearSlide(){
-        foreach( $this->slide as $thisslide ) {
-            $this->removeSlide($thisslide);
-        }
+//        foreach( $this->slide as $thisslide ) {
+//            $this->removeSlide($thisslide);
+//        }
+        $this->slide->clear();
     }
 
     /**

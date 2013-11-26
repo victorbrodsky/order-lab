@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\OrderformBundle\Entity\BlockBlockname;
 
 /**
  * BlockRepository
@@ -60,15 +61,24 @@ class BlockRepository extends ArrayFieldAbstractRepository
         if( $block_found == null ) {
             echo "******* Block Case 2: part id is not null, but block is not found in DB<br>";
 
-            //create new block
-            $newBlock = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession( $this->getValidField($accession->getAccession()), $validPartname );
+//            //method1: create new block
+//            $newBlock = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession( $this->getValidField($accession->getAccession()), $validPartname );
+//            //copy children from provided form block $block to a newly created block $newBlock
+//            foreach( $block->getSlide() as $slide ) {
+//                $newBlock->addSlide( $slide );
+//            }
+//            $block = $this->setResult( $newBlock, $orderinfo, $block );
 
-            //copy children from provided form block $block to a newly created block $newBlock
-            foreach( $block->getSlide() as $slide ) {
-                $newBlock->addSlide( $slide );
-            }
+            //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
+            $fieldValue = $this->findNextBlocknameByAccessionPartname( $this->getValidField($accession->getAccession()), $validPartname );  //next blockname
+            echo "next blockname  generated=".$fieldValue."<br>";
+            $field = new BlockBlockname(1);
+            $field->setField($fieldValue);
+            //$block->setBlockname( array($field) );
+            $block->clearBlockname();
+            $block->addBlockname( $field );
+            $block = $this->setResult( $block, $orderinfo );
 
-            $block = $this->setResult( $newBlock, $orderinfo, $block );
             return $block;
 
         } else {

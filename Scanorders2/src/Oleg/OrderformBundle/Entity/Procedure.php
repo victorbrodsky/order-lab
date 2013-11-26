@@ -98,6 +98,11 @@ class Procedure extends OrderAbstract
         $this->name->removeElement($name);
     }
 
+    public function clearName()
+    {
+        $this->name->clear();
+    }
+
     /**
      * Add accession
      *
@@ -162,9 +167,10 @@ class Procedure extends OrderAbstract
     }
 
     public function clearAccession(){
-        foreach( $this->accession as $thisaccession ) {
-            $this->removeAccession($thisaccession);
-        }
+//        foreach( $this->accession as $thisaccession ) {
+//            $this->removeAccession($thisaccession);
+//        }
+        $this->accession->clear();
     }
 
     public function __toString() {

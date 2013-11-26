@@ -22,52 +22,80 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         echo "<br><br>processEntityPart partname=".$part->getPartname()->first()."<br>";
 
-        $em = $this->_em;
-
-        //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
-        
-        if( $accession->getId() == null ) { //new accession number was entered
-            echo "******* Part Case 1: accession id null<br>";
-            $part = $this->setResult( $part, $orderinfo );
-            return $part;
+        if( !$accession->getAccession() || count($accession->getAccession())==0 ) {
+            throw $this->createNotFoundException('Accession does not have an accession number.');
         }
-        
+
+        $validAccession = $this->getValidField( $accession->getAccession() );
+
+        //$em = $this->_em;
+        //$part = $em->getRepository('OlegOrderformBundle:Block')->removeDuplicateEntities( $part );
+
+        echo "part name partname=".$part->getPartname()->first()."<br>";
+        echo "part name partname count=".count($part->getPartname())."<br>";
+        if( count($part->getPartname()) > 0 ) {
+            echo "part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+            echo "part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+        }
+
+        if( count($part->getPartname()) == 0 ) { //empty key field
+            echo "******* Part Case 1: key field is empty => createPartName only <br>";
+            //create partname
+            $part = $this->createPartName( $part, $validAccession."" );
+        }
+
+        $partnamecount = count($part->getPartname());
+        if( $partnamecount > 1 ) {
+            echo "partname count > 1  <br>";
+            $validPartname = $this->getValidField( $part->getPartname() );
+        } else if( $partnamecount == 1 ) {
+            echo "only one partname <br>";
+            $validPartname = $part->getPartname()->first();
+        } else {
+            echo "partnamecount is 0 => LOGIC WARNING !!!<br>";
+        }
+
+        echo "valid accession#=".$validAccession.", partname=".$validPartname."<br>";
+
         //check if accession already has part with the same name.
         echo "******* check part uniqueness by partname and accession<br>";
-        $validAccession = $this->getValidField( $accession->getAccession() );
-        if( count($part->getPartname()) > 1 ) {
-            $validPartname = $this->getValidField( $part->getPartname() );
-        } else {
-            $validPartname = $part->getPartname()->first();
-        }
-
-        echo "valid accession#=".$validAccession.", partname=".$validPartname.", partId=".$validPartname->getId()."<br>";
-        //exit();
 
         //if $validPartname does not exist in DB, then we can not check findOnePartByJoinedToField, so $part_found will be null
-        if( !$validPartname || $validPartname->getId() == null ) {
-            echo " part_found = null <br>";
+        if( !$validPartname || $validPartname == "" ) {
+            echo "part_found = null => LOGIC WARNING !!!<br>";
             $part_found = null;
         } else {
-            echo " find part <br>";
+            echo "find part <br>";
             $part_found = $this->findOnePartByJoinedToField( $validAccession->getField()."", $validPartname->getField()."" );
         }
 
         if( $part_found == null ) {
-            echo "******* Part Case 2: accession id is not null, but part is not found in DB<br>";
+            echo "******* Part Case 2: part is not found in DB<br>";
 
-            //create new part
-            $newPart = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession( $validAccession );
+            //method1: create new part
+//            $newPart = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession( $validAccession );
+//            //copy children from provided form part $part to a newly created part $newPart
+//            foreach( $part->getBlock() as $block ) {
+//                $newPart->addBlock( $block );
+//            }
+//            $part = $this->setResult( $newPart, $orderinfo, $part );
 
-            //copy children from provided form part $part to a newly created part $newPart
-            foreach( $part->getBlock() as $block ) {
-                $newPart->addBlock( $block );
-            }
+            //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
+//            echo "partname1 count=".count($part->getPartname())."<br>";
+//            $fieldValue = $this->findNextPartnameByAccession($validAccession."");   //next partname
+//            echo "next partname  generated=".$fieldValue."<br>";
+//            $field = new PartPartname(1);
+//            $field->setField($fieldValue);
+//            $part->clearPartname();
+//            $part->addPartname( $field );
+//            echo "partname2 count=".count($part->getPartname())."<br>";
+            //$part = $this->createPartName( $part, $validAccession."" );
 
-            $part = $this->setResult( $newPart, $orderinfo, $part );
+            $part = $this->setResult( $part, $orderinfo );
             return $part;
+
         } else {
-            echo "******* Part Case 3: accession id is not null and part is existed in DB<br>";
+            echo "******* Part Case 3: part is existed in DB<br>";
 
             foreach( $part->getBlock() as $block ) {
                 $part_found->addBlock( $block );
@@ -76,6 +104,18 @@ class PartRepository extends ArrayFieldAbstractRepository
             return $part;
         }
 
+    }
+
+    public function createPartName( $part, $accession ) {
+        echo "partname1 count=".count($part->getPartname())."<br>";
+        $fieldValue = $this->findNextPartnameByAccession($accession);   //next partname
+        echo "next partname generated=".$fieldValue."<br>";
+        $field = new PartPartname(1);
+        $field->setField($fieldValue);
+        $part->clearPartname();
+        $part->addPartname( $field );
+        echo "partname2 count=".count($part->getPartname())."<br>";
+        return $part;
     }
     
     public function setResult( $part, $orderinfo=null, $original=null ) {
@@ -92,6 +132,14 @@ class PartRepository extends ArrayFieldAbstractRepository
             echo "1 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
             echo "1 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
         }
+
+        echo "1 part name diseaseType=".$part->getDiseaseType()->first()."<br>";
+        echo "1 part name diseaseType count=".count($part->getDiseaseType())."<br>";
+        if( count($part->getDiseaseType()) > 0 ) {
+            echo "1 part diseaseType provider=".$part->getDiseaseType()->first()->getProvider()."<br>";
+            echo "1 part diseaseType validity=".$part->getDiseaseType()->first()->getValidity()."<br>";
+        }
+
 //        echo "1 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
 //        echo "1 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
 //        echo "1 part name disidentis count=".count($part->getdisidentis())."<br>";

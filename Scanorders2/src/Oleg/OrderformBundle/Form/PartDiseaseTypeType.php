@@ -34,7 +34,7 @@ class PartDiseaseTypeType extends AbstractType
 
         $builder->add( 'origin', 'choice', array(
             'label'=>'Origin:',
-            //'required'=>false,
+            'required'=>false,
             'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
             'multiple' => false,
             'expanded' => true,

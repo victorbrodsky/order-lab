@@ -114,6 +114,11 @@ class Accession extends OrderAbstract {
         $this->accession->removeElement($accession);
     }
 
+    public function clearAccession()
+    {
+        $this->accession->clear();
+    }
+
     /**
      * Set procedure (parent)
      *
@@ -183,9 +188,10 @@ class Accession extends OrderAbstract {
     }
 
     public function clearPart(){
-        foreach( $this->part as $thispart ) {
-            $this->removePart($thispart);
-        }
+//        foreach( $this->part as $thispart ) {
+//            $this->removePart($thispart);
+//        }
+        $this->part->clear();
     }
 
 

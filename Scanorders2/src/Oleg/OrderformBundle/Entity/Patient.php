@@ -132,6 +132,11 @@ class Patient extends OrderAbstract
         $this->mrn->removeElement($mrn);
     }
 
+    public function clearMrn()
+    {
+        $this->mrn->clear();
+    }
+
     /**
      * Set name
      *
@@ -266,9 +271,10 @@ class Patient extends OrderAbstract
     }
 
     public function clearProcedure(){
-        foreach( $this->procedure as $thisprocedure ) {
-            $this->removeProcedure($thisprocedure);
-        }
+//        foreach( $this->procedure as $thisprocedure ) {
+//            $this->removeProcedure($thisprocedure);
+//        }
+        $this->procedure->clear();
     }
 
     /**
