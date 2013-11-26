@@ -153,7 +153,7 @@ function getMaxIdFromRows( elements, field ) {
     for( var i = 0; i < elements.length; i++ ) {
 
         var element = elements.eq(i);
-        var inputField = element.find('input');
+        var inputField = element.find('input,textarea');
         var fieldId = inputField.attr("id");
         //console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
         var idArr = fieldId.split("_"+field+"_");

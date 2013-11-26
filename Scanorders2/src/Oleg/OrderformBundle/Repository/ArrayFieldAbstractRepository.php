@@ -204,7 +204,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return false;
     }
 
-    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null )
+    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true )
     {
         //echo "fieldStr=".$fieldStr." ";
 
@@ -219,10 +219,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
             JOIN c.'.$fieldName.' cfield
             WHERE cfield.field = :field'.$onlyValid
-            )->setParameter('field', $fieldStr);
+            )->setParameter('field', $fieldStr."");
 
         try {
-            return $query->getSingleResult();
+            if( $single ) {
+                return $query->getSingleResult();
+            } else {
+                return $query->getResult();
+            }
+
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
@@ -230,14 +235,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function deleteIfReserved( $fieldStr, $className, $fieldName ) {
         //echo "fieldStr=".$fieldStr." ";
-        $entity = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName);
-        if( $entity ) {
-            if( $entity->getStatus() == self::STATUS_RESERVED ) {
-                //echo "id=".$entity->getId()." ";
-                $em = $this->_em;
-                $em->remove($entity);
-                $em->flush();
-                return true;
+        $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, null, false);
+        if( $entities ) {
+            foreach( $entities as $entity ) {
+                if( $entity->getStatus() == self::STATUS_RESERVED ) {
+                    //echo "id=".$entity->getId()." ";
+                    $em = $this->_em;
+                    $em->remove($entity);
+                    $em->flush();
+                    return true;
+                }
             }
         }
         return false;
@@ -378,7 +385,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //get only valid field
     public function getValidField( $fields ) {
         foreach( $fields as $field ) {
-            echo "get valid field=".$field.", validity=".$field->getValidity()."<br>";
+            //echo "get valid field=".$field.", validity=".$field->getValidity()."<br>";
             if( $field->getValidity() && $field->getValidity() == 1 ) {
                 return $field;
             }

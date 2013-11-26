@@ -100,12 +100,14 @@
 
 {% macro fieldicon( field ) %}
 
+    {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
+
         <div class="row ">
             <div class="col-xs-10">
                 {{ form_widget(field) }}
             </div>
             <div class="col-xs-2">
-                <button id="check_btn" class="btn btn-default" type="button" onclick="checkForm(this)"><i class="glyphicon glyphicon-check"></i></button>
+                <button id="check_btn" class="btn btn-default" type="button" onclick="checkForm(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
             </div>
         </div>
 
@@ -711,25 +713,39 @@ ident:      specialStains or relevantScans
 
 
 
-{% macro blockForm( block, flag, uid, cycle, blocknameHtml ) %}
+{% macro blockForm( block, flag, uid, cycle, blocknameHtml, sectionsourceHtml ) %}
     {% import _self as formmacros %}
     <div id="block_{{ uid }}">
+
         {#{{ formmacros.fieldIconLabel(form.blockname,"glyphicon-check") }}#}
         {% if blocknameHtml is not defined or blocknameHtml == "" %}
             {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname","key") }}
         {% else  %}
             <p><div class="blockblockname">{{ blocknameHtml }}</div></p>
         {% endif %}
+
+        {% if sectionsourceHtml is not defined or sectionsourceHtml == "" %}
+            {{ formmacros.inputArrayField(block.sectionsource,cycle,"blocksectionsource","blocksectionsource") }}
+        {% else  %}
+            <p><div class="blocksectionsource">{{ sectionsourceHtml }}</div></p>
+        {% endif %}
+
     </div>
 {% endmacro %}
 
 
 
 
-{% macro slideForm( slide, flag, uid, cycle, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml, specialStainsHtml ) %}
+{% macro slideForm( slide, flag, uid, cycle, slidetypeHtml, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml, specialStainsHtml ) %}
     {% import _self as formmacros %}
 
     <div id="slide_{{ uid }}">
+
+        {% if slidetypeHtml is not defined or slidetypeHtml == "" %}
+            {{ formmacros.field(slide.slidetype) }}
+        {% else  %}
+            <p><div class="slideslidetype">{{ slidetypeHtml }}</div></p>
+        {% endif %}
 
         {% if stainHtml is not defined or stainHtml == "" %}    {#regular#}
 

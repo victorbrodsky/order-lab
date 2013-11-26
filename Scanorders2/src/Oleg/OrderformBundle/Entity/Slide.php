@@ -62,6 +62,12 @@ class Slide extends OrderAbstract
     protected $barcode;
 
     /**
+     * @ORM\ManyToOne(targetEntity="SlideType", inversedBy="slide", cascade={"persist"})
+     * @ORM\JoinColumn(name="slidetype_id", referencedColumnName="id", nullable=true)
+     */
+    protected $slidetype;
+
+    /**
      * @ORM\OneToMany(targetEntity="Scan", mappedBy="slide", cascade={"persist"})
      */
     protected $scan;
@@ -336,4 +342,22 @@ class Slide extends OrderAbstract
     {
         return $this->relevantScans;
     }
+
+    /**
+     * @param mixed $slidetype
+     */
+    public function setSlidetype($slidetype)
+    {
+        $this->slidetype = $slidetype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlidetype()
+    {
+        return $this->slidetype;
+    }
+
+
 }

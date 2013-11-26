@@ -192,8 +192,19 @@ class CheckController extends Controller {
 
         if( $entity ) {
 
+            //find patient mrn
+            //$patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true);
+            $patient = $entity->getProcedure()->getPatient();
+
+            if( $patient ) {
+                $parentKey = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->getValidField( $patient->getMrn() );
+            } else {
+                $parentKey = null;
+            }
+
             $element = array(
                 'id'=>$entity->getId(),
+                'parent'=>$parentKey."",
                 'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession()),
             );
@@ -271,7 +282,7 @@ class CheckController extends Controller {
         //echo "key=".$key."   ";
 
         //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key, $validity=null );
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key );
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
@@ -315,7 +326,7 @@ class CheckController extends Controller {
         //echo "accession=(".$accession.")   ";
 
         $em = $this->getDoctrine()->getManager();
-        $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByPartnameAndAccession($accession);
+        $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession);
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
         //echo "partname=".$part->getPartname()."  ";
@@ -385,6 +396,7 @@ class CheckController extends Controller {
             $element = array(
                 'id'=>$entity->getId(),
                 'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
+                'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
             );
         } else {
             $element = array();

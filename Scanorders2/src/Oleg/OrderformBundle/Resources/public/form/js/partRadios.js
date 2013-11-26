@@ -58,19 +58,19 @@ function diseaseTypeRender() {
         var radioElementValue = radioElement.val();
 
         if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
-            console.log("checked id="+radioElement.attr("id"));
+            //console.log("checked id="+radioElement.attr("id"));
 
             var parent = radioElement.parent().parent();
             var originradio = parent.find('.originradio');
 
             originradio.collapse('show');
 
-            console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
+            //console.log("originradio id="+originradio.attr("id")+",class="+originradio.attr("id"));
 
             originradio.find('input:radio').each(function() {
 
                 var originElement = $(this);
-                console.log("originElement id="+originElement.attr("id")+", value="+originElement.val());
+                //console.log("originElement id="+originElement.attr("id")+", value="+originElement.val());
 
                 if( originElement.is(':checked') && originElement.val() == "Metastatic" ) {
 

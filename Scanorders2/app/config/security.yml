@@ -65,8 +65,9 @@ security:
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/admin/, role: ROLE_ADMIN }
-#     - { path: ^/util/, role: ROLE_USER }
+     - { path: ^/util/, role: ROLE_USER }
      - { path: ^/user/, role: ROLE_USER }
+     - { path: ^/check/, role: ROLE_USER }
 
 #    firewalls:
 #       #FOSUser

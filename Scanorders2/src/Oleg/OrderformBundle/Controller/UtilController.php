@@ -92,9 +92,9 @@ class UtilController extends Controller {
      */
     public function getPathServiceAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -226,9 +226,9 @@ class UtilController extends Controller {
      */
     public function getUserPathServiceAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
 
         $output = array();
 
@@ -270,7 +270,7 @@ class UtilController extends Controller {
      * @Method("POST")
      * //@Method("GET")
      */
-    public function checkMrnAction() {
+    public function checkMrnAction_TODEL() {
 
 //        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
@@ -318,5 +318,6 @@ class UtilController extends Controller {
 
 //        return  new JsonResponse($output);
     }
+
     
 }

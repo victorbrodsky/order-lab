@@ -18,6 +18,11 @@ class Block extends OrderAbstract
      */
     protected $blockname;
 
+    /**
+     * @ORM\OneToMany(targetEntity="BlockSectionsource", mappedBy="block", cascade={"persist"})
+     */
+    protected $sectionsource;
+
 
     //////////////  OBJECTS /////////////
 
@@ -47,9 +52,11 @@ class Block extends OrderAbstract
 
         //fields:
         $this->blockname = new ArrayCollection();
+        $this->sectionsource = new ArrayCollection();
 
         if( $withfields ) {
             $this->addBlockname( new BlockBlockname($validity) );
+            $this->addSectionsource( new BlockSectionsource($validity) );
         }
     }
 
@@ -77,6 +84,33 @@ class Block extends OrderAbstract
     {
         $this->blockname->removeElement($blockname);
     }
+
+
+    public function getSectionsource() {
+        return $this->sectionsource;
+    }
+
+    public function setSectionsource($sectionsource) {
+        $this->sectionsource = $sectionsource;
+    }
+
+    public function addSectionsource($sectionsource)
+    {
+        if( $sectionsource ) {
+            if( !$this->sectionsource->contains($sectionsource) ) {
+                $sectionsource->setBlock($this);
+                $this->sectionsource->add($sectionsource);
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsource($sectionsource)
+    {
+        $this->sectionsource->removeElement($sectionsource);
+    }
+
 
     /**
      * Add slide

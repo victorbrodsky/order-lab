@@ -15,6 +15,7 @@ use Oleg\OrderformBundle\Entity\PathServiceList;
 use Oleg\OrderformBundle\Entity\StatusType;
 use Oleg\OrderformBundle\Entity\StatusGroup;
 use Oleg\OrderformBundle\Entity\Status;
+use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Entity\User;
 use Oleg\OrderformBundle\Form\UserType;
@@ -65,6 +66,7 @@ class AdminController extends Controller
         $count_statusgroup = $this->generateStatusGroups();
         $count_status = $this->generateStatuses();
         $count_pathservice = $this->generatePathServices();
+        $count_slidetype = $this->generateSlideType();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
@@ -79,6 +81,7 @@ class AdminController extends Controller
             'Status Groups='.$count_statusgroup.', '.
             'Statuses='.$count_status.', '.
             'Pathology Services='.$count_pathservice.', '.
+            'Slide Types='.$count_slidetype.', '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -240,6 +243,42 @@ class AdminController extends Controller
             );
 
             return $this->redirect($this->generateUrl('stainlist'));
+
+        } else {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'This table is already exists!'
+            );
+
+            return $this->redirect($this->generateUrl('admin_index'));
+        }
+
+    }
+
+    /**
+     * Populate DB
+     *
+     * @Route("/genslidetype", name="generate_slidetype")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateSlideTypeAction()
+    {
+
+//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+
+        $count = $this->generateSlideType();
+        if( $count >= 0 ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Created '.$count. ' slide types records'
+            );
+
+            return $this->redirect($this->generateUrl('slidetype'));
 
         } else {
 
@@ -519,6 +558,38 @@ class AdminController extends Controller
 
             }
             //echo "<br>";
+        }
+
+        return $count;
+    }
+
+    public function generateSlideType() {
+
+        $helper = new FormHelper();
+        $types = $helper->getSlideType();
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:SlideType')->findAll();
+
+        if( $entities ) {
+
+            return -1;
+        }
+
+        $count = 0;
+        foreach( $types as $type ) {
+            $slideType = new SlideType();
+            $slideType->setCreator( $username );
+            $slideType->setCreatedate( new \DateTime() );
+            $slideType->setName( trim($type) );
+            $slideType->setType('default');
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($slideType);
+            $em->flush();
+            $count++;
         }
 
         return $count;

@@ -7,15 +7,17 @@
  */
 
 var combobox_width = '100%'; //'element'
-var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
+//var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 //var urlCommon = "http://collage.med.cornell.edu/order/util/";
+var urlBase = $("#baseurl").val();
+var urlCommon = "http://"+urlBase+"/util/";
 var type = $("#formtype").val();
 var cicle = $("#formcicle").val();
 var user_name = $("#user_name").val();
 var user_id = $("#user_id").val();
 var proxyuser_name = $("#proxyuser_name").val();
 var proxyuser_id = $("#proxyuser_id").val();
-//console.log("type="+type+", cicle="+cicle);
+//console.log("urlCommon="+urlCommon);
 
 function regularCombobox() {
     //resolve
@@ -44,7 +46,7 @@ function regularCombobox() {
 
 function customCombobox() {
 
-    if( cicle != "show" ) {
+    if( cicle != "show" && urlBase ) {
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
@@ -305,7 +307,7 @@ function getComboboxPathService(urlCommon,ids) {
         });
 
 //        $.ajax(urlCommon+"userpathservice").success(function(data) {
-//            console.log("userpathservice="+data['id']);
+//            //console.log("userpathservice="+data['id']);
 //            $(targetid).select2('val', data['id']);
 //        });
 
@@ -354,23 +356,11 @@ function getComboboxPathService(urlCommon,ids) {
 
 function initComboboxJs(ids) {
 
-    //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
-    getComboboxStain(urlCommon,ids);
-    getComboboxScanregion(urlCommon,ids);
-    getComboboxProcedure(urlCommon,ids);
-    getComboboxOrgan(urlCommon,ids);
-    getComboboxPathService(urlCommon,ids);
-//    getComboboxDelivery(urlCommon,ids);
-//    getComboboxReturn(urlCommon,ids);
-
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_0_slide_1_stain_0_name
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_0_slide_1_scan_0_scanregion
-    //console.log("target id="+id);
-    //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    //var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-
-    //$(id+"stain_0_name").select2('data', {id: 1, text: 'H&E'});
-    //$(id+"scan_0_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
-    //$(id+"delivery").select2('data', {id: 1, text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
-    //$(id+"return").select2('data', {id: 1, text: "Filing Room"});
+    if( urlBase ) {
+        getComboboxStain(urlCommon,ids);
+        getComboboxScanregion(urlCommon,ids);
+        getComboboxProcedure(urlCommon,ids);
+        getComboboxOrgan(urlCommon,ids);
+        getComboboxPathService(urlCommon,ids);
+    }
 }

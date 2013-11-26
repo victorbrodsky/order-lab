@@ -6,9 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
+var urlBase = $("#baseurl").val();
+var urlCheck = "http://"+urlBase+"/check/";
+
 var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: change to patientmrn, accessionaccession, partname ...
 var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //display as array fields "sex"
-var urlCheck = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/check/";
 var selectStr = 'input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
 
 //  0         1              2           3   4  5  6   7
@@ -46,7 +49,7 @@ function checkForm( elem ) {
 
         //console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
-        removeKeyFromDB(keyElement);
+        removeKeyFromDB(keyElement, element);
         cleanFieldsInElementBlock( element, "all" );
         disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
@@ -123,6 +126,8 @@ function checkForm( elem ) {
             return;
         }
 
+        element.button('loading');
+
         //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
         $.ajax({
             url: urlCheck+name,
@@ -132,11 +137,19 @@ function checkForm( elem ) {
             dataType: 'json',
             success: function (data) {
                 console.debug("get object ajax ok "+name);
+                element.button('reset');
                 if( data.id ) {
                     //first: set elements
                     setElementBlock(element, data);
                     //second: disable or enable element. Make sure this function runs after setElementBlock
                     disableInElementBlock(element, true, "all", null, "notarrayfield");
+
+                    if( name == "accession" ) {
+                        var parent = data['parent'];
+                        console.debug("key parent="+parent);
+                        setParent(element,parent);
+                    }
+
                 } else {
                     console.debug("not found");
                     //cleanFieldsInElementBlock( element );
@@ -146,6 +159,7 @@ function checkForm( elem ) {
             },
             error: function () {
                 console.debug("get object ajax error "+name);
+                element.button('reset');
                 //setElementBlock(element, null);
                 cleanFieldsInElementBlock( element );
                 disableInElementBlock(element, false, "all", null, null);
@@ -156,6 +170,63 @@ function checkForm( elem ) {
 
     return;
 }
+
+function setParent(element,keyvalue) {
+    var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    //console.log("element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+
+    var parentBtn = parentEl.find("#check_btn");
+
+    //get parent key element
+    var keyElement = findKeyElement(parentBtn);
+    //console.log("keyElement.id=" + keyElement.element.attr('id') + ", class="+keyElement.element.attr('class'));
+
+    var keyBtn = keyElement.element.parent().parent().find('#check_btn');
+    //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class')+", count="+keyBtn.length);
+
+
+    var keyBtnStatusClass = keyBtn.find("i").attr("class");
+    //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
+
+    //if parent key field is already checked: clean it first
+    if( keyBtnStatusClass == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
+        keyBtn.trigger("click");
+    }
+
+    waitForB( keyElement, 0 );  //wait until check button is ready (cleaned)
+
+    keyElement.element.val(keyvalue);   //set parent key field
+
+    //var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    //var keyElement = findKeyElement(element);
+    var keyBtn = keyElement.element.parent().parent().find('#check_btn');
+    keyBtn.trigger("click");
+
+
+    function waitForB( element, maxi ) {
+
+        //var keyElement = findKeyElement(element);
+        var keyBtn = keyElement.element.parent().parent().find('#check_btn');
+        //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class'));
+        var keyBtnStatusClass = keyBtn.find("i").attr("class");
+        //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
+
+        setTimeout(function(){
+            if( keyBtnStatusClass != "glyphicon glyphicon-check" ){
+                if( maxi > 20 ) {
+                    return;
+                }
+                maxi++;
+                //console.log("parent key is not clean, maxi="+maxi);
+                waitForB(element,maxi);
+            }
+            else{
+                //console.log("parent key is clean");
+            }
+        }, 300);
+    }
+}
+
 
 //set Element. Element is a block of fields
 //element: check_btn element
@@ -829,6 +900,7 @@ function setKeyValue( btnElement, name, parentValueArr ) {
     }
 
     //console.log("set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
+    btnElement.button('loading');
 
     $.ajax({
         url: urlCheck+name,
@@ -837,6 +909,7 @@ function setKeyValue( btnElement, name, parentValueArr ) {
         dataType: 'json',
         data: {key: parentValue, key2: parentValue2},
         success: function (data) {
+            btnElement.button('reset');
             if( data ) {
                 console.debug("key value data is found");
                 setElementBlock(btnElement, data, null, "key");
@@ -847,6 +920,7 @@ function setKeyValue( btnElement, name, parentValueArr ) {
             }
         },
         error: function () {
+            btnElement.button('reset');
             console.debug("set key ajax error");
         }
     });
@@ -855,22 +929,25 @@ function setKeyValue( btnElement, name, parentValueArr ) {
 }
 
 //remove key NOTPROVIDED if it was created by check on empty key field (entity status="reserved").
-function removeKeyFromDB(element) {
+function removeKeyFromDB(element, btnElement) {
 
     var name = element.name;
     //var keyValue =element.element.attr("value");
     var keyValue =element.element.val();
     //console.debug("delete name="+name +", keyvalue="+keyValue);
 
+    btnElement.button('loading');
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue,
         type: 'DELETE',
         contentType: 'application/json',
         dataType: 'json',
-//        success: function (data) {
+        success: function (data) {
+            btnElement.button('reset');
 //            //console.debug("delete key ok");
-//        },
+        },
         error: function () {
+            btnElement.button('reset');
             console.debug("delete key ajax error");
         }
     });

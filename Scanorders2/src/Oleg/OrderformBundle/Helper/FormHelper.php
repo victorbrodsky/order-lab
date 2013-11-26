@@ -799,6 +799,24 @@ Translational Research"
         
         return $arr;
     }
+
+
+    public function getSlideType() {
+        $arr = array(
+            'Permanent Section',
+            'Cytopathology',
+            'Frozen Section',
+            'Smear',
+            'Touch Prep',
+            'Squash Prep',
+            'Scrape Prep',
+            'Drag Prep',
+            'Cell Block',
+            'TMA'
+        );
+
+        return $arr;
+    }
     
 }
 ?>

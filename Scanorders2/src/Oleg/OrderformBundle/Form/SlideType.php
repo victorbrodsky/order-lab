@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class SlideType extends AbstractType
 {
@@ -87,7 +88,19 @@ class SlideType extends AbstractType
             'prototype_name' => '__sliderelevantscans__',
         ));
         
-        //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false)); 
+        //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false));
+
+        $attr = array('class' => 'combobox combobox-width');
+        $builder->add('slidetype', 'entity', array(
+            'class' => 'OlegOrderformBundle:SlideType',
+            'label'=>'* Slide Type:',
+            'required' => true,
+            'attr' => $attr,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('s')
+                    ->orderBy('s.id', 'ASC');
+            },
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

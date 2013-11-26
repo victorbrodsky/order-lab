@@ -51,6 +51,18 @@ class BlockType extends AbstractType
             'prototype_name' => '__blockblockname__',
         ));
 
+        $gen_attr = array('label'=>'Section Source','class'=>'Oleg\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
+        $builder->add('sectionsource', 'collection', array(
+            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Section Source:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__blocksectionsource__',
+        ));
+
         if( $this->params['type'] != 'single' ) {
             $builder->add('slide', 'collection', array(
                 'type' => new SlideType($this->params),
