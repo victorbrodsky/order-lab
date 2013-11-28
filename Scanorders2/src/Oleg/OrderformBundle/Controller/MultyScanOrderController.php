@@ -220,10 +220,13 @@ class MultyScanOrderController extends Controller {
             $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
             echo "proceduretype=".$proceduretype."<br>";
 //
-//            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
-//            echo "part partname=".$partname."<br>";
+            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
+            echo "part partname=".$partname."<br>";
 //            //print_r($partname);
 //            echo " !!!partname count=".count($form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'])."<br>";
+
+            $blockname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['block'][0]['blockname'][0]['field']->getData();
+            echo "block blockname=".$blockname."<br>";
 //
 //            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
 //            echo "part description=".$description."<br>";

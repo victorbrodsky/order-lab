@@ -83,8 +83,8 @@ class Part extends OrderAbstract
     protected $slide;
     
     public function __construct( $withfields=false, $validity=0 ) {
+        parent::__construct();
         $this->block = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
         $this->slide = new ArrayCollection();
 
         //fields:
@@ -116,7 +116,8 @@ class Part extends OrderAbstract
         ", disident=".$this->disident->first().
         ", paper=".$this->paper->first().
         ", diffDisident=".$this->diffDisident->first().
-        ", blockCount=".count($this->block)."<br>";
+        ", blockCount=".count($this->block).
+        ", orderinfo=".count($this->orderinfo)."<br>";
     }
 
     public function getAccession() {
@@ -270,10 +271,7 @@ class Part extends OrderAbstract
         $this->block = $block;
     }
 
-    public function clearBlock(){
-//        foreach( $this->block as $thisblock ) {
-//            $this->removeBlock($thisblock);
-//        }
+    public function clearBlock() {
         $this->block->clear();
     }
 
@@ -392,10 +390,14 @@ class Part extends OrderAbstract
     }
 
     public function clearSlide(){
-//        foreach( $this->slide as $thisslide ) {
-//            $this->removeSlide($thisslide);
-//        }
         $this->slide->clear();
     }
 
+    public function obtainKeyField() {
+        return $this->getPartname();
+    }
+
+    public function getChildren() {
+        return $this->getBlock();
+    }
 }

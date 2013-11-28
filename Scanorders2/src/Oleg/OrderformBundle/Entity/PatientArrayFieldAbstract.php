@@ -24,10 +24,10 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
 //     */
 //    protected $patient;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $field;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $field;
 
     /**
      * Set patient

@@ -213,11 +213,11 @@ function setParent(element,keyvalue) {
                     return;
                 }
                 maxi++;
-                console.log("parent key is not clean, maxi="+maxi);
+                //console.log("parent key is not clean, maxi="+maxi);
                 waitWhenParentIsClean(element,maxi);
             }
             else{
-                console.log("parent key is clean");
+                //console.log("parent key is clean");
                 keyElement.element.val(keyvalue);   //set parent key field
                 var keyBtn = keyElement.element.parent().parent().find('#check_btn');
                 keyBtn.trigger("click");

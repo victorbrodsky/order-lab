@@ -18,8 +18,14 @@ class PartPartname extends PartArrayFieldAbstract
      */
     protected $part;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $field;
+
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="PartList", inversedBy="part", cascade={"persist"})
+     * @ORM\JoinColumn(name="partlist_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $field;
 

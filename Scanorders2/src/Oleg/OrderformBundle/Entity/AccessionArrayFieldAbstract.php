@@ -18,10 +18,10 @@ use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
 abstract class AccessionArrayFieldAbstract extends ArrayFieldAbstract {
 
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $field;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $field;
 
     /**
      * Set accession

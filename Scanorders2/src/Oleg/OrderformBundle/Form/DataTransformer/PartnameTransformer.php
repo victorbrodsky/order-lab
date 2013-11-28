@@ -12,8 +12,9 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
+use Oleg\OrderformBundle\Entity\PartList;
 
-class StringTransformer implements DataTransformerInterface
+class PartnameTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
@@ -42,7 +43,7 @@ class StringTransformer implements DataTransformerInterface
             return "";
         }
 
-        return $entity;  //Scan Region: entity is a string
+        return $entity->getName();
     }
 
     /**
@@ -56,6 +57,7 @@ class StringTransformer implements DataTransformerInterface
      */
     public function reverseTransform($text)
     {
+
         //echo "data transformer text=".$text."<br>";
         //exit();
 
@@ -63,7 +65,51 @@ class StringTransformer implements DataTransformerInterface
             return null;
         }
 
-        return $text;
+        if( is_numeric ( $text ) ) {    //number => most probably it is id
+
+            $entity = $this->em->getRepository('OlegOrderformBundle:PartList')->findOneById($text);
+
+            if( null === $entity ) {
+
+                return $this->createNew($text); //create a new record in db
+
+            } else {
+
+                return $entity; //use found object
+
+            }
+
+        } else {    //text => most probably it is new name
+
+            return $this->createNew($text); //create a new record in db
+
+        }
+
     }
+
+    public function createNew($name) {
+
+        //check if it is already exists in db
+        $entity = $this->em->getRepository('OlegOrderformBundle:PartList')->findOneByName($name);
+        
+        if( null === $entity ) {
+
+            $newEntity = new PartList();
+            $newEntity->setName($name);
+            $newEntity->setCreatedate(new \DateTime());
+            $newEntity->setType('user-added');
+            $newEntity->setCreator($this->user);
+
+            $this->em->persist($newEntity);
+            $this->em->flush($newEntity);
+
+            return $newEntity;
+        } else {
+
+            return $entity;
+        }
+
+    }
+
 
 }

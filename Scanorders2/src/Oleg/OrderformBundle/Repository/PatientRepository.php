@@ -2,10 +2,10 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Symfony\Component\Serializer\Exception\LogicException;
-use Oleg\OrderformBundle\Entity\Patient;
+//use Doctrine\ORM\EntityRepository;
+//use Oleg\OrderformBundle\Entity\PatientMrn;
+//use Symfony\Component\Serializer\Exception\LogicException;
+//use Oleg\OrderformBundle\Entity\Patient;
 
 
 /**
@@ -31,23 +31,39 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return $patient;
         }
 
-        //$part = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first();
-        //$block = $patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
-        //echo "@@@@@ part name partname=".$part->getPartname()->first()."<br>";
-        //echo "@@@@@ part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-        //echo "@@@@@ part name validity=".$part->getPartname()->first()->getValidity()."<br>";
-        //echo "@@@@@ block name=".$block->getName()."<br>";
+
+        echo "@@@@@ procedure count=".count($patient->getProcedure())."<br>";
+        foreach( $patient->getProcedure() as $proc ) {
+            $part = $proc->getAccession()->first()->getPart()->first();
+            $block = $proc->getAccession()->first()->getPart()->first()->getBlock()->first();
+            echo "------------------<br>";
+            echo "@@@@@ accession count=".count($proc->getAccession())."<br>";
+            echo "@@@@@ accession=".$proc->getAccession()->first()."<br>";
+            echo "@@@@@ part count=".count($proc->getAccession()->first()->getPart())."<br>";
+            echo "@@@@@ block count=".count($proc->getAccession()->first()->getPart()->first()->getBlock())."<br>";
+            echo "@@@@@ part name partname=".$part->getPartname()->first()."<br>";
+            //echo "@@@@@ part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+            //echo "@@@@@ part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+            echo "@@@@@ block name=".$block->getBlockname()->first()."<br>";
+        }
+        echo "------------------<br>";
+
 
         $patient = $this->processFieldArrays($patient,$orderinfo,$original);
         //echo "patient after mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
 
         $procedures = $patient->getProcedure();
         //echo "procedure count in patient=".count($procedures)."<br>";
-        echo "0 patient->procedures count=".count($patient->getProcedure())."<br>";
+        echo "0 patient->procedures count=".count($procedures)."<br>";
+        foreach( $procedures as $procedure ) {
+            echo $procedure;
+        }
+
         foreach( $procedures as $procedure ) {   
                             
             if( $em->getRepository('OlegOrderformBundle:Procedure')->notExists($procedure, "Procedure") ) {     //procedure new
-            //if(1) {
+//            if(1) {
+                echo "before process procedure <br>";
                 $patient->removeProcedure( $procedure );
                 //echo "procedure0: ".$procedure."<br>";
                 //$procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntityProcedure( $procedure, $procedure->getAccession(), $orderinfo );
@@ -62,13 +78,14 @@ class PatientRepository extends ArrayFieldAbstractRepository
             
         }
 
-//        echo "patient=".$patient."<br>";
-        //echo "count mrn=".count($patient->getMrn())."<br>";
+        //echo "patient=".$patient."<br>";
+//        echo "count mrn=".count($patient->getMrn())."<br>";
 //        echo "patient id=".$patient->getId()."<br>";
 //        echo "<br>patient mrn=".$patient->getMrn()->first()."<br>";
-        //echo "patient mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
-        //echo "patient mrn validity=".$patient->getMrn()->first()->getValidity()."<br>";
-        //echo "original mrn provider=".$original->getMrn()->first()->getProvider()."<br>";
+//        echo "patient mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
+//        echo "patient mrn validity=".$patient->getMrn()->first()->getValidity()."<br>";
+//        echo "patient mrn id=".$patient->getMrn()->first()->getId()."<br>";
+//        echo "original mrn provider=".$original->getMrn()->first()->getProvider()."<br>";
 //        echo "patient name count=".count($patient->getName())."<br>";
 //        echo "patient name=".$patient->getName()->first()."<br>";
 //        echo "patient sex count=".count($patient->getSex())."<br>";
@@ -78,8 +95,8 @@ class PatientRepository extends ArrayFieldAbstractRepository
 //        echo "patient age=".$patient->getAge()->first()."<br>";
 //        echo "patient clinHist=".$patient->getClinicalHistory()->first()."<br>";
 //        echo $patient."<br>";
-        echo "1 patient->procedures count=".count($patient->getProcedure())."<br>";
-        //exit();
+        echo "1 patient->procedures count=".count($patient->getProcedure()).": ".$patient->getProcedure()->first()."<br>";
+        exit();
 
         return $patient;
     }

@@ -110,13 +110,15 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $slides = $block->getSlide();      
         foreach( $slides as $slide ) {         
             if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide,"Slide") ) {
+//            if(1) {
                 $block->removeSlide( $slide );
                 $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $orderinfo );               
                 $block->addSlide($slide);                                                                                                                             
-                $orderinfo->addSlide($slide);
+                //$orderinfo->addSlide($slide);
             } else {
                 continue;
-            }         
+            }
+            $orderinfo->addSlide($slide);
         }
 
         echo "block name=".$block->getBlockname()->first()."<br>";

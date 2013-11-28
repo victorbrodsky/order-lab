@@ -28,12 +28,6 @@ class Slide extends OrderAbstract
      * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
      */
     protected $part;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide")
-//     * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
-//     */
-//    protected $type;
     
     //*********************************************// 
     // second part of the form (optional) 
@@ -84,7 +78,7 @@ class Slide extends OrderAbstract
     
     public function __construct($withfields=false, $validity=0)
     {
-        $this->orderinfo = new ArrayCollection();
+        parent::__construct();
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
         $this->specialStains = new ArrayCollection();
@@ -158,7 +152,6 @@ class Slide extends OrderAbstract
         //$type = $this->getType();
         //$this->$type = $parent;
         $this->block = $parent;
-
         return $this;
     }
     public function getParent()
@@ -199,7 +192,7 @@ class Slide extends OrderAbstract
     {
         if( !$this->scan->contains($scan) ) {
             $scan->setSlide($this);
-            $this->scan[] = $scan;
+            $this->scan->add($scan);
         }
     
         return $this;
@@ -235,7 +228,7 @@ class Slide extends OrderAbstract
     {
         if( !$this->stain->contains($stain) ) {
             $stain->setSlide($this);
-            $this->stain[] = $stain;
+            $this->stain->add($stain);
         }
     
         return $this;
@@ -277,7 +270,7 @@ class Slide extends OrderAbstract
         if( $specialStains != null ) {
             if( !$this->specialStains->contains($specialStains) ) {
                 $specialStains->setSlide($this);
-                $this->specialStains[] = $specialStains;
+                $this->specialStains->add($specialStains);
             }
         }
     
@@ -316,7 +309,7 @@ class Slide extends OrderAbstract
         if( $relevantScans != null ) {
             if( !$this->relevantScans->contains($relevantScans) ) {
                 $relevantScans->setSlide($this);
-                $this->relevantScans[] = $relevantScans;
+                $this->relevantScans->add($relevantScans);
             }
         }
     

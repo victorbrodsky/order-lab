@@ -47,8 +47,8 @@ class Block extends OrderAbstract
 
     
     public function __construct( $withfields=false, $validity=0 ) {
+        parent::__construct();
         $this->slide = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
 
         //fields:
         $this->blockname = new ArrayCollection();
@@ -153,9 +153,6 @@ class Block extends OrderAbstract
     }
     
     public function clearSlide(){
-//        foreach( $this->slide as $thisslide ) {
-//            $this->removeSlide($thisslide);
-//        }
         $this->slide->clear();
     }
 
@@ -185,6 +182,14 @@ class Block extends OrderAbstract
     public function getPart()
     {
         return $this->part;
+    }
+
+    public function obtainKeyField() {
+        return $this->getBlockname();
+    }
+
+    public function getChildren() {
+        return $this->getSlide();
     }
 
     public function __toString()

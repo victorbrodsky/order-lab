@@ -116,4 +116,45 @@ abstract class OrderAbstract
         return $this->orderinfo;
     }
 
+    public function getValidChild()
+    {
+        $validChild = null;
+        $count = 0;
+        //echo "number of children=: ".count($this->getChildren())."<br>";
+        foreach( $this->getChildren() as $child) {
+            //echo "get valid: ".$child."<br>";
+            if( $child->getStatus()."" == "valid" ) {
+                $validChild = $child;
+                $count++;
+            }
+        }
+//        if( $count > 1 ) {
+//            throw $this->createNotFoundException( 'This Object must have only one valid child. Number of valid children=' . $count );
+//        }
+        return $validChild;
+    }
+
+    //return the key field with validity 1 or return a single existing key field
+    public function getValidKeyfield()
+    {
+        if( count($this->obtainKeyField()) == 1 ) {
+            return $this->obtainKeyField()->first();
+        }
+
+        $validChild = null;
+        $count = 0;
+        //echo "number of children=: ".count($this->getChildren())."<br>";
+        foreach( $this->obtainKeyField() as $child) {
+            //echo "get valid: ".$child."<br>";
+            if( $child->getValidity() == 1 ) {
+                $validChild = $child;
+                $count++;
+            }
+        }
+//        if( $count > 1 ) {
+//            throw $this->createNotFoundException( 'This Object must have only one valid child. Number of valid children=' . $count );
+//        }
+        return $validChild;
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\EntityRepository;
 
 /**
  * ProcedureRepository
@@ -15,7 +15,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
     //Accession number is the key to check uniqueness for Procedure-Accession element
     //input $accessions requires for single slide order, when objects are provided separately and procedure does not have $accessions
-    public function processEntityProcedure( $entity, $accessions=null, $orderinfo=null ) {
+    public function processEntityProcedure222( $entity, $accessions=null, $orderinfo=null ) {
         
         //$em = $this->_em;
         //$entity = $em->getRepository('OlegOrderformBundle:Accession')->removeDuplicateEntities( $entity );
@@ -80,23 +80,54 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
 
         $accessions = $procedure->getAccession();
-        //echo "accession count=".count($accessions)."<br>";
-//        foreach( $accessions as $accession ) {
-//            echo $accession;
-//        }
-        
+        echo "accession count=".count($accessions)."<br>";
         foreach( $accessions as $accession ) {
-            //echo $accession;
-            if( $em->getRepository('OlegOrderformBundle:Accession')->notExists($accession, "Accession") ) {
-                $procedure->removeAccession( $accession );
-                $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo, "Accession", "accession", "Part", $procedure );
-                $procedure->addAccession($accession);
-                //$accession->setProcedure($procedure);
-                $orderinfo->addAccession($accession);
+            echo $accession;
+        }
+        
+//        foreach( $accessions as $accession ) {
+//            //echo $accession;
+////            if( $em->getRepository('OlegOrderformBundle:Accession')->notExists($accession, "Accession") ) {
+//            if(1) {
+//                $procedure->removeAccession( $accession );
+//                $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo, "Accession", "accession", "Part", $procedure );
+//                $procedure->addAccession($accession);
+//                $accession->setProcedure($procedure);
+//                $orderinfo->addAccession($accession);
+//            } else {
+//                continue;
+//            }
+//        }
+
+        $accession = $accessions->first();
+        $em->persist($accession);
+        $parts = $accession->getPart();
+        echo "part count=".count($parts)."=>".$parts->first()."<br>";
+
+        //copy accession childs
+//        foreach( $entity->getAccession() as $thisAccession ) {
+//            $foundProcedure->addAccession( $thisAccession );
+//        }
+
+        foreach( $parts as $part ) {
+            echo "###<br>".$part."###<br>";
+            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
+//            if(1) {
+                $accession->removePart( $part );
+
+                echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
+                //echo "0 accession part name partname validity=".$part->getPartname()->first()->getValidity()."<br>";
+                echo "0 accession part name partname count=".count($part->getPartname())."<br>";
+
+                $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );
+                $accession->addPart($part);
+                //$orderinfo->addPart($part);
             } else {
                 continue;
             }
+            $orderinfo->addPart($part);
         }
+
 
         //echo $procedure."<br>";
         //echo "procedure name provider=".$procedure->getName()->first()->getProvider()."<br>";

@@ -29,42 +29,72 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$childName: i.e. "Procedure" for Patient
     public function processEntity( $entity, $orderinfo = null, $className, $fieldName, $childName, $parent = null ) {
 
-        //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check
+        //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
         //$em = $this->_em;
         //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
 
         $found = $this->isExisted($entity,$className,$fieldName);
 
         $getChildMethod = "get".ucfirst($childName);
-        $addChildMethod = "add".ucfirst($fieldName);
+        $addChildMethod = "add".ucfirst($childName);
         $getFieldMethod = "get".ucfirst($fieldName);
 
         if( $found ) {
             //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
             //Case 2 - existed and STATUS_VALID; User entered existed MRN
             echo "********* ".$className." case 1 and 2: found in DB <br>";
+            echo "0 children count=".count($entity->$getChildMethod())."<br>";
             foreach( $entity->$getChildMethod() as $child ) {
+                echo "adding: ".$child."<br>";
                 $found->$addChildMethod( $child );
             }
+            echo "1 children count=".count($entity->$getChildMethod())."<br>";
             return $this->setResult( $found, $orderinfo, $entity ); //provide found object, cause we need id
         } else {
+            echo "********* ".$className." case ?: not found in DB <br>";
             if( count($entity->$getFieldMethod()) > 0 ) {
                 //Case 3 - User entered new KEY, not existed in DB
                 echo "********* ".$className." case 3: not found, new key <br>";
                 return $this->setResult( $entity, $orderinfo );
             } else {
                 //Case 4 - KEY is not provided.
-                echo "********* ".$className." case 4: not found, kye is empty <br>";
-                if( $orderinfo ) {
-                    $provider = $orderinfo->getProvider()->first();
+                echo "********* ".$className." case 4: not found, key is empty <br>";
+
+                //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
+                if( $className == "Procedure" ) {
+
+                    if( count($entity->$getChildMethod()) != 1 ) {
+                        throw $this->createNotFoundException( 'This Object ' . $className . ' must have only one child. Number of children=' . count($entity->$getChildMethod()) );
+                    }
+
+                    $foundChild = $this->isExisted($entity->$getChildMethod()->first(),"Accession","accession");
+
+                    if( $foundChild ) {
+                        echo $className." alsready exists in DB <br>";
+                        ////remove this from parent
+                        //$removeField = "remove".ucfirst($className);
+                        //$entity->getParent()->$removeField($entity);
+
+                        //get existing procedure
+                        $foundProcedure = $foundChild->getParent(); //Accession->getProcedure => procedure
+
+                        foreach( $entity->$getChildMethod() as $child ) {
+                            $foundProcedure->$addChildMethod( $child );
+                        }
+
+                        return $this->setResult( $foundProcedure, $orderinfo, $entity ); //provide found object, cause we need id
+
+                    } else {
+                        echo $className." does not exist in DB => create a new key field <br>";
+                        //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
+                        $entity = $this->createKeyField( $entity, $className, $fieldName );
+                    }
+
                 } else {
-                    $provider = null;
+                    //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
+                    $entity = $this->createKeyField( $entity, $className, $fieldName );
                 }
 
-                //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-                $entity = $this->createKeyField( $entity, $className, $fieldName );
-                //$entity->$clearFieldMethod();
-                //$entity->$addChildMethod($field);
                 return $this->setResult( $entity, $orderinfo );
 
             }
@@ -74,6 +104,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function createKeyField( $entity, $className, $fieldName ) {
         $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+        //echo "fieldValue=".$fieldValue."<br>";
         $fieldEntityName = ucfirst($className).ucfirst($fieldName);
         $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
         $clearFieldMethod = "clear".ucfirst($fieldName);
@@ -220,7 +251,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true )
     {
-        //echo "fieldStr=".$fieldStr." ";
+        //echo "fieldStr=(".$fieldStr.")<br>";
 
         $onlyValid = "";
         if( $validity ) {
@@ -228,21 +259,34 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $onlyValid = " AND cfield.validity=1";
         }
 
-        $query = $this->getEntityManager()
-            ->createQuery('
+        if( $className == "Part" || $className == "Block" ) {
+            $query = $this->getEntityManager()
+                ->createQuery('
+            SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
+            JOIN c.'.$fieldName.' cfield
+            JOIN cfield.field cfieldfield
+            WHERE cfieldfield.name = :field'.$onlyValid
+                )->setParameter('field', $fieldStr."");
+        } else {
+            $query = $this->getEntityManager()
+                ->createQuery('
             SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
             JOIN c.'.$fieldName.' cfield
             WHERE cfield.field = :field'.$onlyValid
-            )->setParameter('field', $fieldStr."");
+                )->setParameter('field', $fieldStr."");
+        }
 
         try {
             if( $single ) {
+                //echo "find return single<br>";
                 return $query->getSingleResult();
             } else {
+                //echo "find return<br>";
                 return $query->getResult();
             }
 
         } catch (\Doctrine\ORM\NoResultException $e) {
+            //echo "find return null<br>";
             return null;
         }
     }
@@ -255,6 +299,23 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 if( $entity->getStatus() == self::STATUS_RESERVED ) {
                     //echo "id=".$entity->getId()." ";
                     $em = $this->_em;
+
+                    //TODO: is it possible to remove by persistence?
+                    if( $className == "Part" ) {
+                        $partnames = $entity->getPartname();
+                        foreach( $partnames as $partname ) {
+                            $partlist = $partname->getField();
+                            $em->remove($partlist);
+                        }
+                    }
+                    if( $className == "Block" ) {
+                        $blockames = $entity->getBlockname();
+                        foreach( $blockames as $blockame ) {
+                            $blocklist = $blockame->getField();
+                            $em->remove($blocklist);
+                        }
+                    }
+
                     $em->remove($entity);
                     $em->flush();
                     return true;
@@ -281,7 +342,20 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
         $field = new $fieldClass();
 
+        if( $className == "Part" || $className == "Block" ) {
+            $listEntity = "Oleg\\OrderformBundle\\Entity\\".ucfirst($className)."List";
+            //echo "create listEntity=".$listEntity."<br>";
+            $newList = new $listEntity();
+            $newList->setName($fieldValue);
+            $newList->setType('system-added');
+            $newList->setCreator("system");
+            $newList->setCreatedate(new \DateTime());
+            $fieldValue = $newList;
+        }
+
+
         $field->setField($fieldValue);
+
         if( $provider ) {
             $field->setProvider($provider);
         }
@@ -313,13 +387,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
     public function getNextNonProvided( $name, $className, $fieldName ) {
-
-//        $query = $this->getEntityManager()
-//            ->createQuery('
-//            SELECT MAX(pmrn.field) as maxmrn FROM OlegOrderformBundle:Patient p
-//            JOIN p.mrn pmrn
-//            WHERE pmrn.field LIKE :mrn'
-//            )->setParameter('mrn', '%NOMRNPROVIDED%');
         $query = $this->getEntityManager()
             ->createQuery('
             SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
@@ -371,7 +438,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             foreach( $entity->$fieldMethod() as $field ) {
                 //echo "entity field=".$field->getField()."<br>";
                 //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToMrn( $field->getField() );
-                $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($field->getField(),$className,$fieldName,true);
+                $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($field->getField()."",$className,$fieldName,true);
                 return $newEntity; //return first patient. In theory we should have only one KEY (i.e. mrn) in the submitting patient
             }
         } else {
@@ -383,10 +450,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //check entity by ID (need for postgresql; for mssql can check by if($entity->getId()) )
     public function notExists($entity, $className) {
+
+        return true;
+
         $id = $entity->getId();
         if( !$id ) {
+            echo "notExists: ".$className.": no id =>".$entity." <br>";
             return true;
         }
+        echo "notExists: ".$className.": id=".$id." =>".$entity."<br>";
         $em = $this->_em;
         $found = $em->getRepository('OlegOrderformBundle:'.$className)->findOneById($id);
         if( null === $found ) {

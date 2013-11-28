@@ -12,15 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="accession")
  */
 class Accession extends OrderAbstract {
-    
-//    /**
-//     * @ORM\Id
-//     * @ORM\Column(type="integer")
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    protected $id;
 
     /**
+     * Accession Number
      * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="accession", cascade={"persist"})
      */
     protected $accession;
@@ -49,10 +43,9 @@ class Accession extends OrderAbstract {
     public function __construct( $withfields=false, $validity=0 ) {
         parent::__construct();
         $this->part = new ArrayCollection();
-        //$this->orderinfo = new ArrayCollection();
 
         //fields:
-        $this->accession = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accession = new ArrayCollection();
 
         if( $withfields ) {
             $this->addAccession( new AccessionAccession($validity) );
@@ -61,18 +54,12 @@ class Accession extends OrderAbstract {
       
     public function __toString()
     {
-        return "Accession: id=".$this->id.", accessionCount=".count($this->accession).", accession#=".$this->accession->first().", partCount=".count($this->part)."<br>";
+        $accNameStr = "";
+        foreach( $this->accession as $accession ) {
+            $accNameStr = $accNameStr." ".$accession->getField();
+        }
+        return "Accession: id=".$this->id.", accessionCount=".count($this->accession).", accessions#=".$accNameStr.", partCount=".count($this->part).", status=".$this->status."<br>";
     }
-
-//    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
 
     /**
      * Set accession
@@ -97,12 +84,13 @@ class Accession extends OrderAbstract {
         return $this->accession;
     }
 
-    public function addAccession($accession)
+    public function addAccession(\Oleg\OrderformBundle\Entity\AccessionAccession $accession)
     {
         if( $accession ) {
             if( !$this->accession->contains($accession) ) {
                 $accession->setAccession($this);
                 $this->accession->add($accession);
+                //$this->accession[] = $accession;
             }
         }
 
@@ -119,6 +107,11 @@ class Accession extends OrderAbstract {
         $this->accession->clear();
     }
 
+    public function obtainKeyField()
+    {
+        return $this->getAccession();
+    }
+
     /**
      * Set procedure (parent)
      *
@@ -131,10 +124,17 @@ class Accession extends OrderAbstract {
     
         return $this;
     }
+
+    //parent
     public function setParent($parent)
     {
         $this->setProcedure($parent);
         return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->getProcedure();
     }
 
     /**
@@ -188,43 +188,7 @@ class Accession extends OrderAbstract {
     }
 
     public function clearPart(){
-//        foreach( $this->part as $thispart ) {
-//            $this->removePart($thispart);
-//        }
         $this->part->clear();
     }
 
-
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Accession
-     */
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        if( !$this->orderinfo->contains($orderinfo) ) {
-//            $this->orderinfo->add($orderinfo);
-//        }
-//    }
-//
-//    /**
-//     * Remove orderinfo
-//     *
-//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-//     */
-//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        $this->orderinfo->removeElement($orderinfo);
-//    }
-//
-//    /**
-//     * Get orderinfo
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getOrderinfo()
-//    {
-//        return $this->orderinfo;
-//    }
 }

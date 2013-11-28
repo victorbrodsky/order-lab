@@ -47,6 +47,8 @@ function regularCombobox() {
 function customCombobox() {
 
     if( cicle != "show" && urlBase ) {
+        getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
@@ -350,13 +352,71 @@ function getComboboxPathService(urlCommon,ids) {
 
     });
 
+}
 
+//#############  partname types  ##############//
+function getComboboxPartname(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"partname";
+    $.ajax(url).success(function(data) {
+        var targetid = id+"partname_0_field";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_partname_name";
+        }
+        $(targetid).select2({
+            placeholder: "Part Name",
+            width: combobox_width,
+            dropdownAutoWidth: true,
+            allowClear: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
 
+        });
+    });
+}
+
+//#############  blockname types  ##############//
+function getComboboxBlockname(urlCommon,ids) {
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"blockname";
+    $.ajax(url).success(function(data) {
+        var targetid = id+"blockname_0_field";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_blockname_name";
+        }
+        $(targetid).select2({
+            placeholder: "Block Name",
+            width: combobox_width,
+            dropdownAutoWidth: true,
+            allowClear: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {return {id:term, text:term};}
+            }
+
+        });
+    });
 }
 
 function initComboboxJs(ids) {
 
     if( urlBase ) {
+        getComboboxPartname(urlCommon,ids);
+        getComboboxBlockname(urlCommon,ids);
         getComboboxStain(urlCommon,ids);
         getComboboxScanregion(urlCommon,ids);
         getComboboxProcedure(urlCommon,ids);

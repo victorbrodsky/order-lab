@@ -1,8 +1,8 @@
 <?php
 
 namespace Oleg\OrderformBundle\Repository;
-use Doctrine\ORM\EntityRepository;
 
+//use Doctrine\ORM\EntityRepository;
 //use Oleg\OrderformBundle\Entity\Accession;
 
 /**
@@ -29,6 +29,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         foreach( $parts as $part ) {
             if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
+//            if(1) {
                 $accession->removePart( $part );
 
                 echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
@@ -37,13 +38,15 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
                 $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );
                 $accession->addPart($part);
-                $orderinfo->addPart($part);
+                //$orderinfo->addPart($part);
             } else {
                 continue;
             }
+            $orderinfo->addPart($part);
         }
                   
         //$em->flush($accession);
+        echo "finish process accession=".$accession."<br>";
         
         return $accession;
     }

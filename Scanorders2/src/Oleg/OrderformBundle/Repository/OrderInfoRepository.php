@@ -89,10 +89,17 @@ class OrderInfoRepository extends EntityRepository
         $em->persist($entity);      
         
         $patients = $entity->getPatient();
-        //echo "patients count=".count($patients)."<br>";
+        echo "patients count=".count($patients)."<br>";
+        echo "patient->procedures count=".count($patients->first()->getProcedure())."<br>";
+
+        $part = $patients->first()->getProcedure()->first()->getAccession()->first()->getPart()->first();
+        $block = $patients->first()->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
+        echo "@@@@@ part name=".$part->getPartname()->first()."<br>";
+        echo "@@@@@ block name=".$block->getBlockname()->first()."<br>";
         
         foreach( $patients as $patient ) {
             if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient,"Patient") ) {
+//            if(1) {
                 //echo $patient;
                 $entity->removePatient( $patient );
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );

@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Entity\PartList;
 use Oleg\OrderformBundle\Helper\FormHelper;
 
 use Oleg\OrderformBundle\Entity\Part;
@@ -145,55 +146,57 @@ class PartRepository extends ArrayFieldAbstractRepository
         
         foreach( $blocks as $block ) {
             if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block,"Block") ) {
+//            if(1) {
                 $part->removeBlock( $block );
                 $block = $em->getRepository('OlegOrderformBundle:Block')->processEntityBlock( $block, $part, $orderinfo );
                 $part->addBlock($block);
-                $orderinfo->addBlock($block);
+                //$orderinfo->addBlock($block);
             } else {
                 continue;
             }
+            $orderinfo->addBlock($block);
         }
 
         echo "####################################################<br>";
-        echo "2 part name partname=".$part->getPartname()->first()."<br>";
-        if( count($part->getPartname()) > 0 ) {
-            echo "2 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
-            echo "2 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
-        }
-        echo "2 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
+//        echo "2 part name partname=".$part->getPartname()->first()."<br>";
+//        if( count($part->getPartname()) > 0 ) {
+//            echo "2 part name provider=".$part->getPartname()->first()->getProvider()."<br>";
+//            echo "2 part name validity=".$part->getPartname()->first()->getValidity()."<br>";
+//        }
+//        echo "2 part name sourceOrgan=".$part->getSourceOrgan()->first()."<br>";
 
-        $descr = $part->getDescription()[0];
-        if( $descr ) {
-            echo "descr yes <br>";
-            echo "2 part descr->getField()=".$descr->getField()."<br>";
-            echo "2 part descr->getPart()=".$descr->getPart()."<br>";
-            echo "2 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
-        } else {
-            echo "descr null <br>";
-        }
+//        $descr = $part->getDescription()[0];
+//        if( $descr ) {
+//            echo "descr yes <br>";
+//            echo "2 part descr->getField()=".$descr->getField()."<br>";
+//            echo "2 part descr->getPart()=".$descr->getPart()."<br>";
+//            echo "2 part name description=".$part->getDescription()->first().",count=".count($part->getDescription())."<br>";
+//        } else {
+//            echo "descr null <br>";
+//        }
 
-        echo "2 part name disident count=".count($part->getDisident())."<br>";
-        $disident = $part->getDisident()[0];
-        if( $disident ) {
-            echo "disident yes <br>";
-            echo "2 part disident->getField()=".$disident->getField()."<br>";
-            echo "2 part disident->getPart()=".$disident->getPart()."<br>";
-        } else {
-            echo "disident null <br>";
-        }
+//        echo "2 part name disident count=".count($part->getDisident())."<br>";
+//        $disident = $part->getDisident()[0];
+//        if( $disident ) {
+//            echo "disident yes <br>";
+//            echo "2 part disident->getField()=".$disident->getField()."<br>";
+//            echo "2 part disident->getPart()=".$disident->getPart()."<br>";
+//        } else {
+//            echo "disident null <br>";
+//        }
 
         //echo "2 part name disident=".$part->getdisident()[0].",count=".count($part->getdisident()).", provider=".$part->getdisident()[0]->getProvider().", partCount=".count($part->getdisident()[0]->getPart()).", validity=".$part->getdisident()[0]->getValidity()."<br>";
         //echo "2 part name Description=".$part->getDescription()[0].",count=".count($part->getDescription()).", provider=".$part->getDescription()[0]->getProvider().", partCount=".count($part->getDescription()[0]->getPart()).", validity=".$part->getDescription()[0]->getValidity()."<br>";
 
-        echo "2 part name diffDisident count=".count($part->getdiffDisident())."<br>";
-        $diffDisident = $part->getdiffDisident()[0];
-        if( $diffDisident ) {
-            echo "diffDisident yes <br>";
-            echo "2 part diffDisident->getField()=".$diffDisident->getField()."<br>";
-            echo "2 part diffDisident->getPart()=".$diffDisident->getPart()."<br>";
-        } else {
-            echo "diffDisident null <br>";
-        }
+//        echo "2 part name diffDisident count=".count($part->getdiffDisident())."<br>";
+//        $diffDisident = $part->getdiffDisident()[0];
+//        if( $diffDisident ) {
+//            echo "diffDisident yes <br>";
+//            echo "2 part diffDisident->getField()=".$diffDisident->getField()."<br>";
+//            echo "2 part diffDisident->getPart()=".$diffDisident->getPart()."<br>";
+//        } else {
+//            echo "diffDisident null <br>";
+//        }
 
         echo "2 part=".$part."<br>";
         echo "####################################################<br>";
@@ -242,6 +245,43 @@ class PartRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
+        //echo "findNextPartnameByAccession: accessionNumber=".$accessionNumber."<br>";
+        $name = "NOPARTNAMEPROVIDED";
+
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT MAX(ppartnamefield.name) as max'.'partname'.' FROM OlegOrderformBundle:Part p
+            JOIN p.partname ppartname
+            JOIN ppartname.field ppartnamefield
+            JOIN p.accession a
+            JOIN a.accession aa
+            WHERE ppartnamefield.name LIKE :name AND aa.field = :accession'
+            )->setParameter('name', '%'.$name.'%')->setParameter('accession', $accessionNumber."");
+
+        $lastField = $query->getSingleResult();
+        $index = 'max'.'partname';
+        $lastFieldStr = $lastField[$index];
+        //echo "lastFieldStr=".$lastFieldStr."<br>";
+        $fieldIndexArr = explode("-",$lastFieldStr);
+        //echo "count=".count($fieldIndexArr)."<br>";
+        if( count($fieldIndexArr) > 1 ) {
+            $fieldIndex = $fieldIndexArr[1];
+        } else {
+            $fieldIndex = 0;
+        }
+        $fieldIndex = ltrim($fieldIndex,'0') + 1;
+        $paddedfield = str_pad($fieldIndex,10,'0',STR_PAD_LEFT);
+        //echo "paddedfield=".$paddedfield."<br>";
+        //exit();
+        return $name.'-'.$paddedfield;
+
+    }
+
+    public function findNextPartnameByAccession_OLD( $accessionNumber ) {
+        if( !$accessionNumber || $accessionNumber == "" ) {
+            return null;
+        }
+
         $helper = new FormHelper();
         $names = $helper->getPart();
 
@@ -267,6 +307,8 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     //create new Part by provided accession number
     public function createPartByAccession( $accessionNumber ) {
+
+        //echo "accessionNumber=".$accessionNumber."<br>";
 
         if( !$accessionNumber || $accessionNumber == "" ) {
             return null;
@@ -295,6 +337,10 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //2) find next available part name by accession number
         $partname = $em->getRepository('OlegOrderformBundle:Part')->findNextPartnameByAccession($accessionNumber);
+//        $partname = $em->getRepository('OlegOrderformBundle:Part')->getNextNonProvided("NOPARTNAMEPROVIDED", "Part", "partname");
+        //echo "next partlist generated=".$partname."<br>";
+        //exit();
+
 
         //3) before part create: check if part with $partname does not exists in DB
         $partFound = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true);
@@ -304,7 +350,9 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
 
         //echo "create part, accession=".$accession->getAccession()->first().", partid=".$accession->getId()."<br>";
+        //exit();
 
+        //echo "create part <br>";
         //4) create part object by partname and link it to the parent
         $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname);
 

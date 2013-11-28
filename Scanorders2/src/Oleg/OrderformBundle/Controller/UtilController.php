@@ -266,7 +266,54 @@ class UtilController extends Controller {
 
 
     /**
-     * @Route("/checkmrn", name="get-checkmrn")
+     * @Route("/partname", name="get-partname")
+     * @Method("GET")
+     */
+    public function getPartnameAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT proc.id as id, proc.name as text
+            FROM OlegOrderformBundle:PartList proc WHERE proc.type = :type'
+        )->setParameter('type', 'default');
+
+        //$empty = array("id"=>0,"text"=>"");
+        $output = $query->getResult();
+        //array_unshift($output, $empty);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/blockname", name="get-blockname")
+     * @Method("GET")
+     */
+    public function getBlocknameAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT proc.id as id, proc.name as text
+            FROM OlegOrderformBundle:BlockList proc WHERE proc.type = :type'
+        )->setParameter('type', 'default');
+
+        //$empty = array("id"=>0,"text"=>"");
+        $output = $query->getResult();
+        //array_unshift($output, $empty);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+    /**
+     * @Route("/checkmrn_TODEL", name="get-checkmrn_TODEL")
      * @Method("POST")
      * //@Method("GET")
      */

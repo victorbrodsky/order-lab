@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Procedure
+ * Procedure (use 'procedures', because 'procedure' causes problems (reserved?))
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureRepository")
  * @ORM\Table(name="procedures")
  */
@@ -117,6 +117,10 @@ class Procedure extends OrderAbstract
         $this->encounter->clear();
     }
 
+    public function obtainKeyField() {
+        return $this->getEncounter();
+    }
+
 
     /**
      * Add accession
@@ -158,6 +162,11 @@ class Procedure extends OrderAbstract
         $this->accession = $accession;
     }
 
+    public function getChildren()
+    {
+        return $this->getAccession();
+    }
+
     /**
      * Set patient
      *
@@ -185,8 +194,20 @@ class Procedure extends OrderAbstract
         $this->accession->clear();
     }
 
+    //parent
+    public function setParent($parent)
+    {
+        $this->setPatient($parent);
+        return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->getPatient();
+    }
+
     public function __toString() {
-        return 'Procedure: id=' . $this->getId() . "<br>";
+        return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().", encounterCount=" . count($this->encounter->first()) . ": encounter->first=" . $this->encounter->first() . "; accessionCount=".count($this->accession).":".$this->accession->first()."<br>";
     }
 
 }

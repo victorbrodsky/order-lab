@@ -22,23 +22,42 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $helper = new FormHelper();
+//        $helper = new FormHelper();
+//
+//        $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
+//        $builder->add('field', 'choice', array(
+//            'choices' => $helper->getPart(),
+//            'required' => false,
+//            'label' => 'Part Name',
+//            //'max_length' => '3',
+//            'attr' => $attr,
+//            //'empty_value' => "",   //"Choose an option",
+//            //'multiple' => false
+//        ));
+//
+//        $builder->add('partnameothers', new ArrayFieldType(), array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
+//            'label' => false
+//        ));
 
-        $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
-        $builder->add('field', 'choice', array(
-            'choices' => $helper->getPart(),
-            'required' => false,
+
+        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+            $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');    //new
+        } else {
+            $attr = array('class' => 'combobox combobox-width');    //show
+        }
+        $builder->add('field', 'custom_selector', array(
             'label' => 'Part Name',
-            //'max_length' => '3',
+            'required' => false,
             'attr' => $attr,
-            //'empty_value' => "",   //"Choose an option",
-            //'multiple' => false
+            'classtype' => 'partname'
         ));
 
-        $builder->add('partnameothers', new ArrayFieldType(), array(
+        $builder->add('partothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
             'label' => false
         ));
+
 
     }
 

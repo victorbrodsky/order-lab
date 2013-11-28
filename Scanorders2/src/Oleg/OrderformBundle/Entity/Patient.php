@@ -5,7 +5,6 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use JsonSerializable;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -68,7 +67,6 @@ class Patient extends OrderAbstract
      */
     public function __construct( $withfields=false, $validity=0 )
     {
-        //$this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct();
         $this->procedure = new \Doctrine\Common\Collections\ArrayCollection();
 
@@ -135,6 +133,11 @@ class Patient extends OrderAbstract
     public function clearMrn()
     {
         $this->mrn->clear();
+    }
+
+    //don't use get because later functions relay on "get" keyword
+    public function obtainKeyField() {
+        return $this->getMrn();
     }
 
     /**
@@ -237,12 +240,35 @@ class Patient extends OrderAbstract
      */
     public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
+        //echo "add procedure: ".$procedure."<br>";
         if( !$this->procedure->contains($procedure) ) {
+//        if( !$this->containsChild($procedure) ) {
             $procedure->setPatient($this);
             $this->procedure->add($procedure);
         }
 
         return $this;
+    }
+
+    //check if procedure-accession is exists
+    //$entity - procedure
+    public function containsChild($entity) {
+        //echo $entity;
+//        if( count($entity->getChildren()) != 1 ) {
+//            throw $this->createNotFoundException( 'This Object must have only one child. Number of children=' . count($entity->getChildren()) );
+//        }
+        //echo "procedure count=".count($this->procedure)."<br>";
+        foreach( $this->procedure as $procedure ) {
+            $acc1 = $entity->getChildren()->first()->getValidKeyfield();
+            $acc2 = $procedure->getChildren()->first()->getValidKeyfield();
+            //echo "compare: ".$acc1."?=".$acc2."<br>";
+            if( $acc1."" == $acc2."" ) {
+                echo "exists!!! <br>";
+                return true;
+            }
+        }
+        echo "not exists!!! <br>";
+        return false;
     }
 
     /**
@@ -272,6 +298,10 @@ class Patient extends OrderAbstract
 
     public function clearProcedure(){
         $this->procedure->clear();
+    }
+
+    public function getChildren() {
+        return $this->getProcedure();
     }
 
     /**
@@ -431,6 +461,14 @@ class Patient extends OrderAbstract
     public function removeDob($dob)
     {
         $this->dob->removeElement($dob);
+    }
+
+    public function __toString()
+    {
+        return "Patient: id=".$this->id.
+        ", mrn=".$this->mrn->first().
+        ", name=".$this->name->first().
+        ", orderinfo=".count($this->orderinfo)."<br>";
     }
 
 }
