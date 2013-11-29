@@ -139,16 +139,19 @@ function checkForm( elem ) {
                 console.debug("get object ajax ok "+name);
                 var gonext = 1;
                 element.button('reset');
-                if( data.id ) {                     
-                    if( name == "accession" ) {
-                        var parent = data['parent'];
-                        console.debug("key parent="+parent);
-                        gonext = setParent(element,parent);
-                    }    
-                    console.debug("gonext="+gonext);
+                if( data.id ) {      
+                    
+                    gonext = checkParent(element,keyValue,name,fieldName); //check if this key is not used yet
+                    
+                    if( name == "accession" && gonext == 1) {
+                        var parentkeyvalue = data['parent'];
+                        //console.debug("key parent="+parent);
+                        gonext = setPatient(element,parentkeyvalue);
+                    }                                          
+                       
+                    //console.debug("gonext="+gonext);                  
                     if( gonext == 1 ) {
-                        console.debug("continue gonext="+gonext);  
-                        console.log( "element.id=" + element.attr('id') + ", class="+element.attr('class'));
+                        //console.debug("continue gonext="+gonext);                         
                         //first: set elements
                         setElementBlock(element, data);
                         //second: disable or enable element. Make sure this function runs after setElementBlock
@@ -177,9 +180,45 @@ function checkForm( elem ) {
     return;
 }
 
-function setParent(element,keyvalue) {
+//check if parent has checked sublings with the same key valuess
+function checkParent(element,keyValue,name,fieldName) {
     var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
-    console.log("element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+    //console.log("checkParent parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+   
+    //if this patient has already another checked accession, then check current accession is not possible
+    //get patient accession buttons  
+    var retval = 1;
+    
+    var sublingsKey = parentEl.find('.'+name+fieldName).each(function() {
+             
+        //console.log("checkParent this.id=" + $(this) + ", class="+$(this));      
+        
+        var keyField = $(this).find('.keyfield');
+        
+        if( $(this).val() == "" ) {
+            var sublingsKeyValue = keyField.val();
+        } else {
+            var sublingsKeyValue = keyField.select2("val");
+        }
+
+        //console.log("checkParent sublingsKeyValue=" + sublingsKeyValue);
+
+        if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" && sublingsKeyValue == keyValue ) {
+            alert("This keyfield is already in use and it is checked");
+            retval = 0;
+            return false;   //break each
+        }
+    });               
+    
+    if( retval == 0 ) {
+        return 0;
+    }
+    return 1;
+}
+
+function setPatient(element,keyvalue) {
+    var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    //console.log("element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
 
     var parentBtn = parentEl.find("#check_btn");
 
@@ -197,17 +236,29 @@ function setParent(element,keyvalue) {
     //check if parent is set already and has different keyfield value
     var parentKeyValue = parentEl.find(".patientmrn").find('.keyfield');
     if( parentKeyValue.val() == keyvalue ) {
-        console.log('keyvalues are the same');
+        //console.log('keyvalues are the same');
         return 1;
     }
+    
+    //if this patient has already another checked accession, then check current accession is not possible
+    //get patient accession buttons  
+    var retval = 1;
+    parentEl.find('.accessionaccession').each(function() {
+        if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" ) {
+            alert("The Patient has already checked accession. You can not use this accession, because it belongs to another patient");
+            retval = 0;
+        }
+    });
+    if( retval == 0 ) {
+        return 0;
+    }   
     
     if( keyBtnStatusClass == "glyphicon glyphicon-remove" && parentKeyValue.val() != keyvalue ) { //Remove Button Cliked
         var r=confirm('Patient with MRN '+parentKeyValue.val()+' is already set in this form. Are you sure that you want to change the patient?');
         if( r == true ) {
-            console.log("you decide to continue");
-            invertButton(element);
+            //console.log("you decide to continue");          
         } else {
-            console.log("you canceled");
+            //console.log("you canceled");
             return 0;
         } 
     }
