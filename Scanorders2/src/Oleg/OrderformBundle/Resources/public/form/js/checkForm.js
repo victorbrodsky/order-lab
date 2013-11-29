@@ -137,25 +137,31 @@ function checkForm( elem ) {
             dataType: 'json',
             success: function (data) {
                 console.debug("get object ajax ok "+name);
+                var gonext = 1;
                 element.button('reset');
-                if( data.id ) {
-                    //first: set elements
-                    setElementBlock(element, data);
-                    //second: disable or enable element. Make sure this function runs after setElementBlock
-                    disableInElementBlock(element, true, "all", null, "notarrayfield");
-
+                if( data.id ) {                     
                     if( name == "accession" ) {
                         var parent = data['parent'];
                         console.debug("key parent="+parent);
-                        setParent(element,parent);
-                    }
-
+                        gonext = setParent(element,parent);
+                    }    
+                    console.debug("gonext="+gonext);
+                    if( gonext == 1 ) {
+                        console.debug("continue gonext="+gonext);  
+                        console.log( "element.id=" + element.attr('id') + ", class="+element.attr('class'));
+                        //first: set elements
+                        setElementBlock(element, data);
+                        //second: disable or enable element. Make sure this function runs after setElementBlock
+                        disableInElementBlock(element, true, "all", null, "notarrayfield");    
+                        invertButton(element);
+                    }                              
                 } else {
                     console.debug("not found");
                     //cleanFieldsInElementBlock( element );
                     disableInElementBlock(element, false, null, "notkey", null);
-                }
-                invertButton(element);
+                    invertButton(element);
+                } 
+                //invertButton(element);
             },
             error: function () {
                 console.debug("get object ajax error "+name);
@@ -173,7 +179,7 @@ function checkForm( elem ) {
 
 function setParent(element,keyvalue) {
     var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
-    //console.log("element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+    console.log("element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
 
     var parentBtn = parentEl.find("#check_btn");
 
@@ -187,6 +193,24 @@ function setParent(element,keyvalue) {
 
     var keyBtnStatusClass = keyBtn.find("i").attr("class");
     //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
+
+    //check if parent is set already and has different keyfield value
+    var parentKeyValue = parentEl.find(".patientmrn").find('.keyfield');
+    if( parentKeyValue.val() == keyvalue ) {
+        console.log('keyvalues are the same');
+        return 1;
+    }
+    
+    if( keyBtnStatusClass == "glyphicon glyphicon-remove" && parentKeyValue.val() != keyvalue ) { //Remove Button Cliked
+        var r=confirm('Patient with MRN '+parentKeyValue.val()+' is already set in this form. Are you sure that you want to change the patient?');
+        if( r == true ) {
+            console.log("you decide to continue");
+            invertButton(element);
+        } else {
+            console.log("you canceled");
+            return 0;
+        } 
+    }
 
     //if parent key field is already checked: clean it first
     if( keyBtnStatusClass == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
@@ -210,7 +234,7 @@ function setParent(element,keyvalue) {
         setTimeout(function(){
             if( keyBtnStatusClass != "glyphicon glyphicon-check" ){
                 if( maxi > 20 ) {
-                    return;
+                    return 0;
                 }
                 maxi++;
                 //console.log("parent key is not clean, maxi="+maxi);
@@ -221,10 +245,11 @@ function setParent(element,keyvalue) {
                 keyElement.element.val(keyvalue);   //set parent key field
                 var keyBtn = keyElement.element.parent().parent().find('#check_btn');
                 keyBtn.trigger("click");
+                return 1;
             }
         }, 300);
     }
-
+    return 1;  
 }
 
 
