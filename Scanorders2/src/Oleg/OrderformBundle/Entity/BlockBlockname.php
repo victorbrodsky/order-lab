@@ -17,15 +17,10 @@ class BlockBlockname extends BlockArrayFieldAbstract
      */
     protected $block;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $field;
-
     /**
-     * @ORM\ManyToOne(targetEntity="BlockList", inversedBy="block", cascade={"persist"})
-     * @ORM\JoinColumn(name="blocklist_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
+
 
 }

@@ -22,8 +22,8 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $helper = new FormHelper();
-//
+        $helper = new FormHelper();
+
 //        $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
 //        $builder->add('field', 'choice', array(
 //            'choices' => $helper->getPart(),
@@ -34,29 +34,42 @@ class PartNameType extends AbstractType
 //            //'empty_value' => "",   //"Choose an option",
 //            //'multiple' => false
 //        ));
-//
-//        $builder->add('partnameothers', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
-//            'label' => false
-//        ));
-
-
-        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+        
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Part Name',
-            'required' => false,
+            'label' => 'Part Name:',   
+            //'choices' => $helper->getBlock(),
             'attr' => $attr,
+            'required'=>false,
             'classtype' => 'partname'
         ));
 
-        $builder->add('partothers', new ArrayFieldType(), array(
+        $builder->add('partnameothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
             'label' => false
         ));
+
+
+//        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+//            $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');    //new
+//        } else {
+//            $attr = array('class' => 'combobox combobox-width');    //show
+//        }
+//        $builder->add('field', 'custom_selector', array(
+//            'label' => 'Part Name',
+//            'required' => false,
+//            'attr' => $attr,
+//            'classtype' => 'partname'
+//        ));
+//
+//        $builder->add('partothers', new ArrayFieldType(), array(
+//            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
+//            'label' => false
+//        ));
 
 
     }

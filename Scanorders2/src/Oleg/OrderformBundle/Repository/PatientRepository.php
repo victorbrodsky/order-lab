@@ -96,7 +96,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 //        echo "patient clinHist=".$patient->getClinicalHistory()->first()."<br>";
 //        echo $patient."<br>";
         echo "1 patient->procedures count=".count($patient->getProcedure()).": ".$patient->getProcedure()->first()."<br>";
-        exit();
+        //exit();
 
         return $patient;
     }

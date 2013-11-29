@@ -458,7 +458,7 @@ class CheckController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Part')->deleteIfReserved( $key,"Block","blockname" );
+        $res = $em->getRepository('OlegOrderformBundle:Block')->deleteIfReserved( $key,"Block","blockname" );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

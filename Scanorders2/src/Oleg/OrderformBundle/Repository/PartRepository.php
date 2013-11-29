@@ -250,31 +250,19 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         $query = $this->getEntityManager()
             ->createQuery('
-            SELECT MAX(ppartnamefield.name) as max'.'partname'.' FROM OlegOrderformBundle:Part p
-            JOIN p.partname ppartname
-            JOIN ppartname.field ppartnamefield
+            SELECT MAX(ppartname.field) as max'.'partname'.' FROM OlegOrderformBundle:Part p
+            JOIN p.partname ppartname           
             JOIN p.accession a
             JOIN a.accession aa
-            WHERE ppartnamefield.name LIKE :name AND aa.field = :accession'
+            WHERE ppartname.field LIKE :name AND aa.field = :accession'
             )->setParameter('name', '%'.$name.'%')->setParameter('accession', $accessionNumber."");
 
         $lastField = $query->getSingleResult();
         $index = 'max'.'partname';
         $lastFieldStr = $lastField[$index];
         //echo "lastFieldStr=".$lastFieldStr."<br>";
-        $fieldIndexArr = explode("-",$lastFieldStr);
-        //echo "count=".count($fieldIndexArr)."<br>";
-        if( count($fieldIndexArr) > 1 ) {
-            $fieldIndex = $fieldIndexArr[1];
-        } else {
-            $fieldIndex = 0;
-        }
-        $fieldIndex = ltrim($fieldIndex,'0') + 1;
-        $paddedfield = str_pad($fieldIndex,10,'0',STR_PAD_LEFT);
-        //echo "paddedfield=".$paddedfield."<br>";
-        //exit();
-        return $name.'-'.$paddedfield;
-
+        
+        return $this->getNextByMax($lastFieldStr, $name);
     }
 
     public function findNextPartnameByAccession_OLD( $accessionNumber ) {

@@ -271,17 +271,18 @@ class UtilController extends Controller {
      */
     public function getPartnameAction() {
 
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQuery(
-            'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:PartList proc WHERE proc.type = :type'
-        )->setParameter('type', 'default');
-
-        //$empty = array("id"=>0,"text"=>"");
-        $output = $query->getResult();
-        //array_unshift($output, $empty);
-
+        $formHelper = new FormHelper();
+        $arr = $formHelper->getPart();
+        
+        $output = array();
+        
+        $count = 0;
+        foreach( $arr as $var ) {
+            $element = array('id'=>$var."", 'text'=>$var.""); 
+            $output[] = $element;          
+            $count++;
+        }
+        
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
@@ -294,77 +295,22 @@ class UtilController extends Controller {
      */
     public function getBlocknameAction() {
 
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQuery(
-            'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:BlockList proc WHERE proc.type = :type'
-        )->setParameter('type', 'default');
-
-        //$empty = array("id"=>0,"text"=>"");
-        $output = $query->getResult();
-        //array_unshift($output, $empty);
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-
-    /**
-     * @Route("/checkmrn_TODEL", name="get-checkmrn_TODEL")
-     * @Method("POST")
-     * //@Method("GET")
-     */
-    public function checkMrnAction_TODEL() {
-
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
-        $request = $this->getRequest();
-
-        $request->isXmlHttpRequest();           // is it an Ajax request?
-        $mrn = $request->request->get('mrn');   // get a $_POST parameter
-
-        $em = $this->getDoctrine()->getManager();
-
-        //$mrn = 9;
-
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findByMrn($mrn);
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findById($mrn);
-
-
-        $query = $em->createQuery(
-            'SELECT p.id as id, p.name as name
-            FROM OlegOrderformBundle:Patient p WHERE p.mrn = :mrn'
-        //)->setParameter('mrn', "'".$mrn."'");
-        )->setParameter('mrn', $mrn);
-        //$entity = $query->getResult();
-
-        //echo $entity;
-
-        //$output = array("id"=>1,"text"=>"hello");
-        $output = $entity;
-
-        if(1){//} !$entity || count($entity) == 0 ) {
-            $output = array("id"=>0, "name"=>$mrn);
+        $formHelper = new FormHelper();
+        $arr = $formHelper->getBlock();
+        
+        $output = array();
+        
+        $count = 0;
+        foreach( $arr as $var ) {
+            $element = array('id'=>$var."", 'text'=>$var.""); 
+            $output[] = $element;          
+            $count++;
         }
-
-//        if( count($entity) > 1 ) {
-//            $output = $entity[0];
-//        }
-
-
+        
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
         return $response;
-
-
-//        return  new JsonResponse($output);
     }
-
-    
+  
 }

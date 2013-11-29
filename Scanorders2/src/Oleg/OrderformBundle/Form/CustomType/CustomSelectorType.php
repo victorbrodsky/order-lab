@@ -20,8 +20,6 @@ use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\PathServiceTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\PathServicesTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\BlocknameTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\PartnameTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -75,13 +73,13 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "returnSlide":
                 $transformer = new StringTransformer($this->om, $username);
-                break;
-            case "blockname":
-                $transformer = new BlocknameTransformer($this->om, $username);
-                break;
+                break; 
             case "partname":
-                $transformer = new PartnameTransformer($this->om, $username);
-                break;
+                $transformer = new StringTransformer($this->om, $username);
+                break; 
+            case "blockname":
+                $transformer = new StringTransformer($this->om, $username);
+                break; 
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }

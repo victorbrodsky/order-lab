@@ -259,22 +259,22 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $onlyValid = " AND cfield.validity=1";
         }
 
-        if( $className == "Part" || $className == "Block" ) {
-            $query = $this->getEntityManager()
-                ->createQuery('
-            SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
-            JOIN c.'.$fieldName.' cfield
-            JOIN cfield.field cfieldfield
-            WHERE cfieldfield.name = :field'.$onlyValid
-                )->setParameter('field', $fieldStr."");
-        } else {
+//        if( $className == "Part" || $className == "Block" ) {
+//            $query = $this->getEntityManager()
+//                ->createQuery('
+//            SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
+//            JOIN c.'.$fieldName.' cfield
+//            JOIN cfield.field cfieldfield
+//            WHERE cfieldfield.name = :field'.$onlyValid
+//                )->setParameter('field', $fieldStr."");
+//        } else {
             $query = $this->getEntityManager()
                 ->createQuery('
             SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
             JOIN c.'.$fieldName.' cfield
             WHERE cfield.field = :field'.$onlyValid
                 )->setParameter('field', $fieldStr."");
-        }
+//        }
 
         try {
             if( $single ) {
@@ -300,19 +300,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     //echo "id=".$entity->getId()." ";
                     $em = $this->_em;
 
-                    //TODO: is it possible to remove by persistence?
+                    //delete created parents
                     if( $className == "Part" ) {
-                        $partnames = $entity->getPartname();
-                        foreach( $partnames as $partname ) {
-                            $partlist = $partname->getField();
-                            $em->remove($partlist);
+                        $accession = $entity->getAccession();
+                        if( $accession->getStatus() == self::STATUS_RESERVED ) {                          
+                            $em->remove($accession);
                         }
                     }
                     if( $className == "Block" ) {
-                        $blockames = $entity->getBlockname();
-                        foreach( $blockames as $blockame ) {
-                            $blocklist = $blockame->getField();
-                            $em->remove($blocklist);
+                        $part = $entity->getPart();
+                        $accession = $part->getAccession();
+                        if( $accession->getStatus() == self::STATUS_RESERVED ) {                          
+                            $em->remove($accession);
+                        }                      
+                        if( $part->getStatus() == self::STATUS_RESERVED ) {                          
+                            $em->remove($part);
                         }
                     }
 
@@ -342,16 +344,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
         $field = new $fieldClass();
 
-        if( $className == "Part" || $className == "Block" ) {
-            $listEntity = "Oleg\\OrderformBundle\\Entity\\".ucfirst($className)."List";
-            //echo "create listEntity=".$listEntity."<br>";
-            $newList = new $listEntity();
-            $newList->setName($fieldValue);
-            $newList->setType('system-added');
-            $newList->setCreator("system");
-            $newList->setCreatedate(new \DateTime());
-            $fieldValue = $newList;
-        }
+//        if( $className == "Part" || $className == "Block" ) {
+//            $listEntity = "Oleg\\OrderformBundle\\Entity\\".ucfirst($className)."List";
+//            //echo "create listEntity=".$listEntity."<br>";
+//            $newList = new $listEntity();
+//            $newList->setName($fieldValue);
+//            $newList->setType('system-added');
+//            $newList->setCreator("system");
+//            $newList->setCreatedate(new \DateTime());
+//            $fieldValue = $newList;
+//        }
 
 
         $field->setField($fieldValue);
@@ -387,17 +389,25 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
     public function getNextNonProvided( $name, $className, $fieldName ) {
+               
         $query = $this->getEntityManager()
-            ->createQuery('
-            SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
-            JOIN c.'.$fieldName.' cfield
-            WHERE cfield.field LIKE :field'
-            )->setParameter('field', '%'.$name.'%');
-
+        ->createQuery('
+        SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
+        JOIN c.'.$fieldName.' cfield
+        WHERE cfield.field LIKE :field'
+        )->setParameter('field', '%'.$name.'%');
+        
         $lastField = $query->getSingleResult();
         $index = 'max'.$fieldName;
         $lastFieldStr = $lastField[$index];
         //echo "lastFieldStr=".$lastFieldStr."<br>";
+        $fieldIndexArr = explode("-",$lastFieldStr);
+        //echo "count=".count($fieldIndexArr)."<br>";
+        
+        return $this->getNextByMax($lastFieldStr, $name);
+    }
+    
+    public function getNextByMax( $lastFieldStr, $name ) {
         $fieldIndexArr = explode("-",$lastFieldStr);
         //echo "count=".count($fieldIndexArr)."<br>";
         if( count($fieldIndexArr) > 1 ) {

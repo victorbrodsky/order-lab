@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
 use Oleg\OrderformBundle\Entity\ProcedureList;
-use Oleg\OrderformBundle\Entity\PartList;
-use Oleg\OrderformBundle\Entity\BlockList;
 use Oleg\OrderformBundle\Entity\PathServiceList;
 use Oleg\OrderformBundle\Entity\StatusType;
 use Oleg\OrderformBundle\Entity\StatusGroup;
@@ -69,8 +67,6 @@ class AdminController extends Controller
         $count_status = $this->generateStatuses();
         $count_pathservice = $this->generatePathServices();
         $count_slidetype = $this->generateSlideType();
-        $count_partname = $this->generatePartname();
-        $count_blockname = $this->generateBlockname();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
@@ -86,8 +82,6 @@ class AdminController extends Controller
             'Statuses='.$count_status.', '.
             'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
-            'Partnames='.$count_partname.', '.
-            'Blocknames='.$count_blockname.', '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -286,75 +280,6 @@ class AdminController extends Controller
 
             return $this->redirect($this->generateUrl('slidetype'));
 
-        } else {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'This table is already exists!'
-            );
-
-            return $this->redirect($this->generateUrl('admin_index'));
-        }
-
-    }
-
-
-    /**
-     * Populate DB
-     *
-     * @Route("/genpartname", name="generate_partname")
-     * @Method("GET")
-     * @Template()
-     */
-    public function generatePartnameAction()
-    {
-
-
-        $count = $this->generatePartname();
-
-        if( $count >= 0 ) {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Created '.$count. ' partname records'
-            );
-
-            //return $this->redirect($this->generateUrl('partnamelist'));
-            return $this->redirect($this->generateUrl('admin_index'));
-        } else {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'This table is already exists!'
-            );
-
-            return $this->redirect($this->generateUrl('admin_index'));
-        }
-
-    }
-
-    /**
-     * Populate DB
-     *
-     * @Route("/genblockname", name="generate_blockname")
-     * @Method("GET")
-     * @Template()
-     */
-    public function generateBlocknameAction()
-    {
-
-
-        $count = $this->generateBlockname();
-
-        if( $count >= 0 ) {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Created '.$count. ' blockname records'
-            );
-
-//            return $this->redirect($this->generateUrl('blocknamelist'));
-            return $this->redirect($this->generateUrl('admin_index'));
         } else {
 
             $this->get('session')->getFlashBag()->add(
@@ -670,71 +595,6 @@ class AdminController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($slideType);
-            $em->flush();
-            $count++;
-        }
-
-        return $count;
-    }
-
-
-    public function generatePartname() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:PartList')->findAll();
-
-        if( $entities ) {
-
-            return -1;
-        }
-
-        $helper = new FormHelper();
-        $parts = $helper->getPart();
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $count = 0;
-        foreach( $parts as $part ) {
-            $list = new PartList();
-            $list->setCreator( $username );
-            $list->setCreatedate( new \DateTime() );
-            $list->setName( trim($part) );
-            $list->setType('default');
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($list);
-            $em->flush();
-            $count++;
-        }
-
-        return $count;
-    }
-
-    public function generateBlockname() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:BlockList')->findAll();
-
-        if( $entities ) {
-
-            return -1;
-        }
-
-        $helper = new FormHelper();
-        $blocks = $helper->getBlock();
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $count = 0;
-        foreach( $blocks as $block ) {
-            $list = new BlockList();
-            $list->setCreator( $username );
-            $list->setCreatedate( new \DateTime() );
-            $list->setName( trim($block) );
-            $list->setType('default');
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($list);
             $em->flush();
             $count++;
         }

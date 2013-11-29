@@ -73,7 +73,7 @@ function checkForm( elem ) {
             var accessionNumberElement = getAccessionNumberElement(element);
             var accessionValue = accessionNumberElement.val();    //i.e. Accession #
             var partNumberElement = getPartNumberElement(element);
-            var partValue = partNumberElement.select2("val"); //i.e. Part #
+            var partValue = partNumberElement.select2("val"); //i.e. Part #                   
         }
         //console.log("accessionValue="+accessionValue+",partValue="+partValue);
 
@@ -1006,12 +1006,10 @@ function getPartNumberElement( element ) {
         var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
     }
     //console.log("get part number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
-
     var partNumberHolder = parent.find('.partpartname');
-    var partNumberElement = partNumberHolder.find('.keyfield');
-    //console.log("get part number: partNumberElement.id=" + partNumberElement.attr('id') + ", partNumberElement.class=" + partNumberElement.attr('class'));
-
-    return partNumberElement.eq(0);
+    var partNumberElement = partNumberHolder.find('.keyfield');    
+    //console.log("1="+partNumberElement.val() + " 2="+partNumberElement.select2("val")  );
+    return partNumberElement;
 }
 
 //Helpers

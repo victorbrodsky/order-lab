@@ -45,7 +45,8 @@ security:
              aperio:  true
              form_login:
                  always_use_default_target_path: false
-                 provider: chain_provider
+#                 provider: chain_provider
+                 provider: in_memory
                  use_referer: true
                  success_handler: login_sucess_handler
              logout:     true

@@ -218,7 +218,8 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         //2) find next available part name by accession number
         $blockname = $em->getRepository('OlegOrderformBundle:Block')->findNextBlocknameByAccessionPartname($accessionNumber,$partname);
-
+        //echo "next blockname generated=".$blockname."<br>";
+        
         //3) before part create: check if block with $blockname $partname and $accessionNumber does not exists in DB
         //$blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneByIdJoinedToField($blockname,"Block","blockname",true);
         $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($accessionNumber, $partname, $blockname,true);
@@ -246,28 +247,37 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         $helper = new FormHelper();
         $names = $helper->getBlock();
+     
+//            $query = $this->getEntityManager()
+//                ->createQuery('
+//            SELECT b FROM OlegOrderformBundle:Block b
+//            JOIN b.blockname bfield
+//            JOIN b.part p
+//            JOIN p.partname pp
+//            JOIN p.accession a
+//            JOIN a.accession aa
+//            WHERE bfield.field = :field AND aa.field = :accession AND pp.field = :partname'
+//                )->setParameter('field', $name)->setParameter('accession', $accessionNumber."")->setParameter('partname', $partname."");
+               
+        $name = "NOBLOCKNAMEPROVIDED";
 
-        foreach( $names as $name ) {
-            $query = $this->getEntityManager()
-                ->createQuery('
-            SELECT b FROM OlegOrderformBundle:Block b
-            JOIN b.blockname bfield
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT MAX(bblockname.field) as max'.'blockname'.' FROM OlegOrderformBundle:Block b
+            JOIN b.blockname bblockname  
             JOIN b.part p
             JOIN p.partname pp
             JOIN p.accession a
             JOIN a.accession aa
-            WHERE bfield.field = :field AND aa.field = :accession AND pp.field = :partname'
-                )->setParameter('field', $name)->setParameter('accession', $accessionNumber."")->setParameter('partname', $partname."");
+            WHERE bblockname.field LIKE :name AND aa.field = :accession AND pp.field = :partname'
+            )->setParameter('name', '%'.$name.'%')->setParameter('accession', $accessionNumber."")->setParameter('partname', $partname."");
 
-            $block = $query->getResult();
-
-            if( !$block ) {
-                //echo "blockname="+$name;
-                return $name;
-            }
-        }
-
-        return null;
+        $lastField = $query->getSingleResult();
+        $index = 'max'.'blockname';
+        $lastFieldStr = $lastField[$index];
+        //echo "lastFieldStr=".$lastFieldStr."<br>";
+        
+        return $this->getNextByMax($lastFieldStr, $name);
     }
     
 }
