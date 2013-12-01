@@ -431,8 +431,15 @@ function initComboboxJs(ids) {
 function slideType(ids) {    
     
     //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_1_slide_0_slidetype
-    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
-    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_"+"slide_0_slidetype";
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_slidetype";
+    
+    //TODO: what to do with other slides in the same block?
+    //Solution1: Onlye the first slide has slide type combobox.
+    //Solution2: ecery slides under the same block has synchronized slide type.
+//    if( ids[5] != '0' ) {
+//        return;
+//    }
     
     $(id).change(function(e) {   //.slidetype-combobox
         console.log("slidetype-combobox changed: this id="+$(this).attr('id')+",class="+$(this).attr('class'));
@@ -449,9 +456,10 @@ function slideType(ids) {
             keyfield.attr('disabled','disabled'); 
             disableInElementBlock(parent.find('#check_btn').first(), true, "all", null, null);
             var htmlDiv = '<div class="element-skipped">Block is not used for cytopathology slide</div>';
+            parent.find('.element-skipped').first().remove();
             blockValue.after(htmlDiv);
             blockValue.hide();
-            parent.find('.form-btn-options').hide();
+            parent.find('.form-btn-options').first().hide();
             //parent.find('.panel-body').first().css("border-color", "#C0C0C0");
         } else {    
             //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
@@ -459,7 +467,7 @@ function slideType(ids) {
             parent.find('.element-skipped').first().remove();
             blockValue.show();
             keyfield.removeAttr('disabled'); 
-            parent.find('.form-btn-options').show();
+            parent.find('.form-btn-options').first().show();
             //parent.find('.panel-body').first().css("border-color", "#1268B3");
         }
         
