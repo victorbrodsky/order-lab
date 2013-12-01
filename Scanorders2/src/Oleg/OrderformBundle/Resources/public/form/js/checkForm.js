@@ -142,6 +142,7 @@ function checkForm( elem ) {
                 if( data.id ) {      
                     
                     gonext = checkParent(element,keyValue,name,fieldName); //check if this key is not used yet
+                    console.debug("1 gonext="+gonext);  
                     
                     if( name == "accession" && gonext == 1) {
                         var parentkeyvalue = data['parent'];
@@ -149,7 +150,7 @@ function checkForm( elem ) {
                         gonext = setPatient(element,parentkeyvalue);
                     }                                          
                        
-                    //console.debug("gonext="+gonext);                  
+                    //console.debug("0 gonext="+gonext);                  
                     if( gonext == 1 ) {
                         //console.debug("continue gonext="+gonext);                         
                         //first: set elements
@@ -875,7 +876,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
                             disableElement(elements.eq(i),true);
                         }
                     }
-                }
+                }               
             }
 
         }
@@ -898,7 +899,7 @@ function disableElement(element, flag) {
     }
 
     if( tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
-        //console.debug("select disable classs="+classs+", id="+element.attr('id'));
+        //console.debug("select disable classs="+classs+", id="+element.attr('id')+", flag="+flag);
         //element.select2("disable", flag);
         if( flag ) {    //disable
             element.select2("readonly", true);

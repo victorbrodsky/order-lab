@@ -56,6 +56,7 @@ function customCombobox() {
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+        slideType(new Array("0","0","0","0","0","0"));
     }
 
 }
@@ -422,5 +423,45 @@ function initComboboxJs(ids) {
         getComboboxProcedure(urlCommon,ids);
         getComboboxOrgan(urlCommon,ids);
         getComboboxPathService(urlCommon,ids);
+        slideType(ids);
     }
+}
+
+
+function slideType(ids) {    
+    
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_1_slide_0_slidetype
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_"+"slide_0_slidetype";
+    
+    $(id).change(function(e) {   //.slidetype-combobox
+        console.log("slidetype-combobox changed: this id="+$(this).attr('id')+",class="+$(this).attr('class'));
+        //e.preventDefault();
+        var parent = $(this).parent().parent().parent().parent().parent().parent().parent().parent();
+        console.log("parent: id="+parent.attr('id')+",class="+parent.attr('class'));
+        var blockValue = parent.find('.element-title').first();
+        console.log("slidetype-combobox: id="+parent.find('.slidetype-combobox').first().attr('id')+",class="+parent.find('.slidetype-combobox').first().attr('class'));
+        var slideType = parent.find('.slidetype-combobox').first().select2('val');
+        console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideType="+slideType);
+        var keyfield = parent.find('#check_btn');
+        if( slideType == 3 ) {   //'Cytopathology'
+            console.log("Cytopathology is chosen = "+slideType);
+            keyfield.attr('disabled','disabled'); 
+            disableInElementBlock(parent.find('#check_btn').first(), true, "all", null, null);
+            var htmlDiv = '<div class="element-skipped">Block is not used for cytopathology slide</div>';
+            blockValue.after(htmlDiv);
+            blockValue.hide();
+            parent.find('.form-btn-options').hide();
+            //parent.find('.panel-body').first().css("border-color", "#C0C0C0");
+        } else {    
+            //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
+            disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
+            parent.find('.element-skipped').first().remove();
+            blockValue.show();
+            keyfield.removeAttr('disabled'); 
+            parent.find('.form-btn-options').show();
+            //parent.find('.panel-body').first().css("border-color", "#1268B3");
+        }
+        
+    });   
 }

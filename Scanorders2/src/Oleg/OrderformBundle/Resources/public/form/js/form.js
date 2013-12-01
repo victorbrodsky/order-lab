@@ -281,7 +281,8 @@ function getForm( name, id, idsorig, ids, idsm ) {
         '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
             '<div class="panel-heading" align="left">' +
             '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
-            '&nbsp;' + capitaliseFirstLetter(title) + ' ' + itemCount +
+            '&nbsp;' +
+            '<div class="element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</div>' +           
             '<div class="form-btn-options">' +
             addbtn +
             deletebtn +

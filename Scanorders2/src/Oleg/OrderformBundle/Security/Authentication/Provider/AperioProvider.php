@@ -70,7 +70,7 @@ class AperioProvider implements AuthenticationProviderInterface
                 
                 //TODO: for testing at home!!!
                 echo "Aperio Auth: Remove it !!!";
-                $user->setUsername("testuser1");
+                $user->setUsername("testuser4");
                 $user->addRole('ROLE_SUPER_ADMIN'); 
 
                 if( $token->username == "oli2002" || $token->username == "vib9020" ) {

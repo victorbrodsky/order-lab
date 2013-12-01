@@ -80,7 +80,7 @@ class SlideType extends AbstractType
         
         //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false));
 
-        $attr = array('class' => 'combobox combobox-width');
+        $attr = array('class' => 'combobox combobox-width slidetype-combobox');
         $builder->add('slidetype', 'entity', array(
             'class' => 'OlegOrderformBundle:SlideType',
             'label'=>'* Slide Type:',

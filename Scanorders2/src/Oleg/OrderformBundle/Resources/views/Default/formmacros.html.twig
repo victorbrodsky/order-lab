@@ -193,7 +193,7 @@
         {% else %}
             {% set title = name %}
         {% endif %}
-        {{ title | capitalize }} {{ count+1 }}
+        <div class="element-title">{{ title | capitalize }} {{ count+1 }}</div>        
         {% if name != "scan" and name != "stain" %}
         {% if type == 'new' or type == 'edit' %}
             <div class="form-btn-options">
@@ -741,12 +741,17 @@ ident:      specialStains or relevantScans
 
     <div id="slide_{{ uid }}">
 
+        <p><div class="slideslidetype">     
         {% if slidetypeHtml is not defined or slidetypeHtml == "" %}
             {{ formmacros.field(slide.slidetype) }}
         {% else  %}
-            <p><div class="slideslidetype">{{ slidetypeHtml }}</div></p>
+{#            <p><div class="slideslidetype">#}
+            {{ slidetypeHtml }}
+{#            </div></p>#}
         {% endif %}
-
+        </div></p>
+        
+        
         {% if stainHtml is not defined or stainHtml == "" %}    {#regular#}
 
             {% for stain in slide.stain %}
