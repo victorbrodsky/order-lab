@@ -754,12 +754,16 @@ function cleanFieldsInElementBlock( element, all ) {
                    //console.log("clean not as arrayFieldShow");
 
                     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) {
-                        //console.log("clean as radio");
+                        console.log("clean as radio");
                         //cleanArrayField( elements.eq(i), field );
                         processGroup( elements.eq(i), "", "ignoreDisable" );
                     } else if( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
                         //console.log("clean as select");
-                        elements.eq(i).select2('data', null);
+                        if( field == "mrn" ) {
+                            elements.eq(i).select2('data', {id: 'New York Hospital MRN', text: 'New York Hospital MRN'});
+                        } else {
+                            elements.eq(i).select2('data', null);
+                        }
                     } else {
                         elements.eq(i).val(null);
                     }

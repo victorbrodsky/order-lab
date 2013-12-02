@@ -55,7 +55,7 @@ class SlideType extends AbstractType
         ));
 
         $builder->add('specialStains', 'collection', array(
-            'type' => new SpecialStainsType(),
+            'type' => new SpecialStainsType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

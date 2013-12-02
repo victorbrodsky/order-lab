@@ -184,6 +184,10 @@
     border-left: 7px solid;
 }
 
+.panel-heading {
+    height: 43px;
+}
+
 .panel-patient {
     border-color: #90BEE4;
 }
@@ -269,6 +273,10 @@
     float:right;
     /*width: 20%;*/
 }
+.element-title {
+    float: left;
+    padding-left: 1%;
+}
 
 .safary-fix {
     overflow: hidden;
@@ -280,8 +288,10 @@
 
 .form_body_toggle_btn {
     padding-right: 1%;
+    float: left;
 }
 
 .textarea {
     min-height:55px;
 }
+

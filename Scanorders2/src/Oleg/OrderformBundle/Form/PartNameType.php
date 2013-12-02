@@ -41,7 +41,7 @@ class PartNameType extends AbstractType
             $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Part Name:',   
+            'label' => 'Part Name',
             //'choices' => $helper->getBlock(),
             'attr' => $attr,
             'required'=>false,

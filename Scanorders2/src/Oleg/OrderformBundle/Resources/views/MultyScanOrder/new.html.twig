@@ -139,7 +139,7 @@
         {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
 
         {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains %}
-        {% set specialStainsWidget = formmacros.fieldWidget(specialStainsField) %}
+        {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
         {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
     {% endif %}
@@ -208,12 +208,12 @@
         "
 
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","nolabel")|e }}"
+          data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
           data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","nolabel")|e }}"
+          data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
           data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
 

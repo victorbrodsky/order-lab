@@ -8,8 +8,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-//use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
-
 class PatientType extends AbstractType
 {
 
@@ -35,16 +33,26 @@ class PatientType extends AbstractType
             //$flag = true;
         }
 
-        $attr = array('class'=>'form-control keyfield');
-        $gen_attr = array('label'=>'MRN','class'=>'Oleg\OrderformBundle\Entity\PatientMrn','type'=>null);
+//        $attr = array('class'=>'form-control keyfield');
+//        $gen_attr = array('label'=>'MRN','class'=>'Oleg\OrderformBundle\Entity\PatientMrn','type'=>null);
+//        $builder->add('mrn', 'collection', array(
+//            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+//            //'type' => new PatientMrnType($this->params),
+//            'read_only' => $flag,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => "MRN:",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__patientmrn__',
+//        ));
         $builder->add('mrn', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            //'type' => new PatientMrnType($this->params),
+            'type' => new PatientMrnType($this->params, null),
             'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "MRN:",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__patientmrn__',

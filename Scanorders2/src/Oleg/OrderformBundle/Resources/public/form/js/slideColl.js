@@ -9,6 +9,10 @@
 
 ////////////////// uses as generic collection field with + and - buttons ////////////////////////
 
+var findCollectionStr = 'input,.ajax-combobox-stain';
+var findCollectionSpecialStr = 'input[type=text],.ajax-combobox-stain';
+var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.ajax-combobox-stain:enabled:not([readonly])';
+
 //get input field only
 function getCollField( ident, patient, procedure, accession, part, block, slide, coll, prefix ) {
 
@@ -53,7 +57,7 @@ function addCollectionField( elem, btnpos ) {
         var parent = element.parent();
     }
 
-    var elementInput = parent.find("input,textarea");
+    var elementInput = parent.find(findCollectionStr);
 
     //console.log("elementInput.class="+elementInput.attr('class')+", id="+elementInput.attr('id'));
     var inputId = elementInput.attr('id');
@@ -64,12 +68,14 @@ function addCollectionField( elem, btnpos ) {
     var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
     var fieldName = idsArr[idsArr.length-fieldIndex];
 
-    console.log("name="+name+",fieldName="+fieldName);
+    //console.log("name="+name+",fieldName="+fieldName);
 
     var patient = idsArr[4];
     var procedure = idsArr[6];
     var accession = idsArr[8];
     var part = idsArr[10];
+    var block = idsArr[12];
+    var slide = idsArr[14];
 
     if( inputId && inputId.indexOf("_slide_") != -1 ) {
         var block = idsArr[12];
@@ -101,7 +107,8 @@ function addCollectionField( elem, btnpos ) {
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, maxId+1, prefix );
     //console.log("newForm="+newForm);
 
-    var collInputs = elementHolder.find('input[type=text],textarea');
+    //var collInputs = elementHolder.find('input[type=text],textarea');
+    var collInputs = elementHolder.find(findCollectionSpecialStr);
     var lastInput = collInputs.eq(collHoldersCount-1);
     //console.log("attach to el id="+lastInput.attr("id")+",class="+lastInput.attr("class"));
 
@@ -144,18 +151,20 @@ function addCollectionField( elem, btnpos ) {
 
     }
 
+    //populate the combobox by Ajax
+    getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,slide,maxId+1));
 }
 
 //elements is a row element
 function getMaxIdFromRows( elements, field ) {
     var maxId = 0;
-    console.log("elements.length="+elements.length + ", field="+field);
+    //console.log("elements.length="+elements.length + ", field="+field);
     for( var i = 0; i < elements.length; i++ ) {
 
         var element = elements.eq(i);
-        var inputField = element.find('input,textarea');
+        var inputField = element.find(findCollectionStr);
         var fieldId = inputField.attr("id");
-        console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
+        //console.log("get Max: inputField id="+fieldId+",class="+inputField.attr("class"));
         var idArr = fieldId.split("_"+field+"_");
         var idValueStr = idArr[1].split("_")[0];
         var idValue = parseInt(idValueStr);
@@ -236,15 +245,18 @@ function delCollectionField( elem, btnpos ) {
     }
 
     //console.log("holder id="+holder.attr("id")+", class="+holder.attr("class"));
-
     //console.log("elementHolder id="+elementHolder.attr("id")+", class="+elementHolder.attr("class"));
 
     elementHolder.remove();
 
-    var elementsEnabled = holder.find('input[type=text]:enabled:not([readonly]),textarea:enabled:not([readonly])');
+    if( btnpos && btnpos == "bottom" ) {
+        var elementsEnabledCount = parent.find(".row").length;
+    } else {
+        //var elementsEnabled = holder.find('input[type=text]:enabled:not([readonly]),textarea:enabled:not([readonly])');
+        var elementsEnabled = holder.find(findCollectionEnabledStr);
+        var elementsEnabledCount = elementsEnabled.length;
+    }
 
-    //var elementsCount = elements.length;
-    var elementsEnabledCount = elementsEnabled.length;
     //console.log("elementsEnabledCount="+elementsEnabledCount);
 
     if( !btnpos || btnpos != "bottom" ) { //only for attached field-button
@@ -262,6 +274,7 @@ function delCollectionField( elem, btnpos ) {
     if( elementsEnabledCount == 1 ) {
         //console.log('remove - btn, count='+elementsEnabledCount);
         if( btnpos && btnpos == "bottom" ) {
+            //console.log('button at the bottom => text area');
             element.remove();
         } else {
             elementsEnabled.first().parent().find('.delbtnCollField').remove();

@@ -24,5 +24,27 @@ class PatientMrn extends PatientArrayFieldAbstract
      * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
+    /**
+     * @ORM\ManyToOne(targetEntity="MrnType", inversedBy="patientmrn", cascade={"persist"})
+     * @ORM\JoinColumn(name="mrntype_id", referencedColumnName="id", nullable=true)
+     */
+    protected $mrntype;
+
+    /**
+     * @param mixed $mrntype
+     */
+    public function setMrntype($mrntype)
+    {
+        $this->mrntype = $mrntype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMrntype()
+    {
+        return $this->mrntype;
+    }
+
 
 }

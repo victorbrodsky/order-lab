@@ -1,7 +1,7 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
 {% block content %}
-    <h3 class="text-info">Slide Type</h3>
+    <h3 class="text-info">Mrn Type</h3>
 
     <table class="records_list table">
         <thead>
@@ -17,14 +17,14 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('slidetype_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path('mrntype_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
-                    <a href="{{ path('slidetype_show', { 'id': entity.id }) }}">show</a>
-                    <a href="{{ path('slidetype_edit', { 'id': entity.id }) }}">edit</a>
+                    <a href="{{ path('mrntype_show', { 'id': entity.id }) }}">show</a>
+                    <a href="{{ path('mrntype_edit', { 'id': entity.id }) }}">edit</a>
                 </td>
             </tr>
         {% endfor %}
@@ -32,7 +32,7 @@
     </table>
 
 
-    <a href="{{ path('slidetype_new') }}">
+    <a href="{{ path('mrntype_new') }}">
         Create a new entry
     </a>
 

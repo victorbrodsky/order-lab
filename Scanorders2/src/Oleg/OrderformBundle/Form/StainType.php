@@ -15,7 +15,7 @@ class StainType extends AbstractType
 {
 
     protected $params;
-    protected $user;
+    protected $entity;
 
     public function __construct( $params=null, $entity = null )
     {

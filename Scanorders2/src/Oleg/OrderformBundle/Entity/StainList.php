@@ -63,6 +63,11 @@ class StainList
      */
     protected $stain;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="stain")
+     */
+    protected $specialstain;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();

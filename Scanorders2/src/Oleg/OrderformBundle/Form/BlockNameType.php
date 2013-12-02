@@ -44,7 +44,7 @@ class BlockNameType extends AbstractType
             $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Block Name:',   
+            'label' => 'Block Name',
             'attr' => $attr,
             'required'=>false,
             'classtype' => 'blockname'

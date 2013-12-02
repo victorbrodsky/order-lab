@@ -347,8 +347,9 @@
     {% endif %}
 
     <div class="row">
-        <div class="col-xs-6" align="right">
 
+        <div class="col-xs-6" align="right">
+            <p>
             {% if nolabel is defined and nolabel != "" %}
                 {#no label#}
             {% else %}
@@ -360,7 +361,6 @@
                     {% else %}
                         {{ label }}
                     {% endif %}
-
                 {% endif %}
                 {% if cycle == "show" %}
                     {% if field.vars.value.creationdate != "" %}
@@ -370,13 +370,13 @@
                     {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
                         by
                         {{field.vars.value.provider}}
-
                     {% endif %}
                 {% endif %}
                 <b>:</b>
             {% endif %}
-
+            </p>
         </div>
+
         <div class="col-xs-6" align="left">
             {% if fieldtype == "key" %}
                 {{ formmacros.fieldicon(fieldThis.field) }}
@@ -386,6 +386,11 @@
                 {{ formmacros.fieldpaper(fieldThis,cycle) }}
             {% elseif fieldtype == "diseaseType" %}
                 {{ formmacros.diseaseMulti(fieldThis) }}
+            {#{% elseif fieldtype == "patientmrn" %}#}
+                {#{{ formmacros.mrntype(fieldThis) }}#}
+                {#{{ formmacros.field(fieldThis.mrntype) }}#}
+                {#{{ formmacros.field(fieldThis.mrntype) }}#}
+                {#{{ formmacros.fieldicon(fieldThis.field) }}#}
             {% elseif   fieldtype == "partdiffDisident" or
                         fieldtype == "sliderelevantScans"
                         and cycle != 'show' %}
@@ -399,11 +404,12 @@
                 {{ form_rest(fieldThis) }}
             {% endif %}
         </div>
+
     </div>
 
     {#add + button after the field#}
     {% if ( nobtn is defined and nobtn == "buttonbottom") and (cycle == 'new' or cycle == 'edit') %}
-        <div class="col-xs-6" align="right"></div>
+        <div class="col-xs-6" align="right"><p></p></div>
         <div class="col-xs-6" align="left" style="padding-bottom: 1%">
             <div class="addDelBtnColl">
                 <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
@@ -419,7 +425,18 @@
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
 
+{% macro fieldSpecialStainsWidget(field) %}
+    {{ form_widget(field.vars.prototype.stain) }}
+    {{ form_widget(field.vars.prototype.field) }}
+{% endmacro %}
+
 {############# custom array fields #############}
+{% macro mrntype(form) %}
+    {% import _self as formmacros %}
+    {{ formmacros.field(form.mrntype) }}
+    {{ formmacros.fieldicon(form.field) }}
+{% endmacro %}
+
 {% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn) %}
 
     {{ form_errors(field.field) }}
@@ -468,6 +485,7 @@
         <div style="float:left; width:100%">
             <div class="fieldInputColl">
                 {% if widget is not defined or widget == "" %}
+                    {{ form_widget(field.stain) }}
                     {{ form_widget(field.field) }}
                 {% else %}
                     {{ widget }}

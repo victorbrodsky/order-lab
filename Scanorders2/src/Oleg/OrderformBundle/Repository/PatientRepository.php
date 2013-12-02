@@ -31,7 +31,6 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return $patient;
         }
 
-
         echo "@@@@@ procedure count=".count($patient->getProcedure())."<br>";
         foreach( $patient->getProcedure() as $proc ) {
             $part = $proc->getAccession()->first()->getPart()->first();
@@ -47,6 +46,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             echo "@@@@@ block name=".$block->getBlockname()->first()."<br>";
         }
         echo "------------------<br>";
+        //exit();
 
 
         $patient = $this->processFieldArrays($patient,$orderinfo,$original);
@@ -84,6 +84,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 //        echo "<br>patient mrn=".$patient->getMrn()->first()."<br>";
 //        echo "patient mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
 //        echo "patient mrn validity=".$patient->getMrn()->first()->getValidity()."<br>";
+//        echo "patient mrntype=".$patient->getMrn()->first()->getMrntype()."<br>";
 //        echo "patient mrn id=".$patient->getMrn()->first()->getId()."<br>";
 //        echo "original mrn provider=".$original->getMrn()->first()->getProvider()."<br>";
 //        echo "patient name count=".count($patient->getName())."<br>";

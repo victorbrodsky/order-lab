@@ -51,6 +51,7 @@ function customCombobox() {
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"));
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
@@ -91,6 +92,47 @@ function getComboboxStain(urlCommon, ids) {
             createSearchChoice:function(term, data) {
                 //console.log("data="+data['text']);
                 //console.log("data="+data[0].text);
+                if ($(data).filter(function() {
+                    return this.text.localeCompare(term)===0;
+                }).length===0) {
+                    return {id:term, text:term};
+                }
+            }
+
+        });
+
+        //console.log("targetid="+targetid);
+        $(targetid).select2('data', {id: 1, text: 'H&E'});
+
+    });
+}
+
+function getComboboxSpecialStain(urlCommon, ids) {
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var url = urlCommon+"stain";
+    $.ajax(url).success(function(data) {
+        //json = eval(data);
+//        if( ids[6] == 'undefined' ) {
+//            var coll = 0;
+//        } else {
+//            var coll = ids[6];
+//        }
+        var targetid = id+"specialStains_"+ids[6]+"_stain";
+        if( type == "single" ) {
+            targetid = "#oleg_orderformbundle_staintype_field";
+        }
+        //var target = "#oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_0_slide_0_stain_0_name";
+        //console.log("targetid="+targetid);
+        $(targetid).select2({
+            //placeholder: "Search",
+            width: combobox_width,
+            dropdownAutoWidth: true,
+            selectOnBlur: true,
+            dataType: 'json',
+            quietMillis: 100,
+            data: data,
+            createSearchChoice:function(term, data) {
                 if ($(data).filter(function() {
                     return this.text.localeCompare(term)===0;
                 }).length===0) {
@@ -419,6 +461,7 @@ function initComboboxJs(ids) {
         getComboboxPartname(urlCommon,ids);
         getComboboxBlockname(urlCommon,ids);
         getComboboxStain(urlCommon,ids);
+        getComboboxSpecialStain(urlCommon,ids);
         getComboboxScanregion(urlCommon,ids);
         getComboboxProcedure(urlCommon,ids);
         getComboboxOrgan(urlCommon,ids);
