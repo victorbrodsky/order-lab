@@ -20,6 +20,9 @@ http://collage.med.cornell.edu/order/admin
 php app/console assetic:dump --env=prod --no-debug
 php app/console cache:clear --env=prod --no-debug
 
+#To include assets located in your bundles' Resources/public folder (target is by default "web") (for production add ../..):
+php app/console assets:install ../..
+
 # Since web folder is moved to root order/ and this is written in compser.json => run composer update
 composer.phar update
 

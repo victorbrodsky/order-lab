@@ -22,6 +22,8 @@ class PartPaperType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //echo "cicile=".$this->params['cicle']."<br>";
+
         if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
 
             //echo " => new, create or edit set file ";

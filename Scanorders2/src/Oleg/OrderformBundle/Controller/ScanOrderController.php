@@ -530,17 +530,17 @@ class ScanOrderController extends Controller {
 //        $patient->addClinicalHistory($clinicalHistory);
         $form_patient   = $this->createForm(new PatientType($params), $patient);
 
-        $procedure = new Procedure();
+        $procedure = new Procedure(true);
 
         $form_procedure = $this->createForm(new ProcedureType($params), $procedure);
 
         //$paper = new Document();
         //$form_paper = $this->createForm(new DocumentType(), $paper);
 
-        $accession = new Accession();
+        $accession = new Accession(true);
         $form_accession   = $this->createForm(new AccessionType($params), $accession);
          
-        $part = new Part();
+        $part = new Part(true);
         //$diffDiagnoses = new DiffDiagnoses();
         //$part->addDiffDiagnoses($diffDiagnoses);
         //$file = new Document();
@@ -548,10 +548,10 @@ class ScanOrderController extends Controller {
         //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $form_part   = $this->createForm(new PartType($params), $part);
             
-        $block = new Block();      
+        $block = new Block(true);
         $form_block   = $this->createForm(new BlockType($params), $block);
         
-        $slide = new Slide();
+        $slide = new Slide(true);
 
         //$specialStains = new SpecialStains();
         //$relevantScans = new RelevantScans();
@@ -560,11 +560,11 @@ class ScanOrderController extends Controller {
 
         $form_slide   = $this->createForm(new SlideType($params), $slide);
 
-        $scan = new Scan();
-        $form_scan   = $this->createForm(new ScanType(), $scan);
+//        $scan = new Scan();
+//        $form_scan   = $this->createForm(new ScanType(), $scan);
 
-        $stain = new Stain();
-        $form_stain   = $this->createForm(new StainType($params), $stain);
+//        $stain = new Stain();
+//        $form_stain   = $this->createForm(new StainType($params), $stain);
         
         return array(          
             'form' => $form->createView(),
@@ -574,8 +574,8 @@ class ScanOrderController extends Controller {
             'form_part' => $form_part->createView(),
             'form_block' => $form_block->createView(),
             'form_slide' => $form_slide->createView(),
-            'form_scan' => $form_scan->createView(),
-            'form_stain' => $form_stain->createView(),
+//            'form_scan' => $form_scan->createView(),
+//            'form_stain' => $form_stain->createView(),
             //'form_paper' => $form_paper->createView()
         );
     }

@@ -14,6 +14,10 @@
     {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
 {#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
 
+    {% set diffDiagnosesField = form_part.diffDisident %}
+    {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
+    {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
+
     <input type="hidden" id="formtype" value="single" />
     
     <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form_part) }}>
@@ -26,11 +30,15 @@
         {{ form_errors(form_part) }}
         {{ form_errors(form_block) }}
         {{ form_errors(form_slide) }}
-        {{ form_errors(form_scan) }}
-        {{ form_errors(form_stain) }}
+        {#{{ form_errors(form_scan) }}#}
+        {#{{ form_errors(form_stain) }}#}
+
 
         <div id="form-prototype-data"
-             data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDisident.vars.prototype.field)|e }}"
+             {#data-prototype-diffdiagnoses="{{ form_widget(form_part.diffDisident.vars.prototype.field)|e }}"#}
+             data-prototype-addorderformbundlediffdisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
+             data-prototype-orderformbundlediffdisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
+
              data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.field)|e }}"
              data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.field)|e }}"
         >
@@ -45,6 +53,8 @@
                 </div>
             </div>
             <div id="main" class="panel-body collapse in">
+
+                {{ formmacros.field(form_slide.title) }}
 
                 <div class="row">
                     <div class="col-xs-6" align="right">
@@ -65,13 +75,16 @@
                     </div>
                 </div>
 
-                {{ formmacros.field(form_stain.field) }}
+                {{ formmacros.field(form_slide.stain|first.field) }}
+                {{ formmacros.field(form_slide.stain|first.stainothers) }}
 
-                {{ formmacros.field(form_scan.field) }}
+                {{ formmacros.field(form_slide.scan|first.field) }}
+                {{ formmacros.field(form_slide.scan|first.scanothers) }}
 
-                {{ formmacros.field(form_part.disident) }}
+                {#{{ formmacros.field(form_part.disident) }}#}
+                {{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}
 
-                {{ formmacros.field(form_scan.note) }}
+                {{ formmacros.field(form_slide.scan|first.note) }}
 
             </div>
         </div>
@@ -121,7 +134,7 @@
                 <li><a href="#procedure">Procedure</a></li>
                 {#<li><a href="#accession">Accession</a></li>#}
                 <li><a href="#part">Part</a></li>
-{#                <li><a href="#block">Block</a></li>             #}
+                <li><a href="#block">Block</a></li>
 {#                <li><a href="#stain">Stain</a></li>#}
 
                 <li><a href="#slide">Slide</a></li>
@@ -132,30 +145,41 @@
             <div class="tab-content option_info_panel">
               <div class="tab-pane active" id="patient">
 
-                  {{ formmacros.patientForm(form_patient,form_patient) }}
+                  {{ formmacros.patientForm(form_patient,"check") }}
 
               </div>
               <div class="tab-pane" id="procedure">
-                  {{ formmacros.field(form_procedure.name) }}
+                  {#{{ formmacros.field(form_procedure.name) }}#}
+                  {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
               </div>
               {#<div class="tab-pane" id="accession">#}
                   {#{{ formmacros.field(form_accession.date) }}#}
               {#</div>#}
               <div class="tab-pane" id="part">
-                  {{ formmacros.field(form_part.sourceOrgan) }}
+                  {#{{ formmacros.field(form_part.sourceOrgan) }}#}
+                  {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+
                   {#{{ formmacros.field(form_part.paper.file) }}#}
-                  {{ formmacros.paperInput(form_part.paper,'new') }}
-                  {{ formmacros.field(form_part.description) }}
+                  {#{{ formmacros.paperInput(form_part.paper,'new') }}#}
+                  {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+
+                  {#{{ formmacros.field(form_part.description) }}#}
+                  {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+
                   {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
-                  {% if form_part.diffDisident|length > 0 %}
-                        {{ formmacros.collectionInput(form_part.diffDisident, 'diffDiagnoses', 'new', 'single', 0, 0, 0, 0, 0, 0) }}
-                  {% endif %}
+                  {#{% if form_part.diffDisident|length > 0 %}#}
+                        {#{{ formmacros.collectionInput(form_part.diffDisident, 'diffDiagnoses', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
                   
                   {#{{ formmacros.field(form_part.diseaseType) }}#}
                   {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
               </div>
 
-{#              <div class="tab-pane" id="block"> {{ form_rest(form_block) }}</div>           #}
+              <div class="tab-pane" id="block">
+                  {#{{ form_rest(form_block) }}#}
+                  {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
+              </div>
 {#              <div class="tab-pane" id="stain"> {{ form_rest(form_stain) }} </div>#}
 
               {#<div class="tab-pane" id="scan">#}
@@ -163,21 +187,30 @@
               {#</div>#}
 
               <div class="tab-pane" id="slide">
+
+                  {{ formmacros.field(form_slide.slidetype) }}
+
                   {#{{ formmacros.field(form_slide.diagnosis) }}#}
                   {{ formmacros.field(form_slide.microscopicdescr) }}
                   {#{{ formmacros.field(form_slide.specialStains) }}#}
-                  {% if form_slide.specialStains|length > 0 %}
-                      {{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 'specialStains', 0, 0, 0, 0, 0, 0) }}
-                  {% endif %}
+                  {#{% if form_slide.specialStains|length > 0 %}#}
+                      {#{{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 'specialStains', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
+
                   {#{{ formmacros.field(form_slide.relevantScans) }}#}
-                  {% if form_slide.relevantScans|length > 0 %}
-                      {#{{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}#}
-                      {{ formmacros.collectionInput(form_slide.relevantScans, 'relevantScans', 'new', 'single', 0, 0, 0, 0, 0, 0) }}
-                  {% endif %}
+                  {#{% if form_slide.relevantScans|length > 0 %}#}
+                      {#&#123;&#35;{{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}&#35;&#125;#}
+                      {#{{ formmacros.collectionInput(form_slide.relevantScans, 'relevantScans', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
+
+                  {#{{ formmacros.slideForm(form_slide, "check", "0_0_0_0_0_0_0_0", 'new') }}#}
+
               </div>
 
                 <div class="tab-pane" id="scan">
-                    {{ formmacros.field(form_scan.scanregion) }}
+                    {{ formmacros.field(form_slide.scan|first.scanregion) }}
                 </div>
 
             </div>
@@ -195,8 +228,8 @@
             {{ form_rest(form_part) }}
             {{ form_rest(form_block) }}
             {{ form_rest(form_slide) }}
-            {{ form_rest(form_scan) }}
-            {{ form_rest(form_stain) }}
+            {#{{ form_rest(form_scan) }}#}
+            {#{{ form_rest(form_stain) }}#}
             
         </div>     
        </div>      

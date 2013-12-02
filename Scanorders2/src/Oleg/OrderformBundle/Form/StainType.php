@@ -38,7 +38,7 @@ class StainType extends AbstractType
             'classtype' => 'stain'
         ));
 
-        $builder->add('slideothers', new ArrayFieldType(), array(
+        $builder->add('stainothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Stain',
             'label' => false
         ));

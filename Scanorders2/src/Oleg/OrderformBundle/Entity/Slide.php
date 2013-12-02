@@ -56,6 +56,11 @@ class Slide extends OrderAbstract
     protected $barcode;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $title;
+
+    /**
      * @ORM\ManyToOne(targetEntity="SlideType", inversedBy="slide", cascade={"persist"})
      * @ORM\JoinColumn(name="slidetype_id", referencedColumnName="id", nullable=true)
      */
@@ -352,5 +357,20 @@ class Slide extends OrderAbstract
         return $this->slidetype;
     }
 
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
 }

@@ -197,22 +197,20 @@
         {% if name != "scan" and name != "stain" %}
         {% if type == 'new' or type == 'edit' %}
             <div class="form-btn-options">
-                {#{% if toatlLength ==  (count + 1) %}#}
-                    <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
-                            class="add_form_btn btn-xs btn btn_margin btn-default"
-                            onclick="addSameForm(
-                                '{{ name }}',
-                                {{ patientCount }},
-                                {{ procedureCount }},
-                                {{ accessionCount }},
-                                {{ partCount }},
-                                {{ blockCount }},
-                                {{ slideCount }},
-                                {{ scanCount }},
-                                {{ stainCount }}
-                            )">Add</button>
-                {#{% endif %}#}
-                <button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>
+                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
+                        class="add_form_btn btn-xs btn btn_margin btn-default"
+                        onclick="addSameForm(
+                            '{{ name }}',
+                            {{ patientCount }},
+                            {{ procedureCount }},
+                            {{ accessionCount }},
+                            {{ partCount }},
+                            {{ blockCount }},
+                            {{ slideCount }},
+                            {{ scanCount }},
+                            {{ stainCount }}
+                        )">Add</button>
+                {#<button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>#}
             </div>
         {% endif %}
         {% endif %}
@@ -741,17 +739,16 @@ ident:      specialStains or relevantScans
 
     <div id="slide_{{ uid }}">
 
+        {{ formmacros.field(slide.title) }}
+
         <p><div class="slideslidetype">     
         {% if slidetypeHtml is not defined or slidetypeHtml == "" %}
             {{ formmacros.field(slide.slidetype) }}
         {% else  %}
-{#            <p><div class="slideslidetype">#}
             {{ slidetypeHtml }}
-{#            </div></p>#}
         {% endif %}
         </div></p>
-        
-        
+
         {% if stainHtml is not defined or stainHtml == "" %}    {#regular#}
 
             {% for stain in slide.stain %}
@@ -778,7 +775,7 @@ ident:      specialStains or relevantScans
         {% endif %}
 
         {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
-        {#                                        (fields,    cycle,     classname,             fieldtype,        nobtn,     nolabel)#}
+        {#                                        (fields,    cycle,     classname,           fieldtype,        nobtn,     nolabel)#}
             {{ formmacros.inputArrayField(slide.specialStains,cycle,"slidespecialstains","slidespecialStains","buttonbottom","") }}
         {% else  %}
             <p><div class="slidespecialstains">{{ specialStainsHtml }}</div></p>
@@ -789,6 +786,7 @@ ident:      specialStains or relevantScans
         {% else  %}
             <p><div class="sliderelevantscans">{{ relevantScansHtml }}</div></p>
         {% endif %}
+
 
     </div>
 
