@@ -90,7 +90,6 @@ class Accession extends OrderAbstract {
             if( !$this->accession->contains($accession) ) {
                 $accession->setAccession($this);
                 $this->accession->add($accession);
-                //$this->accession[] = $accession;
             }
         }
 
@@ -107,11 +106,6 @@ class Accession extends OrderAbstract {
         $this->accession->clear();
     }
 
-    public function obtainKeyField()
-    {
-        return $this->getAccession();
-    }
-
     /**
      * Set procedure (parent)
      *
@@ -123,18 +117,6 @@ class Accession extends OrderAbstract {
         $this->procedure = $procedure;
     
         return $this;
-    }
-
-    //parent
-    public function setParent($parent)
-    {
-        $this->setProcedure($parent);
-        return $this;
-    }
-
-    public function getParent()
-    {
-        return $this->getProcedure();
     }
 
     /**
@@ -189,6 +171,39 @@ class Accession extends OrderAbstract {
 
     public function clearPart(){
         $this->part->clear();
+    }
+
+
+    //parent, children, key field methods
+    public function setParent($parent) {
+        $this->setProcedure($parent);
+        return $this;
+    }
+
+    public function getParent() {
+        return $this->getProcedure();
+    }
+
+    public function getChildren() {
+        return $this->getPart();
+    }
+
+    public function addChildren($child) {
+        $this->addPart($child);
+    }
+
+    //don't use 'get' because later repo functions relay on "get" keyword
+    public function obtainKeyField() {
+        return $this->getAccession();
+    }
+
+    public function obtainKeyFieldName() {
+        return "accession";
+    }
+
+    public function createKeyField() {
+        $this->addAccession( new AccessionAccession(1) );
+        return $this->obtainKeyField();
     }
 
 }

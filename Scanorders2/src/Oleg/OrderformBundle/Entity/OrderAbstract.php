@@ -116,6 +116,8 @@ abstract class OrderAbstract
         return $this->orderinfo;
     }
 
+    //children methods
+
     public function getValidChild()
     {
         $validChild = null;
@@ -151,10 +153,16 @@ abstract class OrderAbstract
                 $count++;
             }
         }
-//        if( $count > 1 ) {
-//            throw $this->createNotFoundException( 'This Object must have only one valid child. Number of valid children=' . $count );
-//        }
+
+        if( $count > 1 ) {
+            throw $this->createNotFoundException( 'This Object must have only one valid child. Number of valid children=' . $count );
+        }
+
         return $validChild;
+    }
+
+    public function getAllKeyfield() {
+        return $this->obtainKeyField();
     }
 
 }

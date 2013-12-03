@@ -5,8 +5,7 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 //use Symfony\Component\Validator\Constraints as Assert;
-
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 //* @UniqueEntity({"accession","partname"})
 
@@ -159,13 +158,6 @@ class Part extends OrderAbstract
 
     public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null) {
         $this->accession = $accession;
-        return $this;
-    }
-
-
-    public function setParent($parent)
-    {
-        $this->setAccession($parent);
         return $this;
     }
 
@@ -393,11 +385,37 @@ class Part extends OrderAbstract
         $this->slide->clear();
     }
 
-    public function obtainKeyField() {
-        return $this->getPartname();
+
+    //parent, children, key field methods
+    public function setParent($parent) {
+        $this->setAccession($parent);
+        return $this;
+    }
+
+    public function getParent() {
+        return $this->getAccession();
     }
 
     public function getChildren() {
         return $this->getBlock();
     }
+
+    public function addChildren($child) {
+        $this->addBlock($child);
+    }
+
+    //don't use 'get' because later repo functions relay on "get" keyword
+    public function obtainKeyField() {
+        return $this->getPartname();
+    }
+
+    public function obtainKeyFieldName() {
+        return "partname";
+    }
+
+    public function createKeyField() {
+        $this->addPartname( new PartPartname(1) );
+        return $this->obtainKeyField();
+    }
+
 }

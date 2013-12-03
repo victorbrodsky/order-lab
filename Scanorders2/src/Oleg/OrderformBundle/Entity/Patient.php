@@ -135,11 +135,6 @@ class Patient extends OrderAbstract
         $this->mrn->clear();
     }
 
-    //don't use get because later functions relay on "get" keyword
-    public function obtainKeyField() {
-        return $this->getMrn();
-    }
-
     /**
      * Set name
      *
@@ -250,27 +245,6 @@ class Patient extends OrderAbstract
         return $this;
     }
 
-    //check if procedure-accession is exists
-    //$entity - procedure
-    public function containsChild($entity) {
-        //echo $entity;
-//        if( count($entity->getChildren()) != 1 ) {
-//            throw $this->createNotFoundException( 'This Object must have only one child. Number of children=' . count($entity->getChildren()) );
-//        }
-        //echo "procedure count=".count($this->procedure)."<br>";
-        foreach( $this->procedure as $procedure ) {
-            $acc1 = $entity->getChildren()->first()->getValidKeyfield();
-            $acc2 = $procedure->getChildren()->first()->getValidKeyfield();
-            //echo "compare: ".$acc1."?=".$acc2."<br>";
-            if( $acc1."" == $acc2."" ) {
-                echo "exists!!! <br>";
-                return true;
-            }
-        }
-        echo "not exists!!! <br>";
-        return false;
-    }
-
     /**
      * Remove procedure
      *
@@ -298,10 +272,6 @@ class Patient extends OrderAbstract
 
     public function clearProcedure(){
         $this->procedure->clear();
-    }
-
-    public function getChildren() {
-        return $this->getProcedure();
     }
 
     /**
@@ -470,5 +440,61 @@ class Patient extends OrderAbstract
         ", name=".$this->name->first().
         ", orderinfo=".count($this->orderinfo)."<br>";
     }
+
+
+
+    //parent, children, key field methods
+    public function setParent($parent) {
+        return null; //no parent for patient
+    }
+
+    public function getParent() {
+        return null; //no parent for patient
+    }
+
+    public function getChildren() {
+        return $this->getProcedure();
+    }
+
+    public function addChildren($child) {
+        $this->addProcedure($child);
+    }
+
+    //don't use 'get' because later repo functions relay on "get" keyword
+    public function obtainKeyField() {
+        return $this->getMrn();
+    }
+
+    public function obtainKeyFieldName() {
+        return "mrn";
+    }
+
+    public function createKeyField() {
+        $this->addMrn( new PatientMrn(1) );
+        return $this->obtainKeyField();
+    }
+
+    //TODO: not used. Remove it later.
+    //check if procedure-accession is exists
+    //$entity - procedure
+    public function containsChild($entity) {
+        //echo $entity;
+//        if( count($entity->getChildren()) != 1 ) {
+//            throw $this->createNotFoundException( 'This Object must have only one child. Number of children=' . count($entity->getChildren()) );
+//        }
+        //echo "procedure count=".count($this->procedure)."<br>";
+        foreach( $this->procedure as $procedure ) {
+            $acc1 = $entity->getChildren()->first()->getValidKeyfield();
+            $acc2 = $procedure->getChildren()->first()->getValidKeyfield();
+            //echo "compare: ".$acc1."?=".$acc2."<br>";
+            if( $acc1."" == $acc2."" ) {
+                echo "exists!!! <br>";
+                return true;
+            }
+        }
+        echo "not exists!!! <br>";
+        return false;
+    }
+
 
 }

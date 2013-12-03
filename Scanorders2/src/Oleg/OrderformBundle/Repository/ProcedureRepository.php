@@ -13,57 +13,6 @@ namespace Oleg\OrderformBundle\Repository;
 class ProcedureRepository extends ArrayFieldAbstractRepository
 {
 
-    //Accession number is the key to check uniqueness for Procedure-Accession element
-    //input $accessions requires for single slide order, when objects are provided separately and procedure does not have $accessions
-    public function processEntityProcedure222( $entity, $accessions=null, $orderinfo=null ) {
-        
-        //$em = $this->_em;
-        //$entity = $em->getRepository('OlegOrderformBundle:Accession')->removeDuplicateEntities( $entity );
-
-//        $accessions = $patient->getAccession();
-
-        echo "accession ID=".$accessions->first()->getId()."<br>";
-
-        //1) can't check uniqueness without accession number
-        if( $accessions == null ) {
-            echo "******* Procedure Case 1: return cause no accession provided<br>";
-            return $this->setResult($entity, $orderinfo);
-        }
-
-        //echo "accession count=".count($accessions)."<br>";
-
-        //$accession_found = null;
-        //2) if at least one accession belongs to a procedure, then potentially we can use this procedure. Since, currently, Procedure-Accession is one element => procedure has only one accession
-        $accession = $accessions->first();
-
-        //$accession = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $entity, $orderinfo = null, "Accession", "accession", "Part" );
-
-        //check accession
-        $foundAccession = $this->isExisted($accession,"Accession","accession");
-
-        if( $foundAccession ) {
-            echo "******* Procedure Case 2 & 3: Accession existed in DB<br>";
-            //case 2 - existed but empty with STATUS_RESERVED; User press check with empty Key field => new Key was generated
-            //Case 3 - existed and STATUS_VALID; User entered existed Key
-            $foundProcedure = $foundAccession->getProcedure();
-
-            if( $foundProcedure ) {
-                echo "**** Procedure Case 2 & 3: Accession has procedure<br>";
-                foreach( $entity->getAccession() as $thisAccession ) {
-                    $foundProcedure->addAccession( $thisAccession );
-                }
-                return $this->setResult( $foundProcedure, $orderinfo, $entity ); //provide found object, cause we need id
-            } else {
-                echo "**** Procedure Case 2 & 3: Accession does not have procedure, so use procedure provided by form<br>";
-                return $this->setResult( $entity, $orderinfo );
-            }
-
-        } else {
-            echo "******* Procedure Case 4 & 5: Accession does not exists in DB<br>";
-            return $this->setResult( $entity, $orderinfo );
-        }
-    }
-    
     public function setResult( $procedure, $orderinfo=null, $original=null ) {
 
         $em = $this->_em;
@@ -73,34 +22,37 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             return $procedure;
         }
 
+        //set status 'valid'
+        $procedure->setStatus(self::STATUS_VALID);
+
+        //CopyFields
+        $procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
+
         //echo "1 procedure name provider=".$procedure->getName()->first()->getProvider()."<br>";
         //echo "1 procedure name validity=".$procedure->getName()->first()->getValidity()."<br>";
         //echo "0 procedure patient MRN=".$procedure->getPatient()->getMrn()->first()."<br>";
 
-        $procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
+        //$procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
 
         $accessions = $procedure->getAccession();
         echo "accession count=".count($accessions)."<br>";
         foreach( $accessions as $accession ) {
             echo $accession;
         }
-        
-//        foreach( $accessions as $accession ) {
-//            //echo $accession;
-////            if( $em->getRepository('OlegOrderformBundle:Accession')->notExists($accession, "Accession") ) {
-//            if(1) {
-//                $procedure->removeAccession( $accession );
-//                $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo, "Accession", "accession", "Part", $procedure );
-//                $procedure->addAccession($accession);
-//                $accession->setProcedure($procedure);
-//                $orderinfo->addAccession($accession);
-//            } else {
-//                continue;
-//            }
-//        }
 
+        //we should have only one Accession in the Procedure, because Procedure-Accession is considered as one object for now
         $accession = $accessions->first();
         $em->persist($accession);
+
+        //set status 'valid'
+        $accession->setStatus(self::STATUS_VALID);
+
+        //CopyFields
+        $accession = $this->processFieldArrays($accession,$orderinfo);
+
+        //add orderinfo link
+        $orderinfo->addAccession($accession);
+
         $parts = $accession->getPart();
         echo "part count=".count($parts)."=>".$parts->first()."<br>";
 
@@ -110,21 +62,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 //        }
 
         foreach( $parts as $part ) {
-            echo "###<br>".$part."###<br>";
-            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
-//            if(1) {
-                $accession->removePart( $part );
 
-                echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
-                //echo "0 accession part name partname validity=".$part->getPartname()->first()->getValidity()."<br>";
-                echo "0 accession part name partname count=".count($part->getPartname())."<br>";
+            $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $orderinfo );
 
-                $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );
-                $accession->addPart($part);
-                //$orderinfo->addPart($part);
-            } else {
-                continue;
-            }
             $orderinfo->addPart($part);
         }
 
@@ -214,5 +154,28 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         return $patient;
     }
-    
+
+    //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
+    public function findUniqueByKey( $entity ) {
+
+        echo "Procedure: ".$entity;
+
+        if( count($entity->getChildren()) != 1 ) {
+            throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
+        }
+
+        $foundAccession = $this->findUniqueByKey($entity->getChildren()->first(),"Accession","accession");
+
+        if( $foundAccession ) {
+            echo "This entity alsready exists in DB <br>";
+            //get existing procedure
+            return $foundAccession->getParent(); //Accession->getProcedure => procedure
+
+        } else {
+            return null;
+        }
+
+
+    }
+
 }

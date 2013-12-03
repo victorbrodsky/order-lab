@@ -19,12 +19,12 @@ class PartRepository extends ArrayFieldAbstractRepository
 {
     
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntityPart( $part, $accession=null, $orderinfo=null ) {
+    public function processEntityPart_OLD( $part, $accession=null, $orderinfo=null ) {
 
         echo "<br><br>processEntityPart partname=".$part->getPartname()->first()."<br>";
 
         if( !$accession->getAccession() || count($accession->getAccession())==0 ) {
-            throw $this->createNotFoundException('Accession does not have an accession number.');
+            throw new \Exception('Accession does not have an accession number.');
         }
 
         $validAccession = $this->getValidField( $accession->getAccession() );
@@ -100,7 +100,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         return $part;
     }
     
-    public function setResult( $part, $orderinfo=null, $original=null ) {
+    public function setResult_OLD( $part, $orderinfo=null, $original=null ) {
 
         if( $part ) {
             echo "part yes <br>";
@@ -145,8 +145,8 @@ class PartRepository extends ArrayFieldAbstractRepository
         $blocks = $part->getBlock();    
         
         foreach( $blocks as $block ) {
-            if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block,"Block") ) {
-//            if(1) {
+//            if( $em->getRepository('OlegOrderformBundle:Block')->notExists($block,"Block") ) {
+            if(1) {
                 $part->removeBlock( $block );
                 $block = $em->getRepository('OlegOrderformBundle:Block')->processEntityBlock( $block, $part, $orderinfo );
                 $part->addBlock($block);
@@ -240,31 +240,6 @@ class PartRepository extends ArrayFieldAbstractRepository
         return $accession;
     }
 
-    public function findNextPartnameByAccession( $accessionNumber ) {
-        if( !$accessionNumber || $accessionNumber == "" ) {
-            return null;
-        }
-
-        //echo "findNextPartnameByAccession: accessionNumber=".$accessionNumber."<br>";
-        $name = "NOPARTNAMEPROVIDED";
-
-        $query = $this->getEntityManager()
-            ->createQuery('
-            SELECT MAX(ppartname.field) as max'.'partname'.' FROM OlegOrderformBundle:Part p
-            JOIN p.partname ppartname           
-            JOIN p.accession a
-            JOIN a.accession aa
-            WHERE ppartname.field LIKE :name AND aa.field = :accession'
-            )->setParameter('name', '%'.$name.'%')->setParameter('accession', $accessionNumber."");
-
-        $lastField = $query->getSingleResult();
-        $index = 'max'.'partname';
-        $lastFieldStr = $lastField[$index];
-        //echo "lastFieldStr=".$lastFieldStr."<br>";
-        
-        return $this->getNextByMax($lastFieldStr, $name);
-    }
-
     public function findNextPartnameByAccession_OLD( $accessionNumber ) {
         if( !$accessionNumber || $accessionNumber == "" ) {
             return null;
@@ -293,6 +268,41 @@ class PartRepository extends ArrayFieldAbstractRepository
         return null;
     }
 
+
+
+
+    //override parent method to get next key string
+    public function getNextNonProvided($entity) {
+        $accession= $entity->getParent();
+        $accessionNumber = $accession->getValidKeyfield()."";
+        return $this->findNextPartnameByAccession( $accessionNumber );
+    }
+
+    public function findNextPartnameByAccession( $accessionNumber ) {
+        if( !$accessionNumber || $accessionNumber == "" ) {
+            return null;
+        }
+
+        //echo "findNextPartnameByAccession: accessionNumber=".$accessionNumber."<br>";
+        $name = "NOPARTNAMEPROVIDED";
+
+        $query = $this->getEntityManager()
+            ->createQuery('
+            SELECT MAX(ppartname.field) as max'.'partname'.' FROM OlegOrderformBundle:Part p
+            JOIN p.partname ppartname
+            JOIN p.accession a
+            JOIN a.accession aa
+            WHERE ppartname.field LIKE :name AND aa.field = :accession'
+            )->setParameter('name', '%'.$name.'%')->setParameter('accession', $accessionNumber."");
+
+        $lastField = $query->getSingleResult();
+        $index = 'max'.'partname';
+        $lastFieldStr = $lastField[$index];
+        //echo "lastFieldStr=".$lastFieldStr."<br>";
+
+        return $this->getNextByMax($lastFieldStr, $name);
+    }
+
     //create new Part by provided accession number
     public function createPartByAccession( $accessionNumber ) {
 
@@ -309,7 +319,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         $accessions = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionNumber,"Accession","accession",true,false); //find multi: all accessions with given $accessionNumber
 
         if( count($accessions) > 1 ) {
-            throw $this->createNotFoundException('More than one entity found.');
+            throw new \Exception('More than one entity found.');
         }
 
         if( !$accessions ) {
@@ -347,6 +357,19 @@ class PartRepository extends ArrayFieldAbstractRepository
         return $part;
     }
 
+
+    //override parent method to find unique entity in DB
+    public function findUniqueByKey($entity) {
+
+        $partname = $entity->getValidKeyfield()."";
+        $accession = $entity->getAccession();
+        $accessionNumber = $accession->getValidKeyfield()."";
+
+        return $this->findOnePartByJoinedToField( $accessionNumber, $partname, null );
+    }
+
+    //$accession - Accession number (string)
+    //$partname - Part name (string)
     public function findOnePartByJoinedToField( $accession, $partname, $validity=null ) {
 
         $onlyValid = "";
@@ -375,44 +398,44 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     }
 
-    //use abstract method
-    public function createPart( $name=null, $accession=null, $status = null ) {
-
-        if( !$status ) {
-            $status = self::STATUS_RESERVED;
-        }
-
-        if( !$name ) {
-            $name = "A";
-        }
-
-        $part = new Part();
-        $part->setStatus($status);
-
-        $partname = new PartPartname();
-        $partname->setField($name);
-        $partname->setValidity(1);
-
-//        if( $accession && !$accession->getId() ) {
-//            $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession");
-//            $em->persist($accession);
-//            $entity->setParent($accession);
+//    //use abstract method
+//    public function createPart_TODEL( $name=null, $accession=null, $status = null ) {
+//
+//        if( !$status ) {
+//            $status = self::STATUS_RESERVED;
 //        }
-
-        $part->addPartname($partname);
-        $em = $this->_em;
-        $em->persist($part);
-        $em->flush();
-
-        return $part;
-    }
-    
-    public function presetEntity( $part ) {
-
-        //$part->setDiseaseType("Non-Neoplastic");
-
-        return $part;
-
-    }
+//
+//        if( !$name ) {
+//            $name = "A";
+//        }
+//
+//        $part = new Part();
+//        $part->setStatus($status);
+//
+//        $partname = new PartPartname();
+//        $partname->setField($name);
+//        $partname->setValidity(1);
+//
+////        if( $accession && !$accession->getId() ) {
+////            $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession");
+////            $em->persist($accession);
+////            $entity->setParent($accession);
+////        }
+//
+//        $part->addPartname($partname);
+//        $em = $this->_em;
+//        $em->persist($part);
+//        $em->flush();
+//
+//        return $part;
+//    }
+//
+//    public function presetEntity( $part ) {
+//
+//        //$part->setDiseaseType("Non-Neoplastic");
+//
+//        return $part;
+//
+//    }
 
 }

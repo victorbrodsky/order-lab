@@ -2,11 +2,6 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
-//use Doctrine\ORM\EntityRepository;
-//use Oleg\OrderformBundle\Entity\PatientMrn;
-//use Symfony\Component\Serializer\Exception\LogicException;
-//use Oleg\OrderformBundle\Entity\Patient;
-
 
 /**
  * PatientRepository
@@ -19,7 +14,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     //patient is a patient object found in DB
     //original is a patient object provided by submitted form
-    public function setResult( $patient, $orderinfo = null, $original=null ) {
+    public function setResult_OLD( $patient, $orderinfo = null, $original=null ) {
               
         $em = $this->_em;
 
@@ -31,6 +26,14 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return $patient;
         }
 
+        echo "patient=".$patient."<br>";
+        echo "count mrn=".count($patient->getMrn())."<br>";
+        echo "patient id=".$patient->getId()."<br>";
+        echo "<br>patient mrn=".$patient->getMrn()->first()."<br>";
+        echo "patient mrn provider=".$patient->getMrn()->first()->getProvider()."<br>";
+        echo "patient mrn validity=".$patient->getMrn()->first()->getValidity()."<br>";
+        echo "patient mrntype=".$patient->getMrn()->first()->getMrntype()."<br>";
+        echo "patient mrn id=".$patient->getMrn()->first()->getId()."<br>";
         echo "@@@@@ procedure count=".count($patient->getProcedure())."<br>";
         foreach( $patient->getProcedure() as $proc ) {
             $part = $proc->getAccession()->first()->getPart()->first();
@@ -46,7 +49,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             echo "@@@@@ block name=".$block->getBlockname()->first()."<br>";
         }
         echo "------------------<br>";
-        //exit();
+        exit();
 
 
         $patient = $this->processFieldArrays($patient,$orderinfo,$original);
@@ -61,8 +64,8 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
         foreach( $procedures as $procedure ) {   
                             
-            if( $em->getRepository('OlegOrderformBundle:Procedure')->notExists($procedure, "Procedure") ) {     //procedure new
-//            if(1) {
+//            if( $em->getRepository('OlegOrderformBundle:Procedure')->notExists($procedure, "Procedure") ) {     //procedure new
+            if(1) {
                 echo "before process procedure <br>";
                 $patient->removeProcedure( $procedure );
                 //echo "procedure0: ".$procedure."<br>";

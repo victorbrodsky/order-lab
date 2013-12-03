@@ -12,7 +12,7 @@ namespace Oleg\OrderformBundle\Repository;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
-    public function setResult( $accession, $orderinfo=null, $original=null ) {
+    public function setResult_OLD( $accession, $orderinfo=null, $original=null ) {
                
         echo "accession=".$accession."<br>";
         $em = $this->_em;
@@ -28,8 +28,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         echo "after process accession=".$accession."<br>";
 
         foreach( $parts as $part ) {
-            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
-//            if(1) {
+//            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
+            if(1) {
                 $accession->removePart( $part );
 
                 echo "0 accession part name partname=".$part->getPartname()->first()."<br>";

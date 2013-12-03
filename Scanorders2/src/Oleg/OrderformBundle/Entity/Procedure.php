@@ -117,11 +117,6 @@ class Procedure extends OrderAbstract
         $this->encounter->clear();
     }
 
-    public function obtainKeyField() {
-        return $this->getEncounter();
-    }
-
-
     /**
      * Add accession
      *
@@ -162,11 +157,6 @@ class Procedure extends OrderAbstract
         $this->accession = $accession;
     }
 
-    public function getChildren()
-    {
-        return $this->getAccession();
-    }
-
     /**
      * Set patient
      *
@@ -194,7 +184,14 @@ class Procedure extends OrderAbstract
         $this->accession->clear();
     }
 
-    //parent
+
+
+    public function __toString() {
+        return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().", encounterCount=" . count($this->encounter->first()) . ": encounter->first=" . $this->encounter->first() . "; accessionCount=".count($this->accession).":".$this->accession->first()."<br>";
+    }
+
+
+    //parent, children, key field methods
     public function setParent($parent)
     {
         $this->setPatient($parent);
@@ -206,8 +203,26 @@ class Procedure extends OrderAbstract
         return $this->getPatient();
     }
 
-    public function __toString() {
-        return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().", encounterCount=" . count($this->encounter->first()) . ": encounter->first=" . $this->encounter->first() . "; accessionCount=".count($this->accession).":".$this->accession->first()."<br>";
+    public function getChildren() {
+        return $this->getAccession();
+    }
+
+    public function addChildren($child) {
+        $this->addAccession($child);
+    }
+
+    //don't use 'get' because later repo functions relay on "get" keyword
+    public function obtainKeyField() {
+        return $this->getEncounter();
+    }
+
+    public function obtainKeyFieldName() {
+        return "encounter";
+    }
+
+    public function createKeyField() {
+        $this->addEncounter( new ProcedureEncounter(1) );
+        return $this->obtainKeyField();
     }
 
 }

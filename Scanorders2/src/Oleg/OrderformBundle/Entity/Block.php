@@ -4,7 +4,6 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-//use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
@@ -168,12 +167,6 @@ class Block extends OrderAbstract
         return $this;
     }
 
-    public function setParent($parent)
-    {
-        $this->setPart($parent);
-        return $this;
-    }
-
     /**
      * Get part
      *
@@ -182,14 +175,6 @@ class Block extends OrderAbstract
     public function getPart()
     {
         return $this->part;
-    }
-
-    public function obtainKeyField() {
-        return $this->getBlockname();
-    }
-
-    public function getChildren() {
-        return $this->getSlide();
     }
 
     public function __toString()
@@ -204,6 +189,39 @@ class Block extends OrderAbstract
 //        $slide_info .= ")";
 //        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
         return "Block: id=".$this->id.", blockname=".$this->blockname->first()."<br>";
+    }
+
+
+    //parent, children, key field methods
+    public function setParent($parent) {
+        $this->setPart($parent);
+        return $this;
+    }
+
+    public function getParent() {
+        return $this->getPart();
+    }
+
+    public function getChildren() {
+        return $this->getSlide();
+    }
+
+    public function addChildren($child) {
+        $this->addSlide($child);
+    }
+
+    //don't use 'get' because later repo functions relay on "get" keyword
+    public function obtainKeyField() {
+        return $this->getBlockname();
+    }
+
+    public function obtainKeyFieldName() {
+        return "blockname";
+    }
+
+    public function createKeyField() {
+        $this->addBlockname( new BlockBlockname(1) );
+        return $this->obtainKeyField();
     }
 
 }

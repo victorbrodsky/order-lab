@@ -17,20 +17,20 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
 
     //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntityBlock( $block, $part=null, $orderinfo=null ) {
+    public function processEntityBlock_OLD( $block, $part=null, $orderinfo=null ) {
 
         echo "<br><br>processEntityPart partname=".$part->getPartname()->first()."<br>";
 
         $accession = $part->getAccession();
 
         if( !$accession->getAccession() || count($accession->getAccession())==0 ) {
-            throw $this->createNotFoundException('Accession does not have an accession number.');
+            throw new \Exception('Accession does not have an accession number.');
         }
 
         $validAccession = $this->getValidField($accession->getAccession());
 
         if( !$part->getPartname() || count($part->getPartname())==0 ) {
-            throw $this->createNotFoundException('Part does not have an part name.');
+            throw new \Exception('Part does not have an part name.');
         }
 
         $validPartname = $this->getValidField( $part->getPartname() );
@@ -50,7 +50,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $validBlockname = $block->getBlockname()->first();
         } else {
             //echo "partnamecount is 0 => LOGIC WARNING !!!<br>";
-            throw $this->createNotFoundException('Part still does not have an part name.');
+            throw new \Exception('Part still does not have an part name.');
         }
 
         echo "valid accession#=".$validAccession.", partname=".$validPartname.", blockname=".$validBlockname."<br>";
@@ -96,7 +96,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         return $block;
     }
     
-    public function setResult( $block, $orderinfo=null, $original=null ) {
+    public function setResult_OLD( $block, $orderinfo=null, $original=null ) {
         
         $em = $this->_em;
         $em->persist($block);
@@ -109,8 +109,8 @@ class BlockRepository extends ArrayFieldAbstractRepository
         
         $slides = $block->getSlide();      
         foreach( $slides as $slide ) {         
-            if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide,"Slide") ) {
-//            if(1) {
+//            if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide,"Slide") ) {
+            if(1) {
                 $block->removeSlide( $slide );
                 $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $orderinfo );               
                 $block->addSlide($slide);                                                                                                                             
@@ -156,6 +156,28 @@ class BlockRepository extends ArrayFieldAbstractRepository
         }
 
         return $part;
+    }
+
+
+    //override parent method to get next key string
+    public function getNextNonProvided($entity) {
+        $part= $entity->getParent();
+        $partname = $part->getValidKeyfield()."";
+        $accession= $part->getParent();
+        $accessionNumber = $accession->getValidKeyfield()."";
+        return $this->findNextBlocknameByAccessionPartname( $accessionNumber, $partname );
+    }
+
+    //override parent method to find unique entity in DB
+    public function findUniqueByKey($entity) {
+
+        $blockname = $entity->getValidKeyfield()."";
+        $part= $entity->getParent();
+        $partname = $part->getValidKeyfield()."";
+        $accession= $part->getParent();
+        $accessionNumber = $accession->getValidKeyfield()."";
+
+        return $this->findOneBlockByJoinedToField( $accessionNumber, $partname, $blockname, null );
     }
 
     public function findOneBlockByJoinedToField( $accession, $partname, $blockname, $validity=null ) {

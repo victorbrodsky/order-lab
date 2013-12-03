@@ -98,8 +98,8 @@ class OrderInfoRepository extends EntityRepository
         echo "@@@@@ block name=".$block->getBlockname()->first()."<br>";
         
         foreach( $patients as $patient ) {
-            if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient,"Patient") ) {
-//            if(1) {
+//            if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient,"Patient") ) {
+            if(1) {
                 //echo $patient;
                 $entity->removePatient( $patient );
                 $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
