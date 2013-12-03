@@ -28,17 +28,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //CopyFields
         $procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
 
-        //echo "1 procedure name provider=".$procedure->getName()->first()->getProvider()."<br>";
-        //echo "1 procedure name validity=".$procedure->getName()->first()->getValidity()."<br>";
-        //echo "0 procedure patient MRN=".$procedure->getPatient()->getMrn()->first()."<br>";
-
-        //$procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
-
         $accessions = $procedure->getAccession();
-        echo "accession count=".count($accessions)."<br>";
-        foreach( $accessions as $accession ) {
-            echo $accession;
-        }
 
         //we should have only one Accession in the Procedure, because Procedure-Accession is considered as one object for now
         $accession = $accessions->first();
@@ -54,12 +44,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $orderinfo->addAccession($accession);
 
         $parts = $accession->getPart();
-        echo "part count=".count($parts)."=>".$parts->first()."<br>";
-
-        //copy accession childs
-//        foreach( $entity->getAccession() as $thisAccession ) {
-//            $foundProcedure->addAccession( $thisAccession );
-//        }
+        //echo "part count=".count($parts)."=>".$parts->first()."<br>";
 
         foreach( $parts as $part ) {
 
@@ -68,19 +53,36 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $orderinfo->addPart($part);
         }
 
-
-        //echo $procedure."<br>";
-        //echo "procedure name provider=".$procedure->getName()->first()->getProvider()."<br>";
-        //echo "procedure name validity=".$procedure->getName()->first()->getValidity()."<br>";
-//        echo "procedure accession count=".count($procedure->getAccession())."<br>";
-//        echo "procedure accession provider=".$procedure->getAccession()->first()->getAccession()->first()->getProvider()."<br>";
-//        echo "procedure accession validity=".$procedure->getAccession()->first()->getAccession()->first()->getValidity()."<br>";
-//        echo "procedure patient MRN=".$procedure->getPatient()->getMrn()->first()."<br>";
-
-        //exit();
-        //$em->flush($procedure);
         return $procedure;
     }
+
+    //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
+    public function findUniqueByKey( $entity ) {
+
+        echo "findUniqueByKey: Procedure: ".$entity;
+
+        if( count($entity->getChildren()) != 1 ) {
+            throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
+        }
+
+//        $accession = $entity->getChildren()->first();
+//        $class = new \ReflectionClass($accession);
+//        $className = $class->getShortName();
+//        echo "findUniqueByKey: Procedure: className=".$className."<br>";
+
+        $em = $this->_em;
+        $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey($entity->getChildren()->first(),"Accession","accession");
+
+        if( $foundAccession ) {
+            echo "This entity alsready exists in DB <br>";
+            //get existing procedure
+            return $foundAccession->getParent(); //Accession->getProcedure => procedure
+
+        } else {
+            return null;
+        }
+    }
+
 
     //TODO: remove MRN check (check procedure only by Accession number)
     //filter out duplicate virtual (in form, not in DB) procedures from provided patient
@@ -153,29 +155,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //exit();
 
         return $patient;
-    }
-
-    //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
-    public function findUniqueByKey( $entity ) {
-
-        echo "Procedure: ".$entity;
-
-        if( count($entity->getChildren()) != 1 ) {
-            throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
-        }
-
-        $foundAccession = $this->findUniqueByKey($entity->getChildren()->first(),"Accession","accession");
-
-        if( $foundAccession ) {
-            echo "This entity alsready exists in DB <br>";
-            //get existing procedure
-            return $foundAccession->getParent(); //Accession->getProcedure => procedure
-
-        } else {
-            return null;
-        }
-
-
     }
 
 }

@@ -91,6 +91,7 @@ abstract class OrderAbstract
      */
     public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
     {
+        echo "OrderAbstract add orderinfo=".$orderinfo."<br>";
         if( !$this->orderinfo->contains($orderinfo) ) {
             $this->orderinfo->add($orderinfo);
         }
@@ -161,7 +162,7 @@ abstract class OrderAbstract
         return $validChild;
     }
 
-    public function getAllKeyfield() {
+    public function obtainAllKeyfield() {
         return $this->obtainKeyField();
     }
 

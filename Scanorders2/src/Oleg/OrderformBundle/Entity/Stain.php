@@ -2,12 +2,12 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//(repositoryClass="Oleg\OrderformBundle\Repository\StainRepository")
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StainRepository")
+ * @ORM\Entity
  * @ORM\Table(name="stain")
  */
 class Stain extends SlideArrayFieldAbstract

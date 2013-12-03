@@ -2,9 +2,9 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Entity\BlockBlockname;
+//use Doctrine\ORM\EntityRepository;
+//use Oleg\OrderformBundle\Helper\FormHelper;
+//use Oleg\OrderformBundle\Entity\BlockBlockname;
 
 /**
  * BlockRepository
@@ -14,150 +14,6 @@ use Oleg\OrderformBundle\Entity\BlockBlockname;
  */
 class BlockRepository extends ArrayFieldAbstractRepository
 {
-
-
-    //this function will create an entity if it doesn't exist or return the existing entity object
-    public function processEntityBlock_OLD( $block, $part=null, $orderinfo=null ) {
-
-        echo "<br><br>processEntityPart partname=".$part->getPartname()->first()."<br>";
-
-        $accession = $part->getAccession();
-
-        if( !$accession->getAccession() || count($accession->getAccession())==0 ) {
-            throw new \Exception('Accession does not have an accession number.');
-        }
-
-        $validAccession = $this->getValidField($accession->getAccession());
-
-        if( !$part->getPartname() || count($part->getPartname())==0 ) {
-            throw new \Exception('Part does not have an part name.');
-        }
-
-        $validPartname = $this->getValidField( $part->getPartname() );
-
-        if( count($block->getBlockname()) == 0 ) { //empty key field
-            echo "******* Block Case 1: key field is empty => createBlockName only <br>";
-            //create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-            $block = $this->createBlockName( $validAccession, $validPartname, $block );
-        }
-
-        $blocknamecount = count($block->getBlockname());
-        if( $blocknamecount > 1 ) {
-            echo "blockname count > 1  <br>";
-            $validBlockname = $this->getValidField( $block->getBlockname() );
-        } else if( $blocknamecount == 1 ) {
-            echo "only one partname <br>";
-            $validBlockname = $block->getBlockname()->first();
-        } else {
-            //echo "partnamecount is 0 => LOGIC WARNING !!!<br>";
-            throw new \Exception('Part still does not have an part name.');
-        }
-
-        echo "valid accession#=".$validAccession.", partname=".$validPartname.", blockname=".$validBlockname."<br>";
-
-        //check if part already has block with the same name.
-        echo "******* check block uniqueness by blockname, partname and accession<br>";
-
-        //if $validBlockname does not exist in DB, then we can not check findOneBlockByJoinedToField, so $block_found will be null
-        if( !$validBlockname || $validBlockname == "" ) {
-            echo "block_found = null => LOGIC WARNING !!!<br>";
-            $block_found = null;
-        } else {
-            $block_found = $this->findOneBlockByJoinedToField( $validAccession, $validPartname, $validBlockname );
-            echo "block_found <br>";
-        }
-
-        if( $block_found == null ) {
-
-            echo "******* Block Case 2: block is not found in DB<br>";
-            return $this->setResult( $block, $orderinfo );
-
-        } else {
-
-            echo "******* Block Case 3: block is existed in DB<br>";
-
-            //copy all children to existing entity
-            foreach( $block->getSlide() as $slide ) {
-                $block_found->addSlide($slide);
-            }
-            return $this->setResult( $block_found, $orderinfo, $block );
-
-        }
-
-    }
-
-    public function createBlockName( $accession, $part, $block ) {
-        $fieldValue = $this->findNextBlocknameByAccessionPartname($accession, $part );  //next blockname
-        echo "next blockname  generated=".$fieldValue."<br>";
-        $field = new BlockBlockname(1);
-        $field->setField($fieldValue);
-        $block->clearBlockname();
-        $block->addBlockname( $field );
-        return $block;
-    }
-    
-    public function setResult_OLD( $block, $orderinfo=null, $original=null ) {
-        
-        $em = $this->_em;
-        $em->persist($block);
-
-        if( $orderinfo == null ) {
-            return $block;
-        }
-
-        $block = $this->processFieldArrays($block,$orderinfo,$original);
-        
-        $slides = $block->getSlide();      
-        foreach( $slides as $slide ) {         
-//            if( $em->getRepository('OlegOrderformBundle:Slide')->notExists($slide,"Slide") ) {
-            if(1) {
-                $block->removeSlide( $slide );
-                $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $orderinfo );               
-                $block->addSlide($slide);                                                                                                                             
-                //$orderinfo->addSlide($slide);
-            } else {
-                continue;
-            }
-            $orderinfo->addSlide($slide);
-        }
-
-        echo "block name=".$block->getBlockname()->first()."<br>";
-                 
-        //$em->flush($block);
-        //exit();
-        
-        return $block;
-    }
-
-    //filter out duplicate virtual (in form, not in DB) blocks from a part
-    //since we check the block for this particular part, then use just block's name (?!)
-    public function removeDuplicateEntities( $part ) {
-
-        $blocks = $part->getBlock();
-
-        if( count($blocks) == 1 ) {
-            return $part;
-        }
-
-        $names = array();
-
-        foreach( $blocks as $block ) {
-
-            $thisName = $block->getBlockname();
-
-            if( count($names) == 0 || !in_array($thisName, $names) ) {
-                $names[] = $thisName;
-                //persist the rest of entities, because they will be added to DB.
-                $em = $this->_em;
-                $em->persist($block);
-            } else {
-                $part->removeBlock($block);
-            }
-        }
-
-        return $part;
-    }
-
 
     //override parent method to get next key string
     public function getNextNonProvided($entity) {
@@ -266,20 +122,6 @@ class BlockRepository extends ArrayFieldAbstractRepository
         if( !$partname || $partname == "" ) {
             return null;
         }
-
-        $helper = new FormHelper();
-        $names = $helper->getBlock();
-     
-//            $query = $this->getEntityManager()
-//                ->createQuery('
-//            SELECT b FROM OlegOrderformBundle:Block b
-//            JOIN b.blockname bfield
-//            JOIN b.part p
-//            JOIN p.partname pp
-//            JOIN p.accession a
-//            JOIN a.accession aa
-//            WHERE bfield.field = :field AND aa.field = :accession AND pp.field = :partname'
-//                )->setParameter('field', $name)->setParameter('accession', $accessionNumber."")->setParameter('partname', $partname."");
                
         $name = "NOBLOCKNAMEPROVIDED";
 
@@ -301,5 +143,34 @@ class BlockRepository extends ArrayFieldAbstractRepository
         
         return $this->getNextByMax($lastFieldStr, $name);
     }
-    
+
+    //filter out duplicate virtual (in form, not in DB) blocks from a part
+    //since we check the block for this particular part, then use just block's name (?!)
+    public function removeDuplicateEntities( $part ) {
+
+        $blocks = $part->getBlock();
+
+        if( count($blocks) == 1 ) {
+            return $part;
+        }
+
+        $names = array();
+
+        foreach( $blocks as $block ) {
+
+            $thisName = $block->getBlockname();
+
+            if( count($names) == 0 || !in_array($thisName, $names) ) {
+                $names[] = $thisName;
+                //persist the rest of entities, because they will be added to DB.
+                $em = $this->_em;
+                $em->persist($block);
+            } else {
+                $part->removeBlock($block);
+            }
+        }
+
+        return $part;
+    }
+
 }

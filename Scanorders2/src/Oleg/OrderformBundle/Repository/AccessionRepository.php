@@ -12,55 +12,13 @@ namespace Oleg\OrderformBundle\Repository;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
-    public function setResult_OLD( $accession, $orderinfo=null, $original=null ) {
-               
-        echo "accession=".$accession."<br>";
-        $em = $this->_em;
-        $em->persist($accession);
-                
-        if( $orderinfo == null ) {
-            return $accession;
-        }
-
-        $accession = $this->processFieldArrays($accession,$orderinfo,$original);
-        
-        $parts = $accession->getPart();
-        echo "after process accession=".$accession."<br>";
-
-        foreach( $parts as $part ) {
-//            if( $em->getRepository('OlegOrderformBundle:Part')->notExists($part,"Part") ) {
-            if(1) {
-                $accession->removePart( $part );
-
-                echo "0 accession part name partname=".$part->getPartname()->first()."<br>";
-                //echo "0 accession part name partname validity=".$part->getPartname()->first()->getValidity()."<br>";
-                echo "0 accession part name partname count=".count($part->getPartname())."<br>";
-
-                $part = $em->getRepository('OlegOrderformBundle:Part')->processEntityPart( $part, $accession, $orderinfo );
-                $accession->addPart($part);
-                //$orderinfo->addPart($part);
-            } else {
-                continue;
-            }
-            $orderinfo->addPart($part);
-        }
-                  
-        //$em->flush($accession);
-        echo "finish process accession=".$accession."<br>";
-        
-        return $accession;
-    }
-
     //filter out duplicate virtual (in form, not in DB) accessions from specimen
-    public function removeDuplicateEntities( $specimen ) {
+    public function removeDuplicateEntities( $procedure ) {
 
-        $accessions = $specimen->getAccession();
-
-//        echo "accession count=".count($accessions)."<br>";
-//        exit();
+        $accessions = $procedure->getAccession();
         
         if( count($accessions) == 1 ) {
-            return $specimen;
+            return $procedure;
         }
 
         $accessionNums = array();
@@ -76,12 +34,12 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 $em = $this->_em;
                 $em->persist($accession);
             } else {
-                $specimen->removeAccession($accession);
+                $procedure->removeAccession($accession);
             }
 
         }
 
-        return $specimen;
+        return $procedure;
     }
 
 }

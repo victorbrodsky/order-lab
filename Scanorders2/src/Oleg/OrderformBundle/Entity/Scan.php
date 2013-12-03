@@ -4,8 +4,9 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+//(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ScanRepository")
+ * @ORM\Entity
  * @ORM\Table(name="scan")
  */
 class Scan extends SlideArrayFieldAbstract

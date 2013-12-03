@@ -35,6 +35,7 @@ class SpecialStains extends SlideArrayFieldAbstract
      */
     public function setStain($stain)
     {
+        echo "setStain=".$stain."<br>";
         $this->stain = $stain;
     }
 

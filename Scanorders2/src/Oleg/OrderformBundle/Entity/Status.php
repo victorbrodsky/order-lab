@@ -176,9 +176,10 @@ class Status
      */
     public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
     {
-        $this->orderinfo[] = $orderinfo;
-    
-        return $this;
+        //echo "Status addOrderinfo=".$orderinfo."<br>";
+        if( !$this->orderinfo->contains($orderinfo) ) {
+            $this->orderinfo->add($orderinfo);
+        }
     }
 
     /**

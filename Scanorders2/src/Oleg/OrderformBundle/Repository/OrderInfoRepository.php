@@ -15,13 +15,11 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 class OrderInfoRepository extends EntityRepository
 {
     
-    //make correct object
+    //process orderinfo and all entities
     public function processEntity( $entity, $type ) {
-        
-//        echo "orderifno repos id=".$entity->getId()."<br>";
-//        $providers = $entity->getProvider();
-//        echo "orderifno repos provider count=".count($providers).", [0]username=".$providers[0]->getUsername()."<br>";
-//        exit();
+
+        echo "patients count=".count($entity->getPatient())."<br>";
+        //exit();
 
         $em = $this->_em;
 
@@ -29,9 +27,7 @@ class OrderInfoRepository extends EntityRepository
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
 
         //set Status with Type and Group
-        //$status = $em->getRepository('OlegOrderformBundle:Status')->setStatus('Submit');
         $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
-        //$entity->setStatus("active");
         $entity->setStatus($status);
 
         $entity->setType($type);
@@ -53,31 +49,12 @@ class OrderInfoRepository extends EntityRepository
                 $entity->setReturnSlide( trim($returnSlide[$key]) );
             }
         }
-             
-//        $key = $entity->getPathologyService();
-//        if( isset($key) && $key >= 0 ) {
-//            $pathologyService = $helper->getPathologyService();
-//            $entity->setPathologyService( trim($pathologyService[$key]) );
-//        }
 
         $key = $entity->getPriority();
         if( isset($key) && $key >= 0 ) {
             $priority = $helper->getPriority();
             $entity->setPriority( trim($priority[$key]) );
         }
-
-//        echo "key=".$key."<br>";
-//        echo "getSlideDelivery=".$entity->getSlideDelivery()."<br>";
-//        exit();
-        
-//        $patients = $entity->getPatient();
-//        foreach( $patients as $patient ){
-//            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );
-//        }
-        
-        //$em->persist($in_entity);
-        //$em->flush();
-
 
         //return $entity;
         return $this->setResult( $entity );
@@ -89,28 +66,13 @@ class OrderInfoRepository extends EntityRepository
         $em->persist($entity);      
         
         $patients = $entity->getPatient();
+
         echo "patients count=".count($patients)."<br>";
-        echo "patient->procedures count=".count($patients->first()->getProcedure())."<br>";
 
-        $part = $patients->first()->getProcedure()->first()->getAccession()->first()->getPart()->first();
-        $block = $patients->first()->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first();
-        echo "@@@@@ part name=".$part->getPartname()->first()."<br>";
-        echo "@@@@@ block name=".$block->getBlockname()->first()."<br>";
-        
         foreach( $patients as $patient ) {
-//            if( $em->getRepository('OlegOrderformBundle:Patient')->notExists($patient,"Patient") ) {
-            if(1) {
-                //echo $patient;
-                $entity->removePatient( $patient );
-                $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
-                $entity->addPatient($patient);
-            } else {
-                continue;
-            }
+            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
+            //$entity->addPatient($patient);
         }
-
-        //echo "before orderinfo exit<br>";
-        //exit();
 
         $em->flush();         
         return $entity;

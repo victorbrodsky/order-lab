@@ -6,8 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//(repositoryClass="Oleg\OrderformBundle\Repository\StainListRepository")
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StainListRepository")
+ * @ORM\Entity
  * @ORM\Table(name="stainlist")
  */
 class StainList
@@ -72,6 +73,7 @@ class StainList
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->stain = new ArrayCollection();
+        $this->specialstain = new ArrayCollection();
     }
 
     /**
@@ -254,7 +256,9 @@ class StainList
      */
     public function addStain(\Oleg\OrderformBundle\Entity\Stain $stain)
     {
-        $this->stain[] = $stain;
+        if( !$this->stain->contains($stain) ) {
+            $this->stain->add($stain);
+        }
     
         return $this;
     }
@@ -277,5 +281,25 @@ class StainList
     public function getStain()
     {
         return $this->stain;
+    }
+
+
+    public function addSpecialstain(\Oleg\OrderformBundle\Entity\Specialstain $specialstain)
+    {
+        if( !$this->specialstain->contains($specialstain) ) {
+            $this->specialstain->add($specialstain);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecialstain(\Oleg\OrderformBundle\Entity\Specialstain $specialstain)
+    {
+        $this->specialstain->removeElement($specialstain);
+    }
+
+    public function getSpecialstain()
+    {
+        return $this->specialstain;
     }
 }

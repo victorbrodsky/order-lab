@@ -38,7 +38,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //$em = $this->_em;
         //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
 
-        $keys = $entity->getAllKeyfield();
+        $keys = $entity->obtainAllKeyfield();
 
         echo "count keys=".count($keys)."<br>";
         echo "key=".$keys->first()."<br>";
@@ -108,89 +108,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
             $addClassMethod = "add".$childClassName;
             $orderinfo->$addClassMethod($child);
-//            $child->addOrderinfo($orderinfo);
         }
         echo "finish: entity status=".$entity->getStatus()."<br>";
 
         return $entity;
     }
 
-    //make sure the uniqueness entity. Make new or return id of existing.
-    //$childName: i.e. "Procedure" for Patient
-    public function processEntity_OLD( $entity, $orderinfo = null, $className, $fieldName, $childName, $parent = null ) {
 
-        //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
-        //$em = $this->_em;
-        //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
-
-        $found = $this->findUniqueByKey($entity);
-
-        $getChildMethod = "get".ucfirst($childName);
-        $addChildMethod = "add".ucfirst($childName);
-        $getFieldMethod = "get".ucfirst($fieldName);
-
-        if( $found ) {
-            //case 1 - existed but empty with STATUS_RESERVED; User press check with empty MRN field => new MRN was generated
-            //Case 2 - existed and STATUS_VALID; User entered existed MRN
-            echo "********* ".$className." case 1 and 2: found in DB <br>";
-            echo "0 children count=".count($entity->$getChildMethod())."<br>";
-            foreach( $entity->$getChildMethod() as $child ) {
-                echo "adding: ".$child."<br>";
-                $found->$addChildMethod( $child );
-            }
-            echo "1 children count=".count($entity->$getChildMethod())."<br>";
-            return $this->setResult( $found, $orderinfo, $entity ); //provide found object, cause we need id
-        } else {
-            echo "********* ".$className." case ?: not found in DB <br>";
-            if( count($entity->$getFieldMethod()) > 0 ) {
-                //Case 3 - User entered new KEY, not existed in DB
-                echo "********* ".$className." case 3: not found, new key <br>";
-                return $this->setResult( $entity, $orderinfo );
-            } else {
-                //Case 4 - KEY is not provided.
-                echo "********* ".$className." case 4: not found, key is empty <br>";
-
-                //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
-                if( $className == "Procedure" ) {
-
-                    if( count($entity->$getChildMethod()) != 1 ) {
-                        throw new \Exception( 'This Object ' . $className . ' must have only one child. Number of children=' . count($entity->$getChildMethod()) );
-                    }
-
-                    $foundChild = $this->findUniqueByKey($entity->$getChildMethod()->first());
-
-                    if( $foundChild ) {
-                        echo $className." alsready exists in DB <br>";
-                        ////remove this from parent
-                        //$removeField = "remove".ucfirst($className);
-                        //$entity->getParent()->$removeField($entity);
-
-                        //get existing procedure
-                        $foundProcedure = $foundChild->getParent(); //Accession->getProcedure => procedure
-
-                        foreach( $entity->$getChildMethod() as $child ) {
-                            $foundProcedure->$addChildMethod( $child );
-                        }
-
-                        return $this->setResult( $foundProcedure, $orderinfo, $entity ); //provide found object, cause we need id
-
-                    } else {
-                        echo $className." does not exist in DB => create a new key field <br>";
-                        //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-                        $entity = $this->createKeyField( $entity, $className, $fieldName );
-                    }
-
-                } else {
-                    //method2: create a key field with next available key value and set this key field to form object (Advantage: no need to copy children)
-                    $entity = $this->createKeyField( $entity, $className, $fieldName );
-                }
-
-                return $this->setResult( $entity, $orderinfo );
-
-            }
-        }
-
-    }
 
     public function createKeyField( $entity, $className, $fieldName ) {
         $fieldValue = $this->getNextNonProvided($entity);
@@ -267,7 +191,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     if( !$field->getProvider() || $field->getProvider() == "" ) {
                                         //echo( "add provider <br>" );
                                         $field->setProvider($provider); //set provider
-                                        echo( "after added provider=".$field->getProvider()." <br>" );
+                                        //echo( "after added provider=".$field->getProvider()." <br>" );
                                     }
 
                                     //############# set validity to the fields from submitted form
@@ -310,7 +234,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //replace field entity if not existed from source object to destination object
     public function copyField( $entity, $field, $className, $methodName ) {
         $em = $this->_em;
-        //echo "class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        echo "class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
 
         if( !$found ) {
@@ -504,7 +428,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //return: null - not existed, entity object if existed
     public function findUniqueByKey( $entity ) {
 
-        echo "Abstract: ".$entity;
+        echo "findUniqueByKey: Abstract: ".$entity;
 
         if( !$entity ) {
             //echo "entity is null <br>";
@@ -514,15 +438,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
-
-        //$fieldMethod = "get".ucfirst($fieldName);
-
-        //echo "entity field count=".count($entity->$fieldMethod())."<br>";
-
-//        if( $entity->getAllKeyfield() == "" || $entity->getAllKeyfield() == null ) {
-//            //echo "entity field get is null<br>";
-//            return null;
-//        }
 
         $validKeyField = $entity->getValidKeyfield();
         if( $entity->getValidKeyfield() ) {

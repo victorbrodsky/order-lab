@@ -124,9 +124,11 @@ class CheckController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,null,"Patient","mrn");
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn");
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
 //        $entity = new Patient();
@@ -229,8 +231,10 @@ class CheckController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession");
+        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$user,"Accession","accession");
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
         $element = array(
@@ -329,7 +333,8 @@ class CheckController extends Controller {
         $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession);
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-        //echo "partname=".$part->getPartname()."  ";
+        $user = $this->get('security.context')->getToken()->getUser();
+        $part->getPartname()->first()->setProvider($user);
 
         if( $part ) {
             //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
@@ -428,6 +433,9 @@ class CheckController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$partname);
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $block->getBlockname()->first()->setProvider($user);
 
         //echo "partname=".$part->getPartname()."  ";
 
