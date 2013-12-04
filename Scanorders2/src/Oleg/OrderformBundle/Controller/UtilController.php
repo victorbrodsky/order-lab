@@ -38,7 +38,28 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
-    
+
+    /**
+     * @Route("/staintype", name="get-staintype")
+     * @Method("GET")
+     */
+    public function getStainTypeAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT stain.id as id, stain.name as text
+            FROM OlegOrderformBundle:StainList stain WHERE stain.type = :type'
+        )->setParameter('type', 'default');
+
+        $output = $query->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      * @Route("/procedure", name="get-procedure")

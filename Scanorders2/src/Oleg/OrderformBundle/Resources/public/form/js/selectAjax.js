@@ -110,7 +110,7 @@ function getComboboxStain(urlCommon, ids) {
 function getComboboxSpecialStain(urlCommon, ids) {
     var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var url = urlCommon+"stain";
+    var url = urlCommon+"staintype";
     $.ajax(url).success(function(data) {
         //json = eval(data);
 //        if( ids[6] == 'undefined' ) {
@@ -118,7 +118,7 @@ function getComboboxSpecialStain(urlCommon, ids) {
 //        } else {
 //            var coll = ids[6];
 //        }
-        var targetid = id+"specialStains_"+ids[6]+"_stain";
+        var targetid = id+"specialStains_"+ids[6]+"_staintype";
         if( type == "single" ) {
             targetid = "#oleg_orderformbundle_staintype_field";
         }

@@ -48,6 +48,7 @@
 
     {#action buttons#}
     {% if type == 'edit' or type == 'show'  %}
+        <div class="well well-sm">
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
             <a class="btn btn-danger" onclick="return confirm('Are you sure?');"
@@ -66,8 +67,8 @@
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
                href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Amend' }) }}">Amend</a>
         {% endif %}
+        </div
     {% endif %}
-    <br><br>
 
     <input type="hidden" id="formtype" value="multi" />
     <input type="hidden" id="formcicle" value="{{ type }}" />

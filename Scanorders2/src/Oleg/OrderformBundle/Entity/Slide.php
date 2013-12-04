@@ -261,15 +261,17 @@ class Slide extends OrderAbstract
     
     
     public function __toString() {
-        return "Slide: id=".$this->getId()."<br>";
+        $stain = "";
+        $mag = "";
+        if( count($this->getStain()) > 0 && count($this->getScan())>0 ) {
+            $mag = $this->getScan()->first()->getField();
+            $stain = $this->getStain()->first()->getField();
+        }
+
+        return "Slide: id=".$this->getId().", stain count=".count($this->getStain()).", stain=".$stain.", mag=".$mag."<br>";
     }
 
-    /**
-     * Add specialStains
-     *
-     * @param \Oleg\OrderformBundle\Entity\SpecialStains $specialStains
-     * @return Slide
-     */
+
     public function addSpecialStain( $specialStains )
     {
         if( $specialStains != null ) {
@@ -282,21 +284,11 @@ class Slide extends OrderAbstract
         return $this;
     }
 
-    /**
-     * Remove specialStains
-     *
-     * @param \Oleg\OrderformBundle\Entity\SpecialStains $specialStains
-     */
     public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
     {
         $this->specialStains->removeElement($specialStains);
     }
 
-    /**
-     * Get specialStains
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
     public function getSpecialStains()
     {
         return $this->specialStains;

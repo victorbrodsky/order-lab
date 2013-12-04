@@ -31,32 +31,16 @@ class SpecialStainsType extends AbstractType
             'attr' => array('class'=>'textarea form-control form-control-modif')
         ));
 
-//        $builder->add('stain', 'collection', array(
-//            'type' => new StainType($this->params),
-//            'required' => false,
-//            'label' => false
-//        ));
-//        $attr = array('class' => 'combobox combobox-width mrntype-combobox');
-//        $builder->add('stain', 'entity', array(
-//            'class' => 'OlegOrderformBundle:StainList',
-//            'label'=>false,
-//            'required' => true,
-//            'attr' => $attr,
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('s')
-//                    ->orderBy('s.id', 'ASC');
-//            },
-//        ));
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-stain', 'type' => 'hidden');    //new
+            $attr = array('class' => 'ajax-combobox-staintype', 'type' => 'hidden');    //new
         } else {
             $attr = array('class' => 'combobox combobox-width');    //show
         }
-        $builder->add('stain', 'custom_selector', array(
+        $builder->add('staintype', 'custom_selector', array(
             'label' => false,
             'required' => true,
             'attr' => $attr,
-            'classtype' => 'stain'
+            'classtype' => 'staintype'
         ));
 
         $builder->add('stainothers', new ArrayFieldType(), array(

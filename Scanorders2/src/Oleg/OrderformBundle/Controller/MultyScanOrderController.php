@@ -350,20 +350,7 @@ class MultyScanOrderController extends Controller {
         $part->addBlock($block);
 
         $slide = new Slide(true);
-
-//        $specialStains = new SpecialStains();
-//        $relevantScans = new RelevantScans();
-//        $slide->addRelevantScan($relevantScans);
-//        $slide->addSpecialStain($specialStains);
-
         $block->addSlide($slide);
-
-//        $scan = new Scan();
-//        $slide->addScan($scan);
-//
-//        $stain = new Stain();
-//        $slide->addStain($stain);
-
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -385,7 +372,7 @@ class MultyScanOrderController extends Controller {
         //$slide2 = new Slide();
         //$block->addSlide($slide2);
 
-        //get pathology service for this user by email
+        //get pathology service for this user
         $service = $user->getPathologyServices();
 
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);

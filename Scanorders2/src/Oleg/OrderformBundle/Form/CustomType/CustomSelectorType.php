@@ -53,6 +53,9 @@ class CustomSelectorType extends AbstractType {
             case "stain":
                 $transformer = new StainTransformer($this->om, $username);
                 break;
+            case "staintype":
+                $transformer = new StainTransformer($this->om, $username);
+                break;
             case "procedureType":
                 $transformer = new ProcedureTransformer($this->om, $username);
                 break;         

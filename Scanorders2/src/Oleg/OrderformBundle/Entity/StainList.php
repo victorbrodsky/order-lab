@@ -65,7 +65,7 @@ class StainList
     protected $stain;
 
     /**
-     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="stain")
+     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="staintype")
      */
     protected $specialstain;
 
@@ -189,7 +189,9 @@ class StainList
      */
     public function addSynonym(\Oleg\OrderformBundle\Entity\StainList $synonyms)
     {
-        $this->synonyms[] = $synonyms;
+        if( !$this->synonyms->contains($synonyms) ) {
+            $this->synonyms->add($synonyms);
+        }
     
         return $this;
     }
@@ -284,7 +286,7 @@ class StainList
     }
 
 
-    public function addSpecialstain(\Oleg\OrderformBundle\Entity\Specialstain $specialstain)
+    public function addSpecialstain(\Oleg\OrderformBundle\Entity\SpecialStains $specialstain)
     {
         if( !$this->specialstain->contains($specialstain) ) {
             $this->specialstain->add($specialstain);
@@ -293,7 +295,7 @@ class StainList
         return $this;
     }
 
-    public function removeSpecialstain(\Oleg\OrderformBundle\Entity\Specialstain $specialstain)
+    public function removeSpecialstain(\Oleg\OrderformBundle\Entity\SpecialStains $specialstain)
     {
         $this->specialstain->removeElement($specialstain);
     }

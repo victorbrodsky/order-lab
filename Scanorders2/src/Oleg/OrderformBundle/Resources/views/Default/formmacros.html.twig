@@ -426,7 +426,7 @@
 {% endmacro %}
 
 {% macro fieldSpecialStainsWidget(field) %}
-    {{ form_widget(field.vars.prototype.stain) }}
+    {{ form_widget(field.vars.prototype.staintype) }}
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
 
@@ -485,7 +485,7 @@
         <div style="float:left; width:100%">
             <div class="fieldInputColl">
                 {% if widget is not defined or widget == "" %}
-                    {{ form_widget(field.stain) }}
+                    {{ form_widget(field.staintype) }}
                     {{ form_widget(field.field) }}
                 {% else %}
                     {{ widget }}
@@ -610,10 +610,16 @@ ident:      specialStains or relevantScans
 {% macro patientForm( patient, flag, uid, cycle, mrnHtml, nameHtml, sexHtml, dobHtml, ageHtml, clinicalhistoryHtml ) %}
     {% import _self as formmacros %}
 
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
     <div id="patient_{{ uid }}">
 
         {% if mrnHtml is not defined or mrnHtml == "" %}
-            {{ formmacros.inputArrayField(patient.mrn,cycle,"patientmrn","key") }}
+            {{ formmacros.inputArrayField(patient.mrn,cycle,"patientmrn",key) }}
         {% else  %}
             <p><div class="patientmrn">{{ mrnHtml }}</div></p>
         {% endif %}
@@ -655,10 +661,17 @@ ident:      specialStains or relevantScans
 
 {% macro accessionForm( procedure, accession, flag, uid, cycle, procedureHtml, accessionHtml ) %}
     {% import _self as formmacros %}
+
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
     <div id="accession_{{ uid }}">
         {#{{ formmacros.fieldIconLabel(accession.accession,"glyphicon-check") }}#}
         {% if accessionHtml is not defined or accessionHtml == "" %}
-            {{ formmacros.inputArrayField(accession.accession,cycle,"accessionaccession","key") }}
+            {{ formmacros.inputArrayField(accession.accession,cycle,"accessionaccession",key) }}
         {% else  %}
             <p><div class="accessionaccession">{{ accessionHtml }}</div></p>
         {% endif %}
@@ -678,10 +691,16 @@ ident:      specialStains or relevantScans
 
     {% import _self as formmacros %}
 
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
     <div id="part_{{ uid }}">
 
         {% if partnameHtml is not defined or partnameHtml == "" %}
-            {{ formmacros.inputArrayField(part.partname,cycle,"partpartname","key") }}
+            {{ formmacros.inputArrayField(part.partname,cycle,"partpartname",key) }}
         {% else  %}
             <p><div class="partpartname">{{ partnameHtml }}</div></p>
         {% endif %}
@@ -731,11 +750,18 @@ ident:      specialStains or relevantScans
 
 {% macro blockForm( block, flag, uid, cycle, blocknameHtml, sectionsourceHtml ) %}
     {% import _self as formmacros %}
+
+    {% if cycle != 'show' %}
+        {% set key = "key" %}
+    {% else %}
+        {% set key = "" %}
+    {% endif %}
+
     <div id="block_{{ uid }}">
 
         {#{{ formmacros.fieldIconLabel(form.blockname,"glyphicon-check") }}#}
         {% if blocknameHtml is not defined or blocknameHtml == "" %}
-            {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname","key") }}
+            {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname",key) }}
         {% else  %}
             <p><div class="blockblockname">{{ blocknameHtml }}</div></p>
         {% endif %}

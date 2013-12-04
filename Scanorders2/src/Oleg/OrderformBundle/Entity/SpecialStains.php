@@ -25,26 +25,27 @@ class SpecialStains extends SlideArrayFieldAbstract
     protected $field;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="specialstain", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="specialstain")
      * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
      */
-    protected $stain;
+    protected $staintype;
 
     /**
-     * @param mixed $stain
+     * @param mixed $staintype
      */
-    public function setStain($stain)
+    public function setStaintype($staintype)
     {
-        echo "setStain=".$stain."<br>";
-        $this->stain = $stain;
+        $this->staintype = $staintype;
     }
 
     /**
      * @return mixed
      */
-    public function getStain()
+    public function getStaintype()
     {
-        return $this->stain;
+        return $this->staintype;
     }
+
+
 
 }

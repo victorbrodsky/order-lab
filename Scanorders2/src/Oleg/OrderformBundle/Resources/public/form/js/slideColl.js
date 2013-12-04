@@ -9,9 +9,9 @@
 
 ////////////////// uses as generic collection field with + and - buttons ////////////////////////
 
-var findCollectionStr = 'input,.ajax-combobox-stain';
-var findCollectionSpecialStr = 'input[type=text],.ajax-combobox-stain';
-var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.ajax-combobox-stain:enabled:not([readonly])';
+var findCollectionStr = 'input,.ajax-combobox-staintype';
+var findCollectionSpecialStr = 'input[type=text],.ajax-combobox-staintype';
+var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.ajax-combobox-staintype:enabled:not([readonly])';
 
 //get input field only
 function getCollField( ident, patient, procedure, accession, part, block, slide, coll, prefix ) {
