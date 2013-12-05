@@ -22,21 +22,11 @@ class BlockNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $helper = new FormHelper();
-//
-//        $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
-//        $builder->add('field', 'choice', array(
-//            'choices' => $helper->getBlock(),
-//            'required' => false,
-//            'label' => 'Block Name',
-//            'attr' => $attr,
-//        ));
-//
-//        $builder->add('blocknameothers', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',
-//            'label' => false
-//        ));
-
+        if( $this->params['type'] == 'singleorder') {
+            $label = false;
+        } else {
+            $label = 'Block Name';
+        }
 
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-blockname keyfield', 'type' => 'hidden');    //new
@@ -44,7 +34,7 @@ class BlockNameType extends AbstractType
             $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Block Name',
+            'label' => $label,
             'attr' => $attr,
             'required'=>false,
             'classtype' => 'blockname'

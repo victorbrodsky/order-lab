@@ -277,225 +277,225 @@ class ScanOrderController extends Controller {
         );
     }
     
-    /**
-     * Creates a new OrderInfo entity.
-     *
-     * @Route("/", name="singleorder_create")
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
-        $params = array('type'=>'single', 'cicle'=>'create', 'service'=>null);
-
-//        echo "controller create=";
-//        print_r($params);
-//        echo "<br>";
-
-        //echo "scanorder createAction";
-        $entity  = new OrderInfo();
-        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
-        $form->bind($request);
-              
-        $patient = new Patient();      
-        $form_patient = $this->createForm(new PatientType($params), $patient);
-        $form_patient->bind($request);
-
-        $procedure = new Procedure();
-        $form_procedure = $this->createForm(new ProcedureType($params), $procedure);
-        $form_procedure->bind($request);
-
-//        $files = $this->getRequest()->files;
-//        print_r($files);
-//        $paper = $procedure->getPaper();
-//        echo "PAPER=".$paper."<br>";
-//        $paper = new Document();
-//        $form_paper = $this->createForm(new DocumentType(), $paper);
-//        $form_paper->bind($request);
-        
-        $accession = new Accession();
-        $form_accession = $this->createForm(new AccessionType($params), $accession);
-        $form_accession->bind($request);
-        
-        $part = new Part();
-        $form_part = $this->createForm(new PartType($params), $part);
-        $form_part->bind($request);
-        
-        $block = new Block();
-        $form_block = $this->createForm(new BlockType($params), $block);
-        $form_block->bind($request);
-
-        $slide = new Slide();
-        $form_slide = $this->createForm(new SlideType($params), $slide);
-        $form_slide->bind($request);
-
-        $scan = new Scan();
-        $form_scan = $this->createForm(new ScanType(), $scan);
-        $form_scan->bind($request);
-
-        $stain = new Stain();
-        $form_stain = $this->createForm(new StainType($params), $stain);
-        $form_stain->bind($request);
-
-
-        if(0) {
-            $errorHelper = new ErrorHelper();
-            $errors = $errorHelper->getErrorMessages($form);
-            echo "<br>form errors:<br>";
-            print_r($errors); 
-            $errors = $errorHelper->getErrorMessages($form_patient);
-            echo "<br>patient errors:<br>";
-            print_r($errors); 
-            $errors = $errorHelper->getErrorMessages($form_procedure);
-            echo "<br>procedure errors:<br>";
-            print_r($errors); 
-            $errors = $errorHelper->getErrorMessages($form_accession);
-            echo "<br>accession errors:<br>";
-            print_r($errors);
-            $errors = $errorHelper->getErrorMessages($form_part);
-            echo "<br>part errors:<br>";
-            print_r($errors);
-            $errors = $errorHelper->getErrorMessages($form_block);
-            echo "<br>block errors:<br>";
-            print_r($errors);
-            $errors = $errorHelper->getErrorMessages($form_slide);
-            echo "<br>slide errors:<br>";
-            print_r($errors);
-            $errors = $errorHelper->getErrorMessages($form_scan);
-            echo "<br>scan errors:<br>";
-            print_r($errors);
-            $errors = $errorHelper->getErrorMessages($form_stain);
-            echo "<br>stain errors:<br>";
-            print_r($errors);
-
-        }
-//            
-//        echo "<br>stain type=".$slide->getStain()->getName()."<br>";
-//        echo "scan mag=".$slide->getScan()->getMag()."<br>";        
-        
-        
-        if( $form->isValid() && 
-            $form_procedure->isValid() &&
-            $form_accession->isValid() &&
-            $form_part->isValid() &&    
-            $form_block->isValid() &&
-            $form_slide->isValid() &&
-            $form_scan->isValid() &&
-            $form_stain->isValid()
-        ) {
-            $em = $this->getDoctrine()->getManager();
-
-            //echo $paper;
-            //$paper->upload();
-            //$em->persist($paper);
-            //$em->flush();
-            //exit();
-                        
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "single" );
-            
-            //procedure/procedure: none
-            //$procedure->addProcedure($accession);
-
-//            echo "<br>Before loop:<br>";
-//            echo "<br>name=".$patient->getName();
-//            echo "<br>sex=".$patient->getSex();
-//            exit();
-
-            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );                       
-            $entity->addPatient($patient);
-            //$em->persist($entity);          
-            //$em->flush();
-            
-            $procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntity( $procedure, $patient, array($accession) );
-            $patient->addProcedure($procedure);
-            $entity->addProcedure($procedure);
-
-            //$procedure->setPaper($paper);
-            //$em->persist($patient); 
-            //$em->persist($procedure);
-            //$em->flush();
-
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
-            $procedure->addAccession($accession);
-            $entity->addAccession($accession);
-            //$em->persist($accession);          
-            //$em->flush();
-            
-            $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession );
-            $accession->addPart($part);
-            $entity->addPart($part);
-            //$em->persist($part);          
-            //$em->flush();
-            
-            $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part );
-            $part->addBlock($block);
-            $entity->addBlock($block);
-            //$em->persist($block);          
-            //$em->flush();
-            
-            $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
-            //$em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
-            //$em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );
-            //$accession->addSlide($slide); 
-            //$part->addSlide($slide);
-            $block->addSlide($slide);  
-            $entity->addSlide($slide);
-
-            $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
-            $slide->addScan($scan);
-            $entity->addScan($scan);
-
-            $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
-            $slide->addStain($stain);
-            $entity->addStain($stain);
-
-            $name = $form_stain["name"]->getData();
-            
-//            echo "stain name=".$name."<br>";
-//            print_r($request);
-//            echo $stain;
-            
-//            echo $entity;
-//            echo $procedure;
-//            echo "orderinfo proc count=".count($procedure->getOrderInfo())."<br>";
-//            echo "proc count=".count($entity->getProcedure())."<br>";
-//            echo "orderinfo part count=".count($part->getOrderInfo())."<br>";
-//            echo "part count=".count($entity->getPart())."<br>";
-//            exit();
-
-            $em->persist($entity);
-            $em->flush();
-
-            //$email = $this->get('security.context')->getToken()->getAttribute('email');
-            $user = $this->get('security.context')->getToken()->getUser();
-            $email = $user->getEmail();
-
-            $emailUtil = new EmailUtil();
-            $emailUtil->sendEmail( $email, $entity, null );
-                      
-            return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-                'orderid' => $entity->getId(),
-            ));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-            'form_patient'   => $form_patient->createView(),
-            'form_procedure'   => $form_procedure->createView(),
-            'form_accession'   => $form_accession->createView(),
-            'form_part'   => $form_part->createView(),
-            'form_block'   => $form_block->createView(),
-            'form_slide'   => $form_slide->createView(),
-            'form_stain'   => $form_stain->createView(),
-            'form_scan'   => $form_scan->createView(),
-        );
-    }
-    
+//    /**
+//     * Creates a new OrderInfo entity.
+//     *
+//     * @Route("/TODEL", name="TODEL_singleorder_create_TODEL")
+//     * @Method("POST")
+//     * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
+//     */
+//    public function createAction_TODEL(Request $request)
+//    {
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+//
+//        $params = array('type'=>'single', 'cicle'=>'create', 'service'=>null);
+//
+////        echo "controller create=";
+////        print_r($params);
+////        echo "<br>";
+//
+//        //echo "scanorder createAction";
+//        $entity  = new OrderInfo();
+//        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+//        $form->bind($request);
+//
+//        $patient = new Patient();
+//        $form_patient = $this->createForm(new PatientType($params), $patient);
+//        $form_patient->bind($request);
+//
+//        $procedure = new Procedure();
+//        $form_procedure = $this->createForm(new ProcedureType($params), $procedure);
+//        $form_procedure->bind($request);
+//
+////        $files = $this->getRequest()->files;
+////        print_r($files);
+////        $paper = $procedure->getPaper();
+////        echo "PAPER=".$paper."<br>";
+////        $paper = new Document();
+////        $form_paper = $this->createForm(new DocumentType(), $paper);
+////        $form_paper->bind($request);
+//
+//        $accession = new Accession();
+//        $form_accession = $this->createForm(new AccessionType($params), $accession);
+//        $form_accession->bind($request);
+//
+//        $part = new Part();
+//        $form_part = $this->createForm(new PartType($params), $part);
+//        $form_part->bind($request);
+//
+//        $block = new Block();
+//        $form_block = $this->createForm(new BlockType($params), $block);
+//        $form_block->bind($request);
+//
+//        $slide = new Slide();
+//        $form_slide = $this->createForm(new SlideType($params), $slide);
+//        $form_slide->bind($request);
+//
+//        $scan = new Scan();
+//        $form_scan = $this->createForm(new ScanType(), $scan);
+//        $form_scan->bind($request);
+//
+//        $stain = new Stain();
+//        $form_stain = $this->createForm(new StainType($params), $stain);
+//        $form_stain->bind($request);
+//
+//
+//        if(0) {
+//            $errorHelper = new ErrorHelper();
+//            $errors = $errorHelper->getErrorMessages($form);
+//            echo "<br>form errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_patient);
+//            echo "<br>patient errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_procedure);
+//            echo "<br>procedure errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_accession);
+//            echo "<br>accession errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_part);
+//            echo "<br>part errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_block);
+//            echo "<br>block errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_slide);
+//            echo "<br>slide errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_scan);
+//            echo "<br>scan errors:<br>";
+//            print_r($errors);
+//            $errors = $errorHelper->getErrorMessages($form_stain);
+//            echo "<br>stain errors:<br>";
+//            print_r($errors);
+//
+//        }
+////
+////        echo "<br>stain type=".$slide->getStain()->getName()."<br>";
+////        echo "scan mag=".$slide->getScan()->getMag()."<br>";
+//
+//
+//        if( $form->isValid() &&
+//            $form_procedure->isValid() &&
+//            $form_accession->isValid() &&
+//            $form_part->isValid() &&
+//            $form_block->isValid() &&
+//            $form_slide->isValid() &&
+//            $form_scan->isValid() &&
+//            $form_stain->isValid()
+//        ) {
+//            $em = $this->getDoctrine()->getManager();
+//
+//            //echo $paper;
+//            //$paper->upload();
+//            //$em->persist($paper);
+//            //$em->flush();
+//            //exit();
+//
+//            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, "single" );
+//
+//            //procedure/procedure: none
+//            //$procedure->addProcedure($accession);
+//
+////            echo "<br>Before loop:<br>";
+////            echo "<br>name=".$patient->getName();
+////            echo "<br>sex=".$patient->getSex();
+////            exit();
+//
+//            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient );
+//            $entity->addPatient($patient);
+//            //$em->persist($entity);
+//            //$em->flush();
+//
+//            $procedure = $em->getRepository('OlegOrderformBundle:Procedure')->processEntity( $procedure, $patient, array($accession) );
+//            $patient->addProcedure($procedure);
+//            $entity->addProcedure($procedure);
+//
+//            //$procedure->setPaper($paper);
+//            //$em->persist($patient);
+//            //$em->persist($procedure);
+//            //$em->flush();
+//
+//            $accession = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession );
+//            $procedure->addAccession($accession);
+//            $entity->addAccession($accession);
+//            //$em->persist($accession);
+//            //$em->flush();
+//
+//            $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $accession );
+//            $accession->addPart($part);
+//            $entity->addPart($part);
+//            //$em->persist($part);
+//            //$em->flush();
+//
+//            $block = $em->getRepository('OlegOrderformBundle:Block')->processEntity( $block, $part );
+//            $part->addBlock($block);
+//            $entity->addBlock($block);
+//            //$em->persist($block);
+//            //$em->flush();
+//
+//            $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide );
+//            //$em->getRepository('OlegOrderformBundle:Stain')->processEntity( $slide->getStain() );
+//            //$em->getRepository('OlegOrderformBundle:Scan')->processEntity( $slide->getScan() );
+//            //$accession->addSlide($slide);
+//            //$part->addSlide($slide);
+//            $block->addSlide($slide);
+//            $entity->addSlide($slide);
+//
+//            $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
+//            $slide->addScan($scan);
+//            $entity->addScan($scan);
+//
+//            $stain = $em->getRepository('OlegOrderformBundle:Stain')->processEntity( $stain );
+//            $slide->addStain($stain);
+//            $entity->addStain($stain);
+//
+//            $name = $form_stain["name"]->getData();
+//
+////            echo "stain name=".$name."<br>";
+////            print_r($request);
+////            echo $stain;
+//
+////            echo $entity;
+////            echo $procedure;
+////            echo "orderinfo proc count=".count($procedure->getOrderInfo())."<br>";
+////            echo "proc count=".count($entity->getProcedure())."<br>";
+////            echo "orderinfo part count=".count($part->getOrderInfo())."<br>";
+////            echo "part count=".count($entity->getPart())."<br>";
+////            exit();
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            //$email = $this->get('security.context')->getToken()->getAttribute('email');
+//            $user = $this->get('security.context')->getToken()->getUser();
+//            $email = $user->getEmail();
+//
+//            $emailUtil = new EmailUtil();
+//            $emailUtil->sendEmail( $email, $entity, null );
+//
+//            return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+//                'orderid' => $entity->getId(),
+//            ));
+//        }
+//
+//        return array(
+//            'entity' => $entity,
+//            'form'   => $form->createView(),
+//            'form_patient'   => $form_patient->createView(),
+//            'form_procedure'   => $form_procedure->createView(),
+//            'form_accession'   => $form_accession->createView(),
+//            'form_part'   => $form_part->createView(),
+//            'form_block'   => $form_block->createView(),
+//            'form_slide'   => $form_slide->createView(),
+//            'form_stain'   => $form_stain->createView(),
+//            'form_scan'   => $form_scan->createView(),
+//        );
+//    }
+//
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
@@ -504,8 +504,8 @@ class ScanOrderController extends Controller {
      * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
      */
     public function newAction()
-    {            
-        
+    {
+
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
@@ -539,7 +539,7 @@ class ScanOrderController extends Controller {
 
         $accession = new Accession(true);
         $form_accession   = $this->createForm(new AccessionType($params), $accession);
-         
+
         $part = new Part(true);
         //$diffDiagnoses = new DiffDiagnoses();
         //$part->addDiffDiagnoses($diffDiagnoses);
@@ -547,10 +547,10 @@ class ScanOrderController extends Controller {
         //$part->addPaper($file);
         //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
         $form_part   = $this->createForm(new PartType($params), $part);
-            
+
         $block = new Block(true);
         $form_block   = $this->createForm(new BlockType($params), $block);
-        
+
         $slide = new Slide(true);
 
         //$specialStains = new SpecialStains();
@@ -565,8 +565,8 @@ class ScanOrderController extends Controller {
 
 //        $stain = new Stain();
 //        $form_stain   = $this->createForm(new StainType($params), $stain);
-        
-        return array(          
+
+        return array(
             'form' => $form->createView(),
             'form_patient' => $form_patient->createView(),
             'form_procedure' => $form_procedure->createView(),

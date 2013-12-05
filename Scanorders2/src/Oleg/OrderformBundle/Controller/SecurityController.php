@@ -104,7 +104,7 @@ class SecurityController extends Controller
         
 //        return $this->redirect($this->generateUrl('scanorder_new'), 301);
         //return $this->render('OlegOrderformBundle:Controller:scanorder_new');
-        return $this->redirect($this->generateUrl('scanorder_new'));
+        return $this->redirect($this->generateUrl('single_new'));
         
     }
     

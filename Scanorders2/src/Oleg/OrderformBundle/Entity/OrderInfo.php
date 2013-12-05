@@ -386,7 +386,7 @@ class OrderInfo
      */
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {
-        echo "OrderInfo addPatient=".$patient."<br>";
+        //echo "OrderInfo addPatient=".$patient."<br>";
         if( !$this->patient->contains($patient) ) {            
             $this->patient->add($patient);
         }               

@@ -107,6 +107,7 @@ class MultyScanOrderController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
+     * @Route("/single/new", name="singleorder_create")
      * @Route("/research/new", name="res_create")
      * @Route("/educational/new", name="edu_create")
      * @Route("/clinical/new", name="clinical_create")
@@ -136,22 +137,16 @@ class MultyScanOrderController extends Controller {
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName;
 
-        $type = "clinical";
-
-        if( $routeName == "clinical_create") {
+        if( $routeName == "singleorder_create" ) {
+            $type = "singleorder";
+        } elseif( $routeName == "clinical_create") {
             $type = "clinical";
-            //$entity->setEducational(null);
-            //$entity->setResearch(null);
-        }
-
-        if( $routeName == "edu_create") {
+        } elseif( $routeName == "edu_create") {
             $type = "educational";
-            //$entity->setResearch(null);
-        }
-
-        if( $routeName == "res_create") {
+        } elseif( $routeName == "res_create") {
             $type = "research";
-            //$entity->setEducational(null);
+        } else {
+            $type = "singleorder";
         }
 
         $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
@@ -311,6 +306,7 @@ class MultyScanOrderController extends Controller {
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
+     * @Route("/single/new", name="single_new")
      * @Route("/research/new", name="res_new")
      * @Route("/educational/new", name="edu_new")
      * @Route("/clinical/new", name="clinical_new")
@@ -355,18 +351,22 @@ class MultyScanOrderController extends Controller {
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName;
-        $type = "clinical";
-        if( $routeName == "edu_new") {
+
+        if( $routeName == "clinical_new") {
+            $type = "clinical";
+        } elseif( $routeName == "edu_new") {
             //echo " add edu ";
             $type = "educational";
             $edu = new Educational();
             $entity->setEducational($edu);
-        }
-
-        if( $routeName == "res_new") {
+        } elseif( $routeName == "res_new") {
             $type = "research";
             $res = new Research();
             $entity->setResearch($res);
+        } elseif( $routeName == "single_new") {
+            $type = "singleorder";
+        } else {
+            $type = "singleorder";
         }
 
         //$slide2 = new Slide();
@@ -378,11 +378,25 @@ class MultyScanOrderController extends Controller {
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
         
-        return array(          
-            'form' => $form->createView(),
-            'type' => 'new',
-            'multy' => $type
-        );
+//        return array(
+//            'form' => $form->createView(),
+//            'type' => 'new',
+//            'multy' => $type
+//        );
+
+        if( $routeName != "single_new") {
+            return $this->render('OlegOrderformBundle:MultyScanOrder:new.html.twig', array(
+                'form' => $form->createView(),
+                'type' => 'new',
+                'multy' => $type
+            ));
+        } else {
+            return $this->render('OlegOrderformBundle:MultyScanOrder:newsingle.html.twig', array(
+                'form' => $form->createView(),
+                'cycle' => 'new'
+            ));
+        }
+
     }
 
 

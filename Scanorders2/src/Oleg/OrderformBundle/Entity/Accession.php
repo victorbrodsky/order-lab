@@ -84,7 +84,7 @@ class Accession extends OrderAbstract {
         return $this->accession;
     }
 
-    public function addAccession(\Oleg\OrderformBundle\Entity\AccessionAccession $accession)
+    public function addAccession( $accession )
     {
         if( $accession ) {
             if( !$this->accession->contains($accession) ) {

@@ -20,37 +20,41 @@ var fieldIndex = 3;     //get 'key'
 var holderIndex = 5;    //get 'patient'
 //console.log("urlCheck="+urlCheck);
 
-function checkForm( elem ) {
+function checkForm( elem, single ) {
 
     var element = $(elem);
 
-    //console.log( "element.id=" + element.attr('id') );
+    //console.log( "element.id=" + element.attr('id') + ", single="+single);
 
-    //var elementInput = element.parent().parent().find("input");  //find("input[type=text]");
     var elementInput = element.parent().parent().find(".keyfield");
-    //console.log("elementInput.class="+elementInput.attr('class'));
+
+    if( single ) {
+        var elementInput = element.parent().find(".keyfield");
+    }
+
+    //console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
 
     //  0         1              2           3   4  5  6   7
     //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
     var inputId = elementInput.attr('id');
-    //console.log("inputId="+inputId);
+    //console.log("\n\n inputId="+inputId);
 
     var idsArr = inputId.split("_");
 
     var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
     var fieldName = idsArr[idsArr.length-fieldIndex];
-    //console.log("name="+name);
+    //console.log("name="+name+", fieldName="+fieldName);
     //var patient = idsArr[4];
     //var key = idsArr[4];
 
-    var keyElement = findKeyElement(element);
+    var keyElement = findKeyElement(element, single);
 
     if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
 
         //console.log("Remove Button Cliked");
         //setElementBlock(element, null, true);
         removeKeyFromDB(keyElement, element);
-        cleanFieldsInElementBlock( element, "all" );
+        cleanFieldsInElementBlock( element, "all", single );
         disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
         return;
@@ -65,14 +69,14 @@ function checkForm( elem ) {
         //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
 
         if( name == "part" ) {
-            var accessionNumberElement = getAccessionNumberElement(element);
+            var accessionNumberElement = getAccessionNumberElement(element,single);
             var accessionValue = accessionNumberElement.val();    //i.e. Accession #
         }
 
         if( name == "block" ) {
-            var accessionNumberElement = getAccessionNumberElement(element);
+            var accessionNumberElement = getAccessionNumberElement(element, single);
             var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-            var partNumberElement = getPartNumberElement(element);
+            var partNumberElement = getPartNumberElement(element, single);
             var partValue = partNumberElement.select2("val"); //i.e. Part #                   
         }
         //console.log("accessionValue="+accessionValue+",partValue="+partValue);
@@ -87,7 +91,7 @@ function checkForm( elem ) {
 
             if( name == "part" || name == "block" ) {
 
-                if( !accessionValue || (name == "block" && !partValue) ) {
+                if( !single && (!accessionValue || (name == "block" && !partValue)) ) {
 
                     var blockError = "";
                     if( name == "block" ) {
@@ -95,7 +99,7 @@ function checkForm( elem ) {
                     }
                     var messageError = "Can not check "+capitaliseFirstLetter(name)+" name without Accession number"+blockError;
 
-                    //console.log( "accessionValue is empty. parentNumberElement id="+parentNumberElement.attr("id") + ", class=" + parentNumberElement.attr("class") );
+                    //console.log( "accessionValue is empty.");   // parentNumberElement id="+parentNumberElement.attr("id") + ", class=" + parentNumberElement.attr("class") );
                     accessionNumberElement.popover({
                         placement: 'bottom',
                         content: messageError
@@ -140,14 +144,16 @@ function checkForm( elem ) {
                 var gonext = 1;
                 element.button('reset');
                 if( data.id ) {      
-                    
-                    gonext = checkParent(element,keyValue,name,fieldName); //check if this key is not used yet
-                    console.debug("1 gonext="+gonext);  
+
+                    if( !single ) {
+                        gonext = checkParent(element,keyValue,name,fieldName); //check if this key is not used yet
+                        //console.debug("1 gonext="+gonext);
+                    }
                     
                     if( name == "accession" && gonext == 1) {
                         var parentkeyvalue = data['parent'];
-                        //console.debug("key parent="+parent);
-                        gonext = setPatient(element,parentkeyvalue);
+                        //console.debug("key parent="+parentkeyvalue);
+                        gonext = setPatient(element,parentkeyvalue,single);
                     }                                          
                        
                     //console.debug("0 gonext="+gonext);                  
@@ -217,11 +223,19 @@ function checkParent(element,keyValue,name,fieldName) {
     return 1;
 }
 
-function setPatient(element,keyvalue) {
-    var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
-    //console.log("element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+function setPatient(element,keyvalue,single) {
 
-    var parentBtn = parentEl.find("#check_btn");
+    if( single ) {
+        //console.log("single!");
+        var parentEl = element.parent().parent().parent().parent().parent().parent().parent();
+        var parentBtn = parentEl.find(".patientmrn");
+    } else {
+        var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+        var parentBtn = parentEl.find("#check_btn");
+    }
+
+    //console.log("@@@@@@@@@@@@ element set parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+    //console.log("parentBtn.id=" + parentBtn.attr('id') + ", class="+parentBtn.attr('class'));
 
     //get parent key element
     var keyElement = findKeyElement(parentBtn);
@@ -230,12 +244,14 @@ function setPatient(element,keyvalue) {
     var keyBtn = keyElement.element.parent().parent().find('#check_btn');
     //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class')+", count="+keyBtn.length);
 
-
     var keyBtnStatusClass = keyBtn.find("i").attr("class");
     //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
 
     //check if parent is set already and has different keyfield value
     var parentKeyValue = parentEl.find(".patientmrn").find('.keyfield');
+
+    //console.log("parentKeyValue.val()=" + parentKeyValue.val() + ", keyvalue="+keyvalue);
+
     if( parentKeyValue.val() == keyvalue ) {
         //console.log('keyvalues are the same');
         return 1;
@@ -254,10 +270,10 @@ function setPatient(element,keyvalue) {
         return 0;
     }   
     
-    if( keyBtnStatusClass == "glyphicon glyphicon-remove" && parentKeyValue.val() != keyvalue ) { //Remove Button Cliked
+    if( keyBtnStatusClass == "glyphicon glyphicon-remove" && parentKeyValue.val() && parentKeyValue.val() != keyvalue ) { //Remove Button Cliked
         var r=confirm('Patient with MRN '+parentKeyValue.val()+' is already set in this form. Are you sure that you want to change the patient?');
         if( r == true ) {
-            //console.log("you decide to continue");          
+            //console.log("you decide to continue");
         } else {
             //console.log("you canceled");
             return 0;
@@ -313,7 +329,12 @@ function setElementBlock( element, data, cleanall, key ) {
 
     //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
     var parent = element.parent().parent().parent().parent().parent().parent();
-    //console.log("set parent.id=" + parent.attr('id') + ", key="+key);
+    //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+
+    if( !parent.attr('id') ) {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent();
+        //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+    }
 
     //var elements = parent.find('input,textarea,select');
     var elements = parent.find(selectStr);
@@ -408,6 +429,10 @@ function setElementBlock( element, data, cleanall, key ) {
 //set array field such as ClinicalHistory array fields
 //element is an input element jquery object
 function setArrayField(element, dataArr, parent) {
+
+    if( !dataArr ) {
+        return false;
+    }
 
     var type = element.attr("type");
     var classs = element.attr("class");
@@ -629,6 +654,10 @@ function cleanArrayField( element, field ) {
 
     //console.log( "rows.length=" + rows.length );
 
+    if( rows.length == 0 ) {
+        return false;
+    }
+
     //if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 || rows.length == 1 ) {
     if( rows.length == 1 ) {
 
@@ -648,6 +677,8 @@ function cleanArrayField( element, field ) {
             }
 
             delBtn.remove();
+        } else {
+            //console.log("no delBtn");
         }
 
         //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
@@ -720,9 +751,16 @@ function changeIdtoIndex( element, field, index ) {
 
 //clean fields in Element Block, except key field
 //all: if set to "all" => clean all fields, including key field
-function cleanFieldsInElementBlock( element, all ) {
+function cleanFieldsInElementBlock( element, all, single ) {
 
     var parent = element.parent().parent().parent().parent().parent().parent();
+
+    //if( !parent.attr('id') ) {
+    if( single ) {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent();
+        //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+    }
+
     //console.log("clean parent.id=" + parent.attr('id'));
     var elements = parent.find(selectStr);
 
@@ -732,6 +770,20 @@ function cleanFieldsInElementBlock( element, all ) {
         var type = elements.eq(i).attr("type");
         var tagName = elements.eq(i).prop('tagName');
         var classs = elements.eq(i).attr('class');
+
+        //don't process slide fields
+        if( id && id.indexOf("_slide_") != -1 ) {
+            continue;
+        }
+        //don't process fields not containing patient (orderinfo fields)
+        if( id && id.indexOf("_patient_") == -1 ) {
+            continue;
+        }
+        //don't process patient fields if the form was submitted by single form: click on accession,part,block delete button
+        if( single && id && id.indexOf("_procedure_") == -1 ) {
+            continue;
+        }
+
         //console.log("clean id="+id+", type="+type+", tagName="+tagName);
 
         if( type == "text" || !type ) {
@@ -754,7 +806,7 @@ function cleanFieldsInElementBlock( element, all ) {
                    //console.log("clean not as arrayFieldShow");
 
                     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) {
-                        console.log("clean as radio");
+                        //console.log("clean as radio");
                         //cleanArrayField( elements.eq(i), field );
                         processGroup( elements.eq(i), "", "ignoreDisable" );
                     } else if( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
@@ -765,6 +817,7 @@ function cleanFieldsInElementBlock( element, all ) {
                             elements.eq(i).select2('data', null);
                         }
                     } else {
+                        //console.log("clean as regular");
                         elements.eq(i).val(null);
                     }
 
@@ -828,6 +881,12 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     var parent = element.parent().parent().parent().parent().parent().parent();
 
+    var single = false;
+    if( !parent.attr('id') ) {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent();
+        var single = true;
+    }
+
     //console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find(selectStr);
@@ -841,6 +900,23 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
+
+        //don't process slide fields
+        if( id && id.indexOf("_slide_") != -1 ) {
+            continue;
+        }
+        //don't process fields not containing patient (orderinfo fields)
+        if( id && id.indexOf("_patient_") == -1 ) {
+            continue;
+        }
+        //don't process patient fields if the form was submitted by single form: click on accession,part,block delete button
+        if( single && id && id.indexOf("_procedure_") == -1 ) {
+            continue;
+        }
+        //don't process disident field: part's Diagnosis :
+        if( single && id && id.indexOf("_disident_") != -1 ) {
+            continue;
+        }
 
         if( id && type != "hidden" ) {
 
@@ -980,7 +1056,7 @@ function setKeyValue( btnElement, name, parentValueArr ) {
         var parentValue2 = '';
     }
 
-    //console.log("set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
+    console.log("set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
     btnElement.button('loading');
 
     $.ajax({
@@ -1017,6 +1093,10 @@ function removeKeyFromDB(element, btnElement) {
     var keyValue =element.element.val();
     //console.debug("delete name="+name +", keyvalue="+keyValue);
 
+    if( !keyValue ) {
+        return false;
+    }
+
     btnElement.button('loading');
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue,
@@ -1034,9 +1114,14 @@ function removeKeyFromDB(element, btnElement) {
     });
 }
 
-function findKeyElement( element ) {
+function findKeyElement( element, single ) {
 
     var parent = element.parent().parent().parent().parent().parent().parent();
+
+    if( single ) {
+        var parent = element.parent();
+    }
+
     //console.log("set key value: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find('input,select');
@@ -1068,29 +1153,45 @@ function findKeyElement( element ) {
     return res;
 }
 
-function getAccessionNumberElement( element ) {
-    var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
-    if( parent.attr('id') && parent.attr('id').indexOf("form_body_procedure") == -1 ) {
-        var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+function getAccessionNumberElement( element, single ) {
+
+    if( single ) {
+        var accessionNumberElement = element.parent().parent().not("*[id^='s2id_']").find('.keyfield');
+        //console.log("accessionNumberElement.id=" + accessionNumberElement.attr('id') + ", class=" + accessionNumberElement.attr('class'));
+        return accessionNumberElement.eq(0);
+    } else {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+
+        if( parent.attr('id') && parent.attr('id').indexOf("form_body_procedure") == -1 ) {
+            var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+        }
+
+        //console.log("get accession number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+
+        var accessionNumberHolder = parent.find('.accessionaccession');
+        var accessionNumberElement = accessionNumberHolder.find('.keyfield');
+
+        return accessionNumberElement.eq(0);
     }
 
-    //console.log("get accession number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
-    var accessionNumberHolder = parent.find('.accessionaccession');
-    var accessionNumberElement = accessionNumberHolder.find('.keyfield');
-
-    return accessionNumberElement.eq(0);
 }
 
-function getPartNumberElement( element ) {
-    var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
-    if( parent.attr('id') && parent.attr('id').indexOf("form_body_part") == -1 ) {
-        var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+function getPartNumberElement( element, single ) {
+    if( single ) {
+        var partNumberElement = element.parent().parent().not("*[id^='s2id_']").find('.keyfield');
+        return partNumberElement.eq(1);
+    } else {
+        var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+
+        if( parent.attr('id') && parent.attr('id').indexOf("form_body_part") == -1 ) {
+            var parent = element.parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
+        }
+        //console.log("get part number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+        var partNumberHolder = parent.find('.partpartname');
+        var partNumberElement = partNumberHolder.find('.keyfield');
+        //console.log("1="+partNumberElement.val() + " 2="+partNumberElement.select2("val")  );
+        return partNumberElement;
     }
-    //console.log("get part number: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
-    var partNumberHolder = parent.find('.partpartname');
-    var partNumberElement = partNumberHolder.find('.keyfield');    
-    //console.log("1="+partNumberElement.val() + " 2="+partNumberElement.select2("val")  );
-    return partNumberElement;
 }
 
 //Helpers
@@ -1129,3 +1230,27 @@ $(document).ready(function() {
     });
 
 });
+
+
+
+//Check form single
+function checkFormSingle( elem ) {
+    var element = $(elem);
+
+    //console.log( "element.id=" + element.attr('id') );
+
+    var elementInputs = element.parent().parent().find(".keyfield").not("*[id^='s2id_']").each(function() {
+
+        var keyInput = $(this);
+        //console.log("keyInput.class="+keyInput.attr('class')+", id="+keyInput.attr('id'));
+
+        var keyBtn = keyInput.parent().parent().parent().find('#check_btn');
+        //console.log("keyBtn.class="+keyBtn.attr('class')+", id="+keyBtn.attr('id'));
+
+        keyBtn.trigger("click");
+        invertButton(element);
+    });
+
+    return;
+}
+

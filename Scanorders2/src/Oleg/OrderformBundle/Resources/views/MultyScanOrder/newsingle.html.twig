@@ -1,0 +1,329 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    Scan Order
+{% endblock %}
+
+
+{% block content %}
+    
+    <h3 class="text-info">Scan Order</h3>
+
+    {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
+{#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
+
+
+    {% if cycle != 'show' %}
+        {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,cycle,"key","prototype") %}
+        {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,cycle,"","prototype") %}
+        {% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,cycle,"","prototype") %}
+        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,cycle,"","prototype") %}
+        {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,cycle,"","prototype") %}
+        {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,cycle,"","prototype") %}
+
+        {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,cycle,"key","prototype") %}
+        {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,cycle,"","prototype") %}
+
+        {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,cycle,"key","prototype") %}
+        {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,cycle,"","prototype") %}
+        {% set paperHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.paper,cycle,"","prototype") %}
+        {% set descriptionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.description,cycle,"","prototype") %}
+        {% set diagnosisHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.disident,cycle,"","prototype") %}
+
+        {#{% set diffDiagnosesField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diffDisident %}#}
+        {#{% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}#}
+        {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,cycle,"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
+
+        {% set diseaseTypeHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.diseaseType,cycle,"diseaseType","prototype") %}
+
+        {% set blocknameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.blockname,cycle,"key","prototype") %}
+        {% set sectionsourceHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.sectionsource,cycle,"","prototype") %}
+
+        {% set relevantScansField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans %}
+        {% set relevantScansWidget = formmacros.fieldWidget(relevantScansField) %}
+        {% set relevantScansHtml = formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"") %}
+
+        {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains %}
+        {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
+        {% set specialStainsHtml = formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
+
+        {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
+    {% endif %}
+
+
+    {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
+
+    {#<input type="hidden" id="formtype" value="single" />#}
+    <input type="hidden" id="formtype" value="multi" />
+    <input type="hidden" id="formcicle" value="{{ cycle }}" />
+    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+    
+    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
+    {#{{ form_start(form) }}#}
+
+    {% for form_patient in form.patient %}
+        {% for form_procedure in form_patient.procedure %}
+            {% for form_accession in form_procedure.accession %}
+                {% for form_part in form_accession.part %}
+                    {% for form_block in form_part.block %}
+                        {% for form_slide in form_block.slide %}
+
+                            {% set diffDiagnosesField = form_part.diffDisident %}
+                            {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
+
+        {{ form_errors(form) }}
+        {{ form_errors(form_patient) }}
+        {{ form_errors(form_procedure) }}
+        {{ form_errors(form_accession) }}
+        {{ form_errors(form_part) }}
+        {{ form_errors(form_block) }}
+        {{ form_errors(form_slide) }}
+        {#{{ form_errors(form_scan) }}#}
+        {#{{ form_errors(form_stain) }}#}
+
+
+        <div id="form-prototype-data"
+
+             data-prototype-patientmrn=               "{{ mrnHtml|e }}"
+             data-prototype-patientname=              "{{ nameHtml|e }}"
+             data-prototype-patientsex=               "{{ sexHtml|e }}"
+             data-prototype-patientdob=               "{{ dobHtml|e }}"
+             data-prototype-patientage=               "{{ ageHtml|e }}"
+             data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
+
+             data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
+             data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
+
+             {#data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.field)|e }}"#}
+             {#data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.field)|e }}"#}
+                {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+             data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"","")|e }}"
+                {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+             data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
+
+                {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+             data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+                {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+             data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+
+        >
+        </div>
+
+    <div class="singleorderinfo" id="singleorderinfo">
+
+        <div class="panel panel-patient">
+
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h4>Slide Info</h4>
+                    </div>
+                </div>
+            </div>
+            <div id="main" class="panel-body collapse in">
+
+                {{ formmacros.field(form_slide.title) }}
+
+                <div class="row">
+                    <div class="col-xs-6" align="right">
+                        {{ form_label(form_accession.accession, "* Accession Number [or Label], Part, Block:") }}
+                    </div>
+                    <div class="col-xs-6" align="left">
+                        <div style="float:left; width:100%">
+                            <div style="float:left; width:50%">
+                                {{ form_widget(form_accession.accession|first) }}
+                                <button style="display: none;" id="check_btn" class="btn btn-default accessionbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
+                            </div>
+                            <div style="float:left; width:20%">
+                                {{ form_widget(form_part.partname|first) }}
+                                <button style="display: none;" id="check_btn" class="btn btn-default partbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
+                            </div>
+                            <div style="float:left; width:20%">
+                                {{ form_widget(form_block.blockname|first) }}
+                                <button style="display: none;" id="check_btn" class="btn btn-default blockbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
+                                {#{{ formmacros.inputArrayField(form_block.blockname,cycle,"blockblockname","key","","nolabel") }}#}
+                            </div>
+                            <div style="float:left; width:10%">
+                                <button id="check_btn" class="btn btn-default" type="button" onclick="checkFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{ formmacros.field(form_slide.stain|first.field) }}
+                {{ formmacros.field(form_slide.stain|first.stainothers) }}
+
+                {{ formmacros.field(form_slide.scan|first.field) }}
+                {{ formmacros.field(form_slide.scan|first.scanothers) }}
+
+                {#{{ formmacros.field(form_part.disident) }}#}
+                {{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}
+
+                {{ formmacros.field(form_slide.scan|first.note) }}
+
+            </div>
+        </div>
+
+        <button id="next_button" type="button" class="btn btn-success" 
+                data-toggle="collapse" data-target="#orderinfo_param">Next
+        </button>
+
+
+        <div id="orderinfo_param" class="collapse">
+            {{ formmacros.orderinfo_panel(form,"Order Info") }}
+
+            <div class="row">
+                <p>
+                    <button class="btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
+                </p>
+            </div> 
+        
+      
+        {#        The optional parameter    #}
+        <div class="row">
+        <p>
+            <button id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-target="#optional_param">
+                Add Optional Info
+            </button>
+        </p>
+        </div>
+  
+            
+        <div id="optional_param" class="collapse">  
+            
+<div  class="panel panel-patient">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Optional Info</h4>
+            </div>
+        </div>
+    </div>
+            
+    <div class="panel-body collapse in">    
+              
+            <div class="row">
+{#            <div class="span12">#}
+            <ul class="nav nav-tabs" id="optional_param_tab">
+                <li class="active"><a href="#patient">Patient</a></li>
+                <li><a href="#procedure">Procedure</a></li>
+                {#<li><a href="#accession">Accession</a></li>#}
+                <li><a href="#part">Part</a></li>
+                <li><a href="#block">Block</a></li>
+{#                <li><a href="#stain">Stain</a></li>#}
+
+                <li><a href="#slide">Slide</a></li>
+                <li><a href="#scan">Scan</a></li>
+
+            </ul>
+
+            <div class="tab-content option_info_panel">
+              <div class="tab-pane active" id="patient">
+
+                  {{ formmacros.patientForm(form_patient,"check") }}
+
+              </div>
+              <div class="tab-pane" id="procedure">
+                  {#{{ formmacros.field(form_procedure.name) }}#}
+                  {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
+              </div>
+              {#<div class="tab-pane" id="accession">#}
+                  {#{{ formmacros.field(form_accession.date) }}#}
+              {#</div>#}
+              <div class="tab-pane" id="part">
+                  {#{{ formmacros.field(form_part.sourceOrgan) }}#}
+                  {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+
+                  {#{{ formmacros.field(form_part.paper.file) }}#}
+                  {#{{ formmacros.paperInput(form_part.paper,'new') }}#}
+                  {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+
+                  {#{{ formmacros.field(form_part.description) }}#}
+                  {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+
+                  {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
+                  {#{% if form_part.diffDisident|length > 0 %}#}
+                        {#{{ formmacros.collectionInput(form_part.diffDisident, 'diffDiagnoses', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
+                  
+                  {#{{ formmacros.field(form_part.diseaseType) }}#}
+                  {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
+              </div>
+
+              <div class="tab-pane" id="block">
+                  {#{{ form_rest(form_block) }}#}
+                  {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
+              </div>
+{#              <div class="tab-pane" id="stain"> {{ form_rest(form_stain) }} </div>#}
+
+              {#<div class="tab-pane" id="scan">#}
+                  {#{{ formmacros.field(form_scan.scanregion) }}#}
+              {#</div>#}
+
+              <div class="tab-pane" id="slide">
+
+                  {{ formmacros.field(form_slide.slidetype) }}
+
+                  {#{{ formmacros.field(form_slide.diagnosis) }}#}
+                  {{ formmacros.field(form_slide.microscopicdescr) }}
+                  {#{{ formmacros.field(form_slide.specialStains) }}#}
+                  {#{% if form_slide.specialStains|length > 0 %}#}
+                      {#{{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 'specialStains', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
+
+                  {#{{ formmacros.field(form_slide.relevantScans) }}#}
+                  {#{% if form_slide.relevantScans|length > 0 %}#}
+                      {#&#123;&#35;{{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}&#35;&#125;#}
+                      {#{{ formmacros.collectionInput(form_slide.relevantScans, 'relevantScans', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
+                  {#{% endif %}#}
+                  {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
+
+                  {#{{ formmacros.slideForm(form_slide, "check", "0_0_0_0_0_0_0_0", 'new') }}#}
+
+              </div>
+
+                <div class="tab-pane" id="scan">
+                    {{ formmacros.field(form_slide.scan|first.scanregion) }}
+                </div>
+
+            </div>
+                
+{#            </div>#}
+            </div>
+        </div>
+    </div>
+                 
+            {# Just in case display rest of the form to prevent CRF error #}
+            {#{{ form_rest(form) }}#}
+            {#{{ form_rest(form_patient) }}#}
+            {#{{ form_rest(form_procedure) }}#}
+            {#{{ form_rest(form_accession) }}#}
+            {#{{ form_rest(form_part) }}#}
+            {#{{ form_rest(form_block) }}#}
+            {#{{ form_rest(form_slide) }}#}
+            {#{{ form_rest(form_scan) }}#}
+            {#{{ form_rest(form_stain) }}#}
+            
+        </div>     
+       </div>
+
+    </div>
+{#        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>#}
+
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+
+    {#{{ form_end(form) }}#}
+    </form>
+
+
+
+{% endblock %}

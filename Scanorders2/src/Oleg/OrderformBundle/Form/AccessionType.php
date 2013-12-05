@@ -23,12 +23,11 @@ class AccessionType extends AbstractType
 
         $attr = array('class'=>'form-control form-control-modif keyfield', 'title' => 'Example: S12-12345');
 
-        if( $this->params['type'] == 'single') {
+        if( $this->params['type'] == 'singleorder') {
             $attr['style'] = 'width:100%';
-            $gen_attr = array('label'=>'Accession Number [or Label]:','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+            $gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {
             $gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
-            //$attr_width = 'style' => 'width:130px';
         }
 
         $builder->add('accession', 'collection', array(

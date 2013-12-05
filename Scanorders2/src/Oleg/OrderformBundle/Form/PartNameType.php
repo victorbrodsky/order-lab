@@ -5,7 +5,6 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Oleg\OrderformBundle\Helper\FormHelper;
 
 class PartNameType extends AbstractType
 {
@@ -22,27 +21,19 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $helper = new FormHelper();
+        if( $this->params['type'] == 'singleorder') {
+            $label = false;
+        } else {
+            $label = 'Part Name';
+        }
 
-//        $attr = array('class' => 'combobox keyfield', 'style' => 'width:100%' );
-//        $builder->add('field', 'choice', array(
-//            'choices' => $helper->getPart(),
-//            'required' => false,
-//            'label' => 'Part Name',
-//            //'max_length' => '3',
-//            'attr' => $attr,
-//            //'empty_value' => "",   //"Choose an option",
-//            //'multiple' => false
-//        ));
-        
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');    //new
         } else {
             $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('field', 'custom_selector', array(
-            'label' => 'Part Name',
-            //'choices' => $helper->getBlock(),
+            'label' => $label,
             'attr' => $attr,
             'required'=>false,
             'classtype' => 'partname'
