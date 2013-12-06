@@ -9,7 +9,7 @@
 
 ////////////////// uses as generic collection field with + and - buttons ////////////////////////
 
-var findCollectionStr = 'input,.ajax-combobox-staintype';
+var findCollectionStr = 'input[type=text],.ajax-combobox-staintype';
 var findCollectionSpecialStr = 'input[type=text],.ajax-combobox-staintype';
 var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.ajax-combobox-staintype:enabled:not([readonly])';
 
@@ -51,17 +51,29 @@ function addCollectionField( elem, btnpos ) {
     var element = $(elem);
     //console.log("element.class="+element.attr('class'));
 
-    if( btnpos && btnpos == "bottom" ) {
-        var parent = element.parent().parent().parent();
-    } else {
-        var parent = element.parent();
-    }
+//    if( btnpos && btnpos == "bottom" ) {
+//        var parent = element.parent().parent().parent();
+//        var elementInput = parent.find(findCollectionStr);  //.not("*[id^='s2id_']");
+//    } else {
+//        var parent = element.parent();
+//    }
+    var parent = element.parent().parent().parent();
+    //console.log("parent id="+parent.attr('id')+", class="+parent.attr('class'));
 
-    var elementInput = parent.find(findCollectionStr);
+    //make sure to get only one element with correct id containing patient, procedure ... indexes
+    var elementInputFind = parent.find('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");    //.find('[id^=_patient_]');    //has("[id^=_patient_]");  //.not("*[id^='s2id_']");
+    var elementInput =  elementInputFind.first();
+    for( var i = 0; i < elementInputFind.length; i++ ) {
+        //console.log("id="+elementInputFind.eq(i).attr('id')+", class="+elementInputFind.eq(i).attr('class'));
+        if( elementInputFind.eq(i).attr('id') && elementInputFind.eq(i).attr('id').indexOf("_patient_") != -1 ) {
+            elementInput = elementInputFind.eq(i);
+            break;
+        }
+    }
 
     //console.log("elementInput.class="+elementInput.attr('class')+", id="+elementInput.attr('id'));
     var inputId = elementInput.attr('id');
-    //console.log("inputId="+inputId);
+    //console.log("inputId="+inputId+", elementInput.length="+elementInput.length);
 
     var idsArr = inputId.split("_");
 
@@ -99,7 +111,7 @@ function addCollectionField( elem, btnpos ) {
     //console.log("maxId="+maxId);
 
     var ident = name+fieldName;
-    //console.log("ident=" + ident + ", collHoldersCount="+collHoldersCount );
+    //console.log("ident=" + ident + ", collHoldersCount="+collHoldersCount + ", patient="+patient );
 
     var prefix = "add"; //indicate that this field is added by + button, so we can get different data prototype
 

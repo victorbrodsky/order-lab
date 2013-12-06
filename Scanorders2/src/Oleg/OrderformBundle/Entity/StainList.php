@@ -247,9 +247,6 @@ class StainList
     }
 
 
-    
-
-
     /**
      * Add stain
      *

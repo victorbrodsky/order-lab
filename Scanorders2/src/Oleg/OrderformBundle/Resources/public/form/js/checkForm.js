@@ -66,7 +66,7 @@ function checkForm( elem, single ) {
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
         var keyValue =keyElement.element.val();
-        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
+        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+",name="+name);
 
         if( name == "part" ) {
             var accessionNumberElement = getAccessionNumberElement(element,single);
@@ -79,13 +79,13 @@ function checkForm( elem, single ) {
             var partNumberElement = getPartNumberElement(element, single);
             var partValue = partNumberElement.select2("val"); //i.e. Part #                   
         }
-        //console.log("accessionValue="+accessionValue+",partValue="+partValue);
+        console.log("accessionValue="+accessionValue+",partValue="+partValue);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            //console.log("key undefined!");
+            console.log("key undefined!");
 //            $('#'+inputId).popover( {content:"Please fill out key field"} );
 //            $('#'+inputId).popover('show');
 
@@ -132,7 +132,7 @@ function checkForm( elem, single ) {
 
         element.button('loading');
 
-        //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
+        console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
@@ -158,7 +158,7 @@ function checkForm( elem, single ) {
                        
                     //console.debug("0 gonext="+gonext);                  
                     if( gonext == 1 ) {
-                        //console.debug("continue gonext="+gonext);                         
+                        console.debug("continue gonext="+gonext);
                         //first: set elements
                         setElementBlock(element, data);
                         //second: disable or enable element. Make sure this function runs after setElementBlock
@@ -517,6 +517,11 @@ function setArrayField(element, dataArr, parent) {
                 //console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
                 firstAttachedElement.val(text);
 
+                //set mrntype
+                if( fieldName == "mrn" ) {
+                    setMrnType(element,dataArr[i]["mrntype"]);
+                }
+
             } else if( classs && classs.indexOf("datepicker") != -1 ) {
                 //console.log("datepicker");
                 var firstAttachedElement = attachElement.find('input').first();
@@ -561,6 +566,13 @@ function setArrayField(element, dataArr, parent) {
 
     } //for loop
 
+}
+
+function setMrnType( element, mrntype ) {
+    //console.log("setMrnType="+mrntype+", id="+element.attr("id") + ", class="+element.attr("class"));
+    var holder = element.parent();
+    var mrntypeEl = holder.find('select.combobox');
+    mrntypeEl.select2('data', {id: mrntype, text: mrntype});
 }
 
 //process groups such as radio button group
@@ -1121,23 +1133,21 @@ function findKeyElement( element, single ) {
     if( single ) {
         var parent = element.parent();
     }
-
     //console.log("set key value: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find('input,select');
-    //console.log("set key value: elements.length=" + elements.length);
 
     var keyElement = null;
     var name = "";
     for (var i = 0; i < elements.length; i++) {
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
+        //console.log("id=" + id + ", class=" + elements.eq(i).attr('class'));
         if( id && type != "hidden" ) {
-            var idsArr = elements.eq(i).attr("id").split("_");
+            var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
             //console.log("set key value: field=(" + field + ")");
-
-            if( $.inArray(field, keys) != -1 ) {
+            if( $.inArray(field, keys) != -1 && id.indexOf('_mrntype') == -1 ) {
                 //console.log("set key value: found key=(" + field + ")");
                 name = field;
                 keyElement = elements.eq(i);

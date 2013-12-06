@@ -23,30 +23,11 @@ class PatientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        echo "patient params=";
-//        //print_r($this->params);
-//        echo $this->params['type']." ".$this->params['cicle'];
-//        echo "<br>";
-
         $flag = false;
         if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
             //$flag = true;
         }
 
-//        $attr = array('class'=>'form-control keyfield');
-//        $gen_attr = array('label'=>'MRN','class'=>'Oleg\OrderformBundle\Entity\PatientMrn','type'=>null);
-//        $builder->add('mrn', 'collection', array(
-//            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-//            //'type' => new PatientMrnType($this->params),
-//            'read_only' => $flag,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'label' => "MRN:",
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__patientmrn__',
-//        ));
         $builder->add('mrn', 'collection', array(
             'type' => new PatientMrnType($this->params, null),
             'read_only' => $flag,

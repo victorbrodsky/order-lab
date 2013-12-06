@@ -17,12 +17,6 @@ use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
  */
 abstract class SlideArrayFieldAbstract extends ArrayFieldAbstract {
 
-
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $field;
-
     /**
      * Set slide
      *

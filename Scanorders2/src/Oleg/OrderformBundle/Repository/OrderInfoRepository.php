@@ -18,12 +18,12 @@ class OrderInfoRepository extends EntityRepository
     //process orderinfo and all entities
     public function processEntity( $entity, $type ) {
 
-        echo "patients count=".count($entity->getPatient())."<br>";
-        foreach( $entity->getPatient() as $patient ) {
-            echo "patient mrn=".$patient->getMrn()->first()."<br>";
-            echo "patient name=".$patient->getName()->first()."<br>";
-            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
-        }
+//        echo "patients count=".count($entity->getPatient())."<br>";
+//        foreach( $entity->getPatient() as $patient ) {
+//            echo "patient mrn=".$patient->getMrn()->first()."<br>";
+//            echo "patient name=".$patient->getName()->first()."<br>";
+//            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
+//        }
         //exit();
 
         $em = $this->_em;

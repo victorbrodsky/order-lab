@@ -111,6 +111,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
         echo "finish: entity status=".$entity->getStatus()."<br>";
 
+//        $em->merge($entity);
+
         return $entity;
     }
 

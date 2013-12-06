@@ -98,12 +98,16 @@
     </p>
 {% endmacro %}
 
-{% macro fieldicon( field ) %}
+{% macro fieldicon( field, extra ) %}
 
+    {% import _self as formmacros %}
     {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
 
         <div class="row ">
             <div class="col-xs-10">
+                {% if extra != "" %}
+                    {{ form_widget(extra) }}
+                {% endif %}
                 {{ form_widget(field) }}
             </div>
             <div class="col-xs-2">
@@ -330,14 +334,14 @@
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel) }}
+        <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname) }}</p>
     {% endfor %}
     </div>
     </p>
 {% endmacro %}
 
 {#input array field with separate label#}
-{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel) %}
+{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname) %}
     {% import _self as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -379,23 +383,29 @@
 
         <div class="col-xs-6" align="left">
             {% if fieldtype == "key" %}
-                {{ formmacros.fieldicon(fieldThis.field) }}
+                {% if classname == "patientmrn" %}
+                    {{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}
+                {% else %}
+                    {{ formmacros.fieldicon(fieldThis.field,"") }}
+                {% endif %}
             {% elseif fieldtype == "date" %}
                 {{ formmacros.fielddate(fieldThis.field) }}
             {% elseif fieldtype == "paper" %}
                 {{ formmacros.fieldpaper(fieldThis,cycle) }}
             {% elseif fieldtype == "diseaseType" %}
                 {{ formmacros.diseaseMulti(fieldThis) }}
-            {#{% elseif fieldtype == "patientmrn" %}#}
-                {#{{ formmacros.mrntype(fieldThis) }}#}
-                {#{{ formmacros.field(fieldThis.mrntype) }}#}
-                {#{{ formmacros.field(fieldThis.mrntype) }}#}
-                {#{{ formmacros.fieldicon(fieldThis.field) }}#}
+            {% elseif classname == "patientmrn" %}
+                {#3{{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}               #}
+                {{ form_widget(fieldThis.mrntype) }}
+                {{ form_widget(fieldThis.field) }}
             {% elseif   fieldtype == "partdiffDisident" or
                         fieldtype == "sliderelevantScans"
                         and cycle != 'show' %}
                 {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn) }}
-            {% elseif fieldtype == "slidespecialStains" and cycle != 'show' %}
+            {#{% elseif fieldtype == "slidespecialStains" and cycle != 'show' %}#}
+                {#{{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn) }}#}
+            {% elseif fieldtype == "slidespecialStains" %}
+                {#{{ form_widget(fieldThis.staintype) }}#}
                 {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn) }}
             {% else %}
                 {{ form_widget(fieldThis.field) }}
@@ -415,7 +425,6 @@
                 <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
             </div>
         </div>
-
     {% endif %}
 
 {% endmacro %}
@@ -431,11 +440,6 @@
 {% endmacro %}
 
 {############# custom array fields #############}
-{% macro mrntype(form) %}
-    {% import _self as formmacros %}
-    {{ formmacros.field(form.mrntype) }}
-    {{ formmacros.fieldicon(form.field) }}
-{% endmacro %}
 
 {% macro fieldCollectionInput(field, cycle, prototype, widget, nobtn) %}
 

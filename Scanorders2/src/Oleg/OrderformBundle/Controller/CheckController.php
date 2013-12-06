@@ -96,7 +96,7 @@ class CheckController extends Controller {
             $element = array(
                 //'inmrn'=>$mrn,
                 'id'=>$entity->getId(),
-                'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
+                'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('mrntype')),
                 'name'=>$this->getArrayFieldJson($entity->getName()),
                 'sex'=>$this->getArrayFieldJson($entity->getSex()),
                 'dob'=>$this->getArrayFieldJson($entity->getDob()),

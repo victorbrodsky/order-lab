@@ -51,7 +51,11 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $orderinfo );
 
             $orderinfo->addPart($part);
+
         }
+
+        //$em->persist($accession);
+        //$em->merge($accession);
 
         return $procedure;
     }

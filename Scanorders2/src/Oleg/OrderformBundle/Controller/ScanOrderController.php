@@ -81,8 +81,11 @@ class ScanOrderController extends Controller {
         $form->bind($request);
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-
         $dql =  $repository->createQueryBuilder("orderinfo");
+
+        //$dql->innerJoin("orderinfo.slide", "slides");
+        //$dql->select('orderinfo, COUNT(orderinfo.slide) as slidecount');
+
         $dql->innerJoin("orderinfo.provider", "provider");
 
         $search = $form->get('search')->getData();

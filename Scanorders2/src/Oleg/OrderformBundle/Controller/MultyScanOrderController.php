@@ -176,7 +176,7 @@ class MultyScanOrderController extends Controller {
 //            return;
 //        }
 
-        if(0) {
+        if(1) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
@@ -185,94 +185,19 @@ class MultyScanOrderController extends Controller {
         
         //echo "Before validation main entity:<br>";
 
-//       if( $form->isValid() ) {
-//           echo "form is valid !!! <br>";
-//       } else {
-//           echo "form is not valid ??? <br>";
-//       }
+       if( $form->isValid() ) {
+           echo "form is valid !!! <br>";
+       } else {
+           echo "form is not valid ??? <br>";
+       }
         if( 1 ) {
 
-            //echo "id2=".$entity->getId()."<br>";
-            //exit();
-
-//            echo "<br>Before loop:<br>";
-//            echo "<br>part count=".count($entity->getPart())."<br>";
-//            foreach( $entity->getPart() as $part ) {
-//                echo "<br>part id=".$part->getId();
-//                echo "<br>part name=".$part->getPartname()->first();
-//                echo "<br>part validity=".$part->getPartname()->first()->getValidity();
-//            }
-
-
-//            $patientname = $form['patient'][0]['mrn'][0]['field']->getData();
-//            echo "patientname=".$patientname."<br>";
-//
-//            $accessionname = $form['patient'][0]['procedure'][0]['accession'][0]['accession'][0]['field']->getData();
-//            echo "accessionname=".$accessionname."<br>";
-//            print_r( $accessionname );
-//            echo " accessionname count=".count($form['patient'][0]['procedure'][0]['accession'][0]['accession'])."<br>";
-//
-            $proceduretype = $form['patient'][0]['procedure'][0]['name'][0]['field']->getData();
-            echo "proceduretype=".$proceduretype."<br>";
-//
-            $partname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'][0]['field']->getData();
-            echo "part partname=".$partname."<br>";
-//            //print_r($partname);
-//            echo " !!!partname count=".count($form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['partname'])."<br>";
-
-            $blockname = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['block'][0]['blockname'][0]['field']->getData();
-            echo "block blockname=".$blockname."<br>";
-//
-//            $description = $form['patient'][0]['procedure'][0]['accession'][0]['part'][0]['description'][0]['field']->getData();
-//            echo "part description=".$description."<br>";
-//
-//            exit();
-
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
-
-//            echo "<br>After loop:<br>";
-//            echo "patient count=".count($entity->getPatient());
-//            foreach( $entity->getPatient() as $pat ) {
-//                echo "<br>mrn=".$pat->getMrn();
-//                echo "<br>name=".$pat->getName();
-//                echo "<br>sex=".$pat->getSex();
-//                //echo "<br>dob=".$pat->getDob();
-//
-//                foreach( $pat->getClinicalHistory() as $hist ) {
-//                    echo "<br>hist id=".$hist->getId();
-//                    echo "<br>hist text=".$hist->getClinicalHistory();
-//                    echo "<br>hist Provider=".$hist->getProvider()[0];
-//                }
-//
-//            }
-//            exit();
-
-//            echo "part count=".count($entity->getPart());
-//            foreach( $entity->getPart() as $part ) {
-//                echo "<br>id=".$part->getId();
-//                echo "<br>name=".$part->getPartname()->first();
-//                echo "<br>Diagnos=".$part->getDiagnos()->first();
-//                //echo "<br>dob=".$pat->getDob();
-//
-//                foreach( $part->getDiagnos() as $diag ) {
-//                    echo "<br>diag id=".$diag->getId();
-//                    echo "<br>diag text=".$diag->getField();
-//                    //echo "<br>hist creator=".$hist->getProvider()[0]->getUsername();
-//                }
-//
-//            }
-//            exit();
 
             if( isset($_POST['btnSave']) ) {
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             
                 $entity->setStatus($status);
             }
-
-            //echo "entity=".$entity;
-            //exit();
-
-            //$em->persist($entity);
-            //$em->flush();
 
             if( isset($_POST['btnSubmit']) ) {
                 //email
@@ -551,51 +476,6 @@ class MultyScanOrderController extends Controller {
         }
         return $has;
     }
-
-//    //test ajax json data controller
-//    /**
-//     * Displays a form to create a new OrderInfo + Scan entities.
-//     * @Route("/getdata/{term}", name="getdata")
-//     * @Method("POST")
-//     * @Method("GET")
-//     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
-//     */
-//    public function getStainsAction($term) {
-//
-//        //$request = $this->get('request');
-//        //$name=$request->request->get('formName');
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-////        $entities = $em->getRepository('OlegOrderformBundle:StainList')->findAll();
-////        $output = array();
-////        foreach ($entities as $member) {
-////            $output[] = array(
-////                'id' => $member->getId(),
-////                'text' => $member->getname(),
-////            );
-////        }
-//
-//        $query = $em->createQuery(
-//            'SELECT stain.id as id, stain.name as text
-//            FROM OlegOrderformBundle:StainList stain'
-//        );
-//        $output = $query->getResult();
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//
-////        $arr = array('1','me', 'who');
-////
-////        $res = array("id"=>1, "text"=>$arr);
-////
-////        $return=$res1;
-////
-////        $return=json_encode($return);//jscon encode the array
-////        return new Response($return,200,array('Content-Type'=>'application/json'));//make sure it has the correct content type
-//    }
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.

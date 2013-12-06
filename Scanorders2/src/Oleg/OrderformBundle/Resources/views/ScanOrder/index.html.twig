@@ -47,7 +47,8 @@
                 <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
-                <th>Slides #</th>
+                <th>Slides</th>
+                {#<th>{{ knp_pagination_sortable(pagination, 'Slides', 'slides') }}</th>#}
                 <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>
@@ -79,36 +80,38 @@
                     <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                 </td>
                 <td>
-                    {% for slide in entity.slide %}
-                        <a href="{{ path('slide_show', { 'id': slide.id }) }}">
+                    {{ entity.slide|length }}
 
-                            {#set valid accession#}
-                            {% set validAccession = slide.block.part.accession.accession|first %}
-                            {% for thisAccession in slide.block.part.accession.accession  %}
-                                {% if thisAccession.validity == 1 %}
-                                    {% set validAccession = thisAccession %}
-                                {% endif %}
-                            {% endfor %}
+                    {#{% for slide in entity.slide %}#}
+                        {#<a href="{{ path('slide_show', { 'id': slide.id }) }}">#}
 
-                            {#set valid partname#}
-                            {% set validPartname = slide.block.part.partname|first %}
-                            {% for partname in slide.block.part.partname %}
-                                {% if partname.validity == 1 %}
-                                    {% set validPartname = partname %}
-                                {% endif %}
-                            {% endfor %}
+                            {#&#123;&#35;set valid accession&#35;&#125;#}
+                            {#{% set validAccession = slide.block.part.accession.accession|first %}#}
+                            {#{% for thisAccession in slide.block.part.accession.accession  %}#}
+                                {#{% if thisAccession.validity == 1 %}#}
+                                    {#{% set validAccession = thisAccession %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
 
-                            {#set valid blockname#}
-                            {% set validBlockame = slide.block.blockname|first %}
-                            {% for blockname in slide.block.blockname %}
-                                {% if blockname.validity == 1 %}
-                                    {% set validBlockame = blockname %}
-                                {% endif %}
-                            {% endfor %}
+                            {#&#123;&#35;set valid partname&#35;&#125;#}
+                            {#{% set validPartname = slide.block.part.partname|first %}#}
+                            {#{% for partname in slide.block.part.partname %}#}
+                                {#{% if partname.validity == 1 %}#}
+                                    {#{% set validPartname = partname %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
 
-                            <p>{{ validAccession }}&nbsp;{{validPartname}}{{validBlockame}}</p>
-                        </a>
-                    {% endfor %}
+                            {#&#123;&#35;set valid blockname&#35;&#125;#}
+                            {#{% set validBlockame = slide.block.blockname|first %}#}
+                            {#{% for blockname in slide.block.blockname %}#}
+                                {#{% if blockname.validity == 1 %}#}
+                                    {#{% set validBlockame = blockname %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+
+                            {#<p>{{ validAccession }}&nbsp;{{validPartname}}{{validBlockame}}</p>#}
+                        {#</a>#}
+                    {#{% endfor %}#}
                 </td>
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>

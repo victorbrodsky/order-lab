@@ -81,7 +81,8 @@ class PartRepository extends ArrayFieldAbstractRepository
 
 
         //3) before part create: check if part with $partname does not exists in DB
-        $partFound = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true);
+        //$partFound = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true);
+        $partFound = $this->findOnePartByJoinedToField( $accessionNumber, $partname, null );
 
         if( $partFound ) {
             return $partFound;
