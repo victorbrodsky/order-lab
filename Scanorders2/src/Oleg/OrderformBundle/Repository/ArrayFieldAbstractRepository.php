@@ -412,13 +412,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $extraStr = "";
         if( $extra ) {
             if( $className == "Patient" ) {
-                $extraStr = " AND cfield.mrntype = ".$extra;
+                $extraStr = " cfield.mrntype = '".$extra."' AND ";
             }
         } else {
             $validKeyField = $entity->getValidKeyfield();
             //get extra field key such as Patient's mrntype
             if( $validKeyField && method_exists($validKeyField,'obtainExtraKey') ) {
-                $extraStr = $validKeyField->obtainExtraKey();
+                $extraStr = " cfield.mrntype = ".$validKeyField->obtainExtraKey()->getId()." AND ";
             }
         }
 
@@ -426,7 +426,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         ->createQuery('
         SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
         JOIN c.'.$fieldName.' cfield
-        WHERE cfield.field LIKE :field'.$extraStr
+        WHERE '.$extraStr.'cfield.field LIKE :field'
         )->setParameter('field', '%'.$name.'%');
         
         $lastField = $query->getSingleResult();
