@@ -475,14 +475,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //get extra field key such as Patient's mrntype
         if( method_exists($validKeyField,'obtainExtraKey') ) {
-            $extra = $validKeyField->obtainExtraKey();
+            $extra = $validKeyField->obtainExtraKey()->getId();
         } else {
             $extra = null;
         }
 
         if( $entity->getValidKeyfield() ) {
             $em = $this->_em;
-            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,true, $extra);
+            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,true,true, $extra);
         } else {
             echo "This entity does not have a valid key field<br>";
             $newEntity = null;

@@ -75,10 +75,10 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 //        echo "findUniqueByKey: Procedure: className=".$className."<br>";
 
         $em = $this->_em;
-        $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey($entity->getChildren()->first(),"Accession","accession");
+        $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
 
         if( $foundAccession ) {
-            echo "This entity alsready exists in DB <br>";
+            echo "This entity alsready exists in DB ".$foundAccession."<br>";
             //get existing procedure
             return $foundAccession->getParent(); //Accession->getProcedure => procedure
 
