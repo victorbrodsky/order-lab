@@ -60,9 +60,18 @@ class CheckController extends Controller {
                 foreach( $childrenArr as $child ) {
                     $getMethod = "get".$child;
                     //echo "getMethod=".$getMethod."<br>";
-                    $childValue = $field->$getMethod()."";
-                    //echo "childValue=".$childValue."<br>";
-                    $hist[$child] = $childValue;
+
+                    if( $child == "mrntype" ) {
+                        $childValue = $field->$getMethod()->getId();
+                        //echo "childValue=".$childValue."<br>";
+                        $hist[$child] = $childValue;
+                    } else {
+                        $childValue = $field->$getMethod()."";
+                        //echo "childValue=".$childValue."<br>";
+                        $hist[$child] = $childValue;
+                    }
+
+
                 }
             }
 
@@ -75,6 +84,7 @@ class CheckController extends Controller {
 
 
     /**
+     * Find an element in DB
      * @Route("/patient", name="get-patientdata")
      * @Method("GET")   //TODO: use POST?
      */
@@ -86,10 +96,20 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $key = $request->get('key');
+        $mrntype = $request->get('extra');
+        //echo "key=".$key.", mrntype=".$mrntype."; ";
+
+        //TODO: select2 is not set correctly by clean in checkForm.js? So, mrntype is ""
+//        if( $mrntype == "" ) {
+//            $entityTemp = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");   //get default value
+//            $mrntype = $entityTemp->getId(); //id of "New York Hospital MRN" in DB
+//        }
+        //echo "key=".$key.", mrntype=".$mrntype."; ";
 
         //$em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true);   //findOneByIdJoinedToMrn($mrn);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$mrntype);   //findOneByIdJoinedToMrn($mrn);
+        //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOnePatientByIdJoinedToField($key,$mrntype,true);   //findOneByIdJoinedToMrn($mrn);
 
         if( $entity ) {
 
@@ -114,7 +134,7 @@ class CheckController extends Controller {
     }
 
     /**
-     * Get next available MRN from DB
+     * Create new element with status RESERVED
      * @Route("/patientmrn", name="create-mrn")
      * @Method("GET")
      */
@@ -126,19 +146,29 @@ class CheckController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
+        $request = $this->get('request');
+        $mrntype = $request->get('key');
+
+        //echo "mrntype=".$mrntype."<br>";
+        //TODO: select2 is not set correctly by clean in checkForm.js? So, mrntype is ""
+//        if( $mrntype == "" ) {
+//            $entityTemp = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");   //get default value
+//            $mrntype = $entityTemp->getId().""; //id of "New York Hospital MRN" in DB
+//        }
+        //echo "mrntype=".$mrntype."<br>";
+
         $em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn");
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$mrntype);
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient(null, $user, $mrntype );
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-//        $entity = new Patient();
-//        $mrn = new PatientMrn(1);
-//        $mrn->setField("NOMRNPROVIDED-0000000003");
-//        $entity->addMrn($mrn);
+        //$entity->getValidKeyfield()->setMrntype($mrntype);
+        //echo "mrntype name = ".$entity->getMrn()->first()->getMrntype()." ";
 
         $element = array(
             'id'=>$entity->getId(),
-            'mrn'=>$this->getArrayFieldJson($entity->getMrn()),
+            'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('mrntype')),
             'name'=>$this->getArrayFieldJson($entity->getName()),
             'sex'=>$this->getArrayFieldJson($entity->getSex()),
             'dob'=>$this->getArrayFieldJson($entity->getDob()),
@@ -153,17 +183,22 @@ class CheckController extends Controller {
     }
 
     /**
-     * @Route("/mrn/check/{key}", name="delete-mrn")
+     * @Route("/mrn/check/{key}/{mrntype)", name="delete-mrn-mrntype")
      * @Method("DELETE")
      */
-    public function deleteMrnAction($key) {
+    public function deleteMrnAction( $key, $mrntype ) {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+//        $arr = explode("_", $keymrntype);
+//        $key = $arr[0];
+//        $mrntype = $arr[1];
+
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key,"Patient","mrn" );
+        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key,"Patient","mrn",$mrntype );
+        //$res = $em->getRepository('OlegOrderformBundle:Patient')->deletePatientIfReserved( $key, $mrntype );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -199,7 +234,10 @@ class CheckController extends Controller {
             $patient = $entity->getProcedure()->getPatient();
 
             if( $patient ) {
-                $parentKey = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->getValidField( $patient->getMrn() );
+
+//                $parentKey = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->getValidField( $patient->getMrn() );
+                $parentKey = $patient->getValidKeyfield();
+
             } else {
                 $parentKey = null;
             }
@@ -207,6 +245,7 @@ class CheckController extends Controller {
             $element = array(
                 'id'=>$entity->getId(),
                 'parent'=>$parentKey."",
+                'extraid'=>$parentKey->getMrntype()->getId()."",
                 'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession()),
             );
@@ -326,24 +365,30 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $accession = $request->get('key');
-
         //echo "accession=(".$accession.")   ";
 
-        $em = $this->getDoctrine()->getManager();
-        $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession);
-        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+        if( $accession && $accession != ""  ) {
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $part->getPartname()->first()->setProvider($user);
+            $em = $this->getDoctrine()->getManager();
+            $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession);
+            //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-        if( $part ) {
-            //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
-            $element = array(
-                'id'=>$part->getId(),
-                'partname'=>$this->getArrayFieldJson($part->getPartname())
-            );
+            if( $part ) {
+                $user = $this->get('security.context')->getToken()->getUser();
+                $part->getPartname()->first()->setProvider($user);
+                //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
+                $element = array(
+                    'id'=>$part->getId(),
+                    'partname'=>$this->getArrayFieldJson($part->getPartname())
+                );
+            } else {
+                $element = null;
+            }
+
         } else {
+
             $element = null;
+
         }
 
         $response = new Response();
@@ -390,19 +435,23 @@ class CheckController extends Controller {
         $partname = $request->get('parent2'); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
-        //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key );
+        if( $accession != "" && $partname != "" ) {
+            //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
+            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key );
 
-        //echo "count=".count($entity)."<br>";
-        //echo "partname=".$entity->getPartname()->first()."<br>";
+            //echo "count=".count($entity)."<br>";
+            //echo "partname=".$entity->getPartname()->first()."<br>";
 
-        if( $entity ) {
+            if( $entity ) {
 
-            $element = array(
-                'id'=>$entity->getId(),
-                'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
-                'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
-            );
+                $element = array(
+                    'id'=>$entity->getId(),
+                    'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
+                    'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
+                );
+            } else {
+                $element = array();
+            }
         } else {
             $element = array();
         }
@@ -427,26 +476,33 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $accession = $request->get('key');
         $partname = $request->get('key2');
-
         //echo "accession=(".$accession.")   ";
 
-        $em = $this->getDoctrine()->getManager();
-        $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$partname);
-        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
+        if( $accession != "" && $partname != "" ) {
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $block->getBlockname()->first()->setProvider($user);
+            $em = $this->getDoctrine()->getManager();
+            $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$partname);
+            //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-        //echo "partname=".$part->getPartname()."  ";
+            $user = $this->get('security.context')->getToken()->getUser();
+            $block->getBlockname()->first()->setProvider($user);
 
-        if( $block ) {
-            //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
-            $element = array(
-                'id'=>$block->getId(),
-                'blockname'=>$this->getArrayFieldJson($block->getBlockname())
-            );
+            //echo "partname=".$part->getPartname()."  ";
+
+            if( $block ) {
+                //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
+                $element = array(
+                    'id'=>$block->getId(),
+                    'blockname'=>$this->getArrayFieldJson($block->getBlockname())
+                );
+            } else {
+                $element = null;
+            }
+
         } else {
+
             $element = null;
+
         }
 
         $response = new Response();

@@ -105,6 +105,60 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $patient;
     }
 
+    public function getExtraEntityById( $id ) {
+        $em = $this->_em;
+        return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($id);
+    }
+
+
+//    public function findOnePatientByIdJoinedToField( $mrn, $mrntype, $validity=null ) {
+//        $onlyValid = "";
+//        if( $validity ) {
+//            //echo "Part check validity ";
+//            $onlyValid = " AND pmrn.validity=1";
+//        }
+//
+//        $query = $this->getEntityManager()
+//            ->createQuery('
+//            SELECT p FROM OlegOrderformBundle:Patient p
+//            JOIN p.mrn pmrn
+//            WHERE pmrn.field = :mrn AND pmrn.mrntype = :mrntype'.$onlyValid
+//            )->setParameter('mrn', $mrn."")->setParameter('mrntype', $mrntype."");
+//
+//        $parts = $query->getResult();
+//
+//        if( $parts ) {
+//            //echo "parts count=".count($parts)."<br>";
+//            return $parts[0];
+//        } else {
+//            return null;
+//        }
+//    }
+
+//    public function findNextMrnByMrntype( $mrntype ) {
+//        if( !$mrntype || $mrntype == "" ) {
+//            return null;
+//        }
+//
+//        //echo "findNextPartnameByAccession: accessionNumber=".$accessionNumber."<br>";
+//        $name = "NOMRNPROVIDED";
+//
+//        $query = $this->getEntityManager()
+//            ->createQuery('
+//            SELECT MAX(pmrn.field) as max'.'mrn'.' FROM OlegOrderformBundle:Patient p
+//            JOIN p.mrn pmrn
+//            WHERE ppartname.field LIKE :name AND aa.field = :accession'
+//            )->setParameter('name', '%'.$name.'%')->setParameter('accession', $accessionNumber."");
+//
+//        $lastField = $query->getSingleResult();
+//        $index = 'max'.'partname';
+//        $lastFieldStr = $lastField[$index];
+//        //echo "lastFieldStr=".$lastFieldStr."<br>";
+//
+//        return $this->getNextByMax($lastFieldStr, $name);
+//    }
+
+
     //filter out duplicate virtual (in form, not in DB) patients
     //after js check form, theoretically we should not have duplicate entities submitted by the form, but let's have it just in case ...
     public function removeDuplicateEntities( $entity ) {

@@ -124,8 +124,6 @@
             </div>
             <div id="main" class="panel-body collapse in">
 
-                {{ formmacros.field(form_slide.title) }}
-
                 <div class="row">
                     <div class="col-xs-6" align="right">
                         {{ form_label(form_accession.accession, "* Accession Number [or Label], Part, Block:") }}
@@ -264,6 +262,8 @@
               {#</div>#}
 
               <div class="tab-pane" id="slide">
+
+                  {{ formmacros.field(form_slide.title) }}
 
                   {{ formmacros.field(form_slide.slidetype) }}
 

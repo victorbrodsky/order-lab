@@ -168,11 +168,11 @@ class UtilController extends Controller {
         
         $output = array();
         
-        $count = 0;
+        //$count = 0;
         foreach( $arr as $region ) {
-            $element = array('id'=>$count, 'text'=>$region); 
+            $element = array('id'=>$region, 'text'=>$region);
             $output[] = $element;          
-            $count++;
+            //$count++;
         }
         
 
@@ -198,11 +198,11 @@ class UtilController extends Controller {
         
         $output = array();
         
-        $count = 0;
+        //$count = 0;
         foreach( $arr as $region ) {
-            $element = array('id'=>$count, 'text'=>$region); 
+            $element = array('id'=>$region, 'text'=>$region);
             $output[] = $element;          
-            $count++;
+            //$count++;
         }
         
         $response = new Response();
@@ -227,11 +227,11 @@ class UtilController extends Controller {
         
         $output = array();
         
-        $count = 0;
+        //$count = 0;
         foreach( $arr as $region ) {
-            $element = array('id'=>$count, 'text'=>$region); 
+            $element = array('id'=>$region, 'text'=>$region);
             $output[] = $element;          
-            $count++;
+            //$count++;
         }
         
         $response = new Response();
@@ -296,12 +296,10 @@ class UtilController extends Controller {
         $arr = $formHelper->getPart();
         
         $output = array();
-        
-        $count = 0;
+
         foreach( $arr as $var ) {
             $element = array('id'=>$var."", 'text'=>$var.""); 
-            $output[] = $element;          
-            $count++;
+            $output[] = $element;
         }
         
         $response = new Response();
@@ -320,12 +318,10 @@ class UtilController extends Controller {
         $arr = $formHelper->getBlock();
         
         $output = array();
-        
-        $count = 0;
+
         foreach( $arr as $var ) {
             $element = array('id'=>$var."", 'text'=>$var.""); 
-            $output[] = $element;          
-            $count++;
+            $output[] = $element;
         }
         
         $response = new Response();

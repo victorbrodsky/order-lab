@@ -37,6 +37,12 @@ abstract class ArrayFieldAbstract {
     protected $validity;
 
     /**
+     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $source;
+
+    /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -45,6 +51,7 @@ abstract class ArrayFieldAbstract {
     public function __construct( $validity = 0 )
     {
         $this->validity = $validity;
+        $this->source = "scanorder";
     }
 
     public function setId($id)
@@ -107,6 +114,23 @@ abstract class ArrayFieldAbstract {
     {
         return $this->validity;
     }
+
+    /**
+     * @param mixed $source
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
 
     public function __toString() {
         return $this->field."";

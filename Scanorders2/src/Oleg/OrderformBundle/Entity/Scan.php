@@ -138,4 +138,8 @@ class Scan extends SlideArrayFieldAbstract
         return $this->scandate;
     }
 
+    public function __toString() {
+        return $this->scanregion."";
+    }
+
 }

@@ -465,6 +465,10 @@ class Patient extends OrderAbstract
         return $this->getMrn();
     }
 
+    public function obtainExtraKey() {
+        return $this->getMrn()->getMrntype();
+    }
+
     public function obtainKeyFieldName() {
         return "mrn";
     }

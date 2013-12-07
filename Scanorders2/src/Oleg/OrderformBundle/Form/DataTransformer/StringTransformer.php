@@ -38,6 +38,7 @@ class StringTransformer implements DataTransformerInterface
      */
     public function transform($entity)
     {
+        //echo "data transformer: ".$entity."<br>";
         if (null === $entity) {
             return "";
         }
@@ -56,7 +57,7 @@ class StringTransformer implements DataTransformerInterface
      */
     public function reverseTransform($text)
     {
-        //echo "data transformer text=".$text."<br>";
+        //echo "data reverseTransform text=".$text."<br>";
         //exit();
 
         if (!$text) {

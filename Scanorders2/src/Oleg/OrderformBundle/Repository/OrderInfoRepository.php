@@ -37,29 +37,29 @@ class OrderInfoRepository extends EntityRepository
 
         $entity->setType($type);
 
-        $helper = new FormHelper();
-
-        $key = $entity->getSlideDelivery();
-        if (is_numeric($key)) {
-            $slideDelivery = $helper->getSlideDelivery();
-            if( isset($key) && $key >= 0 ) {
-                $entity->setSlideDelivery( trim($slideDelivery[$key]) );
-            }
-        }
-
-        $key = $entity->getReturnSlide();
-        if (is_numeric($key)) {
-            $returnSlide = $helper->getReturnSlide();
-            if( isset($key) && $key >= 0 ) {
-                $entity->setReturnSlide( trim($returnSlide[$key]) );
-            }
-        }
-
-        $key = $entity->getPriority();
-        if( isset($key) && $key >= 0 ) {
-            $priority = $helper->getPriority();
-            $entity->setPriority( trim($priority[$key]) );
-        }
+//        $helper = new FormHelper();
+//
+//        $key = $entity->getSlideDelivery();
+//        if (is_numeric($key)) {
+//            $slideDelivery = $helper->getSlideDelivery();
+//            if( isset($key) && $key >= 0 ) {
+//                $entity->setSlideDelivery( trim($slideDelivery[$key]) );
+//            }
+//        }
+//
+//        $key = $entity->getReturnSlide();
+//        if (is_numeric($key)) {
+//            $returnSlide = $helper->getReturnSlide();
+//            if( isset($key) && $key >= 0 ) {
+//                $entity->setReturnSlide( trim($returnSlide[$key]) );
+//            }
+//        }
+//
+//        $key = $entity->getPriority();
+//        if( isset($key) && $key >= 0 ) {
+//            $priority = $helper->getPriority();
+//            $entity->setPriority( trim($priority[$key]) );
+//        }
 
         //return $entity;
         return $this->setResult( $entity );

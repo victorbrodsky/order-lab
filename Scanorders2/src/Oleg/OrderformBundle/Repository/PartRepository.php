@@ -12,7 +12,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 {
 
     //override parent method to get next key string
-    public function getNextNonProvided($entity) {
+    public function getNextNonProvided($entity, $extra=null) {
         $accession= $entity->getParent();
         $accessionNumber = $accession->getValidKeyfield()."";
         return $this->findNextPartnameByAccession( $accessionNumber );

@@ -68,30 +68,6 @@ class OrderInfoType extends AbstractType
             $builder->add( 'research', new ResearchType(), array('label'=>'Research:') );
         }
 
-        //pathologyService
-//        $pathServices = $helper->getPathologyService();
-//        $pathParam = array(
-//            'label' => 'Pathology Service:',
-//            'max_length'=>200,
-//            'choices' => $pathServices,
-//            'required'=>false,
-//            'attr' => array('class' => 'combobox combobox-width'),
-//        );
-//        if( $this->entity->getPathologyService() && $this->entity->getPathologyService() != "" ) { //show, edit
-//            $thisname = trim( $this->entity->getPathologyService() );
-//        } else {  //new
-//            $thisname = trim($this->params['service']);
-//        }
-//        $counter = 0;
-//        foreach( $pathServices as $var ){
-//            if( trim( $var ) == $thisname ) {
-//                $key = $counter;
-//                $pathParam['data'] = $key;
-//                break;
-//            }
-//            $counter++;
-//        }
-//        $builder->add( 'pathologyService', 'choice', $pathParam );
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
         } else {
@@ -103,35 +79,22 @@ class OrderInfoType extends AbstractType
             'required' => false,
             'classtype' => 'pathologyService'
         ));
-        
-        //priority                    
-        $priorityArr = $helper->getPriority();
-        $priority_param = array(
+
+        //priority
+        $priorityArr = array(
             'label' => '* Priority:',
-            //'max_length'=>200,
+            'choices' => $helper->getPriority(),
             'required' => true,
-            'choices' => $priorityArr,
             'multiple' => false,
             'expanded' => true,
-            'data' => 0,
-            'attr' => array('class' => 'horizontal_type', 'required' => 'required'),
-//            'auto_initialize' => false,
+            'attr' => array('class' => 'horizontal_type', 'required'=>'required')
         );
-        $priority = $this->entity->getPriority();
-        $key = 0;
-        $counter = 0;
-        foreach( $priorityArr as $var ) {
-            //echo "<br>".$var."?".$pathservice;
-            if( trim( $var ) == trim( $priority ) ){
-                $key = $counter;
-                //$priority_param['data'] = $key;
-                break;
-            }
-            $counter++;
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+            $priorityArr['data'] = 'Routine';    //new
         }
-        $priority_param['data'] = $key;
-        $builder->add( 'priority', 'choice', $priority_param);
+        $builder->add( 'priority', 'choice', $priorityArr);
 
+        //slideDelivery
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');    //new
         } else {
@@ -143,16 +106,7 @@ class OrderInfoType extends AbstractType
             'required'=>true,
             'classtype' => 'slideDelivery'
         ));
-                
-//        $builder->add( 'returnSlide', 
-//                'choice', array(
-//                'label'=>'* Return Slides to:', 
-//                'max_length'=>200,
-//                'choices' => $helper->getReturnSlide(),
-//                'required'=>true,
-//                'data' => 0,    //'Filing Room',
-//                'attr' => array('class' => 'combobox combobox-width', 'required' => 'required')
-//        ));
+
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');    //new
         } else {

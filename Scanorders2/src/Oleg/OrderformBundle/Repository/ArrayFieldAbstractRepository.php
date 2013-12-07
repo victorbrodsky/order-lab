@@ -265,7 +265,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return false;
     }
 
-    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true )
+    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br>";
 
@@ -275,11 +275,18 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $onlyValid = " AND cfield.validity=1";
         }
 
+        $extraStr = "";
+        if( $extra ) {
+            if( $className == "Patient" ) {
+                $extraStr = " AND cfield.mrntype = ".$extra;
+            }
+        }
+
         $query = $this->getEntityManager()
             ->createQuery('
         SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
         JOIN c.'.$fieldName.' cfield
-        WHERE cfield.field = :field'.$onlyValid
+        WHERE cfield.field = :field'.$onlyValid.$extraStr
             )->setParameter('field', $fieldStr."");
 
         try {
@@ -297,9 +304,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
     }
 
-    public function deleteIfReserved( $fieldStr, $className, $fieldName ) {
+    public function deleteIfReserved( $fieldStr, $className, $fieldName, $extra = null ) {
         //echo "fieldStr=".$fieldStr." ";
-        $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, null, false);
+        $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, null, false, $extra);
         if( $entities ) {
             foreach( $entities as $entity ) {
                 if( $entity->getStatus() == self::STATUS_RESERVED ) {
@@ -335,7 +342,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$className: Patient
     //$fieldName: mrn
-    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null, $fieldValue = null ) {
+    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null ) {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
@@ -345,8 +352,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = new $entityClass();
 
         if( !$fieldValue ) {
-//            $fieldValue = $this->getNextNonProvided("NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
-            $fieldValue = $this->getNextNonProvided($entity);
+            $fieldValue = $this->getNextNonProvided($entity,$extra);
         }
         //echo "fieldValue=".$fieldValue;
 
@@ -362,11 +368,20 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $field->setValidity(1);
 
+        //if( $className == "Patient" ) {
+        if( $field && method_exists($field,'setExtra') ) {
+            //find mrnType with provided extra (mrntype id) from DB
+            $extraEntity = $this->getExtraEntityById($extra);
+            $field->setExtra($extraEntity);
+        }
 
         $keyAddMethod = "add".ucfirst($fieldName);
         $entity->$keyAddMethod($field);
+
         $entity->setStatus($status);
+
         $em->persist($entity);
+
         if( $parent ) {
             //echo "set Parent = ".$fieldName."<br>";
             $em->persist($parent);
@@ -374,6 +389,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         } else {
             //echo "Parent is not set<br>";
         }
+
         //exit();
         $em->flush();
         //echo "Created=".$fieldEntityName."<br>";
@@ -385,18 +401,32 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$name: NOMRNPROVIDED
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
-    public function getNextNonProvided( $entity ) { //$name, $className, $fieldName ) {
+    public function getNextNonProvided( $entity, $extra=null ) { //$name, $className, $fieldName ) {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
         $name = "NO".strtoupper($fieldName)."PROVIDED";
 
+        //get extra key by $extra optional parameter or get it from entity
+        $extraStr = "";
+        if( $extra ) {
+            if( $className == "Patient" ) {
+                $extraStr = " AND cfield.mrntype = ".$extra;
+            }
+        } else {
+            $validKeyField = $entity->getValidKeyfield();
+            //get extra field key such as Patient's mrntype
+            if( $validKeyField && method_exists($validKeyField,'obtainExtraKey') ) {
+                $extraStr = $validKeyField->obtainExtraKey();
+            }
+        }
+
         $query = $this->getEntityManager()
         ->createQuery('
         SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
         JOIN c.'.$fieldName.' cfield
-        WHERE cfield.field LIKE :field'
+        WHERE cfield.field LIKE :field'.$extraStr
         )->setParameter('field', '%'.$name.'%');
         
         $lastField = $query->getSingleResult();
@@ -430,7 +460,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //return: null - not existed, entity object if existed
     public function findUniqueByKey( $entity ) {
 
-        echo "findUniqueByKey: Abstract: ".$entity;
+        echo "find Unique By Key: Abstract: ".$entity;
 
         if( !$entity ) {
             //echo "entity is null <br>";
@@ -442,9 +472,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $fieldName = $entity->obtainKeyFieldName();
 
         $validKeyField = $entity->getValidKeyfield();
+
+        //get extra field key such as Patient's mrntype
+        if( method_exists($validKeyField,'obtainExtraKey') ) {
+            $extra = $validKeyField->obtainExtraKey();
+        } else {
+            $extra = null;
+        }
+
         if( $entity->getValidKeyfield() ) {
             $em = $this->_em;
-            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,true);
+            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,true, $extra);
         } else {
             echo "This entity does not have a valid key field<br>";
             $newEntity = null;
@@ -453,35 +491,35 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $newEntity;
     }
 
-    //check entity by ID (need for postgresql; for mssql can check by if($entity->getId()) )
-    public function notExists($entity, $className) {
+//    //check entity by ID (need for postgresql; for mssql can check by if($entity->getId()) )
+//    public function notExists($entity, $className) {
+//
+//        return true;
+//
+//        $id = $entity->getId();
+//        if( !$id ) {
+//            echo "notExists: ".$className.": no id =>".$entity." <br>";
+//            return true;
+//        }
+//        echo "notExists: ".$className.": id=".$id." =>".$entity."<br>";
+//        $em = $this->_em;
+//        $found = $em->getRepository('OlegOrderformBundle:'.$className)->findOneById($id);
+//        if( null === $found ) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
-        return true;
-
-        $id = $entity->getId();
-        if( !$id ) {
-            echo "notExists: ".$className.": no id =>".$entity." <br>";
-            return true;
-        }
-        echo "notExists: ".$className.": id=".$id." =>".$entity."<br>";
-        $em = $this->_em;
-        $found = $em->getRepository('OlegOrderformBundle:'.$className)->findOneById($id);
-        if( null === $found ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    //get only valid field
-    public function getValidField( $fields ) {
-        foreach( $fields as $field ) {
-            //echo "get valid field=".$field.", validity=".$field->getValidity()."<br>";
-            if( $field->getValidity() && $field->getValidity() == 1 ) {
-                return $field;
-            }
-        }
-        return null;
-    }
+//    //get only valid field
+//    public function getValidField( $fields ) {
+//        foreach( $fields as $field ) {
+//            //echo "get valid field=".$field.", validity=".$field->getValidity()."<br>";
+//            if( $field->getValidity() && $field->getValidity() == 1 ) {
+//                return $field;
+//            }
+//        }
+//        return null;
+//    }
 
 }

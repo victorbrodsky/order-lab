@@ -718,10 +718,10 @@ Translational Research"
         return $arr;
     }
     
-    public function getPriority() {        
-        $arr1 = array( 'Routine'=>'Routine', 'Stat'=>'Stat' );
-        $arr = array( 'Routine', 'Stat' );
-        
+    public function getPriority() {
+        $arr = array( 'Routine'=>'Routine', 'Stat'=>'Stat' );
+        //$arr = array( 'Routine', 'Stat' );
+
         return $arr;
     }
     

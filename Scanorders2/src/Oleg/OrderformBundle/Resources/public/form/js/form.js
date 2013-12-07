@@ -557,7 +557,7 @@ function priorityOption() {
     });
 
     var checked = $('form input[type=radio]:checked').val();
-    if( checked == 1 ) {
+    if( checked == 'Stat' ) {
         $('#priority_option').collapse('toggle');
     }
 }

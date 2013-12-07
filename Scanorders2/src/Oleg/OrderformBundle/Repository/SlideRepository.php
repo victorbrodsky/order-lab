@@ -32,20 +32,6 @@ class SlideRepository extends EntityRepository {
         return $slide;
     }
     
-//    public function notExists($entity) {
-//        $id = $entity->getId();
-//        if( !$id ) {
-//            return true;
-//        }
-//        $em = $this->_em;
-//        $found = $em->getRepository('OlegOrderformBundle:Slide')->findOneById($id);
-//        if( null === $found ) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-    
 }
 
 ?>
