@@ -73,6 +73,9 @@
                             {% set diffDiagnosesField = form_part.diffDisident %}
                             {% set diffDiagnosesWidget = formmacros.fieldWidget(diffDiagnosesField) %}
 
+                            {% set disidentField = form_part.disident %}
+                            {% set disidentWidget = formmacros.fieldWidget(disidentField) %}
+
         {{ form_errors(form) }}
         {{ form_errors(form_patient) }}
         {{ form_errors(form_procedure) }}
@@ -93,6 +96,9 @@
              data-prototype-patientage=               "{{ ageHtml|e }}"
              data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
+             {#data-prototype-addpartdisident="{{ formmacros.inputField(disidentField,'new',"partdisident","prototype",disidentWidget,"nobtn","")|e }}"#}
+             data-prototype-partdisident="{{ formmacros.inputField(disidentField,'new',"partdisident","prototype",disidentWidget,"nobtn","")|e }}"
+
              data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
              data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
 
@@ -104,14 +110,14 @@
              data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 
                 {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-             data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+             data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
                 {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-             data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+             data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
 
         >
         </div>
 
-    <div class="singleorderinfo" id="singleorderinfo">
+    <div class="singleorderinfo" id="singleorderinfo_0_0_0_0_0_0_0_0">
 
         <div class="panel panel-patient">
 
@@ -220,7 +226,7 @@
             <div class="tab-content option_info_panel">
               <div class="tab-pane active" id="patient">
 
-                  {{ formmacros.patientForm(form_patient,"check") }}
+                  {{ formmacros.patientForm(form_patient,"check","0") }}
 
               </div>
               <div class="tab-pane" id="procedure">
@@ -231,23 +237,17 @@
                   {#{{ formmacros.field(form_accession.date) }}#}
               {#</div>#}
               <div class="tab-pane" id="part">
-                  {#{{ formmacros.field(form_part.sourceOrgan) }}#}
                   {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
 
-                  {#{{ formmacros.field(form_part.paper.file) }}#}
-                  {#{{ formmacros.paperInput(form_part.paper,'new') }}#}
                   {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
 
-                  {#{{ formmacros.field(form_part.description) }}#}
                   {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
 
-                  {#{{ formmacros.field(form_part.diffDiagnoses) }}#}               
-                  {#{% if form_part.diffDisident|length > 0 %}#}
-                        {#{{ formmacros.collectionInput(form_part.diffDisident, 'diffDiagnoses', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
-                  {#{% endif %}#}
+                  <div id="partdisident_marker"></div>
+                  {#{{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}#}
+
                   {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
-                  
-                  {#{{ formmacros.field(form_part.diseaseType) }}#}
+
                   {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
               </div>
 

@@ -329,19 +329,19 @@
 
 
 {######################  holder for array of fields  #################################}
-{% macro inputArrayField(fields,cycle,classname,fieldtype,nobtn,nolabel) %}
+{% macro inputArrayField(fields,cycle,classname,fieldtype,nobtn,nolabel,withspace) %}
     {% import _self as formmacros %}
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname) }}</p>
+        <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace) }}</p>
     {% endfor %}
     </div>
     </p>
 {% endmacro %}
 
 {#input array field with separate label#}
-{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname) %}
+{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace) %}
     {% import _self as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -350,7 +350,15 @@
         {% set fieldThis = field %}
     {% endif %}
 
-    <div class="row">
+    {% if withspace is defined and withspace != "" %}
+        {#{% set elemstyle = 'style="padding-top: 10%;"' %}#}
+        <div class="row" style="padding-top: 1%;">
+    {% else %}
+        {#{% set elemstyle = "" %}#}
+        <div class="row">
+    {% endif %}
+
+    {#<div class="row" {{ elemstyle }}>#}
 
         <div class="col-xs-6" align="right">
             <p>
@@ -395,17 +403,14 @@
             {% elseif fieldtype == "diseaseType" %}
                 {{ formmacros.diseaseMulti(fieldThis) }}
             {% elseif classname == "patientmrn" %}
-                {#3{{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}               #}
                 {{ form_widget(fieldThis.mrntype) }}
                 {{ form_widget(fieldThis.field) }}
             {% elseif   fieldtype == "partdiffDisident" or
+                        fieldtype == "partdisident" or
                         fieldtype == "sliderelevantScans"
                         and cycle != 'show' %}
                 {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn) }}
-            {#{% elseif fieldtype == "slidespecialStains" and cycle != 'show' %}#}
-                {#{{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn) }}#}
             {% elseif fieldtype == "slidespecialStains" %}
-                {#{{ form_widget(fieldThis.staintype) }}#}
                 {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn) }}
             {% else %}
                 {{ form_widget(fieldThis.field) }}
@@ -824,7 +829,7 @@ ident:      specialStains or relevantScans
 
         {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
         {#                                        (fields,    cycle,     classname,           fieldtype,        nobtn,     nolabel)#}
-            {{ formmacros.inputArrayField(slide.specialStains,cycle,"slidespecialstains","slidespecialStains","buttonbottom","") }}
+            {{ formmacros.inputArrayField(slide.specialStains,cycle,"slidespecialstains","slidespecialStains","buttonbottom","","","withspace") }}
         {% else  %}
             <p><div class="slidespecialstains">{{ specialStainsHtml }}</div></p>
         {% endif %}

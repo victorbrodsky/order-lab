@@ -214,9 +214,9 @@
           data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+          data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-          data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","")|e }}"
+          data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
 
       {% endif %}
 
@@ -353,7 +353,7 @@
             {{ formmacros.orderinfo_panel(form,"Scan Order Info") }}
 
             <div class="row">
-                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
+                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit" onClick="submitValidation(this)">Submit</button></p>
                 {#<p><button class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>#}
             </div>
         </div>

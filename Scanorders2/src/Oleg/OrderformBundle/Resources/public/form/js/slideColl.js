@@ -16,7 +16,7 @@ var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.
 //get input field only
 function getCollField( ident, patient, procedure, accession, part, block, slide, coll, prefix ) {
 
-    //console.log("coll field input:"+ident+"_"+patient+"_"+procedure+"_"+accession+"_"+part+"_"+block+"_"+slide+"_"+coll+"_"+prefix);
+    console.log("coll field input:"+ident+"_"+patient+"_"+procedure+"_"+accession+"_"+part+"_"+block+"_"+slide+"_"+coll+"_"+prefix);
     //diffDisident_field_0_0_0_0_0_0_0_0_diffdiag_0
     var dataholder = "#form-prototype-data"; //fixed data holder
 
@@ -25,7 +25,7 @@ function getCollField( ident, patient, procedure, accession, part, block, slide,
     }
 
     var identLowerCase = ident.toLowerCase();
-    //console.log(dataholder+", ident="+ident+", identLowerCase="+identLowerCase);
+    console.log(dataholder+", ident="+ident+", identLowerCase="+identLowerCase);
     var collectionHolder =  $(dataholder);
     var prototype = collectionHolder.data('prototype-'+prefix+identLowerCase);
     //console.log("prototype="+prototype);
