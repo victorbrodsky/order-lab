@@ -11,19 +11,19 @@
             </tr>
             <tr>
                 <th>Mrn</th>
-                <td>{{ entity.mrn }}</td>
+                <td>{{ entity.mrn|first }}</td>
             </tr>
             <tr>
                 <th>Name</th>
-                <td>{{ entity.name }}</td>
+                <td>{{ entity.name|first }}</td>
             </tr>
             <tr>
                 <th>Procedures</th>
                 <td>
                     {#{{ entity.specimen }}#}
-                    {% for specimen in entity.specimen %}
+                    {% for specimen in entity.procedure %}
                         <a href="{{ path('specimen_show', { 'id': specimen.id }) }}">
-                            Specimen: ID={{ specimen.id }}, MRN={{ specimen.proceduretype }}, patientId={{ specimen.patient.id }}<br>
+                            Specimen: ID={{ specimen.id }}, MRN={{ specimen.name|first }}, patientId={{ specimen.patient.id }}<br>
                         </a>
                     {% endfor %}
                 </td>

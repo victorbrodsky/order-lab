@@ -130,21 +130,21 @@
                     </div>
                     <div class="col-xs-6" align="left">
                         <div style="float:left; width:100%">
-                            <div style="float:left; width:50%">
+                            <div style="float:left; width:50%" id="accession-single">
                                 {{ form_widget(form_accession.accession|first) }}
                                 <button style="display: none;" id="check_btn" class="btn btn-default accessionbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
                             </div>
-                            <div style="float:left; width:20%">
+                            <div style="float:left; width:25%" id="part-single">
                                 {{ form_widget(form_part.partname|first) }}
                                 <button style="display: none;" id="check_btn" class="btn btn-default partbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
                             </div>
-                            <div style="float:left; width:20%">
+                            <div style="float:left; width:25%" id="block-single">
                                 {{ form_widget(form_block.blockname|first) }}
                                 <button style="display: none;" id="check_btn" class="btn btn-default blockbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
                                 {#{{ formmacros.inputArrayField(form_block.blockname,cycle,"blockblockname","key","","nolabel") }}#}
                             </div>
-                            <div style="float:left; width:10%">
-                                <button id="check_btn" class="btn btn-default" type="button" onclick="checkFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
+                            <div style="float:left; width:10%" id="maincinglebtn">
+                                <button id="remove_single_btn" class="btn btn-default maincinglebtn" type="button" onclick="removeFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-remove"></i></button>
                             </div>
                         </div>
                     </div>
@@ -182,7 +182,7 @@
         {#        The optional parameter    #}
         <div class="row">
         <p>
-            <button id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-target="#optional_param">
+            <button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-target="#optional_param">
                 Add Optional Info
             </button>
         </p>

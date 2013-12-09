@@ -44,10 +44,9 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 
 //ScanOrder joins OrderInfo + Scan
+//@Route("/multi")
 /**
  * OrderInfo controller.
- *
- * @Route("/multi")
  */
 class MultyScanOrderController extends Controller {
    
@@ -58,31 +57,31 @@ class MultyScanOrderController extends Controller {
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:index.html.twig")
      */
-    public function multyIndexAction() {
-        
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            //throw new AccessDeniedException();
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        //findAll();
-        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
-                    findBy(array(), array('orderdate'=>'desc')); 
-       
-        //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
-        
-        return array(
-            'entities' => $entities,  
-            //'slides' => $slides
-        );
-    }
+//    public function multyIndexAction() {
+//        
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            //throw new AccessDeniedException();
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+//        
+//        $em = $this->getDoctrine()->getManager();
+//        
+//        //findAll();
+//        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
+//                    findBy(array(), array('orderdate'=>'desc')); 
+//       
+//        //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
+//        
+//        return array(
+//            'entities' => $entities,  
+//            //'slides' => $slides
+//        );
+//    }
 
 
     /**
      * Edit: If the form exists, use this function
-     * @Route("/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
+     * @Route("/multi/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -107,10 +106,10 @@ class MultyScanOrderController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/single/new", name="singleorder_create")
-     * @Route("/research/new", name="res_create")
-     * @Route("/educational/new", name="edu_create")
-     * @Route("/clinical/new", name="clinical_create")
+     * @Route("/", name="singleorder_create")
+     * @Route("/multi/research/new", name="res_create")
+     * @Route("/multi/educational/new", name="edu_create")
+     * @Route("/multi/clinical/new", name="clinical_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -231,10 +230,10 @@ class MultyScanOrderController extends Controller {
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
-     * @Route("/single/new", name="single_new")
-     * @Route("/research/new", name="res_new")
-     * @Route("/educational/new", name="edu_new")
-     * @Route("/clinical/new", name="clinical_new")
+     * @Route("/", name="single_new")
+     * @Route("/multi/research/new", name="res_new")
+     * @Route("/multi/educational/new", name="edu_new")
+     * @Route("/multi/clinical/new", name="clinical_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */

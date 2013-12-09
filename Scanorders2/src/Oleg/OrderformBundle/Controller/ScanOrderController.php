@@ -54,7 +54,7 @@ class ScanOrderController extends Controller {
      * @Method("GET")
      * @Template()
      */
-    public function indexAction( Request $request ) {
+    public function indexAction( Request $request ) {    
         
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             //throw new AccessDeniedException();
@@ -502,13 +502,13 @@ class ScanOrderController extends Controller {
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
-     * @Route("/", name="scanorder_new")
+     * @Route("/TODEL", name="scanorder_new_TODEL")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
      */
     public function newAction()
     {
-
+        exit("single order controller???");
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
