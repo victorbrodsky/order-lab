@@ -56,7 +56,8 @@
     {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
 
     {#<input type="hidden" id="formtype" value="single" />#}
-    <input type="hidden" id="formtype" value="multi" />
+    <input type="hidden" id="orderformtype" value="single" />
+    {#<input type="hidden" id="formtype" value="multi" />#}
     <input type="hidden" id="formcicle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
     

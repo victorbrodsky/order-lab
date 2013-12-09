@@ -11,8 +11,20 @@ var urlBase = $("#baseurl").val();
 var urlCheck = "http://"+urlBase+"/check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: change to patientmrn, accessionaccession, partname ...
-var arrayFieldShow = new Array("clinicalHistory","age","diffDisident","disident"); //display as array fields "sex"
-var selectStr = 'input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
+var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+
+//add disident to a single form array field
+$(document).ready(function() {
+
+    var orderformtype = $("#orderformtype").val();
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@ add disident for single form: orderformtype="+orderformtype);
+    if( orderformtype == "single") {
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@ add disident for single form");
+        arrayFieldShow.push("disident")
+    }
+
+});
 
 //  0         1              2           3   4  5  6   7
 //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -67,7 +79,7 @@ function checkForm( elem, single ) {
 
         var keyValue =keyElement.element.val();
         var extra =keyElement.extra;
-        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
+        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
 
         if( name == "part" ) {
             var accessionNumberElement = getAccessionNumberElement(element,single);
@@ -81,13 +93,20 @@ function checkForm( elem, single ) {
             var partValue = partNumberElement.select2("val"); //i.e. Part #                   
         }
 
-        //console.log("accessionValue="+accessionValue+",partValue="+partValue+",extra="+extra);
+        console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            //console.log("key undefined! "+fieldName);
+            console.log("key undefined! "+fieldName);
+
+            if( name == "part" || name == "block" ) {
+                console.log("accessionValue is not empty");
+                setKeyValue(element,name+fieldName,new Array(accessionValue,partValue),single);
+                return;
+            }
+
             setKeyValue(element,name+fieldName,new Array(extra),single);
             //disableInElementBlock(element, false, null, "notkey", null);
             //invertButton(element);
@@ -311,7 +330,7 @@ function setElementBlock( element, data, cleanall, key ) {
     if( !parent.attr('id') ) {
         var single = true;
         var parent = element.parent().parent().parent().parent().parent().parent().parent();
-        //console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+        console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
     }
 
     if( key == "key" && single ) {
@@ -319,6 +338,7 @@ function setElementBlock( element, data, cleanall, key ) {
         //console.log("inputField.id=" + inputField.attr('id') + ", class=" + inputField.attr('class'));
         var idsArrTemp = inputField.attr("id").split("_");
         var field = idsArrTemp[idsArrTemp.length-fieldIndex];    //default
+        console.log("field=" + field);
         if( field == "partname" ) {
             var elements = $('#part-single').find('.keyfield').not("*[id^='s2id_']");
         } else if( field == "blockname" ) {
@@ -435,7 +455,7 @@ function setArrayField(element, dataArr, parent, single) {
     var classs = element.attr("class");
     var tagName = element.prop("tagName");
     var value = element.attr("value");
-    console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
+    //console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
 
     for (var i = 0; i < dataArr.length; i++) {
 
@@ -447,9 +467,9 @@ function setArrayField(element, dataArr, parent, single) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        console.log( "set array field i="+i+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        //console.log( "set array field i="+i+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
-        console.log("parent id=" + parent.attr("id"));
+        //console.log("parent id=" + parent.attr("id"));
         var idsArr = parent.attr("id").split("_");
         var elementIdArr = element.attr("id").split("_");
         // 0        1               2           3    4      5          6        7
@@ -457,7 +477,7 @@ function setArrayField(element, dataArr, parent, single) {
         // 0        1               2           3    4      5   6     7     8   9  10      11      12 13
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_0_name
 
-        console.log("in loop parent.id=" + parent.attr("id") + ", tagName=" + tagName + ", type=" + type + ", classs=" + classs + ", text=" + text );
+        //console.log("in loop parent.id=" + parent.attr("id") + ", tagName=" + tagName + ", type=" + type + ", classs=" + classs + ", text=" + text );
 
         var fieldName = elementIdArr[elementIdArr.length-fieldIndex];
         var holderame = elementIdArr[elementIdArr.length-holderIndex];
@@ -466,9 +486,9 @@ function setArrayField(element, dataArr, parent, single) {
 
         //var attachElement = element.parent().parent().parent().parent().parent();
         var attachElement = parent.find("."+ident.toLowerCase());   //patientsex
-        console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+        //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
 
-        if( $.inArray(fieldName, arrayFieldShow) != -1 || (fieldName == "disident" && single) ) { //show all fields from DB, plus exception for single form disident
+        if( $.inArray(fieldName, arrayFieldShow) != -1 ) { //show all fields from DB
 
             //patient_0_0_0_0_0_0_0_0
 
@@ -480,7 +500,7 @@ function setArrayField(element, dataArr, parent, single) {
             var block = idsArr[5];
             var slide = idsArr[6];
 
-            console.log("Create array empty field, fieldName=" + fieldName + ", patient="+patient+", part="+part );
+            //console.log("Create array empty field, fieldName=" + fieldName + ", patient="+patient+", part="+part );
 
             //fieldName = "clinicalHistory";
 
@@ -493,7 +513,7 @@ function setArrayField(element, dataArr, parent, single) {
             var idStr = 'type="hidden" value="'+id+'" ';
             newForm = newForm.replace('type="hidden"', idStr);
 
-            console.log("newForm="+newForm);
+            //console.log("newForm="+newForm);
 
             if( fieldName == "disident" && single ) {
                 //attachElement
@@ -501,22 +521,31 @@ function setArrayField(element, dataArr, parent, single) {
                 console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 $('#partdisident_marker').append(newForm);
             } else {
-                console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+                //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 attachElement.prepend(newForm);
             }
 
         } else {    //show the valid field (with validity=1)
-            console.log("NO SHOW");
+            //console.log("NO SHOW");
         }
 
+        //set data
         if( tagName == "INPUT" ) {
             console.log("input tagName: fieldName="+fieldName);
 
-            if( type == "text" ) {
+            if( type == "file" ) {
+
+                element.hide();
+                //var paperLink = '<a href="../../../../web/uploads/documents/'+dataArr[i]["path"]+'" target="_blank">'+dataArr[i]["name"]+'</a>';
+                var paperLink = text;
+                //console.log("paperLink="+paperLink);
+                element.parent().append(paperLink);
+
+            } else if( type == "text" ) {
                 console.log("type text, text="+text);
                 //find the last attached element to attachElement
-                if( fieldName == "disident" && single ) {
-                    var firstAttachedElement = element; //for single there is only one field: this element
+                if( fieldName != "diffDisident" && single ) {
+                    var firstAttachedElement = element; //for single & disident (Diagnosis) there is only one field: this element
                 } else {
                     var firstAttachedElement = attachElement.find('input,textarea').first();
                 }
@@ -546,16 +575,17 @@ function setArrayField(element, dataArr, parent, single) {
 
             if( fieldName == "disident" && single ) {
                 var firstAttachedElement = $('#partdisident_marker').find('.row').find('textarea'); //the last diffDiagnosis field is part's disident field
+                //console.log("disident: " + firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
             } else {
                 var firstAttachedElement = attachElement.find('textarea').first();
             }
 
-            console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
+            //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
             firstAttachedElement.val(text);
 
         } else if ( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
 
-            console.log("### select field, id="+id+",text="+text);
+            //console.log("### select field, id="+id+",text="+text);
             //console.log("id="+element.attr("id"));
 
             //set mrntype
@@ -822,7 +852,12 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
         //console.log("clean id="+id+", type="+type+", tagName="+tagName);
 
-        if( type == "text" || !type ) {
+        if( type == "file" ) {
+
+            elements.eq(i).parent().find('a').remove();
+            elements.eq(i).show();
+
+        } else if( type == "text" || !type ) {
             var clean = false;
             var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
@@ -890,13 +925,13 @@ function isKey(element, field) {
 }
 
 function initAllElements() {
-    if( type ) {
-        if( type == 'single' ) {    //single form
-
-        } else {    //multi form
+//    if( type ) {
+//        if( type == 'single' ) {    //single form
+//
+//        } else {    //multi form
             initAllMulti();
-        }
-    }
+//        }
+//    }
 }
 
 function initAllMulti() {
@@ -1128,14 +1163,14 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
 
         var partNumberElement = getPartNumberElement(btnElement, single);
         var partValue = partNumberElement.select2("val"); //i.e. Part #
-        //console.log("1 partNumberElement.id=" + partNumberElement.attr('id') + ", class=" + partNumberElement.attr('class'));
+        console.log("blockblockname: partNumberElement.id=" + partNumberElement.attr('id') + ", class=" + partNumberElement.attr('class'));
 
         if( partValue && partValue != "" ) {
-            //console.log("generate block! partValue ="+partValue);
+            console.log("generate block! partValue ="+partValue);
             setKeyValueSingle( btnElement, name, parentValueArr );  //generate block
             return false;
         } else {    //generate partname
-            //console.log("partvalue is empty! partValue ="+partValue);
+            console.log("partvalue is empty! partValue ="+partValue);
             var holder = btnElement.closest('.panel-part');
             var partBtn = holder.find('.partpartname').find("#check_btn");
             if( single ) {
@@ -1171,7 +1206,7 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
                     return 0;
                 }
                 maxi++;
-                console.log("gen: parent key is not set, maxi="+maxi);
+                //console.log("gen: parent key is not set, maxi="+maxi);
                 waitWhenParentIsGenerated(origBtnElement, name, maxi, single);
             }
         }, 300);
@@ -1352,37 +1387,6 @@ function capitaliseFirstLetter(string)
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-//$(document).ready(function() {
-//
-//    //popover hide for check button
-//    $('html').click(function(e) {
-//
-//        var clickedEl = $(e.target);
-//        var clickedClass = clickedEl.attr("class");
-//        //console.debug("html clickedClass="+clickedClass);
-//
-//        if( clickedClass && ( clickedClass.indexOf("glyphicon") != -1 || clickedEl.children().hasClass("glyphicon") ) ) {
-//            //console.debug("html no hide");
-//            return;
-//        } else {
-//            var elements = $('.keyfield');
-//            for( var i = 0; i < elements.length; i++ ) {
-//                var element = elements.eq(i);
-//                //console.debug("html hide, elem id="+element.attr("id"));
-//                var origTitle = element.attr('data-original-title');
-//                //console.log("origTitle=("+origTitle+")");
-//                if( origTitle != "" && origTitle != undefined ) {
-//                    //console.log("change title");
-//                    element.attr('title', origTitle);
-//                    $(".popover").delay(100).remove();
-//                }
-//            }
-//            return;
-//        }
-//    });
-//
-//});
 
 
 //Check form single

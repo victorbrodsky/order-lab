@@ -62,7 +62,6 @@ $(document).ready(function() {
         //$('#formpanel_'+id).remove();
         deleteItem(id);
     });
-    
 
 
 });
