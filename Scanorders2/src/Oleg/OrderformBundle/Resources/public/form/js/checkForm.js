@@ -342,7 +342,7 @@ function setPatient( element, keyvalue, extraid, single ) {
 //key: set only key field
 function setElementBlock( element, data, cleanall, key ) {
 
-    //console.debug( "name=" + name + ", data.id=" + data.id + ", sex=" + data.sex );
+    console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
     var parent = element.parent().parent().parent().parent().parent().parent();
     //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
 
@@ -353,12 +353,30 @@ function setElementBlock( element, data, cleanall, key ) {
         console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
     }
 
+    if( key == "key" && single ) {
+        var inputField = element.parent().find('.keyfield').not("*[id^='s2id_']");
+        console.log("inputField.id=" + inputField.attr('id') + ", class=" + inputField.attr('class'));
+        var idsArrTemp = inputField.attr("id").split("_");
+        var field = idsArrTemp[idsArrTemp.length-fieldIndex];    //default
+        if( field == "partname" ) {
+            var elements = $('#part-single').find('.keyfield').not("*[id^='s2id_']");
+        } else if( field == "blockname" ) {
+            var elements = $('#block-single').find('.keyfield').not("*[id^='s2id_']");
+        } else if( field == "accession" ) {
+            var elements = $('#accession-single').find('.keyfield').not("*[id^='s2id_']");
+        } else {
+            console.log('WARNING: logical error! No key for single order form is found: field='+field);
+        }
+    } else {
+        var elements = parent.find(selectStr);
+    }
     //var elements = parent.find('input,textarea,select');
-    var elements = parent.find(selectStr);
 
-    for (var i = 0; i < elements.length; i++) {
+    console.log("elements.length=" + elements.length);
 
-        //console.debug('\n\n'+"Element.id=" + elements.eq(i).attr("id"));
+    for( var i = 0; i < elements.length; i++ ) {
+
+        console.debug('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
@@ -379,11 +397,12 @@ function setElementBlock( element, data, cleanall, key ) {
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-fieldIndex];    //default
-            console.log("field = " + field);// + ", data text=" + data[field]['text']);
+            console.log("######## field = " + field);// + ", data text=" + data[field]['text']);
 
             if( key == "key" ) {
+
                 if( $.inArray(field, keys) != -1 ) {
-                    //console.log("set key field = " + data[field][0]['text'] );
+                    console.log("set key field = " + data[field][0]['text'] );
                     setArrayField( elements.eq(i), data[field], parent, single );
                     //elements.eq(i).val(data[field]);
                     break;
@@ -439,7 +458,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
         }
 
-    }
+    } //for
 
 }
 
@@ -538,7 +557,12 @@ function setArrayField(element, dataArr, parent, single) {
                 }
                 
                 console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
-                firstAttachedElement.val(text);
+                if( fieldName == "partname" || fieldName == "blockname" ) {
+                    firstAttachedElement.select2('data', {id: text, text: text});
+                } else {
+                    firstAttachedElement.val(text);
+                }
+
 
             } else if( classs && classs.indexOf("datepicker") != -1 ) {
                 //console.log("datepicker");
@@ -1396,97 +1420,80 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-$(document).ready(function() {
-
-    //popover hide for check button
-    $('html').click(function(e) {
-
-        var clickedEl = $(e.target);
-        var clickedClass = clickedEl.attr("class");
-        //console.debug("html clickedClass="+clickedClass);
-
-        if( clickedClass && ( clickedClass.indexOf("glyphicon") != -1 || clickedEl.children().hasClass("glyphicon") ) ) {
-            //console.debug("html no hide");
-            return;
-        } else {
-            var elements = $('.keyfield');
-            for( var i = 0; i < elements.length; i++ ) {
-                var element = elements.eq(i);
-                //console.debug("html hide, elem id="+element.attr("id"));
-                var origTitle = element.attr('data-original-title');
-                //console.log("origTitle=("+origTitle+")");
-                if( origTitle != "" && origTitle != undefined ) {
-                    //console.log("change title");
-                    element.attr('title', origTitle);
-                    $(".popover").delay(100).remove();
-                }
-            }
-            return;
-        }
-    });
-
-});
+//$(document).ready(function() {
+//
+//    //popover hide for check button
+//    $('html').click(function(e) {
+//
+//        var clickedEl = $(e.target);
+//        var clickedClass = clickedEl.attr("class");
+//        //console.debug("html clickedClass="+clickedClass);
+//
+//        if( clickedClass && ( clickedClass.indexOf("glyphicon") != -1 || clickedEl.children().hasClass("glyphicon") ) ) {
+//            //console.debug("html no hide");
+//            return;
+//        } else {
+//            var elements = $('.keyfield');
+//            for( var i = 0; i < elements.length; i++ ) {
+//                var element = elements.eq(i);
+//                //console.debug("html hide, elem id="+element.attr("id"));
+//                var origTitle = element.attr('data-original-title');
+//                //console.log("origTitle=("+origTitle+")");
+//                if( origTitle != "" && origTitle != undefined ) {
+//                    //console.log("change title");
+//                    element.attr('title', origTitle);
+//                    $(".popover").delay(100).remove();
+//                }
+//            }
+//            return;
+//        }
+//    });
+//
+//});
 
 
 //Check form single
 function checkFormSingle( elem ) {
-    var element = $(elem);
 
-    //console.log( "element.id=" + element.attr('id') );
+    //check if accession is not empty
+    var accValue = $('#accession-single').find('.keyfield').val();
+    if( accValue && accValue != "" ) {
+        $('.accessionbtn').trigger("click");
+    }
 
-    //TODO: change: first triger accession, when finish triger part, when finish triger block
-    //var elementInputs = element.closest(".singleorderinfo").find('.keyfield').not("*[id^='s2id_']");
-    //var accessionInput = elementInputs.first();
-    //console.log( "accessionInput.id=" + accessionInput.attr('id') + ", class="+accessionInput.attr('class'));
-    //var keyAccBtn = accessionInput.parent().parent().parent().find('#check_btn');
+    //check if accession is not empty
+    var partValue = $('#part-single').find('.keyfield').not("*[id^='s2id_']").select2("val");
+    if( partValue && partValue != "" ) {
+        $('.partbtn').trigger("click");
+    }
+
     $('.blockbtn').trigger("click");
-    //keyAccBtn.trigger("click");
-    invertButton(element);
-    
-    //var keyBtn = element.closest(".singleorderinfo").find('#maincinglebtn');   
-    //var btnHtml = '<button style="display: none;" id="remove_single_btn" class="btn btn-default maincinglebtn" type="button" onclick="removeFormSingle(this)" data-loading-text="<img src=\'{{ imgLoading }}\' />"><i class="glyphicon glyphicon-remove"></i></button>';
-    //keyBtn.css( "display", "inline" );  
-    //keyBtn.html(btnHtml);
+    invertButton($(elem));
     
     $('#part-single').css( "width", "20%" );
     $('#block-single').css( "width", "20%" );
     $('#maincinglebtn').show();
-    
-//    var elementInputs = element.parent().parent().find(".keyfield").not("*[id^='s2id_']").each(function() {
-//
-//        var keyInput = $(this);
-//        //console.log("keyInput.class="+keyInput.attr('class')+", id="+keyInput.attr('id'));
-//
-//        var keyBtn = keyInput.parent().parent().parent().find('#check_btn');
-//        //console.log("keyBtn.class="+keyBtn.attr('class')+", id="+keyBtn.attr('id'));
-//
-//        keyBtn.trigger("click");
-//        invertButton(element);
-//    });
+
 
     return;
 }
 
 //Remove form single
 function removeFormSingle( elem ) {
-//    $(elem).closest(".singleorderinfo").find('#check_btn').each(function() {
-//        var keyBtn = $(this);
-//        console.log("keyInput.class="+keyInput.attr('class')+", id="+keyInput.attr('id'));       
-//        keyBtn.trigger("click");
-//        invertButton(keyBtn);                     
-//    });
 
     $('.accessionbtn').trigger("click");
-    invertButton($('.accessionbtn')); 
+    //invertButton( $('.accessionbtn') );
     
     $('.partbtn').trigger("click");
-    invertButton($('.partbtn'));
+    //invertButton( $('.partbtn') );
     
     $('.blockbtn').trigger("click");
-    invertButton($('.blockbtn'));
+    //invertButton( $('.blockbtn') );
 
     $('#part-single').css( "width", "25%" );
     $('#block-single').css( "width", "25%" );
     $('#maincinglebtn').hide();
+    $('#optional_param').collapse('toggle'); //close optional info
+
 }
 
