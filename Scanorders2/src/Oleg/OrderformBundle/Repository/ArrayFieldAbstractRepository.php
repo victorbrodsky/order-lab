@@ -267,7 +267,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
     {
-        //echo "fieldStr=(".$fieldStr.")<br>";
+        //echo "fieldStr=(".$fieldStr.")<br> ";
 
         $onlyValid = "";
         if( $validity ) {
@@ -276,11 +276,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         $extraStr = "";
-        if( $extra ) {
+        if( $extra && count($extra) > 0 ) {
             if( $className == "Patient" ) {
-                $extraStr = " AND cfield.mrntype = ".$extra;
+                $extraStr = " AND cfield.mrntype = ".$extra["mrntype"];
             }
         }
+
+        //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." ";
 
         $query = $this->getEntityManager()
             ->createQuery('
@@ -305,39 +307,43 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     public function deleteIfReserved( $fieldStr, $className, $fieldName, $extra = null ) {
+
         //echo "fieldStr=".$fieldStr." ";
-        $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, null, false, $extra);
-        if( $entities ) {
-            foreach( $entities as $entity ) {
-                if( $entity->getStatus() == self::STATUS_RESERVED ) {
-                    //echo "id=".$entity->getId()." ";
-                    $em = $this->_em;
+        $entity = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, null, true, $extra );
 
-                    //delete created parents
-                    if( $className == "Part" ) {
-                        $accession = $entity->getAccession();
-                        if( $accession->getStatus() == self::STATUS_RESERVED ) {                          
-                            $em->remove($accession);
-                        }
-                    }
-                    if( $className == "Block" ) {
-                        $part = $entity->getPart();
-                        $accession = $part->getAccession();
-                        if( $accession->getStatus() == self::STATUS_RESERVED ) {                          
-                            $em->remove($accession);
-                        }                      
-                        if( $part->getStatus() == self::STATUS_RESERVED ) {                          
-                            $em->remove($part);
-                        }
-                    }
+        if( $entity ) {
 
-                    $em->remove($entity);
-                    $em->flush();
-                    return true;
+            //echo "found Status=".$entity->getStatus()." => ";
+            if( $entity->getStatus() == self::STATUS_RESERVED ) {
+                //echo "found id=".$entity->getId()." entity=".$entity." => ";
+                $em = $this->_em;
+
+                //delete created parents
+                if(0) { // $className == "Part" ) {
+                    $accession = $entity->getAccession();
+                    if( $accession->getStatus() == self::STATUS_RESERVED ) {
+                        $em->remove($accession);
+                    }
                 }
+                if(0) { //} $className == "Block" ) {
+                    $part = $entity->getPart();
+                    $accession = $part->getAccession();
+                    if( $accession->getStatus() == self::STATUS_RESERVED ) {
+                        $em->remove($accession);
+                    }
+                    if( $part->getStatus() == self::STATUS_RESERVED ) {
+                        $em->remove($part);
+                    }
+                }
+
+                $em->remove($entity);
+                $em->flush();
+                return true;
             }
+        } else {
+            return false;
         }
-        return false;
+
     }
 
     //$className: Patient
@@ -410,15 +416,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //get extra key by $extra optional parameter or get it from entity
         $extraStr = "";
-        if( $extra ) {
+        if( $extra && count($extra) > 0 ) {
             if( $className == "Patient" ) {
-                $extraStr = " cfield.mrntype = '".$extra."' AND ";
+                $extraStr = " cfield.mrntype = '".$extra["mrntype"]."' AND ";
             }
         } else {
             $validKeyField = $entity->getValidKeyfield();
             //get extra field key such as Patient's mrntype
             if( $validKeyField && method_exists($validKeyField,'obtainExtraKey') ) {
-                $extraStr = " cfield.mrntype = ".$validKeyField->obtainExtraKey()->getId()." AND ";
+                $extra = $validKeyField->obtainExtraKey();
+                $mrntype = $extra["mrntype"];
+                $extraStr = " cfield.mrntype = ".$mrntype." AND ";
             }
         }
 
@@ -475,7 +483,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //get extra field key such as Patient's mrntype
         if( method_exists($validKeyField,'obtainExtraKey') ) {
-            $extra = $validKeyField->obtainExtraKey()->getId();
+            $extra = $validKeyField->obtainExtraKey();
         } else {
             $extra = null;
         }
@@ -491,35 +499,5 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $newEntity;
     }
 
-//    //check entity by ID (need for postgresql; for mssql can check by if($entity->getId()) )
-//    public function notExists($entity, $className) {
-//
-//        return true;
-//
-//        $id = $entity->getId();
-//        if( !$id ) {
-//            echo "notExists: ".$className.": no id =>".$entity." <br>";
-//            return true;
-//        }
-//        echo "notExists: ".$className.": id=".$id." =>".$entity."<br>";
-//        $em = $this->_em;
-//        $found = $em->getRepository('OlegOrderformBundle:'.$className)->findOneById($id);
-//        if( null === $found ) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
-//    //get only valid field
-//    public function getValidField( $fields ) {
-//        foreach( $fields as $field ) {
-//            //echo "get valid field=".$field.", validity=".$field->getValidity()."<br>";
-//            if( $field->getValidity() && $field->getValidity() == 1 ) {
-//                return $field;
-//            }
-//        }
-//        return null;
-//    }
 
 }

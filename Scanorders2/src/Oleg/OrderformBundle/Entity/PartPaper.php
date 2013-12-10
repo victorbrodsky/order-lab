@@ -168,6 +168,7 @@ class PartPaper extends PartArrayFieldAbstract
     public function __toString() {
         //return "Paper: name=".$this->name.",path=".$this->path.",temp=".$this->temp.",field(file) =".$this->field."<br>";
         return '<a href="../../../../web/uploads/documents/' . $this->path . '" target="_blank">' . $this->name . '</a>';
+        //return '<a href="http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/uploads/documents/' . $this->path . '" target="_blank">' . $this->name . '</a>';
     }
 
 

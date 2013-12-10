@@ -105,9 +105,9 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $patient;
     }
 
-    public function getExtraEntityById( $id ) {
+    public function getExtraEntityById( $extra ) {
         $em = $this->_em;
-        return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($id);
+        return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["mrntype"]);
     }
 
 

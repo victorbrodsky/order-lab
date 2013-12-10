@@ -36,7 +36,18 @@ class BlockRepository extends ArrayFieldAbstractRepository
         return $this->findOneBlockByJoinedToField( $accessionNumber, $partname, $blockname, null );
     }
 
+    //              findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
+    public function findOneByIdJoinedToField($fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null ) {
+
+        $accessionNumber = $extra['accession'];
+        $partname = $extra['partname'];
+
+        return $this->findOneBlockByJoinedToField( $accessionNumber, $partname, $fieldStr, $validity );
+    }
+
     public function findOneBlockByJoinedToField( $accession, $partname, $blockname, $validity=null ) {
+
+        //echo "block find:".$accession.", ".$partname.", ".$blockname.", ".$validity." ";
 
         $onlyValid = "";
         if( $validity ) {
@@ -86,7 +97,6 @@ class BlockRepository extends ArrayFieldAbstractRepository
         }
 
         //1b) Check part by partname and accession number
-//        $part = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true,false);
         $part = $em->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accessionNumber, $partname, true );
         if( !$part ) {
             //1) create Part if not existed. We must create parent , because we will create an object which must be linked to its parent
@@ -99,7 +109,6 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //echo "next blockname generated=".$blockname."<br>";
         
         //3) before part create: check if block with $blockname $partname and $accessionNumber does not exists in DB
-        //$blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneByIdJoinedToField($blockname,"Block","blockname",true);
         $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($accessionNumber, $partname, $blockname,true);
 
         if( $blockFound ) {

@@ -81,7 +81,6 @@ class PartRepository extends ArrayFieldAbstractRepository
 
 
         //3) before part create: check if part with $partname does not exists in DB
-        //$partFound = $em->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($partname,"Part","partname",true);
         $partFound = $this->findOnePartByJoinedToField( $accessionNumber, $partname, null );
 
         if( $partFound ) {
@@ -107,6 +106,13 @@ class PartRepository extends ArrayFieldAbstractRepository
         $accessionNumber = $accession->getValidKeyfield()."";
 
         return $this->findOnePartByJoinedToField( $accessionNumber, $partname, null );
+    }
+
+    public function findOneByIdJoinedToField($fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null ) {
+
+        $accessionNumber = $extra['accession'];
+
+        return $this->findOnePartByJoinedToField( $accessionNumber, $fieldStr, $validity );
     }
 
     //$accession - Accession number (string)

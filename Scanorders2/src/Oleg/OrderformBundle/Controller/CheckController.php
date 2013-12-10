@@ -97,6 +97,8 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = $request->get('key');
         $mrntype = $request->get('extra');
+        $extra = array();
+        $extra["mrntype"] = $mrntype;
         //echo "key=".$key.", mrntype=".$mrntype."; ";
 
         //TODO: select2 is not set correctly by clean in checkForm.js? So, mrntype is ""
@@ -108,7 +110,7 @@ class CheckController extends Controller {
 
         //$em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$mrntype);   //findOneByIdJoinedToMrn($mrn);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);
         //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOnePatientByIdJoinedToField($key,$mrntype,true);   //findOneByIdJoinedToMrn($mrn);
 
         if( $entity ) {
@@ -149,6 +151,9 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $mrntype = $request->get('key');
 
+        $extra = array();
+        $extra["mrntype"] = $mrntype;
+
         //echo "mrntype=".$mrntype."<br>";
         //TODO: select2 is not set correctly by clean in checkForm.js? So, mrntype is ""
 //        if( $mrntype == "" ) {
@@ -159,7 +164,7 @@ class CheckController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$mrntype);
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra);
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient(null, $user, $mrntype );
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
@@ -183,10 +188,10 @@ class CheckController extends Controller {
     }
 
     /**
-     * @Route("/mrn/check/{key}/{mrntype)", name="delete-mrn-mrntype")
+     * @Route("/mrn/check/{key}", name="delete-mrn-mrntype")
      * @Method("DELETE")
      */
-    public function deleteMrnAction( $key, $mrntype ) {
+    public function deleteMrnAction( Request $request ) {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
@@ -196,8 +201,14 @@ class CheckController extends Controller {
 //        $key = $arr[0];
 //        $mrntype = $arr[1];
 
+        $key = $request->get('key');
+        $mrntype = $request->get('extra');
+
+        $extra = array();
+        $extra["mrntype"] = $mrntype;
+
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key,"Patient","mrn",$mrntype );
+        $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key,"Patient","mrn",$extra );
         //$res = $em->getRepository('OlegOrderformBundle:Patient')->deletePatientIfReserved( $key, $mrntype );
 
         $response = new Response();
@@ -230,7 +241,6 @@ class CheckController extends Controller {
         if( $entity ) {
 
             //find patient mrn
-            //$patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true);
             $patient = $entity->getProcedure()->getPatient();
 
             if( $patient ) {
@@ -324,7 +334,6 @@ class CheckController extends Controller {
         $accession = $request->get('parent'); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
-        //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key );
 
         //echo "count=".count($entity)."<br>";
@@ -401,14 +410,22 @@ class CheckController extends Controller {
      * @Route("/partname/check/{key}", name="delete-part")
      * @Method("DELETE")
      */
-    public function deletePartAction($key) {
+    public function deletePartAction(Request $request) {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+        $key = $request->get('key');
+        $accession = $request->get('accession');
+
+        $extra = array();
+        $extra["accession"] = $accession;
+
+        //echo "key=".$key." , accession=".$accession."   ";
+
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Part')->deleteIfReserved( $key,"Part","partname" );
+        $res = $em->getRepository('OlegOrderformBundle:Part')->deleteIfReserved( $key,"Part","partname", $extra );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -436,7 +453,6 @@ class CheckController extends Controller {
         //echo "key=".$key."   ";
 
         if( $accession != "" && $partname != "" ) {
-            //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOneByIdJoinedToField($key,"Part","partname",true);
             $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key );
 
             //echo "count=".count($entity)."<br>";
@@ -515,14 +531,22 @@ class CheckController extends Controller {
      * @Route("/blockname/check/{key}", name="delete-block")
      * @Method("DELETE")
      */
-    public function deleteBlockAction($key) {
+    public function deleteBlockAction(Request $request) {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+        $key = $request->get('key');
+        $accession = $request->get('accession');
+        $partname = $request->get('partname');
+
+        $extra = array();
+        $extra["accession"] = $accession;
+        $extra["partname"] = $partname;
+
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Block')->deleteIfReserved( $key,"Block","blockname" );
+        $res = $em->getRepository('OlegOrderformBundle:Block')->deleteIfReserved( $key,"Block","blockname", $extra );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

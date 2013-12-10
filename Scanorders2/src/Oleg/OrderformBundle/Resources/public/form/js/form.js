@@ -26,7 +26,6 @@ $(document).ready(function() {
        $("#next_button").hide();
        $("#optional_button").show();
     });
-    $('#maincinglebtn').hide();
 
     //priority and disease type options
     priorityOption();

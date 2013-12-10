@@ -49,12 +49,14 @@ class PatientMrn extends PatientArrayFieldAbstract
 
     public function obtainExtraKey()
     {
-        return $this->getMrntype();
+        $extra = array();
+        $extra['mrntype'] = $this->getMrntype()->getId();
+        return $extra;
     }
 
-    public function setExtra($extra)
+    public function setExtra($extraEntity)
     {
-        $this->setMrntype($extra);
+        $this->setMrntype($extraEntity);
     }
 
 }

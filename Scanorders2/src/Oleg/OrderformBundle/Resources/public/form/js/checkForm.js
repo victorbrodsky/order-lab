@@ -18,11 +18,11 @@ var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.dis
 $(document).ready(function() {
 
     var orderformtype = $("#orderformtype").val();
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@ add disident for single form: orderformtype="+orderformtype);
     if( orderformtype == "single") {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@ add disident for single form");
         arrayFieldShow.push("disident")
     }
+
+    $('#maincinglebtn').hide(); //hide remove button
 
 });
 
@@ -31,6 +31,10 @@ $(document).ready(function() {
 var fieldIndex = 3;     //get 'key'
 var holderIndex = 5;    //get 'patient'
 //console.log("urlCheck="+urlCheck);
+
+var asseccionKeyGlobal = "";
+var partKeyGlobal = "";
+var blockKeyGlobal = "";
 
 function checkForm( elem, single ) {
 
@@ -63,9 +67,9 @@ function checkForm( elem, single ) {
 
     if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
 
-        //console.log("Remove Button Cliked");
+        console.log("Remove Button Cliked: fieldName="+fieldName);
         //setElementBlock(element, null, true);
-        removeKeyFromDB(keyElement, element);
+        removeKeyFromDB(keyElement, element, single);
         cleanFieldsInElementBlock( element, "all", single );
         disableInElementBlock(element, true, null, "notkey", null);
         invertButton(element);
@@ -81,17 +85,35 @@ function checkForm( elem, single ) {
         var extra =keyElement.extra;
         console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
 
-        if( name == "part" ) {
-            var accessionNumberElement = getAccessionNumberElement(element,single);
-            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-        }
+//        if( name == "part" ) {
+//            var accessionNumberElement = getAccessionNumberElement(element,single);
+//            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
+//        }
 
-        if( name == "block" ) {
-            var accessionNumberElement = getAccessionNumberElement(element, single);
-            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-            var partNumberElement = getPartNumberElement(element, single);
-            var partValue = partNumberElement.select2("val"); //i.e. Part #                   
-        }
+//        var blockValue = "";
+//        if( name == "block" ) {
+//            var accessionNumberElement = getAccessionNumberElement(element, single);
+//            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
+//            var partNumberElement = getPartNumberElement(element, single);
+//            var partValue = partNumberElement.select2("val"); //i.e. Part #
+//            var blockValue = keyValue;
+//        }
+
+        var accessionValue = keyElement.accession;
+        var partValue = keyElement.partname;
+
+//        //save keys for single form, because all keys will be removed by the first clean functions
+//        if( single ) {
+//            if( asseccionKeyGlobal == "" ) {
+//                asseccionKeyGlobal = accessionValue;
+//            }
+//            if( partKeyGlobal == "" ) {
+//                partKeyGlobal = partValue;
+//            }
+//            if( blockKeyGlobal == "" ) {
+//                blockKeyGlobal = blockValue;
+//            }
+//        }
 
         console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
@@ -151,7 +173,6 @@ function checkForm( elem, single ) {
                     }                              
                 } else {
                     console.debug("not found");
-                    //cleanFieldsInElementBlock( element );
                     disableInElementBlock(element, false, null, "notkey", null);
                     invertButton(element);
                 } 
@@ -161,7 +182,7 @@ function checkForm( elem, single ) {
                 console.debug("get object ajax error "+name);
                 element.button('reset');
                 //setElementBlock(element, null);
-                cleanFieldsInElementBlock( element );
+                cleanFieldsInElementBlock( element, null, single );
                 disableInElementBlock(element, false, "all", null, null);
                 invertButton(element);
             }
@@ -283,7 +304,6 @@ function setPatient( element, keyvalue, extraid, single ) {
 
     function waitWhenParentIsClean( element, maxi ) {
 
-        //var keyElement = findKeyElement(element);
         var keyBtn = keyElement.element.parent().parent().find('#check_btn');
         //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class'));
         var keyBtnStatusClass = keyBtn.find("i").attr("class");
@@ -543,6 +563,20 @@ function setArrayField(element, dataArr, parent, single) {
 
             } else if( type == "text" ) {
                 console.log("type text, text="+text);
+
+                //save keys for single form, because all keys will be removed by the first clean functions
+                if( single ) {
+                    if( fieldName == "accession" ) {
+                        asseccionKeyGlobal = text;
+                    }
+                    if( fieldName == "partname" ) {
+                        partKeyGlobal = text;
+                    }
+                    if( fieldName == "blockname" ) {
+                        blockKeyGlobal = text;
+                    }
+                }
+
                 //find the last attached element to attachElement
                 if( fieldName != "diffDisident" && single ) {
                     var firstAttachedElement = element; //for single & disident (Diagnosis) there is only one field: this element
@@ -684,8 +718,22 @@ function processGroup( element, data, disableFlag ) {
 
 }
 
-function cleanArrayFieldSimple( element, field ) {
+function cleanArrayFieldSimple( element, field, single ) {
     //console.log( "clean array field id=" + element.attr("id") );
+
+    //delete keys for single form, because all keys will be removed by the first clean functions
+    if( single ) {
+        if( field == "accession" ) {
+            asseccionKeyGlobal = "";
+        }
+        if( field == "partname" ) {
+            partKeyGlobal = "";
+        }
+        if( field == "blockname" ) {
+            blockKeyGlobal = "";
+        }
+    }
+
     //delete if id != 0
     if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 ) {
         element.val(null);
@@ -695,10 +743,10 @@ function cleanArrayFieldSimple( element, field ) {
 }
 
 //element - input field element
-function cleanArrayField( element, field ) {
+function cleanArrayField( element, field, single ) {
 
     if( field != "diffDisident" ) {
-        cleanArrayFieldSimple(element,field);
+        cleanArrayFieldSimple(element,field,single);
         return;
     }
 
@@ -878,7 +926,6 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
                     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) {
                         //console.log("clean as radio");
-                        //cleanArrayField( elements.eq(i), field );
                         processGroup( elements.eq(i), "", "ignoreDisable" );
                     } else if( classs.indexOf("select2") != -1 ) {
                         //console.log("clean as select");
@@ -897,7 +944,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
                 } else {
                     //console.log("clean as an arrayFieldShow");
-                    cleanArrayField( elements.eq(i), field );
+                    cleanArrayField( elements.eq(i), field, single );
                 }
             }
         }
@@ -1257,22 +1304,59 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
 }
 
 //remove key NOTPROVIDED if it was created by check on empty key field (entity status="reserved").
-function removeKeyFromDB(element, btnElement) {
+function removeKeyFromDB(element, btnElement, single) {
 
     var name = element.name;
     //var keyValue =element.element.attr("value");
     var keyValue =element.element.val();
-    //console.debug("delete name="+name +", keyvalue="+keyValue);
+
+    if( element.name == "partname" || element.name == "blockname" ) {
+        var keyValue =element.element.select2("val");
+        //console.debug("select2 case, keyValue="+keyValue);
+    }
+
+    //check global keys for single form, because all keys will be removed by the first clean functions
+    if( single ) {
+        if( name == "accession" && !keyValue ) {
+            keyValue = asseccionKeyGlobal;
+        }
+        if( name == "partname" ) {
+            keyValue = partKeyGlobal;
+        }
+        if( name == "blockname" ) {
+            keyValue = blockKeyGlobal;
+        }
+    }
+
+    var accessionValue = element.accession;
+    var partValue = element.partname;
+
+    //console.debug("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue);
 
     if( !keyValue ) {
         return false;
     }
 
-    if( element.extra ) {
-        var extraStr = "/"+element.extra;
+    if( element.extra || accessionValue || partValue ) {
+        var extraStr = "?";
     } else {
         var extraStr = "";
     }
+
+    if( element.extra ) {
+        extraStr = extraStr + "extra="+element.extra;
+    }
+
+    if( accessionValue ) {
+        if( extraStr ) extraStr = extraStr + "&";
+        extraStr = extraStr + "accession="+accessionValue;
+    }
+
+    if( partValue ) {
+        if( extraStr ) extraStr = extraStr + "&";
+        extraStr = extraStr + "partname="+partValue;
+    }
+
 
     btnElement.button('loading');
     $.ajax({
@@ -1280,7 +1364,7 @@ function removeKeyFromDB(element, btnElement) {
         type: 'DELETE',
         contentType: 'application/json',
         dataType: 'json',
-        //data: {key: keyValue, extra: element.extra},
+        //data: {key1: keyValue, accession1: accessionValue},
         success: function (data) {
             btnElement.button('reset');
 //            //console.debug("delete key ok");
@@ -1301,20 +1385,21 @@ function findKeyElement( element, single ) {
     }
     //console.log("find key element:: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
-    var elements = parent.find('input,select');
+    //var elements = parent.find('input,select').not("*[id^='s2id_']");
+    var elements = parent.find('.keyfield').not("*[id^='s2id_']");
 
     var keyElement = null;
     var name = "";
     for (var i = 0; i < elements.length; i++) {
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
-        //console.log("id=" + id + ", class=" + elements.eq(i).attr('class'));
+        console.log("id=" + id + ", class=" + elements.eq(i).attr('class'));
         if( id && type != "hidden" ) {
             var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
             //console.log("set key value: field=(" + field + ")");
             if( $.inArray(field, keys) != -1 && id.indexOf('_mrntype') == -1 ) {
-                //console.log("set key value: found key=(" + field + ")");
+                console.log("set key value: found key=(" + field + "), id="+elements.eq(i).attr("id"));
                 name = field;
                 keyElement = elements.eq(i);
                 break;
@@ -1327,15 +1412,29 @@ function findKeyElement( element, single ) {
     //console.log("find key element: mrntype.length="+mrntype.length);
     if( mrntype.length > 0 ) {
         var extra = mrntype.select2("val");
-        //console.log("find key element: mrntype id="+mrntype.attr("id")+", class="+mrntype.attr("class")+", extra="+extra);
+        console.log("find key element: mrntype id="+mrntype.attr("id")+", class="+mrntype.attr("class")+", extra="+extra);
     } else {
         var extra = null;
     }
 
+    if( name == "partname" ) {
+        var accessionNumberElement = getAccessionNumberElement(element,single);
+        var accessionValue = accessionNumberElement.val();    //i.e. Accession #
+    }
+
+    if( name == "blockname" ) {
+        var accessionNumberElement = getAccessionNumberElement(element, single);
+        var accessionValue = accessionNumberElement.val();    //i.e. Accession #
+        var partNumberElement = getPartNumberElement(element, single);
+        var partValue = partNumberElement.select2("val"); //i.e. Part #
+    }
+
     var res = new Array;
     res.element = keyElement;
-    res.extra = extra;
     res.name = name;
+    res.extra = extra;  //mrn type
+    res.accession = accessionValue;
+    res.partname = partValue;
 
     return res;
 }
@@ -1392,6 +1491,10 @@ function capitaliseFirstLetter(string)
 //Check form single
 function checkFormSingle( elem ) {
 
+    if( $('#maincinglebtn').is(":visible") ) {
+        return false;
+    }
+
     //check if accession is not empty
     var accValue = $('#accession-single').find('.keyfield').val();
     if( accValue && accValue != "" ) {
@@ -1420,10 +1523,12 @@ function removeFormSingle( elem ) {
 
     $('.accessionbtn').trigger("click");
     //invertButton( $('.accessionbtn') );
-    
+
+    console.log("trigger partbtn: class="+$('.partbtn').attr("class"));
     $('.partbtn').trigger("click");
     //invertButton( $('.partbtn') );
-    
+
+    console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
     $('.blockbtn').trigger("click");
     //invertButton( $('.blockbtn') );
 
@@ -1436,6 +1541,9 @@ function removeFormSingle( elem ) {
 
 //accesion-MRN link validation when the user clicks "Submit" on multi-slide form
 function submitValidation( elem ) {
+
+
+
     console.log("1="+partNumberElement.val() + " 2="+partNumberElement.select2("val")  );
     //for all accession fields
     $('.accessionaccession').find('.keyfield').each(function() {
@@ -1451,4 +1559,5 @@ function submitValidation( elem ) {
 
         }
     });
+
 }

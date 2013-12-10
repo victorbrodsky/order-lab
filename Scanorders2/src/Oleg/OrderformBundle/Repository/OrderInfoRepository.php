@@ -24,7 +24,7 @@ class OrderInfoRepository extends EntityRepository
 //            echo "patient name=".$patient->getName()->first()."<br>";
 //            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
 //        }
-        //exit();
+//        exit();
 
         $em = $this->_em;
 
@@ -76,7 +76,7 @@ class OrderInfoRepository extends EntityRepository
 
         foreach( $patients as $patient ) {
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
-            //$entity->addPatient($patient);
+            $entity->addPatient($patient);
         }
 
         $em->flush();         
