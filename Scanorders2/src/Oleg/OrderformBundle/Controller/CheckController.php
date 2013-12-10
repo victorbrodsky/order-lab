@@ -221,7 +221,7 @@ class CheckController extends Controller {
 
     /************************ ACCESSION *************************/
     /**
-     * Get next available MRN from DB
+     * Find accession by #
      * @Route("/accession", name="get-accession")
      * @Method("GET")
      */
@@ -234,7 +234,7 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = $request->get('key');
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true);
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true, true);
 
         //$procedure = $this->getDoctrine()->getRepository('OlegOrderformBundle:Procedure')->findOneByAccession($entity);
 

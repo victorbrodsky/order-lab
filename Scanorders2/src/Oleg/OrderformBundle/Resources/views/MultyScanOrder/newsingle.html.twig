@@ -61,7 +61,7 @@
     <input type="hidden" id="formcicle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
     
-    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('singleorder_create') }}" onsubmit="return validateForm()" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
 
     {% for form_patient in form.patient %}

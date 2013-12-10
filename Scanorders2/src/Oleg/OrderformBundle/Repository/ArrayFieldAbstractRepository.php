@@ -286,7 +286,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $query = $this->getEntityManager()
             ->createQuery('
-        SELECT c, cfield FROM OlegOrderformBundle:'.$className.' c
+        SELECT c FROM OlegOrderformBundle:'.$className.' c
         JOIN c.'.$fieldName.' cfield
         WHERE cfield.field = :field'.$onlyValid.$extraStr
             )->setParameter('field', $fieldStr."");

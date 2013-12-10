@@ -24,6 +24,11 @@ $(document).ready(function() {
 
     $('#maincinglebtn').hide(); //hide remove button
 
+    //validation on form submit
+    $("#scanorderform").on("submit", function () {
+        return validateForm();
+    });
+
 });
 
 //  0         1              2           3   4  5  6   7
@@ -85,35 +90,8 @@ function checkForm( elem, single ) {
         var extra =keyElement.extra;
         console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
 
-//        if( name == "part" ) {
-//            var accessionNumberElement = getAccessionNumberElement(element,single);
-//            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-//        }
-
-//        var blockValue = "";
-//        if( name == "block" ) {
-//            var accessionNumberElement = getAccessionNumberElement(element, single);
-//            var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-//            var partNumberElement = getPartNumberElement(element, single);
-//            var partValue = partNumberElement.select2("val"); //i.e. Part #
-//            var blockValue = keyValue;
-//        }
-
         var accessionValue = keyElement.accession;
         var partValue = keyElement.partname;
-
-//        //save keys for single form, because all keys will be removed by the first clean functions
-//        if( single ) {
-//            if( asseccionKeyGlobal == "" ) {
-//                asseccionKeyGlobal = accessionValue;
-//            }
-//            if( partKeyGlobal == "" ) {
-//                partKeyGlobal = partValue;
-//            }
-//            if( blockKeyGlobal == "" ) {
-//                blockKeyGlobal = blockValue;
-//            }
-//        }
 
         console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
@@ -1540,24 +1518,93 @@ function removeFormSingle( elem ) {
 }
 
 //accesion-MRN link validation when the user clicks "Submit" on multi-slide form
-function submitValidation( elem ) {
+function validateForm() {
 
-
-
-    console.log("1="+partNumberElement.val() + " 2="+partNumberElement.select2("val")  );
     //for all accession fields
     $('.accessionaccession').find('.keyfield').each(function() {
+
         var accInput = $(this);
         var accValue = accInput.val();
 
-        var patientInput = accInput.closest('.patientmrn').find('.keyfield');
-        var patientValue = patientInput.val();
+        var patientInputs = accInput.closest('.panel-patient').find(".patientmrn").find('.keyfield').not("*[id^='s2id_']").first();
+        var mrnValue = patientInputs.val();
+        console.log("patientInputs.first().id=" + patientInputs.first().attr('id') + ", class=" + patientInputs.first().attr('class'));
 
-        console.log("accValue="+accValue + " patientValue="+patientValue  );
-        if( accValue && accValue !="" && patientValue && patientValue !="" ) {
-            console.log("validate accession-mrn");
+        var patientMrnInputs = accInput.closest('.panel-patient').find(".patientmrn").find('.mrntype-combobox').not("*[id^='s2id_']").first();
+        var mrntypeValue = patientMrnInputs.select2("val");
+        console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
 
+        console.log("accValue="+accValue + " mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
+
+        if( accValue && accValue !="" && mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !="" ) {
+            console.log("validate accession-mrn-mrntype");
+
+            var passedValidation = false;
+            var mrn = "";
+            var mrntype = "";
+            var provider = "";
+            var date = "";
+
+            $.ajax({
+                url: urlCheck+"accession",
+                type: 'GET',
+                data: {key: accValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.debug("get accession ajax ok");
+                    if( data.id ) {
+
+                        mrn = data['parent'];
+                        mrntype = data['extraid'];
+                        provider = data['provider'];
+                        date = data['date'];
+
+                        console.log('mrn='+mrn+', mrntype='+mrntype);
+
+                        if( mrn == mrnValue && mrntype == mrntypeValue ) {
+                            passedValidation = true;
+                            console.log("validated successfully !");
+                        } else {
+                            console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+
+
+                            var message = "Entered Accession Number "+accValue+" belongs to Patient with <b>MRN "+mrn+" (as submitted by "+provider+" on "+date+")</b>, not Patient with <b>MRN "+mrntypeValue+"</b> as you have entered. Please correct ether the MRN or the Accession Number above.";
+                            var message2 = "If you believe <b>MRN "+mrn+" and MRN "+mrntypeValue+" </b>belong to the same patient, please mark this checkbox: ";
+                            var divBox = '<div id="validationerror" class="alert alert-danger">'+message+'<br>'+message2+'<input type="checkbox" name="mrnok" value="">'+'</div>';
+
+                            $('#validationerror').append(divBox);
+
+                            //red
+                            accInput.css("background-color","red");
+                            patientInputs.css("background-color","red");
+
+                        }
+
+                    } else {
+                        console.debug("not found");
+                    }
+                },
+                error: function () {
+                    console.debug("get object ajax error "+name);
+                }
+            });
+
+
+            if( passedValidation ) {
+                return false; //Testing
+            } else {
+                return false; //Testing
+            }
+
+            //check if all check boxes are checked
+
+            return false; //Testing
+            return passedValidation;
         }
+
     });
 
+    return false;
 }

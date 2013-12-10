@@ -75,7 +75,7 @@
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
     {############ START FORM ##############}
-    <form id="multy_form" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
+    <form id="scanorderform" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
 
     {#{{ form_widget(form.patient[0].procedure[0].accession) }}#}
@@ -353,7 +353,7 @@
             {{ formmacros.orderinfo_panel(form,"Scan Order Info") }}
 
             <div class="row">
-                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit" onClick="submitValidation(this)">Submit</button></p>
+                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
                 {#<p><button class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>#}
             </div>
         </div>
@@ -364,6 +364,10 @@
         </div>
 
     {% endif %}
+
+
+    <div id="validationerror"></div>
+
 
     {#{{ form_end(form) }}#}
     </form>
