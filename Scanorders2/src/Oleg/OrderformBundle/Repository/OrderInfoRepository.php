@@ -18,18 +18,29 @@ class OrderInfoRepository extends EntityRepository
     //process orderinfo and all entities
     public function processEntity( $entity, $type ) {
 
-//        echo "patients count=".count($entity->getPatient())."<br>";
-//        foreach( $entity->getPatient() as $patient ) {
-//            echo "patient mrn=".$patient->getMrn()->first()."<br>";
-//            echo "patient name=".$patient->getName()->first()."<br>";
-//            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
-//        }
+        echo "patients count=".count($entity->getPatient())."<br>";
+        foreach( $entity->getPatient() as $patient ) {
+            echo "patient id=".$patient->getId()."<br>";
+            echo "patient mrn=".$patient->getMrn()->first()."<br>";
+            echo "patient name=".$patient->getName()->first()."<br>";
+            echo "patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
+            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
+
+            echo "patient count age=".count($patient->getAge())."<br>";
+            foreach( $patient->getAge() as $age ) {
+                echo "age: id=".$age->getId().", field=".$age."<br>";
+            }
+            echo "patient count clinicalHistory=".count($patient->getClinicalHistory())."<br>";
+            foreach( $patient->getClinicalHistory() as $ch ) {
+                echo "ch: id=".$ch->getId().", field=".$ch."<br>";
+            }
+        }
 //        exit();
 
         $em = $this->_em;
 
         //one way to solev multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
 
         //set Status with Type and Group
         $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
@@ -37,49 +48,44 @@ class OrderInfoRepository extends EntityRepository
 
         $entity->setType($type);
 
-//        $helper = new FormHelper();
-//
-//        $key = $entity->getSlideDelivery();
-//        if (is_numeric($key)) {
-//            $slideDelivery = $helper->getSlideDelivery();
-//            if( isset($key) && $key >= 0 ) {
-//                $entity->setSlideDelivery( trim($slideDelivery[$key]) );
-//            }
-//        }
-//
-//        $key = $entity->getReturnSlide();
-//        if (is_numeric($key)) {
-//            $returnSlide = $helper->getReturnSlide();
-//            if( isset($key) && $key >= 0 ) {
-//                $entity->setReturnSlide( trim($returnSlide[$key]) );
-//            }
-//        }
-//
-//        $key = $entity->getPriority();
-//        if( isset($key) && $key >= 0 ) {
-//            $priority = $helper->getPriority();
-//            $entity->setPriority( trim($priority[$key]) );
-//        }
-
         //return $entity;
         return $this->setResult( $entity );
     }
     
     public function setResult( $entity ) {
-        
+
         $em = $this->_em;
-        $em->persist($entity);      
-        
+
         $patients = $entity->getPatient();
 
-        echo "patients count=".count($patients)."<br>";
+        //echo "patients count=".count($patients)."<br>";
 
         foreach( $patients as $patient ) {
+            //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
+            $entity->removePatient($patient);
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
             $entity->addPatient($patient);
+            //add entity if it is not existed yet (if id is not null)
+            echo "check patient id=".$patient->getId()."<br>";
+            if( !$patient->getId() || $patient->getId() == "" ) {
+                echo "add patient!!! <br>";
+                $entity->addPatient($patient);
+            }
+            //$entity->addPatient($patient);
+            //$patient->addOrderinfo($entity);
+
+            echo "final patient's oredreinfo count=".count($patient->getOrderinfo())."<br>";
         }
 
-        $em->flush();         
+        echo "final patients count=".count($entity->getPatient())."<br>";
+        foreach( $entity->getPatient() as $patient ) {
+            echo $patient;
+        }
+        exit();
+
+        $em->persist($entity);
+        $em->flush();
+        //$em->clear();
         return $entity;
     }
 

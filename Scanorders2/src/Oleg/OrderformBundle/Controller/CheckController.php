@@ -244,18 +244,24 @@ class CheckController extends Controller {
             $patient = $entity->getProcedure()->getPatient();
 
             if( $patient ) {
-
-//                $parentKey = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->getValidField( $patient->getMrn() );
                 $parentKey = $patient->getValidKeyfield();
-
+                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+                $dateStr = $transformer->transform($parentKey->getCreationdate());
+                $mrnstring = 'MRN '.$parentKey.', '.$parentKey->getMrntype().' (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
+                $extraid = $parentKey->getMrntype()->getId()."";
             } else {
                 $parentKey = null;
+                $mrnstring = "";
+                $extraid = "";
             }
+
+            //echo "mrnstring=".$mrnstring." ";
 
             $element = array(
                 'id'=>$entity->getId(),
                 'parent'=>$parentKey."",
-                'extraid'=>$parentKey->getMrntype()->getId()."",
+                'extraid'=>$extraid,
+                'mrnstring'=>$mrnstring,
                 'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession()),
             );

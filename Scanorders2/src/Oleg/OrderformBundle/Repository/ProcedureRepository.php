@@ -13,10 +13,43 @@ namespace Oleg\OrderformBundle\Repository;
 class ProcedureRepository extends ArrayFieldAbstractRepository
 {
 
+    public function processEntity_TEMP( $entity, $orderinfo ) {
+
+        $patient = $entity->getParent();
+        $procedures = $patient->getChildren();
+        echo "procedure count=".count($procedures)."<br>";
+        foreach( $procedures as $procedure ) {
+            echo $procedure;
+        }
+
+        //find accession
+        $accessions = $entity->getAccession();
+        //we should have only one Accession in the Procedure, because Procedure-Accession is considered as one object for now
+        $accession = $accessions->first();
+        $accession = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo );
+
+
+//            //generate procedure encounter
+//            $nextKey = $this->getNextNonProvided($entity);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+//            $keys->first()->setField($nextKey);
+//            $keys->first()->setValidity(1);
+//            $keys->first()->setProvider($orderinfo->getProvider()->first());
+//
+//            //generate accession encounter
+//            $nextKey = $this->getNextNonProvided($accession);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+//            $keys = $accession->obtainAllKeyfield();
+//            $keys->first()->setField($nextKey);
+//            $keys->first()->setValidity(1);
+//            $keys->first()->setProvider($orderinfo->getProvider()->first());
+//
+//            return $this->setResult($entity, $orderinfo);
+
+    }
+
     public function setResult( $procedure, $orderinfo=null, $original=null ) {
 
         $em = $this->_em;
-        $em->persist($procedure);   
+        //$em->persist($procedure);
         
         if( $orderinfo == null ) {
             return $procedure;
@@ -32,7 +65,14 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         //we should have only one Accession in the Procedure, because Procedure-Accession is considered as one object for now
         $accession = $accessions->first();
-        $em->persist($accession);
+
+        if( !$accession->getId() || $accession->getId() == "" ) {
+            echo "persist Accession<br>";
+            $em->persist($accession);
+        } else {
+            echo "merge Accession<br>";
+            //$em->merge($entity);
+        }
 
         //set status 'valid'
         $accession->setStatus(self::STATUS_VALID);
@@ -41,21 +81,35 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $accession = $this->processFieldArrays($accession,$orderinfo);
 
         //add orderinfo link
-        $orderinfo->addAccession($accession);
+        if( !$accession->getId() || $accession->getId() == "" ) {
+            echo "add accession!!! <br>";
+            $orderinfo->addAccession($accession);
+        }
+
 
         $parts = $accession->getPart();
         //echo "part count=".count($parts)."=>".$parts->first()."<br>";
 
         foreach( $parts as $part ) {
 
+            $accession->removeChildren($part);
             $part = $em->getRepository('OlegOrderformBundle:Part')->processEntity( $part, $orderinfo );
+            $accession->addChildren($part);
 
-            $orderinfo->addPart($part);
+            if( !$part->getId() || $part->getId() == "" ) {
+                echo "add part!!! <br>";
+                $orderinfo->addPart($part);
+            }
 
         }
 
-        //$em->persist($accession);
-        //$em->merge($accession);
+        if( !$procedure->getId() || $procedure->getId() == "" ) {
+            echo "persist Procedure<br>";
+            $em->persist($procedure);
+        } else {
+            echo "merge Procedure<br>";
+            //$em->merge($entity);
+        }
 
         return $procedure;
     }

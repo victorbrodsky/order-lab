@@ -49,34 +49,7 @@ use Oleg\OrderformBundle\Helper\EmailUtil;
  * OrderInfo controller.
  */
 class MultyScanOrderController extends Controller {
-   
-    /**
-     * Lists all OrderInfo entities.
-     *
-     * @Route("/index", name="multyIndex")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:MultyScanOrder:index.html.twig")
-     */
-//    public function multyIndexAction() {
-//        
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            //throw new AccessDeniedException();
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-//        
-//        $em = $this->getDoctrine()->getManager();
-//        
-//        //findAll();
-//        $entities = $em->getRepository('OlegOrderformBundle:OrderInfo')->                   
-//                    findBy(array(), array('orderdate'=>'desc')); 
-//       
-//        //$slides = $em->getRepository('OlegOrderformBundle:Slide')->findAll();
-//        
-//        return array(
-//            'entities' => $entities,  
-//            //'slides' => $slides
-//        );
-//    }
+
 
 
     /**

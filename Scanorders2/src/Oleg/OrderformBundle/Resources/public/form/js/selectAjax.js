@@ -76,9 +76,6 @@ function getComboboxStain(urlCommon, ids) {
     $.ajax(url).success(function(data) {
         //json = eval(data);
         var targetid = id+"stain_0_field";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_staintype_field";
-//        }
         //var target = "#oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_0_slide_0_stain_0_name";
         //console.log("targetid="+targetid);
         $(targetid).select2({
@@ -102,8 +99,8 @@ function getComboboxStain(urlCommon, ids) {
         });
 
         //console.log("targetid="+targetid);
-        $(targetid).select2('data', {id: 1, text: 'H&E'});
-
+        //$(targetid).select2('data', {id: 1, text: 'H&E'});
+        $(targetid).select2('val', '1');
     });
 }
 
@@ -113,15 +110,7 @@ function getComboboxSpecialStain(urlCommon, ids) {
     var url = urlCommon+"staintype";
     $.ajax(url).success(function(data) {
         //json = eval(data);
-//        if( ids[6] == 'undefined' ) {
-//            var coll = 0;
-//        } else {
-//            var coll = ids[6];
-//        }
         var targetid = id+"specialStains_"+ids[6]+"_staintype";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_staintype_field";
-//        }
         //var target = "#oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_block_0_slide_0_stain_0_name";
         //console.log("targetid="+targetid);
         $(targetid).select2({
@@ -143,7 +132,8 @@ function getComboboxSpecialStain(urlCommon, ids) {
         });
 
         //console.log("targetid="+targetid);
-        $(targetid).select2('data', {id: 1, text: 'H&E'});
+        //$(targetid).select2('data', {id: 1, text: 'H&E'});
+        $(targetid).select2('val', '1');
 
     });
 }
@@ -155,9 +145,6 @@ function getComboboxScanregion(urlCommon,ids) {
     var url = urlCommon+"scanregion";
     $.ajax(url).success(function(data) {
         var targetid = id+"scan_0_scanregion";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_scantype_scanregion";
-//        }
         //console.log("targetid="+targetid);
         $(targetid).select2({
             //placeholder: "Region to scan",
@@ -174,9 +161,11 @@ function getComboboxScanregion(urlCommon,ids) {
             }
 
         });
-        $(id+"scan_0_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+//        $(id+"scan_0_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+        $(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
         //single form: s2id_oleg_orderformbundle_staintype_name
-        $("#s2id_oleg_orderformbundle_scantype_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+        //$("#s2id_oleg_orderformbundle_scantype_scanregion").select2('data', {id: 1, text: 'Entire Slide'});
+        //$("#s2id_oleg_orderformbundle_scantype_scanregion").select2("val", "1" );
     });
 }
 
@@ -188,9 +177,6 @@ function getComboboxProcedure(urlCommon,ids) {
     $.ajax(url).success(function(data) {
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_name
         var targetid = id+"name_0_field";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_proceduretype_name";
-//        }
         //console.log("proceduretype targetid="+targetid);
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_name_0_field
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_name
@@ -223,9 +209,6 @@ function getComboboxOrgan(urlCommon,ids) {
 
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_1_accession_0_part_0_sourceOrgan
         var targetid = id+"sourceOrgan_0_field";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_parttype_sourceOrgan";
-//        }
         $(targetid).select2({
             placeholder: "Source Organ",
             width: combobox_width,
@@ -246,9 +229,6 @@ function getComboboxOrgan(urlCommon,ids) {
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_primaryOrgan
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diseaseType_0_primaryOrgan
         var targetid = id+"diseaseType_0_primaryOrgan";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_parttype_primaryOrgan";
-//        }
         $(targetid).select2({
             placeholder: "Source Organ",
             width: combobox_width,
@@ -293,8 +273,7 @@ function getComboboxDelivery(urlCommon,ids) {
                 }).length===0) {return {id:term, text:term};}
             }
         });
-        $(".ajax-combobox-delivery").select2('data', {id: 1, text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
-        //$(".ajax-combobox-delivery").select2('val', 0);
+        $(".ajax-combobox-delivery").select2('data', {id: "I'll give slides to Noah - ST1015E (212) 746-2993", text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
     });
 }
 
@@ -321,7 +300,7 @@ function getComboboxReturn(urlCommon,ids) {
             }
 
         });
-        $(".ajax-combobox-return").select2('data', {id: 1, text: "Filing Room"});
+        $(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
     });
 }
 
@@ -350,11 +329,6 @@ function getComboboxPathService(urlCommon,ids) {
                 }).length===0) {return {id:term, text:term};}
             }
         });
-
-//        $.ajax(urlCommon+"userpathservice").success(function(data) {
-//            //console.log("userpathservice="+data['id']);
-//            $(targetid).select2('val', data['id']);
-//        });
 
     });
 
@@ -404,9 +378,6 @@ function getComboboxPartname(urlCommon,ids) {
     var url = urlCommon+"partname";
     $.ajax(url).success(function(data) {
         var targetid = id+"partname_0_field";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_partname_name";
-//        }
         $(targetid).select2({
             placeholder: "Part Name",
             width: combobox_width,
@@ -433,9 +404,6 @@ function getComboboxBlockname(urlCommon,ids) {
     var url = urlCommon+"blockname";
     $.ajax(url).success(function(data) {
         var targetid = id+"blockname_0_field";
-//        if( type == "single" ) {
-//            targetid = "#oleg_orderformbundle_blockname_name";
-//        }
         $(targetid).select2({
             placeholder: "Block Name",
             width: combobox_width,

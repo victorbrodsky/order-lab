@@ -404,6 +404,10 @@ class Part extends OrderAbstract
         $this->addBlock($child);
     }
 
+    public function removeChildren($child) {
+        $this->removeBlock($child);
+    }
+
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getPartname();

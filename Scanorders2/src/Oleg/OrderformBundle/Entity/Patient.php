@@ -68,15 +68,15 @@ class Patient extends OrderAbstract
     public function __construct( $withfields=false, $validity=0 )
     {
         parent::__construct();
-        $this->procedure = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->procedure = new ArrayCollection();
 
         //fields:
-        $this->mrn = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->name = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->sex = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->dob = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->age = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->clinicalHistory = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->mrn = new ArrayCollection();
+        $this->name = new ArrayCollection();
+        $this->sex = new ArrayCollection();
+        $this->dob = new ArrayCollection();
+        $this->age = new ArrayCollection();
+        $this->clinicalHistory = new ArrayCollection();
 
         if( $withfields ) {
             $this->addMrn( new PatientMrn($validity) );
@@ -458,6 +458,10 @@ class Patient extends OrderAbstract
 
     public function addChildren($child) {
         $this->addProcedure($child);
+    }
+
+    public function removeChildren($child) {
+        $this->removeProcedure($child);
     }
 
     //don't use 'get' because later repo functions relay on "get" keyword

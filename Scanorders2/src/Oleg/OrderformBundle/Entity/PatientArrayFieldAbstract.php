@@ -17,18 +17,6 @@ use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
  */
 abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
 
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Patient",cascade={"persist"})
-//     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $patient;
-
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $field;
-
     /**
      * Set patient
      *

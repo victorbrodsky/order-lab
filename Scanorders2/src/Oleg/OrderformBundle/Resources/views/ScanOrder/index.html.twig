@@ -47,8 +47,8 @@
                 <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
-                <th>Slides</th>
-                {#<th>{{ knp_pagination_sortable(pagination, 'Slides', 'slides') }}</th>#}
+                {#<th>Slides</th>#}
+                <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>
@@ -60,7 +60,9 @@
         </thead>
         <tbody>
         {#{% for entity in entities %}#}
-        {% for entity in pagination  %}
+        {% for entitycomplex in pagination  %}
+
+            {% set entity = entitycomplex|first %}
 
             {% if entity.status.name == 'Submitted' %}
                 <tr class="activetr" >

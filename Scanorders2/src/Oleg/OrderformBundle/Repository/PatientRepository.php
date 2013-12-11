@@ -14,8 +14,26 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     //patient is a patient object found in DB
     //original is a patient object provided by submitted form
-    public function setResult_OLD( $patient, $orderinfo = null, $original=null ) {
-              
+    public function setResult_TODEL( $entity, $orderinfo, $original=null ) {
+
+        echo "<br>patients count=".count($orderinfo->getPatient())."<br>";
+
+        echo "found=".$entity;
+        echo "original=".$original;
+
+        //$orderinfo->addPatient($entity);
+
+        $em = $this->_em;
+        $em->persist($entity);
+        //$em->flush();
+
+        return $entity;
+        exit(); //TODO: testing
+
+        ///////////////////////////////////////////////////
+
+
+
         $em = $this->_em;
 
         echo "patient id=".$patient->getId()."<br>";

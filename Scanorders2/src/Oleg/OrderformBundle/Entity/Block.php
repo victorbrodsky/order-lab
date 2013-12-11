@@ -210,6 +210,10 @@ class Block extends OrderAbstract
         $this->addSlide($child);
     }
 
+    public function removeChildren($child) {
+        $this->removeSlide($child);
+    }
+
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getBlockname();

@@ -59,8 +59,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $keys->first()->setValidity(1);
             $keys->first()->setProvider($orderinfo->getProvider()->first());
 
-            return $this->setResult($entity, $orderinfo);
-
         } else {
 
             //this is a main function to check uniqueness
@@ -73,24 +71,28 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     //echo "adding: ".$child."<br>";
                     $found->addChildren( $child );
                 }
-
-
                 return $this->setResult($found, $orderinfo, $entity);
+
+                //$entity->setId( $found->getId() );
+                //return $this->setResult($entity, $orderinfo);
 
             } else {
                 echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
-
-                return $this->setResult($entity, $orderinfo);
             }
 
         }
+
+        return $this->setResult($entity, $orderinfo);
 
     }
 
     public function setResult( $entity, $orderinfo, $original=null ) {
 
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+
         $em = $this->_em;
-        $em->persist($entity);
+
         $children = $entity->getChildren();
 
         //set status 'valid'
@@ -102,16 +104,39 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         echo "count of children=".count($children)."<br>";
 
         foreach( $children as $child ) {
+
             $childClass = new \ReflectionClass($child);
             $childClassName = $childClass->getShortName();
             echo "childClassName=".$childClassName."<br>";
-            $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
-            $addClassMethod = "add".$childClassName;
-            $orderinfo->$addClassMethod($child);
-        }
-        echo "finish: entity status=".$entity->getStatus()."<br>";
 
-//        $em->merge($entity);
+            $entity->removeChildren($child);
+            $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
+            $entity->addChildren($child);
+
+            //add entity if it is not existed yet (if id is not null)
+            if( !$child->getId() || $child->getId() == "" ) {
+                echo "add ".$childClassName." to orderinfo <br>";
+                $addClassMethod = "add".$childClassName;
+                $orderinfo->$addClassMethod($child);
+            }
+
+        }
+
+        if( !$entity->getId() || $entity->getId() == "" ) {
+            echo "persist ".$className."<br>";
+            $em->persist($entity);
+        } else {
+            echo "merge ".$className."<br>";
+            //$em->merge($entity);
+        }
+
+        echo "final children count=".count($entity->getChildren())."<br>";
+        //echo "###final orderinfo count=".count($entity->getOrderinfo())."<br>";
+        $getClassMethod = "get".$className;
+        echo "###final orderinfo ".$className." count=".count($orderinfo->$getClassMethod())."<br>";
+        foreach( $entity->getChildren() as $child ) {
+            echo $child;
+        }
 
         return $entity;
     }

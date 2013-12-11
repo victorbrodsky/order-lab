@@ -192,6 +192,10 @@ class Accession extends OrderAbstract {
         $this->addPart($child);
     }
 
+    public function removeChildren($child) {
+        $this->removePart($child);
+    }
+
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getAccession();

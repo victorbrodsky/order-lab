@@ -51,17 +51,13 @@ function addCollectionField( elem, btnpos ) {
     var element = $(elem);
     //console.log("element.class="+element.attr('class'));
 
-//    if( btnpos && btnpos == "bottom" ) {
-//        var parent = element.parent().parent().parent();
-//        var elementInput = parent.find(findCollectionStr);  //.not("*[id^='s2id_']");
-//    } else {
-//        var parent = element.parent();
-//    }
     var parent = element.parent().parent().parent();
     //console.log("parent id="+parent.attr('id')+", class="+parent.attr('class'));
 
     //make sure to get only one element with correct id containing patient, procedure ... indexes
     var elementInputFind = parent.find('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");    //.find('[id^=_patient_]');    //has("[id^=_patient_]");  //.not("*[id^='s2id_']");
+    //var elementInputFind = parent.find('.slidespecialstains').find(findCollectionStr).not("*[id^='s2id_']");
+
     var elementInput =  elementInputFind.first();
     for( var i = 0; i < elementInputFind.length; i++ ) {
         //console.log("id="+elementInputFind.eq(i).attr('id')+", class="+elementInputFind.eq(i).attr('class'));

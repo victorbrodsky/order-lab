@@ -14,10 +14,11 @@ var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: cha
 var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
 var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
 
+var orderformtype = $("#orderformtype").val();
+
 //add disident to a single form array field
 $(document).ready(function() {
 
-    var orderformtype = $("#orderformtype").val();
     if( orderformtype == "single") {
         arrayFieldShow.push("disident")
     }
@@ -28,6 +29,8 @@ $(document).ready(function() {
     $("#scanorderform").on("submit", function () {
         return validateForm();
     });
+
+    addKeyListener();
 
 });
 
@@ -72,7 +75,7 @@ function checkForm( elem, single ) {
 
     if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
 
-        console.log("Remove Button Cliked: fieldName="+fieldName);
+        //console.log("Remove Button Cliked: fieldName="+fieldName);
         //setElementBlock(element, null, true);
         removeKeyFromDB(keyElement, element, single);
         cleanFieldsInElementBlock( element, "all", single );
@@ -88,21 +91,21 @@ function checkForm( elem, single ) {
 
         var keyValue =keyElement.element.val();
         var extra =keyElement.extra;
-        console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
+        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
 
         var accessionValue = keyElement.accession;
         var partValue = keyElement.partname;
 
-        console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
+        //console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            console.log("key undefined! "+fieldName);
+            //console.log("key undefined! "+fieldName);
 
             if( name == "part" || name == "block" ) {
-                console.log("accessionValue is not empty");
+                //console.log("accessionValue is not empty");
                 setKeyValue(element,name+fieldName,new Array(accessionValue,partValue),single);
                 return;
             }
@@ -115,7 +118,7 @@ function checkForm( elem, single ) {
 
         element.button('loading');
 
-        console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
+        //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue);
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
@@ -328,7 +331,7 @@ function setElementBlock( element, data, cleanall, key ) {
     if( !parent.attr('id') ) {
         var single = true;
         var parent = element.parent().parent().parent().parent().parent().parent().parent();
-        console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+        //console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
     }
 
     if( key == "key" && single ) {
@@ -336,7 +339,7 @@ function setElementBlock( element, data, cleanall, key ) {
         //console.log("inputField.id=" + inputField.attr('id') + ", class=" + inputField.attr('class'));
         var idsArrTemp = inputField.attr("id").split("_");
         var field = idsArrTemp[idsArrTemp.length-fieldIndex];    //default
-        console.log("field=" + field);
+        //console.log("field=" + field);
         if( field == "partname" ) {
             var elements = $('#part-single').find('.keyfield').not("*[id^='s2id_']");
         } else if( field == "blockname" ) {
@@ -516,7 +519,7 @@ function setArrayField(element, dataArr, parent, single) {
             if( fieldName == "disident" && single ) {
                 //attachElement
                 attachElement = $('.partdiffdisident');
-                console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+                //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 $('#partdisident_marker').append(newForm);
             } else {
                 //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
@@ -529,7 +532,7 @@ function setArrayField(element, dataArr, parent, single) {
 
         //set data
         if( tagName == "INPUT" ) {
-            console.log("input tagName: fieldName="+fieldName);
+            //console.log("input tagName: fieldName="+fieldName);
 
             if( type == "file" ) {
 
@@ -540,7 +543,7 @@ function setArrayField(element, dataArr, parent, single) {
                 element.parent().append(paperLink);
 
             } else if( type == "text" ) {
-                console.log("type text, text="+text);
+                //console.log("type text, text="+text);
 
                 //save keys for single form, because all keys will be removed by the first clean functions
                 if( single ) {
@@ -562,7 +565,7 @@ function setArrayField(element, dataArr, parent, single) {
                     var firstAttachedElement = attachElement.find('input,textarea').first();
                 }
                 
-                console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
+                //console.log("firstAttachedElement id="+firstAttachedElement.attr("id"));
                 if( fieldName == "partname" || fieldName == "blockname" ) {
                     firstAttachedElement.select2('data', {id: text, text: text});
                 } else {
@@ -1188,14 +1191,14 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
 
         var partNumberElement = getPartNumberElement(btnElement, single);
         var partValue = partNumberElement.select2("val"); //i.e. Part #
-        console.log("blockblockname: partNumberElement.id=" + partNumberElement.attr('id') + ", class=" + partNumberElement.attr('class'));
+        //console.log("blockblockname: partNumberElement.id=" + partNumberElement.attr('id') + ", class=" + partNumberElement.attr('class'));
 
         if( partValue && partValue != "" ) {
-            console.log("generate block! partValue ="+partValue);
+            //console.log("generate block! partValue ="+partValue);
             setKeyValueSingle( btnElement, name, parentValueArr );  //generate block
             return false;
         } else {    //generate partname
-            console.log("partvalue is empty! partValue ="+partValue);
+            //console.log("partvalue is empty! partValue ="+partValue);
             var holder = btnElement.closest('.panel-part');
             var partBtn = holder.find('.partpartname').find("#check_btn");
             if( single ) {
@@ -1252,7 +1255,7 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
         var parentValue2 = '';
     }
 
-    console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
+    //console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
     btnElement.button('loading');
 
     $.ajax({
@@ -1371,13 +1374,13 @@ function findKeyElement( element, single ) {
     for (var i = 0; i < elements.length; i++) {
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
-        console.log("id=" + id + ", class=" + elements.eq(i).attr('class'));
+        //console.log("id=" + id + ", class=" + elements.eq(i).attr('class'));
         if( id && type != "hidden" ) {
             var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
             //console.log("set key value: field=(" + field + ")");
             if( $.inArray(field, keys) != -1 && id.indexOf('_mrntype') == -1 ) {
-                console.log("set key value: found key=(" + field + "), id="+elements.eq(i).attr("id"));
+                //console.log("set key value: found key=(" + field + "), id="+elements.eq(i).attr("id"));
                 name = field;
                 keyElement = elements.eq(i);
                 break;
@@ -1390,7 +1393,7 @@ function findKeyElement( element, single ) {
     //console.log("find key element: mrntype.length="+mrntype.length);
     if( mrntype.length > 0 ) {
         var extra = mrntype.select2("val");
-        console.log("find key element: mrntype id="+mrntype.attr("id")+", class="+mrntype.attr("class")+", extra="+extra);
+        //console.log("find key element: mrntype id="+mrntype.attr("id")+", class="+mrntype.attr("class")+", extra="+extra);
     } else {
         var extra = null;
     }
@@ -1502,11 +1505,11 @@ function removeFormSingle( elem ) {
     $('.accessionbtn').trigger("click");
     //invertButton( $('.accessionbtn') );
 
-    console.log("trigger partbtn: class="+$('.partbtn').attr("class"));
+    //console.log("trigger partbtn: class="+$('.partbtn').attr("class"));
     $('.partbtn').trigger("click");
     //invertButton( $('.partbtn') );
 
-    console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
+    //console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
     $('.blockbtn').trigger("click");
     //invertButton( $('.blockbtn') );
 
@@ -1520,30 +1523,73 @@ function removeFormSingle( elem ) {
 //accesion-MRN link validation when the user clicks "Submit" on multi-slide form
 function validateForm() {
 
+    var totalError = 0;
+
+    //Initial check: get total number of checkboxes
+    var unchecked = 0;
+    var totalcheckboxes = 0;
+
+    $('#validationerror').find('#validationerror-added').find('input').each(function() {
+        if( $(this).is(":checked") ){
+
+        } else {
+            unchecked ++;
+        }
+        totalcheckboxes++;
+    });
+
+    //console.log("totalcheckboxes="+totalcheckboxes+",unchecked="+unchecked);
+    if( totalcheckboxes == 0 ) {    //first time submit
+        //continue
+    } else if( totalcheckboxes > 0 && unchecked > 0 ) { //submit was already pressed before and not all check boxes are not checked
+        $('#validationerror-added').remove();
+    } else {    //return true;
+        return true;
+    }
+
+    if( orderformtype == "single") {
+        var accessions = $('#accession-single').find('.keyfield');
+        //console.log("singleform");
+    } else {
+        var accessions = $('.accessionaccession').find('.keyfield');
+        //console.log("not singleform");
+    }
+
+    //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
+
     //for all accession fields
-    $('.accessionaccession').find('.keyfield').each(function() {
+    accessions.each(function() {
 
         var accInput = $(this);
         var accValue = accInput.val();
 
-        var patientInputs = accInput.closest('.panel-patient').find(".patientmrn").find('.keyfield').not("*[id^='s2id_']").first();
+        if( orderformtype == "single") {
+            var mrnHolder = $('.panel-patient').find(".patientmrn");
+        } else {
+            var mrnHolder = accInput.closest('.panel-patient').find(".patientmrn");
+        }
+
+        var patientInputs = mrnHolder.find('.keyfield').not("*[id^='s2id_']").first();
         var mrnValue = patientInputs.val();
-        console.log("patientInputs.first().id=" + patientInputs.first().attr('id') + ", class=" + patientInputs.first().attr('class'));
+        //console.log("patientInputs.first().id=" + patientInputs.first().attr('id') + ", class=" + patientInputs.first().attr('class'));
 
-        var patientMrnInputs = accInput.closest('.panel-patient').find(".patientmrn").find('.mrntype-combobox').not("*[id^='s2id_']").first();
+        var patientMrnInputs = mrnHolder.find('.mrntype-combobox').not("*[id^='s2id_']").first();
+        //var mrntypeValue = patientMrnInputs.select2("val");
         var mrntypeValue = patientMrnInputs.select2("val");
-        console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
+        var mrntypeData = patientMrnInputs.select2("data");
+        //console.log("sel id="+mrntypeData.id);
+        var mrntypeText = mrntypeData.text;
+        //console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
 
-        console.log("accValue="+accValue + " mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
+        //console.log("accValue="+accValue + " mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
 
         if( accValue && accValue !="" && mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !="" ) {
-            console.log("validate accession-mrn-mrntype");
+            //console.log("validate accession-mrn-mrntype");
 
-            var passedValidation = false;
-            var mrn = "";
-            var mrntype = "";
-            var provider = "";
-            var date = "";
+//            var mrn = "";
+//            var mrntype = "";
+//            var provider = "";
+//            var date = "";
 
             $.ajax({
                 url: urlCheck+"accession",
@@ -1553,58 +1599,65 @@ function validateForm() {
                 dataType: 'json',
                 async: false,
                 success: function (data) {
-                    console.debug("get accession ajax ok");
+                    //console.debug("get accession ajax ok");
                     if( data.id ) {
 
                         mrn = data['parent'];
                         mrntype = data['extraid'];
-                        provider = data['provider'];
-                        date = data['date'];
+                        mrnstring = data['mrnstring'];
 
-                        console.log('mrn='+mrn+', mrntype='+mrntype);
+                        //console.log('mrn='+mrn+', mrntype='+mrntype);
 
                         if( mrn == mrnValue && mrntype == mrntypeValue ) {
-                            passedValidation = true;
-                            console.log("validated successfully !");
+                            //console.log("validated successfully !");
                         } else {
-                            console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
 
-                            var message = "Entered Accession Number "+accValue+" belongs to Patient with <b>MRN "+mrn+" (as submitted by "+provider+" on "+date+")</b>, not Patient with <b>MRN "+mrntypeValue+"</b> as you have entered. Please correct ether the MRN or the Accession Number above.";
-                            var message2 = "If you believe <b>MRN "+mrn+" and MRN "+mrntypeValue+" </b>belong to the same patient, please mark this checkbox: ";
-                            var divBox = '<div id="validationerror" class="alert alert-danger">'+message+'<br>'+message2+'<input type="checkbox" name="mrnok" value="">'+'</div>';
+                            var message = "Entered Accession Number "+accValue+" belongs to Patient with <b>"+mrnstring+"</b>, not Patient with <b>MRN "+mrnValue+", "+mrntypeText+"</b> as you have entered. Please correct ether the MRN or the Accession Number above.";
+                            var message2 = "If you believe <b>MRN "+mrn+" and MRN "+mrnValue+" </b>belong to the same patient, please mark this checkbox: ";
+                            var divBox = '<div id="validationerror-added" class="alert alert-danger">'+message+'<br>'+message2+'<input type="checkbox" name="mrnok" value="">'+'</div>';
 
                             $('#validationerror').append(divBox);
 
                             //red
-                            accInput.css("background-color","red");
-                            patientInputs.css("background-color","red");
+                            accInput.parent().addClass("has-error");
+                            patientInputs.parent().addClass("has-error");
+
+                            totalError++;
 
                         }
 
                     } else {
-                        console.debug("not found");
+                        //console.debug("not found");
                     }
                 },
                 error: function () {
-                    console.debug("get object ajax error "+name);
+                    //console.debug("get object ajax error "+name);
                 }
             });
 
-
-            if( passedValidation ) {
-                return false; //Testing
-            } else {
-                return false; //Testing
-            }
-
-            //check if all check boxes are checked
-
-            return false; //Testing
-            return passedValidation;
         }
 
     });
 
-    return false;
+    //console.log("totalError="+totalError);
+    //return false; //testing
+
+    if( totalError == 0 ) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+function addKeyListener() {
+    //remove has-error class from mrn and accession inputs
+    $('.accessionaccession').find('.keyfield').parent().keypress(function() {
+        $(this).removeClass('has-error');
+    });
+    $('.patientmrn').find('.keyfield').parent().keypress(function() {
+        $(this).removeClass('has-error');
+    });
 }

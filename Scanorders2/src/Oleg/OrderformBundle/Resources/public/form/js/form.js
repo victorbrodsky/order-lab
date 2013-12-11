@@ -170,6 +170,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     diseaseTypeListener();
     initComboboxJs(ids);
     initAdd();
+    addKeyListener();
 
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -244,6 +245,7 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
     diseaseTypeListener();
     initComboboxJs(ids);
     initAdd();
+    addKeyListener();
 }
 
 //input: current form ids

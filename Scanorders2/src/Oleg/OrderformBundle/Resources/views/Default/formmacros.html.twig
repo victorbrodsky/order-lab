@@ -279,53 +279,53 @@
 
     
 {#####################  Collection Input Field  (currently used only by slide) ########################}
-{% macro collectionInput(objectForm, classname, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}
+{#{% macro collectionInput(objectForm, classname, objectName, type, formtype, patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount) %}#}
 
-    {% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
-    {% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}
+    {#{% set addBtnId = 'addbtn_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}#}
+    {#{% set inputGroupId = 'inputGroupId_patient_'~patientCount~'_procedure_'~procedureCount~'_accession_'~accessionCount~'_part_'~partCount~'_block_'~blockCount~'_slide_'~slideCount~'_'~objectName~'_0_'~objectName %}#}
 
-    <p>
-    <div class="{{ classname }}">
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                {#Different Diagnoses:#}
-                {% if objectForm|length > 0 %}
-                    {% set thisField = objectForm[0].field %}
-                {% else %}
-                    {% set thisField = objectForm.field %}
-                {% endif %}
+    {#<p>#}
+    {#<div class="{{ classname }}">#}
+        {#<div class="row">#}
+            {#<div class="col-xs-6" align="right">#}
+                {#&#123;&#35;Different Diagnoses:&#35;&#125;#}
+                {#{% if objectForm|length > 0 %}#}
+                    {#{% set thisField = objectForm[0].field %}#}
+                {#{% else %}#}
+                    {#{% set thisField = objectForm.field %}#}
+                {#{% endif %}#}
 
-                {{ form_label(thisField) }}
-            </div>
+                {#{{ form_label(thisField) }}#}
+            {#</div>#}
 
-            <div class="col-xs-6" align="left">
+            {#<div class="col-xs-6" align="left">#}
 
-                <div style="float:left; width:100%">
-                    {% for field in objectForm %}
-                        {{ form_errors(field.field) }}
-                        <div class="fieldInputColl">
-                            <div class="input-group" id="{{ inputGroupId }}">
-                                {{ form_widget(field.field) }}
-                                {% if type == 'new' or type == 'edit' %}
-                                    <span
-                                          {#id="{{ addBtnId }}"#}
-                                          {#onClick="addDiffdiagField('{{ objectName }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')"#}
-                                          onClick="addCollectionField(this)"
-                                          class="input-group-addon btn addbtnCollField" type="button">
-                                          <i class="glyphicon glyphicon-plus-sign"></i>
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                {#<div style="float:left; width:100%">#}
+                    {#{% for field in objectForm %}#}
+                        {#{{ form_errors(field.field) }}#}
+                        {#<div class="fieldInputColl">#}
+                            {#<div class="input-group" id="{{ inputGroupId }}">#}
+                                {#{{ form_widget(field.field) }}#}
+                                {#{% if type == 'new' or type == 'edit' %}#}
+                                    {#<span#}
+                                          {#&#123;&#35;id="{{ addBtnId }}"&#35;&#125;#}
+                                          {#&#123;&#35;onClick="addDiffdiagField('{{ objectName }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')"&#35;&#125;#}
+                                          {#onClick="addCollectionField(this)"#}
+                                          {#class="input-group-addon btn addbtnCollField" type="button">#}
+                                          {#<i class="glyphicon glyphicon-plus-sign"></i>#}
+                                    {#</span>#}
+                                {#{% endif %}#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#{% endfor %}#}
+                {#</div>#}
 
-            </div>
-        </div>
-    </div>
-    </p>
-    
-{% endmacro %}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+    {#</p>#}
+    {##}
+{#{% endmacro %}#}
 
 
 {######################  holder for array of fields  #################################}
@@ -393,6 +393,9 @@
             {% if fieldtype == "key" %}
                 {% if classname == "patientmrn" %}
                     {{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}
+                {% elseif classname == "patientmrn" %}
+                    {{ form_widget(fieldThis.mrntype) }}
+                    {{ formmacros.fieldicon(fieldThis.field,"") }}
                 {% else %}
                     {{ formmacros.fieldicon(fieldThis.field,"") }}
                 {% endif %}
@@ -487,10 +490,6 @@
 
 {% macro fieldCollectionInputTextarea(field, cycle, prototype, widget, nobtn) %}
 
-    {% if widget is defined and widget != "" %}
-        {{ form_errors(field.field) }}
-        {{ widget }}
-    {% else %}
         <div style="float:left; width:100%">
             <div class="fieldInputColl">
                 {% if widget is not defined or widget == "" %}
@@ -506,7 +505,7 @@
                 {#</div>#}
             {#{% endif %}#}
         </div>
-    {% endif %}
+    {#{% endif %}#}
 
 {% endmacro %}
 
@@ -519,37 +518,37 @@
     {% endif %}
 {% endmacro %}
 
-{% macro paperInput(fields,type,attr) %}
-    <p>
-    <div class="row">
-        <div class="col-xs-6" align="right">
-            {% if fields|length > 0 %}
-                {% if type == 'show' %}
-                    {{ form_label(fields[0].name) }}
-                {% else %}
-                    {{ form_label(fields[0].file) }}
-                {% endif %}
-            {% else %}
-                {#{{ form_label(fields.clinicalHistory) }}#}
-            {% endif %}
-        </div>
-        <div class="col-xs-6" align="left">
-            {% for field in fields %}
-                {% if type == 'show' %}
-                    <a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>
-                {% else %}
-                    {% if attr == "disabled" %}
-                        {#value of disabled field will be ignored, but readonly does not work#}
-                        {{ form_widget(field.file,{ 'disabled':'disabled' }) }}
-                    {% else %}
-                        {{ form_widget(field.file) }}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    </p>
-{% endmacro %}
+{#{% macro paperInput(fields,type,attr) %}#}
+    {#<p>#}
+    {#<div class="row">#}
+        {#<div class="col-xs-6" align="right">#}
+            {#{% if fields|length > 0 %}#}
+                {#{% if type == 'show' %}#}
+                    {#{{ form_label(fields[0].name) }}#}
+                {#{% else %}#}
+                    {#{{ form_label(fields[0].file) }}#}
+                {#{% endif %}#}
+            {#{% else %}#}
+                {#&#123;&#35;{{ form_label(fields.clinicalHistory) }}&#35;&#125;#}
+            {#{% endif %}#}
+        {#</div>#}
+        {#<div class="col-xs-6" align="left">#}
+            {#{% for field in fields %}#}
+                {#{% if type == 'show' %}#}
+                    {#<a href="../../../../web/uploads/documents/{{ field.vars.value.path }}" target="_blank">{{ field.vars.value.name }}</a>#}
+                {#{% else %}#}
+                    {#{% if attr == "disabled" %}#}
+                        {#&#123;&#35;value of disabled field will be ignored, but readonly does not work&#35;&#125;#}
+                        {#{{ form_widget(field.file,{ 'disabled':'disabled' }) }}#}
+                    {#{% else %}#}
+                        {#{{ form_widget(field.file) }}#}
+                    {#{% endif %}#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#</div>#}
+    {#</div>#}
+    {#</p>#}
+{#{% endmacro %}#}
 
 
 {#
@@ -559,59 +558,59 @@ formtype:   single or multi
 ident:      specialStains or relevantScans
 *Count:     object id
 #}
-{% macro collInput(coll, cycle, formtype, ident) %}
+{#{% macro collInput(coll, cycle, formtype, ident) %}#}
 
-    <p>
-    <div class="row">
-        <div class="col-xs-6" align="right">
-            {% if coll|length > 0 %}
-                {{ form_label(coll[0].field) }}
-            {% else %}
-                {{ form_label(coll.field) }}
-            {% endif %}
-        </div>
-        <div class="col-xs-6" align="left">
+    {#<p>#}
+    {#<div class="row">#}
+        {#<div class="col-xs-6" align="right">#}
+            {#{% if coll|length > 0 %}#}
+                {#{{ form_label(coll[0].field) }}#}
+            {#{% else %}#}
+                {#{{ form_label(coll.field) }}#}
+            {#{% endif %}#}
+        {#</div>#}
+        {#<div class="col-xs-6" align="left">#}
 
-            <div style="float:left; width:100%">
-                {% for col in coll %}
-                    <div class="fieldInputColl">
-                        {{ form_widget(col.field) }}
-                    </div>
-                {% endfor %}
-                {% if cycle == 'new' or cycle == 'edit' %}
-                    <div class="addDelBtnColl">
-                        {#<button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>#}
-                        <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
-                    </div>
-                {% endif %}
-            </div>
+            {#<div style="float:left; width:100%">#}
+                {#{% for col in coll %}#}
+                    {#<div class="fieldInputColl">#}
+                        {#{{ form_widget(col.field) }}#}
+                    {#</div>#}
+                {#{% endfor %}#}
+                {#{% if cycle == 'new' or cycle == 'edit' %}#}
+                    {#<div class="addDelBtnColl">#}
+                        {#&#123;&#35;<button id="{{ addBtnId }}" onClick="addCollField('{{ ident }}', '{{ formtype }}', '{{ patientCount }}', '{{ procedureCount }}', '{{ accessionCount }}', '{{ partCount }}', '{{ blockCount }}', '{{ slideCount }}')" class="btn btn-sm btn-info" type="button">+</button>&#35;&#125;#}
+                        {#<button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>#}
+                    {#</div>#}
+                {#{% endif %}#}
+            {#</div>#}
 
-        </div>
-    </div>
-    </p>
+        {#</div>#}
+    {#</div>#}
+    {#</p>#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 
-{% macro field_paperurl( paper ) %}
+{#{% macro field_paperurl( paper ) %}#}
 
-    {% if paper.vars.value.path is defined %}
+    {#{% if paper.vars.value.path is defined %}#}
 
-        <p>
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                {{ form_label(paper.name) }}
-            </div>
-            <div class="col-xs-6" align="left">
-                {#{{ form_widget(field) }}#}
-                <a href="../../../../web/uploads/documents/{{ paper.vars.value.path }}" target="_blank">{{ paper.vars.value.name }}</a>
-            </div>
-        </div>
-        </p>
+        {#<p>#}
+        {#<div class="row">#}
+            {#<div class="col-xs-6" align="right">#}
+                {#{{ form_label(paper.name) }}#}
+            {#</div>#}
+            {#<div class="col-xs-6" align="left">#}
+                {#&#123;&#35;{{ form_widget(field) }}&#35;&#125;#}
+                {#<a href="../../../../web/uploads/documents/{{ paper.vars.value.path }}" target="_blank">{{ paper.vars.value.name }}</a>#}
+            {#</div>#}
+        {#</div>#}
+        {#</p>#}
 
-    {% endif %}
+    {#{% endif %}#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 
 {############################ Objects ###########################}
@@ -691,6 +690,13 @@ ident:      specialStains or relevantScans
         {% else  %}
             <p><div class="procedurename">{{ procedureHtml }}</div></p>
         {% endif %}
+
+        {#{% if encounterHtml is not defined or encounterHtml == "" %}#}
+            {#{{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter") }}#}
+        {#{% else  %}#}
+            {#<p><div class="procedureencounter">{{ encounterHtml }}</div></p>#}
+        {#{% endif %}#}
+
     </div>
 {% endmacro %}
 
