@@ -12,12 +12,6 @@ namespace Oleg\OrderformBundle\Repository;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
-    public function setResult_TEMP( $accession, $orderinfo=null, $original=null ) {
-
-        $procedure = $accession->getProcedure();
-
-    }
-
     //filter out duplicate virtual (in form, not in DB) accessions from specimen
     public function removeDuplicateEntities( $procedure ) {
 

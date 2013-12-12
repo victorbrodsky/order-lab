@@ -46,18 +46,22 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( count($keys) == 0 ) {
             $keys = $entity->createKeyField();
         } elseif( count($keys) > 1 ) {
-            throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
+            //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
+            echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
+
         }
 
-        if( $keys->first() == ""  ) {
+        $key = $entity->getValidKeyField();
+
+        if( $key == ""  ) {
             echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
             //we should have only one key field !!!
-            $keys->first()->setField($nextKey);
-            $keys->first()->setValidity(1);
-            $keys->first()->setProvider($orderinfo->getProvider()->first());
+            $key->setField($nextKey);
+            $key->setValidity(1);
+            $key->setProvider($orderinfo->getProvider()->first());
 
         } else {
 
@@ -113,12 +117,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
             $entity->addChildren($child);
 
-            //add entity if it is not existed yet (if id is not null)
-            if( !$child->getId() || $child->getId() == "" ) {
-                echo "add ".$childClassName." to orderinfo <br>";
-                $addClassMethod = "add".$childClassName;
-                $orderinfo->$addClassMethod($child);
-            }
+            //link entity with orderinfo
+            $addClassMethod = "add".$childClassName;
+            $orderinfo->$addClassMethod($child);
 
         }
 
@@ -132,11 +133,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         echo "final children count=".count($entity->getChildren())."<br>";
         //echo "###final orderinfo count=".count($entity->getOrderinfo())."<br>";
-        $getClassMethod = "get".$className;
-        echo "###final orderinfo ".$className." count=".count($orderinfo->$getClassMethod())."<br>";
-        foreach( $entity->getChildren() as $child ) {
-            echo $child;
-        }
+        //$getClassMethod = "get".$className;
+        //echo "final orderinfo ".$className." count=".count($orderinfo->$getClassMethod())."<br>";
+//        foreach( $entity->getChildren() as $child ) {
+//            echo $child;
+//        }
 
         return $entity;
     }

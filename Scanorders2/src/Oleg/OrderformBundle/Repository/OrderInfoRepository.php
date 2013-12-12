@@ -67,10 +67,10 @@ class OrderInfoRepository extends EntityRepository
             $entity->addPatient($patient);
             //add entity if it is not existed yet (if id is not null)
             echo "check patient id=".$patient->getId()."<br>";
-            if( !$patient->getId() || $patient->getId() == "" ) {
-                echo "add patient!!! <br>";
+            //if( !$patient->getId() || $patient->getId() == "" ) {
+                //echo "add patient!!! <br>";
                 $entity->addPatient($patient);
-            }
+            //}
             //$entity->addPatient($patient);
             //$patient->addOrderinfo($entity);
 
@@ -81,7 +81,7 @@ class OrderInfoRepository extends EntityRepository
         foreach( $entity->getPatient() as $patient ) {
             echo $patient;
         }
-        exit();
+        //exit();
 
         $em->persist($entity);
         $em->flush();
