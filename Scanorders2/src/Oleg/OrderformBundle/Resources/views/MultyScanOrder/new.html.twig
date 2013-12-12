@@ -317,6 +317,25 @@
                                                     </div> {#end of block#}
                                                 {% endfor %}
 
+                                                {#part's slide#}
+                                                {% set slideCount = 0 %}
+                                                {% for slide in part.slide %}
+                                                    {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
+                                                    <div id="formpanel_slide_{{ uid }}" class="panel panel-slide">
+                                                        {{ formmacros.orderinfo_panel_header(
+                                                        'slide', type, slideCount, part.slide|length, uid,
+                                                        patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
+                                                        }}
+
+                                                        <div id="form_body_slide_{{ uid }}" class="panel-body collapse in">
+
+                                                            {{ formmacros.slideForm( slide, "check", uid, type ) }}
+
+                                                        </div>
+                                                    </div> {#end of slide#}
+                                                    {% set slideCount = slideCount + 1 %}
+                                                {% endfor %}
+
 
 
                                             </div>

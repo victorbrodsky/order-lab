@@ -152,17 +152,29 @@ class Slide extends OrderAbstract
         return $this->part;
     }
 
-    public function setParent($parent = null)
-    {
-        //$type = $this->getType();
-        //$this->$type = $parent;
-        $this->block = $parent;
-        return $this;
-    }
-    public function getParent()
-    {
-        return $this->block;
-    }
+//    //Not used
+//    public function setParent($parent = null)
+//    {
+//        //echo "Slide set parent <br>";
+//        $type = $this->getSlidetype();
+//        if( $type == "Cytopathology" ) {
+//            $this->part = $parent;
+//        } else {
+//            $this->block = $parent;
+//        }
+//        return $this;
+//    }
+//    //Not used
+//    public function getParent()
+//    {
+//        //echo "Slide get parent <br>";
+//        $type = $this->getSlidetype();
+//        if( $type == "Cytopathology" ) {
+//            return $this->part;
+//        } else {
+//            return $this->block;
+//        }
+//    }
 
     /**
      * Set barcode
@@ -268,7 +280,7 @@ class Slide extends OrderAbstract
             $stain = $this->getStain()->first()->getField();
         }
 
-        return "Slide: id=".$this->getId().", stain count=".count($this->getStain()).", stain=".$stain.", mag=".$mag."<br>";
+        return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().", stain count=".count($this->getStain()).", stain=".$stain.", mag=".$mag."<br>";
     }
 
 

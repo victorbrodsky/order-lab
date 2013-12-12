@@ -28,6 +28,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function processEntity( $entity, $orderinfo ) {
 
+        if( !$entity ) {
+            return $entity;
+        }
+
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
@@ -115,7 +119,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $entity->removeChildren($child);
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
-            $entity->addChildren($child);
+
+            //$entity->addChildren($child);
+            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParent( $entity, $child );
 
             //link entity with orderinfo
             $addClassMethod = "add".$childClassName;
@@ -142,7 +148,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
-
+    public function attachToParent( $entity, $child ) {
+        if( $child ) {
+            $entity->addChildren($child);
+        }
+    }
 
     public function createKeyField( $entity, $className, $fieldName ) {
         $fieldValue = $this->getNextNonProvided($entity);

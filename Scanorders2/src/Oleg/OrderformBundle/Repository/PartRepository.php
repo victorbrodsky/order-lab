@@ -11,6 +11,21 @@ namespace Oleg\OrderformBundle\Repository;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
+    public function attachToParent( $part, $block ) {
+        if( $block ) {
+            if( !$block->getId() || $block->getId() != "" ) { //do it if the block is new
+                //add only if this block has slides
+                if( count($block->getChildren()) > 0 ) {
+                    $part->addChildren($block);
+                } else {
+                    //remove block if it does not have any slides
+                    $em = $this->_em;
+                    $em->remove($block);
+                }
+            }
+        }
+    }
+
     //override parent method to get next key string
     public function getNextNonProvided($entity, $extra=null) {
         $accession= $entity->getParent();

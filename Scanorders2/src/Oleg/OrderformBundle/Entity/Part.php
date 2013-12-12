@@ -355,7 +355,7 @@ class Part extends OrderAbstract
     {
         if( !$this->slide->contains($slide) ) {
             $slide->setPart($this);
-            $this->slide[] = $slide;
+            $this->slide->add($slide);
         }
 
         return $this;

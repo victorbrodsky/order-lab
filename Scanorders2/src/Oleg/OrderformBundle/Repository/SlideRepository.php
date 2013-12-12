@@ -21,13 +21,6 @@ class SlideRepository extends EntityRepository {
         if( $orderinfo == null ) {
             return $slide;
         }
-
-        //Note: stcan and stain are persisted by Slide entity annotations
-
-//        $scans = $slide->getScan();
-//        foreach( $scans as $scan ) {
-//            $scan = $em->getRepository('OlegOrderformBundle:Scan')->processEntity( $scan );
-//        }
         
         return $slide;
     }

@@ -18,12 +18,12 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $em = $this->_em;
 
         //debugging
-        $patient = $entity->getParent();
-        $procedures = $patient->getChildren();
-        echo "procedure count=".count($procedures)."<br>";
-        foreach( $procedures as $procedure ) {
-            echo "Procedure process entity: ".$procedure;
-        }
+//        $patient = $entity->getParent();
+//        $procedures = $patient->getChildren();
+//        echo "procedure count=".count($procedures)."<br>";
+//        foreach( $procedures as $procedure ) {
+//            echo "Procedure process entity: ".$procedure;
+//        }
 
         //find accession
         $accessions = $entity->getAccession();
@@ -58,11 +58,11 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $orderinfo->addAccession($accession);
 
         if( !$procedure->getId() || $procedure->getId() == "" ) {
-            echo "persist Procedure<br>";
+            //echo "persist Procedure<br>";
             $em = $this->_em;
             $em->persist($procedure);
         } else {
-            echo "merge Procedure<br>";
+            //echo "merge Procedure<br>";
             //$em->merge($entity);
         }
 
