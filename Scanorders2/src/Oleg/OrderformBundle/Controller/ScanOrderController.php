@@ -11,33 +11,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
-use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Form\PatientType;
-use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Form\ProcedureType;
-use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Form\AccessionType;
-use Oleg\OrderformBundle\Entity\Part;
-use Oleg\OrderformBundle\Form\PartType;
-use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Form\BlockType;
-use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\SlideType;
-use Oleg\OrderformBundle\Entity\Scan;
-use Oleg\OrderformBundle\Form\ScanType;
-use Oleg\OrderformBundle\Entity\Stain;
-use Oleg\OrderformBundle\Form\StainType;
+//use Oleg\OrderformBundle\Entity\Patient;
+//use Oleg\OrderformBundle\Form\PatientType;
+//use Oleg\OrderformBundle\Entity\Procedure;
+//use Oleg\OrderformBundle\Form\ProcedureType;
+//use Oleg\OrderformBundle\Entity\Accession;
+//use Oleg\OrderformBundle\Form\AccessionType;
+//use Oleg\OrderformBundle\Entity\Part;
+//use Oleg\OrderformBundle\Form\PartType;
+//use Oleg\OrderformBundle\Entity\Block;
+//use Oleg\OrderformBundle\Form\BlockType;
+//use Oleg\OrderformBundle\Entity\Slide;
+//use Oleg\OrderformBundle\Form\SlideType;
+//use Oleg\OrderformBundle\Entity\Scan;
+//use Oleg\OrderformBundle\Form\ScanType;
+//use Oleg\OrderformBundle\Entity\Stain;
+//use Oleg\OrderformBundle\Form\StainType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Entity\DiffDiagnoses;
-use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
-use Oleg\OrderformBundle\Entity\RelevantScans;
-use Oleg\OrderformBundle\Entity\SpecialStains;
-use Oleg\OrderformBundle\Form\DocumentType;
+//use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
+//use Oleg\OrderformBundle\Entity\RelevantScans;
+//use Oleg\OrderformBundle\Entity\SpecialStains;
+//use Oleg\OrderformBundle\Form\DocumentType;
 
-use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Helper\EmailUtil;
+//use Oleg\OrderformBundle\Helper\ErrorHelper;
+//use Oleg\OrderformBundle\Helper\FormHelper;
+//use Oleg\OrderformBundle\Helper\EmailUtil;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -291,89 +291,7 @@ class ScanOrderController extends Controller {
 
 
 
-    /**
-     * Displays a form to create a new OrderInfo + Scan entities.
-     *
-     * @Route("/TODEL", name="scanorder_new_TODEL")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:ScanOrder:new.html.twig")
-     */
-    public function newAction()
-    {
-        exit("single order controller???");
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = new OrderInfo();
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $username = $user->getUsername();
-
-        $entity->addProvider($user);
-
-        //get pathology service for this user by email
-        $service = $user->getPathologyServices();
-
-        $params = array('type'=>'single', 'cicle'=>'new', 'service'=>$service, 'user'=>$username, 'em'=>$em);
-        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
-
-        $patient = new Patient(true);
-//        $clinicalHistory = new ClinicalHistory();
-//        $patient->addClinicalHistory($clinicalHistory);
-        $form_patient   = $this->createForm(new PatientType($params), $patient);
-
-        $procedure = new Procedure(true);
-
-        $form_procedure = $this->createForm(new ProcedureType($params), $procedure);
-
-        //$paper = new Document();
-        //$form_paper = $this->createForm(new DocumentType(), $paper);
-
-        $accession = new Accession(true);
-        $form_accession   = $this->createForm(new AccessionType($params), $accession);
-
-        $part = new Part(true);
-        //$diffDiagnoses = new DiffDiagnoses();
-        //$part->addDiffDiagnoses($diffDiagnoses);
-        //$file = new Document();
-        //$part->addPaper($file);
-        //$part = $em->getRepository('OlegOrderformBundle:Part')->presetEntity( $part );
-        $form_part   = $this->createForm(new PartType($params), $part);
-
-        $block = new Block(true);
-        $form_block   = $this->createForm(new BlockType($params), $block);
-
-        $slide = new Slide(true);
-
-        //$specialStains = new SpecialStains();
-        //$relevantScans = new RelevantScans();
-        //$slide->addRelevantScan($relevantScans);
-        //$slide->addSpecialStain($specialStains);
-
-        $form_slide   = $this->createForm(new SlideType($params), $slide);
-
-//        $scan = new Scan();
-//        $form_scan   = $this->createForm(new ScanType(), $scan);
-
-//        $stain = new Stain();
-//        $form_stain   = $this->createForm(new StainType($params), $stain);
-
-        return array(
-            'form' => $form->createView(),
-            'form_patient' => $form_patient->createView(),
-            'form_procedure' => $form_procedure->createView(),
-            'form_accession' => $form_accession->createView(),
-            'form_part' => $form_part->createView(),
-            'form_block' => $form_block->createView(),
-            'form_slide' => $form_slide->createView(),
-//            'form_scan' => $form_scan->createView(),
-//            'form_stain' => $form_stain->createView(),
-            //'form_paper' => $form_paper->createView()
-        );
-    }
 
     /**
      * Finds and displays a OrderInfo entity.

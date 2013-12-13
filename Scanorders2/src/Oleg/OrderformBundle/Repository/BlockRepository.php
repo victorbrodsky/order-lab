@@ -15,10 +15,10 @@ namespace Oleg\OrderformBundle\Repository;
 class BlockRepository extends ArrayFieldAbstractRepository
 {
 
-    public function attachToParent( $block, $slide ) {
+    public function attachToParentAndOrderinfo( $block, $slide, $orderinfo ) {
 
-//        echo "slide type=".$slide->getSlidetype()."<br>";
-//        echo $slide;
+//        //echo "slide type=".$slide->getSlidetype()."<br>";
+//        //echo $slide;
 
         //reattach slide to part if it is Cytopathology
         if( (!$slide->getId() || $slide->getId() == "") &&  //only new slides
@@ -34,6 +34,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $block->addChildren($slide);    //addSlide
         }
 
+        //$orderinfo->addSlide($slide);
     }
 
     //override parent method to get next key string

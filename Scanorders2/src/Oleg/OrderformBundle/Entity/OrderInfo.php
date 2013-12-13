@@ -635,6 +635,11 @@ class OrderInfo
         return $this->block;
     }
 
+//    public function setBlock($block)
+//    {
+//        $this->block = $block;
+//    }
+
 
     public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
     {

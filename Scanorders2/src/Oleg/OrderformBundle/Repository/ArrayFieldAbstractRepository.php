@@ -36,7 +36,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
 
-        echo "<br>processEntity className=".$className.", fieldName=".$fieldName."<br>";
+        //echo "<br>processEntity className=".$className.", fieldName=".$fieldName."<br>";
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
         //$em = $this->_em;
@@ -44,21 +44,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $keys = $entity->obtainAllKeyfield();
 
-        echo "count keys=".count($keys)."<br>";
-        echo "key=".$keys->first()."<br>";
+        //echo "count keys=".count($keys)."<br>";
+        //echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
             $keys = $entity->createKeyField();
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
-            echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
+            //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
 
         }
 
         $key = $entity->getValidKeyField();
 
         if( $key == ""  ) {
-            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
@@ -73,7 +73,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $found = $this->findUniqueByKey($entity);
 
             if( $found ) {
-                echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
+                //echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
                 //CopyChildren
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -85,7 +85,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+                //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
             }
 
         }
@@ -109,19 +109,19 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //CopyFields
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
 
-        echo "count of children=".count($children)."<br>";
+        //echo "count of children=".count($children)."<br>";
 
         foreach( $children as $child ) {
 
             $childClass = new \ReflectionClass($child);
             $childClassName = $childClass->getShortName();
-            echo "childClassName=".$childClassName."<br>";
+            //echo "childClassName=".$childClassName."<br>";
 
             $entity->removeChildren($child);
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
 
             //$entity->addChildren($child);
-            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParent( $entity, $child );
+            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParentAndOrderinfo( $entity, $child, $orderinfo );
 
             //link entity with orderinfo
             $addClassMethod = "add".$childClassName;
@@ -130,27 +130,25 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         if( !$entity->getId() || $entity->getId() == "" ) {
-            echo "persist ".$className."<br>";
+            //echo "persist ".$className."<br>";
             $em->persist($entity);
         } else {
-            echo "merge ".$className."<br>";
+            //echo "merge ".$className."<br>";
             //$em->merge($entity);
         }
-
-        echo "final children count=".count($entity->getChildren())."<br>";
-        //echo "###final orderinfo count=".count($entity->getOrderinfo())."<br>";
-        //$getClassMethod = "get".$className;
-        //echo "final orderinfo ".$className." count=".count($orderinfo->$getClassMethod())."<br>";
-//        foreach( $entity->getChildren() as $child ) {
-//            echo $child;
-//        }
 
         return $entity;
     }
 
-    public function attachToParent( $entity, $child ) {
+    public function attachToParentAndOrderinfo( $entity, $child, $orderinfo ) {
         if( $child ) {
             $entity->addChildren($child);
+
+//            $childClass = new \ReflectionClass($child);
+//            $childClassName = $childClass->getShortName();
+//            //link entity with orderinfo
+//            $addClassMethod = "add".$childClassName;
+//            $orderinfo->$addClassMethod($child);
         }
     }
 
@@ -272,15 +270,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //replace field entity if not existed from source object to destination object
     public function copyField( $entity, $field, $className, $methodName ) {
         $em = $this->_em;
-        echo "class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        //echo "class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
 
         if( !$found ) {
-            echo( "### ".$methodName." not found !!!!!! => add <br>" );
+            //echo( "### ".$methodName." not found !!!!!! => add <br>" );
             $methodName = "add".$methodName;
             $entity->$methodName( $field );
         } else {
-            echo( "### ".$methodName." entity is found in DB, validity=".$field->getValidity()."<br>" );
+            //echo( "### ".$methodName." entity is found in DB, validity=".$field->getValidity()."<br>" );
 //            $found->setProvider($field->getProvider());
 //            if( $field->getValidity() && $field->getValidity() != 0 ) {
 //                $found->setValidity($field->getValidity());
@@ -504,7 +502,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //return: null - not existed, entity object if existed
     public function findUniqueByKey( $entity ) {
 
-        echo "find Unique By Key: Abstract: ".$entity;
+        //echo "find Unique By Key: Abstract: ".$entity;
 
         if( !$entity ) {
             //echo "entity is null <br>";
@@ -528,7 +526,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $em = $this->_em;
             $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,true,true, $extra);
         } else {
-            echo "This entity does not have a valid key field<br>";
+            //echo "This entity does not have a valid key field<br>";
             $newEntity = null;
         }
 

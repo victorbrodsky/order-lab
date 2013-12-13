@@ -20,9 +20,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //debugging
 //        $patient = $entity->getParent();
 //        $procedures = $patient->getChildren();
-//        echo "procedure count=".count($procedures)."<br>";
+//        //echo "procedure count=".count($procedures)."<br>";
 //        foreach( $procedures as $procedure ) {
-//            echo "Procedure process entity: ".$procedure;
+//            //echo "Procedure process entity: ".$procedure;
 //        }
 
         //find accession
@@ -72,7 +72,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
     public function findUniqueByKey( $entity ) {
 
-        echo "findUniqueByKey: Procedure: ".$entity;
+        //echo "findUniqueByKey: Procedure: ".$entity;
 
         if( count($entity->getChildren()) != 1 ) {
             throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
@@ -81,13 +81,13 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 //        $accession = $entity->getChildren()->first();
 //        $class = new \ReflectionClass($accession);
 //        $className = $class->getShortName();
-//        echo "findUniqueByKey: Procedure: className=".$className."<br>";
+//        //echo "findUniqueByKey: Procedure: className=".$className."<br>";
 
         $em = $this->_em;
         $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
 
         if( $foundAccession ) {
-            echo "This entity alsready exists in DB ".$foundAccession."<br>";
+            //echo "This entity alsready exists in DB ".$foundAccession."<br>";
             //get existing procedure
             return $foundAccession->getParent(); //Accession->getProcedure => procedure
 

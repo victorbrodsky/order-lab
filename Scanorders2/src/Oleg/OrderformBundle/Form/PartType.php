@@ -40,7 +40,7 @@ class PartType extends AbstractType
             )); 
         }
 
-        if( $this->params['cicle'] == 'show' ) {
+        //if( $this->params['cicle'] == 'show' ) {
             $builder->add('slide', 'collection', array(
                 'type' => new SlideType($this->params),
                 'allow_add' => true,
@@ -51,7 +51,7 @@ class PartType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__slide__',
             ));
-        }
+        //}
 
         //name
         $builder->add('partname', 'collection', array(

@@ -4,8 +4,6 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
-
 /**
  * OrderInfoRepository
  *
@@ -18,23 +16,23 @@ class OrderInfoRepository extends EntityRepository
     //process orderinfo and all entities
     public function processEntity( $entity, $type ) {
 
-        echo "patients count=".count($entity->getPatient())."<br>";
-        foreach( $entity->getPatient() as $patient ) {
-            echo "patient id=".$patient->getId()."<br>";
-            echo "patient mrn=".$patient->getMrn()->first()."<br>";
-            echo "patient name=".$patient->getName()->first()."<br>";
-            echo "patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
-            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
-
-            echo "patient count age=".count($patient->getAge())."<br>";
-            foreach( $patient->getAge() as $age ) {
-                echo "age: id=".$age->getId().", field=".$age."<br>";
-            }
-            echo "patient count clinicalHistory=".count($patient->getClinicalHistory())."<br>";
-            foreach( $patient->getClinicalHistory() as $ch ) {
-                echo "ch: id=".$ch->getId().", field=".$ch."<br>";
-            }
-        }
+//        echo "patients count=".count($entity->getPatient())."<br>";
+//        foreach( $entity->getPatient() as $patient ) {
+//            echo "patient id=".$patient->getId()."<br>";
+//            echo "patient mrn=".$patient->getMrn()->first()."<br>";
+//            echo "patient name=".$patient->getName()->first()."<br>";
+//            echo "patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
+//            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
+//
+//            echo "patient count age=".count($patient->getAge())."<br>";
+//            foreach( $patient->getAge() as $age ) {
+//                echo "age: id=".$age->getId().", field=".$age."<br>";
+//            }
+//            echo "patient count clinicalHistory=".count($patient->getClinicalHistory())."<br>";
+//            foreach( $patient->getClinicalHistory() as $ch ) {
+//                echo "ch: id=".$ch->getId().", field=".$ch."<br>";
+//            }
+//        }
 //        exit();
 
         $em = $this->_em;
@@ -65,22 +63,12 @@ class OrderInfoRepository extends EntityRepository
             $entity->removePatient($patient);
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
             $entity->addPatient($patient);
-            //add entity if it is not existed yet (if id is not null)
-            echo "check patient id=".$patient->getId()."<br>";
-            //if( !$patient->getId() || $patient->getId() == "" ) {
-                //echo "add patient!!! <br>";
-                $entity->addPatient($patient);
-            //}
-            //$entity->addPatient($patient);
-            //$patient->addOrderinfo($entity);
-
-            echo "final patient's oredreinfo count=".count($patient->getOrderinfo())."<br>";
         }
 
-        echo "final patients count=".count($entity->getPatient())."<br>";
-        foreach( $entity->getPatient() as $patient ) {
-            echo $patient;
-        }
+        //echo "final patients count=".count($entity->getPatient())."<br>";
+//        foreach( $entity->getPatient() as $patient ) {
+//            echo $patient;
+//        }
         //exit();
 
         $em->persist($entity);

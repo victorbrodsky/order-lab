@@ -148,7 +148,7 @@ class MultyScanOrderController extends Controller {
 //            return;
 //        }
 
-        if(1) {
+        if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
@@ -157,11 +157,12 @@ class MultyScanOrderController extends Controller {
         
         //echo "Before validation main entity:<br>";
 
-       if( $form->isValid() ) {
-           echo "form is valid !!! <br>";
-       } else {
-           echo "form is not valid ??? <br>";
-       }
+//       if( $form->isValid() ) {
+//           echo "form is valid !!! <br>";
+//       } else {
+//           echo "form is not valid ??? <br>";
+//       }
+
         if( 1 ) {
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );

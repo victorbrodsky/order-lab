@@ -11,18 +11,29 @@ namespace Oleg\OrderformBundle\Repository;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
-    public function attachToParent( $part, $block ) {
+    public function attachToParentAndOrderinfo( $part, $block, $orderinfo ) {
         if( $block ) {
-            if( !$block->getId() || $block->getId() != "" ) { //do it if the block is new
+            //echo "block id=".$block->getId()."<br>";
+            //echo $block;
+            if( !$block->getId() || $block->getId() == "" ) { //do it if the block is new
+                //echo "block slides=".count($block->getChildren())."<br>";
                 //add only if this block has slides
                 if( count($block->getChildren()) > 0 ) {
+                    //echo "block add slide<br>";
                     $part->addChildren($block);
+                    //$orderinfo->addBlock($block);
                 } else {
                     //remove block if it does not have any slides
+                    //echo "remove block <br>";
+                    //$orderinfo->removeBlock($block);
+                    //$orderinfo->setBlock(null);
+                    $part->removeBlock($block);
                     $em = $this->_em;
                     $em->remove($block);
+                    //$block = null;
                 }
             }
+            //echo $block;
         }
     }
 
@@ -177,7 +188,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         foreach( $parts as $part ) {
 
-            echo "remove duplication: partname=".$part->getPartname()->first()."<br>";
+            //echo "remove duplication: partname=".$part->getPartname()->first()."<br>";
             $thisName = $this->getValidField($part->getPartname());
 
             if( count($names) == 0 || !in_array($thisName, $names) ) {
