@@ -116,7 +116,7 @@ class PartType extends AbstractType
         ));
 
         //diffDiagnoses
-        $gen_attr = array('label'=>'Differential Diagnoses','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Differential Diagnoses','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
         $builder->add('diffDisident', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,

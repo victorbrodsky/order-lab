@@ -34,7 +34,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $block->addChildren($slide);    //addSlide
         }
 
-        //$orderinfo->addSlide($slide);
+        $orderinfo->addSlide($slide);
     }
 
     //override parent method to get next key string
@@ -73,7 +73,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         $onlyValid = "";
         if( $validity ) {
-            $onlyValid = " AND bfield.validity=1";
+            $onlyValid = " AND bfield.status='".self::STATUS_VALID."'";;
         }
 
         $query = $this->getEntityManager()

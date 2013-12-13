@@ -67,12 +67,28 @@ class OrderInfoRepository extends EntityRepository
 
         //echo "final patients count=".count($entity->getPatient())."<br>";
 //        foreach( $entity->getPatient() as $patient ) {
+//            echo 'patient provider='.$patient->getProvider()."<br>";
+//            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
+//            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
+//            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
 //            echo $patient;
 //        }
-        //exit();
+        //exit('orderinfo repo exit');
 
         $em->persist($entity);
         $em->flush();
+
+        //clean empty blocks
+        $blocks = $entity->getBlock();
+        foreach( $blocks as $block ) {
+            if( count($block->getSlide()) == 0 ) {
+                //echo "final remove block from orderinfo <br>";
+                //echo $block;
+                $em->remove($block);
+                $em->flush();
+            }
+        }
+
         //$em->clear();
         return $entity;
     }

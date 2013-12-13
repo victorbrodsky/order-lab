@@ -44,25 +44,6 @@ class PartNameType extends AbstractType
             'label' => false
         ));
 
-
-//        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
-//            $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'combobox combobox-width');    //show
-//        }
-//        $builder->add('field', 'custom_selector', array(
-//            'label' => 'Part Name',
-//            'required' => false,
-//            'attr' => $attr,
-//            'classtype' => 'partname'
-//        ));
-//
-//        $builder->add('partothers', new ArrayFieldType(), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
-//            'label' => false
-//        ));
-
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -30,11 +30,16 @@ abstract class ArrayFieldAbstract {
      */
     protected $provider;
 
+//    /**
+//     * validity - valid (1) or not valid
+//     * @ORM\Column(type="smallint", nullable=true)
+//     */
+//    protected $validity;
+
     /**
-     * validity - valid (1) or not valid
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $validity;
+    protected $status;
 
     /**
      * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
@@ -48,10 +53,11 @@ abstract class ArrayFieldAbstract {
      */
     protected $creationdate;
 
-    public function __construct( $validity = 0 )
+    public function __construct( $status = 'valid', $provider = null )
     {
-        $this->validity = $validity;
+        $this->status = $status;
         $this->source = "scanorder";
+        $this->provider = $provider;
     }
 
     public function setId($id)
@@ -93,27 +99,44 @@ abstract class ArrayFieldAbstract {
     }
 
     /**
-     * Set validity
-     *
-     * @param string $validity
-     * @return ClinicalHistory
+     * @param mixed $status
      */
-    public function setValidity($validity)
+    public function setStatus($status)
     {
-        $this->validity = $validity;
-
-        return $this;
+        $this->status = $status;
     }
 
     /**
-     * Get validity
-     *
-     * @return string
+     * @return mixed
      */
-    public function getValidity()
+    public function getStatus()
     {
-        return $this->validity;
+        return $this->status;
     }
+
+//    /**
+//     * Set validity
+//     *
+//     * @param string $validity
+//     * @return ClinicalHistory
+//     */
+//    public function setValidity($validity)
+//    {
+//        $this->validity = $validity;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get validity
+//     *
+//     * @return string
+//     */
+//    public function getValidity()
+//    {
+//        return $this->validity;
+//    }
+
 
     /**
      * @param mixed $source

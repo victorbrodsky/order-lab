@@ -27,7 +27,7 @@ class Block extends OrderAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)
      */
     protected $part;
     
@@ -45,8 +45,8 @@ class Block extends OrderAbstract
     protected $orderinfo; 
 
     
-    public function __construct( $withfields=false, $validity=0 ) {
-        parent::__construct();
+    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+        parent::__construct($status,$provider);
         $this->slide = new ArrayCollection();
 
         //fields:
@@ -54,8 +54,8 @@ class Block extends OrderAbstract
         $this->sectionsource = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addBlockname( new BlockBlockname($validity) );
-            $this->addSectionsource( new BlockSectionsource($validity) );
+            $this->addBlockname( new BlockBlockname($status,$provider) );
+            $this->addSectionsource( new BlockSectionsource($status,$provider) );
         }
     }
 

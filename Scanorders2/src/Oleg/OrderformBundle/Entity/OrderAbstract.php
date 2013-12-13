@@ -38,7 +38,22 @@ abstract class OrderAbstract
      */
     private $creationdate;
 
-    public function __construct() {
+    /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     */
+    protected $provider;
+
+    /**
+     * default: 'scanorder'. source="import_from_Epic" or source="import_from_CoPath"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $source;
+
+    public function __construct( $status='invalid', $provider=null ) {
+        $this->status = $status;
+        $this->source = "scanorder";
+        $this->provider = $provider;
         $this->orderinfo = new ArrayCollection();
     }
 
@@ -117,10 +132,43 @@ abstract class OrderAbstract
         return $this->orderinfo;
     }
 
+    public function setProvider($provider)
+    {
+        $this->provider = $provider;
+
+        return $this;
+    }
+
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
+     * @param mixed $source
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+
     //children methods
 
     public function getValidChild()
     {
+        if( !$this->getChildren() ) {
+            return null;
+        }
+
         $validChild = null;
         $count = 0;
         //echo "number of children=: ".count($this->getChildren())."<br>";
@@ -140,23 +188,31 @@ abstract class OrderAbstract
     //return the key field with validity 1 or return a single existing key field
     public function getValidKeyfield()
     {
+        if( !$this->obtainKeyField() ) {
+            return null;
+        }
+
         if( count($this->obtainKeyField()) == 1 ) {
             return $this->obtainKeyField()->first();
         }
 
         $validChild = null;
         $count = 0;
+        $names = "";
         //echo "number of children=: ".count($this->getChildren())."<br>";
         foreach( $this->obtainKeyField() as $child) {
             //echo "get valid: ".$child."<br>";
-            if( $child->getValidity() == 1 ) {
+            if( $child->getStatus() == "valid" ) {
                 $validChild = $child;
                 $count++;
+                $names = $names . $child . " ";
             }
         }
 
         if( $count > 1 ) {
-            throw $this->createNotFoundException( 'This Object must have only one valid child. Number of valid children=' . $count );
+            $class = new \ReflectionClass($child);
+            $className = $class->getShortName();
+            throw new \Exception( 'This Object must have only one valid child. Number of valid children=' . $count . ", className=".$className.", names=".$names);
         }
 
         return $validChild;

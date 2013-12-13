@@ -81,8 +81,8 @@ class Part extends OrderAbstract
      */
     protected $slide;
     
-    public function __construct( $withfields=false, $validity=0 ) {
-        parent::__construct();
+    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+        parent::__construct($status,$provider);
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
 
@@ -96,13 +96,13 @@ class Part extends OrderAbstract
         $this->diseaseType = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addPartname( new PartPartname($validity) );
-            $this->addSourceOrgan( new PartSourceOrgan($validity) );
-            $this->addDescription( new PartDescription($validity) );
-            $this->addDisident( new PartDisident($validity) );
-            $this->addPaper( new PartPaper($validity) );
-            $this->addDiffDisident( new PartDiffDisident() );
-            $this->addDiseaseType( new PartDiseaseType() );
+            $this->addPartname( new PartPartname($status,$provider) );
+            $this->addSourceOrgan( new PartSourceOrgan($status,$provider) );
+            $this->addDescription( new PartDescription($status,$provider) );
+            $this->addDisident( new PartDisident($status,$provider) );
+            $this->addPaper( new PartPaper($status,$provider) );
+            $this->addDiffDisident( new PartDiffDisident($status,$provider) );
+            $this->addDiseaseType( new PartDiseaseType($status,$provider) );
         }
     }
 
@@ -275,7 +275,7 @@ class Part extends OrderAbstract
         if( $diffDisident != null ) {
             if( !$this->diffDisident->contains($diffDisident) ) {
                 $diffDisident->setPart($this);
-                $this->diffDisident[] = $diffDisident;
+                $this->diffDisident->add($diffDisident);
             }
         }
     
@@ -300,7 +300,7 @@ class Part extends OrderAbstract
         if( $paper != null ) {
             if( !$this->paper->contains($paper) ) {
                 $paper->setPart($this);
-                $this->paper[] = $paper;
+                $this->paper->add($paper);
             }
         }
     

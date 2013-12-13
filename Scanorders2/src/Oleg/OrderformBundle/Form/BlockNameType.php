@@ -40,6 +40,11 @@ class BlockNameType extends AbstractType
             'classtype' => 'blockname'
         ));
 
+        $builder->add('blocknameothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',
+            'label' => false
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

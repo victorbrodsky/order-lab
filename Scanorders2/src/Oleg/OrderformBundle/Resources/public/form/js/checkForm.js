@@ -1538,7 +1538,7 @@ function validateForm() {
         totalcheckboxes++;
     });
 
-    //console.log("totalcheckboxes="+totalcheckboxes+",unchecked="+unchecked);
+    console.log("totalcheckboxes="+totalcheckboxes+",unchecked="+unchecked);
     if( totalcheckboxes == 0 ) {    //first time submit
         //continue
     } else if( totalcheckboxes > 0 && unchecked > 0 ) { //submit was already pressed before and not all check boxes are not checked
@@ -1605,18 +1605,29 @@ function validateForm() {
                         mrn = data['parent'];
                         mrntype = data['extraid'];
                         mrnstring = data['mrnstring'];
+                        orderinfo = data['orderinfo'];
 
                         //console.log('mrn='+mrn+', mrntype='+mrntype);
 
                         if( mrn == mrnValue && mrntype == mrntypeValue ) {
-                            //console.log("validated successfully !");
+                            console.log("validated successfully !");
                         } else {
-                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+                            console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
 
-                            var message = "Entered Accession Number "+accValue+" belongs to Patient with <b>"+mrnstring+"</b>, not Patient with <b>MRN "+mrnValue+", "+mrntypeText+"</b> as you have entered. Please correct ether the MRN or the Accession Number above.";
-                            var message2 = "If you believe <b>MRN "+mrn+" and MRN "+mrnValue+" </b>belong to the same patient, please mark this checkbox: ";
-                            var divBox = '<div id="validationerror-added" class="alert alert-danger">'+message+'<br>'+message2+'<input type="checkbox" name="mrnok" value="">'+'</div>';
+                            var message = "Entered Accession Number "+accValue+" belongs to Patient with <b>"+mrnstring+"</b>, not Patient with <b>MRN "
+                                +mrnValue+", "+mrntypeText+"</b> as you have entered. Please correct ether the MRN or the Accession Number above.";
+
+                            var message1 = "If you believe <b>MRN "+mrn+" and MRN "+mrnValue+" </b>belong to the same patient, please mark here: "
+                                +'<input type="checkbox" name="mrnok1" value=""><br><br>';
+
+                            var message2 = "If you believe <b>Accession Number "+accValue+"</b> belongs to patient <b>MRN "+mrnValue+"</b> and not patient <b>MRN "+mrn+"</b> (as stated by "+orderinfo+"), please mark here: "
+                                +'<input type="checkbox" name="mrnok2" value=""><br><br>';
+
+                            var message3 = "If you have changed the involved <b>MRN "+mrnValue+"</b> or the <b>Accession Number "+accValue+"</b> in the form above, please mark here: "
+                                +'<input type="checkbox" name="mrnok1" value="">';
+
+                            var divBox = '<div id="validationerror-added" class="alert alert-danger">'+message+'<br><br>'+message1+message2+message3+'</div>';
 
                             $('#validationerror').append(divBox);
 
@@ -1641,7 +1652,7 @@ function validateForm() {
 
     });
 
-    //console.log("totalError="+totalError);
+    console.log("totalError="+totalError);
     //return false; //testing
 
     if( totalError == 0 ) {

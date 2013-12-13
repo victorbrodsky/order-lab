@@ -34,7 +34,7 @@ class SpecialStainsType extends AbstractType
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-staintype', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('staintype', 'custom_selector', array(
             'label' => false,

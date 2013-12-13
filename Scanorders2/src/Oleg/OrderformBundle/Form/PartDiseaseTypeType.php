@@ -44,7 +44,7 @@ class PartDiseaseTypeType extends AbstractType
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
             $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('primaryOrgan', 'custom_selector', array(
             'label' => 'Primary Site of Origin:',

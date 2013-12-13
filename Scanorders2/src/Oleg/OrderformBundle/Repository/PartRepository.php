@@ -27,13 +27,17 @@ class PartRepository extends ArrayFieldAbstractRepository
                     //echo "remove block <br>";
                     //$orderinfo->removeBlock($block);
                     //$orderinfo->setBlock(null);
+                    //TODO: remove block here. Now the block is removed in order repo
                     $part->removeBlock($block);
-                    $em = $this->_em;
-                    $em->remove($block);
+                    $block->setPart(null);
+                    $part->clearBlock();
+                    //$em = $this->_em;
+                    //$em->remove($block);
                     //$block = null;
                 }
             }
             //echo $block;
+            $orderinfo->addBlock($block);
         }
     }
 
@@ -148,7 +152,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         $onlyValid = "";
         if( $validity ) {
             //echo "Part check validity ";
-            $onlyValid = " AND pfield.validity=1";
+            $onlyValid = " AND pfield.status='".self::STATUS_VALID."'";;
         }
 
         $query = $this->getEntityManager()

@@ -18,11 +18,6 @@ use Oleg\OrderformBundle\Entity\ArrayFieldAbstract;
 abstract class PartArrayFieldAbstract extends ArrayFieldAbstract {
 
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $field;
-
     /**
      * Set part
      *

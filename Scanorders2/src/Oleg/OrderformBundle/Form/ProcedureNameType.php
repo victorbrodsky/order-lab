@@ -24,7 +24,7 @@ class ProcedureNameType extends AbstractType
         if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
             $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');    //new
         } else {
-            $attr = array('class' => 'combobox combobox-width');    //show
+            $attr = array('class' => 'form-control form-control-modif');    //show
         }
         $builder->add('field', 'custom_selector', array(
             'label' => 'Procedure Type',

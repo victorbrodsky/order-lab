@@ -81,19 +81,19 @@ class Slide extends OrderAbstract
      **/
     protected $orderinfo; 
     
-    public function __construct($withfields=false, $validity=0)
+    public function __construct( $withfields=false, $status='valid', $provider=null )
     {
-        parent::__construct();
+        parent::__construct($status,$provider);
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
         $this->specialStains = new ArrayCollection();
         $this->relevantScans = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addRelevantScan( new RelevantScans($validity) );
-            $this->addSpecialStain( new SpecialStains($validity) );
-            $this->addScan( new Scan() );
-            $this->addStain( new Stain() );
+            $this->addRelevantScan( new RelevantScans($status,$provider) );
+            $this->addSpecialStain( new SpecialStains($status,$provider) );
+            $this->addScan( new Scan($status,$provider) );
+            $this->addStain( new Stain($status,$provider) );
         }
     }
     
@@ -114,11 +114,11 @@ class Slide extends OrderAbstract
     }
 
     public function getRelevantscan() {
-        return $this->relevantscan;
+        return $this->relevantScans;
     }
 
     public function setRelevantscan($relevantscan) {
-        $this->relevantscan = $relevantscan;
+        $this->relevantScans = $relevantscan;
     }
 
     /**
@@ -376,5 +376,32 @@ class Slide extends OrderAbstract
     {
         return $this->title;
     }
+
+
+    //parent, children, key field methods
+//    public function setParent($parent) {
+////        $this->setBlock($parent);
+////        return $this;
+//    }
+//
+//    public function getParent() {
+//        return $this->getBlock();
+//    }
+    //
+    public function getChildren() {
+        return null;
+    }
+
+    public function obtainKeyField() {
+        return null;
+    }
+
+//    public function addChildren($child) {
+//        //
+//    }
+//
+//    public function removeChildren($child) {
+//        //
+//    }
 
 }

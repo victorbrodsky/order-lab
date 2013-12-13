@@ -54,7 +54,7 @@ class CheckController extends Controller {
             $hist['text'] = $field."";
             $hist['provider'] = $providerStr;
             $hist['date'] = $dateStr;
-            $hist['validity'] = $field->getValidity();
+            $hist['validity'] = $field->getStatus();
 
             if( $childrenArr ) {
                 foreach( $childrenArr as $child ) {
@@ -249,10 +249,12 @@ class CheckController extends Controller {
                 $dateStr = $transformer->transform($parentKey->getCreationdate());
                 $mrnstring = 'MRN '.$parentKey.', '.$parentKey->getMrntype().' (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
                 $extraid = $parentKey->getMrntype()->getId()."";
+                $orderinfoString = "Order #".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider()->first();
             } else {
                 $parentKey = null;
                 $mrnstring = "";
                 $extraid = "";
+                $orderinfoString = "";
             }
 
             //echo "mrnstring=".$mrnstring." ";
@@ -262,6 +264,7 @@ class CheckController extends Controller {
                 'parent'=>$parentKey."",
                 'extraid'=>$extraid,
                 'mrnstring'=>$mrnstring,
+                'orderinfo'=>$orderinfoString,
                 'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession()),
             );

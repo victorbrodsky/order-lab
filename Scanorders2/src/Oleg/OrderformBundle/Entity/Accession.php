@@ -40,15 +40,15 @@ class Accession extends OrderAbstract {
      **/
     protected $orderinfo;
       
-    public function __construct( $withfields=false, $validity=0 ) {
-        parent::__construct();
+    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+        parent::__construct($status,$provider);
         $this->part = new ArrayCollection();
 
         //fields:
         $this->accession = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addAccession( new AccessionAccession($validity) );
+            $this->addAccession( new AccessionAccession($status,$provider) );
         }
     }
       
@@ -205,8 +205,8 @@ class Accession extends OrderAbstract {
         return "accession";
     }
 
-    public function createKeyField() {
-        $this->addAccession( new AccessionAccession(1) );
+    public function createKeyField($status,$provider) {
+        $this->addAccession( new AccessionAccession($status,$provider) );
         return $this->obtainKeyField();
     }
 

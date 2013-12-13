@@ -80,5 +80,16 @@ class Stain extends SlideArrayFieldAbstract
     {
         return $this->date;
     }
-    
+
+    public function setProvider($provider)
+    {
+        if( $provider ) {
+            $this->provider = $provider;
+        } else {
+            $this->provider = $this->getSlide()->getProvider();
+        }
+
+        return $this;
+    }
+
 }

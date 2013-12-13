@@ -461,18 +461,58 @@ class ScanOrderController extends Controller {
         //$deleteForm = $this->createDeleteForm($id);
         
         //$entity->setStatus($status);
-        //$status = $em->getRepository('OlegOrderformBundle:Status')->setStatus($status);
+        //echo "status=".$status."<br>";
         $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($status);
 
         if( $status_entity ) {
 
             $entity->setStatus($status_entity);
+
+            //change status for all orderinfo children to "deleted-by-canceled-order"
+            //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
+            //AND there are no fields that belong to this object that were added by another order
+            if( $status == 'Cancel' ) {
+                $statusStr = "deleted-by-canceled-order";
+            } else if( $status == 'Submit' ) {
+                $statusStr = "valid";
+            } else {
+                $statusStr = null;
+            }
+
+            //echo "statusStr=".$statusStr."<br>";
+            $message = "";
+
+            if( $statusStr ) {
+
+                $patients = $entity->getPatient();
+                $patCount = $this->iterateEntity( $entity, $patients, $status_entity, $statusStr );
+
+                $procedures = $entity->getProcedure();
+                $procCount = $this->iterateEntity( $entity, $procedures, $status_entity, $statusStr );
+
+                $accessions = $entity->getAccession();
+                $accCount = $this->iterateEntity( $entity, $accessions, $status_entity, $statusStr );
+
+                $parts = $entity->getPart();
+                $partCount = $this->iterateEntity( $entity, $parts, $status_entity, $statusStr );
+
+                $blocks = $entity->getBlock();
+                $blockCount = $this->iterateEntity( $entity, $blocks, $status_entity, $statusStr );
+
+                $slides = $entity->getSlide();
+                $slideCount = $this->iterateEntity( $entity, $slides, $status_entity, $statusStr );
+
+                $message = " (changed children: patients ".$patCount.", procedures ".$procCount.", accessions ".$accCount.", parts ".$partCount.", blocks ".$blockCount." slides ".$slideCount.")";
+
+            }
+            //exit("exit status testing");
+
             $em->persist($entity);
             $em->flush();
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Status of Order #'.$id.' has been changed to "'.$status.'"'
+                'Status of Order #'.$id.' has been changed to "'.$status.'"'.$message
             );
 
         } else {
@@ -485,6 +525,47 @@ class ScanOrderController extends Controller {
         }
 
         return $this->redirect($this->generateUrl('index'));
+    }
+
+    public function iterateEntity( $orderinfo, $children, $status_entity, $statusStr ) {
+
+        if( !$children->first() ) {
+            return 0;
+        }
+
+        //echo "iterate children count=".count($children)."<br>";
+
+        $class = new \ReflectionClass($children->first());
+        $className = $class->getShortName();
+        //echo "class name=".$className."<br>";
+
+        $count = 0;
+
+        foreach( $children as $child ) {
+
+            $noOtherOrderinfo = true;
+
+            //echo "orderinfo count=".count($child->getOrderinfo())."<br>";
+
+            foreach( $child->getOrderinfo() as $order ) {
+                if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
+                    $noOtherOrderinfo = false;
+                    break;
+                }
+            }
+
+            //echo "noOtherOrderinfo=".$noOtherOrderinfo."<br>";
+
+            if( $child->getSource() == 'scanorder' && $noOtherOrderinfo ) {
+                //echo "change status to (".$statusStr.") <br>";
+                $child->setStatus($statusStr);
+                $this->getDoctrine()->getManager()->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
+                $count++;
+            }
+
+        }
+
+        return $count;
     }
 
     /**

@@ -105,6 +105,17 @@ class Scan extends SlideArrayFieldAbstract
         return $this;
     }
 
+    public function setProvider($provider)
+    {
+        if( $provider ) {
+            $this->provider = $provider;
+        } else {
+            $this->provider = $this->getSlide()->getProvider();
+        }
+
+        return $this;
+    }
+
     /**
      * Get status
      *

@@ -223,27 +223,27 @@ class MultyScanOrderController extends Controller {
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        //$username = $user->getUsername();
+        //echo $user."<br>";
         //$email = $user->getEmail();
 
         $entity->addProvider($user);
 
-        $patient = new Patient(true);
+        $patient = new Patient(true,'invalid',$user);
         $entity->addPatient($patient);
 
-        $procedure = new Procedure(true);
+        $procedure = new Procedure(true,'invalid',$user);
         $patient->addProcedure($procedure);
 
-        $accession = new Accession(true);
+        $accession = new Accession(true,'invalid',$user);
         $procedure->addAccession($accession);
 
-        $part = new Part(true);
+        $part = new Part(true,'invalid',$user);
         $accession->addPart($part);
 
-        $block = new Block(true);
+        $block = new Block(true,'invalid',$user);
         $part->addBlock($block);
 
-        $slide = new Slide(true);
+        $slide = new Slide(true,'valid',$user); //Slides are always valid by default
         $block->addSlide($slide);
 
         $request = $this->container->get('request');
@@ -315,7 +315,8 @@ class MultyScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         //TODO: is it possible to filter orderinfo by JOINs?
-        //INNER JOIN orderinfo.procedure procedure
+
+        //INNER JOIN orderinfo.block block
         $query = $em->createQuery('
             SELECT orderinfo
             FROM OlegOrderformBundle:OrderInfo orderinfo
@@ -323,7 +324,7 @@ class MultyScanOrderController extends Controller {
             INNER JOIN orderinfo.procedure procedure
             INNER JOIN orderinfo.accession accession
             INNER JOIN orderinfo.part part
-            INNER JOIN orderinfo.block block
+
             INNER JOIN orderinfo.slide slide
             WHERE orderinfo.id = :id'
         )->setParameter('id', $id);
