@@ -12,6 +12,59 @@ namespace Oleg\OrderformBundle\Repository;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
+    public function processDuplicationKeyField( $accession, $orderinfo ) {
+
+        if( count($orderinfo->getDataquality()) == 0 ) {
+            return $accession;
+        }
+
+        $em = $this->_em;
+
+        //process data quality
+        foreach( $orderinfo->getDataquality() as $dataquality) {
+
+            //take care of mrn-accession conflict: create new patient with MRNNONPROVIDED:
+            //1) if there is a conflict then accession is exists in DB
+
+            $accessionFound = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($dataquality->getAccession(),"Accession","accession",true, true);
+
+            //2) remove conflicting accession from existing patient
+            $procedure = null;
+
+            $foundAccessionNum = $accessionFound->getAccession()->first()->getField()."";
+            $conflictAccessionNum = $dataquality->getAccession()."";
+
+            echo $foundAccessionNum."?=".$conflictAccessionNum."<br>";
+
+            if( $foundAccessionNum == $conflictAccessionNum ) {
+                echo "accession found: remove procedure<br>";
+                $procedure = $accession->getParent();
+                $patient = $procedure->getParent();
+                $patient->removeProcedure($procedure);
+            }
+
+            if( !$procedure ) {
+                throw new \Exception( 'Corresponding Accession was not found' );
+            }
+
+            //3)create a new patient
+            $user = $orderinfo->getProvider()->first();
+            $extra = array();
+            $extra["mrntype"] = $dataquality->getMrntype()->getId();
+            $newPatient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra,false);
+
+            //4) attach this accession to a new created patient
+            $newPatient->addChildren($procedure);
+
+            //5) add this new created patient to this order
+            $orderinfo->addPatient($newPatient);
+
+        } //foreach
+
+
+        return $accession;
+    }
+
     //filter out duplicate virtual (in form, not in DB) accessions from specimen
     public function removeDuplicateEntities( $procedure ) {
 

@@ -3,9 +3,16 @@
     Author     : oli2002
 */
 
-/*.horizontal_type {*/
-    /*padding-bottom: 1%;*/
-/*}*/
+.radio_newline {
+    float: left;
+    width: 100%;
+    padding-top: 7px;
+}
+.radio_newline LABEL, .radio_newline INPUT {
+    display: inline;
+    padding-right: 5px;
+}
+
 .horizontal_type LABEL, .horizontal_type INPUT {
     display: inline;
     padding-right: 10px;

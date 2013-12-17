@@ -16,6 +16,9 @@ var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.dis
 
 var orderformtype = $("#orderformtype").val();
 
+var dataquality_message1 = new Array();
+var dataquality_message2 = new Array();
+
 //add disident to a single form array field
 $(document).ready(function() {
 
@@ -1526,24 +1529,57 @@ function validateForm() {
     var totalError = 0;
 
     //Initial check: get total number of checkboxes
-    var unchecked = 0;
+    //var unchecked = 0;
     var totalcheckboxes = 0;
 
-    $('#validationerror').find('#validationerror-added').find('input').each(function() {
-        if( $(this).is(":checked") ){
+    var reruncount = 0;
 
-        } else {
-            unchecked ++;
-        }
-        totalcheckboxes++;
+    //console.log( "dataquality_message1[0]="+dataquality_message1[0] );
+    //console.log( "dataquality_message2[0]="+dataquality_message2[0] );
+
+    var countErrorBoxes = 0;
+    $('#validationerror').find('#validationerror-added').each(function() {
+
+        $(this).find('input').each(function() {
+            if( $(this).is(":checked") ){
+                console.log("checked value="+$(this).val());
+                if( $(this).val() == "OPTION3" ) {
+                    reruncount++;
+
+                    //console.log( "countErrorBoxes="+countErrorBoxes+", dataquality_message1[]="+dataquality_message1[countErrorBoxes] );
+                    //setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+                }
+                if( $(this).val() == "OPTION1" ) {
+                    //console.log( "countErrorBoxes="+countErrorBoxes+", dataquality_message1[]="+dataquality_message1[countErrorBoxes] );
+                    setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+                }
+                if( $(this).val() == "OPTION2" ) {
+                    //console.log( "countErrorBoxes="+countErrorBoxes+", dataquality_message2[]="+dataquality_message2[countErrorBoxes] );
+                    setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
+                }
+            } else {
+                //unchecked ++;
+            }
+            totalcheckboxes++;
+        });
+
+        countErrorBoxes++;
+
     });
 
-    console.log("totalcheckboxes="+totalcheckboxes+",unchecked="+unchecked);
-    if( totalcheckboxes == 0 ) {    //first time submit
+    //clear array
+    dataquality_message1.length = 0;
+    dataquality_message2.length = 0;
+
+    console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
+
+
+    if( totalcheckboxes == 0 ) {
         //continue
-    } else if( totalcheckboxes > 0 && unchecked > 0 ) { //submit was already pressed before and not all check boxes are not checked
-        $('#validationerror-added').remove();
+    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option was chosen
+        cleanValidationAlert();
     } else {    //return true;
+        //return false; //testing
         return true;
     }
 
@@ -1556,6 +1592,9 @@ function validateForm() {
     }
 
     //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
+    var prototype = $('#form-prototype-data').data('prototype-dataquality');
+    //console.log("prototype="+prototype);
+    var index = 0;
 
     //for all accession fields
     accessions.each(function() {
@@ -1607,44 +1646,65 @@ function validateForm() {
                         mrnstring = data['mrnstring'];
                         orderinfo = data['orderinfo'];
 
-                        //console.log('mrn='+mrn+', mrntype='+mrntype);
+                        console.log('mrn='+mrn+', mrntype='+mrntype);
 
                         if( mrn == mrnValue && mrntype == mrntypeValue ) {
                             console.log("validated successfully !");
                         } else {
                             console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
+                            var message_short = "MRN-ACCESSION CONFLICT :<br>"+"Entered Accession Number "+accValue+" belongs to Patient with <b>"+mrnstring+"</b>, not Patient with <b>MRN "
+                                                +mrnValue+", "+mrntypeText+"</b> as you have entered.";
+                            var message = message_short + " Please correct ether the MRN or the Accession Number above.";
 
-                            var message = "Entered Accession Number "+accValue+" belongs to Patient with <b>"+mrnstring+"</b>, not Patient with <b>MRN "
-                                +mrnValue+", "+mrntypeText+"</b> as you have entered. Please correct ether the MRN or the Accession Number above.";
 
-                            var message1 = "If you believe <b>MRN "+mrn+" and MRN "+mrnValue+" </b>belong to the same patient, please mark here: "
-                                +'<input type="checkbox" name="mrnok1" value=""><br><br>';
+                            var message1 = "If you believe <b>MRN "+mrn+"</b> and <b>MRN "+mrnValue + "</b> belong to the same patient, please mark here:";
+                            var dataquality_message_1 = message_short+"<br>"+"I believe <b>MRN "+mrnstring+"</b> and <b>MRN "+mrnValue+", "+mrntypeText+"</b> belong to the same patient";
+                            dataquality_message1.push(dataquality_message_1);
 
-                            var message2 = "If you believe <b>Accession Number "+accValue+"</b> belongs to patient <b>MRN "+mrnValue+"</b> and not patient <b>MRN "+mrn+"</b> (as stated by "+orderinfo+"), please mark here: "
-                                +'<input type="checkbox" name="mrnok2" value=""><br><br>';
+                            var message2 = "If you believe <b>Accession Number "+accValue+"</b> belongs to patient <b>MRN "+mrnValue+"</b> and not patient <b>MRN "+mrn+"</b> (as stated by "+orderinfo+"), please mark here:";
+                            var dataquality_message_2 = message_short+"<br>"+"I believe <b>Accession Number "+accValue+"</b> belongs to patient <b>MRN "+mrnValue+", "+mrntypeText+"</b> and not patient <b>MRN "+mrnstring+"</b> (as stated by "+orderinfo+")";
+                            dataquality_message2.push(dataquality_message_2);
 
-                            var message3 = "If you have changed the involved <b>MRN "+mrnValue+"</b> or the <b>Accession Number "+accValue+"</b> in the form above, please mark here: "
-                                +'<input type="checkbox" name="mrnok1" value="">';
+                            var message3 = "If you have changed the involved <b>MRN "+mrnValue+"</b> or the <b>Accession Number "+accValue+"</b> in the form above, please mark here:";
 
-                            var divBox = '<div id="validationerror-added" class="alert alert-danger">'+message+'<br><br>'+message1+message2+message3+'</div>';
+                            //var divBox = '<div id="validationerror-added" class="alert alert-danger">'+message+'<br><br>'+message1+message2+message3+'</div>';
+                            //$('#validationerror').append(divBox);
 
-                            $('#validationerror').append(divBox);
+                            if( !prototype ) {
+                                return false;
+                            }
+
+                            var newForm = prototype.replace(/__dataquality__/g, index);
+
+                            newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
+
+                            newForm = newForm.replace("TEXT1", message1);
+                            newForm = newForm.replace("TEXT2", message2);
+                            newForm = newForm.replace("TEXT3", message3);
+
+                            //console.log("newForm="+newForm);
+
+                            var newElementsAppended = $('#validationerror').append(newForm);
+                            //var newElementsAppended = newForm.appendTo("#validationerror");
 
                             //red
                             accInput.parent().addClass("has-error");
                             patientInputs.parent().addClass("has-error");
 
+                            setDataqualityData( index, accValue, mrnValue, mrntypeValue );
+
                             totalError++;
+                            index++;
 
                         }
 
                     } else {
-                        //console.debug("not found");
+                        console.debug("not found");
                     }
                 },
                 error: function () {
-                    //console.debug("get object ajax error "+name);
+                    console.debug("get object ajax error "+name);
                 }
             });
 
@@ -1661,6 +1721,35 @@ function validateForm() {
         return false;
     }
 
+}
+
+function setDataquality(index,message) {
+    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    console.log("message=" + message);
+    $(partid+'description').val(message);
+}
+//function setDataquality_TODEL(element,message) {
+//    var descriptionInput = element.closest('#validationerror-added').find('.dataquality-description-class');
+//    console.log("descriptionInput id="+descriptionInput.attr("id")+", class="+descriptionInput.attr("class"));
+//    descriptionInput.val(message);
+//}
+
+
+function setDataqualityData( index, accession, mrn, mrntype ) {
+    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    console.log(accession + " " + mrn + " " + mrntype);
+    $(partid+'accession').val(accession);
+    $(partid+'mrn').val(mrn);
+    $(partid+'mrntype').val(mrntype);
+}
+
+function cleanValidationAlert() {
+    $('#validationerror-added').each(function() {
+        $(this).remove();
+    });
+    $('#validationerror').html('')
+    dataquality_message1.length = 0;
+    dataquality_message2.length = 0;
 }
 
 function addKeyListener() {

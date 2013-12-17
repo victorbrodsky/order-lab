@@ -75,6 +75,10 @@ function initAdd() {
 
     initDatepicker();
 
+    //clean validation elements
+    //console.log("clean initAdd");
+    cleanValidationAlert();
+
 }
 
 //confirm delete
@@ -123,6 +127,9 @@ function deleteItem(id) {
             }
         }
     }
+
+    //clean validation elements
+    cleanValidationAlert();
 
     return false;
 }
@@ -507,7 +514,7 @@ function bindDeleteBtn( uid ) {
     //console.log('delete uid='+uid);
     $('#delete_form_btn_'+uid).on('click', function(e) {
         var id = uid;
-        //alert("clicked delete!");
+        alert("clicked delete!");
         deleteItem(id);
     });
 }

@@ -6,10 +6,10 @@ use Doctrine\ORM\EntityRepository;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Doctrine\ORM\Mapping\ClassMetadata;
+//use Doctrine\ORM\Mapping\ClassMetadata;
 
-use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\AccessionAccession;
+//use Oleg\OrderformBundle\Entity\PatientMrn;
+//use Oleg\OrderformBundle\Entity\AccessionAccession;
 
 class ArrayFieldAbstractRepository extends EntityRepository {
 
@@ -32,19 +32,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return $entity;
         }
 
-        //$class = new \ReflectionClass($entity);
-        //$className = $class->getShortName();
-        //$fieldName = $entity->obtainKeyFieldName();
-        //echo "<br>processEntity className=".$className.", fieldName=".$fieldName."<br>";
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+        $fieldName = $entity->obtainKeyFieldName();
+        echo "<br>processEntity className=".$className.", fieldName=".$fieldName."<br>";
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
-        //$em = $this->_em;
         //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
+
+        $em = $this->_em;
+        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
 
         $keys = $entity->obtainAllKeyfield();
 
-        //echo "count keys=".count($keys)."<br>";
-        //echo "key=".$keys->first()."<br>";
+        echo "count keys=".count($keys)."<br>";
+        echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
             $keys = $entity->createKeyField();
@@ -57,7 +59,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $key = $entity->getValidKeyField();
 
         if( $key == ""  ) {
-            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
@@ -72,7 +74,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $found = $this->findUniqueByKey($entity);
 
             if( $found ) {
-                //echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
+                echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
                 //CopyChildren
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -84,7 +86,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+                echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
             }
 
         }
@@ -153,6 +155,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $addClassMethod = "add".$childClassName;
             $orderinfo->$addClassMethod($child);
         }
+    }
+
+    public function processDuplicationKeyField($entity,$orderinfo) {
+        return $entity; //override it for accession only
     }
 
     //process single array of fields (i.e. ClinicalHistory Array of Fields)
@@ -372,7 +378,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$className: Patient
     //$fieldName: mrn
-    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null ) {
+    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $flush=true ) {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
@@ -421,7 +427,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //exit();
-        $em->flush();
+        if( $flush ) {
+            $em->flush();
+        }
         //echo "Created=".$fieldEntityName."<br>";
 
         return $entity;

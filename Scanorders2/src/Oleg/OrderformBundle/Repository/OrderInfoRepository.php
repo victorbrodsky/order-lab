@@ -17,12 +17,14 @@ class OrderInfoRepository extends EntityRepository
     public function processEntity( $entity, $type ) {
 
 //        echo "patients count=".count($entity->getPatient())."<br>";
-//        foreach( $entity->getPatient() as $patient ) {
+        foreach( $entity->getPatient() as $patient ) {
 //            echo "patient id=".$patient->getId()."<br>";
 //            echo "patient mrn=".$patient->getMrn()->first()."<br>";
 //            echo "patient name=".$patient->getName()->first()."<br>";
 //            echo "patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
 //            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
+              echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
+              echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
 //
 //            echo "patient count age=".count($patient->getAge())."<br>";
 //            foreach( $patient->getAge() as $age ) {
@@ -32,7 +34,7 @@ class OrderInfoRepository extends EntityRepository
 //            foreach( $patient->getClinicalHistory() as $ch ) {
 //                echo "ch: id=".$ch->getId().", field=".$ch."<br>";
 //            }
-//        }
+        }
 //        exit();
 
         $em = $this->_em;
@@ -55,8 +57,30 @@ class OrderInfoRepository extends EntityRepository
         $em = $this->_em;
 
         $patients = $entity->getPatient();
+        echo $patients->first();
+
+        //process data quality
+        foreach( $entity->getDataquality() as $dataquality) {
+
+            //set correct mrntype
+            $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $dataquality->getMrntype() );
+            $dataquality->setMrntype($mrntype);
+
+            echo "dataquality: description=".$dataquality->getDescription()."<br>";
+            echo "dataquality: accession=".$dataquality->getAccession()."<br>";
+            echo "dataquality: mrn=".$dataquality->getMrn()."<br>";
+            echo "dataquality: mrn text=".$dataquality->getMrntype()."<br>";
+
+        } //foreach
 
         //echo "patients count=".count($patients)."<br>";
+//        echo "dataquality count=".count($entity->getDataquality())."<br>";
+//        if( count($entity->getDataquality()) > 0 ) {
+//            echo "dataquality: description=".$entity->getDataquality()->first()->getDescription()."<br>";
+//            echo "dataquality: accession=".$entity->getDataquality()->first()->getAccession()."<br>";
+//            echo "dataquality: mrn=".$entity->getDataquality()->first()->getMrn()."<br>";
+//            echo "dataquality: mrn text=".$entity->getDataquality()->first()->getMrntype()."<br>";
+//        }
 
         foreach( $patients as $patient ) {
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
@@ -65,15 +89,17 @@ class OrderInfoRepository extends EntityRepository
             $entity->addPatient($patient);
         }
 
-        //echo "final patients count=".count($entity->getPatient())."<br>";
-//        foreach( $entity->getPatient() as $patient ) {
+        echo "final patients count=".count($entity->getPatient())."<br>";
+        foreach( $entity->getPatient() as $patient ) {
 //            echo 'patient provider='.$patient->getProvider()."<br>";
 //            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 //            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
 //            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
-//            echo $patient;
-//        }
-        //exit('orderinfo repo exit');
+            echo $patient;
+            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
+            echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
+        }
+        exit('orderinfo repo exit');
 
         $em->persist($entity);
         $em->flush();

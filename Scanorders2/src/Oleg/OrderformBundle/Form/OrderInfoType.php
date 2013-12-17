@@ -158,6 +158,16 @@ class OrderInfoType extends AbstractType
                     ->setParameter('roles', '%' . 'ROLE_ORDERING_PROVIDER' . '%');
             },
         ));
+
+        $builder->add('dataquality', 'collection', array(
+            'type' => new DataQualityType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__dataquality__',
+        ));
         
     }
 

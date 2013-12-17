@@ -30,9 +30,11 @@ class PartRepository extends ArrayFieldAbstractRepository
                     //TODO: remove block here. Now the block is removed in order repo
                     $part->removeBlock($block);
                     $block->setPart(null);
-                    $part->clearBlock();
-                    //$em = $this->_em;
-                    //$em->remove($block);
+                    //$part->clearBlock();
+
+//                    $em = $this->_em;
+//                    $em->persist($block);
+//                    $em->remove($block);
                     //$block = null;
                 }
             }

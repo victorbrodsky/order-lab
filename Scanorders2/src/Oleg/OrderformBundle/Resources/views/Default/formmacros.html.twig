@@ -144,7 +144,7 @@
 
     {#            optional for priority#}
     <div id="priority_option" class="collapse">
-        <div class="well" aling='center'>
+        <div class="well" align='center'>
 
             {{ formmacros.fieldDateLabel(form.scandeadline) }}
             {{ formmacros.field(form.returnoption) }}
@@ -233,7 +233,7 @@
     {#  optional for origin  #}
     <div id="origin_option" class="collapse">
 
-        <div class="well" aling='center'>
+        <div class="well" align='center'>
 
             {{ formmacros.field(form.diseaseType.origin) }}
 
@@ -244,7 +244,7 @@
     {#  optional for primaryOrgan  #}
     <div id="primaryOrgan" class="collapse">
 
-        <div class="well" aling='center'>
+        <div class="well" align='center'>
 
             {{ formmacros.field(form.diseaseType.primaryOrgan) }}
 
@@ -262,14 +262,14 @@
     <br>
 
     <div class="collapse originradio">
-        <div class="well" aling='center'>
+        <div class="well" align='center'>
             {{ form_label(form.origin) }}
             {{ form_widget(form.origin) }}
         </div>
     </div>
 
     <div class="collapse primaryorganradio">
-        <div class="well" aling='center'>
+        <div class="well" align='center'>
             {{ form_label(form.primaryOrgan) }}
             {{ form_widget(form.primaryOrgan) }}
         </div>
@@ -463,6 +463,23 @@
     {% else %}
        {{ form_widget(field.field) }}
     {% endif %}
+{% endmacro %}
+
+
+{% macro dataQualityWidget( field ) %}
+    {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
+    {#{% for field in fields %}#}
+        <div id="validationerror-added" class="alert alert-danger" style="height: 205px;">
+            {{ form_errors(field) }}
+            {{ form_label(field.btnoption) }}
+            {{ form_widget(field.btnoption) }}
+            {{ form_widget(field.description) }}
+            {{ form_widget(field.accession) }}
+            {{ form_widget(field.mrn) }}
+            {{ form_widget(field.mrntype) }}
+            {{ form_rest(field) }}
+        </div>
+    {#{% endfor %}#}
 {% endmacro %}
 
 

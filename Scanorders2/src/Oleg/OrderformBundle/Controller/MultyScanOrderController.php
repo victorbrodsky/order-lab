@@ -43,6 +43,8 @@ use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 
+//use Oleg\OrderformBundle\Entity\DataQuality;
+
 //ScanOrder joins OrderInfo + Scan
 //@Route("/multi")
 /**
@@ -225,6 +227,9 @@ class MultyScanOrderController extends Controller {
 
         //echo $user."<br>";
         //$email = $user->getEmail();
+
+//        $dataQuality = new DataQuality();
+//        $entity->addDataQuality($dataQuality);
 
         $entity->addProvider($user);
 

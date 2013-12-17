@@ -106,6 +106,12 @@ class OrderInfo
      */
     protected $proxyuser;
 
+    /**
+     * Accession Number
+     * @ORM\OneToMany(targetEntity="DataQuality", mappedBy="orderinfo", cascade={"persist"})
+     */
+    protected $dataquality;
+
     /////////////////    OBJECTS    //////////////////////
 
     //cascade={"persist"}   
@@ -187,6 +193,7 @@ class OrderInfo
         $this->slide = new ArrayCollection();
         $this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
+        $this->dataquality = new ArrayCollection();
     }
     
     /**
@@ -282,6 +289,25 @@ class OrderInfo
     public function setReturnoption($returnoption) {
         $this->returnoption = $returnoption;
     }
+
+
+    public function getDataquality()
+    {
+        return $this->dataquality;
+    }
+
+    public function addDataquality($dataquality)
+    {
+        if( !$this->dataquality->contains($dataquality) ) {
+            $this->dataquality->add($dataquality);
+        }
+    }
+
+    public function removeDataquality($dataquality)
+    {
+        $this->dataquality->removeElement($dataquality);
+    }
+
 
     /**
      * Set slideDelivery
@@ -689,6 +715,8 @@ class OrderInfo
     {
         $this->provider->removeElement($provider);
     }
+
+
 
 
 }
