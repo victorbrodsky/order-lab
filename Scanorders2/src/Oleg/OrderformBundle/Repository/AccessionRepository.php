@@ -12,6 +12,7 @@ namespace Oleg\OrderformBundle\Repository;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
+    //TODO: we cannot attach an Accession to multiple different Patients!
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
         if( count($orderinfo->getDataquality()) == 0 ) {
@@ -20,49 +21,76 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $em = $this->_em;
 
+        echo "process Accession: ".$accession;
+        $this->printTree( $accession->getParent()->getParent() );
+
         //process data quality
+        $accessionConflict = false;
         foreach( $orderinfo->getDataquality() as $dataquality) {
-
-            //take care of mrn-accession conflict: create new patient with MRNNONPROVIDED:
-            //1) if there is a conflict then accession is exists in DB
-
-            $accessionFound = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($dataquality->getAccession(),"Accession","accession",true, true);
-
-            //2) remove conflicting accession from existing patient
-            $procedure = null;
-
-            $foundAccessionNum = $accessionFound->getAccession()->first()->getField()."";
             $conflictAccessionNum = $dataquality->getAccession()."";
-
-            echo $foundAccessionNum."?=".$conflictAccessionNum."<br>";
-
-            if( $foundAccessionNum == $conflictAccessionNum ) {
-                echo "accession found: remove procedure<br>";
-                $procedure = $accession->getParent();
-                $patient = $procedure->getParent();
-                $patient->removeProcedure($procedure);
+            $currentAccessionNum = $accession->getAccession()->first()->getField()."";
+            echo $currentAccessionNum."?=".$conflictAccessionNum."<br>";
+            if( $currentAccessionNum == $conflictAccessionNum ) {
+                $accessionConflict = true;
+                break;
             }
+        }
 
-            if( !$procedure ) {
-                throw new \Exception( 'Corresponding Accession was not found' );
-            }
+        if( !$accessionConflict ) {
+            return $accession;
+        }
 
-            //3)create a new patient
-            $user = $orderinfo->getProvider()->first();
-            $extra = array();
-            $extra["mrntype"] = $dataquality->getMrntype()->getId();
-            $newPatient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra,false);
+        //Now we know that this accession has MRN conflict
 
-            //4) attach this accession to a new created patient
-            $newPatient->addChildren($procedure);
+        //take care of mrn-accession conflict: create new patient with MRNNONPROVIDED:
+        //1) if there is a conflict then accession is exists in DB
 
-            //5) add this new created patient to this order
-            $orderinfo->addPatient($newPatient);
+        $accessionFound = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($dataquality->getAccession(),"Accession","accession",true, true);
+        $procedureFound = $accessionFound->getParent();
 
-        } //foreach
+        echo "<br>-----------------Original Accession:<br>";
+        $this->printTree( $accession );
+        echo "--------------------------<br>";
+
+        //1a) copy children from original accession to a found one
+        foreach( $accession->getChildren() as $child ) {
+            echo $child;
+            $accessionFound->addChildren( $child );
+            echo $child;
+        }
+
+        echo "<br>-------------------------accessionFound:<br>";
+        $this->printTree( $accessionFound );
+        echo "--------------------------<br>";
+        echo "blockCount=".count($accessionFound->getPart()->first()->getBlock())."<br>";
 
 
-        return $accession;
+        //2) remove conflicting accession from existing patient
+        echo "accession found: remove procedure<br>";
+        $procedure = $accession->getParent();
+        $patient = $procedure->getParent();
+        $patient->removeProcedure($procedure);
+
+        if( !$procedureFound ) {
+            throw new \Exception( 'Corresponding Procedure-Accession was not found' );
+        }
+
+        //3)create a new patient
+        $user = $orderinfo->getProvider()->first();
+        $extra = array();
+        $extra["mrntype"] = $dataquality->getMrntype()->getId();
+        $newPatient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra,false);
+
+        //4) attach found accession to a new created patient
+        $newPatient->addChildren($procedureFound);
+
+        //4a) attach original (form procedure) to a new created patient
+
+        //5) add this new created patient to this order
+        $orderinfo->addPatient($newPatient);
+
+
+        return $accessionFound;
     }
 
     //filter out duplicate virtual (in form, not in DB) accessions from specimen

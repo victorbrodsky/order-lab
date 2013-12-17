@@ -466,20 +466,44 @@
 {% endmacro %}
 
 
-{% macro dataQualityWidget( field ) %}
+{% macro dataQualityWidget( field, cycle ) %}
     {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
-    {#{% for field in fields %}#}
-        <div id="validationerror-added" class="alert alert-danger" style="height: 205px;">
-            {{ form_errors(field) }}
+
+    {#{% if cycle == "new" %}#}
+        {% set styleOption = 'style="height: 205px;"' %}
+    {#{% else %}#}
+        {#{% set styleOption = '' %}#}
+    {#{% endif %}#}
+
+    <div id="validationerror-added" class="alert alert-danger" style="height: 210px;">
+        {{ form_errors(field) }}
+        {% if cycle == "new" %}
             {{ form_label(field.btnoption) }}
             {{ form_widget(field.btnoption) }}
-            {{ form_widget(field.description) }}
-            {{ form_widget(field.accession) }}
-            {{ form_widget(field.mrn) }}
-            {{ form_widget(field.mrntype) }}
-            {{ form_rest(field) }}
-        </div>
-    {#{% endfor %}#}
+        {% endif %}
+
+        {% if cycle == "show" %}
+            {{ form_label(field.description) }}
+        {% endif %}
+        {{ form_widget(field.description) }}
+
+        {% if cycle == "show" %}
+            {{ form_label(field.accession) }}
+        {% endif %}
+        {{ form_widget(field.accession) }}
+
+        {% if cycle == "show" %}
+            {{ form_label(field.mrn) }}
+        {% endif %}
+        {{ form_widget(field.mrn) }}
+
+        {% if cycle == "show" %}
+            {{ form_label(field.mrntype) }}
+        {% endif %}
+        {{ form_widget(field.mrntype) }}
+
+        {{ form_rest(field) }}
+    </div>
 {% endmacro %}
 
 

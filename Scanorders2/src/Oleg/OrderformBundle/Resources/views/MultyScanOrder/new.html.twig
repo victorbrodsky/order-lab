@@ -4,9 +4,9 @@
 
 {#{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
 
-{% if multy is not defined %}
-    {% set multy = 'multy' %}
-{% endif %}
+{#{% if multy is not defined %}#}
+    {#{% set multy = 'multy' %}#}
+{#{% endif %}#}
 
 {#use this form for single order edit #}
 {% set formpath = 'singleorder_create' %}
@@ -70,7 +70,8 @@
         </div
     {% endif %}
 
-    <input type="hidden" id="formtype" value="multi" />
+    {#<input type="hidden" id="formtype" value="multi" />#}
+    <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcicle" value="{{ type }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
@@ -393,8 +394,10 @@
 
 
     <div id="validationerror">
-        {{ form_widget(form.dataquality) }}
-
+        {% for dataquality in form.dataquality %}
+            {#{{ form_widget(dataquality) }}#}
+            {{ formmacros.dataQualityWidget(dataquality,type) }}
+        {% endfor %}
     </div>
 
 

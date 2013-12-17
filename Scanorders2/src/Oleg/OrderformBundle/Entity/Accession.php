@@ -139,7 +139,7 @@ class Accession extends OrderAbstract {
     {
         if( !$this->part->contains($part) ) {
             $part->setAccession($this);
-            $this->part[] = $part;
+            $this->part->add($part);
         }
 
         return $this;

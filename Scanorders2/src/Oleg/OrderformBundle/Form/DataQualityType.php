@@ -21,35 +21,53 @@ class DataQualityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'description', 'hidden', array(
-            'label'=>false,
-            'attr'=>array('class'=>'dataquality-description-class')
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+
+            $type = 'hidden';
+            $labelDescr = false;
+            $labelAccession = false;
+            $labelMrn = false;
+            $labelMrntype = false;
+
+            $builder->add( 'btnoption', 'choice', array(
+                'label'=>'MRN-ACCESSION CONFLICT',
+                'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
+                'multiple' => false,
+                'expanded' => true,
+                'mapped' => false,
+                'attr' => array('required'=>'required')
+            ));
+
+        } else {
+
+            $type = null;
+            $labelDescr = "MRN-ACCESSION CONFLICT";
+            $labelAccession = "Conflict Accession";
+            $labelMrn = "Conflict MRN";
+            $labelMrntype = "Conflict MRN Type";
+
+        }
+
+        $builder->add( 'description', $type, array(
+            'label'=>$labelDescr,
+            'attr'=>array('class'=>'dataquality-description-class textarea form-control')
         ));
 
-        $builder->add( 'accession', 'hidden', array(
-            'label'=>false,
-            'attr'=>array('class'=>'dataquality-accession-class')
+        $builder->add( 'accession', $type, array(
+            'label'=>$labelAccession,
+            'attr'=>array('class'=>'dataquality-accession-class form-control form-control-modif')
         ));
 
-        $builder->add( 'mrn', 'hidden', array(
-            'label'=>false,
-            'attr'=>array('class'=>'dataquality-mrn-class')
+        $builder->add( 'mrn', $type, array(
+            'label'=>$labelMrn,
+            'attr'=>array('class'=>'dataquality-mrn-class form-control form-control-modif')
         ));
 
-        $builder->add( 'mrntype', 'hidden', array(
-            'label'=>false,
+        $builder->add( 'mrntype', $type, array(
+            'label'=>$labelMrntype,
             'attr'=>array('class'=>'dataquality-mrntype-class')
         ));
 
-
-        $builder->add( 'btnoption', 'choice', array(
-            'label'=>'MRN-ACCESSION CONFLICT',
-            'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
-            'multiple' => false,
-            'expanded' => true,
-            'mapped' => false,
-            'attr' => array('required'=>'required')
-        ));
 
     }
 

@@ -109,6 +109,7 @@ class Part extends OrderAbstract
     public function __toString()
     {
         return "Part: id=".$this->id.
+        ", accessionId=".$this->getAccession()->getId().
         ", partname=".$this->partname->first().
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
@@ -233,7 +234,7 @@ class Part extends OrderAbstract
     {
         if( !$this->block->contains($block) ) {
             $block->setPart($this);
-            $this->block[] = $block;
+            $this->block->add($block);
         }
 
         return $this;

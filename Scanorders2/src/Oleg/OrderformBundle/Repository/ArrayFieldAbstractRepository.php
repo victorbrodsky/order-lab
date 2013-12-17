@@ -298,11 +298,20 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
+        //echo " validity=".$validity." ";
 
         $onlyValid = "";
         if( $validity ) {
             //echo " check validity ";
-            $onlyValid = " AND cfield.status='".self::STATUS_VALID."'";
+            if( $validity != "" && $validity !=  1 ) {
+                //echo "validity == string1 ";
+            } else if( $validity ==  1 ) {
+                //echo "validity == true ";
+                $validity = self::STATUS_VALID;
+            } else {
+                //echo "else-validity == string ";
+            }
+            $onlyValid = " AND c.status='".$validity."'";
         }
 
         $extraStr = "";
@@ -326,7 +335,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //echo "find return single<br>";
                 return $query->getSingleResult();
             } else {
-                //echo "find return<br>";
+                //echo "find multi return<br>";
                 return $query->getResult();
             }
 
@@ -339,41 +348,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function deleteIfReserved( $fieldStr, $className, $fieldName, $extra = null ) {
 
         //echo "fieldStr=".$fieldStr." ";
-        $entity = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, null, true, $extra );
+        $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, self::STATUS_RESERVED, false, $extra );
+        //echo "found entities = ". count($entities). " ";
 
-        if( $entity ) {
-
-            //echo "found Status=".$entity->getStatus()." => ";
-            if( $entity->getStatus() == self::STATUS_RESERVED ) {
-                //echo "found id=".$entity->getId()." entity=".$entity." => ";
-                $em = $this->_em;
-
-                //delete created parents
-                if(0) { // $className == "Part" ) {
-                    $accession = $entity->getAccession();
-                    if( $accession->getStatus() == self::STATUS_RESERVED ) {
-                        $em->remove($accession);
-                    }
-                }
-                if(0) { //} $className == "Block" ) {
-                    $part = $entity->getPart();
-                    $accession = $part->getAccession();
-                    if( $accession->getStatus() == self::STATUS_RESERVED ) {
-                        $em->remove($accession);
-                    }
-                    if( $part->getStatus() == self::STATUS_RESERVED ) {
-                        $em->remove($part);
-                    }
-                }
-
-                $em->remove($entity);
-                $em->flush();
-                return true;
-            }
-        } else {
-            return false;
+        if( !$entities ) {
+            return 0;
         }
 
+        $removed = 0;
+        foreach( $entities as $entity ) {
+            $em = $this->_em;
+            $em->remove($entity);
+            $em->flush();
+            $removed++;
+        }
+        return $removed;
     }
 
     //$className: Patient
@@ -391,6 +380,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $fieldValue = $this->getNextNonProvided($entity,$extra);
         }
         //echo "fieldValue=".$fieldValue;
+
+        //before create: check if entity with key does not exists in DB
+//        $entityFound = $this->findOneByIdJoinedToField($fieldValue, $className, $fieldName, self::STATUS_RESERVED, true, $extra );
+//        if( $entityFound ) {
+//            return $entityFound;
+//        }
 
         $fieldEntityName = ucfirst($className).ucfirst($fieldName);
         $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
@@ -529,6 +524,20 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         return $newEntity;
+    }
+
+    public function printTree( $entity ) {
+
+        echo "print Tree: " . $entity;
+
+        foreach( $entity->getChildren() as $child ) {
+            if( count( $child->getChildren() ) == 0 ) {
+                echo "print Tree node: " . $child;
+            } else {
+                $this->printTree($child);
+            }
+        }
+
     }
 
 

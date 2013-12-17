@@ -955,26 +955,21 @@ function isKey(element, field) {
     }
 }
 
-function initAllElements() {
-//    if( type ) {
-//        if( type == 'single' ) {    //single form
-//
-//        } else {    //multi form
-            initAllMulti();
-//        }
-//    }
-}
 
-function initAllMulti() {
-    var check_btns = $("[id=check_btn]");
-    //console.log("check_btns.length="+check_btns.length);
-    for (var i = 0; i < check_btns.length; i++) {
-        var idArr = check_btns.eq(i).attr("id").split("_");
-        if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
-            check_btns.eq(i).attr('flag', 'done');
-            disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
+function initAllElements() {
+
+    if( cicle == "new" ) {
+        var check_btns = $("[id=check_btn]");
+        //console.log("check_btns.length="+check_btns.length);
+        for (var i = 0; i < check_btns.length; i++) {
+            var idArr = check_btns.eq(i).attr("id").split("_");
+            if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
+                check_btns.eq(i).attr('flag', 'done');
+                disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
+            }
         }
     }
+
 }
 
 //all: "all" => disable/enable all fields including key field
@@ -1744,12 +1739,14 @@ function setDataqualityData( index, accession, mrn, mrntype ) {
 }
 
 function cleanValidationAlert() {
-    $('#validationerror-added').each(function() {
-        $(this).remove();
-    });
-    $('#validationerror').html('')
-    dataquality_message1.length = 0;
-    dataquality_message2.length = 0;
+    if( cicle == "new" ) {
+        $('#validationerror-added').each(function() {
+            $(this).remove();
+        });
+        $('#validationerror').html('')
+        dataquality_message1.length = 0;
+        dataquality_message2.length = 0;
+    }
 }
 
 function addKeyListener() {

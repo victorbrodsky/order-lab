@@ -52,8 +52,6 @@ use Oleg\OrderformBundle\Helper\EmailUtil;
  */
 class MultyScanOrderController extends Controller {
 
-
-
     /**
      * Edit: If the form exists, use this function
      * @Route("/multi/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
@@ -167,7 +165,7 @@ class MultyScanOrderController extends Controller {
 
         if( 1 ) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processEntity( $entity, $type );
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type );
 
             if( isset($_POST['btnSave']) ) {
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             
@@ -197,9 +195,11 @@ class MultyScanOrderController extends Controller {
 
         }
 
+        //form always valid, so this will not be reached anyway
         return array(           
             'form'   => $form->createView(),
-            'type' => 'new'
+            'type' => 'new',
+            'multy' => 'multy'
         );    
     }    
     

@@ -343,7 +343,7 @@ class CheckController extends Controller {
         $accession = $request->get('parent'); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key );
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key, true );
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
@@ -462,7 +462,7 @@ class CheckController extends Controller {
         //echo "key=".$key."   ";
 
         if( $accession != "" && $partname != "" ) {
-            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key );
+            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key, true );
 
             //echo "count=".count($entity)."<br>";
             //echo "partname=".$entity->getPartname()->first()."<br>";

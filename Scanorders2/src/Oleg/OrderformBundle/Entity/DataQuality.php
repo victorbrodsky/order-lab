@@ -24,12 +24,12 @@ class DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="dataquality", cascade={"persist"})
-     * @ORM\JoinColumn(name="dataquality_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $orderinfo;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
