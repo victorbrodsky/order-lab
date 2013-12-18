@@ -30,13 +30,8 @@ abstract class ArrayFieldAbstract {
      */
     protected $provider;
 
-//    /**
-//     * validity - valid (1) or not valid
-//     * @ORM\Column(type="smallint", nullable=true)
-//     */
-//    protected $validity;
-
     /**
+     * status: valid, invalid
      * @ORM\Column(type="string", nullable=true)
      */
     protected $status;
@@ -113,30 +108,6 @@ abstract class ArrayFieldAbstract {
     {
         return $this->status;
     }
-
-//    /**
-//     * Set validity
-//     *
-//     * @param string $validity
-//     * @return ClinicalHistory
-//     */
-//    public function setValidity($validity)
-//    {
-//        $this->validity = $validity;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get validity
-//     *
-//     * @return string
-//     */
-//    public function getValidity()
-//    {
-//        return $this->validity;
-//    }
-
 
     /**
      * @param mixed $source

@@ -225,7 +225,7 @@ class Procedure extends OrderAbstract
     }
 
     public function createKeyField() {
-        $this->addEncounter( new ProcedureEncounter(1) );
+        $this->addEncounter( new ProcedureEncounter() );
         return $this->obtainKeyField();
     }
 

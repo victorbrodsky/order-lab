@@ -224,7 +224,7 @@ class Block extends OrderAbstract
     }
 
     public function createKeyField() {
-        $this->addBlockname( new BlockBlockname(1) );
+        $this->addBlockname( new BlockBlockname() );
         return $this->obtainKeyField();
     }
 

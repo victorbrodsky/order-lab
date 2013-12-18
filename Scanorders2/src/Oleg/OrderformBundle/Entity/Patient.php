@@ -435,10 +435,16 @@ class Patient extends OrderAbstract
 
     public function __toString()
     {
+        $mrns = ", mrnCount=".count($this->mrn).": ";
+        foreach( $this->mrn as $mrn ) {
+            $mrns = $mrns . $mrn->getField().",".$mrn->getMrntype()."(".$mrn->getStatus().",id=".$mrn->getId().")";
+        }
+
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().
         ", name=".$this->name->first().
-        ", orderinfo=".count($this->orderinfo)."<br>";
+        ", orderinfo=".count($this->orderinfo).
+        $mrns."<br>";
     }
 
 
@@ -480,7 +486,7 @@ class Patient extends OrderAbstract
     }
 
     public function createKeyField() {
-        $this->addMrn( new PatientMrn(1) );
+        $this->addMrn( new PatientMrn() );
         return $this->obtainKeyField();
     }
 
@@ -494,8 +500,8 @@ class Patient extends OrderAbstract
 //        }
         //echo "procedure count=".count($this->procedure)."<br>";
         foreach( $this->procedure as $procedure ) {
-            $acc1 = $entity->getChildren()->first()->getValidKeyfield();
-            $acc2 = $procedure->getChildren()->first()->getValidKeyfield();
+            $acc1 = $entity->getChildren()->first()->obtainValidKeyfield();
+            $acc2 = $procedure->getChildren()->first()->obtainValidKeyfield();
             //echo "compare: ".$acc1."?=".$acc2."<br>";
             if( $acc1."" == $acc2."" ) {
                 echo "exists!!! <br>";

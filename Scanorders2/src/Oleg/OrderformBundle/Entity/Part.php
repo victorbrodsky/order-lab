@@ -108,16 +108,21 @@ class Part extends OrderAbstract
 
     public function __toString()
     {
+        $partnameStr = ", partnameCount=".count($this->getPartname()).":";
+        foreach( $this->getPartname() as $partname ) {
+            $partnameStr = $partnameStr . $partname . "(". $partname->getStatus() . ", id=". $partname->getId().") ";
+        }
+
         return "Part: id=".$this->id.
         ", accessionId=".$this->getAccession()->getId().
-        ", partname=".$this->partname->first().
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
         ", disident=".$this->disident->first().
         ", paper=".$this->paper->first().
         ", diffDisident=".$this->diffDisident->first().
         ", blockCount=".count($this->block).
-        ", orderinfo=".count($this->orderinfo)."<br>";
+        ", orderinfo=".count($this->orderinfo).
+        $partnameStr."<br>";
     }
 
     public function getAccession() {
@@ -398,7 +403,16 @@ class Part extends OrderAbstract
     }
 
     public function getChildren() {
-        return $this->getBlock();
+        //echo "Part block count=".count($this->getBlock())."<br>";
+        //echo "Part slide count=".count($this->getSlide())."<br>";
+        if( count($this->getBlock()) > 0 ) {
+            return $this->getBlock();
+        } else if( count($this->getSlide()) > 0 ) {
+            return $this->getSlide();
+        } else {
+            //echo "return null!!! <br>";
+            return new ArrayCollection();
+        }
     }
 
     public function addChildren($child) {
@@ -419,7 +433,7 @@ class Part extends OrderAbstract
     }
 
     public function createKeyField() {
-        $this->addPartname( new PartPartname(1) );
+        $this->addPartname( new PartPartname() );
         return $this->obtainKeyField();
     }
 

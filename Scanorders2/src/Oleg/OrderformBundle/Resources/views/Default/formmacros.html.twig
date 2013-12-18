@@ -284,7 +284,9 @@
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace) }}</p>
+        {% if field.vars.value.status == 'valid' or cycle != "show" %}
+            <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace) }}</p>
+        {% endif %}
     {% endfor %}
     </div>
     </p>
@@ -469,13 +471,12 @@
 {% macro dataQualityWidget( field, cycle ) %}
     {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
 
-    {#{% if cycle == "new" %}#}
-        {% set styleOption = 'style="height: 205px;"' %}
-    {#{% else %}#}
-        {#{% set styleOption = '' %}#}
-    {#{% endif %}#}
+    {% if cycle == "new" %}
+        <div class="validationerror-added alert alert-danger" style="height: 210px;">
+    {% else %}
+        <div class="validationerror-added alert alert-danger">
+    {% endif %}
 
-    <div id="validationerror-added" class="alert alert-danger" style="height: 210px;">
         {{ form_errors(field) }}
         {% if cycle == "new" %}
             {{ form_label(field.btnoption) }}
@@ -504,6 +505,7 @@
 
         {{ form_rest(field) }}
     </div>
+
 {% endmacro %}
 
 

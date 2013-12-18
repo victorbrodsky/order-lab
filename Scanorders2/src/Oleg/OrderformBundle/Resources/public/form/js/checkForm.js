@@ -1524,7 +1524,6 @@ function validateForm() {
     var totalError = 0;
 
     //Initial check: get total number of checkboxes
-    //var unchecked = 0;
     var totalcheckboxes = 0;
 
     var reruncount = 0;
@@ -1533,45 +1532,50 @@ function validateForm() {
     //console.log( "dataquality_message2[0]="+dataquality_message2[0] );
 
     var countErrorBoxes = 0;
-    $('#validationerror').find('#validationerror-added').each(function() {
 
-        $(this).find('input').each(function() {
-            if( $(this).is(":checked") ){
-                console.log("checked value="+$(this).val());
-                if( $(this).val() == "OPTION3" ) {
+    var errorBoxes = $('#validationerror').find('.validationerror-added');
+    //console.log("errorBoxes.length="+errorBoxes.length);
+
+    for (var i = 0; i < errorBoxes.length; i++) {
+
+        var errorBox = errorBoxes.eq(i);
+
+        var checkedEl = errorBox.find("input:checked");
+        //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+
+            //console.log("value="+checkedEl.val());
+            if( checkedEl.is(":checked") ){
+                //console.log("checked value="+checkedEl.val());
+                if( checkedEl.val() == "OPTION3" ) {
                     reruncount++;
-
-                    //console.log( "countErrorBoxes="+countErrorBoxes+", dataquality_message1[]="+dataquality_message1[countErrorBoxes] );
-                    //setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
                 }
-                if( $(this).val() == "OPTION1" ) {
-                    //console.log( "countErrorBoxes="+countErrorBoxes+", dataquality_message1[]="+dataquality_message1[countErrorBoxes] );
+                if( checkedEl.val() == "OPTION1" ) {
                     setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
                 }
-                if( $(this).val() == "OPTION2" ) {
-                    //console.log( "countErrorBoxes="+countErrorBoxes+", dataquality_message2[]="+dataquality_message2[countErrorBoxes] );
+                if( checkedEl.val() == "OPTION2" ) {
                     setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
                 }
             } else {
-                //unchecked ++;
+                //
             }
             totalcheckboxes++;
-        });
 
         countErrorBoxes++;
 
-    });
+    }
 
     //clear array
     dataquality_message1.length = 0;
     dataquality_message2.length = 0;
 
-    console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
+    //console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
 
 
     if( totalcheckboxes == 0 ) {
         //continue
-    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option was chosen
+//    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
+//        cleanValidationAlert();
+    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
         cleanValidationAlert();
     } else {    //return true;
         //return false; //testing
@@ -1641,30 +1645,29 @@ function validateForm() {
                         mrnstring = data['mrnstring'];
                         orderinfo = data['orderinfo'];
 
-                        console.log('mrn='+mrn+', mrntype='+mrntype);
+                        //console.log('mrn='+mrn+', mrntype='+mrntype);
 
                         if( mrn == mrnValue && mrntype == mrntypeValue ) {
-                            console.log("validated successfully !");
+                            //console.log("validated successfully !");
                         } else {
-                            console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
-                            var message_short = "MRN-ACCESSION CONFLICT :<br>"+"Entered Accession Number "+accValue+" belongs to Patient with <b>"+mrnstring+"</b>, not Patient with <b>MRN "
-                                                +mrnValue+", "+mrntypeText+"</b> as you have entered.";
+                            var nl = "\n";    //"&#13;&#10;";
+
+                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
+                                                +mrnValue+", "+mrntypeText+" as you have entered.";
                             var message = message_short + " Please correct ether the MRN or the Accession Number above.";
 
 
-                            var message1 = "If you believe <b>MRN "+mrn+"</b> and <b>MRN "+mrnValue + "</b> belong to the same patient, please mark here:";
-                            var dataquality_message_1 = message_short+"<br>"+"I believe <b>MRN "+mrnstring+"</b> and <b>MRN "+mrnValue+", "+mrntypeText+"</b> belong to the same patient";
+                            var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
+                            var dataquality_message_1 = message_short+nl+"I believe MRN "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
                             dataquality_message1.push(dataquality_message_1);
 
-                            var message2 = "If you believe <b>Accession Number "+accValue+"</b> belongs to patient <b>MRN "+mrnValue+"</b> and not patient <b>MRN "+mrn+"</b> (as stated by "+orderinfo+"), please mark here:";
-                            var dataquality_message_2 = message_short+"<br>"+"I believe <b>Accession Number "+accValue+"</b> belongs to patient <b>MRN "+mrnValue+", "+mrntypeText+"</b> and not patient <b>MRN "+mrnstring+"</b> (as stated by "+orderinfo+")";
+                            var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
+                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient MRN "+mrnstring+" (as stated by "+orderinfo+")";
                             dataquality_message2.push(dataquality_message_2);
 
-                            var message3 = "If you have changed the involved <b>MRN "+mrnValue+"</b> or the <b>Accession Number "+accValue+"</b> in the form above, please mark here:";
-
-                            //var divBox = '<div id="validationerror-added" class="alert alert-danger">'+message+'<br><br>'+message1+message2+message3+'</div>';
-                            //$('#validationerror').append(divBox);
+                            var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";
 
                             if( !prototype ) {
                                 return false;
@@ -1707,7 +1710,7 @@ function validateForm() {
 
     });
 
-    console.log("totalError="+totalError);
+    //console.log("totalError="+totalError);
     //return false; //testing
 
     if( totalError == 0 ) {
@@ -1720,19 +1723,14 @@ function validateForm() {
 
 function setDataquality(index,message) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
-    console.log("message=" + message);
+    //console.log("message=" + message);
     $(partid+'description').val(message);
 }
-//function setDataquality_TODEL(element,message) {
-//    var descriptionInput = element.closest('#validationerror-added').find('.dataquality-description-class');
-//    console.log("descriptionInput id="+descriptionInput.attr("id")+", class="+descriptionInput.attr("class"));
-//    descriptionInput.val(message);
-//}
 
 
 function setDataqualityData( index, accession, mrn, mrntype ) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
-    console.log(accession + " " + mrn + " " + mrntype);
+    //console.log(accession + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'mrn').val(mrn);
     $(partid+'mrntype').val(mrntype);
@@ -1740,10 +1738,10 @@ function setDataqualityData( index, accession, mrn, mrntype ) {
 
 function cleanValidationAlert() {
     if( cicle == "new" ) {
-        $('#validationerror-added').each(function() {
+        $('.validationerror-added').each(function() {
             $(this).remove();
         });
-        $('#validationerror').html('')
+        //$('#validationerror').html('')
         dataquality_message1.length = 0;
         dataquality_message2.length = 0;
     }

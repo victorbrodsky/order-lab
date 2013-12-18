@@ -163,7 +163,7 @@ abstract class OrderAbstract
 
     //children methods
 
-    public function getValidChild()
+    public function obtainValidChild()
     {
         if( !$this->getChildren() ) {
             return null;
@@ -186,7 +186,7 @@ abstract class OrderAbstract
     }
 
     //return the key field with validity 1 or return a single existing key field
-    public function getValidKeyfield()
+    public function obtainValidKeyfield()
     {
         if( !$this->obtainKeyField() ) {
             return null;
@@ -196,30 +196,37 @@ abstract class OrderAbstract
             return $this->obtainKeyField()->first();
         }
 
-        $validChild = null;
+        $validField = null;
         $count = 0;
         $names = "";
         //echo "number of children=: ".count($this->getChildren())."<br>";
-        foreach( $this->obtainKeyField() as $child) {
-            //echo "get valid: ".$child."<br>";
-            if( $child->getStatus() == "valid" ) {
-                $validChild = $child;
+        foreach( $this->obtainKeyField() as $field) {
+            //echo "get field: status=".$field->getStatus().", field=".$field."<br>";
+            if( $field->getStatus() == "valid" ) {
+                //echo "child is valid!<br>";
+                $validField = $field;
                 $count++;
-                $names = $names . $child . " ";
+                $names = $names . $field . " ";
             }
         }
 
         if( $count > 1 ) {
-            $class = new \ReflectionClass($child);
+            $class = new \ReflectionClass($field);
             $className = $class->getShortName();
             throw new \Exception( 'This Object must have only one valid child. Number of valid children=' . $count . ", className=".$className.", names=".$names);
         }
 
-        return $validChild;
+        return $validField;
     }
 
     public function obtainAllKeyfield() {
         return $this->obtainKeyField();
+    }
+
+    public function setStatusAllKeyfield($status) {
+        foreach( $this->obtainKeyField() as $child) {
+            $child->setStatus($status);
+        }
     }
 
 }

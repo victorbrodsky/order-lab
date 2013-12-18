@@ -217,7 +217,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         }
     }
 
-    initAllMulti();
+    initAllElements();
 }
 
 //add children forms triggered by parent form

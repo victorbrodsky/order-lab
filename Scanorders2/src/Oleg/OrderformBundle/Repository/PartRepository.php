@@ -13,14 +13,16 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     public function attachToParentAndOrderinfo( $part, $block, $orderinfo ) {
         if( $block ) {
-            //echo "block id=".$block->getId()."<br>";
-            //echo $block;
-            if( !$block->getId() || $block->getId() == "" ) { //do it if the block is new
+            echo "block id=".$block->getId()."<br>";
+            echo $block;
+            if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) { //do it if the block is new
                 //echo "block slides=".count($block->getChildren())."<br>";
                 //add only if this block has slides
                 if( count($block->getChildren()) > 0 ) {
-                    //echo "block add slide<br>";
+                    echo "block has slides<br>";
                     $part->addChildren($block);
+                    //$children = $part->getChildren();
+                    //echo "part's blocCount=".count($part->getChildren())."<br>";
                     //$orderinfo->addBlock($block);
                 } else {
                     //remove block if it does not have any slides
@@ -44,9 +46,11 @@ class PartRepository extends ArrayFieldAbstractRepository
     }
 
     //override parent method to get next key string
-    public function getNextNonProvided($entity, $extra=null) {
+    public function getNextNonProvided( $entity, $extra=null ) {
         $accession= $entity->getParent();
-        $accessionNumber = $accession->getValidKeyfield()."";
+        echo $entity;
+        echo $accession;
+        $accessionNumber = $accession->obtainValidKeyfield()."";
         return $this->findNextPartnameByAccession( $accessionNumber );
     }
 
@@ -135,9 +139,9 @@ class PartRepository extends ArrayFieldAbstractRepository
     //override parent method to find unique entity in DB
     public function findUniqueByKey($entity) {
 
-        $partname = $entity->getValidKeyfield()."";
+        $partname = $entity->obtainValidKeyfield()."";
         $accession = $entity->getAccession();
-        $accessionNumber = $accession->getValidKeyfield()."";
+        $accessionNumber = $accession->obtainValidKeyfield()."";
 
         return $this->findOnePartByJoinedToField( $accessionNumber, $partname, true );
     }
@@ -164,7 +168,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             } else {
                 //echo "else-validity == string |";
             }
-            $onlyValid = " AND p.status='".$validity."'";
+            $onlyValid = " AND p.status='".$validity."' AND pfield.status='".self::STATUS_VALID."'";
         }
 
         $query = $this->getEntityManager()
@@ -210,7 +214,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         foreach( $parts as $part ) {
 
             //echo "remove duplication: partname=".$part->getPartname()->first()."<br>";
-            $thisName = $this->getValidField($part->getPartname());
+            $thisName = $this->obtainValidField($part->getPartname());
 
             if( count($names) == 0 || !in_array($thisName, $names) ) {
                 $names[] = $thisName;

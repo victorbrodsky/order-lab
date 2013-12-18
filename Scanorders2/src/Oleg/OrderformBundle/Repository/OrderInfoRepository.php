@@ -24,8 +24,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "patient name=".$patient->getName()->first()."<br>";
 //            echo "patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
 //            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
-              echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
-              echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
+//              echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
+//              echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
 //
 //            echo "patient count age=".count($patient->getAge())."<br>";
 //            foreach( $patient->getAge() as $age ) {
@@ -70,10 +70,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $dataquality->setProvider($entity->getProvider()->first());
             $dataquality->setStatus('active');
 
-            echo "dataquality: description=".$dataquality->getDescription()."<br>";
-            echo "dataquality: accession=".$dataquality->getAccession()."<br>";
-            echo "dataquality: mrn=".$dataquality->getMrn()."<br>";
-            echo "dataquality: mrn text=".$dataquality->getMrntype()."<br>";
+//            echo "dataquality: description=".$dataquality->getDescription()."<br>";
+//            echo "dataquality: accession=".$dataquality->getAccession()."<br>";
+//            echo "dataquality: mrn=".$dataquality->getMrn()."<br>";
+//            echo "dataquality: mrn text=".$dataquality->getMrntype()."<br>";
 
         } //foreach
 
@@ -99,10 +99,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 //            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
 //            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
-            echo $patient;
+            //echo $patient;
             echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
-            echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
+            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
+            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
+            echo "<br>--------------------------<br>";
             $this->printTree( $patient );
+            echo "--------------------------<br>";
         }
 
         //exit('orderinfo repo exit');

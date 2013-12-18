@@ -56,7 +56,7 @@ class Accession extends OrderAbstract {
     {
         $accNameStr = "";
         foreach( $this->accession as $accession ) {
-            $accNameStr = $accNameStr." ".$accession->getField();
+            $accNameStr = $accNameStr." ".$accession->getField()."(".$accession->getStatus().")";
         }
         return "Accession: id=".$this->id.", accessionCount=".count($this->accession).", accessions#=".$accNameStr.", partCount=".count($this->part).", status=".$this->status."<br>";
     }
@@ -185,6 +185,7 @@ class Accession extends OrderAbstract {
     }
 
     public function getChildren() {
+        echo "Accession part count=".count($this->getPart())."<br>";
         return $this->getPart();
     }
 
@@ -205,8 +206,8 @@ class Accession extends OrderAbstract {
         return "accession";
     }
 
-    public function createKeyField($status,$provider) {
-        $this->addAccession( new AccessionAccession($status,$provider) );
+    public function createKeyField() {
+        $this->addAccession( new AccessionAccession() );
         return $this->obtainKeyField();
     }
 

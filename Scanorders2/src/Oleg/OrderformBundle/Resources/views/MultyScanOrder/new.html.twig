@@ -78,6 +78,13 @@
 
     {#{{ formmacros.dataQualityWidget(form.dataquality)}}#}
 
+    {% if form.dataquality|length > 0 %}
+        <div class="alert alert-danger">
+            <p>This order contained an MRN-Accession Number association that conflicted with an already existing MRN-Accession Number association.</p>
+            <a href="#validationerror">Please see the note below for details.</a>
+        </div>
+    {% endif %}
+
     {############ START FORM ##############}
     <form id="scanorderform" action="{{ path(formpath) }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
@@ -157,7 +164,7 @@
 
       {% if type != 'show' %}
 
-          data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype)|e }}"
+          data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,type)|e }}"
 
          data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type, mrnHtml,nameHtml,sexHtml,dobHtml,ageHtml,clinicalhistoryHtml)|e }}"
 
@@ -395,8 +402,9 @@
 
     <div id="validationerror">
         {% for dataquality in form.dataquality %}
-            {#{{ form_widget(dataquality) }}#}
-            {{ formmacros.dataQualityWidget(dataquality,type) }}
+            <div class="validationerror-added alert alert-danger">
+                {{ formmacros.dataQualityWidget(dataquality,type) }}
+            </div>
         {% endfor %}
     </div>
 

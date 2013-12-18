@@ -40,20 +40,20 @@ class BlockRepository extends ArrayFieldAbstractRepository
     //override parent method to get next key string
     public function getNextNonProvided($entity, $extra=null) {
         $part= $entity->getParent();
-        $partname = $part->getValidKeyfield()."";
+        $partname = $part->obtainValidKeyfield()."";
         $accession= $part->getParent();
-        $accessionNumber = $accession->getValidKeyfield()."";
+        $accessionNumber = $accession->obtainValidKeyfield()."";
         return $this->findNextBlocknameByAccessionPartname( $accessionNumber, $partname );
     }
 
     //override parent method to find unique entity in DB
     public function findUniqueByKey($entity) {
 
-        $blockname = $entity->getValidKeyfield()."";
+        $blockname = $entity->obtainValidKeyfield()."";
         $part= $entity->getParent();
-        $partname = $part->getValidKeyfield()."";
+        $partname = $part->obtainValidKeyfield()."";
         $accession= $part->getParent();
-        $accessionNumber = $accession->getValidKeyfield()."";
+        $accessionNumber = $accession->obtainValidKeyfield()."";
 
         return $this->findOneBlockByJoinedToField( $accessionNumber, $partname, $blockname, true );
     }
@@ -82,7 +82,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
             } else {
                 //echo "else-validity == string ";
             }
-            $onlyValid = " AND b.status='".$validity."'";;
+            $onlyValid = " AND b.status='".$validity."' AND bfield.status='".self::STATUS_VALID."'";
         }
 
         $query = $this->getEntityManager()

@@ -168,7 +168,7 @@ class CheckController extends Controller {
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient(null, $user, $mrntype );
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-        //$entity->getValidKeyfield()->setMrntype($mrntype);
+        //$entity->obtainValidKeyfield()->setMrntype($mrntype);
         //echo "mrntype name = ".$entity->getMrn()->first()->getMrntype()." ";
 
         $element = array(
@@ -244,7 +244,7 @@ class CheckController extends Controller {
             $patient = $entity->getProcedure()->getPatient();
 
             if( $patient ) {
-                $parentKey = $patient->getValidKeyfield();
+                $parentKey = $patient->obtainValidKeyfield();
                 $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
                 $dateStr = $transformer->transform($parentKey->getCreationdate());
                 $mrnstring = 'MRN '.$parentKey.', '.$parentKey->getMrntype().' (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
@@ -394,7 +394,7 @@ class CheckController extends Controller {
             if( $part ) {
                 $user = $this->get('security.context')->getToken()->getUser();
                 $part->getPartname()->first()->setProvider($user);
-                //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
+                //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->obtainValidField($part->getPartname());
                 $element = array(
                     'id'=>$part->getId(),
                     'partname'=>$this->getArrayFieldJson($part->getPartname())
@@ -515,7 +515,7 @@ class CheckController extends Controller {
             //echo "partname=".$part->getPartname()."  ";
 
             if( $block ) {
-                //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->getValidField($part->getPartname());
+                //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->obtainValidField($part->getPartname());
                 $element = array(
                     'id'=>$block->getId(),
                     'blockname'=>$this->getArrayFieldJson($block->getBlockname())
