@@ -15,10 +15,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     //process orderinfo and all entities
     public function processOrderInfoEntity( $entity, $type ) {
 
-        echo "patients count=".count($entity->getPatient())."<br>";
-        $this->printTree( $entity->getPatient()->first() );
+//        echo "patients count=".count($entity->getPatient())."<br>";
+//        $this->printTree( $entity->getPatient()->first() );
 
-        foreach( $entity->getPatient() as $patient ) {
+//        foreach( $entity->getPatient() as $patient ) {
 //            echo "patient id=".$patient->getId()."<br>";
 //            echo "patient mrn=".$patient->getMrn()->first()."<br>";
 //            echo "patient name=".$patient->getName()->first()."<br>";
@@ -35,7 +35,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            foreach( $patient->getClinicalHistory() as $ch ) {
 //                echo "ch: id=".$ch->getId().", field=".$ch."<br>";
 //            }
-        }
+//        }
 //        exit();
 
         $em = $this->_em;
@@ -58,7 +58,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $em = $this->_em;
 
         $patients = $entity->getPatient();
-        echo $patients->first();
+        //echo $patients->first();
 
         //process data quality
         foreach( $entity->getDataquality() as $dataquality) {
@@ -93,20 +93,20 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->addPatient($patient);
         }
 
-        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-        foreach( $entity->getPatient() as $patient ) {
-//            echo 'patient provider='.$patient->getProvider()."<br>";
-//            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
-//            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
-//            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
-            //echo $patient;
-            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
-            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
-            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
-            echo "<br>--------------------------<br>";
-            $this->printTree( $patient );
-            echo "--------------------------<br>";
-        }
+//        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+//        foreach( $entity->getPatient() as $patient ) {
+////            echo 'patient provider='.$patient->getProvider()."<br>";
+////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
+////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
+////            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
+//            //echo $patient;
+//            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
+//            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
+//            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
+//            echo "<br>--------------------------<br>";
+//            $this->printTree( $patient );
+//            echo "--------------------------<br>";
+//        }
 
         //exit('orderinfo repo exit');
 
@@ -114,11 +114,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $em->flush();
 
         //clean empty blocks
+        //TODO: do it in part repository
         $blocks = $entity->getBlock();
         foreach( $blocks as $block ) {
             if( count($block->getSlide()) == 0 ) {
-                //echo "final remove block from orderinfo <br>";
-                //echo $block;
+                //echo "final remove block from orderinfo: ".$block;
                 $em->remove($block);
                 $em->flush();
             }

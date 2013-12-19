@@ -1660,11 +1660,11 @@ function validateForm() {
 
 
                             var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
-                            var dataquality_message_1 = message_short+nl+"I believe MRN "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
+                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
                             dataquality_message1.push(dataquality_message_1);
 
                             var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
-                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient MRN "+mrnstring+" (as stated by "+orderinfo+")";
+                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient "+mrnstring+" (as stated by "+orderinfo+")";
                             dataquality_message2.push(dataquality_message_2);
 
                             var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";

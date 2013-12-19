@@ -8,7 +8,7 @@ namespace Oleg\OrderformBundle\Helper;
  */
 class EmailUtil {
     
-    public function sendEmail( $email, $entity, $text = null ) {
+    public function sendEmail( $email, $entity, $text = null, $conflict=null ) {
 
         if( !$email || $email == "" ) {
             return false;
@@ -26,6 +26,10 @@ class EmailUtil {
             $message = $text;
         } else {
             $message = $thanks_txt;
+        }
+
+        if( $conflict ) {
+            $message = $message."\r\n\r\n".$conflict;
         }
 
         // In case any of our lines are larger than 70 characters, we should use wordwrap()

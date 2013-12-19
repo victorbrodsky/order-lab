@@ -26,6 +26,7 @@ class DataQualityType extends AbstractType
             $type = 'hidden';
             $labelDescr = false;
             $labelAccession = false;
+            $labelNewaccession = false;
             $labelMrn = false;
             $labelMrntype = false;
 
@@ -42,7 +43,8 @@ class DataQualityType extends AbstractType
 
             $type = null;
             $labelDescr = "MRN-ACCESSION CONFLICT";
-            $labelAccession = "Conflict Accession";
+            $labelAccession = "Conflict Accession#";
+            $labelNewaccession = "New Assigned Accession#";
             $labelMrn = "Conflict MRN";
             $labelMrntype = "Conflict MRN Type";
 
@@ -57,6 +59,11 @@ class DataQualityType extends AbstractType
             'label'=>$labelAccession,
             'attr'=>array('class'=>'dataquality-accession-class form-control form-control-modif')
         ));
+
+//        $builder->add( 'newaccession', $type, array(
+//            'label'=>$labelNewaccession,
+//            'attr'=>array('class'=>'dataquality-accession-class form-control form-control-modif')
+//        ));
 
         $builder->add( 'mrn', $type, array(
             'label'=>$labelMrn,

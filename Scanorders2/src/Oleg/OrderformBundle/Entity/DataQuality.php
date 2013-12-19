@@ -41,6 +41,11 @@ class DataQuality
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $newaccession;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $mrn;
 
     /**
@@ -236,5 +241,22 @@ class DataQuality
     {
         return $this->mrntype;
     }
+
+    /**
+     * @param mixed $newaccession
+     */
+    public function setNewaccession($newaccession)
+    {
+        $this->newaccession = $newaccession;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewaccession()
+    {
+        return $this->newaccession;
+    }
+
 
 }

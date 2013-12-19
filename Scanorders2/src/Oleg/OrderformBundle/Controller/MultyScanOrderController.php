@@ -173,16 +173,27 @@ class MultyScanOrderController extends Controller {
             }
 
             if( isset($_POST['btnSubmit']) ) {
+
+                $conflictStr = "";
+                foreach( $entity->getDataquality() as $dq ) {
+                    $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
+                }
+
                 //email
                 //$email = $this->get('security.context')->getToken()->getAttribute('email');
                 $user = $this->get('security.context')->getToken()->getUser();
                 $email = $user->getEmail();
-
                 $emailUtil = new EmailUtil();
-                $emailUtil->sendEmail( $email, $entity, null );
+                $emailUtil->sendEmail( $email, $entity, null, $conflictStr );
+
+                $conflicts = array();
+                foreach( $entity->getDataquality() as $dq ) {
+                    $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
+                }
 
                 return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                     'orderid' => $entity->getId(),
+                    'conflicts' => $conflicts
                 ));
             }
 

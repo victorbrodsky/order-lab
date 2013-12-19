@@ -405,22 +405,48 @@ class Part extends OrderAbstract
     public function getChildren() {
         //echo "Part block count=".count($this->getBlock())."<br>";
         //echo "Part slide count=".count($this->getSlide())."<br>";
-        if( count($this->getBlock()) > 0 ) {
-            return $this->getBlock();
-        } else if( count($this->getSlide()) > 0 ) {
-            return $this->getSlide();
-        } else {
-            //echo "return null!!! <br>";
-            return new ArrayCollection();
+
+        $children = new ArrayCollection();
+
+        foreach( $this->getBlock() as $block ) {
+            $children->add($block);
         }
+
+        foreach( $this->getSlide() as $slide ) {
+            $children->add($slide);
+        }
+
+        return $children;
     }
 
     public function addChildren($child) {
-        $this->addBlock($child);
+        $childClass = new \ReflectionClass($child);
+        $childClassName = $childClass->getShortName();
+        if( $childClassName == "Block" ) {
+            //echo "add  Block <br>";
+            $this->addBlock($child);
+        } else
+        if( $childClassName == "Slide") {
+            //echo "add  Slide <br>";
+            $this->addSlide($child);
+        } else {
+            throw new \Exception('Part can not add object of the class ' . $childClassName );
+        }
     }
 
     public function removeChildren($child) {
-        $this->removeBlock($child);
+        $childClass = new \ReflectionClass($child);
+        $childClassName = $childClass->getShortName();
+        if( $childClassName == "Block" ) {
+            //echo "remove  Block <br>";
+            $this->removeBlock($child);
+        } else
+        if( $childClassName == "Slide") {
+            //echo "remove  Slide <br>";
+            $this->removeSlide($child);
+        } else {
+            throw new \Exception('Part can not remove object of the class ' . $childClassName );
+        }
     }
 
     //don't use 'get' because later repo functions relay on "get" keyword

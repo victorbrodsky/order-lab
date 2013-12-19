@@ -12,14 +12,23 @@ class PartRepository extends ArrayFieldAbstractRepository
 {
 
     public function attachToParentAndOrderinfo( $part, $block, $orderinfo ) {
+
+        $childClass = new \ReflectionClass($block);
+        $childClassName = $childClass->getShortName();
+        //echo "childClassName=".$childClassName."<br>";
+        if( $childClassName == "Slide" ) {
+            parent::attachToParentAndOrderinfo( $part, $block, $orderinfo );
+            return;
+        }
+
         if( $block ) {
-            echo "block id=".$block->getId()."<br>";
-            echo $block;
-            if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) { //do it if the block is new
+            //echo $block;
+            //do it, if the block is new. If nlock has ID then it was found in DB and it was created by someone else.
+            if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) {
                 //echo "block slides=".count($block->getChildren())."<br>";
                 //add only if this block has slides
                 if( count($block->getChildren()) > 0 ) {
-                    echo "block has slides<br>";
+                    //echo "block has slides<br>";
                     $part->addChildren($block);
                     //$children = $part->getChildren();
                     //echo "part's blocCount=".count($part->getChildren())."<br>";
@@ -32,29 +41,29 @@ class PartRepository extends ArrayFieldAbstractRepository
                     //TODO: remove block here. Now the block is removed in order repo
                     $part->removeBlock($block);
                     $block->setPart(null);
-                    //$part->clearBlock();
 
-//                    $em = $this->_em;
+                    //$em = $this->_em;
 //                    $em->persist($block);
-//                    $em->remove($block);
+                    //$em->remove($block);
                     //$block = null;
                 }
             }
             //echo $block;
             $orderinfo->addBlock($block);
         }
+
     }
 
     //override parent method to get next key string
-    public function getNextNonProvided( $entity, $extra=null ) {
+    public function getNextNonProvided( $entity, $extra=null, $orderinfo=null ) {
         $accession= $entity->getParent();
-        echo $entity;
-        echo $accession;
+        //echo $entity;
+        //echo $accession;
         $accessionNumber = $accession->obtainValidKeyfield()."";
-        return $this->findNextPartnameByAccession( $accessionNumber );
+        return $this->findNextPartnameByAccession( $accessionNumber, $orderinfo );
     }
 
-    public function findNextPartnameByAccession( $accessionNumber ) {
+    public function findNextPartnameByAccession( $accessionNumber, $orderinfo=null ) {
         if( !$accessionNumber || $accessionNumber == "" ) {
             return null;
         }
@@ -76,7 +85,27 @@ class PartRepository extends ArrayFieldAbstractRepository
         $lastFieldStr = $lastField[$index];
         //echo "lastFieldStr=".$lastFieldStr."<br>";
 
-        return $this->getNextByMax($lastFieldStr, $name);
+        //return $this->getNextByMax($lastFieldStr, $name);
+        $maxKey = $this->getNextByMax($lastFieldStr, $name);
+
+        //check if the valid bigger key was already assigned to the element of the same class attached to this order
+        if( $orderinfo ) {
+            $className = "Part";
+            $getSameEntity = "get".$className;
+            foreach( $orderinfo->$getSameEntity() as $same ) {
+                if( $same->getStatus() == self::STATUS_VALID ) {
+                    $key = $same->obtainValidKeyfield();
+                    $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);
+                    if( $newBiggerKey != -1 ) {
+                        $maxKey = $newBiggerKey;
+                    }
+                }
+            }
+        }
+
+        //return $this->getNextByMax($lastFieldStr, $name);
+        return $maxKey;
+
     }
 
     //create new Part by provided accession number

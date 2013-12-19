@@ -185,7 +185,6 @@ class Accession extends OrderAbstract {
     }
 
     public function getChildren() {
-        echo "Accession part count=".count($this->getPart())."<br>";
         return $this->getPart();
     }
 

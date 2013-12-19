@@ -18,7 +18,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
     //replace field entity if not existed from source object to destination object
-    public function copyField( $entity, $field, $className, $methodName, $original=null ) {
+    public function copyField( $entity, $field, $className, $methodName, $fields ) {
         $em = $this->_em;
         //echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
 
@@ -29,7 +29,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             //echo "count foundFields=".count($foundFields)."<br>";
             foreach( $foundFields as $thisField ) {
                 //echo "mrntype ids compare: ".$thisField->getMrntype()->getId() . "?=" . $field->getMrntype()->getId() . "<br>";
-                if( $thisField->getMrntype()->getId() == $field->getMrntype()->getId() ) {
+                if( $thisField->getMrntype()->getId() == $field->getMrntype()->getId() && $thisField->getStatus() == self::STATUS_VALID ) {
                     //this field is already exists in entity => don't add this field
                     return $entity;
                 }
@@ -67,10 +67,6 @@ class PatientRepository extends ArrayFieldAbstractRepository
         $mrns = array();
 
         foreach( $patients as $patient ) {
-
-//            foreach( $patient->getClinicalHistory() as $hist ) {
-//                echo "hist id=".$hist->getId()."<br>";
-//            }
 
             $mrn = $patient->getMrn();
 

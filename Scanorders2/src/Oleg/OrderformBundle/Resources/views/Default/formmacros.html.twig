@@ -489,21 +489,19 @@
         {{ form_widget(field.description) }}
 
         {% if cycle == "show" %}
-            {{ form_label(field.accession) }}
+            <br>
+            Conflict Resolved by Replacement:<br>
+            <b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>
+            <br>
         {% endif %}
-        {{ form_widget(field.accession) }}
 
-        {% if cycle == "show" %}
-            {{ form_label(field.mrn) }}
+        {% if cycle == "new" %}
+            {{ form_widget(field.accession) }}
+            {{ form_widget(field.mrn) }}
+            {{ form_widget(field.mrntype) }}
         {% endif %}
-        {{ form_widget(field.mrn) }}
 
-        {% if cycle == "show" %}
-            {{ form_label(field.mrntype) }}
-        {% endif %}
-        {{ form_widget(field.mrntype) }}
-
-        {{ form_rest(field) }}
+        {#{{ form_rest(field) }}#}
     </div>
 
 {% endmacro %}

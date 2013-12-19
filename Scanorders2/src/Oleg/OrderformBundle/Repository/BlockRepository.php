@@ -22,7 +22,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         //reattach slide to part if it is Cytopathology
         if( (!$slide->getId() || $slide->getId() == "") &&  //only new slides
-            $slide->getSlidetype() == "Cytopathology"
+            $slide->getSlidetype() == "Cytopathology"       //&& only Cytopathology slides
         ) {
             //echo "Cytopathology => attach slide to part<br>";
             $part = $block->getParent();
@@ -38,12 +38,12 @@ class BlockRepository extends ArrayFieldAbstractRepository
     }
 
     //override parent method to get next key string
-    public function getNextNonProvided($entity, $extra=null) {
+    public function getNextNonProvided($entity, $extra=null, $orderinfo=null) {
         $part= $entity->getParent();
         $partname = $part->obtainValidKeyfield()."";
         $accession= $part->getParent();
         $accessionNumber = $accession->obtainValidKeyfield()."";
-        return $this->findNextBlocknameByAccessionPartname( $accessionNumber, $partname );
+        return $this->findNextBlocknameByAccessionPartname( $accessionNumber, $partname, $orderinfo );
     }
 
     //override parent method to find unique entity in DB
@@ -158,7 +158,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         return $block;
     }
 
-    public function findNextBlocknameByAccessionPartname( $accessionNumber, $partname ) {
+    public function findNextBlocknameByAccessionPartname( $accessionNumber, $partname, $orderinfo=null ) {
         if( !$accessionNumber || $accessionNumber == "" ) {
             return null;
         }
@@ -185,7 +185,27 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $lastFieldStr = $lastField[$index];
         //echo "lastFieldStr=".$lastFieldStr."<br>";
         
-        return $this->getNextByMax($lastFieldStr, $name);
+        //return $this->getNextByMax($lastFieldStr, $name);
+
+        $maxKey = $this->getNextByMax($lastFieldStr, $name);
+
+        //check if the valid bigger key was already assigned to the element of the same class attached to this order
+        if( $orderinfo ) {
+            $className = "Block";
+            $getSameEntity = "get".$className;
+            foreach( $orderinfo->$getSameEntity() as $same ) {
+                if( $same->getStatus() == self::STATUS_VALID ) {
+                    $key = $same->obtainValidKeyfield();
+                    $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);
+                    if( $newBiggerKey != -1 ) {
+                        $maxKey = $newBiggerKey;
+                    }
+                }
+            }
+        }
+
+        //return $this->getNextByMax($lastFieldStr, $name);
+        return $maxKey;
     }
 
     //filter out duplicate virtual (in form, not in DB) blocks from a part

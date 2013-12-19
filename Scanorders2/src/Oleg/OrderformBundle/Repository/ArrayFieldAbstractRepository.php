@@ -35,8 +35,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-        $fieldName = $entity->obtainKeyFieldName();
-        echo "<br>processEntity className=".$className.", fieldName=".$fieldName."<br>";
+        //$fieldName = $entity->obtainKeyFieldName();
+        //echo "<br>processEntity className=".$className.", fieldName=".$fieldName."<br>";
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
         //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
@@ -46,8 +46,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $keys = $entity->obtainAllKeyfield();
 
-        echo "count keys=".count($keys)."<br>";
-        echo "key=".$keys->first()."<br>";
+        //echo "count keys=".count($keys)."<br>";
+        //echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
             $entity->createKeyField();  //this should never execute in normal situation
@@ -61,9 +61,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
         if( $key == ""  ) {
-            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
-            $nextKey = $this->getNextNonProvided($entity);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
             //we should have only one key field !!!
             $key->setField($nextKey);
@@ -76,7 +76,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $found = $this->findUniqueByKey($entity);
 
             if( $found ) {
-                echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
+                //echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
                 //CopyChildren
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -88,7 +88,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+                //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
             }
 
         }
@@ -104,7 +104,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $em = $this->_em;
 
-        echo "Set Result for entity:".$entity;
+        //echo "Set Result for entity:".$entity;
 
         $children = $entity->getChildren();
 
@@ -114,7 +114,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //CopyFields
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
 
-        echo "After process fields:".$entity;
+        //echo "After process fields:".$entity;
 
         //echo "count of children=".count($children)."<br>";
 
@@ -122,7 +122,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $childClass = new \ReflectionClass($child);
             $childClassName = $childClass->getShortName();
-            //echo "childClassName=".$childClassName."<br>";
+            //echo $className.": childClassName=".$childClassName."<br>";
 
             $entity->removeChildren($child);
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
@@ -147,7 +147,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //set provider
         $entity->setProvider($orderinfo->getProvider()->first());
 
-        echo "Finish Set Result for entity:".$entity;
+        //echo "Finish Set Result for entity:".$entity;
 
         return $entity;
     }
@@ -191,11 +191,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $methodShortName = $method_name->getShortName();    //getMrn
 
-            if( strpos($methodShortName,'get') !== false ) {    //&& $methodShortName != 'getId' ) { //filter in only "get" methods
+            if( strpos($methodShortName,'get') !== false ) {    //filter in only "get" methods
 
                 //echo "methodShortName=".$methodShortName."<br>";
 
                 $this->log->addInfo( " method=".$methodShortName."=>" );
+
+                //get array of fields (i.e. getMrn, getClinicalHistory ... )
                 if( $original ) {
                     $fields = $original->$methodShortName();
                 } else {
@@ -231,7 +233,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                                     //Change status only and continue to the next field
                                     if( $status ) {
-                                        echo "2 change status to (".$status.") <br>";
+                                        //echo "2 change status to (".$status.") <br>";
                                         $field->setStatus($status);
                                         continue;
                                     }
@@ -247,7 +249,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     if( !$validitySet ) {
                                         $this->log->addInfo( "methodShortName=".$methodShortName."<br>" );
                                         if( !$entity->obtainValidKeyfield() ) { //set valid if none of the filed has valid status already
-                                            echo "Set status to ".self::STATUS_VALID." to field".$field."<br>";
+                                            //echo "Set status to ".self::STATUS_VALID." to field".$field."<br>";
                                             $field->setStatus(self::STATUS_VALID);
                                         }
                                         $validitySet = true;    //indicate that status is already has been set in this field array
@@ -256,18 +258,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                                     //############# copy processed field from submitted object (original) to found entity in DB
                                     if( $original ) {
-                                        echo "entity:".$entity;
-                                        echo "original:".$original;
-                                        echo "field=".$field."<br>";
+//                                        echo "entity:".$entity;
+//                                        echo "original:".$original;
+//                                        echo "field=".$field."<br>";
                                         $this->log->addInfo( "original yes: field=".$field."<br>" );
                                         $methodBaseName = str_replace("get", "", $methodShortName);
-                                        $entity = $this->copyField( $entity, $field, $className, $methodBaseName, $original );
+                                        $entity = $this->copyField( $entity, $field, $className, $methodBaseName, $fields );
                                     }
                                 }
-
-                                //echo " end mrn provider=".$entity->getMrn()->first()->getProvider().", count=".count($entity->getMrn());
-                                //echo "end name provider=".$entity->getName()->first()->getProvider().", count=".count($entity->getname())." <br>";
-                                //echo " end provider=".$field->getProvider()." <br><br>";
 
                         } //if object && is_subclass_of
 
@@ -284,30 +282,38 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //replace field entity if not existed from source object to destination object
     //field id is null if check button is not pressed, in this case all fields are gray
     //if entity is found in DB, then all fields have ID, if not then this function is not executed, because processFieldArrays has original=null
-    public function copyField( $entity, $field, $className, $methodName, $original=null ) {
+    public function copyField( $entity, $field, $className, $methodName, $fields ) {
         $em = $this->_em;
-        echo "copyField!!!: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        //echo "copyField!!!: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
 
-        //if id=null, check if entity already has mrn field (mrn+mrntype)
-        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
-            //TODO: use findOneByIdJoinedToField() method; now we have complex find cases: mrn+mrnttype, part+accession, block+part+accession
-            $foundField = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneByField($field.""); //now it looks for partname "A" in PartPartname DB
-            if( $foundField ) {
-                echo "found field by field name=>don't add field <br>";
+//        //if id=null, check if entity already has mrn field (mrn+mrntype)
+//        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
+//            //TODO: use findOneByIdJoinedToField() method; now we have complex find cases: mrn+mrnttype, part+accession, block+part+accession
+//            $foundField = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneByField($field.""); //now it looks for partname "A" in PartPartname DB
+//            if( $foundField ) {
+//                echo "found field by field name=>don't add field <br>";
+//                return $entity;
+//            }
+//        }
+//
+//        //if we reach this point, then now we have $field->getId(), exception - if not
+//        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
+//            throw new \Exception( 'Object '.$className.' does not have ID for field:'.$methodName );
+//        }
+
+        //add only if the field array does not already contain this valid field (by field name)
+        foreach( $fields as $thisField ) {
+            if( $thisField."" == $field."" && $thisField->getStatus() == self::STATUS_VALID ) {
+                //echo "found valid field by field name => don't add field <br>";
                 return $entity;
             }
-        }
-
-        //if we reach this point, then now we have $field->getId(), exception - if not
-        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
-            throw new \Exception( 'Object '.$className.' does not have ID for field:'.$methodName );
         }
 
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
 
         if( !$found ) {
-            echo( "### ".$methodName." not found !!!!!! => add <br>" );
-            $addMethodName = "add".$methodName;
+            //echo( "### ".$methodName." not found !!!!!! => add <br>" );
+            $addMethodName = "add".$methodName; //i.e. addMrn
             $entity->$addMethodName( $field );
         } else {
             //
@@ -398,7 +404,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = new $entityClass();
 
         if( !$fieldValue ) {
-            $fieldValue = $this->getNextNonProvided($entity,$extra);
+            $fieldValue = $this->getNextNonProvided($entity,$extra,null);
         }
         //echo "fieldValue=".$fieldValue;
 
@@ -455,7 +461,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$name: NOMRNPROVIDED
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
-    public function getNextNonProvided( $entity, $extra=null ) { //$name, $className, $fieldName ) {
+    public function getNextNonProvided( $entity, $extra=null, $orderinfo=null ) { //$name, $className, $fieldName ) {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
@@ -489,10 +495,27 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $index = 'max'.$fieldName;
         $lastFieldStr = $lastField[$index];
         //echo "lastFieldStr=".$lastFieldStr."<br>";
-        $fieldIndexArr = explode("-",$lastFieldStr);
+        //$fieldIndexArr = explode("-",$lastFieldStr);
         //echo "count=".count($fieldIndexArr)."<br>";
-        
-        return $this->getNextByMax($lastFieldStr, $name);
+
+        $maxKey = $this->getNextByMax($lastFieldStr, $name);
+
+        //check if the valid bigger key was already assigned to the element of the same class attached to this order
+        if( $orderinfo ) {
+            $getSameEntity = "get".$className;
+            foreach( $orderinfo->$getSameEntity() as $same ) {
+                if( $same->getStatus() == self::STATUS_VALID ) {
+                    $key = $same->obtainValidKeyfield()->getField()."";
+                    $newBiggerKey = $this->getBiggerKey($maxKey,$key,$name);
+                    if( $newBiggerKey != -1 ) {
+                        $maxKey = $newBiggerKey;
+                    }
+                }
+            }
+        }
+        //echo "maxKey=".$maxKey."<br>";
+        //return $this->getNextByMax($lastFieldStr, $name);
+        return $maxKey;
     }
     
     public function getNextByMax( $lastFieldStr, $name ) {
@@ -508,6 +531,41 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "paddedfield=".$paddedfield."<br>";
         //exit();
         return $name.'-'.$paddedfield;
+    }
+
+    //compare two keys:
+    //$keyDb: generated from DB: NOMRNPROVIDED-0000000001
+    //$key  : key founded in the entity
+    public function getBiggerKey( $keyDb, $key, $name ) {
+
+        //echo "get bigger key:".$keyDb." == ".$key.", name=".$name."<br>";
+
+        if( strpos($keyDb,$name) === false || strpos($key,$name) === false ) {
+            //echo "keys are not generated<br>";
+            return -1;
+        }
+
+        $fieldIndexArrDb = explode("-",$keyDb);
+        $intKeyDb = intval($fieldIndexArrDb[1]);
+
+        $fieldIndexArr = explode("-",$key);
+        $intKey = intval($fieldIndexArr[1]);
+
+        if( $intKeyDb == $intKey ) {
+            //echo "keys equal<br>";
+            return $this->getNextByMax( $keyDb, $name );
+        } else
+        if( $intKeyDb > $intKey ) {
+            //echo "DBkey > key <br>";
+            return $keyDb;
+        } else
+        if( $intKeyDb < $intKey ) {
+            //echo "DBkey < key <br>";
+            return $this->getNextByMax( $key, $name ); //increment key by one
+        } else {
+            throw new \Exception('Can not compare keys:'.$intKeyDb." and ".$intKey);
+        }
+
     }
 
     //check if the entity with its field is existed in DB
