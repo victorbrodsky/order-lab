@@ -42,16 +42,9 @@ class SourceOrganTransformer implements DataTransformerInterface
         if (null === $entity) {
             return "";
         }
-//
-        return $entity->getName();
 
-//        $array = new \Doctrine\Common\Collections\ArrayCollection();
-//
-//        if( null === $entity->toArray() ) {
-//            return $array;
-//        }
-//        return $array;
-
+//        return $entity->getName();
+        return $entity->getId();
     }
 
     /**

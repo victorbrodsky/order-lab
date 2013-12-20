@@ -95,8 +95,8 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $key = $request->get('key');
-        $mrntype = $request->get('extra');
+        $key = trim( $request->get('key') );
+        $mrntype = trim( $request->get('extra') );
         $extra = array();
         $extra["mrntype"] = $mrntype;
         //echo "key=".$key.", mrntype=".$mrntype."; ";
@@ -149,7 +149,7 @@ class CheckController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $request = $this->get('request');
-        $mrntype = $request->get('key');
+        $mrntype = trim( $request->get('key') );
 
         $extra = array();
         $extra["mrntype"] = $mrntype;
@@ -201,8 +201,8 @@ class CheckController extends Controller {
 //        $key = $arr[0];
 //        $mrntype = $arr[1];
 
-        $key = $request->get('key');
-        $mrntype = $request->get('extra');
+        $key = trim( $request->get('key') );
+        $mrntype = trim( $request->get('extra') );
 
         $extra = array();
         $extra["mrntype"] = $mrntype;
@@ -232,7 +232,7 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $key = $request->get('key');
+        $key = trim( $request->get('key') );
 
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true, true);
 
@@ -317,7 +317,7 @@ class CheckController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('OlegOrderformBundle:Accession')->deleteIfReserved( $key,"Accession","accession" );
+        $res = $em->getRepository('OlegOrderformBundle:Accession')->deleteIfReserved( trim($key),"Accession","accession" );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -339,8 +339,8 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $key = $request->get('key');
-        $accession = $request->get('parent'); //need accession number to check if part exists in DB
+        $key = trim( $request->get('key') );
+        $accession = trim( $request->get('parent') ); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key, true );
@@ -382,7 +382,7 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $accession = $request->get('key');
+        $accession = trim( $request->get('key') );
         //echo "accession=(".$accession.")   ";
 
         if( $accession && $accession != ""  ) {
@@ -425,8 +425,8 @@ class CheckController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-        $key = $request->get('key');
-        $accession = $request->get('accession');
+        $key = trim( $request->get('key') );
+        $accession = trim( $request->get('accession') );
 
         $extra = array();
         $extra["accession"] = $accession;
@@ -456,9 +456,9 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $key = $request->get('key');
-        $accession = $request->get('parent'); //need accession number to check if part exists in DB
-        $partname = $request->get('parent2'); //need accession number to check if part exists in DB
+        $key = trim($request->get('key'));
+        $accession = trim($request->get('parent')); //need accession number to check if part exists in DB
+        $partname = trim($request->get('parent2')); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
         if( $accession != "" && $partname != "" ) {
@@ -499,8 +499,8 @@ class CheckController extends Controller {
         }
 
         $request = $this->get('request');
-        $accession = $request->get('key');
-        $partname = $request->get('key2');
+        $accession = trim($request->get('key'));
+        $partname = trim($request->get('key2'));
         //echo "accession=(".$accession.")   ";
 
         if( $accession != "" && $partname != "" ) {
@@ -546,9 +546,9 @@ class CheckController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-        $key = $request->get('key');
-        $accession = $request->get('accession');
-        $partname = $request->get('partname');
+        $key = trim($request->get('key'));
+        $accession = trim($request->get('accession'));
+        $partname = trim($request->get('partname'));
 
         $extra = array();
         $extra["accession"] = $accession;

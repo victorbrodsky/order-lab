@@ -93,8 +93,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->addPatient($patient);
         }
 
-//        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-//        foreach( $entity->getPatient() as $patient ) {
+        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+        foreach( $entity->getPatient() as $patient ) {
 ////            echo 'patient provider='.$patient->getProvider()."<br>";
 ////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 ////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
@@ -103,12 +103,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
 //            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
 //            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
-//            echo "<br>--------------------------<br>";
-//            $this->printTree( $patient );
-//            echo "--------------------------<br>";
-//        }
+            echo "<br>--------------------------<br>";
+            $this->printTree( $patient );
+            echo "--------------------------<br>";
+        }
 
-        //exit('orderinfo repo exit');
+        exit('orderinfo repo exit');
 
         $em->persist($entity);
         $em->flush();

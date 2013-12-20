@@ -39,11 +39,19 @@ class StainTransformer implements DataTransformerInterface
      */
     public function transform($stain)
     {
+
         if (null === $stain) {
             return "";
         }
 
-        return $stain->getName();
+        //echo "data transformer stain=".$stain."<br>";
+
+        if( is_int($stain) ) {
+            $stain = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneById($stain);
+            //echo "findOneById stain=".$stain."<br>";
+        }
+
+        return $stain->getId();
     }
 
     /**

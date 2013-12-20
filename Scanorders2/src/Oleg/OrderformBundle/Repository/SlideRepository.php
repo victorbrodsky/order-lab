@@ -21,6 +21,18 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         if( $orderinfo == null ) {
             return $slide;
         }
+
+        $slide->setProvider($orderinfo->getProvider()->first());
+
+        $scans = $slide->getScan();
+        foreach( $scans as $scan ) {
+            $scan->setProvider($orderinfo->getProvider()->first());
+        } //scan
+
+        $stains = $slide->getStain();
+        foreach( $stains as $stain ) {
+            $scan->setProvider($orderinfo->getProvider()->first());
+        } //stain
         
         return $slide;
     }

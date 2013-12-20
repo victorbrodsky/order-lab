@@ -22,11 +22,14 @@ class PartSourceOrganType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
-        } else {
-            $attr = array('class' => 'form-control form-control-modif');    //show
-        }
+//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+//            $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');    //new
+//        } else {
+//            $attr = array('class' => 'form-control form-control-modif');    //show
+//        }
+
+        $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');
+
         $builder->add('field', 'custom_selector', array(
             'label' => 'Source Organ',
             'attr' => $attr,

@@ -25,18 +25,19 @@ class ScanType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $helper = new FormHelper();
-        
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-scanregion', 'type' => 'hidden');    //new
-        } else {
-            $attr = array('class' => 'form-control form-control-modif');    //show
-        }
-        $builder->add('scanregion', 'custom_selector', array(
+
+        //scanregion
+        $attr = array('class' => 'ajax-combobox-scanregion', 'type' => 'hidden');
+        $options = array(
             'label' => 'Region to scan:',
             'max_length'=>500,
             'attr' => $attr,
             'classtype' => 'scanRegion'
-        ));
+        );
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+            $options['data'] = 'Entire Slide';
+        }
+        $builder->add('scanregion', 'custom_selector', $options);
 
         //mag
         $magArr = array(

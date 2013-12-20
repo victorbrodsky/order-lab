@@ -26,17 +26,19 @@ class StainType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-stain', 'type' => 'hidden');    //new
-        } else {
-            $attr = array('class' => 'form-control form-control-modif');    //show
-        }
-        $builder->add('field', 'custom_selector', array(
+        $attr = array('class' => 'ajax-combobox-stain', 'type' => 'hidden');
+        $options = array(
             'label' => '* Stain:',
             'required' => true,
             'attr' => $attr,
-            'classtype' => 'stain'
-        ));
+            'classtype' => 'stain',
+        );
+
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+            $options['data'] = 1; //new
+        }
+
+        $builder->add('field', 'custom_selector', $options);
 
         $builder->add('stainothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Stain',

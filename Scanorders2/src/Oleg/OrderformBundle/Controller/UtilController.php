@@ -26,39 +26,47 @@ class UtilController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQuery(
-            'SELECT stain.id as id, stain.name as text
-            FROM OlegOrderformBundle:StainList stain WHERE stain.type = :type'
-        )->setParameter('type', 'default');
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
 
-        $output = $query->getResult();
+        //echo "opt=".$opt."<br>";
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:StainList', 'stain')
+            ->select("stain.id as id, stain.name as text");
 
-    /**
-     * @Route("/staintype", name="get-staintype")
-     * @Method("GET")
-     */
-    public function getStainTypeAction() {
+        if( $opt ) {
+            $query->where('stain.type = :type')->setParameter('type', 'default');
+        }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQuery(
-            'SELECT stain.id as id, stain.name as text
-            FROM OlegOrderformBundle:StainList stain WHERE stain.type = :type'
-        )->setParameter('type', 'default');
-
-        $output = $query->getResult();
+        $output = $query->getQuery()->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
         return $response;
     }
+
+//    /**
+//     * @Route("/staintype", name="get-staintype")
+//     * @Method("GET")
+//     */
+//    public function getStainTypeAction() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $query = $em->createQuery(
+//            'SELECT stain.id as id, stain.name as text
+//            FROM OlegOrderformBundle:StainList stain WHERE stain.type = :type'
+//        )->setParameter('type', 'default');
+//
+//        $output = $query->getResult();
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
@@ -69,14 +77,27 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQuery(
-            'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:ProcedureList proc WHERE proc.type = :type'
-        )->setParameter('type', 'default');
+//        $query = $em->createQuery(
+//            'SELECT proc.id as id, proc.name as text
+//            FROM OlegOrderformBundle:ProcedureList proc WHERE proc.type = :type'
+//        )->setParameter('type', 'default');
+//
+//        //$empty = array("id"=>0,"text"=>"");
+//        $output = $query->getResult();
+//        //array_unshift($output, $empty);
 
-        //$empty = array("id"=>0,"text"=>"");
-        $output = $query->getResult();
-        //array_unshift($output, $empty);
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:ProcedureList', 'e')
+            ->select("e.id as id, e.name as text");
+
+        if( $opt ) {
+            $query->where('e.type = :type')->setParameter('type', 'default');
+        }
+
+        $output = $query->getQuery()->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -92,14 +113,27 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQuery(
-            'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:OrganList proc WHERE proc.type = :type'
-        )->setParameter('type', 'default');
+//        $query = $em->createQuery(
+//            'SELECT proc.id as id, proc.name as text
+//            FROM OlegOrderformBundle:OrganList proc WHERE proc.type = :type'
+//        )->setParameter('type', 'default');
+//
+//        //$empty = array("id"=>0,"text"=>"");
+//        $output = $query->getResult();
+//        //array_unshift($output, $empty);
 
-        //$empty = array("id"=>0,"text"=>"");
-        $output = $query->getResult();
-        //array_unshift($output, $empty);
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:OrganList', 'e')
+            ->select("e.id as id, e.name as text");
+
+        if( $opt ) {
+            $query->where('e.type = :type')->setParameter('type', 'default');
+        }
+
+        $output = $query->getQuery()->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -119,14 +153,14 @@ class UtilController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQuery(
-            'SELECT proc.id as id, proc.name as text
-            FROM OlegOrderformBundle:PathServiceList proc WHERE proc.type = :type'
-        )->setParameter('type', 'default');
-
-        //$empty = array("id"=>0,"text"=>"");
-        $output = $query->getResult();
-        //array_unshift($output, $empty);
+//        $query = $em->createQuery(
+//            'SELECT proc.id as id, proc.name as text
+//            FROM OlegOrderformBundle:PathServiceList proc WHERE proc.type = :type'
+//        )->setParameter('type', 'default');
+//
+//        //$empty = array("id"=>0,"text"=>"");
+//        $output = $query->getResult();
+//        //array_unshift($output, $empty);
 
         //echo "count=".count($output)."<br>";
         //print_r($output);
@@ -141,6 +175,19 @@ class UtilController extends Controller {
 ////            }
 //            array_push($res,array("id"=>$out['id'],"text"=>$out['text']));
 //        }
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:PathServiceList', 'e')
+            ->select("e.id as id, e.name as text");
+
+        if( $opt ) {
+            $query->where('e.type = :type')->setParameter('type', 'default');
+        }
+
+        $output = $query->getQuery()->getResult();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -165,6 +212,27 @@ class UtilController extends Controller {
         
         $formHelper = new FormHelper();
         $arr = $formHelper->getScanRegion();
+
+//        //add custom added values
+//        //TODO: add custom values, added by ordering provider
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $entities = $this->getDoctrine()->getRepository('OlegOrderformBundle:Scan')->findByProvider($user);
+//        foreach( $entities as $entity ) {
+//            $arr[] = $entity->getScanregion();
+//        }
+
+        //add custom added values by order id
+        $request = $this->get('request');
+        $id = trim( $request->get('opt') );
+        if( $id ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            if( $orderinfo ) {
+                $slides = $orderinfo->getSlide();
+                foreach( $slides as $slide ) {
+                    $arr[] = $slide->getScan()->first()->getScanregion();
+                }
+            }
+        }
         
         $output = array();
         
@@ -189,13 +257,23 @@ class UtilController extends Controller {
      */
     public function getSlideDeliveryAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
 
         $formHelper = new FormHelper();
         $arr = $formHelper->getSlideDelivery();
-        
+
+        //add custom added values by order id
+        $request = $this->get('request');
+        $id = trim( $request->get('opt') );
+        if( $id ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            if( $orderinfo ) {
+                $arr[] = $orderinfo->getSlideDelivery();
+            }
+        }
+
         $output = array();
         
         //$count = 0;
@@ -224,7 +302,17 @@ class UtilController extends Controller {
 
         $formHelper = new FormHelper();
         $arr = $formHelper->getReturnSlide();
-        
+
+        //add custom added values by order id
+        $request = $this->get('request');
+        $id = trim( $request->get('opt') );
+        if( $id ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            if( $orderinfo ) {
+                $arr[] = $orderinfo->getReturnSlide();
+            }
+        }
+
         $output = array();
         
         //$count = 0;

@@ -38,11 +38,12 @@ class StringTransformer implements DataTransformerInterface
      */
     public function transform($entity)
     {
-        //echo "data transformer: ".$entity."<br>";
+        //echo "string data transformer: ".$entity."<br>";
         if (null === $entity) {
+            //echo "return empty <br>";
             return "";
         }
-
+        //echo "return entity:".$entity." <br>";
         return $entity;  //Scan Region: entity is a string
     }
 

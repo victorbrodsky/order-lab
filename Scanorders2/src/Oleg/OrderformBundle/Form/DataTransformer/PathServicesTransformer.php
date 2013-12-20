@@ -14,6 +14,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oleg\OrderformBundle\Entity\PathServiceList;
 
+//used by user type
 class PathServicesTransformer implements DataTransformerInterface
 {
     /**
@@ -57,7 +58,7 @@ class PathServicesTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        echo "data transformer text=".$text."<br>";
+        //echo "data transformer text=".$text."<br>";
         //exit();
 
         if (!$text) {

@@ -5,6 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Entity\ProcedureList;
 
 class ProcedureNameType extends AbstractType
 {
@@ -21,17 +23,23 @@ class ProcedureNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
-            $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');    //new
-        } else {
-            $attr = array('class' => 'form-control form-control-modif');    //show
-        }
+//        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {    //|| $this->params['cicle'] == 'edit'
+//            $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');    //new
+//            //echo "Procedure Type new <br>";
+//        } else {
+//            $attr = array('class' => 'form-control form-control-modif');    //show
+//            //echo "Procedure Type show <br>";
+//        }
+
+        $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');
+
         $builder->add('field', 'custom_selector', array(
             'label' => 'Procedure Type',
             'required' => false,
             'attr' => $attr,
-            'classtype' => 'procedureType'
+            'classtype' => 'procedureType',
         ));
+
 
         $builder->add('procedureothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureName',

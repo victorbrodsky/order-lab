@@ -103,7 +103,7 @@ class PatientType extends AbstractType
 
         if( $this->params['type'] != 'single' ) {
             $builder->add('procedure', 'collection', array(
-                'type' => new ProcedureType($this->params),
+                'type' => new ProcedureType($this->params,$this->entity),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

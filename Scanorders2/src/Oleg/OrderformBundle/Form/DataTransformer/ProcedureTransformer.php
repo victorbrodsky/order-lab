@@ -33,17 +33,34 @@ class ProcedureTransformer implements DataTransformerInterface
 
     /**
      * Transforms an object to a string.
-     *
+     *  Used to create form
      * @param  Issue|null $issue
      * @return string
      */
-    public function transform($entity)
+    public function transform( $input )
     {
-        if (null === $entity) {
+        //echo "data transformer input=".$input."<br>";
+
+        //if entity is string then find entity
+//        if( !is_object($input) && is_string($input) ) {
+//            $text = $input;
+//            $entity = $this->em->getRepository('OlegOrderformBundle:ProcedureList')->findOneByName($text);
+//            //echo "string => get entity=".$entity."<br>";
+//        } else {
+//            $entity = $input;
+//            //echo "entity =".$entity."<br>";
+//        }
+
+        $entity = $input;
+
+        if( null === $entity ) {
+            //echo "entity=null<br>";
             return "";
         }
+        //echo "entity is not null<br>";
 
-        return $entity->getName();
+        //return $entity->getName();
+        return $entity->getId();
     }
 
     /**
@@ -58,7 +75,7 @@ class ProcedureTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        //echo "data transformer text=".$text."<br>";
+        //echo "data reverse transformer text=".$text."<br>";
         //exit();
 
         if (!$text) {

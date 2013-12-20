@@ -43,7 +43,7 @@ class PathServiceTransformer implements DataTransformerInterface
             return "";
         }
 
-        return $entity->getName();
+        return $entity->getId();
     }
 
     /**

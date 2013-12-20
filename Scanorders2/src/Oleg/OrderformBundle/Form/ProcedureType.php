@@ -22,7 +22,7 @@ class ProcedureType extends AbstractType
     {
 
         $builder->add('name', 'collection', array(
-            'type' => new ProcedureNameType($this->params, null),
+            'type' => new ProcedureNameType($this->params, $this->entity),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

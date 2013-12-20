@@ -43,6 +43,7 @@
         {{ headername  }} Scan Order
         {% if form.vars.value.id != "" %}
             #{{ form.vars.value.id }} ({{ form.vars.value.status }})
+            <input type="hidden" id="orderinfoid" value="{{ form.vars.value.id }}" />
         {% endif %}
     </h3>
 

@@ -81,61 +81,15 @@ class UserType extends AbstractType
         ));
 
 
-//        $builder->add('current_password', 'password', array(
-//            'label' => 'form.current_password',
-//            'translation_domain' => 'FOSUserBundle',
-//            'mapped' => false,
-//            'constraints' => $constraint,
-//        ));
 
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'combobox combobox-width');    //show
-//        }
+        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
+
         $builder->add('pathologyServices', 'custom_selector', array(
             'label' => 'Pathology Service:',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'pathologyServices'
         ));
-
-//        $builder->add('pathologyServices',null, array(
-//            'attr' => $attr
-//        ));
-
-////        if($this->cicle == "" || $this->cicle == 'new' || $this->cicle == 'create' ) {
-//            $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-////        } else {
-////            $attr = array('class' => 'combobox combobox-width');    //show
-////        }
-//        $builder->add('pathologyServices', 'custom_selector', array(
-//            'label' => 'Pathology Service:',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'pathologyServices'
-//        ));
-//        $builder->add('pathologyServices', 'hidden', array(
-//            'label' => 'Pathology Service:',
-//            'attr' => $attr,
-//            'required' => false,
-//        ));
-
-
-//        $builder->add('defaultPathService', 'text', array(
-//            'label' => 'Default Pathology Service:',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
-//        $builder->add('defaultPathService', 'entity', array(
-//            'class' => 'OlegOrderformBundle:PathServiceList',
-//            'label' => 'Default Pathology Service:',
-//            'property' => 'name',
-//            'required' => false,
-////            'query_builder' => function(EntityRepository $er) {
-////                return $er->createQueryBuilder('u')
-////                    ->orderBy('u.username', 'ASC');
-////            },
-//        ));
 
         $attr = array('class' => 'combobox combobox-width');
         if( $this->roleAdmin ) {
