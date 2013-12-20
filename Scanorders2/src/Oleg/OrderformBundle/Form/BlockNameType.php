@@ -28,12 +28,6 @@ class BlockNameType extends AbstractType
             $label = 'Block Name';
         }
 
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
-//            $attr = array('class' => 'ajax-combobox-blockname keyfield', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'form-control form-control-modif');    //show
-//        }
-
         $attr = array('class' => 'ajax-combobox-blockname keyfield', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(

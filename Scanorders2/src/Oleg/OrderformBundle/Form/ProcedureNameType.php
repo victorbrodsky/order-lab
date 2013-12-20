@@ -23,14 +23,6 @@ class ProcedureNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        if($this->params['type'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {    //|| $this->params['cicle'] == 'edit'
-//            $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');    //new
-//            //echo "Procedure Type new <br>";
-//        } else {
-//            $attr = array('class' => 'form-control form-control-modif');    //show
-//            //echo "Procedure Type show <br>";
-//        }
-
         $attr = array('class' => 'ajax-combobox-procedure', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(

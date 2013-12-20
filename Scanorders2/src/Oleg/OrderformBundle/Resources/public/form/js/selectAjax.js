@@ -60,7 +60,7 @@ function regularCombobox() {
 
 function customCombobox() {
 
-    //if( cicle != "show" && urlBase ) {
+    if( cicle && urlBase ) {
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
@@ -72,7 +72,7 @@ function customCombobox() {
         getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
-    //}
+    }
 
 }
 

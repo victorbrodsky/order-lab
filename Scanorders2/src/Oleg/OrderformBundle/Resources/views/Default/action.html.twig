@@ -30,7 +30,7 @@
 
             {% if entity.status != 'Amended' and entity.status != 'Canceled' and entity.status.type.name != "Filled" or is_granted('ROLE_SUPER_ADMIN') %}
                 <li><a onclick="return confirm('Are you sure?');" class="btn-warning"
-                       href="{{ path('scanorder_status', { 'id': entity.id, 'status': 'Amend' }) }}">Amend</a>
+                       href="{{ path('order_amend', { 'id': entity.id }) }}">Amend</a>
                 </li>
             {% endif %}
 

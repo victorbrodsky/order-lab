@@ -24,7 +24,7 @@ class PartPaperType extends AbstractType
 
         //echo "cicile=".$this->params['cicle']."<br>";
 
-        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' || $this->params['cicle'] == 'amend' ) {
 
             //echo " => new, create or edit set file ";
             $builder->add('field', 'file', array(

@@ -7,37 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-//use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
-//use Oleg\OrderformBundle\Entity\Patient;
-//use Oleg\OrderformBundle\Form\PatientType;
-//use Oleg\OrderformBundle\Entity\Procedure;
-//use Oleg\OrderformBundle\Form\ProcedureType;
-//use Oleg\OrderformBundle\Entity\Accession;
-//use Oleg\OrderformBundle\Form\AccessionType;
-//use Oleg\OrderformBundle\Entity\Part;
-//use Oleg\OrderformBundle\Form\PartType;
-//use Oleg\OrderformBundle\Entity\Block;
-//use Oleg\OrderformBundle\Form\BlockType;
-//use Oleg\OrderformBundle\Entity\Slide;
-//use Oleg\OrderformBundle\Form\SlideType;
-//use Oleg\OrderformBundle\Entity\Scan;
-//use Oleg\OrderformBundle\Form\ScanType;
-//use Oleg\OrderformBundle\Entity\Stain;
-//use Oleg\OrderformBundle\Form\StainType;
+
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
-use Oleg\OrderformBundle\Entity\DiffDiagnoses;
-//use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
-//use Oleg\OrderformBundle\Entity\RelevantScans;
-//use Oleg\OrderformBundle\Entity\SpecialStains;
-//use Oleg\OrderformBundle\Form\DocumentType;
+use Oleg\OrderformBundle\Helper\OrderUtil;
 
-//use Oleg\OrderformBundle\Helper\ErrorHelper;
-//use Oleg\OrderformBundle\Helper\FormHelper;
-//use Oleg\OrderformBundle\Helper\EmailUtil;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -449,124 +426,132 @@ class ScanOrderController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $orderUtil = new OrderUtil($em);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
-        }
+        $message = $orderUtil->changeStatus($id, $status);
 
-        //check if user permission
-        
-        //$editForm = $this->createForm(new OrderInfoType(), $entity);
-        //$deleteForm = $this->createDeleteForm($id);
-        
-        //$entity->setStatus($status);
-        //echo "status=".$status."<br>";
-        $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($status);
-
-        if( $status_entity ) {
-
-            $entity->setStatus($status_entity);
-
-            //change status for all orderinfo children to "deleted-by-canceled-order"
-            //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
-            //AND there are no fields that belong to this object that were added by another order
-            if( $status == 'Cancel' ) {
-                $statusStr = "deleted-by-canceled-order";
-            } else if( $status == 'Submit' ) {
-                $statusStr = "valid";
-            } else {
-                $statusStr = null;
-            }
-
-            //echo "statusStr=".$statusStr."<br>";
-            $message = "";
-
-            if( $statusStr ) {
-
-                $patients = $entity->getPatient();
-                $patCount = $this->iterateEntity( $entity, $patients, $status_entity, $statusStr );
-
-                $procedures = $entity->getProcedure();
-                $procCount = $this->iterateEntity( $entity, $procedures, $status_entity, $statusStr );
-
-                $accessions = $entity->getAccession();
-                $accCount = $this->iterateEntity( $entity, $accessions, $status_entity, $statusStr );
-
-                $parts = $entity->getPart();
-                $partCount = $this->iterateEntity( $entity, $parts, $status_entity, $statusStr );
-
-                $blocks = $entity->getBlock();
-                $blockCount = $this->iterateEntity( $entity, $blocks, $status_entity, $statusStr );
-
-                $slides = $entity->getSlide();
-                $slideCount = $this->iterateEntity( $entity, $slides, $status_entity, $statusStr );
-
-                $message = " (changed children: patients ".$patCount.", procedures ".$procCount.", accessions ".$accCount.", parts ".$partCount.", blocks ".$blockCount." slides ".$slideCount.")";
-
-            }
-            //exit("exit status testing");
-
-            $em->persist($entity);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Status of Order #'.$id.' has been changed to "'.$status.'"'.$message
-            );
-
-        } else {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Status: "'.$status.'" is not found'
-            );
-
-        }
+        $this->get('session')->getFlashBag()->add('notice',$message);
 
         return $this->redirect($this->generateUrl('index'));
+
+//        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+//
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+//        }
+//
+//        //check if user permission
+//
+//        //$editForm = $this->createForm(new OrderInfoType(), $entity);
+//        //$deleteForm = $this->createDeleteForm($id);
+//
+//        //$entity->setStatus($status);
+//        //echo "status=".$status."<br>";
+//        $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($status);
+//
+//        if( $status_entity ) {
+//
+//            $entity->setStatus($status_entity);
+//
+//            //change status for all orderinfo children to "deleted-by-canceled-order"
+//            //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
+//            //AND there are no fields that belong to this object that were added by another order
+//            if( $status == 'Cancel' ) {
+//                $statusStr = "deleted-by-canceled-order";
+//            } else if( $status == 'Submit' ) {
+//                $statusStr = "valid";
+//            } else {
+//                $statusStr = null;
+//            }
+//
+//            //echo "statusStr=".$statusStr."<br>";
+//            $message = "";
+//
+//            if( $statusStr ) {
+//
+//                $patients = $entity->getPatient();
+//                $patCount = $this->iterateEntity( $entity, $patients, $status_entity, $statusStr );
+//
+//                $procedures = $entity->getProcedure();
+//                $procCount = $this->iterateEntity( $entity, $procedures, $status_entity, $statusStr );
+//
+//                $accessions = $entity->getAccession();
+//                $accCount = $this->iterateEntity( $entity, $accessions, $status_entity, $statusStr );
+//
+//                $parts = $entity->getPart();
+//                $partCount = $this->iterateEntity( $entity, $parts, $status_entity, $statusStr );
+//
+//                $blocks = $entity->getBlock();
+//                $blockCount = $this->iterateEntity( $entity, $blocks, $status_entity, $statusStr );
+//
+//                $slides = $entity->getSlide();
+//                $slideCount = $this->iterateEntity( $entity, $slides, $status_entity, $statusStr );
+//
+//                $message = " (changed children: patients ".$patCount.", procedures ".$procCount.", accessions ".$accCount.", parts ".$partCount.", blocks ".$blockCount." slides ".$slideCount.")";
+//
+//            }
+//            //exit("exit status testing");
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'Status of Order #'.$id.' has been changed to "'.$status.'"'.$message
+//            );
+//
+//        } else {
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'Status: "'.$status.'" is not found'
+//            );
+//
+//        }
+
+//        return $this->redirect($this->generateUrl('index'));
     }
 
-    public function iterateEntity( $orderinfo, $children, $status_entity, $statusStr ) {
-
-        if( !$children->first() ) {
-            return 0;
-        }
-
-        //echo "iterate children count=".count($children)."<br>";
-
-        $class = new \ReflectionClass($children->first());
-        $className = $class->getShortName();
-        //echo "class name=".$className."<br>";
-
-        $count = 0;
-
-        foreach( $children as $child ) {
-
-            $noOtherOrderinfo = true;
-
-            //echo "orderinfo count=".count($child->getOrderinfo())."<br>";
-
-            foreach( $child->getOrderinfo() as $order ) {
-                if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
-                    $noOtherOrderinfo = false;
-                    break;
-                }
-            }
-
-            //echo "noOtherOrderinfo=".$noOtherOrderinfo."<br>";
-
-            if( $child->getSource() == 'scanorder' && $noOtherOrderinfo ) {
-                //echo "change status to (".$statusStr.") <br>";
-                $child->setStatus($statusStr);
-                $this->getDoctrine()->getManager()->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
-                $count++;
-            }
-
-        }
-
-        return $count;
-    }
+//    public function iterateEntity( $orderinfo, $children, $status_entity, $statusStr ) {
+//
+//        if( !$children->first() ) {
+//            return 0;
+//        }
+//
+//        //echo "iterate children count=".count($children)."<br>";
+//
+//        $class = new \ReflectionClass($children->first());
+//        $className = $class->getShortName();
+//        //echo "class name=".$className."<br>";
+//
+//        $count = 0;
+//
+//        foreach( $children as $child ) {
+//
+//            $noOtherOrderinfo = true;
+//
+//            //echo "orderinfo count=".count($child->getOrderinfo())."<br>";
+//
+//            foreach( $child->getOrderinfo() as $order ) {
+//                if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
+//                    $noOtherOrderinfo = false;
+//                    break;
+//                }
+//            }
+//
+//            //echo "noOtherOrderinfo=".$noOtherOrderinfo."<br>";
+//
+//            if( $child->getSource() == 'scanorder' && $noOtherOrderinfo ) {
+//                //echo "change status to (".$statusStr.") <br>";
+//                $child->setStatus($statusStr);
+//                $this->getDoctrine()->getManager()->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
+//                $count++;
+//            }
+//
+//        }
+//
+//        return $count;
+//    }
 
     /**
      * Creates a form to delete a OrderInfo entity by id.

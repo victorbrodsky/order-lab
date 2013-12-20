@@ -89,8 +89,8 @@ class MultyScanOrderController extends Controller {
     public function multyCreateAction(Request $request)
     { 
 
-//        echo "multi new controller !!!! <br>";
-//        exit();
+        //echo "multi new controller !!!! <br>";
+        //exit();
 
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig'
@@ -165,6 +165,20 @@ class MultyScanOrderController extends Controller {
 
         if( 1 ) {
 
+            if( isset($_POST['btnSubmit']) ) {
+                $cicle = 'new';
+            }
+
+            if( isset($_POST['btnAmend']) ) {
+                $cicle = 'amend';
+                //$orderinfoid = $form["orderinfoid"]->getData();
+                $orderinfoid = $form["id"]->getData();
+                echo "orderinfoid=".$orderinfoid."<br>";
+                $entity->setId($orderinfoid);
+            }
+
+            $entity->setCicle($cicle);
+
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type );
 
             if( isset($_POST['btnSave']) ) {
@@ -172,7 +186,7 @@ class MultyScanOrderController extends Controller {
                 $entity->setStatus($status);
             }
 
-            if( isset($_POST['btnSubmit']) ) {
+            if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) ) {
 
                 $conflictStr = "";
                 foreach( $entity->getDataquality() as $dq ) {
@@ -184,7 +198,19 @@ class MultyScanOrderController extends Controller {
                 $user = $this->get('security.context')->getToken()->getUser();
                 $email = $user->getEmail();
                 $emailUtil = new EmailUtil();
-                $emailUtil->sendEmail( $email, $entity, null, $conflictStr );
+
+
+                if( isset($_POST['btnAmend']) ) {
+                    $text =
+                        "Thank You For Your Order !\r\n"
+                        . "Order #" . $entity->getId() . " Successfully Amended.\r\n"
+                        . "Confirmation Email was sent to " . $email . "\r\n";
+                } else {
+                    $text = null;
+                }
+
+                $emailUtil->sendEmail( $email, $entity, $text, $conflictStr );
+
 
                 $conflicts = array();
                 foreach( $entity->getDataquality() as $dq ) {
@@ -317,6 +343,7 @@ class MultyScanOrderController extends Controller {
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      * @Route("/edit/{id}", name="multy_edit", requirements={"id" = "\d+"})
+     * @Route("/amend/{id}", name="order_amend", requirements={"id" = "\d+"})
      * @Route("/show/{id}", name="multy_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
@@ -426,10 +453,14 @@ class MultyScanOrderController extends Controller {
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
 
-        //echo "route=".$routeName.", type=".$type."<br>";
         if( $type == "edit" || $routeName == "multy_edit") {
             $disable = false;
             $type = "edit";
+        }
+
+        if( $routeName == "order_amend") {
+            $disable = false;
+            $type = "amend";
         }
 
         //echo "show id=".$entity->getId()."<br>";
@@ -439,6 +470,8 @@ class MultyScanOrderController extends Controller {
         if( $single_multy == 'single' ) {
             $single_multy = 'multy';
         }
+
+        echo "route=".$routeName.", type=".$type."<br>";
 
         $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );

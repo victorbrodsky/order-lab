@@ -72,8 +72,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         } else {
 
-            //this is a main function to check uniqueness
-            $found = $this->findUniqueByKey($entity);
+            if( $orderinfo->getCicle() == 'amend' ) {
+                $found = null;
+            } else {
+                //this is a main function to check uniqueness
+                $found = $this->findUniqueByKey($entity);
+            }
+
 
             if( $found ) {
                 echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";

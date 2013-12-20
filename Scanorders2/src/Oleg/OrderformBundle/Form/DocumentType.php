@@ -26,17 +26,8 @@ class DocumentType extends AbstractType
     {
 
 
-//        echo " => new, create or edit set file ";
-//
-//        echo " exit document type ";
-
-//        $builder->add('file', 'file', array(
-//            'label'=>'Paper:',
-//            'required'=>false,
-//        ));
-
         //echo "cicle=".$this->params['cicle'];
-        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
+        if( $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' || $this->params['cicle'] == 'amend' ) {
 
             //echo " => new, create or edit set file ";
             $builder->add('file', 'file', array(

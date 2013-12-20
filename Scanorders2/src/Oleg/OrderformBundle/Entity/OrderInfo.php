@@ -52,6 +52,21 @@ class OrderInfo
      * @ORM\Column(name="type", nullable=true, type="string", length=100)
      */
     private $type;
+
+    /**
+     * cicle - new, amend ...
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $cicle;
+
+    /**
+     * originalid - id of the original order.
+     * When Amend order, switch orders to keep the original id and at newly created order set originalid of the original order
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $originalid;
     
     /**
      * @var string
@@ -194,6 +209,7 @@ class OrderInfo
         $this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
         $this->dataquality = new ArrayCollection();
+        $this->cicle = 'new';
     }
     
     /**
@@ -206,10 +222,11 @@ class OrderInfo
         return $this->id;
     }
 
-//    public function setId($id)
-//    {
-//        return $id;
-//    }
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $id;
+    }
 
     /**
     * @ORM\PrePersist
@@ -398,11 +415,38 @@ class OrderInfo
     public function setType($type) {
         $this->type = $type;
     }
-      
-//    public function removeAllChildren() {
-//        $this->patient->clear();
-//    }
-    
+
+    /**
+     * @param string $cicle
+     */
+    public function setCicle($cicle)
+    {
+        $this->cicle = $cicle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCicle()
+    {
+        return $this->cicle;
+    }
+
+    /**
+     * @param string $originalid
+     */
+    public function setOriginalid($originalid)
+    {
+        $this->originalid = $originalid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginalid()
+    {
+        return $this->originalid;
+    }
 
     /**
      * Add patient
@@ -525,7 +569,7 @@ class OrderInfo
 //        $patient_info .= ")";
 
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
-        return "OrderInfo: id=".$this->id.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
+        return "OrderInfo: id=".$this->id.", cicle=".$this->cicle.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
     }
     
 

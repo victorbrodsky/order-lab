@@ -27,14 +27,6 @@ class PartNameType extends AbstractType
             $label = 'Part Name';
         }
 
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'edit' ) {
-//            $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');    //new
-//            //echo "partname new <br>";
-//        } else {
-//            $attr = array('class' => 'form-control form-control-modif');    //show
-//            //echo "partname show <br>";
-//        }
-
         $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(

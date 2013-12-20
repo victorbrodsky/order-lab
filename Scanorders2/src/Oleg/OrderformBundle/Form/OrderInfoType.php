@@ -38,7 +38,7 @@ class OrderInfoType extends AbstractType
 
         $helper = new FormHelper();
 
-//        $builder->add( 'id' );//, 'hidden' );
+        $builder->add( 'id' , 'hidden' );
 
         $builder->add( 'type', 'hidden' ); 
         

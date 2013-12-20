@@ -43,12 +43,11 @@
         {{ headername  }} Scan Order
         {% if form.vars.value.id != "" %}
             #{{ form.vars.value.id }} ({{ form.vars.value.status }})
-            <input type="hidden" id="orderinfoid" value="{{ form.vars.value.id }}" />
         {% endif %}
     </h3>
 
     {#action buttons#}
-    {% if type == 'edit' or type == 'show'  %}
+    {% if type == 'edit' or type == 'show' or type == 'amend' %}
         <div class="well well-sm">
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
@@ -66,7 +65,7 @@
 
         {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and form.vars.value.status.type.name != "Filled" or is_granted('ROLE_SUPER_ADMIN') %}
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
-               href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Amend' }) }}">Amend</a>
+               href="{{ path('order_amend', { 'id': form.vars.value.id }) }}">Amend</a>
         {% endif %}
         </div
     {% endif %}
@@ -91,6 +90,11 @@
     {#{{ form_start(form) }}#}
 
     {#{{ form_widget(form.patient[0].procedure[0].accession) }}#}
+
+    {#{% if form.vars.value.id != "" %}#}
+        {#<input type="hidden" id="orderinfoid" value="{{ form.vars.value.id }}" />#}
+        {{ form_widget(form.id) }}
+    {#{% endif %}#}
 
     {% if type == 'show' %}
         {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
@@ -376,20 +380,23 @@
     {% endfor %} {# patient loop #}
 
 
-    {% if type == 'new' or type == 'edit' %}
+    {% if type == 'new' or type == 'edit' or type == 'amend' %}
 
         <button id="next_button" type="button" class="btn btn-success"
                 data-toggle="collapse" data-target="#orderinfo_param">Next
         </button>
-
 
         <div id="orderinfo_param" class="collapse">
 
             {{ formmacros.orderinfo_panel(form,"Scan Order Info") }}
 
             <div class="row">
-                <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
-                {#<p><button class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>#}
+                {% if type == 'amend' %}
+                    <p><button class="btn_margin_top btn btn-primary btn-success" name="btnAmend" type="submit">Amend</button></p>
+                {% else %}
+                    <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
+                    {#<p><button class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>#}
+                {% endif %}
             </div>
         </div>
 

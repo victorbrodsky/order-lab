@@ -15,6 +15,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     //process orderinfo and all entities
     public function processOrderInfoEntity( $entity, $type ) {
 
+        echo "orderinfo: ".$entity."<br>";
 //        echo "patients count=".count($entity->getPatient())."<br>";
 //        $this->printTree( $entity->getPatient()->first() );
 
@@ -54,6 +55,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     }
     
     public function setOrderInfoResult( $entity ) {
+
+        $originalId = $entity->getId();
+        echo "originalId=".$originalId."<br>";
 
         $em = $this->_em;
 
@@ -108,7 +112,17 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             echo "--------------------------<br>";
         }
 
+
+        //call statusAction to change status to deleted-by-amended-order
+
         exit('orderinfo repo exit');
+
+        //TODO: make copy of orderinfo
+        if( $entity->getCicle() == 'amend' ) {
+            $orderUtil = new OrderUtil($em);
+            $message = $orderUtil->changeStatus($originalId, 'Amend');
+            $entity->setOriginalid($originalId);
+        }
 
         $em->persist($entity);
         $em->flush();
