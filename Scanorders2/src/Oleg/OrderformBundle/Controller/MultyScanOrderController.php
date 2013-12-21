@@ -170,11 +170,7 @@ class MultyScanOrderController extends Controller {
             }
 
             if( isset($_POST['btnAmend']) ) {
-                $cicle = 'amend';
-                //$orderinfoid = $form["orderinfoid"]->getData();
-                $orderinfoid = $form["id"]->getData();
-                echo "orderinfoid=".$orderinfoid."<br>";
-                $entity->setId($orderinfoid);
+                $cicle = 'amend';               
             }
 
             $entity->setCicle($cicle);
