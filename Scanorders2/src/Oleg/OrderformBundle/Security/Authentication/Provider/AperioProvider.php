@@ -71,7 +71,7 @@ class AperioProvider implements AuthenticationProviderInterface
                 //TDODD: Remove: for testing at home;
                 if(1) {
                     echo "Aperio Auth: Remove it !!!";
-                    $user->setUsername("testuser2");
+                    $user->setUsername("testuser3");
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 

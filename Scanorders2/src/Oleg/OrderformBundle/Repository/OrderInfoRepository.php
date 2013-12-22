@@ -97,7 +97,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
        
         echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
         foreach( $entity->getPatient() as $patient ) {
-////            echo 'patient provider='.$patient->getProvider()."<br>";
+            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first()."<br>";
 ////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 ////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
 ////            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
@@ -110,6 +110,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             echo "--------------------------<br>";
         }
 
+        //exit('orderinfo repo exit');
 
         //call statusAction to change status to deleted-by-amended-order       
 
@@ -139,10 +140,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
                        
             $entity = $newOrderinfo;
         }
-              
-        
-        //exit('orderinfo repo exit');
-
+                             
         //create new orderinfo
         $em->persist($entity);
         $em->flush();                     
