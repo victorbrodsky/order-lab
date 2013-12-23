@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Helper\OrderUtil;
 
 /**
  * OrderInfoRepository
@@ -115,7 +116,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //call statusAction to change status to deleted-by-amended-order
 
-        exit('orderinfo repo exit');
+        //exit('orderinfo repo exit');
 
         //TODO: make copy of orderinfo
         if( $entity->getCicle() == 'amend' ) {
