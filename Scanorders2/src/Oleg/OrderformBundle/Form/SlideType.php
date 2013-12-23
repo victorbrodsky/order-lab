@@ -65,14 +65,14 @@ class SlideType extends AbstractType
             'prototype_name' => '__slidespecialstains__',
         ));
 
-        //diffDiagnoses
+        //relevantScans
         $gen_attr = array('label'=>'Relevant Scanned Images','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type
         $builder->add('relevantScans', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Relevant Scanned Images:",
+            'label' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__sliderelevantscans__',

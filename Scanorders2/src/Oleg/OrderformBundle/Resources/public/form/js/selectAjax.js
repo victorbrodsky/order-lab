@@ -65,7 +65,7 @@ function customCombobox() {
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"));
+        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"),false);
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
@@ -98,10 +98,10 @@ function populateSelectCombobox( targetid, data, placeholder ) {
             //console.log("data="+data['text']);
             //console.log("data="+data[0].text);
             if( $(data).filter(function() {
-                console.log("1 term="+term + " localcompare");
+                //console.log("1 term="+term + " localcompare");
                 return this.text.localeCompare(term)===0;
             }).length===0) {
-                console.log("2 term="+term);
+                //console.log("2 term="+term);
                 return {id:term, text:term};
             }
         }
@@ -143,7 +143,7 @@ function getComboboxStain(urlCommon, ids) {
 
 }
 
-function getComboboxSpecialStain(urlCommon, ids) {
+function getComboboxSpecialStain(urlCommon, ids, preset) {
 
     var url = urlCommon+"stain";
 
@@ -162,7 +162,8 @@ function getComboboxSpecialStain(urlCommon, ids) {
 
     populateSelectCombobox( ".ajax-combobox-staintype", stain, null );
 
-    if( cicle == "new"  ) {
+    //console.log("special stain preset="+preset);
+    if( cicle == "new" || cicle == "amend" && preset ) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"specialStains_"+ids[6]+"_staintype";
@@ -417,7 +418,7 @@ function initComboboxJs(ids) {
         getComboboxPartname(urlCommon,ids);
         getComboboxBlockname(urlCommon,ids);
         getComboboxStain(urlCommon,ids);
-        getComboboxSpecialStain(urlCommon,ids);
+        getComboboxSpecialStain(urlCommon,ids,false);
         getComboboxScanregion(urlCommon,ids);
         getComboboxProcedure(urlCommon,ids);
         getComboboxOrgan(urlCommon,ids);

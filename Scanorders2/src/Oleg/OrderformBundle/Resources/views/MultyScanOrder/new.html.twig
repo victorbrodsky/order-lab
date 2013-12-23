@@ -42,12 +42,18 @@
     <h3 class="text-info">
         {{ headername  }} Scan Order
         {% if form.vars.value.id != "" %}
-            #{{ form.vars.value.id }} ({{ form.vars.value.status }})
+            {% if form.vars.value.originalid %}
+                {% set orderid = form.vars.value.originalid %}
+            {% else %}
+                {% set orderid = form.vars.value.id %}
+            {% endif %}
+            #{{ orderid }}
+            ({{ form.vars.value.status }})
         {% endif %}
     </h3>
 
     {#action buttons#}
-    {% if type == 'edit' or type == 'show' or type == 'amend' %}
+    {% if type == 'edit' or type == 'show' %}
         <div class="well well-sm">
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
@@ -55,10 +61,10 @@
                href="{{ path('scanorder_status', { 'id': form.vars.value.id , 'status': 'Cancel' }) }}">Cancel</a>
         {% endif %}
 
-        {#TODO: Make path to Amend in Controller#}
         {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
-        and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"
-        and form.vars.value.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') %}
+                and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"
+                and form.vars.value.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') and form.vars.value.status != 'Submitted'
+        %}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Submit' }) }}">Submit</a>
         {% endif %}
@@ -67,7 +73,13 @@
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
                href="{{ path('order_amend', { 'id': form.vars.value.id }) }}">Amend</a>
         {% endif %}
-        </div
+        </div>
+    {% endif %}
+
+    {% if type == 'amend' %}
+        <div class="well well-sm">
+            <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.id }) }}">Cancel Amend</a>
+        </div>
     {% endif %}
 
     {#<input type="hidden" id="formtype" value="multi" />#}
@@ -171,7 +183,7 @@
 
           data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,type)|e }}"
 
-         data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type, mrnHtml,nameHtml,sexHtml,dobHtml,ageHtml,clinicalhistoryHtml)|e }}"
+         data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type,form.vars.value.status, mrnHtml,nameHtml,sexHtml,dobHtml,ageHtml,clinicalhistoryHtml)|e }}"
 
           data-prototype-patientmrn=               "{{ mrnHtml|e }}"
           data-prototype-patientname=              "{{ nameHtml|e }}"
@@ -181,14 +193,14 @@
           data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
-         {{ formmacros.accessionForm(form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,procedureHtml,accessionHtml)|e }}
+         {{ formmacros.accessionForm(form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,form.vars.value.status,procedureHtml,accessionHtml)|e }}
          "
          data-prototype-accessionaccession= "{{ accessionHtml|e }}"
          data-prototype-procedurename= "{{ procedureHtml|e }}"
          {#data-prototype-procedureencounter= "{{ encounterHtml|e }}"#}
 
           data-prototype-part="
-        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type,
+        {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, form.vars.value.status,
               partnameHtml,
               sourceorganHtml,
               paperHtml,
@@ -199,14 +211,14 @@
            )|e }}
         "
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
+          data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"","","","withspace")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-          data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
+          data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","","","withspace")|e }}"
 
          data-prototype-block="
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
         {#{{ formmacros.fieldIconLabel(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}#}
-        {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, blocknameHtml, sectionsourceHtml)|e }}
+        {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, form.vars.value.status, blocknameHtml, sectionsourceHtml)|e }}
         "
          {#data-prototype-slide="#}
         {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.field)|e }}#}
@@ -229,9 +241,9 @@
         "
 
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","")|e }}"
+          data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"","","","withspace")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-          data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
+          data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","","","withspace")|e }}"
 
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
           data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
@@ -256,7 +268,7 @@
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">
 
-                {{ formmacros.patientForm(patient,"check",uid,type) }}
+                {{ formmacros.patientForm(patient,"check",uid,type,form.vars.value.status) }}
 
                 {#procedure/procedure#}
                 {% set procedureCount = 0 %}
@@ -276,7 +288,7 @@
                             {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
 
                             {#{{ formmacros.accessionForm(procedure,accession,"check",uid) }}#}
-                                    {{ formmacros.accessionForm(procedure,accession,"check",uid,type) }}
+                                    {{ formmacros.accessionForm(procedure,accession,"check",uid,type,form.vars.value.status) }}
 
 
                                     {#part#}
@@ -292,7 +304,7 @@
 
                                             <div id="form_body_part_{{ uid }}" class="panel-body collapse in">
 
-                                                {{ formmacros.partForm( part, "check", uid, type, "","","","","","","") }}
+                                                {{ formmacros.partForm( part, "check", uid, type, form.vars.value.status, "","","","","","","") }}
 
 
                                                 {#block#}
@@ -307,7 +319,7 @@
 
                                                         <div id="form_body_block_{{ uid }}" class="panel-body collapse in">
                                                             {#{{ formmacros.field(block.name) }}#}
-                                                            {{ formmacros.blockForm( block, "check", uid, type) }}
+                                                            {{ formmacros.blockForm( block, "check", uid, type, form.vars.value.status) }}
 
 
                                                             {#slide#}
@@ -407,7 +419,6 @@
 
     {% endif %}
 
-
     <div id="validationerror">
         {% for dataquality in form.dataquality %}
             <div class="validationerror-added alert alert-danger">
@@ -415,7 +426,6 @@
             </div>
         {% endfor %}
     </div>
-
 
     {#{{ form_end(form) }}#}
     </form>

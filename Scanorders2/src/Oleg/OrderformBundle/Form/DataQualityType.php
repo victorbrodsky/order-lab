@@ -21,7 +21,7 @@ class DataQualityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'amend' ) {
 
             $type = 'hidden';
             $labelDescr = false;

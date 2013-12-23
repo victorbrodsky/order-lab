@@ -49,6 +49,9 @@ class OrderUtil {
             } else if( $status == 'Amend' ) {
                 $statusStr = "deleted-by-amended-order";
             } else if( $status == 'Submit' ) {
+                //1) clone orderinfo object
+                //2) validate MRN-Accession
+                //3) change status to 'valid' and 'submit'
                 $statusStr = "valid";
             } else {
                 $statusStr = null;

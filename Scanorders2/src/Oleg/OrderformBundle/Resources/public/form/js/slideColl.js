@@ -130,7 +130,9 @@ function addCollectionField( elem, btnpos ) {
         lastcollHolder.after(newForm);
 
         //add - button to + button if does not exists
-        if( element.parent().find('.delbtnCollField').length == 0 ) {
+        var delLen = element.closest('.addDelBtnColl').find('.delbtnCollField').length;
+        //console.log("delLen="+delLen);
+        if( delLen == 0 ) {
             //console.log("add - button to textarea + button");
             element.after(btnDel);
         }
@@ -161,7 +163,7 @@ function addCollectionField( elem, btnpos ) {
 
     //populate the combobox by Ajax
     if( btnpos && btnpos == "bottom" ) {
-        getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,slide,maxId+1));
+        getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,slide,maxId+1),true);
     }
 }
 

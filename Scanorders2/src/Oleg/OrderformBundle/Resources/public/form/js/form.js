@@ -556,17 +556,20 @@ function setNavBar() {
 
 
 function priorityOption() {
-    $('#priority_option').collapse({
-        toggle: false
-    })
+
+    if( $('#priority_option').is(':visible') ) {
+        $('#priority_option').collapse('hide');
+    }
+
     $('#oleg_orderformbundle_orderinfotype_priority').change(function(e) {
         e.preventDefault();
         $('#priority_option').collapse('toggle');
     });
 
-    var checked = $('form input[type=radio]:checked').val();
+    var checked = $('#oleg_orderformbundle_orderinfotype_priority').find('input[type=radio]:checked').val();
+    //console.log("checked="+checked);
     if( checked == 'Stat' ) {
-        $('#priority_option').collapse('toggle');
+        $('#priority_option').collapse('show');
     }
 }
 

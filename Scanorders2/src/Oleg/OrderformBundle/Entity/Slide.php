@@ -290,6 +290,7 @@ class Slide extends OrderAbstract
             if( !$this->specialStains->contains($specialStains) ) {
                 $specialStains->setSlide($this);
                 $this->specialStains->add($specialStains);
+                $specialStains->setProvider($this->getProvider());
             }
         }
     
@@ -319,6 +320,7 @@ class Slide extends OrderAbstract
             if( !$this->relevantScans->contains($relevantScans) ) {
                 $relevantScans->setSlide($this);
                 $this->relevantScans->add($relevantScans);
+                $relevantScans->setProvider($this->getProvider());
             }
         }
     

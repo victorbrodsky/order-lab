@@ -1698,11 +1698,11 @@ function validateForm() {
                         }
 
                     } else {
-                        console.debug("not found");
+                        console.debug("validation: accession object not found");
                     }
                 },
                 error: function () {
-                    console.debug("get object ajax error "+name);
+                    console.debug("validation: get object ajax error accession");
                 }
             });
 
@@ -1737,7 +1737,7 @@ function setDataqualityData( index, accession, mrn, mrntype ) {
 }
 
 function cleanValidationAlert() {
-    if( cicle == "new" ) {
+    if( cicle == "new" || cicle == "amend" ) {
         $('.validationerror-added').each(function() {
             $(this).remove();
         });

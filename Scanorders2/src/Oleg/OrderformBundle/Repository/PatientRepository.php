@@ -22,9 +22,20 @@ class PatientRepository extends ArrayFieldAbstractRepository
         $em = $this->_em;
         //echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
 
+        //echo $methodName.": this fields count=".count($fields)."<br>";
+
+        //if similar field is already set and provided field is empty => don't add provided field
+        if( !$field || trim($field) == "" ) {
+            if( $this->validFieldIsSet( $fields ) ) {
+                //echo "field is empty and non empty valid field exists => don't add provided field => return<br>";
+                return $entity;
+            }
+        }
+
         //for Patient $field is not ID, but field value MRN number.
         //if id=null, check if entity already has mrn field (mrn+mrntype)
         if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
+            //echo "field value=".$field."<br>";
             $foundFields = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findByField($field."");
             //echo "count foundFields=".count($foundFields)."<br>";
             foreach( $foundFields as $thisField ) {

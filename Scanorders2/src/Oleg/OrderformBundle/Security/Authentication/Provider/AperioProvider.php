@@ -69,7 +69,7 @@ class AperioProvider implements AuthenticationProviderInterface
                 $user->addRole('ROLE_USER');                //Submitter
                 
                 //TDODD: Remove: for testing at home;
-                if(1) {
+                if(0) {
                     echo "Aperio Auth: Remove it !!!";
                     $user->setUsername("testuser3");
                     $user->addRole('ROLE_SUPER_ADMIN');
@@ -117,11 +117,11 @@ class AperioProvider implements AuthenticationProviderInterface
 
     private function AperioAuth( $loginName, $password ) {
 
-        echo "Aperio Auth Changeit back !!!";
+        //echo "Aperio Auth Changeit back !!!";
         //exit();
         //echo " skip login=".$loginName.", pass=". $password." <br>";
 
-        if( 0 ) {
+        if( 1 ) {
             include_once '\Skeleton.php';
             //$DataServerURL = "http://127.0.0.1:86";
             $DataServerURL = GetDataServerURL();

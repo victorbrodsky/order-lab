@@ -31,6 +31,7 @@ class PartPaperType extends AbstractType
                 'label'=>'Relevant Paper or Abstract',
                 'required'=>false,
                 //'attr'=>array('class'=>'form-control', 'style'=>'height: 50px'),
+                //'data'=>'form.docx'
             ));
 
         } else {

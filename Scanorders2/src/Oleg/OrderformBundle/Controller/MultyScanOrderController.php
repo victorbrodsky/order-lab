@@ -105,27 +105,30 @@ class MultyScanOrderController extends Controller {
 
         $entity  = new OrderInfo();
                       
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        $entity->addProvider($user);
-//
-//        $patient = new Patient(true,'valid',$user);
-//        $entity->addPatient($patient);
-//
-//        $procedure = new Procedure(true,'valid',$user);
-//        $patient->addProcedure($procedure);
-//
-//        $accession = new Accession(true,'valid',$user);
-//        $procedure->addAccession($accession);
-//
-//        $part = new Part(true,'valid',$user);
-//        $accession->addPart($part);
-//
-//        $block = new Block(true,'valid',$user);
-//        $part->addBlock($block);
-//
-//        $slide = new Slide(true,'valid',$user); //Slides are always valid by default
-//        $block->addSlide($slide);       
+        //initialize all form's fields, even if they are empty
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $entity->addProvider($user);
+
+        $status = 'invalid';
+
+        $patient = new Patient(true,$status,$user);
+        $entity->addPatient($patient);
+
+        $procedure = new Procedure(true,$status,$user);
+        $patient->addProcedure($procedure);
+
+        $accession = new Accession(true,$status,$user);
+        $procedure->addAccession($accession);
+
+        $part = new Part(true,$status,$user);
+        $accession->addPart($part);
+
+        $block = new Block(true,$status,$user);
+        $part->addBlock($block);
+
+        $slide = new Slide(true,'valid',$user); //Slides are always valid by default
+        $block->addSlide($slide);
         
 
         $request = $this->container->get('request');
@@ -186,7 +189,12 @@ class MultyScanOrderController extends Controller {
 //           echo "form is not valid ??? <br>";
 //       }
 
+//        echo "form errors=".print_r($form->getErrors())."<br>";
+//        exit("controller exit");
+
         if( 1 ) {
+
+            //exit("controller exit");
 
             if( isset($_POST['btnSubmit']) ) {
                 $cicle = 'new';
@@ -491,7 +499,7 @@ class MultyScanOrderController extends Controller {
             $single_multy = 'multy';
         }
 
-        echo "route=".$routeName.", type=".$type."<br>";
+        //echo "route=".$routeName.", type=".$type."<br>";
 
         $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
