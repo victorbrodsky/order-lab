@@ -18,7 +18,7 @@ class OrderUtil {
         $this->em = $em;
     }
 
-    public function changeStatus($id, $status ) {
+    public function changeStatus( $id, $status ) {
 
         $em = $this->em;
 
@@ -80,7 +80,7 @@ class OrderUtil {
                 $message = " (changed children: patients ".$patCount.", procedures ".$procCount.", accessions ".$accCount.", parts ".$partCount.", blocks ".$blockCount." slides ".$slideCount.")";
 
             }
-            //exit("exit status testing");
+            //exit("exit status testing");                     
 
             $em->persist($entity);
             $em->flush();

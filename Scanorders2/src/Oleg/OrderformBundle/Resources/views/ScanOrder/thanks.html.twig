@@ -3,13 +3,18 @@
 {% block content %} 
 {% block body -%}
 
+{% if cicle == 'new' %}
+    {% set cicleStr = 'Submitted' %}
+{% else %}
+    {% set cicleStr = 'Amended' %}
+{% endif %}
 
     <div class="alert alert-info well-lg">
 {#        <h1>Scan Order Confirmation</h1>#}
         <p><h1>Thank You For Your Order !</h1></p>
         <p><h3>
             <a href="{{ path('multy_show', { 'id': orderid }) }}">Order #{{ orderid }}</a>
-            Successfully Submitted.
+            Successfully {{ cicleStr }}.
         </h3></p>
 
         <p><h3>Confirmation Email was sent to {{ app.security.getToken().getUser.getEmail }}</h3></p>

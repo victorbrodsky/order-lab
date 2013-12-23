@@ -18,7 +18,7 @@ var user_id = $("#user_id").val();
 var proxyuser_name = $("#proxyuser_name").val();
 var proxyuser_id = $("#proxyuser_id").val();
 //console.log("urlCommon="+urlCommon);
-var orderinfoid = $("#orderinfoid").val();
+var orderinfoid = $(".orderinfo-id").val();
 
 var partname = new Array();
 var blockname = new Array();

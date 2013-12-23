@@ -104,6 +104,29 @@ class MultyScanOrderController extends Controller {
         //exit();
 
         $entity  = new OrderInfo();
+                      
+//        $user = $this->get('security.context')->getToken()->getUser();
+//
+//        $entity->addProvider($user);
+//
+//        $patient = new Patient(true,'valid',$user);
+//        $entity->addPatient($patient);
+//
+//        $procedure = new Procedure(true,'valid',$user);
+//        $patient->addProcedure($procedure);
+//
+//        $accession = new Accession(true,'valid',$user);
+//        $procedure->addAccession($accession);
+//
+//        $part = new Part(true,'valid',$user);
+//        $accession->addPart($part);
+//
+//        $block = new Block(true,'valid',$user);
+//        $part->addBlock($block);
+//
+//        $slide = new Slide(true,'valid',$user); //Slides are always valid by default
+//        $block->addSlide($slide);       
+        
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -170,11 +193,7 @@ class MultyScanOrderController extends Controller {
             }
 
             if( isset($_POST['btnAmend']) ) {
-                $cicle = 'amend';
-                //$orderinfoid = $form["orderinfoid"]->getData();
-                $orderinfoid = $form["id"]->getData();
-                echo "orderinfoid=".$orderinfoid."<br>";
-                $entity->setId($orderinfoid);
+                $cicle = 'amend';               
             }
 
             $entity->setCicle($cicle);
@@ -219,7 +238,8 @@ class MultyScanOrderController extends Controller {
 
                 return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                     'orderid' => $entity->getId(),
-                    'conflicts' => $conflicts
+                    'conflicts' => $conflicts,
+                    'cicle' => $cicle
                 ));
             }
 

@@ -55,10 +55,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         return $this->setOrderInfoResult( $entity );
     }
     
-    public function setOrderInfoResult( $entity ) {
-
-        $originalId = $entity->getId();
-        echo "originalId=".$originalId."<br>";
+    public function setOrderInfoResult( $entity ) {       
 
         $em = $this->_em;
 
@@ -97,10 +94,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
             $entity->addPatient($patient);
         }
-
+       
         echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
         foreach( $entity->getPatient() as $patient ) {
-////            echo 'patient provider='.$patient->getProvider()."<br>";
+            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first()."<br>";
 ////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 ////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
 ////            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
@@ -113,21 +110,39 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             echo "--------------------------<br>";
         }
 
-
-        //call statusAction to change status to deleted-by-amended-order
-
         //exit('orderinfo repo exit');
 
         //TODO: make copy of orderinfo
         if( $entity->getCicle() == 'amend' ) {
+                   
+            $originalId = $entity->getId();
+            echo "originalId=".$originalId."<br>";
+            
+            $newOrderinfo = clone $entity; 
+            $newOrderinfo->setCicle('submit');
+            $newOrderinfo->setId(null);           
+            $newOrderinfo->setOriginalid($originalId);
+            
             $orderUtil = new OrderUtil($em);
             $message = $orderUtil->changeStatus($originalId, 'Amend');
-            $entity->setOriginalid($originalId);
+            
+            $entity->setId(null);
+                      
+//            echo "orig id=".$entity->getId().",:".$entity."<br>";
+//            echo "newOrderinfo id=".$newOrderinfo->getId().",:".$newOrderinfo."<br>";
+//            
+//            echo "<br><br>final patients count=".count($newOrderinfo->getPatient())."<br>";
+//            echo "<br>--------------------------<br>";
+//            $this->printTree( $newOrderinfo->getPatient()->first() );
+//            echo "--------------------------<br>";
+                       
+            $entity = $newOrderinfo;
         }
-
+                             
+        //create new orderinfo
         $em->persist($entity);
-        $em->flush();
-
+        $em->flush();                     
+        
         //clean empty blocks
         //TODO: do it in part repository
         $blocks = $entity->getBlock();
@@ -138,6 +153,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
                 $em->flush();
             }
         }
+        
+//        if( $entity->getCicle() == 'amend' ) {
+//            echo "update entity with amend=".$entity."<br>";
+//            $entity->setId(null);           
+//            $entity->setOriginalid($originalId);
+//            $em->persist($entity);
+//            $em->flush();
+//        }
 
         //$em->clear();
         return $entity;

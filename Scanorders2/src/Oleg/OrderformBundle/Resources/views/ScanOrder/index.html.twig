@@ -66,7 +66,7 @@
 
             {% if entity.status.name == 'Submitted' %}
                 <tr class="activetr" >
-            {% elseif entity.status.name == 'Canceled' %}
+            {% elseif entity.status.name == 'Canceled' or entity.status.name == 'Amended' %}
                 <tr class="canceltr" >
             {% elseif entity.status.name == 'Filled: Scanned' %}
                 <tr class="completedtr" >
@@ -79,7 +79,12 @@
                 <td>{{ entity.status }}</td>
                 <td>
                     {#<a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
-                    <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    {% if entity.originalid %} 
+                        {% set orderid = entity.originalid %}
+                    {% else %}
+                        {% set orderid = entity.id %}
+                    {% endif %}
+                    <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ orderid }}</a>
                 </td>
                 <td>
                     {{ entity.slide|length }}
