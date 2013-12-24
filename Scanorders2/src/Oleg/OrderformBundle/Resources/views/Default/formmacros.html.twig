@@ -247,7 +247,7 @@
 {######################  holder for array of fields  #################################}
 {% macro inputArrayField(fields,cycle,classname,fieldtype,nobtn,nolabel,withspace,status) %}
     {% import _self as formmacros %}
-    {% set count = 0 %}
+    {% set count = 1 %}
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
@@ -255,10 +255,14 @@
 
             {% set btntype = '' %}
             {% if cycle == 'amend' %}
-                {% if count < (fields|length - 1) %}
-                    {% set btntype = 'minusbtn' %}
-                {%  else %}
-                    {% set btntype = 'minusplusbtn' %}
+                {% if fields|length == 1 %}
+                    {% set btntype = '' %}
+                {% else %}
+                    {% if count < fields|length %}
+                        {% set btntype = 'minusbtn' %}
+                    {%  else %}
+                        {% set btntype = 'minusplusbtn' %}
+                    {% endif %}
                 {% endif %}
             {% endif %}
 
@@ -350,7 +354,7 @@
 
     {#add + button after the field#}
     {% if ( nobtn is defined and nobtn == "buttonbottom") and (cycle == 'new' or cycle == 'edit' or cycle == 'amend') %}
-        {% if cycle == 'amend' and btntype != "" %}
+        {#{% if cycle == 'amend' and btntype != "" %}#}
             {% if btntype == 'minusplusbtn' %}
                 <div class="col-xs-6" align="right"><p></p></div>
                 <div class="col-xs-6" align="left" style="padding-bottom: 1%">
@@ -360,14 +364,23 @@
                     </div>
                 </div>
             {% endif %}
-        {% else %}
-            <div class="col-xs-6" align="right"><p></p></div>
-            <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                <div class="addDelBtnColl">
-                    <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
+            {% if btntype == '' %}
+                <div class="col-xs-6" align="right"><p></p></div>
+                <div class="col-xs-6" align="left" style="padding-bottom: 1%">
+                    <div class="addDelBtnColl">
+                        <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
+            {% if btntype == 'minustn' %}
+                <div class="col-xs-6" align="right"><p></p></div>
+                <div class="col-xs-6" align="left" style="padding-bottom: 1%">
+                    <div class="addDelBtnColl">
+                        <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
+                    </div>
+                </div>
+            {% endif %}
+        {#{% endif %}#}
 
     {% endif %}
 

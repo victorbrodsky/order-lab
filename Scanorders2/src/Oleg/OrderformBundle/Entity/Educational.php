@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
+ * @ORM\Entity
  * @ORM\Table(name="educational")
  */
 class Educational
@@ -33,6 +33,12 @@ class Educational
      * @ORM\Column(type="string", nullable=true, length=200)
      */
     protected $lesson;
+
+//    public function __clone() {
+//        if ($this->id) {
+//            $this->setId(null);
+//        }
+//    }
 
     /**
      * Get id

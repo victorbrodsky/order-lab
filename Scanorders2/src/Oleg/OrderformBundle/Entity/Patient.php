@@ -89,7 +89,6 @@ class Patient extends OrderAbstract
 
     }
 
-
     /**
      * Set mrn
      *
@@ -282,25 +281,18 @@ class Patient extends OrderAbstract
      */
     public function addClinicalHistory($clinicalHistory)
     {
-        if( $clinicalHistory ) {
-            if( !$this->clinicalHistory->contains($clinicalHistory) ) {
-//            if( !$this->isExisted($this->clinicalHistory,$clinicalHistory) ) {
-                $clinicalHistory->setPatient($this);
-                $this->clinicalHistory->add($clinicalHistory);
-            }
+        if( $clinicalHistory == null ) {
+            $clinicalHistory = new PatientClinicalHistory();
+        }
+
+        if( !$this->clinicalHistory->contains($clinicalHistory) ) {
+            $clinicalHistory->setPatient($this);
+            $this->clinicalHistory->add($clinicalHistory);
         }
 
         return $this;
     }
 
-//    public function isExisted( $clinicalHistories, $clinicalHistory ) {
-//        foreach( $clinicalHistories as $thisHist ) {
-//            if( $thisHist->getClinicalHistory() == $clinicalHistory->getClinicalHistory() ) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     /**
      * Remove clinicalHistory
@@ -330,11 +322,13 @@ class Patient extends OrderAbstract
      */
     public function addName($name)
     {
-        if( $name ) {
-            if( !$this->name->contains($name) ) {
-                $name->setPatient($this);
-                $this->name->add($name);
-            }
+        if( $name == null ) {
+            $name = new PatientName();
+        }
+
+        if( !$this->name->contains($name) ) {
+            $name->setPatient($this);
+            $this->name->add($name);
         }
     
         return $this;
@@ -358,11 +352,13 @@ class Patient extends OrderAbstract
      */
     public function addAge($age)
     {
-        if( $age ) {
-            if( !$this->age->contains($age) ) {
-                $age->setPatient($this);
-                $this->age->add($age);
-            }
+        if( $age == null ) {
+            $age = new PatientAge();
+        }
+
+        if( !$this->age->contains($age) ) {
+            $age->setPatient($this);
+            $this->age->add($age);
         }
 
         return $this;
@@ -386,12 +382,15 @@ class Patient extends OrderAbstract
      */
     public function addSex($sex)
     {
-        if( $sex ) {
-            if( !$this->sex->contains($sex) ) {
-                $sex->setPatient($this);
-                $this->sex->add($sex);
-            }
+        if( $sex == null ) {
+            $sex = new PatientSex();
         }
+
+        if( !$this->sex->contains($sex) ) {
+            $sex->setPatient($this);
+            $this->sex->add($sex);
+        }
+
         return $this;
     }
 
@@ -413,11 +412,13 @@ class Patient extends OrderAbstract
      */
     public function addDob($dob)
     {
-        if( $dob ) {
-            if( !$this->dob->contains($dob) ) {
-                $dob->setPatient($this);
-                $this->dob->add($dob);
-            }
+        if( $dob == null ) {
+            $dob = new PatientDob();
+        }
+
+        if( !$this->dob->contains($dob) ) {
+            $dob->setPatient($this);
+            $this->dob->add($dob);
         }
     
         return $this;
@@ -441,8 +442,8 @@ class Patient extends OrderAbstract
         }
 
         return "Patient: id=".$this->id.
-        ", mrn=".$this->mrn->first().
-        ", name=".$this->name->first().
+        ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
+        ", name=".$this->name->first().", nameID=".$this->name->first()->getId().
         ", orderinfo=".count($this->orderinfo).
         $mrns."<br>";
     }
@@ -490,27 +491,27 @@ class Patient extends OrderAbstract
         return $this->obtainKeyField();
     }
 
-    //TODO: not used. Remove it later.
-    //check if procedure-accession is exists
-    //$entity - procedure
-    public function containsChild($entity) {
-        //echo $entity;
-//        if( count($entity->getChildren()) != 1 ) {
-//            throw $this->createNotFoundException( 'This Object must have only one child. Number of children=' . count($entity->getChildren()) );
+//    //TODO: not used. Remove it later.
+//    //check if procedure-accession is exists
+//    //$entity - procedure
+//    public function containsChild($entity) {
+//        //echo $entity;
+////        if( count($entity->getChildren()) != 1 ) {
+////            throw $this->createNotFoundException( 'This Object must have only one child. Number of children=' . count($entity->getChildren()) );
+////        }
+//        //echo "procedure count=".count($this->procedure)."<br>";
+//        foreach( $this->procedure as $procedure ) {
+//            $acc1 = $entity->getChildren()->first()->obtainValidKeyfield();
+//            $acc2 = $procedure->getChildren()->first()->obtainValidKeyfield();
+//            //echo "compare: ".$acc1."?=".$acc2."<br>";
+//            if( $acc1."" == $acc2."" ) {
+//                echo "exists!!! <br>";
+//                return true;
+//            }
 //        }
-        //echo "procedure count=".count($this->procedure)."<br>";
-        foreach( $this->procedure as $procedure ) {
-            $acc1 = $entity->getChildren()->first()->obtainValidKeyfield();
-            $acc2 = $procedure->getChildren()->first()->obtainValidKeyfield();
-            //echo "compare: ".$acc1."?=".$acc2."<br>";
-            if( $acc1."" == $acc2."" ) {
-                echo "exists!!! <br>";
-                return true;
-            }
-        }
-        echo "not exists!!! <br>";
-        return false;
-    }
+//        echo "not exists!!! <br>";
+//        return false;
+//    }
 
 
 }

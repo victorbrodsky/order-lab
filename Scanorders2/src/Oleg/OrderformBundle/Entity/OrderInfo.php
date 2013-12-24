@@ -36,13 +36,13 @@ class OrderInfo
      * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
      * @ORM\JoinColumn(name="pathservicelist_id", referencedColumnName="id", nullable=true)
      */
-    protected $pathologyService;
+    private $pathologyService;
 
     /**
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
      */
-    protected $status;
+    private $status;
 
     
     /**
@@ -90,7 +90,7 @@ class OrderInfo
     /**
      * @var string
      *
-     * @ORM\Column(name="slideDelivery", type="string", length=200)
+     * @ORM\Column(name="slideDelivery", type="string", length=200, nullable=true)
      * @Assert\NotBlank
      */
     private $slideDelivery;
@@ -98,7 +98,7 @@ class OrderInfo
     /**
      * @var string
      *
-     * @ORM\Column(name="returnSlide", type="string", length=200)
+     * @ORM\Column(name="returnSlide", type="string", length=200, nullable=true)
      * @Assert\NotBlank
      */
     private $returnSlide;
@@ -125,7 +125,7 @@ class OrderInfo
      * Accession Number
      * @ORM\OneToMany(targetEntity="DataQuality", mappedBy="orderinfo", cascade={"persist"})
      */
-    protected $dataquality;
+    private $dataquality;
 
     /////////////////    OBJECTS    //////////////////////
 
@@ -134,7 +134,7 @@ class OrderInfo
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo")
      * @ORM\JoinTable(name="patient_orderinfo")
      **/
-    protected $patient;
+    private $patient;
 
     /**
      * @ORM\OneToOne(
@@ -148,7 +148,7 @@ class OrderInfo
      *      onDelete="CASCADE"
      * )
      */
-    protected $educational;
+    private $educational;
 
     //     nullable=true
     /**
@@ -163,37 +163,37 @@ class OrderInfo
      *      onDelete="CASCADE"
      * )
      */
-    protected $research;
+    private $research;
        
     /**
      * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")
      * @ORM\JoinTable(name="procedure_orderinfo")
      **/
-    protected $procedure;
+    private $procedure;
     
     /**
      * @ORM\ManyToMany(targetEntity="Accession", inversedBy="orderinfo")
      * @ORM\JoinTable(name="accession_orderinfo")
      **/
-    protected $accession;
+    private $accession;
     
     /**
      * @ORM\ManyToMany(targetEntity="Part", inversedBy="orderinfo")
      * @ORM\JoinTable(name="part_orderinfo")
      **/
-    protected $part;
+    private $part;
     
     /**
      * @ORM\ManyToMany(targetEntity="Block", inversedBy="orderinfo")
      * @ORM\JoinTable(name="block_orderinfo")
      **/
-    protected $block;
+    private $block;
     
     /**
      * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
      * @ORM\JoinTable(name="slide_orderinfo")
      **/
-    protected $slide;
+    private $slide;
     
     /**
      * Constructor
@@ -211,6 +211,72 @@ class OrderInfo
         $this->dataquality = new ArrayCollection();
         $this->cicle = 'new';
     }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->setId(null);
+        }
+    }
+
+//    public function __clone() {
+//
+//        if ($this->id) {
+//
+//            echo "clone dependencies <br>";
+//
+//            $this->setId(null);
+//
+//            foreach( $this->patient as $patient ) {
+//                $this->removePatient($patient);
+//                $patient = clone $patient;
+//                $this->addPatient($patient);
+//            }
+//
+//            foreach( $this->procedure as $child ) {
+//                $this->removeProcedure($child);
+//                $child = clone $child;
+//                $this->addProcedure($child);
+//            }
+//
+//            foreach( $this->accession as $child ) {
+//                $this->removeAccession($child);
+//                $child = clone $child;
+//                $this->addAccession($child);
+//            }
+//
+//            foreach( $this->part as $child ) {
+//                $this->removePart($child);
+//                $child = clone $child;
+//                $this->addPart($child);
+//            }
+//
+//            foreach( $this->block as $child ) {
+//                $this->removeBlock($child);
+//                $child = clone $child;
+//                $this->addBlock($child);
+//            }
+//
+//            foreach( $this->slide as $child ) {
+//                $this->removeSlide($child);
+//                $child = clone $child;
+//                $this->addSlide($child);
+//            }
+//
+//            foreach( $this->dataquality as $child ) {
+//                $this->removeDataquality($child);
+//                $child = clone $child;
+//                $this->addDataquality($child);
+//            }
+//
+//            if( $this->getEducational() ) {
+//                $this->setEducational( clone $this->getEducational() );
+//            }
+//
+//            if( $this->getResearch() ) {
+//                $this->setResearch( clone $this->getResearch() );
+//            }
+//        }
+//    }
     
     /**
      * Get id

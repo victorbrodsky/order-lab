@@ -382,7 +382,22 @@ class UtilController extends Controller {
 
         $formHelper = new FormHelper();
         $arr = $formHelper->getPart();
-        
+
+        //add custom added values by order id
+        $request = $this->get('request');
+        $id = trim( $request->get('opt') );
+        if( $id ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            if( $orderinfo ) {
+                $parts = $orderinfo->getPart();
+                foreach( $parts as $part ) {
+                    foreach( $part->getPartname() as $partname ) {
+                        $arr[] = $partname."";
+                    }
+                }
+            }
+        }
+
         $output = array();
 
         foreach( $arr as $var ) {
@@ -404,7 +419,22 @@ class UtilController extends Controller {
 
         $formHelper = new FormHelper();
         $arr = $formHelper->getBlock();
-        
+
+        //add custom added values by order id
+        $request = $this->get('request');
+        $id = trim( $request->get('opt') );
+        if( $id ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            if( $orderinfo ) {
+                $blocks = $orderinfo->getBlock();
+                foreach( $blocks as $block ) {
+                    foreach( $block->getBlockname() as $blockname ) {
+                        $arr[] = $blockname."";
+                    }
+                }
+            }
+        }
+
         $output = array();
 
         foreach( $arr as $var ) {

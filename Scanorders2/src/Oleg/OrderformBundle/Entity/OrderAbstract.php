@@ -36,7 +36,7 @@ abstract class OrderAbstract
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $creationdate;
+    protected $creationdate;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
@@ -56,6 +56,19 @@ abstract class OrderAbstract
         $this->provider = $provider;
         $this->orderinfo = new ArrayCollection();
     }
+
+    public function __clone() {
+    if( $this->getId() ) {
+        $this->setId(null);
+//        if( $this->getChildren() ) {
+//            foreach( $this->getChildren() as $child ) {
+//                $this->removeChildren($child);
+//                $child = clone $child;
+//                $this->addChildren($child);
+//            }
+//        }
+    }
+}
 
     public function setId($id)
     {
@@ -130,6 +143,11 @@ abstract class OrderAbstract
     public function getOrderinfo()
     {
         return $this->orderinfo;
+    }
+
+    public function clearOrderinfo()
+    {
+        return $this->orderinfo->clear();
     }
 
     public function setProvider($provider)

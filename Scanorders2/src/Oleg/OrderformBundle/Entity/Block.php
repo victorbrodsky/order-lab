@@ -99,11 +99,12 @@ class Block extends OrderAbstract
 
     public function addSectionsource($sectionsource)
     {
-        if( $sectionsource ) {
-            if( !$this->sectionsource->contains($sectionsource) ) {
-                $sectionsource->setBlock($this);
-                $this->sectionsource->add($sectionsource);
-            }
+        if( $sectionsource == null ) {
+            $sectionsource = new BlockSectionsource();
+        }
+        if( !$this->sectionsource->contains($sectionsource) ) {
+            $sectionsource->setBlock($this);
+            $this->sectionsource->add($sectionsource);
         }
 
         return $this;

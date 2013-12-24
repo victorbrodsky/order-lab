@@ -149,12 +149,15 @@ class Part extends OrderAbstract
     }
     public function addDiseaseType($diseaseType)
     {
-        if( $diseaseType ) {
-            if( !$this->diseaseType->contains($diseaseType) ) {
-                $diseaseType->setPart($this);
-                $this->diseaseType->add($diseaseType);
-            }
+        if( $diseaseType == null ) {
+            $diseaseType = new PartDiseaseType();
         }
+
+        if( !$this->diseaseType->contains($diseaseType) ) {
+            $diseaseType->setPart($this);
+            $this->diseaseType->add($diseaseType);
+        }
+
         return $this;
     }
     public function removeDiseaseType($diseaseType)
@@ -196,11 +199,13 @@ class Part extends OrderAbstract
     }
     public function addSourceOrgan($sourceOrgan)
     {
-        if( $sourceOrgan ) {
-            if( !$this->sourceOrgan->contains($sourceOrgan) ) {
-                $sourceOrgan->setPart($this);
-                $this->sourceOrgan->add($sourceOrgan);
-            }
+        if( $sourceOrgan == null ) {
+            $sourceOrgan = new PartSourceOrgan();
+        }
+
+        if( !$this->sourceOrgan->contains($sourceOrgan) ) {
+            $sourceOrgan->setPart($this);
+            $this->sourceOrgan->add($sourceOrgan);
         }
 
         return $this;
@@ -213,17 +218,21 @@ class Part extends OrderAbstract
     public function setDescription($description) {
         $this->description = $description;
     }
+
     public function addDescription($description)
     {
-        if( $description ) {
-            if( !$this->description->contains($description) ) {
-                $description->setPart($this);
-                $this->description->add($description);
-            }
+        if( $description == null ) {
+            $description = new PartDescription();
+        }
+
+        if( !$this->description->contains($description) ) {
+            $description->setPart($this);
+            $this->description->add($description);
         }
 
         return $this;
     }
+
     public function removeDescription($description)
     {
         $this->description->removeElement($description);
@@ -278,11 +287,12 @@ class Part extends OrderAbstract
     }
     public function adddiffDisident($diffDisident)
     {
-        if( $diffDisident != null ) {
-            if( !$this->diffDisident->contains($diffDisident) ) {
-                $diffDisident->setPart($this);
-                $this->diffDisident->add($diffDisident);
-            }
+        if( $diffDisident == null ) {
+            $diffDisident = new PartDiffDisident();
+        }
+        if( !$this->diffDisident->contains($diffDisident) ) {
+            $this->diffDisident->add($diffDisident);
+            $diffDisident->setPart($this);
         }
     
         return $this;
@@ -303,11 +313,13 @@ class Part extends OrderAbstract
      */
     public function addPaper($paper)
     {
-        if( $paper != null ) {
-            if( !$this->paper->contains($paper) ) {
-                $paper->setPart($this);
-                $this->paper->add($paper);
-            }
+        if( $paper == null ) {
+            $paper = new PartPaper();
+        }
+
+        if( !$this->paper->contains($paper) ) {
+            $this->paper->add($paper);
+            $paper->setPart($this);
         }
     
         return $this;
@@ -340,12 +352,15 @@ class Part extends OrderAbstract
     }
     public function addDisident($disident)
     {
-        if( $disident ) {
-            if( !$this->disident->contains($disident) ) {
-                $disident->setPart($this);
-                $this->disident->add($disident);
-            }
+        if( $disident == null ) {
+            $disident = new PartDisident();
         }
+
+        if( !$this->disident->contains($disident) ) {
+            $disident->setPart($this);
+            $this->disident->add($disident);
+        }
+
         return $this;
     }
     public function removeDisident($disident)

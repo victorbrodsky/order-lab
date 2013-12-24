@@ -48,12 +48,19 @@ abstract class ArrayFieldAbstract {
      */
     protected $creationdate;
 
+
     public function __construct( $status = 'valid', $provider = null )
     {
         $this->status = $status;
         $this->source = "scanorder";
         $this->provider = $provider;
     }
+
+//    public function __clone() {
+//        if( $this->getId() ) {
+//            $this->setId(null);
+//        }
+//    }
 
     public function setId($id)
     {

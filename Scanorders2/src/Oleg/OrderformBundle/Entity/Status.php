@@ -6,8 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//(repositoryClass="Oleg\OrderformBundle\Repository\StatusRepository")
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\StatusRepository")
+ * @ORM\Entity
  * @ORM\Table(name="status")
  */
 class Status

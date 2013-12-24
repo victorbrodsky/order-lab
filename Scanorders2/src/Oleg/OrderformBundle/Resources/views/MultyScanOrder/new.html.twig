@@ -53,7 +53,7 @@
     </h3>
 
     {#action buttons#}
-    {% if type == 'edit' or type == 'show' %}
+    {% if type == 'edit' or type == 'show' and form.vars.value.status != 'Amended' %}
         <div class="well well-sm">
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}

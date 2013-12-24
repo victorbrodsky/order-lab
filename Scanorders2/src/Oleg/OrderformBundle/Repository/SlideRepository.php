@@ -14,7 +14,9 @@ class SlideRepository extends ArrayFieldAbstractRepository {
     }
     
     public function setResult( $slide, $orderinfo, $original=null ) {
-        
+
+        //echo $slide;
+
         $em = $this->_em;
         $em->persist($slide);
 
@@ -24,14 +26,18 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         $slide->setProvider($orderinfo->getProvider()->first());
 
+        $slide = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($slide,$orderinfo,$original);
+
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {
             $scan->setProvider($orderinfo->getProvider()->first());
+            $scan = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($scan,$orderinfo,$original);
         } //scan
 
         $stains = $slide->getStain();
         foreach( $stains as $stain ) {
-            $scan->setProvider($orderinfo->getProvider()->first());
+            $stain->setProvider($orderinfo->getProvider()->first());
+            $stain = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($stain,$orderinfo,$original);
         } //stain
         
         return $slide;

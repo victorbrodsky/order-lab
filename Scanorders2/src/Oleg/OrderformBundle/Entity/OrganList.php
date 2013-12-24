@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrganListRepository")
+ * @ORM\Entity
  * @ORM\Table(name="organlist")
  */
 class OrganList

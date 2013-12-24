@@ -66,11 +66,13 @@ class Procedure extends OrderAbstract
 
     public function addName($name)
     {
-        if( $name ) {
-            if( !$this->name->contains($name) ) {
-                $name->setProcedure($this);
-                $this->name->add($name);
-            }
+        if( $name == null ) {
+            $name = new ProcedureName();
+        }
+
+        if( !$this->name->contains($name) ) {
+            $name->setProcedure($this);
+            $this->name->add($name);
         }
 
         return $this;

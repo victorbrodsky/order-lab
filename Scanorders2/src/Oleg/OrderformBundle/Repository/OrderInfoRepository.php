@@ -14,7 +14,7 @@ use Oleg\OrderformBundle\Helper\OrderUtil;
 class OrderInfoRepository extends ArrayFieldAbstractRepository {
     
     //process orderinfo and all entities
-    public function processOrderInfoEntity( $entity, $type ) {
+    public function processOrderInfoEntity( $entity, $type=null ) {
 
         //echo "orderinfo: ".$entity."<br>";
 //        echo "patients count=".count($entity->getPatient())."<br>";
@@ -49,7 +49,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
         $entity->setStatus($status);
 
-        $entity->setType($type);
+        if( $type ) {
+            $entity->setType($type);
+        }
 
         //return $entity;
         return $this->setOrderInfoResult( $entity );
@@ -95,20 +97,20 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->addPatient($patient);
         }
        
-//        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-//        foreach( $entity->getPatient() as $patient ) {
+        //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+        //foreach( $entity->getPatient() as $patient ) {
 //            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first().", status=".$patient->getName()->first()->getStatus()."<br>";
 //////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 //////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
-//////            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
-////            //echo $patient;
+//            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
+            //echo $patient;
 ////            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
 ////            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
 ////            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
-//            echo "<br>--------------------------<br>";
-//            $this->printTree( $patient );
-//            echo "--------------------------<br>";
-//        }
+            //echo "<br>--------------------------<br>";
+            //$this->printTree( $patient );
+            //echo "--------------------------<br>";
+        //}
 
         //exit('orderinfo repo exit');
 
@@ -118,15 +120,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $originalId = $entity->getId();
             //echo "originalId=".$originalId."<br>";
             
-            $newOrderinfo = clone $entity; 
+            $newOrderinfo = clone $entity;
             $newOrderinfo->setCicle('submit');
-            $newOrderinfo->setId(null);           
+            $newOrderinfo->setId(null);
             $newOrderinfo->setOriginalid($originalId);
             
             $orderUtil = new OrderUtil($em);
             $message = $orderUtil->changeStatus($originalId, 'Amend');
             
-            $entity->setId(null);
+            //$entity->setId(null);
                       
 //            echo "orig id=".$entity->getId().",:".$entity."<br>";
 //            echo "newOrderinfo id=".$newOrderinfo->getId().",:".$newOrderinfo."<br>";

@@ -241,6 +241,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 if( $status ) {
                                     //echo "2 change status to (".$status.") <br>";
                                     $field->setStatus($status);
+                                    //set ID to null if status is valid (un-cancel procedure)
+                                    if( $status == 'valid' ) {
+                                        $field->setId(null);
+                                    }
                                     continue;
                                 }
 

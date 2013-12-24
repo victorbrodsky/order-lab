@@ -246,6 +246,7 @@ class MultyScanOrderController extends Controller {
 
                 return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                     'orderid' => $entity->getId(),
+                    'originalid' => $entity->getOriginalid(),
                     'conflicts' => $conflicts,
                     'cicle' => $cicle
                 ));

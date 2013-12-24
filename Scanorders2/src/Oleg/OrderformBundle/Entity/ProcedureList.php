@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureListRepository")
+ * @ORM\Entity
  * @ORM\Table(name="ProcedureList")
  */
 class ProcedureList

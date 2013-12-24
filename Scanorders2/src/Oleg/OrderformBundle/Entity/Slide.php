@@ -152,30 +152,6 @@ class Slide extends OrderAbstract
         return $this->part;
     }
 
-//    //Not used
-//    public function setParent($parent = null)
-//    {
-//        //echo "Slide set parent <br>";
-//        $type = $this->getSlidetype();
-//        if( $type == "Cytopathology" ) {
-//            $this->part = $parent;
-//        } else {
-//            $this->block = $parent;
-//        }
-//        return $this;
-//    }
-//    //Not used
-//    public function getParent()
-//    {
-//        //echo "Slide get parent <br>";
-//        $type = $this->getSlidetype();
-//        if( $type == "Cytopathology" ) {
-//            return $this->part;
-//        } else {
-//            return $this->block;
-//        }
-//    }
-
     /**
      * Set barcode
      *
@@ -280,7 +256,9 @@ class Slide extends OrderAbstract
             $stain = $this->getStain()->first()->getField();
         }
 
-        return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().", stain count=".count($this->getStain()).", stain=".$stain.", mag=".$mag."<br>";
+        return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().
+                ", stain count=".count($this->getStain()).", stain=".$stain.", mag=".$mag.
+                ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }
 
 
@@ -288,12 +266,11 @@ class Slide extends OrderAbstract
     {
         if( $specialStains != null ) {
             if( !$this->specialStains->contains($specialStains) ) {
-                $specialStains->setSlide($this);
                 $this->specialStains->add($specialStains);
+                $specialStains->setSlide($this);
                 $specialStains->setProvider($this->getProvider());
             }
         }
-    
         return $this;
     }
 
@@ -316,14 +293,17 @@ class Slide extends OrderAbstract
      */
     public function addRelevantScan( $relevantScans )
     {
-        if( $relevantScans != null ) {
-            if( !$this->relevantScans->contains($relevantScans) ) {
-                $relevantScans->setSlide($this);
-                $this->relevantScans->add($relevantScans);
-                $relevantScans->setProvider($this->getProvider());
-            }
+
+        if( $relevantScans == null ) {
+            $relevantScans = new RelevantScans();
         }
-    
+
+        if( !$this->relevantScans->contains($relevantScans) ) {
+            $this->relevantScans->add($relevantScans);
+            $relevantScans->setSlide($this);
+            $relevantScans->setProvider($this->getProvider());
+        }
+
         return $this;
     }
 
@@ -379,31 +359,13 @@ class Slide extends OrderAbstract
         return $this->title;
     }
 
-
-    //parent, children, key field methods
-//    public function setParent($parent) {
-////        $this->setBlock($parent);
-////        return $this;
-//    }
-//
-//    public function getParent() {
-//        return $this->getBlock();
-//    }
-    //
     public function getChildren() {
-        return null;
+        return null;    //new ArrayCollection();
     }
 
     public function obtainKeyField() {
         return null;
     }
 
-//    public function addChildren($child) {
-//        //
-//    }
-//
-//    public function removeChildren($child) {
-//        //
-//    }
 
 }
