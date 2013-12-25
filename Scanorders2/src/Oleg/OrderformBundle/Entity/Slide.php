@@ -366,6 +366,27 @@ class Slide extends OrderAbstract
     public function obtainKeyField() {
         return null;
     }
+    
+    //parent, children, key field methods
+    public function setParent($parent) {
+        $parentClass = new \ReflectionClass($parent);
+        $parentClassName = $parentClass->getShortName();
+        if( $parentClassName == "Block" ) {
+            //echo "add  Block <br>";
+            $this->setBlock($parent);
+        } else
+        if( $parentClassName == "Part") {
+            //echo "add  Slide <br>";
+            $this->setPart($parent);
+        } else {
+            throw new \Exception('Parent can not be set of the class ' . $parentClassName );
+        }
+        return $this;
+    }
+
+    public function getParent() {
+        return null; //no parent for patient
+    }
 
 
 }

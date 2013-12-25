@@ -471,6 +471,10 @@ class Patient extends OrderAbstract
         $this->removeProcedure($child);
     }
 
+    public function setChildren($children) {
+        $this->setProcedure($children);
+    }
+    
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getMrn();
@@ -490,6 +494,22 @@ class Patient extends OrderAbstract
         $this->addMrn( new PatientMrn() );
         return $this->obtainKeyField();
     }
+    
+//    public function cloneChildren() {
+//        // Get current collection
+//        $children = $this->getChildren();
+//
+//        $cloneChildren = new ArrayCollection();
+//        foreach( $children as $child ) {
+//            //$this->removeChildren($child);
+//            $cloneChild = clone $child;
+//            $cloneChild->cloneChildren();
+//            $cloneChildren->add($cloneChild);
+//            $this->procedure = $cloneChildren;
+//            //$this->addChildren($cloneChild);
+//            $cloneChild->setParent($this);
+//        }
+//    }
 
 //    //TODO: not used. Remove it later.
 //    //check if procedure-accession is exists

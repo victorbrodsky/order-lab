@@ -58,17 +58,37 @@ abstract class OrderAbstract
     }
 
     public function __clone() {
-    if( $this->getId() ) {
-        $this->setId(null);
-//        if( $this->getChildren() ) {
-//            foreach( $this->getChildren() as $child ) {
-//                $this->removeChildren($child);
-//                $child = clone $child;
-//                $this->addChildren($child);
-//            }
-//        }
+        if( $this->getId() ) {
+            $this->setId(null);
+        //        if( $this->getChildren() ) {
+        //            foreach( $this->getChildren() as $child ) {
+        //                $this->removeChildren($child);
+        //                $child = clone $child;
+        //                $this->addChildren($child);
+        //            }
+        //        }
+        }
     }
-}
+    
+    public function cloneChildren() {
+        // Get current collection
+        $children = $this->getChildren();
+
+        if( !$children ) return;
+        
+        $cloneChildren = new ArrayCollection();
+        
+        foreach( $children as $child ) {
+            //$this->removeChildren($child);
+            $cloneChild = clone $child;
+            $cloneChild->cloneChildren();
+            $cloneChildren->add($cloneChild);
+            //$this->addChildren($cloneChild);         
+            $cloneChild->setParent($this);          
+        }
+        
+        $this->setChildren($cloneChildren);
+    }
 
     public function setId($id)
     {

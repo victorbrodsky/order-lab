@@ -215,6 +215,20 @@ class OrderInfo
     public function __clone() {
         if ($this->id) {
             $this->setId(null);
+                     
+            // Get current collection
+            $children = $this->getPatient();
+            if( !$children ) return;
+            $this->patient = new ArrayCollection();
+            foreach( $children as $child ) {
+                //$this->removeChildren($child);
+                $cloneChild = clone $child;
+                $cloneChild->cloneChildren();
+                $this->patient->add($cloneChild);
+                //$this->addChildren($cloneChild);         
+                $cloneChild->setParent($this);
+            }         
+              
         }
     }
 

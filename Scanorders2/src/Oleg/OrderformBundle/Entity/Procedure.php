@@ -217,6 +217,10 @@ class Procedure extends OrderAbstract
         $this->removeAccession($child);
     }
 
+    public function setChildren($children) {
+        $this->setAccession($children);
+    }
+    
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getEncounter();

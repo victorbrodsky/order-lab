@@ -72,8 +72,8 @@ class OrderUtil {
 
                 $newOrderinfo = clone $entity;
                 //$em->detach($entity);
-                //$em->detach($newOrderinfo);
-
+                $em->detach($newOrderinfo);                            
+                
                 echo "<br><br>orig entity1##########: final patients count=".count($entity->getPatient())."<br>";
                 foreach( $entity->getPatient() as $patient ) {
                     echo $entity;
@@ -86,7 +86,10 @@ class OrderUtil {
                 //$newOrderinfo->setId(null);
                 $newOrderinfo->setOriginalid($originalId);
 
-                $newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
+//                foreach( $newOrderinfo->getPatient() as $patient ) {
+//                    $patient->cloneChildren();
+//                } 
+                //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
 
                 echo "<br><br>orig entity2###########: final patients count=".count($entity->getPatient())."<br>";
                 foreach( $entity->getPatient() as $patient ) {
@@ -96,7 +99,7 @@ class OrderUtil {
                     echo "--------------------------<br>";
                 }
 
-                echo "<br><br>newOrderinfo##########: final patients count=".count($newOrderinfo->getPatient())."<br>";
+                echo "<br><br>newOrderinfo1 ##########: final patients count=".count($newOrderinfo->getPatient())."<br>";
                 foreach( $newOrderinfo->getPatient() as $patient ) {
                     echo $newOrderinfo;
                     echo "<br>--------------------------<br>";
@@ -108,6 +111,14 @@ class OrderUtil {
 
                 $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
 
+                echo "<br><br>newOrderinfo2 ##########: final patients count=".count($newOrderinfo->getPatient())."<br>";
+                foreach( $newOrderinfo->getPatient() as $patient ) {
+                    echo $newOrderinfo;
+                    echo "<br>--------------------------<br>";
+                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
+                    echo "--------------------------<br>";
+                }                             
+                
                 $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo );
 
             } else {
@@ -132,7 +143,7 @@ class OrderUtil {
         //$orderinfo->clearPatient();
 
         foreach( $patients as $patient ) {
-
+           
             $orderinfo->removePatient($patient);
             $new_patient = clone $patient;
             $new_patient->setId(null);
@@ -271,12 +282,14 @@ class OrderUtil {
                 //set ID to null if status is valid (un-cancel procedure)
                 if( $statusStr == 'valid' ) {
 
-                    $newChild = clone $child;
+                    //$newChild = clone $child;
 
-                    $newChild->setId(null);
+                    $child->setId(null);
                     //$child->removeOrderInfo($orderinfo);
                     //$newChild->clearOrderinfo();
-                    //$em->persist($child);
+                    //$em->persist($child);                   
+                    $em->detach($child);
+                    $em->persist($child);
                 }
                 $count++;
             }

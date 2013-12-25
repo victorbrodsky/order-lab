@@ -112,7 +112,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //echo "--------------------------<br>";
         //}
 
-        //exit('orderinfo repo exit');
+        exit('orderinfo repo exit');
 
         //TODO: make copy of orderinfo
         if( $entity->getCicle() == 'amend' ) {

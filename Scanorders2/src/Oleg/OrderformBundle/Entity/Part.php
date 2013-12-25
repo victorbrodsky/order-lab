@@ -406,6 +406,9 @@ class Part extends OrderAbstract
         $this->slide->clear();
     }
 
+    public function setSlide( $slide ){
+        $this->slide = $slide;
+    }
 
     //parent, children, key field methods
     public function setParent($parent) {
@@ -461,6 +464,21 @@ class Part extends OrderAbstract
             $this->removeSlide($child);
         } else {
             throw new \Exception('Part can not remove object of the class ' . $childClassName );
+        }
+    }
+    
+    public function setChildren($children) {
+        $childClass = new \ReflectionClass($children->first());
+        $childClassName = $childClass->getShortName();
+        if( $childClassName == "Block" ) {
+            //echo "add  Block <br>";
+            $this->setBlock($children);
+        } else
+        if( $childClassName == "Slide") {
+            //echo "add  Slide <br>";
+            $this->setSlide($children);
+        } else {
+            throw new \Exception('Part can not set object of the class ' . $childClassName );
         }
     }
 

@@ -155,6 +155,10 @@ class Block extends OrderAbstract
     public function clearSlide(){
         $this->slide->clear();
     }
+    
+    public function setSlide( $slide ){
+        $this->slide = $slide;
+    }
 
     /**
      * Set part
@@ -215,6 +219,10 @@ class Block extends OrderAbstract
         $this->removeSlide($child);
     }
 
+    public function setChildren($children) {
+        $this->setSlide($children);
+    }
+    
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getBlockname();

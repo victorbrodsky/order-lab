@@ -158,15 +158,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     public function attachToParentAndOrderinfo( $entity, $child, $orderinfo ) {
+        echo "start adding to orderinfo <br>";
         if( $child ) {
             $entity->addChildren($child);
 
-            //link entity with orderinfo
-            //echo "add orderinfo <br>";
+            //link entity with orderinfo          
             $childClass = new \ReflectionClass($child);
             $childClassName = $childClass->getShortName();
             $addClassMethod = "add".$childClassName;
             $orderinfo->$addClassMethod($child);
+            echo "add orderinfo for ".$childClassName."<br>";
         }
     }
 
@@ -244,6 +245,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     //set ID to null if status is valid (un-cancel procedure)
                                     if( $status == 'valid' ) {
                                         $field->setId(null);
+                                        $em = $this->_em;
+                                        $em->detach($field);
+                                        $em->persist($field);
                                     }
                                     continue;
                                 }
