@@ -46,7 +46,7 @@
             <tr>
                 <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.oid') }}</th>
                 {#<th>Slides</th>#}
                 <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
@@ -79,12 +79,7 @@
                 <td>{{ entity.status }}</td>
                 <td>
                     {#<a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
-                    {% if entity.originalid %} 
-                        {% set orderid = entity.originalid %}
-                    {% else %}
-                        {% set orderid = entity.id %}
-                    {% endif %}
-                    <a href="{{ path('multy_show', { 'id': entity.id }) }}">{{ orderid }}</a>
+                    <a href="{{ path('multy_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a>
                 </td>
                 <td>
                     {{ entity.slide|length }}

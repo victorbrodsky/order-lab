@@ -96,6 +96,18 @@ class Slide extends OrderAbstract
             $this->addStain( new Stain($status,$provider) );
         }
     }
+
+    public function makeDependClone() {
+        $this->scan = $this->cloneDepend($this->scan);
+        $this->stain = $this->cloneDepend($this->stain);
+        $this->specialStains = $this->cloneDepend($this->specialStains);
+        $this->relevantScans = $this->cloneDepend($this->relevantScans);
+
+//        foreach( $this->scan as $depend ) {
+//            echo "after depend id=".$depend->getId()."<br>";
+//        }
+
+    }
     
     public function getId() {
         return $this->id;
@@ -257,7 +269,9 @@ class Slide extends OrderAbstract
         }
 
         return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().
-                ", stain count=".count($this->getStain()).", stain=".$stain.", mag=".$mag.
+                ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().
+                ", stain count=".count($this->getStain()).", firststainid=".$this->getStain()->first()->getId().
+                ", stain=".$stain.", mag=".$mag.
                 ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }
 

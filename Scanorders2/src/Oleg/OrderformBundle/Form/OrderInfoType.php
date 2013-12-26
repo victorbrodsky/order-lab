@@ -33,12 +33,13 @@ class OrderInfoType extends AbstractType
     {
 
 //        echo "orderinfo params=";
-//        print_r($this->params);
+//        //print_r($this->params);
+//        echo "type=".$this->params['type']."<br>";
 //        echo "<br>";
 
         $helper = new FormHelper();
 
-        $builder->add( 'id' , 'hidden', array('attr'=>array('class'=>'orderinfo-id')) );
+        $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'orderinfo-id')) );
 
         $builder->add( 'type', 'hidden' ); 
         

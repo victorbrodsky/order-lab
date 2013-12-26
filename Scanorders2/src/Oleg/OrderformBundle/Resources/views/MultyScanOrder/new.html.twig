@@ -33,21 +33,16 @@
 
 {% block content %}
 
-    {#ID={{ form.vars.value.id }}#}
+    {#ID={{ form.vars.value.oid }}#}
     {#{% if type == 'edit' or type == 'show' %}#}
     {#ID={{ form_widget(form.id) }}#}
-    {#&#123;&#35;{{ form.vars.value.id }}&#35;&#125;#}
+    {#&#123;&#35;{{ form.vars.value.oid }}&#35;&#125;#}
     {#{% endif %}#}
 
     <h3 class="text-info">
         {{ headername  }} Scan Order
-        {% if form.vars.value.id != "" %}
-            {% if form.vars.value.originalid %}
-                {% set orderid = form.vars.value.originalid %}
-            {% else %}
-                {% set orderid = form.vars.value.id %}
-            {% endif %}
-            #{{ orderid }}
+        {% if form.vars.value.oid != "" %}
+            #{{ form.vars.value.oid }}
             ({{ form.vars.value.status }})
         {% endif %}
     </h3>
@@ -58,7 +53,7 @@
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
             <a class="btn btn-danger" onclick="return confirm('Are you sure?');"
-               href="{{ path('scanorder_status', { 'id': form.vars.value.id , 'status': 'Cancel' }) }}">Cancel</a>
+               href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
         {% endif %}
 
         {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
@@ -66,19 +61,19 @@
                 and form.vars.value.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') and form.vars.value.status != 'Submitted'
         %}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
-               href="{{ path('scanorder_status', { 'id': form.vars.value.id, 'status': 'Submit' }) }}">Submit</a>
+               href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
         {% endif %}
 
         {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and form.vars.value.status.type.name != "Filled" or is_granted('ROLE_SUPER_ADMIN') %}
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
-               href="{{ path('order_amend', { 'id': form.vars.value.id }) }}">Amend</a>
+               href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
         {% endif %}
         </div>
     {% endif %}
 
     {% if type == 'amend' %}
         <div class="well well-sm">
-            <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.id }) }}">Cancel Amend</a>
+            <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Amend</a>
         </div>
     {% endif %}
 
@@ -103,9 +98,9 @@
 
     {#{{ form_widget(form.patient[0].procedure[0].accession) }}#}
 
-    {#{% if form.vars.value.id != "" %}#}
-        {#<input type="hidden" id="orderinfoid" value="{{ form.vars.value.id }}" />#}
-        {{ form_widget(form.id) }}
+    {#{% if form.vars.value.oid != "" %}#}
+        {#<input type="hidden" id="orderinfoid" value="{{ form.vars.value.oid }}" />#}
+        {{ form_widget(form.oid) }}
     {#{% endif %}#}
 
     {% if type == 'show' %}

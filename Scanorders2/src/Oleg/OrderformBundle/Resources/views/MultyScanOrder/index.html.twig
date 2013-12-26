@@ -34,7 +34,7 @@
                 <tr>
             {% endif %}
 
-                <td><a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path('scanorder_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a></td>
                 <td>
                     {#{{ entity.patient.count }}:#}
 {#                    {% for patient in entity.patient %}#}

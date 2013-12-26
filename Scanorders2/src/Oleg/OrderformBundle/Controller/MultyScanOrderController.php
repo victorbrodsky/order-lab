@@ -52,9 +52,10 @@ use Oleg\OrderformBundle\Helper\EmailUtil;
  */
 class MultyScanOrderController extends Controller {
 
+    //requirements={"id" = "\d+"}
     /**
      * Edit: If the form exists, use this function
-     * @Route("/multi/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
+     * @Route("/multi/edit/{id}", name="exist_edit")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -245,8 +246,7 @@ class MultyScanOrderController extends Controller {
                 }
 
                 return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-                    'orderid' => $entity->getId(),
-                    'originalid' => $entity->getOriginalid(),
+                    'oid' => $entity->getOid(),
                     'conflicts' => $conflicts,
                     'cicle' => $cicle
                 ));
@@ -286,7 +286,7 @@ class MultyScanOrderController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
@@ -319,7 +319,7 @@ class MultyScanOrderController extends Controller {
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
-        //echo "routeName=".$routeName;
+        //echo "newMultyAction: routeName=".$routeName."<br>";
 
         if( $routeName == "clinical_new") {
             $type = "clinical";
@@ -346,12 +346,6 @@ class MultyScanOrderController extends Controller {
 
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
-        
-//        return array(
-//            'form' => $form->createView(),
-//            'type' => 'new',
-//            'multy' => $type
-//        );
 
         if( $routeName != "single_new") {
             return $this->render('OlegOrderformBundle:MultyScanOrder:new.html.twig', array(
@@ -360,6 +354,7 @@ class MultyScanOrderController extends Controller {
                 'multy' => $type
             ));
         } else {
+            //echo "newsingle: <br>";
             return $this->render('OlegOrderformBundle:MultyScanOrder:newsingle.html.twig', array(
                 'form' => $form->createView(),
                 'cycle' => 'new'
@@ -369,11 +364,12 @@ class MultyScanOrderController extends Controller {
     }
 
 
+    //requirements={"id" = "\d+"}
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/edit/{id}", name="multy_edit", requirements={"id" = "\d+"})
-     * @Route("/amend/{id}", name="order_amend", requirements={"id" = "\d+"})
-     * @Route("/show/{id}", name="multy_show", requirements={"id" = "\d+"})
+     * @Route("/edit/{id}", name="multy_edit")
+     * @Route("/amend/{id}", name="order_amend")
+     * @Route("/show/{id}", name="multy_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -398,7 +394,7 @@ class MultyScanOrderController extends Controller {
             INNER JOIN orderinfo.part part
 
             INNER JOIN orderinfo.slide slide
-            WHERE orderinfo.id = :id'
+            WHERE orderinfo.oid = :id'
         )->setParameter('id', $id);
 
         $entities = $query->getResult();

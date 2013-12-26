@@ -17,7 +17,7 @@ class AperioProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
     private $serviceContainer;
-    private $noldap = true;
+    private $ldap = true;
 
     public function __construct(UserProviderInterface $userProvider, $serviceContainer)
     {
@@ -70,7 +70,7 @@ class AperioProvider implements AuthenticationProviderInterface
                 $user->addRole('ROLE_USER');                //Submitter
                 
                 //TDODD: Remove: for testing at home;
-                if($this->noldap) {
+                if( !$this->ldap ) {
                     echo "Aperio Auth: Remove it !!!";
                     $user->setUsername("testuser4");
                     $user->addRole('ROLE_SUPER_ADMIN');
@@ -122,7 +122,7 @@ class AperioProvider implements AuthenticationProviderInterface
         //exit();
         //echo " skip login=".$loginName.", pass=". $password." <br>";
 
-        if( !$this->noldap ) {
+        if( $this->ldap ) {
             include_once '\Skeleton.php';
             //$DataServerURL = "http://127.0.0.1:86";
             $DataServerURL = GetDataServerURL();

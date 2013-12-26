@@ -55,6 +55,11 @@ class Procedure extends OrderAbstract
         }
     }
 
+    public function makeDependClone() {
+        $this->name = $this->cloneDepend($this->name);
+        $this->encounter = $this->cloneDepend($this->encounter);
+    }
+
     //Name
     public function getName() {
         return $this->name;

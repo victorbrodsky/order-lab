@@ -61,12 +61,12 @@ class OrderInfo
     private $cicle;
 
     /**
-     * originalid - id of the original order.
-     * When Amend order, switch orders to keep the original id and at newly created order set originalid of the original order
+     * oid - id of the original order.
+     * When Amend order, switch orders to keep the original id and at newly created order set oid of the original order
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    private $originalid;
+    private $oid;
     
     /**
      * @var string
@@ -216,7 +216,7 @@ class OrderInfo
         if ($this->id) {
             $this->setId(null);
                      
-            // Get current collection
+//            // Get current collection
             $children = $this->getPatient();
             if( !$children ) return;
             $this->patient = new ArrayCollection();
@@ -225,11 +225,30 @@ class OrderInfo
                 $cloneChild = clone $child;
                 $cloneChild->cloneChildren();
                 $this->patient->add($cloneChild);
-                //$this->addChildren($cloneChild);         
+                //$this->addChildren($cloneChild);
                 $cloneChild->setParent($this);
-            }         
+                //$this->addPatient($cloneChild);
+            }
+
+//            foreach( $this->slide as $child ) {
+//                $this->removeSlide($child);
+//            }
               
         }
+    }
+
+    public function removeDepend( $depend ) {
+        $class = new \ReflectionClass($depend);
+        $className = $class->getShortName();    //Part
+        $removeMethod = "remove".$className;
+        $this->$removeMethod($depend);
+    }
+
+    public function addDepend( $depend ) {
+        $class = new \ReflectionClass($depend);
+        $className = $class->getShortName();    //Part
+        $addMethod = "add".$className;
+        $this->$addMethod($depend);
     }
 
 //    public function __clone() {
@@ -513,19 +532,22 @@ class OrderInfo
     }
 
     /**
-     * @param string $originalid
+     * @param string $oid
      */
-    public function setOriginalid($originalid)
+    public function setOid($oid=null)
     {
-        $this->originalid = $originalid;
+        if( $oid == null ) {
+            $oid = $this->getId();
+        }
+        $this->oid = $oid;
     }
 
     /**
      * @return string
      */
-    public function getOriginalid()
+    public function getOid()
     {
-        return $this->originalid;
+        return $this->oid;
     }
 
     /**
@@ -649,7 +671,7 @@ class OrderInfo
 //        $patient_info .= ")";
 
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
-        return "OrderInfo: id=".$this->id.", cicle=".$this->cicle.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
+        return "OrderInfo: id=".$this->id.", oid=".$this->oid.", cicle=".$this->cicle.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
     }
     
 
@@ -693,10 +715,15 @@ class OrderInfo
      * @return OrderInfo
      */
     public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
-    {             
+    {
+
+        echo "this orderinfo has accessions=".count($this->accession)."<br>";
+        echo "adding ".$accession;
+
         if( !$this->accession->contains($accession) ) {            
             $this->accession->add($accession);
-        }  
+        }
+        echo "this orderinfo has accessions=".count($this->accession)."<br>";
     }
 
     /**

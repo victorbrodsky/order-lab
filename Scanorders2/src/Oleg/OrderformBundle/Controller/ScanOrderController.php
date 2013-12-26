@@ -233,7 +233,7 @@ class ScanOrderController extends Controller {
         if( $params == null || count($params) == 0 ) {
             $dql->orderBy("orderinfo.id","DESC");
         }
-        if( $sort != 'orderinfo.id' ) {
+        if( $sort != 'orderinfo.oid' ) {
             $dql->orderBy("orderinfo.id","DESC");
         }
 
@@ -267,116 +267,118 @@ class ScanOrderController extends Controller {
 
 
 
+//    //, requirements={"id" = "\d+"}
+//    /**
+//     * Finds and displays a OrderInfo entity.
+//     *
+//     * @Route("/{id}", name="scanorder_show")
+//     * @Method("GET")
+//     * @Template("OlegOrderformBundle:ScanOrder:show.html.twig")
+//     */
+//    public function showAction($id)
+//    {
+//
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findByOid($id);
+//
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+//        }
+//
+//        $showForm = $this->createForm(new OrderInfoType(null,$entity), $entity, array('disabled' => true));
+//        $deleteForm = $this->createDeleteForm($id);
+//
+//        return array(
+//            'entity'      => $entity,
+//            'edit_form'   => $showForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        );
+//    }
 
+//    //requirements={"id" = "\d+"}
+//    /**
+//     * Displays a form to edit an existing OrderInfo entity.
+//     *
+//     * @Route("/{id}/edit", name="scanorder_edit")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function editAction($id)
+//    {
+//
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findByOid($id);
+//
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+//        }
+//
+//        $editForm = $this->createForm(new OrderInfoType(null,$entity), $entity);
+//        $deleteForm = $this->createDeleteForm($id);
+//
+//        return array(
+//            'entity'      => $entity,
+//            'edit_form'   => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        );
+//    }
 
+//    //requirements={"id" = "\d+"}
+//    /**
+//     * Edits an existing OrderInfo entity.
+//     *
+//     * @Route("/{id}", name="scanorder_update")
+//     * @Method("PUT")
+//     * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
+//     */
+//    public function updateAction(Request $request, $id)
+//    {
+//
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findByOid($id);
+//
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+//        }
+//
+//        $deleteForm = $this->createDeleteForm($id);
+//        $editForm = $this->createForm(new OrderInfoType(null,$entity), $entity);
+//        $editForm->bind($request);
+//
+//        if ($editForm->isValid()) {
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            return $this->redirect($this->generateUrl('scanorder_edit', array('id' => $id)));
+//        }
+//
+//        return array(
+//            'entity'      => $entity,
+//            'edit_form'   => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        );
+//    }
 
-    /**
-     * Finds and displays a OrderInfo entity.
-     *
-     * @Route("/{id}", name="scanorder_show", requirements={"id" = "\d+"})
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:ScanOrder:show.html.twig")
-     */
-    public function showAction($id)
-    {
-
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
-        }
-
-        $showForm = $this->createForm(new OrderInfoType(null,$entity), $entity, array('disabled' => true));
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $showForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing OrderInfo entity.
-     *
-     * @Route("/{id}/edit", name="scanorder_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
-     * @Template()
-     */
-    public function editAction($id)
-    {
-
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
-        }
-
-        $editForm = $this->createForm(new OrderInfoType(null,$entity), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-     * Edits an existing OrderInfo entity.
-     *
-     * @Route("/{id}", name="scanorder_update", requirements={"id" = "\d+"})
-     * @Method("PUT")
-     * @Template("OlegOrderformBundle:OrderInfo:edit.html.twig")
-     */
-    public function updateAction(Request $request, $id)
-    {
-
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrderInfoType(null,$entity), $entity);
-        $editForm->bind($request);
-
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('scanorder_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
+    //requirements={"id" = "\d+"}
     /**
      * Deletes a OrderInfo entity.
      *
-     * @Route("/{id}", name="scanorder_delete", requirements={"id" = "\d+"})
+     * @Route("/{id}", name="scanorder_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -391,7 +393,7 @@ class ScanOrderController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find OrderInfo entity.');
@@ -411,9 +413,10 @@ class ScanOrderController extends Controller {
 
         return $this->redirect($this->generateUrl('scanorder'));
     }
-    
+
+    //requirements={"id" = "\d+"}
     /**
-     * @Route("/{id}/{status}/status", name="scanorder_status", requirements={"id" = "\d+"})
+     * @Route("/{id}/{status}/status", name="scanorder_status")
      * @Method("GET")
      * @Template()
      */
@@ -454,12 +457,12 @@ class ScanOrderController extends Controller {
      * 
      * @Template("OlegOrderformBundle:ScanOrder:thanks.html.twig")
      */
-    public function thanksAction( $orderid = '' )
+    public function thanksAction( $oid = '' )
     {    
         
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig',
             array(
-                'orderid' => $orderid            
+                'oid' => $oid
             ));
     }
 

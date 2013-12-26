@@ -59,6 +59,11 @@ class Block extends OrderAbstract
         }
     }
 
+    public function makeDependClone() {
+        $this->blockname = $this->cloneDepend($this->blockname);
+        $this->sectionsource = $this->cloneDepend($this->sectionsource);
+    }
+
 
     public function getBlockname() {
         return $this->blockname;

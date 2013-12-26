@@ -30,26 +30,19 @@ class PartRepository extends ArrayFieldAbstractRepository
                 if( count($block->getChildren()) > 0 ) {
                     //echo "block has slides<br>";
                     $part->addChildren($block);
-                    //$children = $part->getChildren();
-                    //echo "part's blocCount=".count($part->getChildren())."<br>";
-                    //$orderinfo->addBlock($block);
                 } else {
                     //remove block if it does not have any slides
                     //echo "remove block <br>";
-                    //$orderinfo->removeBlock($block);
-                    //$orderinfo->setBlock(null);
-                    //TODO: remove block here. Now the block is removed in order repo
                     $part->removeBlock($block);
                     $block->setPart(null);
-
-                    //$em = $this->_em;
-//                    $em->persist($block);
-                    //$em->remove($block);
-                    //$block = null;
                 }
             }
             //echo $block;
-            $orderinfo->addBlock($block);
+            if( $orderinfo->getOid() == null ) {
+                $orderinfo->addBlock($block);
+                echo "PartRepo: add orderinfo for Block<br>";
+            }
+
         }
 
     }

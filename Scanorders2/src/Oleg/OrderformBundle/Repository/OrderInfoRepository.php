@@ -97,8 +97,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->addPatient($patient);
         }
        
-        //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-        //foreach( $entity->getPatient() as $patient ) {
+        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+        foreach( $entity->getPatient() as $patient ) {
 //            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first().", status=".$patient->getName()->first()->getStatus()."<br>";
 //////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 //////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
@@ -107,23 +107,50 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 ////            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
 ////            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
 ////            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
-            //echo "<br>--------------------------<br>";
-            //$this->printTree( $patient );
-            //echo "--------------------------<br>";
-        //}
+            echo "<br>--------------------------<br>";
+            $this->printTree( $patient );
+            echo "--------------------------<br>";
+        }
+
+        echo $entity;
+        echo "count Patient=".count($entity->getPatient())."<br>";
+        echo "count Procedure=".count($entity->getProcedure())."<br>";
+        echo "count Accession=".count($entity->getAccession())."<br>";
+
+        foreach( $entity->getAccession() as $child ) {
+            echo $child;
+            echo $child->getOrderinfo()->first();
+        }
+
+        echo "count Part=".count($entity->getPart())."<br>";
+        foreach( $entity->getPart() as $part ) {
+            $accession = $part->getAccession();
+            echo "acc part count=".count($accession->getPart())."<br>";
+            echo $part;
+            echo "part's orderinfo count=".count($part->getOrderinfo())."<br>";
+            echo $part->getOrderinfo()->first();
+        }
+        echo "count Block=".count($entity->getBlock())."<br>";
+        echo "count Slide=".count($entity->getSlide())."<br>";
+
+        echo "slide=".$entity->getSlide()->first();
+        echo "scan id=".$entity->getSlide()->first()->getScan()->first()->getId()."<br>";
+        echo "stain id=".$entity->getSlide()->first()->getStain()->first()->getId()."<br>";
+
+        echo "Accession id=".$entity->getAccession()->first()->getAccession()->first()->getId()."<br>";
+        echo "Block name id=".$entity->getBlock()->first()->getBlockname()->first()->getId()."<br>";
 
         exit('orderinfo repo exit');
 
-        //TODO: make copy of orderinfo
         if( $entity->getCicle() == 'amend' ) {
                    
-            $originalId = $entity->getId();
+            $originalId = $entity->getOid();
             //echo "originalId=".$originalId."<br>";
             
             $newOrderinfo = clone $entity;
             $newOrderinfo->setCicle('submit');
             $newOrderinfo->setId(null);
-            $newOrderinfo->setOriginalid($originalId);
+            $newOrderinfo->setOid($originalId);
             
             $orderUtil = new OrderUtil($em);
             $message = $orderUtil->changeStatus($originalId, 'Amend');
@@ -137,13 +164,19 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "<br>--------------------------<br>";
 //            $this->printTree( $newOrderinfo->getPatient()->first() );
 //            echo "--------------------------<br>";
-                       
+
             $entity = $newOrderinfo;
         }
-                             
+
         //create new orderinfo
         $em->persist($entity);
-        $em->flush();                     
+        $em->flush();
+
+        //insert oid to entity
+        if( !$entity->getOid() ) {
+            $entity->setOid($entity->getId());
+            $em->flush();
+        }
         
         //clean empty blocks
         //TODO: do it in part repository

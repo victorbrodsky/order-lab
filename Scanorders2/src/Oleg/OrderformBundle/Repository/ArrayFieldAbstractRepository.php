@@ -35,7 +35,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-        //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
         //echo $entity;
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
@@ -93,7 +93,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+                echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
             }
 
         }
@@ -132,12 +132,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $entity->removeChildren($child);
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
 
-            //$entity->addChildren($child);
+            //add children and orderinfo
             $em->getRepository('OlegOrderformBundle:'.$className)->attachToParentAndOrderinfo( $entity, $child, $orderinfo );
-
-            //link entity with orderinfo
-            //$addClassMethod = "add".$childClassName;
-            //$orderinfo->$addClassMethod($child);
 
         }
 
@@ -162,12 +158,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $child ) {
             $entity->addChildren($child);
 
-            //link entity with orderinfo          
-            $childClass = new \ReflectionClass($child);
-            $childClassName = $childClass->getShortName();
-            $addClassMethod = "add".$childClassName;
-            $orderinfo->$addClassMethod($child);
-            echo "add orderinfo for ".$childClassName."<br>";
+            //add orderinfo if oid is not set yet => new orderinfo. If oid is set then it is un-canceled order and it already has links to its children objects(patients, parts, blocks, slides ...)
+            if( $orderinfo->getOid() == null ) {
+                //link entity with orderinfo
+                $childClass = new \ReflectionClass($child);
+                $childClassName = $childClass->getShortName();
+                $addClassMethod = "add".$childClassName;    //"addPatient"
+                $orderinfo->$addClassMethod($child);
+                echo "add orderinfo for ".$childClassName."<br>";
+            }
+
         }
     }
 
@@ -243,12 +243,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     //echo "2 change status to (".$status.") <br>";
                                     $field->setStatus($status);
                                     //set ID to null if status is valid (un-cancel procedure)
-                                    if( $status == 'valid' ) {
-                                        $field->setId(null);
-                                        $em = $this->_em;
-                                        $em->detach($field);
-                                        $em->persist($field);
-                                    }
+                                    //if( $status == 'valid' ) {
+                                        //$field->setId(null);
+                                        //$em = $this->_em;
+                                        //$em->detach($field);
+                                        //$em->persist($field);
+                                    //}
                                     continue;
                                 }
 

@@ -56,11 +56,12 @@ abstract class ArrayFieldAbstract {
         $this->provider = $provider;
     }
 
-//    public function __clone() {
-//        if( $this->getId() ) {
-//            $this->setId(null);
-//        }
-//    }
+    public function __clone() {
+        if( $this->getId() ) {
+            //echo "field ".$this->getId()." set id to null <br>";
+            $this->setId(null);
+        }
+    }
 
     public function setId($id)
     {

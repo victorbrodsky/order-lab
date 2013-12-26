@@ -76,14 +76,20 @@ function checkForm( elem, single ) {
 
     var keyElement = findKeyElement(element, single);
 
-    if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
-
+//    if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) {
+    if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
         //console.log("Remove Button Cliked: fieldName="+fieldName);
         //setElementBlock(element, null, true);
-        removeKeyFromDB(keyElement, element, single);
-        cleanFieldsInElementBlock( element, "all", single );
-        disableInElementBlock(element, true, null, "notkey", null);
-        invertButton(element);
+        var delres = false;
+        delres = removeKeyFromDB(keyElement, element, single);
+        //console.log("delres="+delres);
+        if( delres ) {
+            //console.log("clean, disable and invert button");
+            //console.log("glyphicon class="+element.find("i").attr("class"));
+            cleanFieldsInElementBlock( element, "all", single );
+            disableInElementBlock(element, true, null, "notkey", null);
+            invertButton(element);
+        }
         return;
 
     } else {    //Check Button Cliked
@@ -160,7 +166,7 @@ function checkForm( elem, single ) {
                     disableInElementBlock(element, false, null, "notkey", null);
                     invertButton(element);
                 } 
-                //invertButton(element);
+
             },
             error: function () {
                 console.debug("get object ajax error "+name);
@@ -199,7 +205,8 @@ function checkParent(element,keyValue,name,fieldName) {
 
         //console.log("checkParent sublingsKeyValue=" + sublingsKeyValue);
 
-        if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" && sublingsKeyValue == keyValue ) {
+//        if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" && sublingsKeyValue == keyValue ) {
+        if( $(this).find('#check_btn').find('i').hasClass('removebtn') && sublingsKeyValue == keyValue ) {
             alert("This keyfield is already in use and it is checked");
             retval = 0;
             return false;   //break each
@@ -234,7 +241,7 @@ function setPatient( element, keyvalue, extraid, single ) {
     var keyBtn = keyElement.element.parent().parent().find('#check_btn');
     //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class')+", count="+keyBtn.length);
 
-    var keyBtnStatusClass = keyBtn.find("i").attr("class");
+    //var keyBtnStatusClass = keyBtn.find("i").attr("class");
     //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
 
     //check if parent is set already and has different keyfield value
@@ -256,7 +263,8 @@ function setPatient( element, keyvalue, extraid, single ) {
     //get patient accession buttons  
     var retval = 1;
     parentEl.find('.accessionaccession').each(function() {
-        if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" ) {
+        //if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" ) {
+        if( $(this).find('#check_btn').find('i').hasClass('removebtn') ) {
             alert("The Patient has already checked accession. You can not use this accession, because it belongs to another patient");
             retval = 0;
         }
@@ -265,7 +273,8 @@ function setPatient( element, keyvalue, extraid, single ) {
         return 0;
     }   
     
-    if( keyBtnStatusClass == "glyphicon glyphicon-remove" && parentKeyValue.val() && parentKeyValue.val() != keyvalue ) { //Remove Button Cliked
+    //if( keyBtnStatusClass == "glyphicon glyphicon-remove" && parentKeyValue.val() && parentKeyValue.val() != keyvalue ) { //Remove Button Cliked
+    if( keyBtn.find("i").hasClass('removebtn') && parentKeyValue.val() && parentKeyValue.val() != keyvalue ) {
         var r=confirm('Patient with MRN '+parentKeyValue.val()+' is already set in this form. Are you sure that you want to change the patient?');
         if( r == true ) {
             //console.log("you decide to continue");
@@ -276,7 +285,8 @@ function setPatient( element, keyvalue, extraid, single ) {
     }
 
     //if parent key field is already checked: clean it first
-    if( keyBtnStatusClass == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
+    //if( keyBtnStatusClass == "glyphicon glyphicon-remove" ) { //Remove Button Cliked
+    if( keyBtn.find("i").hasClass('removebtn') ) {
         keyBtn.trigger("click");
     }
 
@@ -291,10 +301,12 @@ function setPatient( element, keyvalue, extraid, single ) {
         var keyBtn = keyElement.element.parent().parent().find('#check_btn');
         //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class'));
         var keyBtnStatusClass = keyBtn.find("i").attr("class");
+        var isRemoveBtn = keyBtn.find("i").hasClass('checkbtn');
         //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
 
         setTimeout(function(){
-            if( keyBtnStatusClass != "glyphicon glyphicon-check" ){
+//            if( keyBtnStatusClass != "glyphicon glyphicon-check" ){
+            if( !isRemoveBtn ) {
                 if( maxi > 20 ) {
                     return 0;
                 }
@@ -1132,17 +1144,18 @@ function disableElement(element, flag) {
 }
 
 function invertButton(btn) {
-    //class="glyphicon glyphicon-check"
-    if( btn.find("i").attr("class") == "glyphicon glyphicon-check" ) {
-        //btn.removeClass("glyphicon glyphicon-check");
-        //btn.addClass("glyphicon glyphicon-remove");
+    //console.log("invert Button: glyphicon class="+btn.find("i").attr("class"));
+//    if( btn.find("i").attr("class") == "glyphicon glyphicon-check" ) {
+    if( btn.find("i").hasClass('checkbtn') ) {
+        //console.log("check=>remove");
         btn.find("i").removeClass('glyphicon-check').addClass('glyphicon-remove');
+        btn.find("i").removeClass('checkbtn').addClass('removebtn');
     } else {
-        //btn.removeClass("glyphicon glyphicon-remove");
-        //btn.addClass("glyphicon glyphicon-check");
+        //console.log("remove=>check");
         btn.find("i").removeClass('glyphicon-remove').addClass('glyphicon-check');
+        btn.find("i").removeClass('removebtn').addClass('checkbtn');
     }
-
+    //console.log("finish invert Button: glyphicon class="+btn.find("i").attr("class"));
 }
 
 
@@ -1336,23 +1349,34 @@ function removeKeyFromDB(element, btnElement, single) {
         extraStr = extraStr + "partname="+partValue;
     }
 
+    var delres = false;
 
-    btnElement.button('loading');
+    //btnElement.button('loading');
+
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue+extraStr,
         type: 'DELETE',
         contentType: 'application/json',
         dataType: 'json',
+        async: false,
         //data: {key1: keyValue, accession1: accessionValue},
         success: function (data) {
-            btnElement.button('reset');
-//            //console.debug("delete key ok");
+            //btnElement.button('reset');
+            //console.debug("delete key ok");
+            delres = true;
+            //console.log("remove ok: glyphicon class="+btnElement.find("i").attr("class"));
         },
         error: function () {
             btnElement.button('reset');
-            console.debug("delete key ajax error");
+            //console.debug("delete key ajax error");
+            alert("Can not delete this element. Check if the children are deleted.");
+            delres = false;
+            //console.log("remove error: glyphicon class="+btnElement.find("i").attr("class"));
         }
     });
+
+    //console.log("remove exit: glyphicon class="+btnElement.find("i").attr("class"));
+    return delres;
 }
 
 function findKeyElement( element, single ) {

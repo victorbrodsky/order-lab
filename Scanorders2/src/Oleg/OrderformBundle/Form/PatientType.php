@@ -23,6 +23,8 @@ class PatientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //echo "patient: type=".$this->params['type']."<br>";
+
         $flag = false;
         if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
             //$flag = true;

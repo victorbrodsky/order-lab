@@ -60,13 +60,8 @@ abstract class OrderAbstract
     public function __clone() {
         if( $this->getId() ) {
             $this->setId(null);
-        //        if( $this->getChildren() ) {
-        //            foreach( $this->getChildren() as $child ) {
-        //                $this->removeChildren($child);
-        //                $child = clone $child;
-        //                $this->addChildren($child);
-        //            }
-        //        }
+            $this->clearOrderinfo();
+            $this->makeDependClone();
         }
     }
     
@@ -84,10 +79,32 @@ abstract class OrderAbstract
             $cloneChild->cloneChildren();
             $cloneChildren->add($cloneChild);
             //$this->addChildren($cloneChild);         
-            $cloneChild->setParent($this);          
+            $cloneChild->setParent($this);
+
+//            foreach( $child->getOrderinfo() as $oi ) {
+//                echo "2 child orderinfo:".$oi."<br>";
+//            }
         }
-        
+
         $this->setChildren($cloneChildren);
+
+    }
+
+    public function cloneDepend($depends) {
+
+        //$class = new \ReflectionClass($depends->first());
+        //$className = $class->getShortName();
+        //echo "cloneDepend ".$className."<br>";
+
+        $dependClone = new ArrayCollection();
+        foreach( $depends as $depend ) {
+            //echo "id=".$depend->getId();
+            $thisclone = clone $depend;
+            //echo ": id=".$thisclone->getId();
+            $dependClone->add($thisclone);
+            //echo " => id=".$thisclone->getId()."<br>";
+        }
+        return $dependClone;
     }
 
     public function setId($id)

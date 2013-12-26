@@ -51,7 +51,11 @@ class Accession extends OrderAbstract {
             $this->addAccession( new AccessionAccession($status,$provider) );
         }
     }
-      
+
+    public function makeDependClone() {
+        $this->accession = $this->cloneDepend($this->accession);
+    }
+
     public function __toString()
     {
         $accNameStr = "";

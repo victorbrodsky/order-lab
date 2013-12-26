@@ -10,6 +10,9 @@
 namespace Oleg\OrderformBundle\Helper;
 
 
+use Oleg\OrderformBundle\Entity\OrderInfo;
+use Doctrine\Common\Collections\ArrayCollection;
+
 class OrderUtil {
 
     private $em;
@@ -22,7 +25,7 @@ class OrderUtil {
 
         $em = $this->em;
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
@@ -50,6 +53,8 @@ class OrderUtil {
 
                 $statusStr = "deleted-by-canceled-order";
                 $message = $this->processObjects( $entity, $status_entity, $statusStr );
+                $entity->setOid($entity->getOid()."-del");
+                $entity->setCicle($statusStr);
                 $em->persist($entity);
                 $em->flush();
 
@@ -57,6 +62,8 @@ class OrderUtil {
 
                 $statusStr = "deleted-by-amended-order";
                 $message = $this->processObjects( $entity, $status_entity, $statusStr );
+                $entity->setOid($entity->getOid()."-del");
+                $entity->setCicle($statusStr);
                 $em->persist($entity);
                 $em->flush();
 
@@ -68,11 +75,43 @@ class OrderUtil {
                 //2) validate MRN-Accession
                 //3) change status to 'valid' and 'submit'
 
-                $originalId = $entity->getId();
+                $oid = $entity->getOid();
+                $oidArr = explode("-del", $oid);
+                $originalId = $oidArr[0];
 
                 $newOrderinfo = clone $entity;
-                //$em->detach($entity);
-                $em->detach($newOrderinfo);                            
+
+//                $newOrderinfo = new OrderInfo();
+//                $newOrderinfo->setOrderdate($entity->getOrderdate());
+//                $newOrderinfo->setPathologyService($entity->getPathologyService());
+//                $newOrderinfo->setPriority($entity->getPriority());
+//                $newOrderinfo->setScandeadline($entity->getScandeadline());
+//                $newOrderinfo->setReturnoption($entity->getReturnoption());
+//                $newOrderinfo->setSlideDelivery($entity->getSlideDelivery());
+//                $newOrderinfo->setReturnSlide($entity->getReturnSlide());
+//                $newOrderinfo->setProvider($entity->getProvider());
+//                $newOrderinfo->setStatus($entity->getStatus());
+//                $newOrderinfo->setType($entity->getType());
+//                $newOrderinfo->setEducational($entity->getEducational());
+//                $newOrderinfo->setResearch($entity->getResearch());
+//                $newOrderinfo->setProxyuser($entity->getProxyuser());
+
+
+                echo "count Patient=".count($entity->getPatient())."<br>";
+                echo "count Procedure=".count($entity->getProcedure())."<br>";
+                echo "count Accession=".count($entity->getAccession())."<br>";
+                echo "count Part=".count($entity->getPart())."<br>";
+                foreach( $entity->getPart() as $part ) {
+                    $accession = $part->getAccession();
+                    echo "acc part count=".count($accession->getPart())."<br>";
+                    echo $part;
+                }
+                echo "count Block=".count($entity->getBlock())."<br>";
+                echo "count Slide=".count($entity->getSlide())."<br>";
+
+                $em->detach($entity);
+                $em->detach($newOrderinfo);
+                //$em->persist($newOrderinfo);
                 
                 echo "<br><br>orig entity1##########: final patients count=".count($entity->getPatient())."<br>";
                 foreach( $entity->getPatient() as $patient ) {
@@ -83,12 +122,19 @@ class OrderUtil {
                 }
 
                 $newOrderinfo->setCicle('submit');
-                //$newOrderinfo->setId(null);
-                $newOrderinfo->setOriginalid($originalId);
+                $newOrderinfo->setOid($originalId);
 
-//                foreach( $newOrderinfo->getPatient() as $patient ) {
-//                    $patient->cloneChildren();
-//                } 
+//                //copy children
+//                $children = $entity->getPatient();
+//                foreach( $children as $patient ) {
+//                    $clonePatient = clone $patient;
+//                    $clonePatient->cloneChildren();
+//                    $em->persist($clonePatient);
+//                    $newOrderinfo->addPatient($clonePatient);
+//                    //$this->addChildren($cloneChild);
+//                    //$this->addPatient($cloneChild);
+//                }
+
                 //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
 
                 echo "<br><br>orig entity2###########: final patients count=".count($entity->getPatient())."<br>";
@@ -108,6 +154,17 @@ class OrderUtil {
                 }
 
                 //exit("order util exit on submit");
+                echo "@@@@@@@@@@count Patient=".count($newOrderinfo->getPatient())."<br>";
+                echo "count Procedure=".count($newOrderinfo->getProcedure())."<br>";
+                echo "count Accession=".count($newOrderinfo->getAccession())."<br>";
+                echo "count Part=".count($newOrderinfo->getPart())."<br>";
+                foreach( $newOrderinfo->getPart() as $part ) {
+                    $accession = $part->getAccession();
+                    echo "acc part count=".count($accession->getPart())."<br>";
+                    echo $part;
+                }
+                echo "count Block=".count($newOrderinfo->getBlock())."<br>";
+                echo "count Slide=".count($newOrderinfo->getSlide())."<br>";
 
                 $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
 
@@ -117,8 +174,8 @@ class OrderUtil {
                     echo "<br>--------------------------<br>";
                     $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
                     echo "--------------------------<br>";
-                }                             
-                
+                }
+
                 $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo );
 
             } else {
@@ -135,6 +192,62 @@ class OrderUtil {
 
         return $message;
     }
+
+//    public function copyDepend( $source, $dest ) {
+//
+//        echo "clone dependencies <br>";
+//
+//        foreach( $this->patient as $patient ) {
+//            $this->removePatient($patient);
+//            $patient = clone $patient;
+//            $this->addPatient($patient);
+//        }
+//
+//        foreach( $this->procedure as $child ) {
+//            $this->removeProcedure($child);
+//            $child = clone $child;
+//            $this->addProcedure($child);
+//        }
+//
+//        foreach( $this->accession as $child ) {
+//            $this->removeAccession($child);
+//            $child = clone $child;
+//            $this->addAccession($child);
+//        }
+//
+//        foreach( $this->part as $child ) {
+//            $this->removePart($child);
+//            $child = clone $child;
+//            $this->addPart($child);
+//        }
+//
+//        foreach( $this->block as $child ) {
+//            $this->removeBlock($child);
+//            $child = clone $child;
+//            $this->addBlock($child);
+//        }
+//
+//        foreach( $this->slide as $child ) {
+//            $this->removeSlide($child);
+//            $child = clone $child;
+//            $this->addSlide($child);
+//        }
+//
+//        foreach( $this->dataquality as $child ) {
+//            $this->removeDataquality($child);
+//            $child = clone $child;
+//            $this->addDataquality($child);
+//        }
+//
+//        if( $this->getEducational() ) {
+//            $this->setEducational( clone $this->getEducational() );
+//        }
+//
+//        if( $this->getResearch() ) {
+//            $this->setResearch( clone $this->getResearch() );
+//        }
+//
+//    }
 
     public function iterateOrderInfo( $orderinfo, $statusStr ) {
 
@@ -264,12 +377,16 @@ class OrderUtil {
 
             $noOtherOrderinfo = true;
 
-            //echo "orderinfo count=".count($child->getOrderinfo())."<br>";
+            //echo "orderinfo count=".count($child->getOrderinfo()).", order id=".$child->getOrderinfo()->first()->getId()."<br>";
 
-            foreach( $child->getOrderinfo() as $order ) {
-                if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
-                    $noOtherOrderinfo = false;
-                    break;
+            if( $statusStr != 'valid' ) {
+                //check if this object is used by another orderinfo (for cancel and amend only)
+                foreach( $child->getOrderinfo() as $order ) {
+                    echo "orderinfo id=".$order->getId().", oid=".$order->getOid()."<br>";
+                    if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
+                        $noOtherOrderinfo = false;
+                        break;
+                    }
                 }
             }
 
@@ -285,11 +402,37 @@ class OrderUtil {
                     //$newChild = clone $child;
 
                     $child->setId(null);
+
+                    echo "orderinfo count=".count($child->getOrderinfo())."<br>";
+                    foreach( $child->getOrderinfo() as $oi ) {
+                        echo $oi;
+                        $child->removeOrderinfo($oi);
+                        $child->addOrderinfo($orderinfo);
+                    }
+
+                    //remove from orderinfo
+                    $childClass = new \ReflectionClass($child);
+                    $childClassName = $childClass->getShortName();
+                    $removeMethod = "remove".$childClassName;
+                    $addMethod = "add".$childClassName;
+                    $getMethod = "get".$childClassName;
+                    echo "child count in orderinfo=".count($orderinfo->$getMethod())."<br>";
+                    foreach( $orderinfo->$getMethod() as $orderchild ) {
+                        echo $orderchild;
+                        $orderinfo->$removeMethod($orderchild);
+                    }
+                    //echo $child;
+                    //$orderinfo->$addMethod($child);
+
+                    //echo "removing ".$childClassName." from orderinfo oid=".$orderinfo->getOid().", id=".$orderinfo->getId()."<br>";
+                    $orderinfo->$removeMethod($child);
+
                     //$child->removeOrderInfo($orderinfo);
                     //$newChild->clearOrderinfo();
+
                     //$em->persist($child);                   
                     $em->detach($child);
-                    $em->persist($child);
+                    //$em->persist($child);
                 }
                 $count++;
             }

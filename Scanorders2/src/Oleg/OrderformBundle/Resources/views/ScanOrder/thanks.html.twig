@@ -9,17 +9,11 @@
         {% set cicleStr = 'Amended' %}
     {% endif %}
 
-    {% if originalid is defined and originalid != "" %}
-        {% set orderidStr = originalid %}
-    {% else %}
-        {% set orderidStr = orderid %}
-    {% endif %}
-
     <div class="alert alert-info well-lg">
 {#        <h1>Scan Order Confirmation</h1>#}
         <p><h1>Thank You For Your Order !</h1></p>
         <p><h3>
-            <a href="{{ path('multy_show', { 'id': orderid }) }}">Order #{{ orderidStr }}</a>
+            <a href="{{ path('multy_show', { 'id': oid }) }}">Order #{{ oid }}</a>
             Successfully {{ cicleStr }}.
         </h3></p>
 

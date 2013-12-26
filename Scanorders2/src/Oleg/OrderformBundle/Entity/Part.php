@@ -106,6 +106,16 @@ class Part extends OrderAbstract
         }
     }
 
+    public function makeDependClone() {
+        $this->partname = $this->cloneDepend($this->partname);
+        $this->sourceOrgan = $this->cloneDepend($this->sourceOrgan);
+        $this->description = $this->cloneDepend($this->description);
+        $this->disident = $this->cloneDepend($this->disident);
+        $this->paper = $this->cloneDepend($this->paper);
+        $this->diffDisident = $this->cloneDepend($this->diffDisident);
+        $this->diseaseType = $this->cloneDepend($this->diseaseType);
+    }
+
     public function __toString()
     {
         $partnameStr = ", partnameCount=".count($this->getPartname()).":";
@@ -115,6 +125,7 @@ class Part extends OrderAbstract
 
         return "Part: id=".$this->id.
         ", accessionId=".$this->getAccession()->getId().
+        ", partnameCount=".count($this->partname).", partnameId=".$this->partname->first()->getId().
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
         ", disident=".$this->disident->first().
