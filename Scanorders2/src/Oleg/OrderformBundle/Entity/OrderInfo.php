@@ -131,7 +131,7 @@ class OrderInfo
 
     //cascade={"persist"}   
     /**
-     * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo")
+     * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
      * @ORM\JoinTable(name="patient_orderinfo")
      **/
     private $patient;
@@ -213,29 +213,62 @@ class OrderInfo
     }
 
     public function __clone() {
+
         if ($this->id) {
             $this->setId(null);
 
             $children = $this->getPatient(); // Get current collection
+
             if( !$children ) return;
+
             $this->patient = new ArrayCollection();
+            $this->procedure = new ArrayCollection();
+            $this->accession = new ArrayCollection();
+            $this->part = new ArrayCollection();
+            $this->block = new ArrayCollection();
+            $this->slide = new ArrayCollection();
+
+            //
+            $providers = $this->getProvider();
+            $proxys = $this->getProxyuser();
+
+            $this->provider = new ArrayCollection();
+            $this->proxyuser = new ArrayCollection();
+            $this->dataquality = new ArrayCollection();
+
+            foreach( $providers as $thisprov ) {
+                $this->addProvider($thisprov);
+            }
+
+            foreach( $proxys as $thisproxy ) {
+                $this->addProxyuser($thisproxy);
+            }
+
             foreach( $children as $child ) {
+                //echo "1 clone Children: ".$child;
                 $this->removeDepend($child);
+
                 $cloneChild = clone $child;
+
+                //$cloneChild->removeOrderinfo($this);
+
                 $cloneChild->cloneChildren($this);
-                $this->patient->add($cloneChild);
-                //$this->addDepend($cloneChild);
+
+                //$this->patient->add($cloneChild);
+                $this->addDepend($cloneChild);  //$orderinfo->addPatient();
                 //$cloneChild->addOrderInfo($this);
+                //echo "2 cloned Children: ".$cloneChild;
             }
               
         }
+
     }
 
     public function removeDepend( $depend ) {
         $class = new \ReflectionClass($depend);
         $className = $class->getShortName();    //Part
         $removeMethod = "remove".$className;
-        echo "orderinfo remove depened:".$removeMethod."<br>";
+        //echo "orderinfo remove depened:".$removeMethod."<br>";
         $this->$removeMethod($depend);
     }
 
@@ -414,7 +447,7 @@ class OrderInfo
      */
     public function setProvider($provider)
     {
-        if ( is_array($provider) ) {
+        if( is_array($provider ) ) {
             $this->provider = $provider;
         } else {
             $this->provider->clear();
@@ -606,7 +639,11 @@ class OrderInfo
 //        $patient_info .= ")";
 
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
-        return "OrderInfo: id=".$this->id.", oid=".$this->oid.", cicle=".$this->cicle.", edu=".$this->educational.", res=".$this->research.", patientCount=".count($this->patient).", slideCount=".count($this->slide)."<br>";
+        return "OrderInfo: id=".$this->id.", oid=".$this->oid.
+                ", providerCount=".count($this->getProvider()).", providerName=".$this->getProvider()->first()->getUsername().", providerId=".$this->getProvider()->first()->getId().
+                ", cicle=".$this->cicle.", edu=".$this->educational.
+                ", res=".$this->research.", patientCount=".count($this->patient).
+                ", slideCount=".count($this->slide)."<br>";
     }
     
 
@@ -772,7 +809,7 @@ class OrderInfo
      */
     public function setProxyuser($proxyuser)
     {
-        if ( is_array($proxyuser) ) {
+        if( is_array($proxyuser) ) {
             $this->proxyuser = $proxyuser;
         } else {
             $this->proxyuser->clear();

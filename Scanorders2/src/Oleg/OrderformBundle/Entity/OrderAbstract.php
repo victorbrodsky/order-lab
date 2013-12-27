@@ -60,7 +60,8 @@ abstract class OrderAbstract
     public function __clone() {
         if( $this->getId() ) {
             $this->setId(null);
-            $this->clearOrderinfo();
+            //$this->clearOrderinfo();
+            $this->orderinfo = new ArrayCollection();
             $this->makeDependClone();
         }
     }
@@ -74,21 +75,26 @@ abstract class OrderAbstract
         $cloneChildren = new ArrayCollection();
         
         foreach( $children as $child ) {
-            echo "clone Children: ".$child;
+            //echo "1 clone Children: ".$child;
             $orderinfo->removeDepend($child);
             $cloneChild = clone $child;
+            //$cloneChild->removeOrderinfo($orderinfo);
             $cloneChild->cloneChildren($orderinfo);
             $cloneChildren->add($cloneChild);
+            $cloneChild->setParent($this);
+            //$orderinfo->removeDepend($cloneChild);
+
+            //$cloneChild->addOrderinfo($orderinfo);
             $orderinfo->addDepend($cloneChild);
-            //$cloneChild->setParent($this);
-            //$cloneChild->addOrderInfo($orderinfo);
+            //echo "2 cloned Children: ".$cloneChild;
         }
 
         $this->setChildren($cloneChildren);
 
     }
 
-    public function cloneDepend($depends) {
+    //clone dependents (i.e. blockname, specialStains ... )
+    public function cloneDepend($depends,$parent=null) {
 
         //$class = new \ReflectionClass($depends->first());
         //$className = $class->getShortName();
@@ -99,6 +105,9 @@ abstract class OrderAbstract
             //echo "id=".$depend->getId();
             $thisclone = clone $depend;
             //echo ": id=".$thisclone->getId();
+            if( $parent ) {
+                $thisclone->setParent($parent);
+            }
             $dependClone->add($thisclone);
             //echo " => id=".$thisclone->getId()."<br>";
         }
@@ -154,7 +163,7 @@ abstract class OrderAbstract
      */
     public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo=null)
     {
-        echo "OrderAbstract add orderinfo=".$orderinfo."<br>";
+        //echo "OrderAbstract add orderinfo=".$orderinfo."<br>";
         if( !$this->orderinfo->contains($orderinfo) ) {
             $this->orderinfo->add($orderinfo);
         }

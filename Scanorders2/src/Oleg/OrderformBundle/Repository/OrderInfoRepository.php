@@ -141,8 +141,20 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         if( count($entity->getSlide()) > 0 ) {
             echo "scan id=".$entity->getSlide()->first()->getScan()->first()->getId()."<br>";
             echo "stain id=".$entity->getSlide()->first()->getStain()->first()->getId()."<br>";
+            echo "specialStains id=".$entity->getSlide()->first()->getSpecialStains()->first()->getId()."<br>";
+            echo "specialStains Parent id=".$entity->getSlide()->first()->getSpecialStains()->first()->getParent()->getId()."<br>";
             echo "Accession id=".$entity->getAccession()->first()->getAccession()->first()->getId()."<br>";
             echo "Block name id=".$entity->getBlock()->first()->getBlockname()->first()->getId()."<br>";
+            echo "Block provider=".$entity->getBlock()->first()->getProvider()."<br>";
+
+            echo "Patient providerCount=".count($entity->getPatient()->first()->getProvider()).", name=".$entity->getPatient()->first()->getProvider().", id=".$entity->getPatient()->first()->getProvider()->getId()."<br>";
+            echo "Procedure providerCount=".count($entity->getProcedure()->first()->getProvider()).", name=".$entity->getProcedure()->first()->getProvider().", id=".$entity->getProcedure()->first()->getProvider()->getId()."<br>";
+            echo "Accession providerCount=".count($entity->getAccession()->first()->getProvider()).", name=".$entity->getAccession()->first()->getProvider().", id=".$entity->getAccession()->first()->getProvider()->getId()."<br>";
+            echo "Part providerCount=".count($entity->getPart()->first()->getProvider()).", name=".$entity->getPart()->first()->getProvider().", id=".$entity->getPart()->first()->getProvider()->getId()."<br>";
+            echo "Partname providerCount=".count($entity->getPart()->first()->getPartname()->first()->getProvider()).", name=".$entity->getPart()->first()->getPartname()->first()->getProvider().", id=".$entity->getPart()->first()->getPartname()->first()->getProvider()->getId()."<br>";
+            echo "Block providerCount=".count($entity->getBlock()->first()->getProvider()).", name=".$entity->getBlock()->first()->getProvider().", id=".$entity->getBlock()->first()->getProvider()->getId()."<br>";
+            echo "Slide providerCount=".count($entity->getSlide()->first()->getProvider()).", name=".$entity->getSlide()->first()->getProvider().", id=".$entity->getSlide()->first()->getProvider()->getId()."<br>";
+
         }
 
         //exit('orderinfo repo exit');

@@ -107,13 +107,13 @@ class Part extends OrderAbstract
     }
 
     public function makeDependClone() {
-        $this->partname = $this->cloneDepend($this->partname);
-        $this->sourceOrgan = $this->cloneDepend($this->sourceOrgan);
-        $this->description = $this->cloneDepend($this->description);
-        $this->disident = $this->cloneDepend($this->disident);
-        $this->paper = $this->cloneDepend($this->paper);
-        $this->diffDisident = $this->cloneDepend($this->diffDisident);
-        $this->diseaseType = $this->cloneDepend($this->diseaseType);
+        $this->partname = $this->cloneDepend($this->partname,$this);
+        $this->sourceOrgan = $this->cloneDepend($this->sourceOrgan,$this);
+        $this->description = $this->cloneDepend($this->description,$this);
+        $this->disident = $this->cloneDepend($this->disident,$this);
+        $this->paper = $this->cloneDepend($this->paper,$this);
+        $this->diffDisident = $this->cloneDepend($this->diffDisident,$this);
+        $this->diseaseType = $this->cloneDepend($this->diseaseType,$this);
     }
 
     public function __toString()
@@ -132,6 +132,7 @@ class Part extends OrderAbstract
         ", paper=".$this->paper->first().
         ", diffDisident=".$this->diffDisident->first().
         ", blockCount=".count($this->block).
+        ", parentId=".$this->getParent()->getId().
         ", orderinfo=".count($this->orderinfo).
         $partnameStr."<br>";
     }

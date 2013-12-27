@@ -60,8 +60,8 @@ class Block extends OrderAbstract
     }
 
     public function makeDependClone() {
-        $this->blockname = $this->cloneDepend($this->blockname);
-        $this->sectionsource = $this->cloneDepend($this->sectionsource);
+        $this->blockname = $this->cloneDepend($this->blockname,$this);
+        $this->sectionsource = $this->cloneDepend($this->sectionsource,$this);
     }
 
 
@@ -198,7 +198,10 @@ class Block extends OrderAbstract
 //        }
 //        $slide_info .= ")";
 //        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
-        return "Block: id=".$this->id.", blockname=".$this->blockname->first()."<br>";
+        return "Block: id=".$this->id.
+        ", blockname=".$this->blockname->first().
+        ", parentId=".$this->getParent()->getId().
+        "<br>";
     }
 
 

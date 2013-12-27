@@ -61,4 +61,16 @@ abstract class PartArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field."";
     }
 
+
+    //set and get parent
+    public function setParent($parent)
+    {
+        $this->setPart($parent);
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->getPart();
+    }
+
 }

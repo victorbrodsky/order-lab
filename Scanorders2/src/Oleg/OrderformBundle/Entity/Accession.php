@@ -53,7 +53,7 @@ class Accession extends OrderAbstract {
     }
 
     public function makeDependClone() {
-        $this->accession = $this->cloneDepend($this->accession);
+        $this->accession = $this->cloneDepend($this->accession,$this);
     }
 
     public function __toString()
@@ -62,7 +62,12 @@ class Accession extends OrderAbstract {
         foreach( $this->accession as $accession ) {
             $accNameStr = $accNameStr." ".$accession->getField()."(".$accession->getStatus().")";
         }
-        return "Accession: id=".$this->id.", accessionCount=".count($this->accession).", accessions#=".$accNameStr.", partCount=".count($this->part).", status=".$this->status."<br>";
+        return "Accession: id=".$this->id.
+            ", accessionCount=".count($this->accession).
+            ", accessions#=".$accNameStr.
+            ", parentId=".$this->getParent()->getId().
+            ", partCount=".count($this->part).
+            ", status=".$this->status."<br>";
     }
 
     /**

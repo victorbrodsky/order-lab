@@ -166,6 +166,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 $addClassMethod = "add".$childClassName;    //"addPatient"
                 $getClassMethod = "get".$childClassName;
                 $orderinfo->$addClassMethod($child);
+                //$child->addOrderInfo($orderinfo);   //TODO: is it correct?
                 echo "orderinfo count:".count($orderinfo->$getClassMethod())."<br>";
                 echo "add orderinfo for ".$childClassName.", :".$orderinfo;
             //}
@@ -639,10 +640,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function printTree( $entity ) {
 
         echo "print Tree: " . $entity;
+        //echo "print provider count: " . count($entity->getProvider()).", id=".$entity->getProvider()->getId()."<br>";
 
         foreach( $entity->getChildren() as $child ) {
             if( count( $child->getChildren() ) == 0 ) {
                 echo "print Tree node: " . $child;
+                //echo "print node provider count: " . count($child->getProvider()).", id=".$child->getProvider()->getId()."<br>";
                 echo "----------<br>";
             } else {
                 $this->printTree($child);

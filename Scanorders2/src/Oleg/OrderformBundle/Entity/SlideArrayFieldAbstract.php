@@ -56,6 +56,17 @@ abstract class SlideArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field;
     }
 
+    //set and get parent
+    public function setParent($parent)
+    {
+        $this->setSlide($parent);
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->getSlide();
+    }
+
     public function __toString() {
         return $this->field."";
     }

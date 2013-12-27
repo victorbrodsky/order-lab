@@ -392,7 +392,6 @@ class MultyScanOrderController extends Controller {
             INNER JOIN orderinfo.procedure procedure
             INNER JOIN orderinfo.accession accession
             INNER JOIN orderinfo.part part
-
             INNER JOIN orderinfo.slide slide
             WHERE orderinfo.oid = :id'
         )->setParameter('id', $id);
@@ -418,7 +417,7 @@ class MultyScanOrderController extends Controller {
         //patient
         foreach( $entity->getPatient() as $patient ) {
 
-//            echo "<br>patient order info count=".count( $patient->getOrderInfo() )."<br>";
+            //echo "<br>patient order info count=".count( $patient->getOrderInfo() )."<br>";
             //check if patient has this orderinfo
             if( !$this->hasOrderInfo($patient,$id) ) {
                 //echo "remove patient!!!! <br>";
@@ -518,7 +517,7 @@ class MultyScanOrderController extends Controller {
     public function hasOrderInfo( $entity, $id ) {
         $has = false;
         foreach( $entity->getOrderInfo() as $child ) {
-            if( $child->getId() == $id ) {
+            if( $child->getOid() == $id ) {
                 $has = true;
             }
         }

@@ -62,4 +62,15 @@ abstract class ProcedureArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field;
     }
 
+    //set and get parent
+    public function setParent($parent)
+    {
+        $this->setProcedure($parent);
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->getProcedure();
+    }
+
 }

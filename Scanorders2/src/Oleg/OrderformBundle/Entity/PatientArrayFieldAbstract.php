@@ -60,4 +60,15 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field."";
     }
 
+    //set and get parent
+    public function setParent($parent)
+    {
+        $this->setPatient($parent);
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->getPatient();
+    }
+
 }

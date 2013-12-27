@@ -56,8 +56,8 @@ class Procedure extends OrderAbstract
     }
 
     public function makeDependClone() {
-        $this->name = $this->cloneDepend($this->name);
-        $this->encounter = $this->cloneDepend($this->encounter);
+        $this->name = $this->cloneDepend($this->name,$this);
+        $this->encounter = $this->cloneDepend($this->encounter,$this);
     }
 
     //Name
@@ -194,7 +194,11 @@ class Procedure extends OrderAbstract
 
 
     public function __toString() {
-        return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().", encounterCount=" . count($this->encounter->first()) . ": encounter->first=" . $this->encounter->first() . "; linked accessionCount=".count($this->accession).":".$this->accession->first();
+        return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().
+            ", encounterCount=" . count($this->encounter->first()) .
+            ": encounter->first=" . $this->encounter->first() .
+            ", parentId=".$this->getParent()->getId().
+            "; linked accessionCount=".count($this->accession).":".$this->accession->first();
     }
 
 

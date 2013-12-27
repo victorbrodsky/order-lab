@@ -98,10 +98,10 @@ class Slide extends OrderAbstract
     }
 
     public function makeDependClone() {
-        $this->scan = $this->cloneDepend($this->scan);
-        $this->stain = $this->cloneDepend($this->stain);
-        $this->specialStains = $this->cloneDepend($this->specialStains);
-        $this->relevantScans = $this->cloneDepend($this->relevantScans);
+        $this->scan = $this->cloneDepend($this->scan,$this);
+        $this->stain = $this->cloneDepend($this->stain,$this);
+        $this->specialStains = $this->cloneDepend($this->specialStains,$this);
+        $this->relevantScans = $this->cloneDepend($this->relevantScans,$this);
 
 //        foreach( $this->scan as $depend ) {
 //            echo "after depend id=".$depend->getId()."<br>";
@@ -269,9 +269,11 @@ class Slide extends OrderAbstract
         }
 
         return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().
+                ", parentId=".$this->getParent()->getId().
+                ", orderinfo count=".count($this->getOrderinfo()).", first orderinfo:=".$this->getOrderinfo()->first().
                 ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().
                 ", stain count=".count($this->getStain()).", firststainid=".$this->getStain()->first()->getId().
-                ", specialStains count=".count($this->getSpecialStains()).", firstspecialStainsid=".$this->getSpecialStains()->first()->getId().
+                ", specialStains count=".count($this->getSpecialStains()).", firstspecialStainsId=".$this->getSpecialStains()->first()->getId().
                 ", stain=".$stain.", mag=".$mag.
                 ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }
@@ -400,7 +402,14 @@ class Slide extends OrderAbstract
     }
 
     public function getParent() {
-        return null; //no parent for patient
+        if( $this->getBlock() ) {
+            return $this->getBlock();
+        } else if( $this->getPart() ) {
+            return $this->getPart();
+        } else {
+            throw new \Exception( 'Slide does not have parent; slide:'.$this );
+        }
+
     }
 
 

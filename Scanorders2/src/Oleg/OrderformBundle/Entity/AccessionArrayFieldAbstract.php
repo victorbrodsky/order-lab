@@ -62,4 +62,15 @@ abstract class AccessionArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field;
     }
 
+    //set and get parent
+    public function setParent($parent)
+    {
+        $this->setAccession($parent);
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->getAccession();
+    }
+
 }

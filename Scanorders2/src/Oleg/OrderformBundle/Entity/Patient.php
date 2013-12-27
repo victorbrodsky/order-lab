@@ -91,12 +91,12 @@ class Patient extends OrderAbstract
 
 
     public function makeDependClone() {
-        $this->mrn = $this->cloneDepend($this->mrn);
-        $this->name = $this->cloneDepend($this->name);
-        $this->sex = $this->cloneDepend($this->sex);
-        $this->dob = $this->cloneDepend($this->dob);
-        $this->age = $this->cloneDepend($this->age);
-        $this->clinicalHistory = $this->cloneDepend($this->clinicalHistory);
+        $this->mrn = $this->cloneDepend($this->mrn,$this);
+        $this->name = $this->cloneDepend($this->name,$this);
+        $this->sex = $this->cloneDepend($this->sex,$this);
+        $this->dob = $this->cloneDepend($this->dob,$this);
+        $this->age = $this->cloneDepend($this->age,$this);
+        $this->clinicalHistory = $this->cloneDepend($this->clinicalHistory,$this);
     }
 
     /**
@@ -450,11 +450,16 @@ class Patient extends OrderAbstract
             $mrns = $mrns . $mrn->getField().",".$mrn->getMrntype()."(".$mrn->getStatus().",id=".$mrn->getId().")";
         }
 
+        $orders = ", orderinfosCount=".count($this->getOrderinfo()).": ";
+        foreach( $this->getOrderinfo() as $order ) {
+            $orders = $orders . "id=".$order->getId().", oid=".$order->getOid();
+        }
+
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
         ", name=".$this->name->first().", nameID=".$this->name->first()->getId().
         ", procedureCount=".count($this->procedure).", firstprocedureID=".$this->procedure->first()->getId().
-        ", orderinfo=".count($this->orderinfo).
+        ", orderinfo=".$orders.
         $mrns."<br>";
     }
 

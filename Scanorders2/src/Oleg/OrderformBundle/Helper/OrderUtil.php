@@ -44,14 +44,13 @@ class OrderUtil {
 
         if( $status_entity ) {
 
-            $entity->setStatus($status_entity);
-
             //change status for all orderinfo children to "deleted-by-canceled-order"
             //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
             //AND there are no fields that belong to this object that were added by another order
             if( $status == 'Cancel' ) {
 
                 $statusStr = "deleted-by-canceled-order";
+                $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $statusStr );
                 $entity->setOid($entity->getOid()."-del");
                 $entity->setCicle($statusStr);
@@ -61,6 +60,7 @@ class OrderUtil {
             } else if( $status == 'Amend' ) {
 
                 $statusStr = "deleted-by-amended-order";
+                $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $statusStr );
                 $entity->setOid($entity->getOid()."-del");
                 $entity->setCicle($statusStr);
@@ -81,65 +81,32 @@ class OrderUtil {
 
                 $newOrderinfo = clone $entity;
 
-                echo "count Patient=".count($entity->getPatient())."<br>";
-                echo "count Procedure=".count($entity->getProcedure())."<br>";
-                echo "count Accession=".count($entity->getAccession())."<br>";
-                echo "count Part=".count($entity->getPart())."<br>";
-                foreach( $entity->getPart() as $part ) {
-                    $accession = $part->getAccession();
-                    echo "acc part count=".count($accession->getPart())."<br>";
-                    echo $part;
-                }
-                echo "count Block=".count($entity->getBlock())."<br>";
-                echo "count Slide=".count($entity->getSlide())."<br>";
-
-                $em->detach($entity);
+                //$em->detach($entity);
                 $em->detach($newOrderinfo);
                 //$em->persist($newOrderinfo);
-                $em->clear();
-                
-                echo "<br><br>orig entity1##########: final patients count=".count($entity->getPatient())."<br>";
-                foreach( $entity->getPatient() as $patient ) {
-                    echo $entity;
-                    echo "<br>--------------------------<br>";
-                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
-                    echo "--------------------------<br>";
-                }
+                //$em->clear();
+                //$em->flush();
 
+                $newOrderinfo->setStatus($status_entity);
                 $newOrderinfo->setCicle('submit');
                 $newOrderinfo->setOid($originalId);
 
-//                //copy children
-//                $children = $entity->getPatient();
-//                foreach( $children as $patient ) {
-//                    $clonePatient = clone $patient;
-//                    $clonePatient->cloneChildren();
-//                    $em->persist($clonePatient);
-//                    $newOrderinfo->addPatient($clonePatient);
-//                    //$this->addChildren($cloneChild);
-//                    //$this->addPatient($cloneChild);
-//                }
-
                 //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
 
-                echo "<br><br>orig entity2###########: final patients count=".count($entity->getPatient())."<br>";
-                foreach( $entity->getPatient() as $patient ) {
-                    echo $entity;
-                    echo "<br>--------------------------<br>";
-                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
-                    echo "--------------------------<br>";
-                }
-
-                echo "<br><br>newOrderinfo1 ##########: final patients count=".count($newOrderinfo->getPatient())."<br>";
-                foreach( $newOrderinfo->getPatient() as $patient ) {
-                    echo $newOrderinfo;
-                    echo "<br>--------------------------<br>";
-                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
-                    echo "--------------------------<br>";
-                }
-
                 //exit("order util exit on submit");
-                echo "@@@@@@@@@@count Patient=".count($newOrderinfo->getPatient())."<br>";
+
+                //change status to valid
+                $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+
+                echo "<br><br>newOrderinfo Patient's count=".count($newOrderinfo->getPatient())."<br>";
+                echo $newOrderinfo;
+                foreach( $newOrderinfo->getPatient() as $patient ) {
+                    echo "<br>--------------------------<br>";
+                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
+                    echo "--------------------------<br>";
+                }
+
+                echo "@@@@@@@@@@ count Patient=".count($newOrderinfo->getPatient())."<br>";
                 echo "count Procedure=".count($newOrderinfo->getProcedure())."<br>";
                 echo "count Accession=".count($newOrderinfo->getAccession())."<br>";
                 echo "count Part=".count($newOrderinfo->getPart())."<br>";
@@ -150,16 +117,6 @@ class OrderUtil {
                 }
                 echo "count Block=".count($newOrderinfo->getBlock())."<br>";
                 echo "count Slide=".count($newOrderinfo->getSlide())."<br>";
-
-                $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
-
-                echo "<br><br>newOrderinfo2 ##########: final patients count=".count($newOrderinfo->getPatient())."<br>";
-                foreach( $newOrderinfo->getPatient() as $patient ) {
-                    echo $newOrderinfo;
-                    echo "<br>--------------------------<br>";
-                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
-                    echo "--------------------------<br>";
-                }
 
                 $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo );
 

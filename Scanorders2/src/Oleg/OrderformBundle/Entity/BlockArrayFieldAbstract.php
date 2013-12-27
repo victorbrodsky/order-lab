@@ -66,4 +66,16 @@ abstract class BlockArrayFieldAbstract extends ArrayFieldAbstract {
         return $this->field."";
     }
 
+
+    //set and get parent
+    public function setParent($parent)
+    {
+        $this->setBlock($parent);
+        return $this;
+    }
+    public function getParent()
+    {
+        return $this->getBlock();
+    }
+
 }

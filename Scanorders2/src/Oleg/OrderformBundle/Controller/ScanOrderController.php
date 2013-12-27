@@ -220,7 +220,6 @@ class ScanOrderController extends Controller {
         }
         //***************** END of User filetr ***************************//
 
-
         //echo "<br>criteriastr=".$criteriastr."<br>";
         
         if( $criteriastr != "" ) {
