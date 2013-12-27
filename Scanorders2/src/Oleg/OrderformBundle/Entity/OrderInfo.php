@@ -215,24 +215,18 @@ class OrderInfo
     public function __clone() {
         if ($this->id) {
             $this->setId(null);
-                     
-//            // Get current collection
-            $children = $this->getPatient();
+
+            $children = $this->getPatient(); // Get current collection
             if( !$children ) return;
             $this->patient = new ArrayCollection();
             foreach( $children as $child ) {
-                //$this->removeChildren($child);
+                $this->removeDepend($child);
                 $cloneChild = clone $child;
-                $cloneChild->cloneChildren();
+                $cloneChild->cloneChildren($this);
                 $this->patient->add($cloneChild);
-                //$this->addChildren($cloneChild);
-                $cloneChild->setParent($this);
-                //$this->addPatient($cloneChild);
+                //$this->addDepend($cloneChild);
+                //$cloneChild->addOrderInfo($this);
             }
-
-//            foreach( $this->slide as $child ) {
-//                $this->removeSlide($child);
-//            }
               
         }
     }
@@ -241,6 +235,7 @@ class OrderInfo
         $class = new \ReflectionClass($depend);
         $className = $class->getShortName();    //Part
         $removeMethod = "remove".$className;
+        echo "orderinfo remove depened:".$removeMethod."<br>";
         $this->$removeMethod($depend);
     }
 
@@ -250,66 +245,6 @@ class OrderInfo
         $addMethod = "add".$className;
         $this->$addMethod($depend);
     }
-
-//    public function __clone() {
-//
-//        if ($this->id) {
-//
-//            echo "clone dependencies <br>";
-//
-//            $this->setId(null);
-//
-//            foreach( $this->patient as $patient ) {
-//                $this->removePatient($patient);
-//                $patient = clone $patient;
-//                $this->addPatient($patient);
-//            }
-//
-//            foreach( $this->procedure as $child ) {
-//                $this->removeProcedure($child);
-//                $child = clone $child;
-//                $this->addProcedure($child);
-//            }
-//
-//            foreach( $this->accession as $child ) {
-//                $this->removeAccession($child);
-//                $child = clone $child;
-//                $this->addAccession($child);
-//            }
-//
-//            foreach( $this->part as $child ) {
-//                $this->removePart($child);
-//                $child = clone $child;
-//                $this->addPart($child);
-//            }
-//
-//            foreach( $this->block as $child ) {
-//                $this->removeBlock($child);
-//                $child = clone $child;
-//                $this->addBlock($child);
-//            }
-//
-//            foreach( $this->slide as $child ) {
-//                $this->removeSlide($child);
-//                $child = clone $child;
-//                $this->addSlide($child);
-//            }
-//
-//            foreach( $this->dataquality as $child ) {
-//                $this->removeDataquality($child);
-//                $child = clone $child;
-//                $this->addDataquality($child);
-//            }
-//
-//            if( $this->getEducational() ) {
-//                $this->setEducational( clone $this->getEducational() );
-//            }
-//
-//            if( $this->getResearch() ) {
-//                $this->setResearch( clone $this->getResearch() );
-//            }
-//        }
-//    }
     
     /**
      * Get id

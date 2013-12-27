@@ -81,22 +81,6 @@ class OrderUtil {
 
                 $newOrderinfo = clone $entity;
 
-//                $newOrderinfo = new OrderInfo();
-//                $newOrderinfo->setOrderdate($entity->getOrderdate());
-//                $newOrderinfo->setPathologyService($entity->getPathologyService());
-//                $newOrderinfo->setPriority($entity->getPriority());
-//                $newOrderinfo->setScandeadline($entity->getScandeadline());
-//                $newOrderinfo->setReturnoption($entity->getReturnoption());
-//                $newOrderinfo->setSlideDelivery($entity->getSlideDelivery());
-//                $newOrderinfo->setReturnSlide($entity->getReturnSlide());
-//                $newOrderinfo->setProvider($entity->getProvider());
-//                $newOrderinfo->setStatus($entity->getStatus());
-//                $newOrderinfo->setType($entity->getType());
-//                $newOrderinfo->setEducational($entity->getEducational());
-//                $newOrderinfo->setResearch($entity->getResearch());
-//                $newOrderinfo->setProxyuser($entity->getProxyuser());
-
-
                 echo "count Patient=".count($entity->getPatient())."<br>";
                 echo "count Procedure=".count($entity->getProcedure())."<br>";
                 echo "count Accession=".count($entity->getAccession())."<br>";
@@ -112,6 +96,7 @@ class OrderUtil {
                 $em->detach($entity);
                 $em->detach($newOrderinfo);
                 //$em->persist($newOrderinfo);
+                $em->clear();
                 
                 echo "<br><br>orig entity1##########: final patients count=".count($entity->getPatient())."<br>";
                 foreach( $entity->getPatient() as $patient ) {
@@ -193,147 +178,6 @@ class OrderUtil {
         return $message;
     }
 
-//    public function copyDepend( $source, $dest ) {
-//
-//        echo "clone dependencies <br>";
-//
-//        foreach( $this->patient as $patient ) {
-//            $this->removePatient($patient);
-//            $patient = clone $patient;
-//            $this->addPatient($patient);
-//        }
-//
-//        foreach( $this->procedure as $child ) {
-//            $this->removeProcedure($child);
-//            $child = clone $child;
-//            $this->addProcedure($child);
-//        }
-//
-//        foreach( $this->accession as $child ) {
-//            $this->removeAccession($child);
-//            $child = clone $child;
-//            $this->addAccession($child);
-//        }
-//
-//        foreach( $this->part as $child ) {
-//            $this->removePart($child);
-//            $child = clone $child;
-//            $this->addPart($child);
-//        }
-//
-//        foreach( $this->block as $child ) {
-//            $this->removeBlock($child);
-//            $child = clone $child;
-//            $this->addBlock($child);
-//        }
-//
-//        foreach( $this->slide as $child ) {
-//            $this->removeSlide($child);
-//            $child = clone $child;
-//            $this->addSlide($child);
-//        }
-//
-//        foreach( $this->dataquality as $child ) {
-//            $this->removeDataquality($child);
-//            $child = clone $child;
-//            $this->addDataquality($child);
-//        }
-//
-//        if( $this->getEducational() ) {
-//            $this->setEducational( clone $this->getEducational() );
-//        }
-//
-//        if( $this->getResearch() ) {
-//            $this->setResearch( clone $this->getResearch() );
-//        }
-//
-//    }
-
-    public function iterateOrderInfo( $orderinfo, $statusStr ) {
-
-        //patient
-        $patients = $orderinfo->getPatient();
-        //$orderinfo->clearPatient();
-
-        foreach( $patients as $patient ) {
-           
-            $orderinfo->removePatient($patient);
-            $new_patient = clone $patient;
-            $new_patient->setId(null);
-            $new_patient->setStatus($statusStr);
-            $orderinfo->addPatient($new_patient);
-
-            //procdeure
-            foreach( $patient->getProcedure() as $procedure ) {
-
-                $new_patient->removeChildren($procedure);
-                $new_procedure = clone $procedure;
-                $new_procedure->setId(null);
-                $new_procedure->setStatus($statusStr);
-                $new_patient->addChildren($new_procedure);
-
-                //accession
-                foreach( $procedure->getAccession() as $accession ) {
-
-                    $new_procedure->removeChildren($accession);
-                    $new_accession = clone $accession;
-                    $new_accession->setId(null);
-                    $new_accession->setStatus($statusStr);
-                    $new_procedure->addChildren($new_accession);
-
-                    //part
-                    foreach( $accession->getPart() as $part ) {
-
-                        $new_accession->removeChildren($part);
-                        $new_part = clone $part;
-                        $new_part->setId(null);
-                        $new_part->setStatus($statusStr);
-                        $new_accession->addChildren($new_part);
-
-                        //slide
-                        foreach( $part->getChildren() as $child ) {
-
-                            $new_part->removeChildren($child);
-                            $new_child = clone $child;
-                            $new_child->setId(null);
-                            $new_child->setStatus($statusStr);
-                            $new_part->addChildren($new_child);
-
-                        }//slide
-
-//                        //block
-//                        foreach( $part->getBlock() as $block ) {
-//
-//                            $new_part->removeChildren($block);
-//                            echo "clone block";
-//                            $new_block = clone $block;
-//                            echo "...done <br>";
-//                            $new_block->setId(null);
-//                            $new_block->setStatus($statusStr);
-//                            $new_part->addChildren($new_block);
-//
-//                            //slide
-//                            foreach( $block->getSlide() as $slide ) {
-//
-//                                $new_block->removeChildren($slide);
-//                                $new_slide = clone $slide;
-//                                $new_slide->setId(null);
-//                                $new_slide->setStatus($statusStr);
-//                                $new_block->addChildren($new_slide);
-//
-//                            }//slide
-//
-//                        }//block
-
-                    }//part
-                }//accession
-            }//procedure
-        }//patient
-
-        return $orderinfo;
-
-    }
-
     public function processObjects( $entity, $status_entity, $statusStr ) {
 
         $patients = $entity->getPatient();
@@ -401,37 +245,37 @@ class OrderUtil {
 
                     //$newChild = clone $child;
 
-                    $child->setId(null);
+                    //$child->setId(null);
 
-                    echo "orderinfo count=".count($child->getOrderinfo())."<br>";
-                    foreach( $child->getOrderinfo() as $oi ) {
-                        echo $oi;
-                        $child->removeOrderinfo($oi);
-                        $child->addOrderinfo($orderinfo);
-                    }
+//                    echo "orderinfo count=".count($child->getOrderinfo())."<br>";
+//                    foreach( $child->getOrderinfo() as $oi ) {
+//                        echo $oi;
+//                        $child->removeOrderinfo($oi);
+//                        $child->addOrderinfo($orderinfo);
+//                    }
 
                     //remove from orderinfo
-                    $childClass = new \ReflectionClass($child);
-                    $childClassName = $childClass->getShortName();
-                    $removeMethod = "remove".$childClassName;
-                    $addMethod = "add".$childClassName;
-                    $getMethod = "get".$childClassName;
-                    echo "child count in orderinfo=".count($orderinfo->$getMethod())."<br>";
-                    foreach( $orderinfo->$getMethod() as $orderchild ) {
-                        echo $orderchild;
-                        $orderinfo->$removeMethod($orderchild);
-                    }
+//                    $childClass = new \ReflectionClass($child);
+//                    $childClassName = $childClass->getShortName();
+//                    $removeMethod = "remove".$childClassName;
+//                    $addMethod = "add".$childClassName;
+//                    $getMethod = "get".$childClassName;
+//                    echo "child count in orderinfo=".count($orderinfo->$getMethod())."<br>";
+//                    foreach( $orderinfo->$getMethod() as $orderchild ) {
+//                        echo $orderchild;
+//                        $orderinfo->$removeMethod($orderchild);
+//                    }
                     //echo $child;
                     //$orderinfo->$addMethod($child);
 
                     //echo "removing ".$childClassName." from orderinfo oid=".$orderinfo->getOid().", id=".$orderinfo->getId()."<br>";
-                    $orderinfo->$removeMethod($child);
+                    //$orderinfo->$removeMethod($child);
 
                     //$child->removeOrderInfo($orderinfo);
                     //$newChild->clearOrderinfo();
 
                     //$em->persist($child);                   
-                    $em->detach($child);
+                    //$em->detach($child);
                     //$em->persist($child);
                 }
                 $count++;

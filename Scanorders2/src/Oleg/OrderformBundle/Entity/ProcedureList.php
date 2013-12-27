@@ -181,7 +181,7 @@ class ProcedureList
      */
     public function addSynonym(\Oleg\OrderformBundle\Entity\ProcedureList $synonyms)
     {
-        $this->synonyms[] = $synonyms;
+        $this->synonyms->add($synonyms);
     
         return $this;
     }
@@ -246,7 +246,7 @@ class ProcedureList
      */
     public function addProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
-        $this->procedure[] = $procedure;
+        $this->procedure->add($procedure);
     
         return $this;
     }

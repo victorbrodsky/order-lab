@@ -115,8 +115,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         echo $entity;
         echo "count Patient=".count($entity->getPatient())."<br>";
         echo "count Procedure=".count($entity->getProcedure())."<br>";
-        echo "count Accession=".count($entity->getAccession())."<br>";
+        foreach( $entity->getProcedure() as $child ) {
+            echo $child;
+            echo $child->getOrderinfo()->first();
+        }
 
+        echo "count Accession=".count($entity->getAccession())."<br>";
         foreach( $entity->getAccession() as $child ) {
             echo $child;
             echo $child->getOrderinfo()->first();
@@ -134,13 +138,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         echo "count Slide=".count($entity->getSlide())."<br>";
 
         echo "slide=".$entity->getSlide()->first();
-        echo "scan id=".$entity->getSlide()->first()->getScan()->first()->getId()."<br>";
-        echo "stain id=".$entity->getSlide()->first()->getStain()->first()->getId()."<br>";
+        if( count($entity->getSlide()) > 0 ) {
+            echo "scan id=".$entity->getSlide()->first()->getScan()->first()->getId()."<br>";
+            echo "stain id=".$entity->getSlide()->first()->getStain()->first()->getId()."<br>";
+            echo "Accession id=".$entity->getAccession()->first()->getAccession()->first()->getId()."<br>";
+            echo "Block name id=".$entity->getBlock()->first()->getBlockname()->first()->getId()."<br>";
+        }
 
-        echo "Accession id=".$entity->getAccession()->first()->getAccession()->first()->getId()."<br>";
-        echo "Block name id=".$entity->getBlock()->first()->getBlockname()->first()->getId()."<br>";
-
-        exit('orderinfo repo exit');
+        //exit('orderinfo repo exit');
 
         if( $entity->getCicle() == 'amend' ) {
                    

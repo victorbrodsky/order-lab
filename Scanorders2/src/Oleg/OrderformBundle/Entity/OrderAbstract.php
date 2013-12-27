@@ -65,7 +65,7 @@ abstract class OrderAbstract
         }
     }
     
-    public function cloneChildren() {
+    public function cloneChildren($orderinfo) {
         // Get current collection
         $children = $this->getChildren();
 
@@ -74,16 +74,14 @@ abstract class OrderAbstract
         $cloneChildren = new ArrayCollection();
         
         foreach( $children as $child ) {
-            //$this->removeChildren($child);
+            echo "clone Children: ".$child;
+            $orderinfo->removeDepend($child);
             $cloneChild = clone $child;
-            $cloneChild->cloneChildren();
+            $cloneChild->cloneChildren($orderinfo);
             $cloneChildren->add($cloneChild);
-            //$this->addChildren($cloneChild);         
-            $cloneChild->setParent($this);
-
-//            foreach( $child->getOrderinfo() as $oi ) {
-//                echo "2 child orderinfo:".$oi."<br>";
-//            }
+            $orderinfo->addDepend($cloneChild);
+            //$cloneChild->setParent($this);
+            //$cloneChild->addOrderInfo($orderinfo);
         }
 
         $this->setChildren($cloneChildren);

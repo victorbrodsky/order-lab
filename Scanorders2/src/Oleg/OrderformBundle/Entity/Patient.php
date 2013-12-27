@@ -246,7 +246,6 @@ class Patient extends OrderAbstract
     {
         //echo "add procedure: ".$procedure."<br>";
         if( !$this->procedure->contains($procedure) ) {
-//        if( !$this->containsChild($procedure) ) {
             $procedure->setPatient($this);
             $this->procedure->add($procedure);
         }
@@ -454,6 +453,7 @@ class Patient extends OrderAbstract
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
         ", name=".$this->name->first().", nameID=".$this->name->first()->getId().
+        ", procedureCount=".count($this->procedure).", firstprocedureID=".$this->procedure->first()->getId().
         ", orderinfo=".count($this->orderinfo).
         $mrns."<br>";
     }

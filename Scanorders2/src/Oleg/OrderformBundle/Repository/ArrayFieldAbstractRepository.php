@@ -159,14 +159,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $entity->addChildren($child);
 
             //add orderinfo if oid is not set yet => new orderinfo. If oid is set then it is un-canceled order and it already has links to its children objects(patients, parts, blocks, slides ...)
-            if( $orderinfo->getOid() == null ) {
+            //if( $orderinfo->getOid() == null ) {
                 //link entity with orderinfo
                 $childClass = new \ReflectionClass($child);
                 $childClassName = $childClass->getShortName();
                 $addClassMethod = "add".$childClassName;    //"addPatient"
+                $getClassMethod = "get".$childClassName;
                 $orderinfo->$addClassMethod($child);
-                echo "add orderinfo for ".$childClassName."<br>";
-            }
+                echo "orderinfo count:".count($orderinfo->$getClassMethod())."<br>";
+                echo "add orderinfo for ".$childClassName.", :".$orderinfo;
+            //}
 
         }
     }

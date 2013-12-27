@@ -38,10 +38,10 @@ class PartRepository extends ArrayFieldAbstractRepository
                 }
             }
             //echo $block;
-            if( $orderinfo->getOid() == null ) {
+            //if( $orderinfo->getOid() == null ) {
                 $orderinfo->addBlock($block);
-                echo "PartRepo: add orderinfo for Block<br>";
-            }
+                echo "PartRepo: add orderinfo for Block, :".$orderinfo;
+            //}
 
         }
 

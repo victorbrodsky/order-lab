@@ -271,6 +271,7 @@ class Slide extends OrderAbstract
         return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().
                 ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().
                 ", stain count=".count($this->getStain()).", firststainid=".$this->getStain()->first()->getId().
+                ", specialStains count=".count($this->getSpecialStains()).", firstspecialStainsid=".$this->getSpecialStains()->first()->getId().
                 ", stain=".$stain.", mag=".$mag.
                 ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }
