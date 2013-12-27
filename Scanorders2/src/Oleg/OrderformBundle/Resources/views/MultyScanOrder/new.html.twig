@@ -71,9 +71,14 @@
         </div>
     {% endif %}
 
-    {% if type == 'amend' %}
+    {% if type == 'amend' and form.vars.value.status == "Submitted" %}
         <div class="well well-sm">
             <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Amend</a>
+        </div>
+    {% endif %}
+    {% if type == 'amend' and form.vars.value.status == "Canceled" %}
+        <div class="well well-sm">
+            <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Un-Canceling</a>
         </div>
     {% endif %}
 

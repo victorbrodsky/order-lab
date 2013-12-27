@@ -251,7 +251,7 @@
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' %}
+        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' or status == 'Canceled' %}
 
             {% set btntype = '' %}
             {% if cycle == 'amend' %}

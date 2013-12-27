@@ -428,9 +428,13 @@ class ScanOrderController extends Controller {
 
         $orderUtil = new OrderUtil($em);
 
-        $message = $orderUtil->changeStatus($id, $status);
+        $res = $orderUtil->changeStatus($id, $status);
 
-        $this->get('session')->getFlashBag()->add('notice',$message);
+        if( $res['result'] == 'conflict' ) {   //redirect to amend
+            return $this->redirect( $this->generateUrl( 'order_amend', array('id' => $res['oid']) ) );
+        }
+
+        $this->get('session')->getFlashBag()->add('notice',$res['message']);
 
         return $this->redirect($this->generateUrl('index'));
     }

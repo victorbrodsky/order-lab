@@ -16,7 +16,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     //process orderinfo and all entities
     public function processOrderInfoEntity( $entity, $type=null ) {
 
-        //echo "orderinfo: ".$entity."<br>";
+        echo "orderinfo: ".$entity."<br>";
 //        echo "patients count=".count($entity->getPatient())."<br>";
 //        $this->printTree( $entity->getPatient()->first() );
 
@@ -41,6 +41,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        exit();
 
         $em = $this->_em;
+
+        //TODO: if un-cancelling the conflicting orderinfo, first make clone as in OrderUtil plus Dataquality
+        $orderUtil = new OrderUtil($em);
+        $res = $orderUtil->makeOrderInfoClone( $entity, null, "valid" );
+        $entity = $res['orderinfo'];
 
         //one way to solev multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
@@ -112,51 +117,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             echo "--------------------------<br>";
         }
 
-        echo $entity;
-        echo "count Patient=".count($entity->getPatient())."<br>";
-        echo "count Procedure=".count($entity->getProcedure())."<br>";
-        foreach( $entity->getProcedure() as $child ) {
-            echo $child;
-            echo $child->getOrderinfo()->first();
-        }
-
-        echo "count Accession=".count($entity->getAccession())."<br>";
-        foreach( $entity->getAccession() as $child ) {
-            echo $child;
-            echo $child->getOrderinfo()->first();
-        }
-
-        echo "count Part=".count($entity->getPart())."<br>";
-        foreach( $entity->getPart() as $part ) {
-            $accession = $part->getAccession();
-            echo "acc part count=".count($accession->getPart())."<br>";
-            echo $part;
-            echo "part's orderinfo count=".count($part->getOrderinfo())."<br>";
-            echo $part->getOrderinfo()->first();
-        }
-        echo "count Block=".count($entity->getBlock())."<br>";
-        echo "count Slide=".count($entity->getSlide())."<br>";
-
-        echo "slide=".$entity->getSlide()->first();
-        if( count($entity->getSlide()) > 0 ) {
-            echo "scan id=".$entity->getSlide()->first()->getScan()->first()->getId()."<br>";
-            echo "stain id=".$entity->getSlide()->first()->getStain()->first()->getId()."<br>";
-            echo "specialStains id=".$entity->getSlide()->first()->getSpecialStains()->first()->getId()."<br>";
-            echo "specialStains Parent id=".$entity->getSlide()->first()->getSpecialStains()->first()->getParent()->getId()."<br>";
-            echo "Accession id=".$entity->getAccession()->first()->getAccession()->first()->getId()."<br>";
-            echo "Block name id=".$entity->getBlock()->first()->getBlockname()->first()->getId()."<br>";
-            echo "Block provider=".$entity->getBlock()->first()->getProvider()."<br>";
-
-            echo "Patient providerCount=".count($entity->getPatient()->first()->getProvider()).", name=".$entity->getPatient()->first()->getProvider().", id=".$entity->getPatient()->first()->getProvider()->getId()."<br>";
-            echo "Procedure providerCount=".count($entity->getProcedure()->first()->getProvider()).", name=".$entity->getProcedure()->first()->getProvider().", id=".$entity->getProcedure()->first()->getProvider()->getId()."<br>";
-            echo "Accession providerCount=".count($entity->getAccession()->first()->getProvider()).", name=".$entity->getAccession()->first()->getProvider().", id=".$entity->getAccession()->first()->getProvider()->getId()."<br>";
-            echo "Part providerCount=".count($entity->getPart()->first()->getProvider()).", name=".$entity->getPart()->first()->getProvider().", id=".$entity->getPart()->first()->getProvider()->getId()."<br>";
-            echo "Partname providerCount=".count($entity->getPart()->first()->getPartname()->first()->getProvider()).", name=".$entity->getPart()->first()->getPartname()->first()->getProvider().", id=".$entity->getPart()->first()->getPartname()->first()->getProvider()->getId()."<br>";
-            echo "Block providerCount=".count($entity->getBlock()->first()->getProvider()).", name=".$entity->getBlock()->first()->getProvider().", id=".$entity->getBlock()->first()->getProvider()->getId()."<br>";
-            echo "Slide providerCount=".count($entity->getSlide()->first()->getProvider()).", name=".$entity->getSlide()->first()->getProvider().", id=".$entity->getSlide()->first()->getProvider()->getId()."<br>";
-
-        }
-
         //exit('orderinfo repo exit');
 
         if( $entity->getCicle() == 'amend' ) {
@@ -205,16 +165,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
                 $em->flush();
             }
         }
-        
-//        if( $entity->getCicle() == 'amend' ) {
-//            echo "update entity with amend=".$entity."<br>";
-//            $entity->setId(null);           
-//            $entity->setOriginalid($originalId);
-//            $em->persist($entity);
-//            $em->flush();
-//        }
 
-        //$em->clear();
+        $em->clear();
+
         return $entity;
     }
 

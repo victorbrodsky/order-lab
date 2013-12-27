@@ -225,7 +225,7 @@ class UtilController extends Controller {
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $slides = $orderinfo->getSlide();
                 foreach( $slides as $slide ) {
@@ -268,7 +268,7 @@ class UtilController extends Controller {
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $arr[] = $orderinfo->getSlideDelivery();
             }
@@ -307,7 +307,7 @@ class UtilController extends Controller {
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $arr[] = $orderinfo->getReturnSlide();
             }
@@ -387,7 +387,7 @@ class UtilController extends Controller {
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $parts = $orderinfo->getPart();
                 foreach( $parts as $part ) {
@@ -424,7 +424,7 @@ class UtilController extends Controller {
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
-            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($id);
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
             if( $orderinfo ) {
                 $blocks = $orderinfo->getBlock();
                 foreach( $blocks as $block ) {

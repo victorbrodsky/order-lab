@@ -10,8 +10,10 @@
 namespace Oleg\OrderformBundle\Helper;
 
 
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Doctrine\Common\Collections\ArrayCollection;
+//use Oleg\OrderformBundle\Entity\OrderInfo;
+//use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Controller\MultyScanOrderController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class OrderUtil {
 
@@ -37,7 +39,7 @@ class OrderUtil {
         //$deleteForm = $this->createDeleteForm($id);
 
         //$entity->setStatus($status);
-        echo "status=".$status."<br>";
+        //echo "status=".$status."<br>";
         $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($status);
         //echo "status_entity=".$status_entity->getName()."<br>";
         //exit();
@@ -52,20 +54,32 @@ class OrderUtil {
                 $statusStr = "deleted-by-canceled-order";
                 $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $statusStr );
-                $entity->setOid($entity->getOid()."-del");
+                $entity->setOid($entity->getId()."-del");
                 $entity->setCicle($statusStr);
                 $em->persist($entity);
                 $em->flush();
+
+//                //add id as prefix to oid 3-del-3
+//                $entity->setOid($entity->getOid()."-".$entity->getId());
+//                $em->persist($entity);
+//                $em->flush();
+//                $em->clear();
 
             } else if( $status == 'Amend' ) {
 
                 $statusStr = "deleted-by-amended-order";
                 $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $statusStr );
-                $entity->setOid($entity->getOid()."-del");
+                $entity->setOid($entity->getId()."-del");
                 $entity->setCicle($statusStr);
                 $em->persist($entity);
                 $em->flush();
+
+//                //add id as prefix to oid 3-del-3
+//                $entity->setOid($entity->getOid()."-".$entity->getId());
+//                $em->persist($entity);
+//                $em->flush();
+//                $em->clear();
 
             } else if( $status == 'Submit' ) {
 
@@ -75,48 +89,87 @@ class OrderUtil {
                 //2) validate MRN-Accession
                 //3) change status to 'valid' and 'submit'
 
-                $oid = $entity->getOid();
-                $oidArr = explode("-del", $oid);
-                $originalId = $oidArr[0];
+//                echo "<br><br>newOrderinfo Patient's count=".count($newOrderinfo->getPatient())."<br>";
+//                echo $newOrderinfo;
+//                foreach( $newOrderinfo->getPatient() as $patient ) {
+//                    echo "<br>--------------------------<br>";
+//                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
+//                    echo "--------------------------<br>";
+//                }
 
-                $newOrderinfo = clone $entity;
+                //VALIDATION Accession-MRN
+                foreach( $entity->getAccession() as $accession ) {
+                    $patient = $accession->getParent()->getParent();
 
-                //$em->detach($entity);
-                $em->detach($newOrderinfo);
-                //$em->persist($newOrderinfo);
-                //$em->clear();
-                //$em->flush();
+                    $patientKey = $patient->obtainValidKeyField();
+                    if( !$patientKey ) {
+                        throw new \Exception( 'Object does not have a valid key field. Object: '.$patient );
+                    }
 
-                $newOrderinfo->setStatus($status_entity);
-                $newOrderinfo->setCicle('submit');
-                $newOrderinfo->setOid($originalId);
+                    $accessionKey = $accession->obtainValidKeyField();
+                    if( !$accessionKey ) {
+                        throw new \Exception( 'Object does not have a valid key field. Object: '.$accession );
+                    }
+
+                    //echo "accessionKey=".$accessionKey."<br>";
+                    $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionKey,"Accession","accession",true, true);
+
+                    $mrn = $patientKey; //mrn
+                    $mrnTypeId = $patientKey->getMrntype()->getId();
+                    //$extra = $patientKey->obtainExtraKey();
+
+                    if( $accessionDb ) {
+                        //echo "similar accession found=".$accessionDb;
+                        $patientDb = $accessionDb->getParent()->getParent();
+                        if( $patientDb ) {
+                            $mrnDb = $patientDb->obtainValidKeyField();
+                            $mrnTypeIdDb = $mrnDb->getMrntype()->getId();
+
+                            //echo $mrn . "?=". $mrnDb ." && ". $mrnTypeId . "==". $mrnTypeIdDb . "<br>";
+
+                            if( $mrn == $mrnDb && $mrnTypeId == $mrnTypeIdDb ) {
+                                //ok
+                                //echo "no conflict <br>";
+                            } else {
+                                //echo "there is a conflict <br>";
+                                //conflict => render the orderinfo in the amend view 'order_amend'
+                                //exit('un-canceling order. id='.$newOrderinfo->getOid());
+
+                                $res = array();
+                                $res['result'] = 'conflict';
+                                $res['oid'] = $entity->getOid();
+
+                                return $res;
+
+                            }
+                        }
+                    }
+
+                }
+
+//                //CLONING
+//                $oid = $entity->getOid();
+//                $oidArr = explode("-del", $oid);
+//                $originalId = $oidArr[0];
+//
+//                $newOrderinfo = clone $entity;
+//
+//                $em->detach($entity);
+//                $em->detach($newOrderinfo);
+//
+//                $newOrderinfo->setStatus($status_entity);
+//                $newOrderinfo->setCicle('submit');
+//                $newOrderinfo->setOid($originalId);
 
                 //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
 
-                //exit("order util exit on submit");
-
                 //change status to valid
-                $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+                //$message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+                $res = $this->makeOrderInfoClone( $entity, $status_entity, $statusStr );
+                //exit('un-canceling order');
 
-                echo "<br><br>newOrderinfo Patient's count=".count($newOrderinfo->getPatient())."<br>";
-                echo $newOrderinfo;
-                foreach( $newOrderinfo->getPatient() as $patient ) {
-                    echo "<br>--------------------------<br>";
-                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
-                    echo "--------------------------<br>";
-                }
-
-                echo "@@@@@@@@@@ count Patient=".count($newOrderinfo->getPatient())."<br>";
-                echo "count Procedure=".count($newOrderinfo->getProcedure())."<br>";
-                echo "count Accession=".count($newOrderinfo->getAccession())."<br>";
-                echo "count Part=".count($newOrderinfo->getPart())."<br>";
-                foreach( $newOrderinfo->getPart() as $part ) {
-                    $accession = $part->getAccession();
-                    echo "acc part count=".count($accession->getPart())."<br>";
-                    echo $part;
-                }
-                echo "count Block=".count($newOrderinfo->getBlock())."<br>";
-                echo "count Slide=".count($newOrderinfo->getSlide())."<br>";
+                $message = $res['message'];
+                $newOrderinfo = $res['orderinfo'];
 
                 $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo );
 
@@ -132,7 +185,45 @@ class OrderUtil {
             $message = 'Status: "'.$status.'" is not found';
         }
 
-        return $message;
+        $res = array();
+        $res['result'] = 'ok';
+        $res['message'] = $message;
+
+        return $res;
+    }
+
+    public function makeOrderInfoClone( $entity, $status_entity, $statusStr ) {
+
+        $em = $this->em;
+
+        if( !$status_entity  ) {
+            $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusStr);
+        }
+
+        //CLONING
+        $oid = $entity->getOid();
+        $oidArr = explode("-del", $oid);
+        $originalId = $oidArr[0];
+
+        $newOrderinfo = clone $entity;
+
+        $em->detach($entity);
+        $em->detach($newOrderinfo);
+
+        $newOrderinfo->setStatus($status_entity);
+        $newOrderinfo->setCicle('submit');
+        $newOrderinfo->setOid($originalId);
+
+        //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
+
+        //change status to valid
+        $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+
+        $res = array();
+        $res['message'] = $message;
+        $res['orderinfo'] = $newOrderinfo;
+
+        return $res;
     }
 
     public function processObjects( $entity, $status_entity, $statusStr ) {
@@ -183,7 +274,7 @@ class OrderUtil {
             if( $statusStr != 'valid' ) {
                 //check if this object is used by another orderinfo (for cancel and amend only)
                 foreach( $child->getOrderinfo() as $order ) {
-                    echo "orderinfo id=".$order->getId().", oid=".$order->getOid()."<br>";
+                    //echo "orderinfo id=".$order->getId().", oid=".$order->getOid()."<br>";
                     if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
                         $noOtherOrderinfo = false;
                         break;
@@ -197,44 +288,6 @@ class OrderUtil {
                 //echo "change status to (".$statusStr.") <br>";
                 $child->setStatus($statusStr);
                 $em->getRepository('OlegOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
-                //set ID to null if status is valid (un-cancel procedure)
-                if( $statusStr == 'valid' ) {
-
-                    //$newChild = clone $child;
-
-                    //$child->setId(null);
-
-//                    echo "orderinfo count=".count($child->getOrderinfo())."<br>";
-//                    foreach( $child->getOrderinfo() as $oi ) {
-//                        echo $oi;
-//                        $child->removeOrderinfo($oi);
-//                        $child->addOrderinfo($orderinfo);
-//                    }
-
-                    //remove from orderinfo
-//                    $childClass = new \ReflectionClass($child);
-//                    $childClassName = $childClass->getShortName();
-//                    $removeMethod = "remove".$childClassName;
-//                    $addMethod = "add".$childClassName;
-//                    $getMethod = "get".$childClassName;
-//                    echo "child count in orderinfo=".count($orderinfo->$getMethod())."<br>";
-//                    foreach( $orderinfo->$getMethod() as $orderchild ) {
-//                        echo $orderchild;
-//                        $orderinfo->$removeMethod($orderchild);
-//                    }
-                    //echo $child;
-                    //$orderinfo->$addMethod($child);
-
-                    //echo "removing ".$childClassName." from orderinfo oid=".$orderinfo->getOid().", id=".$orderinfo->getId()."<br>";
-                    //$orderinfo->$removeMethod($child);
-
-                    //$child->removeOrderInfo($orderinfo);
-                    //$newChild->clearOrderinfo();
-
-                    //$em->persist($child);                   
-                    //$em->detach($child);
-                    //$em->persist($child);
-                }
                 $count++;
             }
 

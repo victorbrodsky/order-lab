@@ -273,7 +273,7 @@ class Slide extends OrderAbstract
                 ", orderinfo count=".count($this->getOrderinfo()).", first orderinfo:=".$this->getOrderinfo()->first().
                 ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().
                 ", stain count=".count($this->getStain()).", firststainid=".$this->getStain()->first()->getId().
-                ", specialStains count=".count($this->getSpecialStains()).", firstspecialStainsId=".$this->getSpecialStains()->first()->getId().
+                //", specialStains count=".count($this->getSpecialStains()).", firstspecialStainsId=".$this->getSpecialStains()->first()->getId().
                 ", stain=".$stain.", mag=".$mag.
                 ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }

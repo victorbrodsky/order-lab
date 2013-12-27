@@ -36,7 +36,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
         echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
+        echo $entity;
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
         //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
@@ -58,10 +58,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         $key = $entity->obtainValidKeyField();
-        //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
+        echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
         if( $key == ""  ) {
-            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
@@ -81,7 +81,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                //echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
+                echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
                 //CopyChildren
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -154,22 +154,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     public function attachToParentAndOrderinfo( $entity, $child, $orderinfo ) {
-        echo "start adding to orderinfo <br>";
+        //echo "start adding to orderinfo <br>";
         if( $child ) {
             $entity->addChildren($child);
 
             //add orderinfo if oid is not set yet => new orderinfo. If oid is set then it is un-canceled order and it already has links to its children objects(patients, parts, blocks, slides ...)
-            //if( $orderinfo->getOid() == null ) {
-                //link entity with orderinfo
-                $childClass = new \ReflectionClass($child);
-                $childClassName = $childClass->getShortName();
-                $addClassMethod = "add".$childClassName;    //"addPatient"
-                $getClassMethod = "get".$childClassName;
-                $orderinfo->$addClassMethod($child);
-                //$child->addOrderInfo($orderinfo);   //TODO: is it correct?
-                echo "orderinfo count:".count($orderinfo->$getClassMethod())."<br>";
-                echo "add orderinfo for ".$childClassName.", :".$orderinfo;
-            //}
+            //link entity with orderinfo
+            $childClass = new \ReflectionClass($child);
+            $childClassName = $childClass->getShortName();
+            $addClassMethod = "add".$childClassName;    //"addPatient"
+            $orderinfo->$addClassMethod($child);
 
         }
     }
