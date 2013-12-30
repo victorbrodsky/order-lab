@@ -15,6 +15,8 @@ namespace Oleg\OrderformBundle\Helper;
 use Oleg\OrderformBundle\Controller\MultyScanOrderController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Oleg\OrderformBundle\Entity\History;
+
 class OrderUtil {
 
     private $em;
@@ -46,40 +48,51 @@ class OrderUtil {
 
         if( $status_entity ) {
 
+            //record history
+            $history = new History();
+            $history->setCurrentid($entity->getOid());
+            $history->setCurrentstatus($entity->getStatus());
+            $history->setCurrentcicle($entity->getCicle());
+            $history->setProvider($entity->getProvider()->first());
+
             //change status for all orderinfo children to "deleted-by-canceled-order"
             //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
             //AND there are no fields that belong to this object that were added by another order
             if( $status == 'Cancel' ) {
 
-                $statusStr = "deleted-by-canceled-order";
+                $fieldStatusStr = "deleted-by-canceled-order";
                 $entity->setStatus($status_entity);
-                $message = $this->processObjects( $entity, $status_entity, $statusStr );
-                $entity->setOid($entity->getId()."-del");
-                $entity->setCicle($statusStr);
-                $em->persist($entity);
-                $em->flush();
+                $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
+                $entity->setOid($entity->getId()."-c");
+                $entity->setCicle("superseded");
 
-//                //add id as prefix to oid 3-del-3
-//                $entity->setOid($entity->getOid()."-".$entity->getId());
-//                $em->persist($entity);
-//                $em->flush();
-//                $em->clear();
+                //record history
+                $history->setNewid($entity->getOid());
+                $history->setNewstatus($entity->getStatus());
+                $history->setNewcicle($entity->getCicle());
+
+                $em->persist($entity);
+                $em->persist($history);
+                $em->flush();
+                $em->clear();
 
             } else if( $status == 'Amend' ) {
 
-                $statusStr = "deleted-by-amended-order";
+                $fieldStatusStr = "deleted-by-amended-order";
                 $entity->setStatus($status_entity);
-                $message = $this->processObjects( $entity, $status_entity, $statusStr );
-                $entity->setOid($entity->getId()."-del");
-                $entity->setCicle($statusStr);
-                $em->persist($entity);
-                $em->flush();
+                $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
+                $entity->setOid($entity->getId()."-a");
+                $entity->setCicle("superseded");
 
-//                //add id as prefix to oid 3-del-3
-//                $entity->setOid($entity->getOid()."-".$entity->getId());
-//                $em->persist($entity);
-//                $em->flush();
-//                $em->clear();
+                //record history
+                $history->setNewid($entity->getOid());
+                $history->setNewstatus($entity->getStatus());
+                $history->setNewcicle($entity->getCicle());
+
+                $em->persist($entity);
+                $em->persist($history);
+                $em->flush();
+                //$em->clear();
 
             } else if( $status == 'Submit' ) {
 
@@ -147,31 +160,19 @@ class OrderUtil {
 
                 }
 
-//                //CLONING
-//                $oid = $entity->getOid();
-//                $oidArr = explode("-del", $oid);
-//                $originalId = $oidArr[0];
-//
-//                $newOrderinfo = clone $entity;
-//
-//                $em->detach($entity);
-//                $em->detach($newOrderinfo);
-//
-//                $newOrderinfo->setStatus($status_entity);
-//                $newOrderinfo->setCicle('submit');
-//                $newOrderinfo->setOid($originalId);
-
-                //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
-
-                //change status to valid
-                //$message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+                //CLONNING the orderinfo
                 $res = $this->makeOrderInfoClone( $entity, $status_entity, $statusStr );
-                //exit('un-canceling order');
 
                 $message = $res['message'];
                 $newOrderinfo = $res['orderinfo'];
 
-                $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo );
+                //record new history
+                $history->setNewid($newOrderinfo->getOid());
+                $history->setNewstatus($newOrderinfo->getStatus());
+                $history->setNewcicle($newOrderinfo->getCicle());
+                $em->persist($history);
+
+                $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo, null, "noform" );
 
             } else {
 
@@ -202,7 +203,7 @@ class OrderUtil {
 
         //CLONING
         $oid = $entity->getOid();
-        $oidArr = explode("-del", $oid);
+        $oidArr = explode("-", $oid);
         $originalId = $oidArr[0];
 
         $newOrderinfo = clone $entity;

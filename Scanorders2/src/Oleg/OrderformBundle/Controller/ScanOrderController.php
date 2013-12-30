@@ -230,10 +230,10 @@ class ScanOrderController extends Controller {
         $params = $this->getRequest()->query->all();
         $sort = $this->getRequest()->query->get('sort');
         if( $params == null || count($params) == 0 ) {
-            $dql->orderBy("orderinfo.id","DESC");
+            $dql->orderBy("orderinfo.orderdate","DESC");
         }
         if( $sort != 'orderinfo.oid' ) {
-            $dql->orderBy("orderinfo.id","DESC");
+            $dql->orderBy("orderinfo.orderdate","DESC");
         }
 
 //        $dql->orderBy("status.name","DESC");

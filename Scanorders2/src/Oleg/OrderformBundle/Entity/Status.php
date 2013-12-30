@@ -41,8 +41,10 @@ class Status
      */
     protected $type;
 
-    //Group can be removed(?). It is not used for now and probably will not be used in the future.
     /**
+     * StatusGroup: User, Admin.
+     * User: Submitted, Not Submitted, Canceled, Amended
+     * Admin: All others (On Hold:..., Filled:...)
      * @ORM\ManyToOne(targetEntity="StatusGroup", inversedBy="status", cascade={"persist"})
      * @ORM\JoinColumn(name="statusgroup_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */

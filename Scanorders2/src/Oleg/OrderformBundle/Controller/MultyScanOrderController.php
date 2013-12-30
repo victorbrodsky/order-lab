@@ -101,9 +101,6 @@ class MultyScanOrderController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        //echo " controller multy<br>";
-        //exit();
-
         $entity  = new OrderInfo();
                       
         //initialize all form's fields, even if they are empty
@@ -204,6 +201,9 @@ class MultyScanOrderController extends Controller {
             if( isset($_POST['btnAmend']) ) {
                 $cicle = 'amend';               
             }
+
+            //echo "cicle=".$cicle."<br>";
+            //exit();
 
             $entity->setCicle($cicle);
 
@@ -507,10 +507,35 @@ class MultyScanOrderController extends Controller {
 //        $provider = $form["provider"]->getData();
 //        echo "id=".$id.", provider=".$provider.", type=".$type."<br>";
 
+        //History
+        $allhistory = null;
+        $backhistory = null;
+        $forwardhistory = null;
+
+        if( $routeName == "multy_show") {
+            $backhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($entity->getOid(),array('changedate' => 'ASC'));
+            $forwardhistory = $em->getRepository('OlegOrderformBundle:History')->findByNewid($entity->getOid(),array('changedate' => 'ASC'));
+
+            foreach( $backhistory as $hist ) {
+                echo "backhistory=".$hist->getId()."<br>";
+            }
+
+            foreach( $forwardhistory as $hist ) {
+                echo "forwardhistory=".$hist->getId()."<br>";
+            }
+            //get all histories to get the chain to the most recent order id (we can have only 1 forwardhistory)
+            if( count($forwardhistory) > 0 ) {
+                $allhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($forwardhistory[0]->getCurrentid(),array('changedate' => 'DESC'));
+            }
+        }
+
         return array(
             'form' => $form->createView(),
             'type' => $type,
-            'multy' => $entity->getType()
+            'multy' => $entity->getType(),
+            'backhistory' => $backhistory,
+            'forwardhistory' => $forwardhistory,
+            'allhistory' => $allhistory
         );
     }
 

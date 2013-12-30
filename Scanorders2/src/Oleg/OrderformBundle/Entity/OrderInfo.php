@@ -44,12 +44,11 @@ class OrderInfo
      */
     private $status;
 
-    
     /**
      * type - type of the order: single, multi, edu, res
      * @var string
      *
-     * @ORM\Column(name="type", nullable=true, type="string", length=100)
+     * @ORM\Column(name="type", nullable=true, type="string")
      */
     private $type;
 
@@ -231,6 +230,7 @@ class OrderInfo
             //
             $providers = $this->getProvider();
             $proxys = $this->getProxyuser();
+            $dataqualities = $this->getDataquality();
 
             $this->provider = new ArrayCollection();
             $this->proxyuser = new ArrayCollection();
@@ -242,6 +242,10 @@ class OrderInfo
 
             foreach( $proxys as $thisproxy ) {
                 $this->addProxyuser($thisproxy);
+            }
+
+            foreach( $dataqualities as $dataquality ) {
+                $this->addDataquality($dataquality);
             }
 
             foreach( $children as $child ) {
@@ -688,14 +692,9 @@ class OrderInfo
      */
     public function addAccession(\Oleg\OrderformBundle\Entity\Accession $accession)
     {
-
-        echo "this orderinfo has accessions=".count($this->accession)."<br>";
-        echo "adding ".$accession;
-
         if( !$this->accession->contains($accession) ) {            
             $this->accession->add($accession);
         }
-        echo "this orderinfo has accessions=".count($this->accession)."<br>";
     }
 
     /**

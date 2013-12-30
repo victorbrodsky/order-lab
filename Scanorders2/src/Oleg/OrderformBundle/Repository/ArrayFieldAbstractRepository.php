@@ -35,8 +35,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-        echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        echo $entity;
+
+        //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        //echo $entity;
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
         //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
@@ -58,10 +59,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         $key = $entity->obtainValidKeyField();
-        echo "valid key=".$key.", status=".$key->getStatus()."<br>";
+        //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
         if( $key == ""  ) {
-            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
@@ -81,7 +82,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
+                //echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
                 //CopyChildren
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -93,7 +94,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+                //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
             }
 
         }
