@@ -53,18 +53,18 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
 
         //set Status with Type and Group
-        $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
-        $entity->setStatus($status);
+        //$status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
+        //$entity->setStatus($status);
 
         if( $type ) {
             $entity->setType($type);
         }
 
         //return $entity;
-        return $this->setOrderInfoResult( $entity );
+        return $this->setOrderInfoResult( $entity, $option );
     }
     
-    public function setOrderInfoResult( $entity ) {       
+    public function setOrderInfoResult( $entity, $option=null ) {
 
         $em = $this->_em;
 
@@ -122,13 +122,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo $entity;
         //exit('orderinfo repo exit');
 
-        if( $entity->getCicle() == 'amend' ) {
+        if( $entity->getStatus() == 'Amended' ) {
                    
             $originalId = $entity->getOid();
             //echo "originalId=".$originalId."<br>";
             
             $newOrderinfo = clone $entity;
-            $newOrderinfo->setCicle('submit');
+            //$newOrderinfo->setCicle('submit');
             $newOrderinfo->setId(null);
             $newOrderinfo->setOid($originalId);
 
@@ -136,8 +136,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            $entity->setId(null);
 //            $entity->setOid($originalId);
             
-            $orderUtil = new OrderUtil($em);
-            $message = $orderUtil->changeStatus($originalId, 'Amend');
+//            $orderUtil = new OrderUtil($em);
+//            $message = $orderUtil->changeStatus($originalId, 'Amend');
             
             //$entity->setId(null);
                       
@@ -178,7 +178,21 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             }
         }
 
-        $em->clear();
+        //final step for amend: swap newly created oid with Superseded order oid
+        if( $entity->getStatus() == 'Amended' ) {
+
+            $orderUtil = new OrderUtil($em);
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $entity->getProvider()->first(), $entity->getId());
+
+            $entity->setOid($originalId);
+
+            //$em->persist($entity);
+            $em->flush();
+        }
+
+        if( !$option ) {
+            $em->clear();
+        }
 
         return $entity;
     }

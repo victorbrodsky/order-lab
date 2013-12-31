@@ -73,7 +73,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         } else {
 
-            if( $orderinfo->getCicle() == 'amend' ) {
+            if( $orderinfo->getStatus() == 'Amended' ) {
                 $found = null;
             } else {
                 //this is a main function to check uniqueness

@@ -494,7 +494,7 @@ class AdminController extends Controller
         }
 
         $statuses = array(
-            "Submitted", "Not Submitted", "Canceled", "Amended",
+            "Submitted", "Not Submitted", "Canceled", "Amended", "Superseded",
             "On Hold: Slides Received", "On Hold: Awaiting Slides",
             "Filled: Scanned", "Filled: Not Scanned", "Filled: Some Scanned", "Filled: Scanned & Returned",
             "Filled: Not Scanned & Returned", "Filled: Some Scanned & Returned",
@@ -524,6 +524,10 @@ class AdminController extends Controller
                 case "Amended":
                     $status->setName("Amended");
                     $status->setAction("Amend");
+                    break;
+                case "Superseded":
+                    $status->setName("Superseded");
+                    $status->setAction("Supersede");
                     break;
                 default:
                     break;

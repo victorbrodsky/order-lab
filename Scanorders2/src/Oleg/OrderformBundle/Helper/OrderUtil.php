@@ -25,7 +25,7 @@ class OrderUtil {
         $this->em = $em;
     }
 
-    public function changeStatus( $id, $status ) {
+    public function changeStatus( $id, $status, $user, $swapId=null ) {
 
         $em = $this->em;
 
@@ -35,14 +35,14 @@ class OrderUtil {
             throw $this->createNotFoundException('Unable to find OrderInfo entity.');
         }
 
-        //check if user permission
+        if( $status == 'Un-Cancel' ) {
+            $statusSearch = 'Submit';
+        } else {
+            $statusSearch = $status;
+        }
 
-        //$editForm = $this->createForm(new OrderInfoType(), $entity);
-        //$deleteForm = $this->createDeleteForm($id);
-
-        //$entity->setStatus($status);
         //echo "status=".$status."<br>";
-        $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($status);
+        $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusSearch);
         //echo "status_entity=".$status_entity->getName()."<br>";
         //exit();
 
@@ -52,8 +52,7 @@ class OrderUtil {
             $history = new History();
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
-            $history->setCurrentcicle($entity->getCicle());
-            $history->setProvider($entity->getProvider()->first());
+            $history->setProvider($user);
 
             //change status for all orderinfo children to "deleted-by-canceled-order"
             //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
@@ -61,42 +60,45 @@ class OrderUtil {
             if( $status == 'Cancel' ) {
 
                 $fieldStatusStr = "deleted-by-canceled-order";
+
+//                if( $entity->getProvider() == $user ) {
+//                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Submitter");
+//                } else {
+//                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Processor");
+//                }
+
                 $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
-                $entity->setOid($entity->getId()."-c");
-                $entity->setCicle("superseded");
+                //$entity->setOid($entity->getId()."-c");
 
                 //record history
                 $history->setNewid($entity->getOid());
                 $history->setNewstatus($entity->getStatus());
-                $history->setNewcicle($entity->getCicle());
 
                 $em->persist($entity);
                 $em->persist($history);
                 $em->flush();
                 $em->clear();
 
-            } else if( $status == 'Amend' ) {
+            } else if( $status == 'Supersede' ) {
 
+                //$status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Superseded");
                 $fieldStatusStr = "deleted-by-amended-order";
                 $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
-                $entity->setOid($entity->getId()."-a");
-                $entity->setCicle("superseded");
+                $entity->setOid($swapId);
+                //$entity->setCicle("superseded");
 
                 //record history
                 $history->setNewid($entity->getOid());
                 $history->setNewstatus($entity->getStatus());
-                $history->setNewcicle($entity->getCicle());
 
                 $em->persist($entity);
                 $em->persist($history);
                 $em->flush();
                 //$em->clear();
 
-            } else if( $status == 'Submit' ) {
-
-                $statusStr = "valid";
+            } else if( $status == 'Un-Cancel' ) {  //this is un-cancel action
 
                 //1) clone orderinfo object
                 //2) validate MRN-Accession
@@ -160,30 +162,62 @@ class OrderUtil {
 
                 }
 
-                //CLONNING the orderinfo
-                $res = $this->makeOrderInfoClone( $entity, $status_entity, $statusStr );
+                $originalId = $entity->getOid();
+
+                //NO CONFLICT: CLONNING the orderinfo
+                $res = $this->makeOrderInfoClone( $entity, $status_entity, "valid" );
 
                 $message = $res['message'];
                 $newOrderinfo = $res['orderinfo'];
 
-                //record new history
-                $history->setNewid($newOrderinfo->getOid());
-                $history->setNewstatus($newOrderinfo->getStatus());
-                $history->setNewcicle($newOrderinfo->getCicle());
-                $em->persist($history);
-
                 $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo, null, "noform" );
+
+                //get a fresh copy of entity
+                $canceled_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Canceled');
+                $canceledEntities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array('oid' => $newOrderinfo->getOid(),'status'=>$canceled_status));
+
+                if( count($canceledEntities) != 1 ) {
+                    throw new \Exception( 'Only one canceled order should exist. Order count='.count($canceledEntities) );
+                }
+
+                $canceledEntity = $canceledEntities[0];
+
+                //final step: swap the oid of the canceled orderinfo
+                $canceledEntity->setOid($newOrderinfo->getId());
+                $superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
+                $canceledEntity->setStatus($superseded_status);
+
+                //record new history for modifying Superseded Order
+                $history->setNewid($canceledEntity->getOid());
+                $history->setNewstatus($canceledEntity->getStatus());
+
+
+
+                $em->persist($history);
+                $em->flush();
+                $em->clear();
 
             } else {
 
-                throw new \Exception( 'Status '.$status.' can not be processed' );
+                //throw new \Exception( 'Status '.$status.' can not be processed' );
+                $entity->setStatus($status_entity);
+
+                //record history
+                $history->setNewid($entity->getOid());
+                $history->setNewstatus($entity->getStatus());
+
+                $em->persist($entity);
+                $em->persist($history);
+                $em->flush();
+                $em->clear();
 
             }
 
             $message = 'Status of Order #'.$id.' has been changed to "'.$status.'"'.$message;
 
         } else {
-            $message = 'Status: "'.$status.'" is not found';
+            //$message = 'Status: "'.$status.'" is not found';
+            throw new \Exception( 'Status '.$status.' can not be processed' );
         }
 
         $res = array();
@@ -198,7 +232,7 @@ class OrderUtil {
         $em = $this->em;
 
         if( !$status_entity  ) {
-            $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusStr);
+            $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
         }
 
         //CLONING
@@ -212,7 +246,7 @@ class OrderUtil {
         $em->detach($newOrderinfo);
 
         $newOrderinfo->setStatus($status_entity);
-        $newOrderinfo->setCicle('submit');
+        //$newOrderinfo->setCicle('submit');
         $newOrderinfo->setOid($originalId);
 
         //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
@@ -272,11 +306,11 @@ class OrderUtil {
 
             //echo "orderinfo count=".count($child->getOrderinfo()).", order id=".$child->getOrderinfo()->first()->getId()."<br>";
 
+            //check if this object is used by any other orderinfo (for cancel and amend only)
             if( $statusStr != 'valid' ) {
-                //check if this object is used by another orderinfo (for cancel and amend only)
                 foreach( $child->getOrderinfo() as $order ) {
                     //echo "orderinfo id=".$order->getId().", oid=".$order->getOid()."<br>";
-                    if( $orderinfo->getId() != $order->getId() && $order->getStatus()->getId() != $status_entity->getId()  ) {
+                    if( $orderinfo->getId() != $order->getId() ) {  //&& $order->getStatus() != $status_entity->getId()  ) {
                         $noOtherOrderinfo = false;
                         break;
                     }

@@ -23,15 +23,14 @@ class Status
 
     /**
      * name: show name in MyOrder table (i.e. Cancelled)
-     * @ORM\Column(type="string", length=200)
+     * @ORM\Column(type="string")
      * @Assert\NotBlank
      */
     protected $name;
 
     /**
      * action: show this 'action' column in the Action menu and the 'name' column in the Filter menu. (i.e. Cancel)
-     * @ORM\Column(type="string", length=200)
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $action;
 

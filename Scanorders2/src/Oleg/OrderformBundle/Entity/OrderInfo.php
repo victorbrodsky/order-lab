@@ -52,12 +52,12 @@ class OrderInfo
      */
     private $type;
 
-    /**
-     * cicle - new, amend ...
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $cicle;
+//    /**
+//     * cicle - new, amend ...
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $cicle;
 
     /**
      * oid - id of the original order.
@@ -208,7 +208,7 @@ class OrderInfo
         $this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
         $this->dataquality = new ArrayCollection();
-        $this->cicle = 'new';
+        //$this->cicle = 'new';
     }
 
     public function __clone() {
@@ -487,21 +487,21 @@ class OrderInfo
         $this->type = $type;
     }
 
-    /**
-     * @param string $cicle
-     */
-    public function setCicle($cicle)
-    {
-        $this->cicle = $cicle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCicle()
-    {
-        return $this->cicle;
-    }
+//    /**
+//     * @param string $cicle
+//     */
+//    public function setCicle($cicle)
+//    {
+//        $this->cicle = $cicle;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getCicle()
+//    {
+//        return $this->cicle;
+//    }
 
     /**
      * @param string $oid

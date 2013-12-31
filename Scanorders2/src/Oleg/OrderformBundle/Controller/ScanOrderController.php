@@ -154,6 +154,13 @@ class ScanOrderController extends Controller {
         }
         //***************** END of Status filetr ***************************//
 
+        //***************** Superseded filter ***************************//
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
+            $criteriastr .= " status.name != 'Superseded'";
+        }
+        //***************** END of Superseded filetr ***************************//
+
 
         //***************** Search filetr ***************************//
         if( $search && $search != "" ) {
@@ -426,9 +433,11 @@ class ScanOrderController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $orderUtil = new OrderUtil($em);
 
-        $res = $orderUtil->changeStatus($id, $status);
+        $res = $orderUtil->changeStatus($id, $status, $user);
 
         if( $res['result'] == 'conflict' ) {   //redirect to amend
             return $this->redirect( $this->generateUrl( 'order_amend', array('id' => $res['oid']) ) );
@@ -471,7 +480,16 @@ class ScanOrderController extends Controller {
 
     public function getFilter() {
         $em = $this->getDoctrine()->getManager();
-        $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
+        } else {
+            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Status');
+            $dql = $repository->createQueryBuilder("status");
+            //$dql->where('status.action IS NOT NULL');
+            $dql->where("status.name != 'Superseded'");
+            $statuses = $dql->getQuery()->getResult();
+        }
 
         //add special cases
         $specials = array(

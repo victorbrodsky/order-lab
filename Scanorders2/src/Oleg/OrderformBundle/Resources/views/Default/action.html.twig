@@ -13,31 +13,37 @@
             <li class="divider"></li>
 
             {###############  USER ACTIONS #################}
-            {% if entity.status != 'Canceled' and entity.status != 'Amended' and entity.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
+            {% if entity.status != 'Canceled' and entity.status != 'Superseded' and entity.status.type.name != "Filled" %}
                 <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Cancel' }) }}">Cancel</a>
                 </li>                  
             {% endif %}
 
-            {#TODO: Make path to Amend in Controller#}
-            {% if entity.status != 'Submitted' and entity.status != 'Canceled'
-                and entity.status != 'Amended' and entity.status.type.name != "Filled"
-                and entity.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') %}
+            {% if entity.status != 'Superseded' and entity.status != 'Submitted' and entity.status != 'Amended' and
+                ( entity.status != 'Canceled' and entity.status.type.name != "Filled"
+                and entity.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') ) %}
                 <li><a onclick="return confirm('Are you sure?');"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Submit' }) }}">Submit</a>
                 </li>
             {% endif %}
 
-            {% if entity.status != 'Amended' and entity.status != 'Canceled' and entity.status.type.name != "Filled" or is_granted('ROLE_SUPER_ADMIN') %}
+            {% if entity.status != 'Superseded' and entity.status != 'Canceled' and entity.status.type.name != "Filled" %}
                 <li><a onclick="return confirm('Are you sure?');" class="btn-warning"
                        href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
+                </li>
+            {% endif %}
+
+
+            {% if entity.status == 'Canceled' %}
+                <li><a onclick="return confirm('Are you sure?');"
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Un-Cancel' }) }}">Un-Cancel</a>
                 </li>
             {% endif %}
 
             <li class="divider"></li>
 
             {###############  ADMIN ACTIONS #################}
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') and entity.status != 'Superseded' %}
 
                 {#<li>#}
                     {#<a class="btn-warning" #}

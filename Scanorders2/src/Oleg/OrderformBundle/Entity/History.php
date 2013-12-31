@@ -67,17 +67,17 @@ class History
      */
     private $newstatus;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $currentcicle;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $newcicle;
+//    /**
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $currentcicle;
+//
+//    /**
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $newcicle;
 
     /**
      * @ORM\Column(type="text", nullable=true, length=5000)
@@ -169,37 +169,37 @@ class History
         return $this->currentstatus;
     }
 
-    /**
-     * @param string $currentcicle
-     */
-    public function setCurrentcicle($currentcicle)
-    {
-        $this->currentcicle = $currentcicle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrentcicle()
-    {
-        return $this->currentcicle;
-    }
-
-    /**
-     * @param string $newcicle
-     */
-    public function setNewcicle($newcicle)
-    {
-        $this->newcicle = $newcicle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNewcicle()
-    {
-        return $this->newcicle;
-    }
+//    /**
+//     * @param string $currentcicle
+//     */
+//    public function setCurrentcicle($currentcicle)
+//    {
+//        $this->currentcicle = $currentcicle;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getCurrentcicle()
+//    {
+//        return $this->currentcicle;
+//    }
+//
+//    /**
+//     * @param string $newcicle
+//     */
+//    public function setNewcicle($newcicle)
+//    {
+//        $this->newcicle = $newcicle;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getNewcicle()
+//    {
+//        return $this->newcicle;
+//    }
 
     /**
      * @param mixed $provider

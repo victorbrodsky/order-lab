@@ -207,7 +207,7 @@
 {% endmacro %}
 
 {#history info for canceled or amended orders#}
-{% macro forwardhistory_info(histories, allhistories, status) %}
+{% macro forwardhistory_info(histories, allhistories, status, oid) %}
     {% set count = 1  %}
     <div class="well well-sm">
         {% for history in histories %}
@@ -218,16 +218,20 @@
             </p>
         {% endfor %}
 
-        <p>
-            All previous versions of this order:
-            {% for history in allhistories %}
-                <p>
-                    <a href="{{ path('multy_show',{'id':history.newid}) }}">Order ID {{ history.newid }}</a>
-                    {{ status|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}
-                </p>
-                {% set count = count + 1 %}
-            {% endfor %}
-        </p>
+        {#{% if histories|length > 1 %}#}
+            <p>
+                All other versions of this order:
+                {% for history in allhistories %}
+                    {% if history.newid != history.currentid and oid != history.newid %}
+                        <p>
+                            <a href="{{ path('multy_show',{'id':history.newid}) }}">Order ID {{ history.newid }}</a>
+                            {{ status|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}
+                        </p>
+                    {% endif %}
+                    {% set count = count + 1 %}
+                {% endfor %}
+            </p>
+        {#{% endif %}#}
     </div>
 {% endmacro %}
 
@@ -294,7 +298,7 @@
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' or status == 'Canceled' %}
+        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' or status == 'Canceled' or status == 'Superseded' %}
 
             {% set btntype = '' %}
             {% if cycle == 'amend' %}

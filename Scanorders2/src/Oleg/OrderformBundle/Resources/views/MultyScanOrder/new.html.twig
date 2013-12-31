@@ -89,7 +89,7 @@
         {{ formmacros.backhistory_info(backhistory,form.vars.value.status ) }}
     {% endif %}
     {% if forwardhistory is defined and forwardhistory %}
-        {{ formmacros.forwardhistory_info(forwardhistory,allhistory,form.vars.value.status ) }}
+        {{ formmacros.forwardhistory_info(forwardhistory,allhistory,form.vars.value.status,form.vars.value.oid) }}
     {% endif %}
 
 
