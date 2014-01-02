@@ -66,7 +66,7 @@
 
             {% if entity.status.name == 'Submitted' or entity.status.name == 'Amended' %}
                 <tr class="activetr" >
-            {% elseif entity.status.name == 'Canceled' or entity.status.name == 'Superseded' %}
+            {% elseif entity.status.action == 'Cancel' or entity.status.name == 'Superseded' %}
                 <tr class="canceltr" >
             {% elseif entity.status.name == 'Filled: Scanned' %}
                 <tr class="completedtr" >

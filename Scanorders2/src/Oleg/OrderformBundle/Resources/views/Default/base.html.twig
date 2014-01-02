@@ -7,9 +7,9 @@
         {% set security = 'true' %}
     {% endif %}
 
-    {% if not is_granted('ROLE_USER') and security == 'true' %}
-        <meta http-equiv="refresh" content="0; URL={{ path('login') }}">
-    {% endif %}
+    {#{% if not is_granted('ROLE_USER') and security == 'true' %}#}
+        {#<meta http-equiv="refresh" content="0; URL={{ path('login') }}">#}
+    {#{% endif %}#}
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">

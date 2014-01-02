@@ -34,10 +34,9 @@ class ScanOrderController extends Controller {
     public function indexAction( Request $request ) {    
         
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            //throw new AccessDeniedException();
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
-        
+
         $em = $this->getDoctrine()->getManager();
 
         //$statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
@@ -52,6 +51,9 @@ class ScanOrderController extends Controller {
 
         //by user
         $user = $this->get('security.context')->getToken()->getUser();
+//        foreach($user->getRoles() as $role) {
+//            echo "roles=".$role."<br>";
+//        }
 
         //create filters
         $form = $this->createForm(new FilterType( $this->getFilter(), $user ), null);
@@ -146,6 +148,9 @@ class ScanOrderController extends Controller {
                     break;
                 case "All On Hold":
                     $criteriastr .= " status.name LIKE '%On Hold%'";
+                    break;
+                case "Canceled (All)":
+                    $criteriastr .= " status.name = 'Canceled by Submitter' OR status.name = 'Canceled by Processor'";
                     break;
                 default:
                     ;
@@ -510,6 +515,9 @@ class ScanOrderController extends Controller {
         foreach( $statuses as $status ) {
             //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
             $filterType[$status->getId()] = $status->getName();
+            if( $status->getName() == "Not Submitted" ) {
+                $filterType["Canceled (All)"] = "Canceled (All)";
+            }
         }
 
         return $filterType;

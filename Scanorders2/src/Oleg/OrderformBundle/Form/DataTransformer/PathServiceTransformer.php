@@ -31,6 +31,10 @@ class PathServiceTransformer implements DataTransformerInterface
         $this->user = $user;
     }
 
+    public function getThisEm() {
+        return $this->em;
+    }
+
     /**
      * Transforms an object to a string.
      *
@@ -42,7 +46,6 @@ class PathServiceTransformer implements DataTransformerInterface
         if (null === $entity) {
             return "";
         }
-
         return $entity->getId();
     }
 

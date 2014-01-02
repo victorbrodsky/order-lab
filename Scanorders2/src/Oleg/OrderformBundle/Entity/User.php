@@ -262,7 +262,10 @@ class User extends BaseUser
         }
     }
 
-
+    public function hasRole($role)
+    {
+        return in_array(strtoupper($role), $this->roles, true);
+    }
 
 }
 

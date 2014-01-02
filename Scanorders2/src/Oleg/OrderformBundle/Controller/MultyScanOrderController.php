@@ -517,13 +517,13 @@ class MultyScanOrderController extends Controller {
         $forwardhistory = null;
 
         if( $routeName == "multy_show") {
-            //$backhistory = $em->getRepository('OlegOrderformBundle:History')->findBy( array('currentid'=>$entity->getOid(),'currentid'=>'newid','changedate' => 'ASC') );
+            $backhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'ASC') );
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-            $dql = $repository->createQueryBuilder("h");
-            $dql->where('h.currentid != h.newid AND h.currentid=:id');
-            $dql->orderBy('h.changedate','ASC');
-            $dql->setParameter('id',$entity->getOid());
-            $backhistory = $dql->getQuery()->getResult();
+//            $dql = $repository->createQueryBuilder("h");
+//            $dql->where('h.currentid != h.newid AND h.currentid=:id');
+//            $dql->orderBy('h.changedate','ASC');
+//            $dql->setParameter('id',$entity->getOid());
+//            $backhistory = $dql->getQuery()->getResult();
 
             //$forwardhistory = $em->getRepository('OlegOrderformBundle:History')->findByNewid($entity->getOid(),array('changedate' => 'ASC'));
             $dql = $repository->createQueryBuilder("h");
@@ -533,12 +533,12 @@ class MultyScanOrderController extends Controller {
             $forwardhistory = $dql->getQuery()->getResult();
 
 //            foreach( $backhistory as $hist ) {
-//                echo "backhistory=".$hist->getId()."<br>";
+//                //echo "backhistory=".$hist->getRoles()."<br>";
+//                foreach( $hist->getRoles() as $role ) {
+//                    echo "Role=".$role."<br>";
+//                }
 //            }
-//
-//            foreach( $forwardhistory as $hist ) {
-//                echo "forwardhistory=".$hist->getId()."<br>";
-//            }
+
             //get all histories to get the chain to the most recent order id (we can have only 1 forwardhistory)
             if( count($forwardhistory) > 0 ) {
                 $allhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($forwardhistory[0]->getCurrentid(),array('changedate' => 'DESC'));

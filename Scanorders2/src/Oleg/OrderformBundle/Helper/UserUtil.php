@@ -76,6 +76,8 @@ class UserUtil {
             $user->setCreatedby('excel');
             $user->addRole('ROLE_ORDERING_PROVIDER');
 
+            //ROLES: Submitter - ROLE_USER, Processor - ROLE_ADMIN
+
             if( $username == "oli2002" || $username == "vib9020" ) {
                 $user->addRole('ROLE_SUPER_ADMIN');
             }

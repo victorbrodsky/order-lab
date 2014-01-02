@@ -19,7 +19,7 @@ use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\PathServiceTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\PathServicesTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\UserPathServicesTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -65,8 +65,8 @@ class CustomSelectorType extends AbstractType {
             case "pathologyService":
                 $transformer = new PathServiceTransformer($this->om, $username);
                 break;
-            case "pathologyServices":
-                $transformer = new PathServicesTransformer($this->om, $username);
+            case "userPathologyServices":
+                $transformer = new UserPathServicesTransformer($this->om, $username);
                 break;
             case "scanRegion":
                 $transformer = new StringTransformer($this->om, $username);

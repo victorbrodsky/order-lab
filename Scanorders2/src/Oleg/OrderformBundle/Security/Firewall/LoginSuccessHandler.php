@@ -33,11 +33,18 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
         }
         elseif( $this->security->isGranted('ROLE_USER') ) {
             $referer_url = $request->headers->get('referer');
-//            echo "user role ok! referer_url=".$referer_url;
-//            exit();
-            $response = new RedirectResponse($referer_url);
+            //echo "user role ok! referer_url=".$referer_url."<br>";
+            $last = basename(parse_url($referer_url, PHP_URL_PATH));
+            //exit();
+            if( $last == 'login' ) {
+                $response = new RedirectResponse($this->router->generate('single_new'));
+            } else {
+                $response = new RedirectResponse($referer_url);
+            }
         }
         else {
+            //echo "user role not ok!";
+            //exit();
             $response = new RedirectResponse( $this->router->generate('login') );
         }
 

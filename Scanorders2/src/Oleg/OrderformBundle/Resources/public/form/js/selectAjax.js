@@ -61,7 +61,7 @@ function regularCombobox() {
 
 function customCombobox() {
 
-    if( cicle && urlBase ) {
+    if( cicle && cicle != 'edit_user' && urlBase ) {
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
@@ -75,6 +75,9 @@ function customCombobox() {
         slideType(new Array("0","0","0","0","0","0"));
     }
 
+    if( cicle && cicle == 'edit_user' && urlBase ) {
+        getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+    }
 }
 
 function populateSelectCombobox( targetid, data, placeholder ) {
@@ -380,7 +383,8 @@ function getComboboxPathService(urlCommon,ids) {
 
     //******************* order pathology service *************************//
     //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    var id= "#oleg_orderformbundle_orderinfotype_";
+    //var id= "#oleg_orderformbundle_orderinfotype_";
+    var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
     if( cicle == "new" || cicle == "create" ) {
@@ -393,34 +397,35 @@ function getComboboxPathService(urlCommon,ids) {
             async: asyncflag
         }).success(function(data) {
             pathservice = data;
-            populateSelectCombobox( id+"pathologyService", pathservice, "Pathology Service" );
+            populateSelectCombobox( targetid, pathservice, "Pathology Service" );
         });
     } else {
-        populateSelectCombobox( id+"pathologyService", pathservice, "Pathology Service" );
+        populateSelectCombobox( targetid, pathservice, "Pathology Service" );
     }
 
-    //******************* user pathology service *************************//
-    var targetid = "#oleg_orderformbundle_user_pathologyServices";
-    populateSelectCombobox( targetid, pathservice, "Pathology Service" );
+//    //******************* user pathology service *************************//
+//    //var targetid = ".ajax-combobox-pathservice";    //"#oleg_orderformbundle_user_pathologyServices";
+//    populateSelectCombobox( targetid, pathservice, "Pathology Service" );
+//
+//    //console.log("userpathservice.length="+userpathservice.length);
+//    if( userpathservice.length == 0 && !userpathserviceflag ) {
+//        $.ajax({
+//            url: urlCommon+"userpathservice",
+//            type: 'POST',
+//            data: {username: user_name},
+//            dataType: 'json',
+//            async: asyncflag,
+//            success: function(data) {
+//                userpathserviceflag = true;
+//                userpathservice = data;
+//            }
+//        });
+//    }
+//
+//    if( cicle == "new" ) {
+//        $(targetid).select2('data', userpathservice);
+//    }
 
-    //console.log("userpathservice.length="+userpathservice.length);
-    if( userpathservice.length == 0 && !userpathserviceflag ) {
-        $.ajax({
-            url: urlCommon+"userpathservice",
-            type: 'POST',
-            data: {username: user_name},
-            dataType: 'json',
-            async: asyncflag,
-            success: function(data) {
-                userpathserviceflag = true;
-                userpathservice = data;
-            }
-        });
-    }
-
-    if( cicle == "new"  ) {
-        $(targetid).select2('data', userpathservice);
-    }
 }
 
 

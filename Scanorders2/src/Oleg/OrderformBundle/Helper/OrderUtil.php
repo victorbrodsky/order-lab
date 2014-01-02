@@ -41,10 +41,10 @@ class OrderUtil {
             $statusSearch = $status;
         }
 
-        //echo "status=".$status."<br>";
+//        echo "status=".$status."<br>";
         $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusSearch);
-        //echo "status_entity=".$status_entity->getName()."<br>";
-        //exit();
+//        echo "status_entity=".$status_entity->getName()."<br>";
+//        exit();
 
         if( $status_entity ) {
 
@@ -54,6 +54,11 @@ class OrderUtil {
             $history->setCurrentstatus($entity->getStatus());
             $history->setProvider($user);
 
+            foreach( $user->getRoles() as $role ) {
+                //echo "Role=".$role."<br>";
+                $history->addRole($role."");
+            }
+
             //change status for all orderinfo children to "deleted-by-canceled-order"
             //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
             //AND there are no fields that belong to this object that were added by another order
@@ -61,11 +66,14 @@ class OrderUtil {
 
                 $fieldStatusStr = "deleted-by-canceled-order";
 
-//                if( $entity->getProvider() == $user ) {
-//                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Submitter");
-//                } else {
-//                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Processor");
-//                }
+                if( $entity->getProvider() == $user || $user->hasRole("ROLE_ORDERING_PROVIDER") || $user->hasRole("ROLE_USER") ) {
+                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+                } else
+                if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_SUPER_ADMIN") ) {
+                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Processor");
+                } else {
+                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+                }
 
                 $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
@@ -104,13 +112,14 @@ class OrderUtil {
                 //2) validate MRN-Accession
                 //3) change status to 'valid' and 'submit'
 
-//                echo "<br><br>newOrderinfo Patient's count=".count($newOrderinfo->getPatient())."<br>";
-//                echo $newOrderinfo;
-//                foreach( $newOrderinfo->getPatient() as $patient ) {
+//                echo "<br><br>newOrderinfo Patient's count=".count($entity->getPatient())."<br>";
+//                echo $entity;
+//                foreach( $entity->getPatient() as $patient ) {
 //                    echo "<br>--------------------------<br>";
 //                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
 //                    echo "--------------------------<br>";
 //                }
+//                exit();
 
                 //VALIDATION Accession-MRN
                 foreach( $entity->getAccession() as $accession ) {
@@ -162,6 +171,7 @@ class OrderUtil {
 
                 }
 
+                //TODO: if no conflict: change status without creating new order
                 $originalId = $entity->getOid();
 
                 //NO CONFLICT: CLONNING the orderinfo
@@ -172,9 +182,14 @@ class OrderUtil {
 
                 $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo, null, "noform" );
 
-                //get a fresh copy of entity
-                $canceled_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Canceled');
-                $canceledEntities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array('oid' => $newOrderinfo->getOid(),'status'=>$canceled_status));
+                //get a fresh copy of entity with status action "Cancel"
+                $canceled_statuses = $em->getRepository('OlegOrderformBundle:Status')->findByAction('Cancel');
+                foreach( $canceled_statuses as $canceled_status ) {
+                    $canceledEntities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array('oid' => $newOrderinfo->getOid(),'status'=>$canceled_status));
+                    if( $canceledEntities ) {
+                        break;
+                    }
+                }
 
                 if( count($canceledEntities) != 1 ) {
                     throw new \Exception( 'Only one canceled order should exist. Order count='.count($canceledEntities) );

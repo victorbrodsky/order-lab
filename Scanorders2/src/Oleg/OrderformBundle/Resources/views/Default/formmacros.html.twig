@@ -189,20 +189,24 @@
 {% endmacro %}
 
 {#history info for un-canceled or new amended orders#}
-{% macro backhistory_info(histories, status) %}
+{% macro backhistory_info(histories, status, oid) %}
     <div class="well well-sm">
         <p>
         This Order has been {{ status|lower }} on
         {{ histories|last.changedate|date('Y-m-d @H:i') }}
         by
-        {{ histories|last.provider }}.
+        {{ histories|last.provider }} {#(ROLES: {{ histories|last.roles|join(', ') }}).#}
         </p>
-        {% for history in histories %}
-            <p>
-            The previous version of the order has been saved as
-            <a href="{{ path('multy_show',{'id':history.newid}) }}">Order ID {{ history.newid }}</a> on {{ history.changedate|date('Y-m-d @H:i') }}.
-            </p>
-        {% endfor %}
+        {% if histories|length > 1 and histories|first.currentid == histories|first.newid %}
+            {% for history in histories %}
+                {% if history.newid != history.currentid and oid != history.newid %}
+                    <p>
+                        The previous version of the order has been saved as
+                        <a href="{{ path('multy_show',{'id':history.newid}) }}">Order ID {{ history.newid }}</a> on {{ history.changedate|date('Y-m-d @H:i') }}.
+                    </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -220,10 +224,10 @@
 
         {#{% if histories|length > 1 %}#}
             <p>
-                All other versions of this order:
                 {% for history in allhistories %}
                     {% if history.newid != history.currentid and oid != history.newid %}
                         <p>
+                            Older version of this order:
                             <a href="{{ path('multy_show',{'id':history.newid}) }}">Order ID {{ history.newid }}</a>
                             {{ status|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}
                         </p>
@@ -298,7 +302,7 @@
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' or status == 'Canceled' or status == 'Superseded' %}
+        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded' %}
 
             {% set btntype = '' %}
             {% if cycle == 'amend' %}

@@ -67,28 +67,16 @@ class History
      */
     private $newstatus;
 
-//    /**
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $currentcicle;
-//
-//    /**
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $newcicle;
+    /**
+     * @var array
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $roles = array();
 
     /**
      * @ORM\Column(type="text", nullable=true, length=5000)
      */
     private $note;
-
-
-//    public function __construct()
-//    {
-//        $this->orderinfo = new ArrayCollection();
-//    }
 
     /**
      * @param int $id
@@ -105,6 +93,20 @@ class History
     {
         return $this->id;
     }
+
+    public function setRoles($roles) {
+        $this->roles = roles;
+    }
+
+    public function getRoles() {
+        return $this->roles;
+    }
+
+    public function addRole($role) {
+        $this->roles[] = $role;
+        //$this->roles->add($role);
+    }
+
 
     /**
      * @ORM\PrePersist
