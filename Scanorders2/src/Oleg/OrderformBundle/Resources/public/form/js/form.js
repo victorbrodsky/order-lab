@@ -79,6 +79,8 @@ function initAdd() {
     //console.log("clean initAdd");
     cleanValidationAlert();
 
+    accessionInputMask();
+
 }
 
 //confirm delete
@@ -584,8 +586,10 @@ function expandTextarea() {
         var element = elements[i];
         element.addEventListener('keyup', function() {
             this.style.overflow = 'hidden';
-            //this.style.height = 0;
-            this.style.height = this.scrollHeight + 'px';
+            this.style.height = 0;
+            var newH = this.scrollHeight + 10;
+            //console.log("cur h="+this.style.height+", newH="+newH);
+            this.style.height = newH + 'px';
         }, false);
     }
 
@@ -643,6 +647,11 @@ function initDatepicker( element, remove ) {
         });
     }
 
+}
+
+function accessionInputMask() {
+//    $(".accession-mask").inputmask({"mask": "AA99-999999"}); //specifying options only
+    $(":input").inputmask();
 }
 
 

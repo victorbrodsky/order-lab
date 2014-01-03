@@ -35,7 +35,7 @@
     </h3>
 
     {#action buttons#}
-    {% if type == 'edit' or type == 'show' and form.vars.value.status != 'Amended' %}
+    {% if (type == 'edit' or type == 'show') and (form.vars.value.status != 'Amended' and form.vars.value.status.action != 'Cancel') %}
         <div class="well well-sm">
         {###############  USER ACTIONS #################}
         {% if form.vars.value.status != 'Canceled' and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"  or is_granted('ROLE_SUPER_ADMIN') %}
@@ -56,6 +56,18 @@
                href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
         {% endif %}
         </div>
+    {% endif %}
+
+    {% if (type == 'edit' or type == 'show') and form.vars.value.status.action == 'Cancel' %}
+        {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
+        and form.vars.value.status != 'Amended' and form.vars.value.status.type.name != "Filled"
+        and form.vars.value.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') and form.vars.value.status != 'Submitted'
+        %}
+            <div class="well well-sm">
+            <a class="btn btn-info" onclick="return confirm('Are you sure?');"
+               href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Un-Cancel</a>
+            </div>
+        {% endif %}
     {% endif %}
 
     {% if type == 'amend' and form.vars.value.status == "Submitted" %}

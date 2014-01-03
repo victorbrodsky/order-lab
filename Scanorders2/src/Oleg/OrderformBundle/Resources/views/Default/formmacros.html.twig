@@ -360,6 +360,9 @@
                     {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
                         by
                         {{field.vars.value.provider}}
+                        {% if field.vars.value.status != 'valid' %}
+                            ({{ field.vars.value.status }})
+                        {% endif %}
                     {% endif %}
                 {% endif %}
                 <b>:</b>

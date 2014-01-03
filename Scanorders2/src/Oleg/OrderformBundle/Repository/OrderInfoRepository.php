@@ -14,7 +14,7 @@ use Oleg\OrderformBundle\Helper\OrderUtil;
 class OrderInfoRepository extends ArrayFieldAbstractRepository {
     
     //process orderinfo and all entities
-    public function processOrderInfoEntity( $entity, $type=null, $option=null ) {
+    public function processOrderInfoEntity( $entity, $type=null ) {
 
         //echo "orderinfo: ".$entity."<br>";
 //        echo "patients count=".count($entity->getPatient())."<br>";
@@ -42,14 +42,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         $em = $this->_em;
 
-        //if un-cancelling the conflicting orderinfo, first make clone using OrderUtil
-        if( $option == "noform" ) {
-            $orderUtil = new OrderUtil($em);
-            $res = $orderUtil->makeOrderInfoClone( $entity, null, "valid" );
-            $entity = $res['orderinfo'];
-        }
 
-        //one way to solev multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
+        //one way to solve multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
 
         //set Status with Type and Group
@@ -67,10 +61,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         //return $entity;
-        return $this->setOrderInfoResult( $entity, $option );
+        return $this->setOrderInfoResult( $entity );
     }
     
-    public function setOrderInfoResult( $entity, $option=null ) {
+    public function setOrderInfoResult( $entity ) {
 
         $em = $this->_em;
 
@@ -125,22 +119,23 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "--------------------------<br>";
 //        }
 
-        //echo $entity;
-        //exit('orderinfo repo exit');
+//        echo $entity;
+//        exit('orderinfo repo exit');
 
-        if( $entity->getStatus() == 'Amended' ) {
-                   
+        $originalStatus = $entity->getStatus();
+
+        if( $originalStatus == 'Amended' ) {
+
             $originalId = $entity->getOid();
             //echo "originalId=".$originalId."<br>";
             
-            $newOrderinfo = clone $entity;
-            //$newOrderinfo->setCicle('submit');
-            $newOrderinfo->setId(null);
-            $newOrderinfo->setOid($originalId);
+//            $newOrderinfo = clone $entity;
+//            $newOrderinfo->setId(null);
+//            $newOrderinfo->setOid($originalId);
+//            $entity = $newOrderinfo;
 
-//            $entity->setCicle('submit');
-//            $entity->setId(null);
-//            $entity->setOid($originalId);
+            $entity->setId(null);
+            $entity->setOid($originalId);
             
 //            $orderUtil = new OrderUtil($em);
 //            $message = $orderUtil->changeStatus($originalId, 'Amend');
@@ -156,7 +151,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "--------------------------<br>";
             //exit('orderinfo repo exit');
 
-            $entity = $newOrderinfo;
         }
 
         //echo $entity;
@@ -169,6 +163,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //insert oid to entity
         if( !$entity->getOid() ) {
+            echo "insert oid <br>";
             $entity->setOid($entity->getId());
             $em->flush();
         }
@@ -185,20 +180,30 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         //final step for amend: swap newly created oid with Superseded order oid
-        if( $entity->getStatus() == 'Amended' ) {
+        if( $originalStatus == 'Amended' ) {
+
+            //exit('amended orderinfo repo exit');
+            $newId = $entity->getId();
+
+            echo "originalId=".$originalId.", newId=".$newId."<br>";
+
+//            $em->detach($entity);
 
             $orderUtil = new OrderUtil($em);
-            $message = $orderUtil->changeStatus($originalId, 'Supersede', $entity->getProvider()->first(), $entity->getId());
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $entity->getProvider()->first(), $newId);
 
-            $entity->setOid($originalId);
+//            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($newId);
+//            if( !$entity ) {
+//                throw new \Exception( 'Unable to find OrderInfo entity by id'.$newId );
+//            }
+            $entity->setOid($originalId);   //swap oid
 
             //$em->persist($entity);
             $em->flush();
         }
 
-        if( !$option ) {
-            $em->clear();
-        }
+
+        $em->clear();
 
         return $entity;
     }

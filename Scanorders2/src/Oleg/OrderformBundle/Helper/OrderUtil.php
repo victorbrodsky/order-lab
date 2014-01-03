@@ -32,7 +32,7 @@ class OrderUtil {
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw new \Exception( 'Unable to find OrderInfo entity by id'.$id );
         }
 
         if( $status == 'Un-Cancel' ) {
@@ -44,7 +44,7 @@ class OrderUtil {
 //        echo "status=".$status."<br>";
         $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusSearch);
 //        echo "status_entity=".$status_entity->getName()."<br>";
-//        exit();
+//        //exit();
 
         if( $status_entity ) {
 
@@ -119,9 +119,10 @@ class OrderUtil {
 //                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
 //                    echo "--------------------------<br>";
 //                }
-//                exit();
+//                //exit();
 
                 //VALIDATION Accession-MRN
+                $conflict = false;
                 foreach( $entity->getAccession() as $accession ) {
                     $patient = $accession->getParent()->getParent();
 
@@ -158,62 +159,39 @@ class OrderUtil {
                                 //echo "there is a conflict <br>";
                                 //conflict => render the orderinfo in the amend view 'order_amend'
                                 //exit('un-canceling order. id='.$newOrderinfo->getOid());
-
-                                $res = array();
-                                $res['result'] = 'conflict';
-                                $res['oid'] = $entity->getOid();
-
-                                return $res;
-
+                                $conflict = true;
                             }
                         }
                     }
 
                 }
 
-                //TODO: if no conflict: change status without creating new order
-                $originalId = $entity->getOid();
+                if( $conflict ) {
 
-                //NO CONFLICT: CLONNING the orderinfo
-                $res = $this->makeOrderInfoClone( $entity, $status_entity, "valid" );
+                    $res = array();
+                    $res['result'] = 'conflict';
+                    $res['oid'] = $entity->getOid();
 
-                $message = $res['message'];
-                $newOrderinfo = $res['orderinfo'];
+                    return $res;
 
-                $newOrderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $newOrderinfo, null, "noform" );
+                } else {
+                     //exit("un-cancel no conflict! <br>");
+                    //if no conflict: change status without creating new order
+                    //record new history for modifying Superseded Order
+                    $entity->setStatus($status_entity);
+                    $message = $this->processObjects( $entity, $status_entity, 'valid' );
+                    $history->setNewid($entity->getOid());
+                    $history->setNewstatus($entity->getStatus());
 
-                //get a fresh copy of entity with status action "Cancel"
-                $canceled_statuses = $em->getRepository('OlegOrderformBundle:Status')->findByAction('Cancel');
-                foreach( $canceled_statuses as $canceled_status ) {
-                    $canceledEntities = $em->getRepository('OlegOrderformBundle:OrderInfo')->findBy(array('oid' => $newOrderinfo->getOid(),'status'=>$canceled_status));
-                    if( $canceledEntities ) {
-                        break;
-                    }
+                    $em->persist($entity);
+                    $em->persist($history);
+                    $em->flush();
+                    $em->clear();
+
                 }
-
-                if( count($canceledEntities) != 1 ) {
-                    throw new \Exception( 'Only one canceled order should exist. Order count='.count($canceledEntities) );
-                }
-
-                $canceledEntity = $canceledEntities[0];
-
-                //final step: swap the oid of the canceled orderinfo
-                $canceledEntity->setOid($newOrderinfo->getId());
-                $superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
-                $canceledEntity->setStatus($superseded_status);
-
-                //record new history for modifying Superseded Order
-                $history->setNewid($canceledEntity->getOid());
-                $history->setNewstatus($canceledEntity->getStatus());
-
-
-
-                $em->persist($history);
-                $em->flush();
-                $em->clear();
 
             } else {
-
+                //exit('regular xit');
                 //throw new \Exception( 'Status '.$status.' can not be processed' );
                 $entity->setStatus($status_entity);
 
