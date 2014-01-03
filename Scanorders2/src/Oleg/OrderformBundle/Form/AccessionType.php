@@ -23,7 +23,7 @@ class AccessionType extends AbstractType
 
         $attr = array('class'=>'form-control form-control-modif keyfield', 'title' => 'Example: S12-12345');
 
-        if( $this->params['type'] == 'singleorder') {
+        if( $this->params['type'] == 'One Slide Scan Order') {
             $attr['style'] = 'width:100%';
             $gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {
@@ -41,21 +41,16 @@ class AccessionType extends AbstractType
             'prototype_name' => '__accessionaccession__',
         ));
 
-        if( $this->params['type'] != 'single' ) {
-            
-            $builder->add('part', 'collection', array(
-                'type' => new PartType($this->params),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'label' => "Part:",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__part__',
-            )); 
-            
-        }
-        
+        $builder->add('part', 'collection', array(
+            'type' => new PartType($this->params),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Part:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__part__',
+        ));
         
     }
 

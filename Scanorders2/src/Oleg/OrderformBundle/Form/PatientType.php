@@ -26,7 +26,7 @@ class PatientType extends AbstractType
         //echo "patient: type=".$this->params['type']."<br>";
 
         $flag = false;
-        if( $this->params['type'] != 'single' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
+        if( $this->params['type'] != 'One Slide Scan Order' && ($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') ) {
             //$flag = true;
         }
 
@@ -103,18 +103,16 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientclinicalhistory__',
         ));
 
-        if( $this->params['type'] != 'single' ) {
-            $builder->add('procedure', 'collection', array(
-                'type' => new ProcedureType($this->params,$this->entity),
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'label' => " ",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__procedure__',
-            ));  
-        }
+        $builder->add('procedure', 'collection', array(
+            'type' => new ProcedureType($this->params,$this->entity),
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedure__',
+        ));
 
     }
 

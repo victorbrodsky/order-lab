@@ -83,37 +83,6 @@
                 </td>
                 <td>
                     {{ entity.slide|length }}
-
-                    {#{% for slide in entity.slide %}#}
-                        {#<a href="{{ path('slide_show', { 'id': slide.id }) }}">#}
-
-                            {#&#123;&#35;set valid accession&#35;&#125;#}
-                            {#{% set validAccession = slide.block.part.accession.accession|first %}#}
-                            {#{% for thisAccession in slide.block.part.accession.accession  %}#}
-                                {#{% if thisAccession.validity == 1 %}#}
-                                    {#{% set validAccession = thisAccession %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
-
-                            {#&#123;&#35;set valid partname&#35;&#125;#}
-                            {#{% set validPartname = slide.block.part.partname|first %}#}
-                            {#{% for partname in slide.block.part.partname %}#}
-                                {#{% if partname.validity == 1 %}#}
-                                    {#{% set validPartname = partname %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
-
-                            {#&#123;&#35;set valid blockname&#35;&#125;#}
-                            {#{% set validBlockame = slide.block.blockname|first %}#}
-                            {#{% for blockname in slide.block.blockname %}#}
-                                {#{% if blockname.validity == 1 %}#}
-                                    {#{% set validBlockame = blockname %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
-
-                            {#<p>{{ validAccession }}&nbsp;{{validPartname}}{{validBlockame}}</p>#}
-                        {#</a>#}
-                    {#{% endfor %}#}
                 </td>
                 <td>{{ entity.priority }}</td>            
                 <td>{{ entity.returnSlide }}</td>

@@ -12,41 +12,34 @@
     {#{% endif %}#}
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">#}
     <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">#}
     {#<!-- Latest compiled and minified JavaScript -->#}
     {#<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>#}
 
-    {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'#}
-    {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/bootstrap/fonts/*' filter='cssrewrite'#}
+    {#{% stylesheets#}
+        {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#'bundles/olegorderform/form/css/form.css'#}
+    {#make sure to run if use bundles/... path: "php app/console assets:install ../.."#}
     {% stylesheets
-        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/select2/select2.css' filter='cssrewrite'
-        '%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'     
+        'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
+        'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+        'bundles/olegorderform/form/css/form.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
-    {#{% stylesheets '@css_bootstrap' %}#}
-        {#<link href="{{ asset_url }}" rel="stylesheet" type="text/css"/>#}
-    {#{% endstylesheets %}#}
 
-    {#'@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'#}
-    {#'@OlegOrderformBundle/Resources/public/form/css/form.css'#}
     {% stylesheets
-
-        '@OlegOrderformBundle/Resources/public/datepicker/css/*'
+        'bundles/olegorderform/datepicker/css/*' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-        
     {% endstylesheets %}
-        
-    {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
-    {# TODO: use 'bundles/acme_foo/css/*' style#}    
-{#    {% stylesheets #}
-{#        '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 #}
-{#    %}#}
-{#        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
-{#    {% endstylesheets %}#}
+
 
     <title>
         {% block title %}
@@ -86,7 +79,6 @@
 
             {% block content %}{% endblock %}
 
-            {#</div>#}
         </div>
 
         <div class="footer">
@@ -111,16 +103,6 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-
-        {# Bootstrap Combobox #}
-{#        {% javascripts        #}
-{#            '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/bootstrap-typeahead.js'            #}
-{#            '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/bootstrap-combobox.js'                         #}
-{#        %}#}
-{#            <script type="text/javascript" src="{{ asset_url }}"></script>#}
-{#        {% endjavascripts %}         #}
-        {# Bootstrap Combobox #}
-
 
     </div>
 

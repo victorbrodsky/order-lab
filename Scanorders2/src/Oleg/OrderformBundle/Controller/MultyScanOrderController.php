@@ -134,15 +134,15 @@ class MultyScanOrderController extends Controller {
         //echo "routeName=".$routeName;
 
         if( $routeName == "singleorder_create" ) {
-            $type = "singleorder";
+            $type = "One Slide Scan Order";
         } elseif( $routeName == "clinical_create") {
-            $type = "clinical";
+            $type = "Clinical Multi-Slide Scan Order";
         } elseif( $routeName == "edu_create") {
-            $type = "educational";
+            $type = "Educational Multi-Slide Scan Order";
         } elseif( $routeName == "res_create") {
-            $type = "research";
+            $type = "Research Multi-Slide Scan Order";
         } else {
-            $type = "singleorder";
+            $type = "One Slide Scan Order";
         }
 
         $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
@@ -269,7 +269,7 @@ class MultyScanOrderController extends Controller {
         return array(           
             'form'   => $form->createView(),
             'type' => 'new',
-            'multy' => 'multy'
+            'formtype' => $entity->getType()
         );    
     }    
     
@@ -326,20 +326,20 @@ class MultyScanOrderController extends Controller {
         //echo "newMultyAction: routeName=".$routeName."<br>";
 
         if( $routeName == "clinical_new") {
-            $type = "clinical";
+            $type = "Clinical Multi-Slide Scan Order";
         } elseif( $routeName == "edu_new") {
             //echo " add edu ";
-            $type = "educational";
+            $type = "Educational Multi-Slide Scan Order";
             $edu = new Educational();
             $entity->setEducational($edu);
         } elseif( $routeName == "res_new") {
-            $type = "research";
+            $type = "Research Multi-Slide Scan Order";
             $res = new Research();
             $entity->setResearch($res);
         } elseif( $routeName == "single_new") {
-            $type = "singleorder";
+            $type = "One Slide Scan Order";
         } else {
-            $type = "singleorder";
+            $type = "One Slide Scan Order";
         }
 
         //$slide2 = new Slide();
@@ -355,7 +355,7 @@ class MultyScanOrderController extends Controller {
             return $this->render('OlegOrderformBundle:MultyScanOrder:new.html.twig', array(
                 'form' => $form->createView(),
                 'type' => 'new',
-                'multy' => $type
+                'formtype' => $type
             ));
         } else {
             //echo "newsingle: <br>";
@@ -548,8 +548,8 @@ class MultyScanOrderController extends Controller {
 
         return array(
             'form' => $form->createView(),
-            'type' => $type,
-            'multy' => $entity->getType(),
+            'type' => $type,    //form cicle: new, show, amend ...
+            'formtype' => $entity->getType(),
             'backhistory' => $backhistory,
             'forwardhistory' => $forwardhistory,
             'allhistory' => $allhistory

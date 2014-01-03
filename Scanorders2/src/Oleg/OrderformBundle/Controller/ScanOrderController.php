@@ -70,7 +70,6 @@ class ScanOrderController extends Controller {
         $dql->addGroupBy('status.name');
 
         $dql->innerJoin("orderinfo.slide", "slides");
-
         $dql->innerJoin("orderinfo.provider", "provider");
 
         $search = $form->get('search')->getData();

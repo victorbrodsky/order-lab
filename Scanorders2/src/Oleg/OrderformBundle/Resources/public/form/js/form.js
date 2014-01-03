@@ -594,9 +594,24 @@ function expandTextarea() {
 //initDatepicker: add or remove click event to the field and its siblings calendar button
 //element: null or jquery object. If null, all element with class datepicker will be assign to calendar click event
 //remove null or "remove"
-function initDatepicker(element,remove) {
+function initDatepicker( element, remove ) {
     //console.debug("init datepicker, cicle="+cicle);
+
+    var hideOrShowCalendar = function(elem) {
+        console.log("hide or cancel! id="+elem.attr("id")+", class="+elem.attr("class"));
+        //Hide the menus if visible
+        //elem.siblings('.datepicker').datepicker('show');
+        if( $('.datepicker-dropdown').is(':visible') ) {
+            console.log("visible");
+            elem.siblings('.datepicker').datepicker('hide');
+        }
+        else {
+            elem.siblings('.datepicker').datepicker('show');
+        }
+    }
+
     if( cicle != "show" ) {
+
         if( !element ) {
             element = $(".datepicker");
         }
@@ -611,12 +626,23 @@ function initDatepicker(element,remove) {
             if( remove == "remove" ) {
                 $( this ).unbind("click");
             } else {
-                $( this ).click(function() {
-                    $(this).siblings('.datepicker').datepicker('show');
+
+                $( this ).click(function(e) {
+                    //$(this).siblings('.datepicker').datepicker('show');
+                    hideOrShowCalendar($(this));
                 });
+
+                //$(this).touch(hideOrShowCalendar).click(hideOrShowCalendar);
+                //iPad
+                $(this).on('touchstart', function(e) {
+                    console.log("touchstart !!!");
+                    hideOrShowCalendar($(this));
+                })
+
             }
         });
     }
+
 }
 
 

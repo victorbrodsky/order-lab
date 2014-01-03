@@ -22,13 +22,13 @@
             {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
             {# TODO: use 'bundles/acme_foo/css/*' #}
             {% stylesheets 
-                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'                 
+                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'
             %}
                 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
             {% endstylesheets %}
 
             {% javascripts                   
-                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'                    
+                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}                    

@@ -25,33 +25,27 @@ class PartType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $helper = new FormHelper();  
-        
-        if( $this->params['type'] != 'single' ) {
-            $builder->add('block', 'collection', array(
-                'type' => new BlockType($this->params),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'label' => "Block:",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__block__',
-            )); 
-        }
+        $builder->add('block', 'collection', array(
+            'type' => new BlockType($this->params),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Block:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__block__',
+        ));
 
-        //if( $this->params['cicle'] == 'show' ) {
-            $builder->add('slide', 'collection', array(
-                'type' => new SlideType($this->params),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'required' => false,
-                'label' => "Slide:",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__slide__',
-            ));
-        //}
+        $builder->add('slide', 'collection', array(
+            'type' => new SlideType($this->params),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Slide:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__slide__',
+        ));
 
         //name
         $builder->add('partname', 'collection', array(

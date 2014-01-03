@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
+
+use Oleg\OrderformBundle\Entity\FormType;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
 use Oleg\OrderformBundle\Entity\ProcedureList;
@@ -18,12 +20,10 @@ use Oleg\OrderformBundle\Entity\Status;
 use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Entity\User;
-use Oleg\OrderformBundle\Form\UserType;
 use Oleg\OrderformBundle\Helper\UserUtil;
 
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+//use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 /**
@@ -60,6 +60,7 @@ class AdminController extends Controller
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 
+        $count_formtype = $this->generateFormType();
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
@@ -76,6 +77,7 @@ class AdminController extends Controller
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
+            'Form Types='.$count_formtype.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
@@ -679,5 +681,39 @@ class AdminController extends Controller
 
         return $count;
     }
+
+    public function generateFormType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:FormType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'One Slide Scan Order',
+            'Clinical Multi-Slide Scan Order',
+            'Educational Multi-Slide Scan Order',
+            'Research Multi-Slide Scan Order'
+        );
+
+        $count = 0;
+        foreach( $types as $type ) {
+
+            $formType = new FormType();
+
+            $formType->setName($type);
+
+            $em->persist($formType);
+            $em->flush();
+
+            $count++;
+
+        } //foreach
+
+        return $count;
+    }
+
 
 }

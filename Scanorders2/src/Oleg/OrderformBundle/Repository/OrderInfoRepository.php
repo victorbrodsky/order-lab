@@ -57,7 +57,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //$entity->setStatus($status);
 
         if( $type ) {
-            $entity->setType($type);
+
+            $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
+
+//            echo "formtype=".$formtype."<br>";
+//            exit();
+
+            $entity->setType($formtype);
         }
 
         //return $entity;

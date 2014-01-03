@@ -44,20 +44,18 @@ class OrderInfo
      */
     private $status;
 
+//    /**
+//     * type - type of the order: single, multi, edu, res
+//     * @var string
+//     *
+//     * @ORM\Column(name="type", nullable=true, type="string")
+//     */
+//    private $type;
     /**
-     * type - type of the order: single, multi, edu, res
-     * @var string
-     *
-     * @ORM\Column(name="type", nullable=true, type="string")
+     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
+     * @ORM\JoinColumn(name="formtype_id", referencedColumnName="id")
      */
     private $type;
-
-//    /**
-//     * cicle - new, amend ...
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $cicle;
 
     /**
      * oid - id of the original order.
@@ -208,7 +206,6 @@ class OrderInfo
         $this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
         $this->dataquality = new ArrayCollection();
-        //$this->cicle = 'new';
     }
 
     public function __clone() {
@@ -486,22 +483,6 @@ class OrderInfo
     public function setType($type) {
         $this->type = $type;
     }
-
-//    /**
-//     * @param string $cicle
-//     */
-//    public function setCicle($cicle)
-//    {
-//        $this->cicle = $cicle;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getCicle()
-//    {
-//        return $this->cicle;
-//    }
 
     /**
      * @param string $oid

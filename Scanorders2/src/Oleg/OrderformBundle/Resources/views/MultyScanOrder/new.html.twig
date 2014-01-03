@@ -4,38 +4,30 @@
 
 {#{% form_theme form 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
 
-{#{% if multy is not defined %}#}
-    {#{% set multy = 'multy' %}#}
-{#{% endif %}#}
+{% if formtype == 'One Slide Scan Order' %}
+    {% set formpath = 'singleorder_create' %}
+{% endif %}
 
-{#use this form for single order edit #}
-{% set formpath = 'singleorder_create' %}
-{% set headername = 'Single-Slide' %}
-
-{% if multy == 'clinical' %}
+{% if formtype == 'Clinical Multi-Slide Scan Order' %}
     {% set formpath = 'clinical_create' %}
-    {% set headername = 'Clinical Multi-Slide' %}
 {% endif %}
 
-{% if multy == 'educational' %}
+{% if formtype == 'Educational Multi-Slide Scan Order' %}
     {% set formpath = 'edu_create' %}
-    {% set headername = 'Educational Multi-Slide' %}
 {% endif %}
 
-{% if multy == 'research' %}
+{% if formtype == 'Research Multi-Slide Scan Order' %}
     {% set formpath = 'res_create' %}
-    {% set headername = 'Research Multi-Slide' %}
 {% endif %}
 
 {% block title %}
-    {{ headername  }} Scan Order
+    {{ form.vars.value.type  }} Scan Order
 {% endblock %}
 
 {% block content %}
 
-
     <h3 class="text-info">
-        {{ headername  }} Scan Order
+        {{ form.vars.value.type  }} Scan Order
         {% if form.vars.value.oid != "" %}
             #{{ form.vars.value.oid }}
             ({{ form.vars.value.status }})
@@ -123,7 +115,7 @@
         {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
     {% endif %}
 
-    {% if multy == 'educational' %}
+    {% if formtype == 'Educational Multi-Slide Scan Order' %}
         <div  class="panel panel-patient">
             <div class="panel-heading">
                 <h4>Topic</h4>
@@ -136,7 +128,7 @@
         </div>
     {% endif %}
 
-    {% if multy == 'research' %}
+    {% if formtype == 'Research Multi-Slide Scan Order' %}
         <div  class="panel panel-patient">
             <div class="panel-heading">
                 <h4>Research Project Info</h4>

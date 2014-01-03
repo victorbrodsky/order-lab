@@ -21,7 +21,7 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->params['type'] == 'singleorder') {
+        if( $this->params['type'] == 'One Slide Scan Order') {
             $label = false;
         } else {
             $label = 'Part Name';

@@ -33,7 +33,6 @@ class OrderInfoType extends AbstractType
     {
 
 //        echo "orderinfo params=";
-//        //print_r($this->params);
 //        echo "type=".$this->params['type']."<br>";
 //        echo "<br>";
 
@@ -41,30 +40,33 @@ class OrderInfoType extends AbstractType
 
         $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'orderinfo-id')) );
 
-        $builder->add( 'type', 'hidden' ); 
-        
-        if( $this->params['type'] != 'single' ) {
-            //add children
-            $builder->add('patient', 'collection', array(
-                'type' => new PatientType($this->params,$this->entity),    //$this->type),
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'label' => " ",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__patient__',
-            ));
-        }
+        //$builder->add( 'type', 'hidden' );
+        $builder->add('type', 'entity', array(
+            'class' => 'OlegOrderformBundle:FormType',
+            'required' => true,
+            'attr' => array('type'=>'hidden'),
+        ));
+
+        //add children
+        $builder->add('patient', 'collection', array(
+            'type' => new PatientType($this->params,$this->entity),    //$this->type),
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__patient__',
+        ));
 
         //echo "<br>type=".$this->type."<br>";
 
-        if( $this->params['type'] == 'educational' ) {
+        if( $this->params['type'] == 'Educational Multi-Slide Scan Order' ) {
             //echo " add type educational ";
             $builder->add( 'educational', new EducationalType(), array('label'=>'Educational:') );
         }
 
-        if( $this->params['type'] == 'research' ) {
+        if( $this->params['type'] == 'Research Multi-Slide Scan Order' ) {
             //echo " add type research ";
             $builder->add( 'research', new ResearchType(), array('label'=>'Research:') );
         }

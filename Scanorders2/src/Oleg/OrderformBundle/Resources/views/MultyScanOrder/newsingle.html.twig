@@ -11,10 +11,6 @@
     
     <h3 class="text-info">Scan Order</h3>
 
-    {#    {% include 'OlegOrderformBundle:ScanOrder:table.html.twig' %}       #}
-{#    EMAIL:{{ app.security.getToken().getAttribute('email') }}#}
-
-
     {% if cycle != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,cycle,"key","prototype") %}
         {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,cycle,"","prototype") %}
