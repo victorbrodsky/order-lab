@@ -46,7 +46,7 @@ security:
              form_login:
                  always_use_default_target_path: false
                  provider: chain_provider
-#                 provider: in_memory
+                 #provider: in_memory
                  use_referer: true
                  success_handler: login_sucess_handler
              logout:     true
@@ -54,15 +54,16 @@ security:
 
 #       aperio_secured:
 #          pattern:    ^/
-#          aperio:  true
+          #aperio:  true
 #          form_login:
 #             always_use_default_target_path: false
-#             provider:    chain_provider
+#             #provider:    chain_provider
+#             provider: in_memory
 ##                 default_target_path: /
 #             use_referer: true
 #          logout:     true
 #          anonymous:  true
-
+          
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/admin/, role: ROLE_ADMIN }
@@ -124,17 +125,7 @@ security:
 #                path:   logout
 #                target: /
 
-#        secured_area:
-#            pattern:    ^/demo/secured/
-#            form_login:
-#                check_path: _security_check
-#                login_path: _demo_login
-#            logout:
-#                path:   _demo_logout
-#                target: _demo
-            #anonymous: ~
-            #http_basic:
-            #    realm: "Secured Demo Area"
+
 
 #    access_control:
 #        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }

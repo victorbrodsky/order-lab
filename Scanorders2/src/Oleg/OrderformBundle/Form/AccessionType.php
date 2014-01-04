@@ -21,7 +21,11 @@ class AccessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class'=>'form-control form-control-modif keyfield accession-mask', 'title' => 'Example: S12-123456', 'data-inputmask'=>"'mask': 'a[a]99-9[999999]', 'greedy': false");
+        $attr = array(  
+            'class'=>'form-control form-control-modif keyfield accession-mask', 
+            'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999', 
+            //'data-inputmask'=>"'mask': 'A[A]99-9[999999]'"
+       );
 
         if( $this->params['type'] == 'One Slide Scan Order') {
             $attr['style'] = 'width:100%';

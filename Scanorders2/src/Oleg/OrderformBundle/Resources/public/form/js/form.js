@@ -651,7 +651,10 @@ function initDatepicker( element, remove ) {
 
 function accessionInputMask() {
 //    $(".accession-mask").inputmask({"mask": "AA99-999999"}); //specifying options only
-    $(":input").inputmask();
+    $(":input").inputmask(
+    'Regex', 
+    { regex: "[A-Z]{2}[0-9]{2}-[1-9]{1}[0-9]{5}" }
+    );
 }
 
 
