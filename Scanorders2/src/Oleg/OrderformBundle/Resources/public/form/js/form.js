@@ -650,11 +650,23 @@ function initDatepicker( element, remove ) {
 }
 
 function accessionInputMask() {
+    
+    $.extend($.inputmask.defaults.definitions, {
+        'd': {  //masksymbol
+                "validator": "[1-9]",
+                "cardinality": 1,
+                'prevalidator': null
+            },
+    });
+    
+    $(":input").inputmask();
+    
 //    $(".accession-mask").inputmask({"mask": "AA99-999999"}); //specifying options only
-    $(":input").inputmask(
-    'Regex', 
-    { regex: "[A-Z]{2}[0-9]{2}-[1-9]{1}[0-9]{5}" }
-    );
+//    $(":input").inputmask(
+//        'Regex', 
+//        { regex: "[A-Z]{2}[0-9]{2}-[1-9]{1}[0-9]{5}" }
+//    );
+    //$(".accession-mask").inputmask({"mask": "A[A]99-f99999"});
 }
 
 
