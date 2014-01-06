@@ -28,7 +28,7 @@ class BlockNameType extends AbstractType
             $label = 'Block Name';
         }
 
-        $attr = array('class' => 'ajax-combobox-blockname keyfield', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox-blockname keyfield blockname-mask', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(
             'label' => $label,

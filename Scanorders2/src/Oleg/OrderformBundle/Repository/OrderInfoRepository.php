@@ -163,7 +163,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //insert oid to entity
         if( !$entity->getOid() ) {
-            echo "insert oid <br>";
+            //echo "insert oid <br>";
             $entity->setOid($entity->getId());
             $em->flush();
         }

@@ -27,7 +27,7 @@ class PartNameType extends AbstractType
             $label = 'Part Name';
         }
 
-        $attr = array('class' => 'ajax-combobox-partname keyfield', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox-partname keyfield partname-mask', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(
             'label' => $label,

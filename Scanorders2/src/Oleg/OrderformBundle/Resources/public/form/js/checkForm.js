@@ -94,6 +94,10 @@ function checkForm( elem, single ) {
 
     } else {    //Check Button Cliked
 
+        if( validateMaskFields() > 0 ) {
+            return false;
+        }
+
         //console.log("Check Button Cliked");
 
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
@@ -1547,6 +1551,12 @@ function validateForm() {
 
     var totalError = 0;
 
+    var maskError = validateMaskFields();
+    if( maskError > 0 ) {
+        //cleanValidationAlert();
+        return false;
+    }
+
     //Initial check: get total number of checkboxes
     var totalcheckboxes = 0;
 
@@ -1780,3 +1790,5 @@ function addKeyListener() {
         $(this).removeClass('has-error');
     });
 }
+
+

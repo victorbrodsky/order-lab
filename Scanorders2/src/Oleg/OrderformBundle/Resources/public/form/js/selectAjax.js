@@ -98,16 +98,10 @@ function populateSelectCombobox( targetid, data, placeholder ) {
         quietMillis: 100,
         data: data,
         createSearchChoice:function(term, data) {
-            //return {id:term, text:term};
-            //console.log("data="+data['text']);
-            //console.log("data="+data[0].text);
-            if( $(data).filter(function() {
-                //console.log("1 term="+term + " localcompare");
-                return this.text.localeCompare(term)===0;
-            }).length===0) {
-                //console.log("2 term="+term);
-                return {id:term, text:term};
-            }
+            //if( term.match(/^[0-9]+$/) != null ) {
+            //    console.log("term is digit");
+            //}
+            return {id:term, text:term};
         }
     });
 }

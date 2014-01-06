@@ -72,9 +72,10 @@ class PartType extends AbstractType
         ));
 
         //description
+        $attr = array('class'=>'textarea form-control');
         $gen_attr = array('label'=>'Gross Description','class'=>'Oleg\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
         $builder->add('description', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -87,7 +88,7 @@ class PartType extends AbstractType
         //diagnosis
         $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
         $builder->add('disident', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

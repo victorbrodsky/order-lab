@@ -68,9 +68,11 @@ class ScanOrderController extends Controller {
         $dql->groupBy('orderinfo');
         $dql->addGroupBy('orderinfo');
         $dql->addGroupBy('status.name');
+        $dql->addGroupBy('formtype.name');
 
         $dql->innerJoin("orderinfo.slide", "slides");
         $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->innerJoin("orderinfo.type", "formtype");
 
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();

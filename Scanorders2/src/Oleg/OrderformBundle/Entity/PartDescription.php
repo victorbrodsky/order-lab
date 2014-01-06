@@ -18,7 +18,7 @@ class PartDescription extends PartArrayFieldAbstract
     protected $part;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $field;
 

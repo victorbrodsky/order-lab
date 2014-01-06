@@ -51,7 +51,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Type', 'orderinfo.type') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
                 {% if showprovider is defined and showprovider == 'true' %}
                    <th>{{ knp_pagination_sortable(pagination, 'Provider', 'provider.username') }}</th>
                 {% endif %}

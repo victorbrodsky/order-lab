@@ -54,9 +54,11 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientname__',
         ));
 
+
+        $attr = array('class'=>'form-control patientage-mask');
         $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
         $builder->add('age', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
@@ -90,9 +92,10 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientdob__',
         ));
 
+        $attr = array('class'=>'textarea form-control');
         $gen_attr = array('label'=>'Clinical History','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
         $builder->add('clinicalHistory', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,

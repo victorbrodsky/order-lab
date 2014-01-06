@@ -44,13 +44,6 @@ class OrderInfo
      */
     private $status;
 
-//    /**
-//     * type - type of the order: single, multi, edu, res
-//     * @var string
-//     *
-//     * @ORM\Column(name="type", nullable=true, type="string")
-//     */
-//    private $type;
     /**
      * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
      * @ORM\JoinColumn(name="formtype_id", referencedColumnName="id")

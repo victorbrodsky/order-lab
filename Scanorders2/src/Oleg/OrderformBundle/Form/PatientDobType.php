@@ -26,7 +26,7 @@ class PatientDobType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control patientdob-mask', 'style'=>'margin-top: 0;'),
         ));
 
         $builder->add('dobothers', new ArrayFieldType(), array(
