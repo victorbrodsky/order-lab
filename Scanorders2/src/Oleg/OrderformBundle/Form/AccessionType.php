@@ -34,12 +34,21 @@ class AccessionType extends AbstractType
             $gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         }
 
+//        $builder->add('accession', 'collection', array(
+//            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => "Accession Number [or Label]:",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__accessionaccession__',
+//        ));
         $builder->add('accession', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+            'type' => new AccessionAccessionType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Accession Number [or Label]:",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__accessionaccession__',

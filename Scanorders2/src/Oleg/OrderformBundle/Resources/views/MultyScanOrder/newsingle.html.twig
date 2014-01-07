@@ -127,6 +127,8 @@
             </div>
             <div id="main" class="panel-body collapse in">
 
+                {{ formmacros.field(form_accession.accession|first.accessiontype) }}
+
                 <div class="row">
                     <div class="col-xs-6" align="right">
                         {{ form_label(form_accession.accession, "* Accession Number [or Label], Part, Block:") }}
@@ -134,7 +136,8 @@
                     <div class="col-xs-6" align="left">
                         <div style="float:left; width:100%">
                             <div style="float:left; width:50%" id="accession-single">
-                                {{ form_widget(form_accession.accession|first) }}
+                                {#{{ form_widget(form_accession.accession|first.accessiontype) }}#}
+                                {{ form_widget(form_accession.accession|first.field) }}
                                 <button style="display: none;" id="check_btn" class="btn btn-default accessionbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="checkbtn glyphicon glyphicon-check"></i></button>
                             </div>
                             <div style="float:left; width:25%" id="part-single">
@@ -167,9 +170,7 @@
             </div>
         </div>
 
-        <button id="next_button" type="button" class="btn btn-success" 
-                data-toggle="collapse" data-target="#orderinfo_param">Next
-        </button>
+        <button id="next_button" type="button" class="btn btn-success" onclick="checkSingleFormOnNext(this)" data-toggle="collapse">Next</button>
 
 
         <div id="orderinfo_param" class="collapse">
@@ -181,13 +182,10 @@
                 </p>
             </div>
 
-            <div id="validationerror"></div>
-        
-      
         {#        The optional parameter    #}
         <div class="row">
         <p>
-            <button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-target="#optional_param">
+            <button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse">
                 Add Optional Info
             </button>
         </p>
@@ -233,9 +231,7 @@
                   {#{{ formmacros.field(form_procedure.name) }}#}
                   {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
               </div>
-              {#<div class="tab-pane" id="accession">#}
-                  {#{{ formmacros.field(form_accession.date) }}#}
-              {#</div>#}
+
               <div class="tab-pane" id="part">
                   {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
 
@@ -324,6 +320,6 @@
     {#{{ form_end(form) }}#}
     </form>
 
-
+    <div id="validationerror" style="padding-top: 2%"></div>
 
 {% endblock %}

@@ -20,6 +20,7 @@ var proxyuser_id = $("#proxyuser_id").val();
 //console.log("urlCommon="+urlCommon);
 var orderinfoid = $(".orderinfo-id").val();
 
+var accessiontype = new Array();
 var partname = new Array();
 var blockname = new Array();
 var stain = new Array();
@@ -62,6 +63,7 @@ function regularCombobox() {
 function customCombobox() {
 
     if( cicle && cicle != 'edit_user' && urlBase ) {
+        getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
@@ -251,6 +253,35 @@ function getComboboxProcedure(urlCommon,ids) {
 
 }
 
+//#############  Accession Type  ##############//
+function getComboboxAccessionType(urlCommon,ids) {
+
+    var url = urlCommon+"accessiontype";
+
+    if( cicle == "new" || cicle == "create" ) {
+        url = url + "?opt=default";
+    }
+
+    if( accessiontype.length == 0 ) {
+        $.ajax({
+            url: url,
+            async: asyncflag
+        }).success(function(data) {
+                accessiontype = data;
+                populateSelectCombobox( ".accessiontype-combobox", accessiontype, null );
+            });
+    } else {
+        populateSelectCombobox( ".accessiontype-combobox", accessiontype, null );
+    }
+
+    if( cicle == "new"  ) {
+        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
+        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+        var targetid = id+"accession_0_accessiontype";
+        //console.log("targetid="+targetid);
+        $(targetid).select2('val', 1);
+    }
+}
 
 //#############  partname types  ##############//
 function getComboboxPartname(urlCommon,ids) {
@@ -429,6 +460,7 @@ function initComboboxJs(ids) {
 
         cicle = 'new';
 
+        getComboboxAccessionType(urlCommon,ids);
         getComboboxPartname(urlCommon,ids);
         getComboboxBlockname(urlCommon,ids);
         getComboboxStain(urlCommon,ids);

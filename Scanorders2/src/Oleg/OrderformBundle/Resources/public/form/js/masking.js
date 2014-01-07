@@ -42,7 +42,7 @@ function fieldInputMask() {
 
     $(".accession-mask").inputmask( {"mask": accessions });
 
-    $(".patientmrn-mask").inputmask( {"mask": ["f999999[9]", "NOMRNPROVIDED-999999999f"] });
+    $(".patientmrn-mask").inputmask( {"mask": ["f999999[9]", "NOMRNPROVIDED-999999999f"] } );
 
     //$(".patientdob-mask").inputmask( {"mask": "mm/dd/yyyy"});
 
@@ -51,7 +51,22 @@ function fieldInputMask() {
     //$(".partname-mask").inputmask( {"mask": "A[A]" });
     //$(".blockname-mask").inputmask( {"mask": "f[9]" });
 
+    accessionTypeListener();
 }
+
+function accessionTypeListener() {
+
+    $('.accessiontype-combobox').change(function(e) {
+        var elem = $(this);
+        console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+
+        var accField = elem.closest('.row').find('.accession-mask');
+        accField.inputmask( {"mask": ["99", "NOACCESSIONPROVIDED-999999999f"] } );
+
+    });
+
+}
+
 
 function makeErrorField(element) {
     //console.log("make red field id="+element.attr("id")+", class="+element.attr("class"));
@@ -64,19 +79,28 @@ function makeErrorField(element) {
     }
 }
 
-function makeOKField(element) {
+function makeOKField( element ) {
     //console.log("make ok field id="+element.attr("id")+", class="+element.attr("class"));
     element.parent().removeClass("has-error");
 }
 
-function validateMaskFields() {
+function validateMaskFields( element ) {
 
     var errors = 0;
     $('.maskerror-added').remove();
 
-    $(".has-error").each(function() {
+    if( element ) { //if element is provided, then validate only element's input field
+        //var errorFields = $(".has-error");
+        //get input field with partial id "-mask"
+        var parent = element.closest('.row');
+        var errorFields = parent.find(".has-error");
+    } else {
+        var errorFields = $(".has-error");
+    }
+
+    errorFields.each(function() {
         var elem = $(this).find('input');
-        //console.log("number of errors id=" + elem.attr("id") + ", class=" + elem.attr("class") );
+        //console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
 
         var fieldName = "field marked in red above";
         if( elem.hasClass("accession-mask") ) {

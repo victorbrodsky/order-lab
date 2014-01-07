@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 
+use Oleg\OrderformBundle\Entity\AccessionType;
 use Oleg\OrderformBundle\Entity\FormType;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
@@ -60,6 +61,7 @@ class AdminController extends Controller
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 
+        $count_acctype = $this->generateAccessionType();
         $count_formtype = $this->generateFormType();
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
@@ -77,6 +79,7 @@ class AdminController extends Controller
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
+            'Accession Types='.$count_acctype.', '.
             'Form Types='.$count_formtype.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
@@ -361,7 +364,6 @@ class AdminController extends Controller
             $stainList->setName( trim($stain) );
             $stainList->setType('default');
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($stainList);
             $em->flush();
             $count++;
@@ -393,7 +395,6 @@ class AdminController extends Controller
             $list->setName( trim($organ) );
             $list->setType('default');
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($list);
             $em->flush();
             $count++;
@@ -426,7 +427,6 @@ class AdminController extends Controller
             $list->setName( trim($procedure) );
             $list->setType('default');
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($list);
             $em->flush();
             $count++;
@@ -601,7 +601,6 @@ class AdminController extends Controller
                     $list->setName( trim($pathlogyService) );
                     $list->setType('default');
 
-                    $em = $this->getDoctrine()->getManager();
                     $em->persist($list);
                     $em->flush();
                     $count++;
@@ -642,7 +641,6 @@ class AdminController extends Controller
                 $slideType->setType('default');
             }
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($slideType);
             $em->flush();
             $count++;
@@ -673,7 +671,6 @@ class AdminController extends Controller
             $mrnType->setCreatedate( new \DateTime() );
             $mrnType->setName( trim($type) );
             $mrnType->setType('default');
-            $em = $this->getDoctrine()->getManager();
             $em->persist($mrnType);
             $em->flush();
             $count++;
@@ -706,6 +703,46 @@ class AdminController extends Controller
             $formType->setName($type);
 
             $em->persist($formType);
+            $em->flush();
+
+            $count++;
+
+        } //foreach
+
+        return $count;
+    }
+
+
+    public function generateAccessionType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:AccessionType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'NYH CoPath Anatomic Pathology Accession Number',
+            'De-Identified NYH Tissue Bank Research Specimen ID',
+            'De-Identified Personal Educational Slide Set Specimen ID',
+            'De-Identified Personal Research Project Specimen ID',
+            'California Tumor Registry Specimen ID',
+            'Specify Another Specimen ID Issuer'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 0;
+        foreach( $types as $type ) {
+
+            $accType = new AccessionType();
+            $accType->setCreator( $username );
+            $accType->setCreatedate( new \DateTime() );
+            $accType->setName( trim($type) );
+            $accType->setType('default');
+
+            $em->persist($accType);
             $em->flush();
 
             $count++;

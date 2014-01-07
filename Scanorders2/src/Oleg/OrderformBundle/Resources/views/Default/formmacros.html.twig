@@ -240,55 +240,26 @@
 {% endmacro %}
 
 
-{#used by single form#}
-{% macro disease(form) %}
-
+{#disease type form#}
+{% macro diseaseTypeForm( field ) %}
     {% import _self as formmacros %}
 
-    {{ formmacros.field(form.diseaseType) }}
-
-    {#  optional for origin  #}
-    <div id="origin_option" class="collapse">
-
-        <div class="well" align='center'>
-
-            {{ formmacros.field(form.diseaseType.origin) }}
-
-        </div>
-
-    </div>
-
-    {#  optional for primaryOrgan  #}
-    <div id="primaryOrgan" class="collapse">
-
-        <div class="well" align='center'>
-
-            {{ formmacros.field(form.diseaseType.primaryOrgan) }}
-
-        </div>
-
-    </div>
-
-{% endmacro %}
-
-{#used by multy form#}
-{% macro diseaseMulti(form) %}
-    {% import _self as formmacros %}
-
-    {{ form_widget(form.field) }}
+    {{ formmacros.field(field.field) }}
     <br>
 
     <div class="collapse originradio">
         <div class="well" align='center'>
-            {{ form_label(form.origin) }}
-            {{ form_widget(form.origin) }}
+            {#{{ form_label(form.origin) }}#}
+            {#{{ form_widget(form.origin) }}#}
+            {{ formmacros.field(field.origin) }}
         </div>
     </div>
 
     <div class="collapse primaryorganradio">
         <div class="well" align='center'>
-            {{ form_label(form.primaryOrgan) }}
-            {{ form_widget(form.primaryOrgan) }}
+            {#{{ form_label(form.primaryOrgan) }}#}
+            {#{{ form_widget(form.primaryOrgan) }}#}
+            {{ formmacros.field(field.primaryOrgan) }}
         </div>
     </div>
 
@@ -336,105 +307,113 @@
         {% set fieldThis = field %}
     {% endif %}
 
-    {% if withspace is defined and withspace != "" %}
-        <div class="row" style="padding-top: 1%;">
-    {% else %}
-        <div class="row">
-    {% endif %}
+    {% if fieldtype == "diseaseType" %}
 
-        <div class="col-xs-6" align="right">
-            <p>
-            {% if nolabel is defined and nolabel != "" %}
-                {#no label#}
-            {% else %}
-                {% if fieldtype == "paper" and cycle == "show" %}
-                    {{form_label(fieldThis.name)}}
+        {{ formmacros.diseaseTypeForm(fieldThis) }}
+
+    {%  else %}
+
+        {% if withspace is defined and withspace != "" %}
+            <div class="row" style="padding-top: 1%;">
+        {% else %}
+            <div class="row">
+        {% endif %}
+
+            <div class="col-xs-6" align="right">
+                <p>
+                {% if nolabel is defined and nolabel != "" %}
+                    {#no label#}
                 {% else %}
-                    {{form_label(fieldThis.field)}}
-                {% endif %}
-                {% if cycle == "show" %}
-                    {% if field.vars.value.creationdate != "" %}
-                        entered on
-                        {{field.vars.value.creationdate|date('Y-m-d')}}
+                    {% if fieldtype == "paper" and cycle == "show" %}
+                        {{form_label(fieldThis.name)}}
+                    {% else %}
+                        {{form_label(fieldThis.field)}}
                     {% endif %}
-                    {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                        by
-                        {{field.vars.value.provider}}
-                        {% if field.vars.value.status != 'valid' %}
-                            ({{ field.vars.value.status }})
+                    {% if cycle == "show" %}
+                        {% if field.vars.value.creationdate != "" %}
+                            entered on
+                            {{field.vars.value.creationdate|date('Y-m-d')}}
+                        {% endif %}
+                        {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                            by
+                            {{field.vars.value.provider}}
+                            {% if field.vars.value.status != 'valid' %}
+                                ({{ field.vars.value.status }})
+                            {% endif %}
                         {% endif %}
                     {% endif %}
+                    <b>:</b>
                 {% endif %}
-                <b>:</b>
-            {% endif %}
-            </p>
-        </div>
+                </p>
+            </div>
 
-        <div class="col-xs-6" align="left">
-            {% if fieldtype == "key" and cycle == 'new' %}
-                {% if classname == "patientmrn" %}
-                    {{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}
+            <div class="col-xs-6" align="left">
+                {% if fieldtype == "key" and cycle == 'new' %}
+                    {% if classname == "patientmrn" %}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}
+                    {% elseif classname == "accessionaccession" %}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.accessiontype) }}
+                    {% else %}
+                        {{ formmacros.fieldicon(fieldThis.field,"") }}
+                    {% endif %}
+                {% elseif fieldtype == "date" %}
+                    {{ formmacros.fielddate(fieldThis.field) }}
+                {% elseif fieldtype == "paper" %}
+                    {{ formmacros.fieldpaper(fieldThis,cycle) }}
                 {% elseif classname == "patientmrn" %}
                     {{ form_widget(fieldThis.mrntype) }}
-                    {{ formmacros.fieldicon(fieldThis.field,"") }}
+                    {{ form_widget(fieldThis.field) }}
+                {% elseif classname == "accessionaccession" %}
+                    {{ form_widget(fieldThis.accessiontype) }}
+                    {{ form_widget(fieldThis.field) }}
+                {% elseif   fieldtype == "partdiffDisident" or
+                            fieldtype == "partdisident" or
+                            fieldtype == "sliderelevantScans"
+                            and cycle != 'show' %}
+                    {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
+                {% elseif fieldtype == "slidespecialStains" %}
+                    {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
                 {% else %}
-                    {{ formmacros.fieldicon(fieldThis.field,"") }}
+                    {{ form_widget(fieldThis.field) }}
                 {% endif %}
-            {% elseif fieldtype == "date" %}
-                {{ formmacros.fielddate(fieldThis.field) }}
-            {% elseif fieldtype == "paper" %}
-                {{ formmacros.fieldpaper(fieldThis,cycle) }}
-            {% elseif fieldtype == "diseaseType" %}
-                {{ formmacros.diseaseMulti(fieldThis) }}
-            {% elseif classname == "patientmrn" %}
-                {{ form_widget(fieldThis.mrntype) }}
-                {{ form_widget(fieldThis.field) }}
-            {% elseif   fieldtype == "partdiffDisident" or
-                        fieldtype == "partdisident" or
-                        fieldtype == "sliderelevantScans"
-                        and cycle != 'show' %}
-                {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
-            {% elseif fieldtype == "slidespecialStains" %}
-                {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
-            {% else %}
-                {{ form_widget(fieldThis.field) }}
-            {% endif %}
-            {% if cycle != 'show' %}
-                {{ form_rest(fieldThis) }}
-            {% endif %}
+                {% if cycle != 'show' %}
+                    {{ form_rest(fieldThis) }}
+                {% endif %}
+            </div>
+
         </div>
 
-    </div>
+        {#add + button after the field#}
+        {% if ( nobtn is defined and nobtn == "buttonbottom") and (cycle == 'new' or cycle == 'edit' or cycle == 'amend') %}
+            {#{% if cycle == 'amend' and btntype != "" %}#}
+                {% if btntype == 'minusplusbtn' %}
+                    <div class="col-xs-6" align="right"><p></p></div>
+                    <div class="col-xs-6" align="left" style="padding-bottom: 1%">
+                        <div class="addDelBtnColl">
+                            <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
+                            <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if btntype == '' %}
+                    <div class="col-xs-6" align="right"><p></p></div>
+                    <div class="col-xs-6" align="left" style="padding-bottom: 1%">
+                        <div class="addDelBtnColl">
+                            <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if btntype == 'minustn' %}
+                    <div class="col-xs-6" align="right"><p></p></div>
+                    <div class="col-xs-6" align="left" style="padding-bottom: 1%">
+                        <div class="addDelBtnColl">
+                            <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
+                        </div>
+                    </div>
+                {% endif %}
+            {#{% endif %}#}
 
-    {#add + button after the field#}
-    {% if ( nobtn is defined and nobtn == "buttonbottom") and (cycle == 'new' or cycle == 'edit' or cycle == 'amend') %}
-        {#{% if cycle == 'amend' and btntype != "" %}#}
-            {% if btntype == 'minusplusbtn' %}
-                <div class="col-xs-6" align="right"><p></p></div>
-                <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                    <div class="addDelBtnColl">
-                        <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
-                        <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
-                    </div>
-                </div>
-            {% endif %}
-            {% if btntype == '' %}
-                <div class="col-xs-6" align="right"><p></p></div>
-                <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                    <div class="addDelBtnColl">
-                        <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
-                    </div>
-                </div>
-            {% endif %}
-            {% if btntype == 'minustn' %}
-                <div class="col-xs-6" align="right"><p></p></div>
-                <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                    <div class="addDelBtnColl">
-                        <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
-                    </div>
-                </div>
-            {% endif %}
-        {#{% endif %}#}
+        {% endif %}
 
     {% endif %}
 

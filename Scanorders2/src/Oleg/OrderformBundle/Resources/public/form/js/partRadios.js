@@ -15,7 +15,7 @@ function diseaseTypeListener() {
         var checkedValue = $(this).val();
         //console.log("checkedValue="+checkedValue);
 
-        var parent = $(this).parent().parent();
+        var parent = $(this).closest('.partdiseasetype');
         var originradio = parent.find('.originradio');
         var primaryorganradio = parent.find('.primaryorganradio');
         //console.log("originradio id="+originradio.attr("id")+", class="+originradio.attr("class"));
@@ -31,7 +31,7 @@ function diseaseTypeListener() {
                 if( checkedValueOrigin == "Metastatic" ) {
                     primaryorganradio.collapse('show');
                 }
-                if( checkedValueOrigin == "Primary" ) {
+                if( checkedValueOrigin == "Primary" || checkedValueOrigin == "" ) {
                     if( primaryorganradio.is(':visible') ) {
                         primaryorganradio.collapse('hide');
                     }
@@ -60,7 +60,7 @@ function diseaseTypeRender() {
         if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
             //console.log("checked id="+radioElement.attr("id"));
 
-            var parent = radioElement.parent().parent();
+            var parent = radioElement.closest('.partdiseasetype');
             var originradio = parent.find('.originradio');
 
             originradio.collapse('show');
@@ -101,7 +101,7 @@ function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
         if( radioElement.is(':checked') && radioElementValue == "Neoplastic" ) {
             //console.log("checked id="+radioElement.attr("id"));
 
-            var parent = radioElement.parent().parent();
+            var parent = radioElement.closest('.partdiseasetype');
             var originradio = parent.find('.originradio');
 
             originradio.collapse('show');

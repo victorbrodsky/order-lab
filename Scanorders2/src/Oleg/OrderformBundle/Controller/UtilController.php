@@ -447,5 +447,34 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
+
+    /**
+     * @Route("/accessiontype", name="get-accessiontype")
+     * @Method("GET")
+     */
+    public function getAccessionTypeAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        //echo "opt=".$opt."<br>";
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:AccessionType', 'type')
+            ->select("type.id as id, type.name as text");
+
+        if( $opt ) {
+            $query->where('type.type = :type')->setParameter('type', 'default');
+        }
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
   
 }

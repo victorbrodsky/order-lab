@@ -1,0 +1,97 @@
+<?php
+
+namespace Oleg\OrderformBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
+
+class AccessionAccessionType extends AbstractType
+{
+
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
+    {
+        $this->params = $params;
+        $this->entity = $entity;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+
+        $attr = array(
+            'class'=>'form-control form-control-modif keyfield accession-mask',
+            'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
+        );
+
+        if( $this->params['type'] == 'One Slide Scan Order') {
+            $attr['style'] = 'width:100%';
+            $accTypeLabel = "Accession Type:";
+            //$gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+        } else {
+            $accTypeLabel = false;
+            //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+        }
+
+        $builder->add( 'field', 'text', array(
+            'label'=>'Accession Number [or Label]',
+            'required'=>false,
+            'attr' => $attr
+        ));
+
+        //$attr = array('class' => 'combobox combobox-width accessiontype-combobox', 'type' => 'hidden');
+//        $builder->add('accessiontype', 'entity', array(
+//            'class' => 'OlegOrderformBundle:AccessionType',
+//            'label' => $accTypeLabel,
+//            'required' => true,
+//            'attr' => $attr,
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('s')
+//                    ->orderBy('s.id', 'ASC');
+//            },
+//        ));
+//        $builder->add( 'accessiontype', 'custom_selector', array(
+//            'label' => $accTypeLabel,
+//            'required'=>true,
+//            'attr' => $attr,
+//            'classtype' => 'accessionaccession',
+//        ));
+
+        //accession type
+        $attr = array('class' => 'accessiontype-combobox', 'type' => 'hidden');
+        $options = array(
+            'label' => $accTypeLabel,
+            'required' => true,
+            'attr' => $attr,
+            'classtype' => 'accessiontype',
+        );
+
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+            $options['data'] = 1; //new
+        }
+
+        $builder->add('accessiontype', 'custom_selector', $options);
+
+
+        $builder->add('accessionothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
+            'label' => false
+        ));
+
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
+        ));
+    }
+
+    public function getName()
+    {
+        return 'oleg_orderformbundle_accessiontype';
+    }
+}

@@ -160,7 +160,7 @@
         {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
 
-        {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype") %}
+        {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
         {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
         {#{% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounter,type,"","prototype") %}#}
 
@@ -231,17 +231,8 @@
           data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","","","withspace")|e }}"
 
          data-prototype-block="
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name)|e }}#}
-        {#{{ formmacros.fieldIconLabel(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.name,"glyphicon-check")|e }}#}
         {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, form.vars.value.status, blocknameHtml, sectionsourceHtml)|e }}
         "
-         {#data-prototype-slide="#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.stain.vars.prototype.field)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.field)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note)|e }}#}
-        {#{{ formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr)|e }}#}
-        {#"#}
           data-prototype-slide="
         {{ formmacros.slideForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype, "", uid, type,
           formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.slidetype),

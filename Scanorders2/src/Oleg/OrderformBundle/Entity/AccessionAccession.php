@@ -25,4 +25,38 @@ class AccessionAccession extends AccessionArrayFieldAbstract
      */
     protected $field;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AccessionType", inversedBy="accessionaccession", cascade={"persist"})
+     * @ORM\JoinColumn(name="accessiontype_id", referencedColumnName="id", nullable=true)
+     */
+    protected $accessiontype;
+
+    /**
+     * @param mixed $accessiontype
+     */
+    public function setAccessiontype($accessiontype)
+    {
+        $this->accessiontype = $accessiontype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessiontype()
+    {
+        return $this->accessiontype;
+    }
+
+    public function obtainExtraKey()
+    {
+        $extra = array();
+        $extra['type'] = $this->getAccessiontype()->getId();
+        return $extra;
+    }
+
+    public function setExtra($extraEntity)
+    {
+        $this->setAccessiontype($extraEntity);
+    }
+
 }

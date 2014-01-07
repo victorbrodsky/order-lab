@@ -22,10 +22,6 @@ $(document).ready(function() {
     //take care of buttons for single form
     $("#orderinfo").hide();
     $("#optional_button").hide();
-    $('#next_button').on('click', function(event) {        
-       $("#next_button").hide();
-       $("#optional_button").show();
-    });
 
     //priority and disease type options
     priorityOption();

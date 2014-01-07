@@ -23,7 +23,7 @@ class PartDiseaseTypeType extends AbstractType
     {
 
         $builder->add( 'field', 'choice', array(
-            'label'=>'Type of Disease',
+            'label'=>'Type of Disease:',
             //'required'=>false,
             'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
             'multiple' => false,

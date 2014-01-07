@@ -94,7 +94,7 @@ function checkForm( elem, single ) {
 
     } else {    //Check Button Cliked
 
-        if( validateMaskFields() > 0 ) {
+        if( validateMaskFields(element) > 0 ) {
             return false;
         }
 
@@ -1494,13 +1494,32 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function checkSingleFormOnNext( elem ) {
+    //data-target="#orderinfo_param"
+    if( validateMaskFields() > 0 ) {
+        return false;
+    } else {
+        //console.log("no masking errors");
+        $("#next_button").hide();
+        $("#optional_button").show();
+        $('#orderinfo_param').collapse('toggle');
+    }
+    return true;
+}
 
 //Check form single
 function checkFormSingle( elem ) {
 
+    if( validateMaskFields() > 0 ) {
+        return false;
+    }
+
     if( $('#maincinglebtn').is(":visible") ) {
         return false;
     }
+
+    //data-target="#optional_param"
+    $('#optional_param').collapse('toggle');
 
     //check if accession is not empty
     var accValue = $('#accession-single').find('.keyfield').val();
@@ -1551,9 +1570,7 @@ function validateForm() {
 
     var totalError = 0;
 
-    var maskError = validateMaskFields();
-    if( maskError > 0 ) {
-        //cleanValidationAlert();
+    if( validateMaskFields() > 0 ) {
         return false;
     }
 
