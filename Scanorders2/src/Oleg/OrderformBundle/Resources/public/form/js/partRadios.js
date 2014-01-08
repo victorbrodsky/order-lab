@@ -30,20 +30,18 @@ function diseaseTypeListener() {
                 //console.log("checkedValueOrigin="+checkedValueOrigin);
                 if( checkedValueOrigin == "Metastatic" ) {
                     primaryorganradio.collapse('show');
-                }
-                if( checkedValueOrigin == "Primary" || checkedValueOrigin == "" ) {
+                } else {
                     if( primaryorganradio.is(':visible') ) {
                         primaryorganradio.collapse('hide');
+                        clearPrimaryOrgan($(this));
                     }
                 }
             });
 
-        }
-        if( checkedValue == "Non-Neoplastic" || checkedValue == "None" ) {
-            //originradio.collapse('hide');
-            if( originradio.is(':visible') ) {
-                originradio.collapse('hide');
-            }
+        } else {
+
+            hideDiseaseTypeChildren($(this));
+
         }
 
 
@@ -144,19 +142,24 @@ function diseaseTypeRenderCheckForm( element, origin, primaryorgan ) {
 //hide children of DiseaseType
 function hideDiseaseTypeChildren( element ) {
 
-    if( !element.attr("class") || element.attr("class").indexOf('diseaseType') == -1 ) {
-        return;
-    }
+    //console.log("hide disease children, id="+element.attr("id")+",class="+element.attr("class"));
+
+    //if( !element.attr("class") || element.attr("class").indexOf('diseaseType') == -1 ) {
+    //    return;
+    //}
 
     //console.log("hide Disease Type Children");
-    var originradio = element.parent().parent().find(".originradio");
+    var originradio = element.closest('.partdiseasetype').find(".originradio");
     if( originradio.is(':visible') ) {
         originradio.collapse('hide');
+        clearOrigin(element);
     }
 
-    var primaryorganradio = element.parent().parent().find(".primaryorganradio");
+    var primaryorganradio = element.closest('.partdiseasetype').find(".primaryorganradio");
+    //console.log("primaryorganradio id="+primaryorganradio.attr("id")+",primaryorganradio="+primaryorganradio.attr("class"));
     if( primaryorganradio.is(':visible') ) {
         primaryorganradio.collapse('hide');
+        clearPrimaryOrgan(element);
     }
 
     //remove disable attr
@@ -166,3 +169,15 @@ function hideDiseaseTypeChildren( element ) {
 
 }
 
+function clearOrigin( elem ) {
+    //console.log("clear orig, id="+elem.attr("id")+",class="+elem.attr("class"));
+    elem.closest('.partdiseasetype').find('.originradio').find('.radio_inline').each(function() {
+        //console.log("clear radio_inline, id="+$(this).attr("id")+",class="+$(this).attr("id"));
+        $(this).find("input").prop('checked',false);
+    });
+}
+
+function clearPrimaryOrgan( elem ) {
+    //console.log("clear orig, id="+elem.attr("id")+",class="+elem.attr("class"));
+    elem.closest('.partdiseasetype').find('.ajax-combobox-organ').select2('data', null);
+}

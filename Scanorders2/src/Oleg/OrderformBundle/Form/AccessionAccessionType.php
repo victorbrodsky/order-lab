@@ -42,24 +42,6 @@ class AccessionAccessionType extends AbstractType
             'attr' => $attr
         ));
 
-        //$attr = array('class' => 'combobox combobox-width accessiontype-combobox', 'type' => 'hidden');
-//        $builder->add('accessiontype', 'entity', array(
-//            'class' => 'OlegOrderformBundle:AccessionType',
-//            'label' => $accTypeLabel,
-//            'required' => true,
-//            'attr' => $attr,
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('s')
-//                    ->orderBy('s.id', 'ASC');
-//            },
-//        ));
-//        $builder->add( 'accessiontype', 'custom_selector', array(
-//            'label' => $accTypeLabel,
-//            'required'=>true,
-//            'attr' => $attr,
-//            'classtype' => 'accessionaccession',
-//        ));
-
         //accession type
         $attr = array('class' => 'accessiontype-combobox', 'type' => 'hidden');
         $options = array(

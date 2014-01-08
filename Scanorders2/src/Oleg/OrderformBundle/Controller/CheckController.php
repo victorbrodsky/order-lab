@@ -149,10 +149,8 @@ class CheckController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $request = $this->get('request');
-        $mrntype = trim( $request->get('key') );
+        //$mrntype = trim( $request->get('key') );
 
-        $extra = array();
-        $extra["mrntype"] = $mrntype;
 
         //echo "mrntype=".$mrntype."<br>";
         //TODO: select2 is not set correctly by clean in checkForm.js? So, mrntype is ""
@@ -160,6 +158,13 @@ class CheckController extends Controller {
 //            $entityTemp = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");   //get default value
 //            $mrntype = $entityTemp->getId().""; //id of "New York Hospital MRN" in DB
 //        }
+
+        $entityTemp = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+        $mrntype = $entityTemp->getId().""; //id of "New York Hospital MRN" in DB
+
+        $extra = array();
+        $extra["mrntype"] = $mrntype;
+
         //echo "mrntype=".$mrntype."<br>";
 
         $em = $this->getDoctrine()->getManager();

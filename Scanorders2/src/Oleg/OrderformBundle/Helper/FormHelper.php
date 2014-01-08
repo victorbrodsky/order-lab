@@ -826,7 +826,9 @@ Translational Research"
             'Enterprise Master Patient Index',
             'Uptown Hospital ID',
             'NYH Health Quest Corporate Person Index',
-            'New York Downtown Hospital'
+            'New York Downtown Hospital',
+            'Auto-generated MRN',
+            'Existing pre-generated MRN'
         );
 
         return $arr;

@@ -25,7 +25,7 @@ class PartDiseaseTypeType extends AbstractType
         $builder->add( 'field', 'choice', array(
             'label'=>'Type of Disease:',
             //'required'=>false,
-            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None"),
+            'choices' => array("Neoplastic"=>"Neoplastic", "Non-Neoplastic"=>"Non-Neoplastic", "None"=>"None", "Unspecified"=>"Unspecified"),
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type diseaseType'), //'required' => '0', 'disabled'
@@ -34,8 +34,8 @@ class PartDiseaseTypeType extends AbstractType
 
         $builder->add( 'origin', 'choice', array(
             'label'=>'Origin:',
-            'required'=>false,
-            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic"),
+            //'required'=>false,
+            'choices' => array("Primary"=>"Primary", "Metastatic"=>"Metastatic", "Unspecified"=>"Unspecified"),
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type'),

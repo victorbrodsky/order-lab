@@ -25,7 +25,7 @@ class PatientSexType extends AbstractType
             'label'=>'Sex',
             'max_length'=>20,
             //'required'=>false,
-            'choices' => array("Female"=>"Female", "Male"=>"Male", "None"=>"None"),
+            'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type patientsexclass')

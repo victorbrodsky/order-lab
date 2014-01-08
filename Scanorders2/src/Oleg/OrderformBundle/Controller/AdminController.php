@@ -728,7 +728,9 @@ class AdminController extends Controller
             'De-Identified Personal Educational Slide Set Specimen ID',
             'De-Identified Personal Research Project Specimen ID',
             'California Tumor Registry Specimen ID',
-            'Specify Another Specimen ID Issuer'
+            'Specify Another Specimen ID Issuer',
+            'Auto-generated Accession Number',
+            'Existing pre-generated Accession Number'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

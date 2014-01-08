@@ -23,6 +23,11 @@ $(document).ready(function() {
     $("#orderinfo").hide();
     $("#optional_button").hide();
 
+    $('#next_button_multi').on('click', function(event) {
+        $("#next_button_multi").hide();
+        $("#optional_button").show();
+    });
+
     //priority and disease type options
     priorityOption();
     //originOption();
@@ -643,6 +648,10 @@ function initDatepicker( element, remove ) {
         });
     }
 
+}
+
+function printF(element) {
+    console.log("print full id="+element.attr("id") + ", class=" + element.attr("class"));
 }
 
 

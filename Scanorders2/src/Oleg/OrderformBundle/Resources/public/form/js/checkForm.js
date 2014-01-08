@@ -10,7 +10,7 @@
 var urlBase = $("#baseurl").val();
 var urlCheck = "http://"+urlBase+"/check/";
 
-var keys = new Array("mrn", "accession", "partname", "blockname");   //TODO: change to patientmrn, accessionaccession, partname ...
+var keys = new Array("mrn", "accession", "partname", "blockname");
 var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
 var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
 
@@ -51,7 +51,7 @@ function checkForm( elem, single ) {
 
     var element = $(elem);
 
-    //console.log( "element.id=" + element.attr('id') + ", single="+single);
+    //console.log( "check element.id=" + element.attr('id') + ", single="+single);
 
     var elementInput = element.parent().parent().find(".keyfield");
 
@@ -76,7 +76,6 @@ function checkForm( elem, single ) {
 
     var keyElement = findKeyElement(element, single);
 
-//    if( element.find("i").attr("class") == "glyphicon glyphicon-remove" ) {
     if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
         //console.log("Remove Button Cliked: fieldName="+fieldName);
         //setElementBlock(element, null, true);
@@ -89,12 +88,13 @@ function checkForm( elem, single ) {
             cleanFieldsInElementBlock( element, "all", single );
             disableInElementBlock(element, true, null, "notkey", null);
             invertButton(element);
+            setDefaultMask(element);
         }
         return;
 
     } else {    //Check Button Cliked
 
-        if( validateMaskFields(element) > 0 ) {
+        if( validateMaskFields(element, fieldName) > 0 ) {
             return false;
         }
 
@@ -123,9 +123,9 @@ function checkForm( elem, single ) {
                 return;
             }
 
+            setFieldType(element,fieldName); //for mrn and accession: change type and field mask
+
             setKeyValue(element,name+fieldName,new Array(extra),single);
-            //disableInElementBlock(element, false, null, "notkey", null);
-            //invertButton(element);
             return;
         }
 
@@ -653,7 +653,7 @@ function setArrayField(element, dataArr, parent, single) {
 
 //set mrn type field
 function setMrnGroup( element, mrn ) {
-    //console.log("set mrn group: element id="+element.attr("id") + ", class="+element.attr("class"));
+    console.log("set mrn group: element id="+element.attr("id") + ", class="+element.attr("class")+"mrntype="+mrn['mrntype']);
     var holder = element.closest('.row');
     var mrntypeEl = holder.find('select.combobox');
     //mrntypeEl.select2('data', {id: mrn['mrntype'], text: mrn['mrntype']});
@@ -1270,7 +1270,7 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
         var parentValue2 = '';
     }
 
-    //console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
+    console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
     btnElement.button('loading');
 
     $.ajax({
@@ -1287,12 +1287,12 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
                 disableInElementBlock(btnElement, false, null, "notkey", null);
                 invertButton(btnElement);
             } else {
-                //console.log('set key data is null');
+                console.log('set key data is null');
             }
         },
         error: function () {
             btnElement.button('reset');
-            //console.debug("set key ajax error");
+            console.debug("set key ajax error");
         }
     });
 
@@ -1806,6 +1806,17 @@ function addKeyListener() {
     $('.patientmrn').find('.keyfield').parent().keypress(function() {
         $(this).removeClass('has-error');
     });
+}
+
+//element is a button element
+function setFieldType(element,fieldName) {
+    console.log("fieldName=" + fieldName);
+    if( fieldName == "mrn" ) {
+        element.closest('.row').find('.mrntype-combobox').select2('val','8');
+    }
+    if( fieldName == "accession" ) {
+        element.closest('.row').find('.accessiontype-combobox').select2('val','7');
+    }
 }
 
 
