@@ -124,16 +124,8 @@ function checkForm( elem, single ) {
             }
 
             setFieldType(element,fieldName); //for mrn and accession: change type and field mask
-            waitfor(
-                _isBusy,
-                false,
-                _TIMEOUT,
-                0,
-                'play->busy false',
-                setKeyValue(element,name+fieldName,new Array(extra),single)
-            );
 
-            //setKeyValue(element,name+fieldName,new Array(extra),single);
+            setKeyValue(element,name+fieldName,new Array(extra),single);
             return;
         }
 
@@ -1817,15 +1809,46 @@ function addKeyListener() {
 }
 
 //element is a button element
-function setFieldType(element,fieldName) {
+function setFieldType( element, fieldName ) {
     console.log("fieldName=" + fieldName);
+
+    var combo;
+    var expectedValue;
+
     if( fieldName == "mrn" ) {
-        element.closest('.row').find('.mrntype-combobox').select2('val','8');
+        combo = element.closest('.row').find('.mrntype-combobox');
+        var mrnField = combo.closest('.row').find('.patientmrn-mask');
+        mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
+        expectedValue = 8;
     }
     if( fieldName == "accession" ) {
-        element.closest('.row').find('.accessiontype-combobox').select2('val','7');
+        combo = element.closest('.row').find('.accessiontype-combobox');
+        var accField = combo.closest('.row').find('.accession-mask');
+        accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
+        expectedValue = 7;
     }
+
+    combo.select2('val',expectedValue);
+
+//    function _getComboValue() {
+//        return combo.select2('val');
+//    }
+//
+//    waitfor(
+//        _getComboValue,
+//        expectedValue,
+//        300,
+//        0,
+//        'play->busy false',
+//        function() {
+//            alert('The show can resume !');
+//        }
+//    );
+//
+//    //setKeyValue(element,name+fieldName,new Array(extra),single)
+//    console.log('exit set field type');
 }
+
 
 //***************************************************************************
 // function waitfor - Wait until a condition is met
@@ -1841,13 +1864,17 @@ function setFieldType(element,fieldName) {
 //***************************************************************************
 function waitfor(test, expectedValue, msec, count, source, callback) {
     // Check if condition met. If not, re-check later (msec).
-    while (test() !== expectedValue) {
+    var res = test();
+    console.log('compare: '+res+"?="+expectedValue);
+    while( test() != expectedValue ) {
+        console.log('not yet... ');
         count++;
         setTimeout(function() {
             waitfor(test, expectedValue, msec, count, source, callback);
         }, msec);
         return;
     }
+    console.log('done !!!');
     // Condition finally met. callback() can be executed.
     console.log(source + ': ' + test() + ', expected: ' + expectedValue + ', ' + count + ' loops.');
     callback();

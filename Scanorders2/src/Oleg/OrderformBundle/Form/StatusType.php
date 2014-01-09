@@ -15,12 +15,15 @@ class StatusType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
             ->add('action')
-            ->add('type')
-            ->add('group')
             ->add('orderinfo')
         ;
+
+        $builder->add('list', new ListType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\Status',
+            'label' => false
+        ));
+
     }
     
     /**

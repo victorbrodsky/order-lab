@@ -7,6 +7,9 @@
  */
 
 ///////////////////// DEFAULT MASKS //////////////////////////
+var _mrnplaceholder = "NOMRNPROVIDED-";
+var _accplaceholder = "NO\\ACCESSIONPROVIDED-";
+
 function getMrnMask() {
     return "f999999[9]";
 }
@@ -91,31 +94,30 @@ function setDefaultMask( element ) {
 
 function mrnTypeListener() {
 
-    $('.mrntype-combobox').change( function() {
+    $('.mrntype-combobox').on("change", function(e) {
 
         var elem = $(this);
-        console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+        console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
         var mrnField = elem.closest('.row').find('.patientmrn-mask');
         //var value = elem.select2("val");
         var text = elem.select2("data").text;
-        //console.log("val="+value + ", text=" + text);
+        console.log("text=" + text);
 
         //clear input field
         mrnField.val('');
         clearErrorField(mrnField);
 
-        var accplaceholder = "NOMRNPROVIDED-";
-
         switch( text )
         {
             case "Auto-generated MRN":
-                mrnField.inputmask( {"mask": accplaceholder+"9999999999" } );
+                mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
                 var parent = elem.closest('.patientmrn');
                 parent.find('#check_btn').trigger("click");
+                console.log('Auto-generated MRN !!!');
                 break;
             case "Existing pre-generated MRN":
-                mrnField.inputmask( {"mask": accplaceholder+"9999999999" } );
+                mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
                 break;
             case "New York Hospital MRN":
                 mrnField.inputmask( {"mask": getMrnMask() } );
@@ -143,16 +145,14 @@ function accessionTypeListener() {
         accField.val('');
         clearErrorField(accField);
 
-        var placeholder = "NO\\ACCESSIONPROVIDED-";
-
         switch( text )
         {
             case "Auto-generated Accession Number":
-                accField.inputmask( {"mask": placeholder+"9999999999" } );
+                accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
                 elem.closest('.accessionaccession').find('#check_btn').trigger("click");
                 break;
             case "Existing pre-generated Accession Number":
-                accField.inputmask( {"mask": placeholder+"9999999999" } );
+                accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
                 break;
             case "De-Identified Personal Educational Slide Set Specimen ID":
                 accField.inputmask( {"mask": ["vib9020-E-*"] } );

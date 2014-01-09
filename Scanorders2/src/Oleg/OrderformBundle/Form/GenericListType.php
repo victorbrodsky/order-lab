@@ -26,6 +26,11 @@ class GenericListType extends AbstractType
     {
         $classEntity = "Oleg\\OrderformBundle\\Entity\\".$this->className;
 
+        if( $this->className == "Status" ) {
+            $builder
+                ->add('action');
+        }
+
         $builder->add('list', new ListType(), array(
             'data_class' => $classEntity,
             'label' => false

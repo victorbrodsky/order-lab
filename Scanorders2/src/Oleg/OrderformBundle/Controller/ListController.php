@@ -23,6 +23,12 @@ class ListController extends Controller
      * @Route("/mrntype/", name="mrntype")
      * @Route("/accessiontype/", name="accessiontype")
      * @Route("/stainlist/", name="stainlist")
+     * @Route("/organlist/", name="organlist")
+     * @Route("/procedurelist/", name="procedurelist")
+     * @Route("/pathservicelist/", name="pathservicelist")
+     * @Route("/slidetype/", name="slidetype")
+     * @Route("/formtype/", name="formtype")
+     * @Route("/status/", name="status")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -53,6 +59,12 @@ class ListController extends Controller
      * @Route("/mrntype/", name="mrntype_create")
      * @Route("/accessiontype/", name="accessiontype_create")
      * @Route("/stainlist/", name="stainlist_create")
+     * @Route("/organlist/", name="organlist_create")
+     * @Route("/procedurelist/", name="procedurelist_create")
+     * @Route("/pathservicelist/", name="pathservicelist_create")
+     * @Route("/slidetype/", name="slidetype_create")
+     * @Route("/formtype/", name="formtype_create")
+     * @Route("/status/", name="status_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -103,9 +115,6 @@ class ListController extends Controller
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        //$formClass = "Oleg\\OrderformBundle\\Form\\".$className."Type";
-        //$newForm = new $formClass($className);
-
         $options = array();
         if( method_exists($entity,'getOriginal') ) {
             $options['original'] = true;
@@ -132,6 +141,12 @@ class ListController extends Controller
      * @Route("/mrntype/new", name="mrntype_new")
      * @Route("/accessiontype/new", name="accessiontype_new")
      * @Route("/stainlist/new", name="stainlist_new")
+     * @Route("/organlist/new", name="organlist_new")
+     * @Route("/procedurelist/new", name="procedurelist_new")
+     * @Route("/pathservicelist/new", name="pathservicelist_new")
+     * @Route("/slidetype/new", name="slidetype_new")
+     * @Route("/formtype/new", name="formtype_new")
+     * @Route("/status/new", name="status_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -146,7 +161,7 @@ class ListController extends Controller
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
-        echo "type=".$type."<br>";
+        //echo "type=".$type."<br>";
 
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$type;
 
@@ -172,6 +187,12 @@ class ListController extends Controller
      * @Route("/mrntype/{id}", name="mrntype_show")
      * @Route("/accessiontype/{id}", name="accessiontype_show")
      * @Route("/stainlist/{id}", name="stainlist_show")
+     * @Route("/organlist/{id}", name="organlist_show")
+     * @Route("/procedurelist/{id}", name="procedurelist_show")
+     * @Route("/pathservicelist/{id}", name="pathservicelist_show")
+     * @Route("/slidetype/{id}", name="slidetype_show")
+     * @Route("/formtype/{id}", name="formtype_show")
+     * @Route("/status/{id}", name="status_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -210,6 +231,12 @@ class ListController extends Controller
      * @Route("/mrntype/{id}/edit", name="mrntype_edit")
      * @Route("/accessiontype/{id}/edit", name="accessiontype_edit")
      * @Route("/stainlist/{id}/edit", name="stainlist_edit")
+     * @Route("/organlist/{id}/edit", name="organlist_edit")
+     * @Route("/procedurelist/{id}/edit", name="procedurelist_edit")
+     * @Route("/pathservicelist/{id}/edit", name="pathservicelist_edit")
+     * @Route("/slidetype/{id}/edit", name="slidetype_edit")
+     * @Route("/formtype/{id}/edit", name="formtype_edit")
+     * @Route("/status/{id}/edit", name="status_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -282,6 +309,12 @@ class ListController extends Controller
      * @Route("/mrntype/{id}", name="mrntype_update")
      * @Route("/accessiontype/{id}", name="accessiontype_update")
      * @Route("/stainlist/{id}", name="stainlist_update")
+     * @Route("/organlist/{id}", name="organlist_update")
+     * @Route("/procedurelist/{id}", name="procedurelist_update")
+     * @Route("/pathservicelist/{id}", name="pathservicelist_update")
+     * @Route("/slidetype/{id}", name="slidetype_update")
+     * @Route("/formtype/{id}", name="formtype_update")
+     * @Route("/status/{id}", name="status_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -328,6 +361,12 @@ class ListController extends Controller
      * @Route("/mrntype/{id}", name="mrntype_delete")
      * @Route("/accessiontype/{id}", name="accessiontype_delete")
      * @Route("/stainlist/{id}", name="stainlist_delete")
+     * @Route("/organlist/{id}", name="organlist_delete")
+     * @Route("/procedurelist/{id}", name="procedurelist_delete")
+     * @Route("/pathservicelist/{id}", name="pathservicelist_delete")
+     * @Route("/slidetype/{id}", name="slidetype_delete")
+     * @Route("/formtype/{id}", name="formtype_delete")
+     * @Route("/status/{id}", name="status_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

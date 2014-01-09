@@ -1,4 +1,8 @@
 
+{% set Filled = "Filled" in entity.status %}
+{% set Amended = "Amended" in entity.status %}
+{% set Canceled = "Canceled" in entity.status %}
+{% set OnHold = "On Hold" in entity.status %}
 
 {% block action %}
     
@@ -13,20 +17,20 @@
             <li class="divider"></li>
 
             {###############  USER ACTIONS #################}
-            {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and entity.status.type.name != "Filled" %}
+            {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and not Filled %}
                 <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Cancel' }) }}">Cancel</a>
                 </li>                  
             {% endif %}
 
             {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and entity.status != 'Submitted' and entity.status != 'Amended' and
-                ( entity.status.type.name != "Filled" and entity.status.type.name != "On Hold" or is_granted('ROLE_SUPER_ADMIN') ) %}
+                ( not Filled and not OnHold or is_granted('ROLE_SUPER_ADMIN') ) %}
                 <li><a onclick="return confirm('Are you sure?');"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Submit' }) }}">Submit</a>
                 </li>
             {% endif %}
 
-            {% if entity.status != 'Superseded' and entity.status.action != 'Cancel' and entity.status.type.name != "Filled" %}
+            {% if entity.status != 'Superseded' and entity.status.action != 'Cancel' and not Filled %}
                 <li><a onclick="return confirm('Are you sure?');" class="btn-warning"
                        href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
                 </li>

@@ -9,6 +9,10 @@
 
     {{ formmacros.field(form.list.name) }}
 
+    {% if form.action is defined %}
+        {{ formmacros.field(form.action) }}
+    {% endif %}
+
     {{ formmacros.field(form.list.type) }}
 
     {{ formmacros.field(form.list.creator) }}
@@ -78,6 +82,10 @@
     {{ form_start(edit_form) }}
 
     {{ formmacros.field(edit_form.list.name) }}
+
+    {% if edit_form.action is defined %}
+        {{ formmacros.field(edit_form.action) }}
+    {% endif %}
 
     {{ formmacros.field(edit_form.list.type) }}
 
