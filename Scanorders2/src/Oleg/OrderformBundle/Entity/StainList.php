@@ -6,47 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//(repositoryClass="Oleg\OrderformBundle\Repository\StainListRepository")
 /**
  * @ORM\Entity
  * @ORM\Table(name="stainlist")
  */
-class StainList
+class StainList extends ListAbstract
 {
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=500)
-     * @Assert\NotBlank
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Assert\NotBlank
-     */
-    protected $type;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
-     */
-    protected $creator;
-
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="date", type="datetime")
-     * @Assert\NotBlank
-     */
-    protected $createdate;
-
 
     /**
      * @ORM\OneToMany(targetEntity="StainList", mappedBy="original")
@@ -75,111 +40,6 @@ class StainList
         $this->stain = new ArrayCollection();
         $this->specialstain = new ArrayCollection();
     }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return StainList
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return StainList
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    
-
-    /**
-     * Set createdate
-     *
-     * @param \DateTime $createdate
-     * @return StainList
-     */
-    public function setCreatedate($createdate)
-    {
-        $this->createdate = $createdate;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdate
-     *
-     * @return \DateTime 
-     */
-    public function getCreatedate()
-    {
-        return $this->createdate;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param string $creator
-     * @return StainList
-     */
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-    
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return string 
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
 
     /**
      * Add synonyms
@@ -238,14 +98,6 @@ class StainList
     {
         return $this->original;
     }
-
-    public function __toString()
-    {
-        //$res = "id=".$this->id.", name=".$this->name.", synonymCount=".count($this->synonyms);
-        $res = $this->name;
-        return $res;
-    }
-
 
     /**
      * Add stain

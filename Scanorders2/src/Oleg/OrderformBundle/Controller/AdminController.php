@@ -199,32 +199,6 @@ class AdminController extends Controller
             return $this->redirect($this->generateUrl('admin_index'));
         }
 
-//        $helper = new FormHelper();
-//        $organs = $helper->getProcedure();
-//
-//        $username = $this->get('security.context')->getToken()->getUser();
-//
-//        $count = 0;
-//        foreach( $organs as $organ ) {
-//            $list = new ProcedureList();
-//            $list->setCreator( $username );
-//            $list->setCreatedate( new \DateTime() );
-//            $list->setName( $organ );
-//            $list->setType('default');
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($list);
-//            $em->flush();
-//            $count++;
-//        }
-//
-//        $this->get('session')->getFlashBag()->add(
-//            'notice',
-//            'Created '.$count. ' procedure records'
-//        );
-//
-//        return $this->redirect($this->generateUrl('procedurelist'));
-
     }
 
 
@@ -359,6 +333,7 @@ class AdminController extends Controller
         $count = 0;
         foreach( $stains as $stain ) {
             $stainList = new StainList();
+            $stainList->setOrderinlist( $count );
             $stainList->setCreator( $username );
             $stainList->setCreatedate( new \DateTime() );
             $stainList->setName( trim($stain) );
@@ -390,6 +365,7 @@ class AdminController extends Controller
         $count = 0;
         foreach( $organs as $organ ) {
             $list = new OrganList();
+            $list->setOrderinlist( $count );
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
             $list->setName( trim($organ) );
@@ -422,6 +398,7 @@ class AdminController extends Controller
         $count = 0;
         foreach( $procedures as $procedure ) {
             $list = new ProcedureList();
+            $list->setOrderinlist( $count );
             $list->setCreator( $username );
             $list->setCreatedate( new \DateTime() );
             $list->setName( trim($procedure) );
@@ -596,6 +573,7 @@ class AdminController extends Controller
                 } else {
                     //echo " ".$pathlogyService.", ";
                     $list = new PathServiceList();
+                    $list->setOrderinlist( $count );
                     $list->setCreator( $username );
                     $list->setCreatedate( new \DateTime() );
                     $list->setName( trim($pathlogyService) );
@@ -631,6 +609,7 @@ class AdminController extends Controller
         $count = 0;
         foreach( $types as $type ) {
             $slideType = new SlideType();
+            $slideType->setOrderinlist( $count );
             $slideType->setCreator( $username );
             $slideType->setCreatedate( new \DateTime() );
             $slideType->setName( trim($type) );
@@ -651,22 +630,31 @@ class AdminController extends Controller
 
     public function generateMrnType() {
 
-        $helper = new FormHelper();
-        $types = $helper->getMrnType();
-
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegOrderformBundle:MrnType')->findAll();
 
         if( $entities ) {
-
             return -1;
         }
+
+        $types = array(
+            'New York Hospital MRN',
+            'Epic Ambulatory Enterprise ID Number',
+            'Weill Medical College IDX System MRN',
+            'Enterprise Master Patient Index',
+            'Uptown Hospital ID',
+            'NYH Health Quest Corporate Person Index',
+            'New York Downtown Hospital',
+            'Auto-generated MRN',
+            'Existing pre-generated MRN'
+        );
 
         $count = 0;
         foreach( $types as $type ) {
             $mrnType = new MrnType();
+            $mrnType->setOrderinlist( $count );
             $mrnType->setCreator( $username );
             $mrnType->setCreatedate( new \DateTime() );
             $mrnType->setName( trim($type) );
@@ -730,7 +718,7 @@ class AdminController extends Controller
             'California Tumor Registry Specimen ID',
             'Specify Another Specimen ID Issuer',
             'Auto-generated Accession Number',
-            'Existing pre-generated Accession Number'
+            "Existing pre-generated Accession Number"
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -739,6 +727,7 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $accType = new AccessionType();
+            $accType->setOrderinlist( $count );
             $accType->setCreator( $username );
             $accType->setCreatedate( new \DateTime() );
             $accType->setName( trim($type) );

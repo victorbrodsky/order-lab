@@ -10,42 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="organlist")
  */
-class OrganList
+class OrganList extends ListAbstract
 {
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=500)
-     * @Assert\NotBlank
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Assert\NotBlank
-     */
-    protected $type;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
-     */
-    protected $creator;
-
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="date", type="datetime")
-     * @Assert\NotBlank
-     */
-    protected $createdate;
-
 
     /**
      * @ORM\OneToMany(targetEntity="OrganList", mappedBy="original")
@@ -77,110 +43,6 @@ class OrganList
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->part = new ArrayCollection();
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return OrganList
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return OrganList
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    
-
-    /**
-     * Set createdate
-     *
-     * @param \DateTime $createdate
-     * @return OrganList
-     */
-    public function setCreatedate($createdate)
-    {
-        $this->createdate = $createdate;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdate
-     *
-     * @return \DateTime 
-     */
-    public function getCreatedate()
-    {
-        return $this->createdate;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param string $creator
-     * @return OrganList
-     */
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-    
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return string 
-     */
-    public function getCreator()
-    {
-        return $this->creator;
     }
 
     /**
@@ -237,13 +99,6 @@ class OrganList
     public function getOriginal()
     {
         return $this->original;
-    }
-
-    public function __toString()
-    {
-        //$res = "id=".$this->id.", name=".$this->name.", synonymCount=".count($this->synonyms);
-        $res = $this->name;
-        return $res;
     }
 
     /**

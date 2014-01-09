@@ -818,21 +818,5 @@ Translational Research"
         return $arr;
     }
 
-    public function getMrnType() {
-        $arr = array(
-            'New York Hospital MRN',
-            'Epic Ambulatory Enterprise ID Number',
-            'Weill Medical College IDX System MRN',
-            'Enterprise Master Patient Index',
-            'Uptown Hospital ID',
-            'NYH Health Quest Corporate Person Index',
-            'New York Downtown Hospital',
-            'Auto-generated MRN',
-            'Existing pre-generated MRN'
-        );
-
-        return $arr;
-    }
-
 }
 ?>

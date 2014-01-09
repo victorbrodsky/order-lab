@@ -1,0 +1,154 @@
+{#macro for list#}
+
+{% macro listNew( form, type ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {#{{ form(form) }}#}
+    {{ form_start(form) }}
+
+    {{ formmacros.field(form.list.name) }}
+
+    {{ formmacros.field(form.list.type) }}
+
+    {{ formmacros.field(form.list.creator) }}
+
+    {{ formmacros.field(form.list.createdate) }}
+
+    {{ formmacros.field(form.list.orderinlist) }}
+
+    {{ form(form) }}
+
+    {{ form_end(form) }}
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path(type) }}">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+
+{% endmacro %}
+
+{% macro listIndex( entities, type ) %}
+
+    <table class="records_list table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Order</th>
+            <th>Creator</th>
+            <th>Createdate</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path(type~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.orderinlist }}</td>
+                <td>{{ entity.creator }}</td>
+                <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <a href="{{ path(type~'_show', { 'id': entity.id }) }}">show</a>
+                    <a href="{{ path(type~'_edit', { 'id': entity.id }) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <a href="{{ path(type~'_new') }}">
+        Create a new entry
+    </a>
+
+{% endmacro %}
+
+
+{% macro listEdit( edit_form, delete_form, pathtolist ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {{ form_start(edit_form) }}
+
+    {{ formmacros.field(edit_form.list.name) }}
+
+    {{ formmacros.field(edit_form.list.type) }}
+
+    {{ formmacros.field(edit_form.list.creator) }}
+
+    {{ formmacros.field(edit_form.list.createdate) }}
+
+    {{ formmacros.field(edit_form.list.orderinlist) }}
+
+    {% if edit_form.list.original is defined %}
+        {{ formmacros.field(edit_form.list.original) }}
+    {% endif %}
+
+    {{ form(edit_form) }}
+
+    {{ form_end(edit_form) }}
+
+    <p>
+        <a href="{{ path(pathtolist) }}">Back to the list</a>
+    </p>
+
+    <div class="record_actions">
+        {{ form(delete_form) }}
+    </div>
+
+{% endmacro %}
+
+
+{% macro listShow( entity, delete_form, type ) %}
+
+    <table class="record_properties">
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ entity.name }}</td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td>{{ entity.type }}</td>
+        </tr>
+        <tr>
+            <th>Order</th>
+            <td>{{ entity.orderinlist }}</td>
+        </tr>
+        <tr>
+            <th>Creator</th>
+            <td>{{ entity.creator }}</td>
+        </tr>
+        <tr>
+            <th>Createdate</th>
+            <td>{{ entity.createdate|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path(type) }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path(type~'_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
+
+{% endmacro %}

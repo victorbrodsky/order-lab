@@ -10,45 +10,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="slidetype")
  */
-class SlideType
+class SlideType extends ListAbstract
 {
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=500)
-     * @Assert\NotBlank
-     */
-    protected $name;
 
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="slidetype")
      */
     protected $slide;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Assert\NotBlank
-     */
-    protected $type;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
-     */
-    protected $creator;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="date", type="datetime")
-     * @Assert\NotBlank
-     */
-    protected $createdate;
 
     /**
      * @ORM\OneToMany(targetEntity="SlideType", mappedBy="original")
@@ -61,8 +29,6 @@ class SlideType
      **/
     private $original;
 
-
-
     /**
      * Constructor
      */
@@ -70,108 +36,6 @@ class SlideType
     {
         $this->slide = new \Doctrine\Common\Collections\ArrayCollection();
         $this->synonyms = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return SlideType
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return SlideType
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param string $creator
-     * @return SlideType
-     */
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-    
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return string 
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Set createdate
-     *
-     * @param \DateTime $createdate
-     * @return SlideType
-     */
-    public function setCreatedate($createdate)
-    {
-        $this->createdate = $createdate;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdate
-     *
-     * @return \DateTime 
-     */
-    public function getCreatedate()
-    {
-        return $this->createdate;
     }
 
     /**
@@ -263,9 +127,4 @@ class SlideType
         return $this->original;
     }
 
-    public function __toString()
-    {
-        $res = $this->name;
-        return $res;
-    }
 }

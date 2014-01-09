@@ -1,0 +1,11 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::ListForm/listmacros.html.twig" as listmacros %}
+
+{% block content %}
+    <h1>{{ type|capitalize }} creation</h1>
+    <br>
+
+    {{ listmacros.listNew( form, type ) }}
+
+{% endblock %}

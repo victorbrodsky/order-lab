@@ -14,12 +14,10 @@ class MrnTypeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name')
-            ->add('type')
-            ->add('creator')
-            ->add('createdate')
-        ;
+        $builder->add('list', new ListType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\MrnType',
+            'label' => false
+        ));
     }
     
     /**

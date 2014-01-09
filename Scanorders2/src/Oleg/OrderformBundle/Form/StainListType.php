@@ -14,20 +14,10 @@ class StainListType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name')
-            ->add('type')
-            ->add('creator')
-            ->add('original', null, array('attr' => array('class' => 'combobox combobox-width')))
-        ;
 
-
-        $builder->add( 'createdate', 'date', array(
-            'label'=>'Creation Date:',
-            'widget' => 'single_text',
-            'required'=>false,
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker'),
+        $builder->add('list', new ListType(array('original'=>true)), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\StainList',
+            'label' => false
         ));
 
     }
