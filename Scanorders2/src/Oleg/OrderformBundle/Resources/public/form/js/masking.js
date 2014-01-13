@@ -10,15 +10,20 @@
 var _mrnplaceholder = "NOMRNPROVIDED-";
 var _accplaceholder = "NO\\ACCESSIONPROVIDED-";
 
-function getMrnMask() {
-    return "f999999[9]";
+function getMrnDefaultMask() {
+    var mrns = [
+        { "mask": "9[999999999999]" },
+        //{ "mask": "9" },
+        //{ "mask": "R" }
+    ];
+    return mrns;
 }
 
-function getAgeMask() {
+function getAgeDefaultMask() {
     return "f[9][9]";
 }
 
-function getAccessionMask() {
+function getAccessionDefaultMask() {
     var accessions = [
         { "mask": "AA99-f[99999]" },
         { "mask": "A99-f[99999]" }
@@ -37,13 +42,15 @@ function fieldInputMask() {
         }
     });
 
-//    $.extend($.inputmask.defaults.definitions, {
-//        'e': {  //masksymbol
-//            "validator": "^$",    //"^\s*$",
-//            "cardinality": 1,
-//            'prevalidator': null
-//        }
-//    });
+    //not all zeros
+    $.extend($.inputmask.defaults.definitions, {
+        'R': {
+            //"validator": "/^(?!0+$)[A-Z0-9]{13}$/",    //"^\s*$",
+            "validator": "[A-Za-z0-9]{13}",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
 
     $.extend($.inputmask.defaults, {
         "onincomplete": function(result){makeErrorField($(this),false);},
@@ -61,8 +68,8 @@ function fieldInputMask() {
 
     if( cicle == "new" || cicle == "create" ) {
 
-        $(".accession-mask").inputmask( { "mask": getAccessionMask() });
-        $(".patientmrn-mask").inputmask( { "mask": getMrnMask() } );
+        $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() });
+        $(".patientmrn-mask").inputmask( { "mask": getMrnDefaultMask() } );
 
     } else {
         //set mrn for amend
@@ -74,7 +81,7 @@ function fieldInputMask() {
         //set accession for amend: do this in selectAjax.js when accession is loaded by Ajax
     }
 
-    $(".patientage-mask").inputmask( { "mask": getAgeMask() });
+    $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
 
     //$(".partname-mask").inputmask( {"mask": "A[A]" });
     //$(".blockname-mask").inputmask( {"mask": "f[9]" });
@@ -83,7 +90,7 @@ function fieldInputMask() {
     mrnTypeListener();
     //maskfieldListener();
 
-    //console.log($.inputmask.defaults.definitions);
+    console.log($.inputmask.defaults.definitions);
 }
 
 //element is check button
@@ -91,27 +98,14 @@ function setDefaultMask( element ) {
     maskField = element.closest('.row').find("*[class$='-mask']");
 
     if( maskField.hasClass('patientmrn-mask') ) {
-        maskField.inputmask( { "mask": getMrnMask() } );
+        maskField.inputmask( { "mask": getMrnDefaultMask() } );
     }
 
     if( maskField.hasClass('accession-mask') ) {
-        maskField.inputmask( { "mask": getAccessionMask() } );
+        maskField.inputmask( { "mask": getAccessionDefaultMask() } );
     }
 
 }
-
-//function maskfieldListener() {
-//
-////    $('.patientmrn-mask').on('input', function() {
-//    $('.patientmrn-mask').keypress(function() {
-//        //console.log("change mask field");
-//        makeErrorField($(this),false);
-//    });
-//
-//    $('.accession-mask').on("change", function(e) {
-//        makeErrorField($(this),false);
-//    });
-//}
 
 
 function mrnTypeListener() {
@@ -148,7 +142,7 @@ function setMrntypeMask( elem, clean ) {
             mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
             break;
         case "New York Hospital MRN":
-            mrnField.inputmask( {"mask": getMrnMask() } );
+            mrnField.inputmask( {"mask": getMrnDefaultMask() } );
             break;
         default:
             mrnField.inputmask('remove');
@@ -198,7 +192,7 @@ function setAccessiontypeMask(elem,clean) {
             accField.inputmask( {"mask": ["vib9020-E-*"] } );
             break;
         case "NYH CoPath Anatomic Pathology Accession Number":
-            accField.inputmask( {"mask": getAccessionMask() } );
+            accField.inputmask( {"mask": getAccessionDefaultMask() } );
             break;
         default:
             accField.inputmask('remove');

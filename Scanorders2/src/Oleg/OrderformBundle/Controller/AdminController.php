@@ -598,6 +598,11 @@ class AdminController extends Controller
             'Uptown Hospital ID',
             'NYH Health Quest Corporate Person Index',
             'New York Downtown Hospital',
+            'De-Identified NYH Tissue Bank Research Patient ID',
+            'De-Identified Personal Educational Slide Set Patient ID',
+            'De-Identified Personal Research Project Patient ID',
+            'California Tumor Registry Patient ID',
+            'Specify Another Patient ID Issuer',
             'Auto-generated MRN',
             'Existing Auto-generated MRN'
         );
