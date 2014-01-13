@@ -46,20 +46,18 @@ function fieldInputMask() {
 //    });
 
     $.extend($.inputmask.defaults, {
-        "onincomplete": function(){ makeErrorField($(this),false); },
+        "onincomplete": function(result){makeErrorField($(this),false);},
         "oncomplete": function(){ clearErrorField($(this)); },
         "oncleared": function(){ clearErrorField($(this)); },
         "onKeyValidation": function(result) {
             //console.log(result);
-            if( !$(this).inputmask("isComplete") ) {
-                makeErrorField($(this),false);
-            }
+            makeErrorField($(this),false);
         },
         placeholder: " ",
         clearMaskOnLostFocus: true
     });
 
-    $(":input").inputmask();
+    //$(":input").inputmask();
 
     $(".accession-mask").inputmask( { "mask": getAccessionMask() });
 
@@ -74,6 +72,7 @@ function fieldInputMask() {
 
     accessionTypeListener();
     mrnTypeListener();
+    //maskfieldListener();
 
     console.log($.inputmask.defaults.definitions);
 }
@@ -91,6 +90,20 @@ function setDefaultMask( element ) {
     }
 
 }
+
+//function maskfieldListener() {
+//
+////    $('.patientmrn-mask').on('input', function() {
+//    $('.patientmrn-mask').keypress(function() {
+//        console.log("change mask field");
+//        makeErrorField($(this),false);
+//    });
+//
+//    $('.accession-mask').on("change", function(e) {
+//        makeErrorField($(this),false);
+//    });
+//}
+
 
 function mrnTypeListener() {
 
@@ -116,7 +129,7 @@ function mrnTypeListener() {
                 parent.find('#check_btn').trigger("click");
                 console.log('Auto-generated MRN !!!');
                 break;
-            case "Existing pre-generated MRN":
+            case "Existing Auto-generated MRN":
                 mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
                 break;
             case "New York Hospital MRN":
@@ -133,7 +146,7 @@ function mrnTypeListener() {
 
 function accessionTypeListener() {
 
-    $('.accessiontype-combobox').change(function(e) {
+    $('.accessiontype-combobox').on("change", function(e) {
         var elem = $(this);
         console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
@@ -151,7 +164,7 @@ function accessionTypeListener() {
                 accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
                 elem.closest('.accessionaccession').find('#check_btn').trigger("click");
                 break;
-            case "Existing pre-generated Accession Number":
+            case "Existing Auto-generated Accession Number":
                 accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
                 break;
             case "De-Identified Personal Educational Slide Set Specimen ID":
@@ -169,14 +182,18 @@ function accessionTypeListener() {
 }
 
 function makeErrorField(element, appendWell) {
-    //console.log("make red field id="+element.attr("id")+", class="+element.attr("class"));
+    console.log("make red field id="+element.attr("id")+", class="+element.attr("class"));
 
-    clearErrorField(element);
+    if( element.inputmask("isComplete") ) {
+        clearErrorField(element);
+        return;
+    }
 
     var value =  element.val().trim();
     //console.log("value="+value);
     if( value != "" ) {
         element.parent().addClass("has-error");
+        element.parent().addClass("maskerror");
         createErrorMessage( element, null, appendWell );
     }
 
@@ -185,6 +202,7 @@ function makeErrorField(element, appendWell) {
 function clearErrorField( element ) {
     //console.log("make ok field id="+element.attr("id")+", class="+element.attr("class"));
     element.parent().removeClass("has-error");
+    element.parent().removeClass("maskerror");
     $('.maskerror-added').remove();
 }
 
@@ -199,13 +217,13 @@ function validateMaskFields( element, fieldName ) {
     if( element ) {
 
         var parent = element.closest('.row');
-        var errorFields = parent.find(".has-error");
+        var errorFields = parent.find(".maskerror");
 
         if( fieldName == "partname" ) { //if element is provided, then validate only element's input field. Check parent => accession
 
             var parent = element.closest('.panel-procedure').find('.accessionaccession');
             //console.log("parent id=" + parent.attr("id") + ", class=" + parent.attr("class") );
-            var errorFields = parent.find(".has-error");
+            var errorFields = parent.find(".maskerror");
             //console.log("count errorFields=" + errorFields.length );
 
             var partname = element.closest('.row').find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
@@ -213,12 +231,12 @@ function validateMaskFields( element, fieldName ) {
         }
 
     } else {
-        var errorFields = $(".has-error");
+        var errorFields = $(".maskerror");
     }
 
     errorFields.each(function() {
         var elem = $(this).find("*[class$='-mask']");
-        //console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
+        console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
 
         //Please correct the invalid accession number
         var errorHtml = createErrorMessage( elem, null, true );
@@ -234,6 +252,11 @@ function validateMaskFields( element, fieldName ) {
 }
 
 function createErrorMessage( element, fieldName, appendWell ) {
+
+    if( element.inputmask("hasMaskedValue") && element.inputmask("isComplete") ) {
+        //clearErrorField(element);
+        return;
+    }
 
     if( !fieldName ) {
         var fieldName = "field marked in red above";
@@ -257,4 +280,15 @@ function createErrorMessage( element, fieldName, appendWell ) {
     }
 
     return errorHtml;
+}
+
+function changeMaskToNoProvided( combobox, fieldName ) {
+    if( fieldName == "mrn" ) {
+        var mrnField = combobox.closest('.row').find('.patientmrn-mask');
+        mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
+    }
+    if( fieldName == "accession" ) {
+        var accField = combobox.closest('.row').find('.accession-mask');
+        accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
+    }
 }

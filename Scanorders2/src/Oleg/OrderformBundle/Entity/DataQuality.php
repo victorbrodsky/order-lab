@@ -33,15 +33,40 @@ class DataQuality
      */
     protected $description;
 
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $accession;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AccessionType", cascade={"persist"})
+     * @ORM\JoinColumn(name="accessiontype_id", referencedColumnName="id", nullable=true)
+     */
+    protected $accessiontype;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $newaccession;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AccessionType", cascade={"persist"})
+     * @ORM\JoinColumn(name="newaccessiontype_id", referencedColumnName="id", nullable=true)
+     */
+    protected $newaccessiontype;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="AccessionAccession", cascade={"persist"})
+//     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $accession;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="AccessionAccession", cascade={"persist"})
+//     * @ORM\JoinColumn(name="newaccession_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $newaccession;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -257,6 +282,39 @@ class DataQuality
     {
         return $this->newaccession;
     }
+
+    /**
+     * @param mixed $accessiontype
+     */
+    public function setAccessiontype($accessiontype)
+    {
+        $this->accessiontype = $accessiontype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessiontype()
+    {
+        return $this->accessiontype;
+    }
+
+    /**
+     * @param mixed $newaccessiontype
+     */
+    public function setNewaccessiontype($newaccessiontype)
+    {
+        $this->newaccessiontype = $newaccessiontype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewaccessiontype()
+    {
+        return $this->newaccessiontype;
+    }
+
 
 
 }

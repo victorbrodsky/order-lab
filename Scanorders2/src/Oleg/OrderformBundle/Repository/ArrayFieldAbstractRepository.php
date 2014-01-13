@@ -370,8 +370,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $extraStr = "";
         if( $extra && count($extra) > 0 ) {
-            if( $className == "Patient" ) {
-                $extraStr = " AND cfield.mrntype = ".$extra["mrntype"];
+            if( $className == "Patient" || $className == "Accession" ) {
+                $extraStr = " AND cfield.keytype = ".$extra["keytype"];
             }
         }
 
@@ -449,13 +449,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( $provider ) {
             $field->setProvider($provider);
+            $entity->setProvider($provider);
         }
 
         $field->setStatus(self::STATUS_VALID);
 
         //if( $className == "Patient" ) {
         if( $field && method_exists($field,'setExtra') ) {
-            //find mrnType with provided extra (mrntype id) from DB
+            //find keytype with provided extra (keytype id) from DB
+            //echo "extra exists for field=".$field."# ";
             $extraEntity = $this->getExtraEntityById($extra);
             $field->setExtra($extraEntity);
         }
@@ -498,16 +500,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //get extra key by $extra optional parameter or get it from entity
         $extraStr = "";
         if( $extra && count($extra) > 0 ) {
-            if( $className == "Patient" ) {
-                $extraStr = " cfield.mrntype = '".$extra["mrntype"]."' AND ";
+            if( $className == "Patient" || $className == "Accession" ) {
+                $extraStr = " cfield.keytype = '".$extra["keytype"]."' AND ";
             }
         } else {
             $validKeyField = $entity->obtainValidKeyfield();
-            //get extra field key such as Patient's mrntype
+            //get extra field key such as Patient's keytype
             if( $validKeyField && method_exists($validKeyField,'obtainExtraKey') ) {
                 $extra = $validKeyField->obtainExtraKey();
-                $mrntype = $extra["mrntype"];
-                $extraStr = " cfield.mrntype = ".$mrntype." AND ";
+                $keytype = $extra["keytype"];
+                $extraStr = " cfield.keytype = ".$keytype." AND ";
             }
         }
 
@@ -614,7 +616,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $validKeyField = $entity->obtainValidKeyfield();
 
-        //get extra field key such as Patient's mrntype
+        //get extra field key such as Patient's keytype
         if( method_exists($validKeyField,'obtainExtraKey') ) {
             $extra = $validKeyField->obtainExtraKey();
         } else {

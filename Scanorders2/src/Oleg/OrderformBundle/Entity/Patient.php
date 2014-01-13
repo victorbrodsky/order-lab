@@ -447,7 +447,7 @@ class Patient extends OrderAbstract
     {
         $mrns = ", mrnCount=".count($this->mrn).": ";
         foreach( $this->mrn as $mrn ) {
-            $mrns = $mrns . $mrn->getField().",".$mrn->getMrntype()."(".$mrn->getStatus().",id=".$mrn->getId().")";
+            $mrns = $mrns . $mrn->getField().",".$mrn->getKeytype()."(".$mrn->getStatus().",id=".$mrn->getId().")";
         }
 
         $orders = ", orderinfosCount=".count($this->getOrderinfo()).": ";
@@ -458,7 +458,8 @@ class Patient extends OrderAbstract
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
         ", name=".$this->name->first().", nameID=".$this->name->first()->getId().
-        ", procedureCount=".count($this->procedure).", firstprocedureID=".$this->procedure->first()->getId().
+        ", procedureCount=".count($this->procedure).
+        //", firstprocedureID=".$this->procedure->first()->getId().
         ", orderinfo=".$orders.
         $mrns."<br>";
     }
@@ -495,11 +496,11 @@ class Patient extends OrderAbstract
         return $this->getMrn();
     }
 
-    public function obtainExtraKey() {
-        $extra = array();
-        $extra['mrntype'] = $this->getMrn()->getMrntype()->getId();
-        return $extra;
-    }
+//    public function obtainExtraKey() {
+//        $extra = array();
+//        $extra['keytype'] = $this->getMrn()->getKeytype()->getId();
+//        return $extra;
+//    }
 
     public function obtainKeyFieldName() {
         return "mrn";

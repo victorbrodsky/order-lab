@@ -323,8 +323,8 @@ function setPatient( element, keyvalue, extraid, single ) {
                 //set parent key and extra (mrntype)
                 var mrnArr = new Array();
                 mrnArr['text'] = keyvalue;
-                mrnArr['mrntype'] = extraid;
-                setMrnGroup( keyElement.element, mrnArr );
+                mrnArr['keytype'] = extraid;
+                setKeyGroup( keyElement.element, mrnArr );
 
                 var keyBtn = keyElement.element.parent().parent().find('#check_btn');
                 keyBtn.trigger("click");
@@ -623,10 +623,10 @@ function setArrayField(element, dataArr, parent, single) {
             //console.log("id="+element.attr("id"));
 
             //set mrntype
-            if( fieldName == "mrn" ) {
-                setMrnGroup(element,dataArr[i]);
+            if( fieldName == "mrn" || fieldName == "accession" ) {
+                setKeyGroup(element,dataArr[i]);
             } else {
-                element.select2('data', {id: text, text: text});  //TODO: make sure it sets in correct way!!!!!
+                element.select2('data', {id: text, text: text}); //TODO: set by id .select2.('val':id);
             }
 
         } else if ( tagName == "DIV" ) {
@@ -652,15 +652,14 @@ function setArrayField(element, dataArr, parent, single) {
 }
 
 //set mrn type field
-function setMrnGroup( element, mrn ) {
-    console.log("set mrn group: element id="+element.attr("id") + ", class="+element.attr("class")+"mrntype="+mrn['mrntype']);
+function setKeyGroup( element, data ) {
+    //console.log("set mrn group: element id="+element.attr("id") + ", class="+element.attr("class")+"mrntype="+mrn['keytype']);
     var holder = element.closest('.row');
     var mrntypeEl = holder.find('select.combobox');
-    //mrntypeEl.select2('data', {id: mrn['mrntype'], text: mrn['mrntype']});
-    mrntypeEl.select2('val', mrn['mrntype']);
+    mrntypeEl.select2('val', data['keytype']);
     var mrnEl = holder.find('input.keyfield');
     //console.log("set mrn group: mrnEl id="+mrnEl.attr("id") + ", class="+mrnEl.attr("class"));
-    mrnEl.val(mrn['text']);
+    mrnEl.val(data['text']);
 }
 
 //process groups such as radio button group
@@ -876,6 +875,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
     }
 
     //console.log("clean parent.id=" + parent.attr('id'));
+    //printF(parent,"clean => parent");
+
     var elements = parent.find(selectStr).not("*[id^='s2id_']");
 
     for (var i = 0; i < elements.length; i++) {
@@ -928,9 +929,9 @@ function cleanFieldsInElementBlock( element, all, single ) {
                         //console.log("clean as radio");
                         processGroup( elements.eq(i), "", "ignoreDisable" );
                     } else if( classs.indexOf("select2") != -1 ) {
-                        //console.log("clean as select");
-                        if( field == "mrn" ) { //special case mrntype: preset to the first default value
-                            //console.log("preset default mrn type id="+elements.eq(i).attr('id')+", class="+elements.eq(i).attr('class'));
+                        //console.log("clean as select, field="+field);
+                        if( field == "mrn" || field == "accession" ) { //special case keytype: preset to the first default value
+                            //console.log("preset default keytype id="+elements.eq(i).attr('id')+", class="+elements.eq(i).attr('class'));
                             //elements.eq(i).select2('data', {id: '1', text: 'New York Hospital MRN'});
                             elements.eq(i).select2("val", "1" );
                         } else {
@@ -1270,7 +1271,7 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
         var parentValue2 = '';
     }
 
-    console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
+    //console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2);
     btnElement.button('loading');
 
     $.ajax({
@@ -1363,7 +1364,6 @@ function removeKeyFromDB(element, btnElement, single) {
         contentType: 'application/json',
         dataType: 'json',
         async: false,
-        //data: {key1: keyValue, accession1: accessionValue},
         success: function (data) {
             //btnElement.button('reset');
             //console.debug("delete key ok");
@@ -1405,7 +1405,7 @@ function findKeyElement( element, single ) {
             var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
             //console.log("set key value: field=(" + field + ")");
-            if( $.inArray(field, keys) != -1 && id.indexOf('_mrntype') == -1 ) {
+            if( $.inArray(field, keys) != -1 && id.indexOf('_keytype') == -1 ) {
                 //console.log("set key value: found key=(" + field + "), id="+elements.eq(i).attr("id"));
                 name = field;
                 keyElement = elements.eq(i);
@@ -1414,14 +1414,15 @@ function findKeyElement( element, single ) {
         }
     }
 
-    //find extra key: mrntype
-    var mrntype = element.closest('.row').find( ".mrntype-combobox").not("*[id^='s2id_']");
-    //console.log("find key element: mrntype.length="+mrntype.length);
-    if( mrntype.length > 0 ) {
-        var extra = mrntype.select2("val");
-        //console.log("find key element: mrntype id="+mrntype.attr("id")+", class="+mrntype.attr("class")+", extra="+extra);
-    } else {
-        var extra = null;
+    //find extra key: keytype
+    var extra = null;
+    if( name == "mrn" || name == "accession" ) {
+        var keytype = element.closest('.row').find( "."+name+"type-combobox").not("*[id^='s2id_']");
+        //console.log("find key element: keytype.length="+keytype.length);
+        if( keytype.length > 0 ) {
+            var extra = keytype.select2("val");
+            //console.log("find key element: keytype id="+keytype.attr("id")+", class="+keytype.attr("class")+", extra="+extra);
+        }
     }
 
     if( name == "partname" ) {
@@ -1651,6 +1652,9 @@ function validateForm() {
 
         var accInput = $(this);
         var accValue = accInput.val();
+        var acctypeField = accInput.closest('.row').find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+        var acctypeValue = acctypeField.select2("val");
+        var acctypeText = acctypeField.select2("data").text;
 
         if( orderformtype == "single") {
             var mrnHolder = $('.panel-patient').find(".patientmrn");
@@ -1672,7 +1676,10 @@ function validateForm() {
 
         //console.log("accValue="+accValue + " mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
 
-        if( accValue && accValue !="" && mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !="" ) {
+        if(
+            accValue && accValue !="" && acctypeValue && acctypeValue !="" &&
+            mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !=""
+        ) {
             //console.log("validate accession-mrn-mrntype");
 
 //            var mrn = "";
@@ -1683,7 +1690,7 @@ function validateForm() {
             $.ajax({
                 url: urlCheck+"accession",
                 type: 'GET',
-                data: {key: accValue},
+                data: {key: accValue, extra: acctypeValue},
                 contentType: 'application/json',
                 dataType: 'json',
                 async: false,
@@ -1691,21 +1698,21 @@ function validateForm() {
                     //console.debug("get accession ajax ok");
                     if( data.id ) {
 
-                        mrn = data['parent'];
-                        mrntype = data['extraid'];
-                        mrnstring = data['mrnstring'];
-                        orderinfo = data['orderinfo'];
+                        var mrn = data['parent'];
+                        var mrntype = data['extraid'];
+                        var mrnstring = data['mrnstring'];
+                        var orderinfo = data['orderinfo'];
 
-                        //console.log('mrn='+mrn+', mrntype='+mrntype);
+                        console.log('mrn='+mrn+', mrntype='+mrntype);
 
                         if( mrn == mrnValue && mrntype == mrntypeValue ) {
                             //console.log("validated successfully !");
                         } else {
-                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+                            console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
                             var nl = "\n";    //"&#13;&#10;";
 
-                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
+                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+","+acctypeValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
                                                 +mrnValue+", "+mrntypeText+" as you have entered.";
                             var message = message_short + " Please correct ether the MRN or the Accession Number above.";
 
@@ -1732,7 +1739,7 @@ function validateForm() {
                             newForm = newForm.replace("TEXT2", message2);
                             newForm = newForm.replace("TEXT3", message3);
 
-                            //console.log("newForm="+newForm);
+                            console.log("newForm="+newForm);
 
                             var newElementsAppended = $('#validationerror').append(newForm);
                             //var newElementsAppended = newForm.appendTo("#validationerror");
@@ -1741,7 +1748,7 @@ function validateForm() {
                             accInput.parent().addClass("has-error");
                             patientInputs.parent().addClass("has-error");
 
-                            setDataqualityData( index, accValue, mrnValue, mrntypeValue );
+                            setDataqualityData( index, accValue, acctypeValue, mrnValue, mrntypeValue );
 
                             totalError++;
                             index++;
@@ -1779,10 +1786,11 @@ function setDataquality(index,message) {
 }
 
 
-function setDataqualityData( index, accession, mrn, mrntype ) {
+function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
-    //console.log(accession + " " + mrn + " " + mrntype);
+    console.log(accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
+    $(partid+'accessiontype').val(acctype);
     $(partid+'mrn').val(mrn);
     $(partid+'mrntype').val(mrntype);
 }
@@ -1810,74 +1818,26 @@ function addKeyListener() {
 
 //element is a button element
 function setFieldType( element, fieldName ) {
-    console.log("fieldName=" + fieldName);
+    //console.log("fieldName=" + fieldName);
 
     var combo;
     var expectedValue;
 
     if( fieldName == "mrn" ) {
         combo = element.closest('.row').find('.mrntype-combobox');
-        var mrnField = combo.closest('.row').find('.patientmrn-mask');
-        mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
         expectedValue = 8;
     }
     if( fieldName == "accession" ) {
         combo = element.closest('.row').find('.accessiontype-combobox');
-        var accField = combo.closest('.row').find('.accession-mask');
-        accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
         expectedValue = 7;
     }
 
+    changeMaskToNoProvided( combo, fieldName );
     combo.select2('val',expectedValue);
 
-//    function _getComboValue() {
-//        return combo.select2('val');
-//    }
-//
-//    waitfor(
-//        _getComboValue,
-//        expectedValue,
-//        300,
-//        0,
-//        'play->busy false',
-//        function() {
-//            alert('The show can resume !');
-//        }
-//    );
-//
-//    //setKeyValue(element,name+fieldName,new Array(extra),single)
-//    console.log('exit set field type');
 }
 
 
-//***************************************************************************
-// function waitfor - Wait until a condition is met
-//
-// Needed parameters:
-//    test: function that returns a value
-//    expectedValue: the value of the test function we are waiting for
-//    msec: delay between the calls to test
-//    callback: function to execute when the condition is met
-// Parameters for debugging:
-//    count: used to count the loops
-//    source: a string to specify an ID, a message, etc
-//***************************************************************************
-function waitfor(test, expectedValue, msec, count, source, callback) {
-    // Check if condition met. If not, re-check later (msec).
-    var res = test();
-    console.log('compare: '+res+"?="+expectedValue);
-    while( test() != expectedValue ) {
-        console.log('not yet... ');
-        count++;
-        setTimeout(function() {
-            waitfor(test, expectedValue, msec, count, source, callback);
-        }, msec);
-        return;
-    }
-    console.log('done !!!');
-    // Condition finally met. callback() can be executed.
-    console.log(source + ': ' + test() + ', expected: ' + expectedValue + ', ' + count + ' loops.');
-    callback();
-}
+
 
 

@@ -43,7 +43,7 @@ class AccessionAccessionType extends AbstractType
         ));
 
         //accession type
-        $attr = array('class' => 'accessiontype-combobox', 'type' => 'hidden');
+        $attr = array('class' => 'combobox combobox-width accessiontype-combobox', 'type' => 'hidden');
         $options = array(
             'label' => $accTypeLabel,
             'required' => true,
@@ -55,7 +55,7 @@ class AccessionAccessionType extends AbstractType
             $options['data'] = 1; //new
         }
 
-        $builder->add('accessiontype', 'custom_selector', $options);
+        $builder->add('keytype', 'custom_selector', $options);
 
 
         $builder->add('accessionothers', new ArrayFieldType(), array(

@@ -650,7 +650,11 @@ function initDatepicker( element, remove ) {
 
 }
 
-function printF(element) {
+function printF(element,text) {
+    var str = "print full id="+element.attr("id") + ", class=" + element.attr("class")
+    if(text) {
+        str = text + " : " + str;
+    }
     console.log("print full id="+element.attr("id") + ", class=" + element.attr("class"));
 }
 

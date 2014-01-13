@@ -27,37 +27,37 @@ class PatientMrn extends PatientArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="MrnType", inversedBy="patientmrn", cascade={"persist"})
-     * @ORM\JoinColumn(name="mrntype_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
      */
-    protected $mrntype;
+    protected $keytype;
 
     /**
-     * @param mixed $mrntype
+     * @param mixed $keytype
      */
-    public function setMrntype($mrntype)
+    public function setKeytype($keytype)
     {
-        $this->mrntype = $mrntype;
+        $this->keytype = $keytype;
     }
 
     /**
      * @return mixed
      */
-    public function getMrntype()
+    public function getKeytype()
     {
-        return $this->mrntype;
+        return $this->keytype;
     }
 
 
     public function obtainExtraKey()
     {
         $extra = array();
-        $extra['mrntype'] = $this->getMrntype()->getId();
+        $extra['keytype'] = $this->getKeytype()->getId();
         return $extra;
     }
 
     public function setExtra($extraEntity)
     {
-        $this->setMrntype($extraEntity);
+        $this->setKeytype($extraEntity);
     }
 
 }

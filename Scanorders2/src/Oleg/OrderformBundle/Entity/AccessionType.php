@@ -14,7 +14,7 @@ class AccessionType extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="accessiontype")
+     * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="keytype")
      */
     protected $accessionaccession;
 

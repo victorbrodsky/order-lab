@@ -60,7 +60,7 @@ class Accession extends OrderAbstract {
     {
         $accNameStr = "";
         foreach( $this->accession as $accession ) {
-            $accNameStr = $accNameStr." ".$accession->getField()."(".$accession->getStatus().")";
+            $accNameStr = $accNameStr." ".$accession->getField()."(keytype=".$accession->getKeytype().")"."(".$accession->getStatus().")";
         }
         return "Accession: id=".$this->id.
             ", accessionCount=".count($this->accession).
@@ -213,6 +213,12 @@ class Accession extends OrderAbstract {
     public function obtainKeyField() {
         return $this->getAccession();
     }
+
+//    public function obtainExtraKey() {
+//        $extra = array();
+//        $extra['keytype'] = $this->getAccession()->getKeytype()->getId();
+//        return $extra;
+//    }
 
     public function obtainKeyFieldName() {
         return "accession";

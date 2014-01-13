@@ -10,14 +10,19 @@ namespace Oleg\OrderformBundle\Repository;
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
 
+    public function getExtraEntityById( $extra ) {
+        $em = $this->_em;
+        return $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($extra["keytype"]);
+    }
+
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
         if( count($orderinfo->getDataquality()) == 0 ) {
             return $accession;
         }
 
-        //echo "process Accession: ".$accession;
-        //$this->printTree( $accession->getParent()->getParent() );
+        echo "process Accession: ".$accession;
+        $this->printTree( $accession->getParent()->getParent() );
 
         //process data quality
         $currentDataquality = null;
@@ -31,7 +36,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $mrntype = $dataquality->getMrntype()->getId();
             $validMrn = $accession->getParent()->getParent()->obtainValidKeyfield();
             $accmrn = $validMrn->getField();
-            $accmrntype = $validMrn->getMrntype()->getId();
+            $accmrntype = $validMrn->getKeytype()->getId();
             //echo "compare patient: ".$mrn ."==". $accmrn ."&&". $mrntype ."==". $accmrntype."<br>";
             if( $mrn == $accmrn && $mrntype == $accmrntype ) {
                 $patientConflict = true;
@@ -39,9 +44,12 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             }
 
             $conflictAccessionNum = $dataquality->getAccession()."";
+            $conflictAccessionType = $dataquality->getAccessiontype()."";
             $currentAccessionNum = $accession->obtainValidKeyfield();
+            $currentAccessionType = $accession->obtainValidKeyfield()->getKeytype()."";
             //echo $currentAccessionNum."?=".$conflictAccessionNum.", newAccession=".$dataquality->getNewaccession()."<br>";
-            if( $currentAccessionNum == $conflictAccessionNum ) { //only for match accessions and if this accession was not processed yet
+            //echo $currentAccessionType."?=".$conflictAccessionType."<br>";
+            if( $currentAccessionNum == $conflictAccessionNum && $currentAccessionType == $conflictAccessionType ) { //only for match accessions and if this accession was not processed yet
                 if( !$dataquality->getNewaccession() ) {
                     $accessionConflict = true;
                 }
@@ -53,13 +61,13 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             }
         }
 
-//        if( !$accessionConflict || !$patientConflict ) {
         if( !$currentDataquality ) {
             //echo "#####this is not conflict accession => return !!!!!! <br>";
             return $accession;
         }
 
         //Now we know that this accession has MRN conflict
+        //echo "Now we know that this accession has MRN conflict <br>";
 
         //$entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$user,"Accession","accession");
         //1) take care of mrn-accession conflict: replace accession# with ACCESSIONNONPROVIDED:
@@ -70,24 +78,21 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         //set new accession number to dataquality
         $currentDataquality->setNewaccession($nextKey);
+        $em = $this->_em;
+        $acctype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
+        $currentDataquality->setNewaccessiontype($acctype);
 
         //we should have only one key field !!!
         $key = $accession->obtainValidKeyField();
         $key->setField($nextKey);
+        $key->setKeytype($acctype);
         $key->setStatus(self::STATUS_VALID);
         $key->setProvider($orderinfo->getProvider()->first());
-
-        //save in DB, so the next conflict Accession will be generated correctly from DB; other way is to loop for newaccessions in this orderinfo's dataquality
-//        $em = $this->_em;
-//        $em->persist($key);
-//        $em->flush();
 
 //        echo "<br>-----------------Original Accession:<br>";
 //        $this->printTree( $accession );
 //        echo "--------------------------<br>";
-        //echo "finish process Accession: ".$accession."<br>";
-
-        //TODO: remove ID from all children?
+//        echo "finish process Accession: ".$accession."<br>";
 
         return $accession;
 

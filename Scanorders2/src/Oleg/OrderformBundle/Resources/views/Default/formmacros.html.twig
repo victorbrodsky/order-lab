@@ -350,9 +350,9 @@
             <div class="col-xs-6" align="left">
                 {% if fieldtype == "key" and cycle == 'new' %}
                     {% if classname == "patientmrn" %}
-                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.mrntype) }}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype) }}
                     {% elseif classname == "accessionaccession" %}
-                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.accessiontype) }}
+                        {{ formmacros.fieldicon(fieldThis.field,fieldThis.keytype) }}
                     {% else %}
                         {{ formmacros.fieldicon(fieldThis.field,"") }}
                     {% endif %}
@@ -361,10 +361,10 @@
                 {% elseif fieldtype == "paper" %}
                     {{ formmacros.fieldpaper(fieldThis,cycle) }}
                 {% elseif classname == "patientmrn" %}
-                    {{ form_widget(fieldThis.mrntype) }}
+                    {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}
                 {% elseif classname == "accessionaccession" %}
-                    {{ form_widget(fieldThis.accessiontype) }}
+                    {{ form_widget(fieldThis.keytype) }}
                     {{ form_widget(fieldThis.field) }}
                 {% elseif   fieldtype == "partdiffDisident" or
                             fieldtype == "partdisident" or
@@ -547,6 +547,7 @@
 
         {% if cycle == "new" or cycle == "amend" %}
             {{ form_widget(field.accession) }}
+            {{ form_widget(field.accessiontype) }}
             {{ form_widget(field.mrn) }}
             {{ form_widget(field.mrntype) }}
         {% endif %}

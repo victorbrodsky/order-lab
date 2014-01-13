@@ -298,9 +298,6 @@ class MultyScanOrderController extends Controller {
         //echo $user."<br>";
         //$email = $user->getEmail();
 
-//        $dataQuality = new DataQuality();
-//        $entity->addDataQuality($dataQuality);
-
         $entity->addProvider($user);
 
         $patient = new Patient(true,'invalid',$user);

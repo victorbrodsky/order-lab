@@ -14,7 +14,7 @@ class MrnType extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="mrntype")
+     * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="keytype")
      */
     protected $patientmrn;
 

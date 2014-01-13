@@ -32,7 +32,7 @@ class PatientMrnType extends AbstractType
         ));
 
         $attr = array('class' => 'combobox combobox-width mrntype-combobox');
-        $builder->add('mrntype', 'entity', array(
+        $builder->add('keytype', 'entity', array(
             'class' => 'OlegOrderformBundle:MrnType',
             'label'=>false, //'MRN Type',
             'required' => true,

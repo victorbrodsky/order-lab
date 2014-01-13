@@ -14,7 +14,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     public function getExtraEntityById( $extra ) {
         $em = $this->_em;
-        return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["mrntype"]);
+        return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["keytype"]);
     }
 
     //replace field entity if not existed from source object to destination object

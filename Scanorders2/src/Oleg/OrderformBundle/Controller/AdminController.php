@@ -599,7 +599,7 @@ class AdminController extends Controller
             'NYH Health Quest Corporate Person Index',
             'New York Downtown Hospital',
             'Auto-generated MRN',
-            'Existing pre-generated MRN'
+            'Existing Auto-generated MRN'
         );
 
         $count = 1;
@@ -672,7 +672,7 @@ class AdminController extends Controller
             'California Tumor Registry Specimen ID',
             'Specify Another Specimen ID Issuer',
             'Auto-generated Accession Number',
-            "Existing pre-generated Accession Number"
+            "Existing Auto-generated Accession Number"
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
