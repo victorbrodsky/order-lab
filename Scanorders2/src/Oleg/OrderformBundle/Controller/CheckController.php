@@ -238,6 +238,11 @@ class CheckController extends Controller {
                 $dateStr = $transformer->transform($parentKey->getCreationdate());
                 $mrnstring = 'MRN '.$parentKey.', '.$parentKey->getKeytype().' (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
                 $extraid = $parentKey->getKeytype()->getId()."";
+                $mrnkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extraid);
+                if( $mrnkeytype == "Auto-generated MRN" ) {
+                    $newkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
+                    $extraid = $newkeytype->getId()."";
+                }
                 $orderinfoString = "Order #".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider()->first();
             } else {
                 $parentKey = null;

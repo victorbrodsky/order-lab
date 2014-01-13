@@ -269,6 +269,7 @@ function getComboboxAccessionType(urlCommon,ids) {
         }).success(function(data) {
                 accessiontype = data;
                 populateSelectCombobox( ".accessiontype-combobox", accessiontype, null );
+                setAccessionMask();
             });
     } else {
         populateSelectCombobox( ".accessiontype-combobox", accessiontype, null );

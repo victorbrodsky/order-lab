@@ -309,7 +309,6 @@ function setPatient( element, keyvalue, extraid, single ) {
         //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
 
         setTimeout(function(){
-//            if( keyBtnStatusClass != "glyphicon glyphicon-check" ){
             if( !isRemoveBtn ) {
                 if( maxi > 20 ) {
                     return 0;
@@ -653,10 +652,11 @@ function setArrayField(element, dataArr, parent, single) {
 
 //set mrn type field
 function setKeyGroup( element, data ) {
-    //console.log("set mrn group: element id="+element.attr("id") + ", class="+element.attr("class")+"mrntype="+mrn['keytype']);
+    //console.log("set mrn group: element id="+element.attr("id") + ", class="+element.attr("class")+"mrntype="+data['keytype']);
     var holder = element.closest('.row');
     var mrntypeEl = holder.find('select.combobox');
     mrntypeEl.select2('val', data['keytype']);
+    setMrntypeMask(element,true);
     var mrnEl = holder.find('input.keyfield');
     //console.log("set mrn group: mrnEl id="+mrnEl.attr("id") + ", class="+mrnEl.attr("class"));
     mrnEl.val(data['text']);
@@ -1703,12 +1703,12 @@ function validateForm() {
                         var mrnstring = data['mrnstring'];
                         var orderinfo = data['orderinfo'];
 
-                        console.log('mrn='+mrn+', mrntype='+mrntype);
+                        //console.log('mrn='+mrn+', mrntype='+mrntype);
 
                         if( mrn == mrnValue && mrntype == mrntypeValue ) {
                             //console.log("validated successfully !");
                         } else {
-                            console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
                             var nl = "\n";    //"&#13;&#10;";
 
@@ -1739,7 +1739,7 @@ function validateForm() {
                             newForm = newForm.replace("TEXT2", message2);
                             newForm = newForm.replace("TEXT3", message3);
 
-                            console.log("newForm="+newForm);
+                            //console.log("newForm="+newForm);
 
                             var newElementsAppended = $('#validationerror').append(newForm);
                             //var newElementsAppended = newForm.appendTo("#validationerror");
@@ -1788,7 +1788,7 @@ function setDataquality(index,message) {
 
 function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
-    console.log(accession + " " + acctype + " " + mrn + " " + mrntype);
+    //console.log(accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'accessiontype').val(acctype);
     $(partid+'mrn').val(mrn);
