@@ -12,6 +12,26 @@ namespace Oleg\OrderformBundle\Repository;
 class PatientRepository extends ArrayFieldAbstractRepository
 {
 
+    public function changeKeytype($entity) {
+        $key = $entity->obtainValidKeyField();
+        $newkeytypeid = $this->getCorrectKeytypeId( $key->getKeytype()->getId() );
+        if( $key == "" || $newkeytypeid != $key->getKeytype()->getId() ) {  //$key == "" is the same as $key->getName().""
+            $em = $this->_em;
+            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+            $key->setKeytype($newkeytypeEntity);
+        }
+        return $entity;
+    }
+
+    public function getCorrectKeytypeId($keytypeid) {
+        $em = $this->_em;
+        $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($keytypeid);
+        if( $keytypeEntity->getName()."" == "Existing Auto-generated MRN" ) {
+            $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+        }
+        return $keytypeEntity->getId();
+    }
+
     public function getExtraEntityById( $extra ) {
         $em = $this->_em;
         return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["keytype"]);

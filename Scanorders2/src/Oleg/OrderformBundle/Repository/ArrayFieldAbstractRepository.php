@@ -61,7 +61,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $key = $entity->obtainValidKeyField();
         //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
-        if( $key == ""  ) {
+        //change keytype from Existing Auto-generated MRN to Existing Auto-generated MRN
+        $entity = $this->changeKeytype($entity);
+
+        if( $key == ""  ) { //$key == "" is the same as $key->getName().""
             //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
@@ -171,6 +174,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function processDuplicationKeyField($entity,$orderinfo) {
         return $entity; //override it for accession only
+    }
+
+    public function changeKeytype($entity) {
+        return $entity; //override it for patient and accession only
     }
 
     //process single array of fields (i.e. ClinicalHistory Array of Fields)

@@ -10,6 +10,26 @@ namespace Oleg\OrderformBundle\Repository;
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
 
+    public function changeKeytype($entity) {
+        $key = $entity->obtainValidKeyField();
+        $newkeytypeid = $this->getCorrectKeytypeId($key->getKeytype()->getId());
+        if( $key == "" || $newkeytypeid != $key->getKeytype()->getId() ) {
+            $em = $this->_em;
+            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
+            $key->setKeytype($newkeytypeEntity);
+        }
+        return $entity;
+    }
+
+    public function getCorrectKeytypeId($keytypeid) {
+        $em = $this->_em;
+        $keytypeEntity = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($keytypeid);
+        if( $keytypeEntity->getName()."" == "Existing Auto-generated Accession Number" ) {
+            $keytypeEntity = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
+        }
+        return $keytypeEntity->getId();
+    }
+
     public function getExtraEntityById( $extra ) {
         $em = $this->_em;
         return $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($extra["keytype"]);

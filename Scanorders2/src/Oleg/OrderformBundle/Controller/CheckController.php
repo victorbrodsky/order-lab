@@ -97,21 +97,15 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
+
+        $em = $this->getDoctrine()->getManager();
+        $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype);
+
         $extra = array();
         $extra["keytype"] = $keytype;
         //echo "key=".$key.", keytype=".$keytype."; ";
 
-        //TODO: select2 is not set correctly by clean in checkForm.js? So, keytype is ""
-//        if( $keytype == "" ) {
-//            $entityTemp = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");   //get default value
-//            $keytype = $entityTemp->getId(); //id of "New York Hospital MRN" in DB
-//        }
-        //echo "key=".$key.", keytype=".$keytype."; ";
-
-        //$em = $this->getDoctrine()->getManager();
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByMrn($mrn);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);
-        //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->findOnePatientByIdJoinedToField($key,$keytype,true);   //findOneByIdJoinedToMrn($mrn);
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);
 
         if( $entity ) {
 
@@ -148,9 +142,6 @@ class CheckController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        //$request = $this->get('request');
-        //$keytype = trim( $request->get('key') );
-
         $keytypeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
         $keytype = $keytypeEntity->getId().""; //id of "New York Hospital MRN" in DB
 
@@ -161,13 +152,7 @@ class CheckController extends Controller {
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient();
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra);
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->createPatient(null, $user, $keytype );
-        //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
-
-        //$entity->obtainValidKeyfield()->setKeytype($keytype);
-        //echo "keytype name = ".$entity->getMrn()->first()->getKeytype()." ";
 
         $element = array(
             'id'=>$entity->getId(),
@@ -195,25 +180,16 @@ class CheckController extends Controller {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
-//        $arr = explode("_", $keykeytype);
-//        $key = $arr[0];
-//        $keytype = $arr[1];
-
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
 
-        $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneById($keytype);
-        if( $typeEntity->getId() == $keytype ) {
-            $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
-            $keytype = $typeEntity->getId()."";
-        }
+        $em = $this->getDoctrine()->getManager();
+        $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype);
 
         $extra = array();
         $extra["keytype"] = $keytype;
 
-        $em = $this->getDoctrine()->getManager();
         $res = $em->getRepository('OlegOrderformBundle:Patient')->deleteIfReserved( $key,"Patient","mrn",$extra );
-        //$res = $em->getRepository('OlegOrderformBundle:Patient')->deletePatientIfReserved( $key, $keytype );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -238,13 +214,18 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
+
+        $em = $this->getDoctrine()->getManager();
+
+        //echo "keytype=".$keytype." ";
+        $keytype = $em->getRepository('OlegOrderformBundle:Accession')->getCorrectKeytypeId($keytype);
         //echo "keytype=".$keytype." ";
 
         $extra = array();
         $extra["keytype"] = $keytype;
 
         //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true, true);
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true,true,$extra);
+        $entity = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true,true,$extra);
 
         if( $entity ) {
 
@@ -299,13 +280,15 @@ class CheckController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
-        $acctype = $typeEntity->getId().""; //id of "New York Hospital MRN" in DB
+        $em = $this->getDoctrine()->getManager();
+
+        //always use Auto-generated Accession Number keytype to generate the new key
+        $typeEntity = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
+        $keytype = $typeEntity->getId().""; //id of "New York Hospital MRN" in DB
 
         $extra = array();
-        $extra["keytype"] = $acctype;
+        $extra["keytype"] = $keytype;
 
-        $em = $this->getDoctrine()->getManager();
 //        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$user,"Accession","accession");
         $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$user,"Accession","accession",null,null,$extra);
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
@@ -334,16 +317,19 @@ class CheckController extends Controller {
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
 
-        $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneById($keytype);
-        if( $typeEntity->getId() == $keytype ) {
-            $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
-            $keytype = $typeEntity->getId()."";
-        }
+//        $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneById($keytype);
+//        if( $typeEntity->getId() == $keytype ) {
+//            $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
+//            $keytype = $typeEntity->getId()."";
+//        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $keytype = $em->getRepository('OlegOrderformBundle:Accession')->getCorrectKeytypeId($keytype);
 
         $extra = array();
         $extra["keytype"] = $keytype;
 
-        $em = $this->getDoctrine()->getManager();
         $res = $em->getRepository('OlegOrderformBundle:Accession')->deleteIfReserved( $key,"Accession","accession",$extra );
 
         $response = new Response();
