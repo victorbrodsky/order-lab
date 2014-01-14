@@ -9,14 +9,22 @@
 ///////////////////// DEFAULT MASKS //////////////////////////
 var _mrnplaceholder = "NOMRNPROVIDED-";
 var _accplaceholder = "NO\\ACCESSIONPROVIDED-";
+var _maskErrorClass = "has-warning"; //"maskerror"
 
 function getMrnDefaultMask() {
     var mrns = [
-        { "mask": "9[999999999999]" },
+        //{ "mask": "9[999999999999]" },
         //{ "mask": "9" },
-        //{ "mask": "R" }
+        {"mask": "*[m][m][m][m][m][m][m][m][m][m][m][*]"} //13 total: alfa-numeric leading and ending, plus 11 alfa-numeric and dash in the middle
     ];
-    return mrns;
+
+    var mask = {
+        "mask": mrns
+        //"repeat": 13,
+        //"greedy": false
+    };
+
+    return mask;
 }
 
 function getAgeDefaultMask() {
@@ -43,10 +51,23 @@ function fieldInputMask() {
     });
 
     //not all zeros
+//    $.extend($.inputmask.defaults.definitions, {
+//        'm': {
+//            //"validator": "/^(?!0+$)[A-Z0-9]{13}$/",    //"^\s*$",
+//            "validator": "^(?!0+$)[a-zA-Z0-9]{1,13}$",
+////            "validator": function (chrs, buffer, pos, strict, opts) {
+////                var valExp2 = new RegExp("2[0-5]|[01][0-9]");
+////                return valExp2.test(buffer[pos - 1] + chrs);
+////            },
+//            "cardinality": 1,
+//            'prevalidator': null
+//        }
+//    });
+
+    //any alfa-numeric without leading or ending '-'
     $.extend($.inputmask.defaults.definitions, {
-        'R': {
-            //"validator": "/^(?!0+$)[A-Z0-9]{13}$/",    //"^\s*$",
-            "validator": "[A-Za-z0-9]{13}",
+        'm': {
+            "validator": "[A-Za-z0-9-]",
             "cardinality": 1,
             'prevalidator': null
         }
@@ -60,6 +81,10 @@ function fieldInputMask() {
             //console.log(result);
             makeErrorField($(this),false);
         },
+        "onKeyDown": function(result) {
+            //console.log(result);
+            makeErrorField($(this),false);
+        },
         placeholder: " ",
         clearMaskOnLostFocus: true
     });
@@ -68,8 +93,10 @@ function fieldInputMask() {
 
     if( cicle == "new" || cicle == "create" ) {
 
-        $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() });
-        $(".patientmrn-mask").inputmask( { "mask": getMrnDefaultMask() } );
+        $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+        $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+        //$(".patientmrn-mask").inputmask( { "mask": "*", "repeat": 13, "greedy": false } );
+        //$(".patientmrn-mask").inputmask( { "mask": "*" } );
 
     } else {
         //set mrn for amend
@@ -97,8 +124,10 @@ function fieldInputMask() {
 function setDefaultMask( element ) {
     maskField = element.closest('.row').find("*[class$='-mask']");
 
+    clearErrorField(element);
+
     if( maskField.hasClass('patientmrn-mask') ) {
-        maskField.inputmask( { "mask": getMrnDefaultMask() } );
+        maskField.inputmask( getMrnDefaultMask() );
     }
 
     if( maskField.hasClass('accession-mask') ) {
@@ -110,19 +139,19 @@ function setDefaultMask( element ) {
 
 function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
-        console.log("mrn type change listener!!!");
+        //console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
     });
 }
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var mrnField = elem.closest('.row').find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -142,7 +171,15 @@ function setMrntypeMask( elem, clean ) {
             mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
             break;
         case "New York Hospital MRN":
-            mrnField.inputmask( {"mask": getMrnDefaultMask() } );
+            mrnField.inputmask( getMrnDefaultMask() );
+            break;
+        case "De-Identified NYH Tissue Bank Research Patient ID":
+            console.log( 'set mrn mask: ' + text );
+            //mrnField.inputmask( {"mask": "*[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][*]"} );    //25 total: 2 all + 23 m
+            mrnField.inputmask( {"mask": "*[m][m][m][m][m][m][m][*]"} );    //25 total: 2 all + 23 m
+            break;
+        case "De-Identified Personal Educational Slide Set Patient ID":
+            mrnField.inputmask( getMrnDefaultMask() );
             break;
         default:
             mrnField.inputmask('remove');
@@ -202,26 +239,42 @@ function setAccessiontypeMask(elem,clean) {
 function makeErrorField(element, appendWell) {
     //console.log("make red field id="+element.attr("id")+", class="+element.attr("class"));
 
-    if( element.inputmask("isComplete") ) {
+    if( element.inputmask("isComplete") && !allZeros(element) ) {
         clearErrorField(element);
         return;
     }
 
     var value =  element.val().trim();
-    //console.log("value="+value);
+    //console.log("error: value="+value);
     if( value != "" ) {
-        element.parent().addClass("has-error");
-        element.parent().addClass("maskerror");
+        element.parent().addClass(_maskErrorClass);
         createErrorMessage( element, null, appendWell );
     }
 
 }
 
 function clearErrorField( element ) {
+
+    //check if not all zeros
+    if( allZeros(element) ) {
+        //console.log("all zeros!");
+        return;
+    }
+
     //console.log("make ok field id="+element.attr("id")+", class="+element.attr("class"));
-    element.parent().removeClass("has-error");
-    element.parent().removeClass("maskerror");
+    element.parent().removeClass(_maskErrorClass);
     $('.maskerror-added').remove();
+}
+
+function allZeros(element) {
+    //console.log("element.val()="+element.val());
+    var res = element.val().trim().match(/^[0]+$/);
+    //console.log("res="+res);
+    if( res ) {
+        //console.log("all zeros!");
+        return true;
+    }
+    return false;
 }
 
 function validateMaskFields( element, fieldName ) {
@@ -229,27 +282,30 @@ function validateMaskFields( element, fieldName ) {
     var errors = 0;
     $('.maskerror-added').remove();
 
-    //console.log("element id=" + element.attr("id") + ", class=" + element.attr("class") );
-    //console.log("fieldName="+fieldName);
+    //console.log("validate mask fields: fieldName="+fieldName);
 
     if( element ) {
 
+        //console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
+
         var parent = element.closest('.row');
-        var errorFields = parent.find(".maskerror");
+        var errorFields = parent.find("."+_maskErrorClass);
 
         if( fieldName == "partname" ) { //if element is provided, then validate only element's input field. Check parent => accession
 
             var parent = element.closest('.panel-procedure').find('.accessionaccession');
             //console.log("parent id=" + parent.attr("id") + ", class=" + parent.attr("class") );
-            var errorFields = parent.find(".maskerror");
+            var errorFields = parent.find("."+_maskErrorClass);
             //console.log("count errorFields=" + errorFields.length );
 
-            var partname = element.closest('.row').find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
-            createErrorMessage( partname, "Accession Number above", true );   //create warning well under partname
+            if( errorFields.length > 0 ) {
+                var partname = element.closest('.row').find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
+                createErrorMessage( partname, "Accession Number above", true );   //create warning well under partname
+            }
         }
 
     } else {
-        var errorFields = $(".maskerror");
+        var errorFields = $("."+_maskErrorClass);
     }
 
     errorFields.each(function() {
@@ -271,7 +327,7 @@ function validateMaskFields( element, fieldName ) {
 
 function createErrorMessage( element, fieldName, appendWell ) {
 
-    if( element.inputmask("hasMaskedValue") && element.inputmask("isComplete") ) {
+    if( element.inputmask("hasMaskedValue") && element.inputmask("isComplete") && !allZeros(element) ) {
         //clearErrorField(element);
         return;
     }
@@ -291,7 +347,7 @@ function createErrorMessage( element, fieldName, appendWell ) {
             'Please correct the invalid ' + fieldName + '.' +
             '</div>';
 
-    //console.log("inputField id="+inputField.attr("id")+", class="+inputField.attr("class"));
+    //console.log("element id="+element.attr("id")+", class="+element.attr("class"));
 
     if( appendWell ) {
         element.after(errorHtml);

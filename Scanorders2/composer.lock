@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c0fbc084369dbcf42c770fa7af367652",
+    "hash": "1914e856e90062cebf67c692f5615011",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1100,6 +1100,41 @@
             "time": "2013-11-14 19:48:31"
         },
         {
+            "name": "phpexcel/phpexcel",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ddeboer/phpexcel.git",
+                "reference": "8a3f7a02cfbb0c34b06d66b614762ebe52423dc9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ddeboer/phpexcel/zipball/8a3f7a02cfbb0c34b06d66b614762ebe52423dc9",
+                "reference": "8a3f7a02cfbb0c34b06d66b614762ebe52423dc9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU"
+            ],
+            "description": "PHPExcel - OpenXML - Create Excel2007 documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "excel",
+                "xls"
+            ],
+            "time": "2013-09-10 18:57:03"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1851,7 +1886,8 @@
     "stability-flags": {
         "friendsofsymfony/user-bundle": 20,
         "knplabs/knp-paginator-bundle": 20,
-        "fr3d/ldap-bundle": 20
+        "fr3d/ldap-bundle": 20,
+        "phpexcel/phpexcel": 20
     },
     "platform": {
         "php": ">=5.3.3"

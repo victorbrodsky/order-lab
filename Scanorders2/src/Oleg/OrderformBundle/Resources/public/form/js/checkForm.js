@@ -53,6 +53,11 @@ function checkForm( elem, single ) {
 
     //console.log( "check element.id=" + element.attr('id') + ", single="+single);
 
+    if( element.hasClass('disabled') ) {
+        //console.log("loading button Cliked => return");
+        return; //loading button => prevent multiple clicked
+    }
+
     var elementInput = element.parent().parent().find(".keyfield");
 
     if( single ) {
@@ -60,6 +65,12 @@ function checkForm( elem, single ) {
     }
 
     //console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
+
+    //print full id=check_btn, class=btn btn-default disabled
+    //print full id=undefined, class=checkbtn glyphicon glyphicon-check
+    //elementInput.class=form-control keyfield patientmrn-mask, id=oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
+    //printF( element, "check button: " );
+    //printF( element.find("i"), "check button find(i): " );
 
     //  0         1              2           3   4  5  6   7
     //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
@@ -78,21 +89,10 @@ function checkForm( elem, single ) {
 
     if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
         //console.log("Remove Button Cliked: fieldName="+fieldName);
-        //setElementBlock(element, null, true);
-        var delres = false;
-        delres = removeKeyFromDB(keyElement, element, single);
-        //console.log("delres="+delres);
-        if( delres ) {
-            //console.log("clean, disable and invert button");
-            //console.log("glyphicon class="+element.find("i").attr("class"));
-            cleanFieldsInElementBlock( element, "all", single );
-            disableInElementBlock(element, true, null, "notkey", null);
-            invertButton(element);
-            setDefaultMask(element);
-        }
+        removeKeyFromDB(keyElement, element, single);
         return;
 
-    } else {    //Check Button Cliked
+    } else if( element.find("i").hasClass('glyphicon-check') ) { //Check Button Cliked
 
         if( validateMaskFields(element, fieldName) > 0 ) {
             return false;
@@ -156,12 +156,12 @@ function checkForm( elem, single ) {
                         gonext = setPatient(element,parentkeyvalue,extraid,single);
                     }                                          
                        
-                    //console.debug("0 gonext="+gonext);                  
+                    //console.debug("0 gonext="+gonext);
                     if( gonext == 1 ) {
                         //console.debug("continue gonext="+gonext);
                         //first: set elements
                         setElementBlock(element, data);
-                        //second: disable or enable element. Make sure this function runs after setElementBlock
+                        //second: disable or enable element. Make sure this function runs after set Element Block
                         disableInElementBlock(element, true, "all", null, "notarrayfield");    
                         invertButton(element);
                     }                              
@@ -175,12 +175,13 @@ function checkForm( elem, single ) {
             error: function () {
                 console.debug("get object ajax error "+name);
                 element.button('reset');
-                //setElementBlock(element, null);
                 cleanFieldsInElementBlock( element, null, single );
                 disableInElementBlock(element, false, "all", null, null);
                 invertButton(element);
             }
         });
+    } else {
+        printF(element,"undefined button:"+name);
     }
 
     return;
@@ -1354,9 +1355,13 @@ function removeKeyFromDB(element, btnElement, single) {
         extraStr = extraStr + "partname="+partValue;
     }
 
-    var delres = false;
-
     //btnElement.button('loading');
+    function deleteSuccess(btnElement,single) {
+        cleanFieldsInElementBlock( btnElement, "all", single );
+        disableInElementBlock(btnElement, true, null, "notkey", null);
+        invertButton(btnElement);
+        setDefaultMask(btnElement);
+    }
 
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue+extraStr,
@@ -1367,20 +1372,28 @@ function removeKeyFromDB(element, btnElement, single) {
         success: function (data) {
             //btnElement.button('reset');
             //console.debug("delete key ok");
-            delres = true;
+            deleteSuccess(btnElement,single);
             //console.log("remove ok: glyphicon class="+btnElement.find("i").attr("class"));
         },
         error: function () {
-            btnElement.button('reset');
+            //btnElement.button('reset');
             //console.debug("delete key ajax error");
-            alert("Can not delete this element. Check if the children are deleted.");
-            delres = false;
+            if( !single ) {
+                var childStr = "Child";
+                if( name == "accession" ) {
+                    childStr = "Part";
+                }
+                if( name == "partname" ) {
+                    childStr = "Block";
+                }
+                alert("Can not delete this element. Make sure if " + childStr + " is deleted.");
+            }
             //console.log("remove error: glyphicon class="+btnElement.find("i").attr("class"));
         }
     });
 
     //console.log("remove exit: glyphicon class="+btnElement.find("i").attr("class"));
-    return delres;
+    return;
 }
 
 function findKeyElement( element, single ) {
@@ -1812,6 +1825,7 @@ function addKeyListener() {
         $(this).removeClass('has-error');
     });
     $('.patientmrn').find('.keyfield').parent().keypress(function() {
+        //console.log("remove has-error on keypress");
         $(this).removeClass('has-error');
     });
 }

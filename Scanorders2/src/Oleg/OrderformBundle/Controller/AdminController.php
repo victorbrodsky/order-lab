@@ -676,6 +676,7 @@ class AdminController extends Controller
             'De-Identified Personal Research Project Specimen ID',
             'California Tumor Registry Specimen ID',
             'Specify Another Specimen ID Issuer',
+            'TMA Slide',
             'Auto-generated Accession Number',
             "Existing Auto-generated Accession Number"
         );
