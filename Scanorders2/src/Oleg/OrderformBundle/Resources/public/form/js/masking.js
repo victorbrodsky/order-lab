@@ -8,20 +8,24 @@
 
 ///////////////////// DEFAULT MASKS //////////////////////////
 var _mrnplaceholder = "NOMRNPROVIDED-";
-var _accplaceholder = "NO\\ACCESSIONPROVIDED-";
+var _accplaceholder = "NOACCESSIONPROVIDED-";
 var _maskErrorClass = "has-warning"; //"maskerror"
+var _repeatBig = 25;
+var _repeatSmall = 13;
 
 function getMrnDefaultMask() {
     var mrns = [
         //{ "mask": "9[999999999999]" },
-        //{ "mask": "9" },
-        {"mask": "*[m][m][m][m][m][m][m][m][m][m][m][*]"} //13 total: alfa-numeric leading and ending, plus 11 alfa-numeric and dash in the middle
+//        { "mask": "9" },
+        //{ "mask": "m" },
+        //{"mask": "*[m][m][m][m][m][m][m][m][m][m][m][*]"} //13 total: alfa-numeric leading and ending, plus 11 alfa-numeric and dash in the middle
+        { "mask": "m" }
     ];
 
     var mask = {
-        "mask": mrns
-        //"repeat": 13,
-        //"greedy": false
+        "mask": mrns,
+        "repeat": _repeatSmall,
+        "greedy": false
     };
 
     return mask;
@@ -96,7 +100,7 @@ function fieldInputMask() {
         $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
         $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
         //$(".patientmrn-mask").inputmask( { "mask": "*", "repeat": 13, "greedy": false } );
-        //$(".patientmrn-mask").inputmask( { "mask": "*" } );
+        //$(".patientmrn-mask").inputmask( { "mask": "***" } );
 
     } else {
         //set mrn for amend
@@ -116,8 +120,6 @@ function fieldInputMask() {
     accessionTypeListener();
     mrnTypeListener();
     //maskfieldListener();
-
-    console.log($.inputmask.defaults.definitions);
 }
 
 //element is check button
@@ -144,6 +146,12 @@ function mrnTypeListener() {
     });
 }
 
+function getMrnAutoGenMask() {
+    var placeholderStr = getCleanMaskStr( _mrnplaceholder );
+    var mask = {"mask": placeholderStr+"9999999999" };
+    return mask;
+}
+
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
     //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
@@ -151,7 +159,7 @@ function setMrntypeMask( elem, clean ) {
     var mrnField = elem.closest('.row').find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    console.log("text=" + text + ", value=" + value);
+    //console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -159,28 +167,48 @@ function setMrntypeMask( elem, clean ) {
         clearErrorField(mrnField);
     }
 
+    //mrnField.inputmask('remove');
+
     switch( text )
     {
         case "Auto-generated MRN":
-            mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
+            mrnField.inputmask( getMrnAutoGenMask() );
             var parent = elem.closest('.patientmrn');
             parent.find('#check_btn').trigger("click");
             //console.log('Auto-generated MRN !!!');
             break;
         case "Existing Auto-generated MRN":
-            mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
+            mrnField.inputmask( getMrnAutoGenMask() );
             break;
         case "New York Hospital MRN":
+        case "Epic Ambulatory Enterprise ID Number":
+        case "Weill Medical College IDX System MRN":
+        case "Uptown Hospital ID":
+        case "NYH Health Quest Corporate Person Index":
+        case "New York Downtown Hospital":
             mrnField.inputmask( getMrnDefaultMask() );
             break;
+        case "California Tumor Registry Patient ID":
+        case "Specify Another Patient ID Issuer":
         case "De-Identified NYH Tissue Bank Research Patient ID":
-            console.log( 'set mrn mask: ' + text );
-            //mrnField.inputmask( {"mask": "*[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][*]"} );    //25 total: 2 all + 23 m
-            mrnField.inputmask( {"mask": "*[m][m][m][m][m][m][m][*]"} );    //25 total: 2 all + 23 m
+            mrnField.inputmask( { "mask": "m", "repeat": _repeatBig, "greedy": false } );
             break;
         case "De-Identified Personal Educational Slide Set Patient ID":
-            mrnField.inputmask( getMrnDefaultMask() );
+            var placeholderStr = user_name+"-EMRN-";
+            var repeatmrn = getRepeatNum( placeholderStr, _repeatBig );
+            var placeholderStr = getCleanMaskStr( placeholderStr );
+            var repeatStr = getRepeatMask(repeatmrn,"m");
+            mrnField.inputmask( { "mask": placeholderStr+repeatStr } );
             break;
+        case "De-Identified Personal Research Project Patient ID":
+            var placeholderStr = user_name+"-RMRN-";
+            var repeatmrn = getRepeatNum( placeholderStr, _repeatBig );
+            var placeholderStr = getCleanMaskStr( placeholderStr );
+            var repeatStr = getRepeatMask(repeatmrn,"m");
+            mrnField.inputmask( { "mask": placeholderStr+repeatStr } );
+            break;
+        case "Enterprise Master Patient Index":
+            mrnField.inputmask('remove');
         default:
             mrnField.inputmask('remove');
     }
@@ -201,6 +229,12 @@ function accessionTypeListener() {
     });
 }
 
+function getAccessionAutoGenMask() {
+    var placeholderStr = getCleanMaskStr( _accplaceholder );
+    var mask = {"mask": placeholderStr+"9999999999" };
+    return mask;
+}
+
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
     //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
@@ -218,18 +252,37 @@ function setAccessiontypeMask(elem,clean) {
     switch( text )
     {
         case "Auto-generated Accession Number":
-            accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
+            accField.inputmask( getAccessionAutoGenMask() );
             elem.closest('.accessionaccession').find('#check_btn').trigger("click");
             //console.log('Auto-generated Accession !!!');
             break;
         case "Existing Auto-generated Accession Number":
-            accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
-            break;
-        case "De-Identified Personal Educational Slide Set Specimen ID":
-            accField.inputmask( {"mask": ["vib9020-E-*"] } );
+            accField.inputmask( getAccessionAutoGenMask() );
             break;
         case "NYH CoPath Anatomic Pathology Accession Number":
             accField.inputmask( {"mask": getAccessionDefaultMask() } );
+            break;
+        case "De-Identified Personal Educational Slide Set Specimen ID":
+            var placeholderStr = user_name+"-E-";
+            var repeatnum = getRepeatNum( placeholderStr, _repeatBig );
+            var placeholderStr = getCleanMaskStr( placeholderStr );
+            var repeatStr = getRepeatMask(repeatnum,"m");
+            accField.inputmask( { "mask": placeholderStr+repeatStr } );
+            break;
+        case "De-Identified Personal Research Project Specimen ID":
+            var placeholderStr = user_name+"-R-";
+            var repeatnum = getRepeatNum( placeholderStr, _repeatBig );
+            var placeholderStr = getCleanMaskStr( placeholderStr );
+            var repeatStr = getRepeatMask(repeatnum,"m");
+            accField.inputmask( { "mask": placeholderStr+repeatStr } );
+            break;
+        case "De-Identified NYH Tissue Bank Research Specimen ID":
+        case "California Tumor Registry Specimen ID":
+        case "Specify Another Specimen ID Issuer":
+            accField.inputmask( { "mask": "m", "repeat": _repeatBig, "greedy": false } );
+            break;
+        case "TMA Slide":
+            accField.inputmask('remove');
             break;
         default:
             accField.inputmask('remove');
@@ -239,7 +292,10 @@ function setAccessiontypeMask(elem,clean) {
 function makeErrorField(element, appendWell) {
     //console.log("make red field id="+element.attr("id")+", class="+element.attr("class"));
 
-    if( element.inputmask("isComplete") && !allZeros(element) ) {
+    //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
+
+//    if( element.inputmask("isComplete") && !allZeros(element) ) {
+    if( !allZeros(element) ) {
         clearErrorField(element);
         return;
     }
@@ -267,7 +323,13 @@ function clearErrorField( element ) {
 }
 
 function allZeros(element) {
+
+    if( !element.inputmask("hasMaskedValue") ) {
+        return false;
+    }
+
     //console.log("element.val()="+element.val());
+    printF(element,"all zeros? :")
     var res = element.val().trim().match(/^[0]+$/);
     //console.log("res="+res);
     if( res ) {
@@ -282,11 +344,11 @@ function validateMaskFields( element, fieldName ) {
     var errors = 0;
     $('.maskerror-added').remove();
 
-    //console.log("validate mask fields: fieldName="+fieldName);
+    console.log("validate mask fields: fieldName="+fieldName);
 
     if( element ) {
 
-        //console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
+        console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
 
         var parent = element.closest('.row');
         var errorFields = parent.find("."+_maskErrorClass);
@@ -310,7 +372,7 @@ function validateMaskFields( element, fieldName ) {
 
     errorFields.each(function() {
         var elem = $(this).find("*[class$='-mask']");
-        //console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
+        console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
 
         //Please correct the invalid accession number
         var errorHtml = createErrorMessage( elem, null, true );
@@ -327,7 +389,8 @@ function validateMaskFields( element, fieldName ) {
 
 function createErrorMessage( element, fieldName, appendWell ) {
 
-    if( element.inputmask("hasMaskedValue") && element.inputmask("isComplete") && !allZeros(element) ) {
+//    if( element.inputmask("hasMaskedValue") && element.inputmask("isComplete") && !allZeros(element) ) {
+    if( !allZeros(element) ) {
         //clearErrorField(element);
         return;
     }
@@ -359,10 +422,47 @@ function createErrorMessage( element, fieldName, appendWell ) {
 function changeMaskToNoProvided( combobox, fieldName ) {
     if( fieldName == "mrn" ) {
         var mrnField = combobox.closest('.row').find('.patientmrn-mask');
-        mrnField.inputmask( {"mask": _mrnplaceholder+"9999999999" } );
+        mrnField.inputmask( getMrnAutoGenMask() );
     }
     if( fieldName == "accession" ) {
         var accField = combobox.closest('.row').find('.accession-mask');
-        accField.inputmask( {"mask": _accplaceholder+"9999999999" } );
+        //printF(accField,"change to noprovided: ");
+        accField.inputmask( getAccessionAutoGenMask() );
     }
+}
+
+function getCleanMaskStr( str) {
+    //console.log("str="+str);
+
+    var defarr = $.inputmask.defaults.definitions;
+
+    for( var index in defarr ) {
+        index = index.trim();
+        if( index != "*" ) {
+            //console.log( "index="+index);
+            var replaceValue = "\\\\"+index;
+            var regex = new RegExp( index, 'g' );
+            str = str.replace(regex, replaceValue);
+        }
+
+    }
+
+    //console.log( "str="+str);
+    return str;
+}
+
+function getRepeatNum( placeholderStr, rnum ) {
+    var origLength = placeholderStr.length;
+    //console.log("origLength=" + origLength);
+    var res = rnum - origLength;
+    //console.log("res=" + res);
+    return res;
+}
+
+function getRepeatMask( repeat, char ) {
+    var repeatStr = char;
+    for (var i=1; i<repeat; i++ ) {
+        repeatStr = repeatStr + char;
+    }
+    return repeatStr;
 }

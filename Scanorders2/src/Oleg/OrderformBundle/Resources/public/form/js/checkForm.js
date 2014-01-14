@@ -19,6 +19,9 @@ var orderformtype = $("#orderformtype").val();
 var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
 
+var _autogenAcc = 8;
+var _autogenMrn = 13;
+
 //add disident to a single form array field
 $(document).ready(function() {
 
@@ -1839,11 +1842,11 @@ function setFieldType( element, fieldName ) {
 
     if( fieldName == "mrn" ) {
         combo = element.closest('.row').find('.mrntype-combobox');
-        expectedValue = 8;
+        expectedValue = _autogenMrn;
     }
     if( fieldName == "accession" ) {
         combo = element.closest('.row').find('.accessiontype-combobox');
-        expectedValue = 7;
+        expectedValue = _autogenAcc;
     }
 
     changeMaskToNoProvided( combo, fieldName );

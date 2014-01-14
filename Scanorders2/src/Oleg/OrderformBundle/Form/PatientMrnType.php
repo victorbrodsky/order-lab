@@ -27,7 +27,6 @@ class PatientMrnType extends AbstractType
             'required'=>false,
             'attr' => array(
                 'class' => 'form-control keyfield patientmrn-mask',
-                //'data-inputmask'=>"'mask':'d999999[9]'",
             )
         ));
 
