@@ -18,14 +18,14 @@ function getMrnDefaultMask() {
         //{ "mask": "9[999999999999]" },
 //        { "mask": "9" },
         //{ "mask": "m" },
-        //{"mask": "*[m][m][m][m][m][m][m][m][m][m][m][*]"} //13 total: alfa-numeric leading and ending, plus 11 alfa-numeric and dash in the middle
-        { "mask": "m" }
+//        {"mask": "*[m][m][m][m][m][m][m][m][m][m][m][*]"} //13 total: alfa-numeric leading and ending, plus 11 alfa-numeric and dash in the middle
+        { "mask": getRepeatMask(_repeatSmall,"m") }
     ];
 
     var mask = {
-        "mask": mrns,
-        "repeat": _repeatSmall,
-        "greedy": false
+        "mask": mrns
+//        "repeat": _repeatSmall,
+//        "greedy": false
     };
 
     return mask;
@@ -70,7 +70,7 @@ function fieldInputMask() {
 
     //any alfa-numeric without leading or ending '-'
     $.extend($.inputmask.defaults.definitions, {
-        'm': {
+        "m": {
             "validator": "[A-Za-z0-9-]",
             "cardinality": 1,
             'prevalidator': null
@@ -141,7 +141,7 @@ function setDefaultMask( element ) {
 
 function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
-        //console.log("mrn type change listener!!!");
+        console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
     });
 }
@@ -191,7 +191,8 @@ function setMrntypeMask( elem, clean ) {
         case "California Tumor Registry Patient ID":
         case "Specify Another Patient ID Issuer":
         case "De-Identified NYH Tissue Bank Research Patient ID":
-            mrnField.inputmask( { "mask": "m", "repeat": _repeatBig, "greedy": false } );
+            var repeatStr = getRepeatMask(_repeatBig,"m");
+            mrnField.inputmask( { "mask": repeatStr } );
             break;
         case "De-Identified Personal Educational Slide Set Patient ID":
             var placeholderStr = user_name+"-EMRN-";
@@ -224,8 +225,19 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        //console.log("accession type listener!!!");
+        console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
+
+        //enable optional_button for single form
+        if( orderformtype == "single" ) {
+            var accTypeText = $(this).select2('data').text;
+            if( accTypeText == 'TMA Slide' ) {
+                $("#optional_button").hide();
+            } else {
+                $("#optional_button").show();
+            }
+        }
+
     });
 }
 
@@ -238,7 +250,13 @@ function getAccessionAutoGenMask() {
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
     //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
-    var accField = elem.closest('.row').find('.accession-mask');
+
+    if( orderformtype == "single") {
+        var accField = $('.accession-mask');
+    } else {
+        var accField = elem.closest('.row').find('.accession-mask');
+    }
+
     var value = elem.select2("val");
     var text = elem.select2("data").text;
     //console.log("text=" + text + ", value=" + value);
@@ -279,10 +297,9 @@ function setAccessiontypeMask(elem,clean) {
         case "De-Identified NYH Tissue Bank Research Specimen ID":
         case "California Tumor Registry Specimen ID":
         case "Specify Another Specimen ID Issuer":
-            accField.inputmask( { "mask": "m", "repeat": _repeatBig, "greedy": false } );
-            break;
         case "TMA Slide":
-            accField.inputmask('remove');
+            var repeatStr = getRepeatMask(_repeatBig,"m");
+            accField.inputmask( { "mask": repeatStr } );
             break;
         default:
             accField.inputmask('remove');
@@ -459,10 +476,33 @@ function getRepeatNum( placeholderStr, rnum ) {
     return res;
 }
 
-function getRepeatMask( repeat, char ) {
-    var repeatStr = char;
+//allsame - if true: use * as the first and last masking characters (no leading and ending dashes)
+function getRepeatMask( repeat, char, allsame ) {
+    if( allsame ) {
+        var repeatStr = char;
+    } else {
+        var repeatStr = "*";
+        repeat = repeat - 1;
+    }
+
     for (var i=1; i<repeat; i++ ) {
         repeatStr = repeatStr + char;
     }
+
+    if( allsame ) {
+        //
+    } else {
+        repeatStr = repeatStr + "*";
+    }
+
     return repeatStr;
+}
+
+function getParent(elem) {
+    if( orderformtype == "single") {
+        var parent = $('.accession-mask');
+    } else {
+        var parent = elem.closest('.row').find('.accession-mask');
+    }
+    return parent;
 }

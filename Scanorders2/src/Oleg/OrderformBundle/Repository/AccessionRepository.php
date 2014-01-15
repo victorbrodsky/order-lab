@@ -18,6 +18,13 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
             $key->setKeytype($newkeytypeEntity);
         }
+
+        //strip zeros and record original
+        $originalKey = $key->getField();
+        $stripedKey = ltrim($originalKey,'0');
+        $key->setField($stripedKey);
+        $key->setOriginal($originalKey);
+
         return $entity;
     }
 

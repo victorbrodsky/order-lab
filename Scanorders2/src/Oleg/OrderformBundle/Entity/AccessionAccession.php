@@ -26,6 +26,12 @@ class AccessionAccession extends AccessionArrayFieldAbstract
     protected $field;
 
     /**
+     * original accession # enetered by user
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $original;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AccessionType", inversedBy="accessionaccession", cascade={"persist"})
      * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
      */
@@ -45,6 +51,22 @@ class AccessionAccession extends AccessionArrayFieldAbstract
     public function getKeytype()
     {
         return $this->keytype;
+    }
+
+    /**
+     * @param mixed $original
+     */
+    public function setOriginal($original)
+    {
+        $this->original = $original;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginal()
+    {
+        return $this->original;
     }
 
     public function obtainExtraKey()

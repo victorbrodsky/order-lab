@@ -691,7 +691,12 @@ class AdminController extends Controller
             $accType->setCreator( $username );
             $accType->setCreatedate( new \DateTime() );
             $accType->setName( trim($type) );
-            $accType->setType('default');
+
+            if( $type == "TMA Slide" ) {
+                $accType->setType('TMA');
+            } else {
+                $accType->setType('default');
+            }
 
             $em->persist($accType);
             $em->flush();

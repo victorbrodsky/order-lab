@@ -418,6 +418,12 @@ class UtilController extends Controller {
 
         $request = $this->get('request');
         $opt = trim( $request->get('opt') );
+        $type = trim( $request->get('type') );
+
+//        $defSelect = "";
+//        if( $type == "multi" ) {
+//            $defSelect = "type.type = 'default'";
+//        }
 
         //echo "opt=".$opt."<br>";
 
@@ -425,9 +431,24 @@ class UtilController extends Controller {
             ->from('OlegOrderformBundle:AccessionType', 'type')
             ->select("type.id as id, type.name as text")
             ->orderBy("type.orderinlist","ASC");
+            //->where($defSelect);
 
-        if( $opt ) {
-            $query->where('type.type = :type')->setParameter('type', 'default');
+//        if( $opt ) {
+//            $query->where('type.type = :type')->setParameter('type', 'default');
+//        }
+
+        if( $type == "single" ) {
+            if( $opt ) {
+                $query->where('type.type = :type OR type.type = :typetma');    //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
+                $query->setParameters(array('type' => 'default', 'typetma' => 'TMA'));
+            }
+        } else {
+            if( $opt ) {
+                $query->where('type.type = :type AND type.type != :typetma');   //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
+                $query->setParameters(array('type' => 'default', 'typetma' => 'TMA'));
+            } else {
+                $query->where('type.type != :type')->setParameter('type', 'TMA');
+            }
         }
 
         $output = $query->getQuery()->getResult();

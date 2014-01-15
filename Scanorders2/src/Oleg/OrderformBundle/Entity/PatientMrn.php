@@ -26,6 +26,12 @@ class PatientMrn extends PatientArrayFieldAbstract
     protected $field;
 
     /**
+     * original mrn # enetered by user
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $original;
+
+    /**
      * @ORM\ManyToOne(targetEntity="MrnType", inversedBy="patientmrn", cascade={"persist"})
      * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
      */
@@ -45,6 +51,22 @@ class PatientMrn extends PatientArrayFieldAbstract
     public function getKeytype()
     {
         return $this->keytype;
+    }
+
+    /**
+     * @param mixed $original
+     */
+    public function setOriginal($original)
+    {
+        $this->original = $original;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginal()
+    {
+        return $this->original;
     }
 
 

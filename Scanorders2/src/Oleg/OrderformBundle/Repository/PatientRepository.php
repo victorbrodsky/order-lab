@@ -20,6 +20,13 @@ class PatientRepository extends ArrayFieldAbstractRepository
             $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
             $key->setKeytype($newkeytypeEntity);
         }
+
+        //strip zeros and record original
+        $originalKey = $key->getField();
+        $stripedKey = ltrim($originalKey,'0');
+        $key->setField($stripedKey);
+        $key->setOriginal($originalKey);
+
         return $entity;
     }
 
@@ -38,9 +45,9 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
     //replace field entity if not existed from source object to destination object
-    public function copyField( $entity, $field, $className, $methodName, $fields ) {
+    public function copyField_TODEL( $entity, $field, $className, $methodName, $fields ) {
         $em = $this->_em;
-        //echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
 
         //echo $methodName.": this fields count=".count($fields)."<br>";
 
@@ -56,11 +63,12 @@ class PatientRepository extends ArrayFieldAbstractRepository
         //if id=null, check if entity already has mrn field (mrn+mrntype)
         if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
             //echo "field value=".$field."<br>";
-            $foundFields = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findByField($field."");
+            $foundFields = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findByField($field.""); //PatientMrn
             //echo "count foundFields=".count($foundFields)."<br>";
             foreach( $foundFields as $thisField ) {
-                //echo "mrntype ids compare: ".$thisField->getMrntype()->getId() . "?=" . $field->getMrntype()->getId() . "<br>";
-                if( $thisField->getMrntype()->getId() == $field->getMrntype()->getId() && $thisField->getStatus() == self::STATUS_VALID ) {
+                echo "thisField=".$thisField->getField().", field=".$field->getField().", original=".$field->getOriginal()."<br>";
+                echo "field id=".$field->getId()."<br>";
+                if( $thisField->getId() == $field->getId() && $thisField->getStatus() == self::STATUS_VALID ) {
                     //this field is already exists in entity => don't add this field
                     return $entity;
                 }

@@ -1518,7 +1518,12 @@ function checkSingleFormOnNext( elem ) {
     } else {
         //console.log("no masking errors");
         $("#next_button").hide();
-        $("#optional_button").show();
+
+        var accTypeText = $('.accessiontype-combobox').first().select2('data').text;
+        if( accTypeText != 'TMA Slide' ) {
+            $("#optional_button").show();
+        }
+
         $('#orderinfo_param').collapse('toggle');
     }
     return true;
@@ -1835,7 +1840,7 @@ function addKeyListener() {
 
 //element is a button element
 function setFieldType( element, fieldName ) {
-    //console.log("fieldName=" + fieldName);
+    console.log("set type for fieldName=" + fieldName);
 
     var combo;
     var expectedValue;

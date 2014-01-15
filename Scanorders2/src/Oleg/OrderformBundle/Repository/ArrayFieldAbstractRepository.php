@@ -85,7 +85,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                //echo "Case 2: object exists in DB (eneterd key is for existing object): CopyChildren, CopyFields <br>";
+                //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
                 //CopyChildren
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -120,7 +120,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //set status 'valid'
         $entity->setStatus(self::STATUS_VALID);
 
-        //CopyFields
+        //Copy Fields
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
 
         //echo "After process fields:".$entity;
@@ -282,7 +282,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                         //echo "entity:".$entity;
                                         //echo "original:".$original;
                                         //echo "field=".$field."<br>";
-                                    $this->log->addInfo( "original yes: field=".$field."<br>" );
+                                    $this->log->addInfo( "original yes: original field=".$field."<br>" );
                                     $methodBaseName = str_replace("get", "", $methodShortName);
                                     $entity = $this->copyField( $entity, $field, $className, $methodBaseName, $fields );
                                 }
