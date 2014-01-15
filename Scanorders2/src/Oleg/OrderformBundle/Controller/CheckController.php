@@ -359,9 +359,10 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = trim( $request->get('key') );
         $accession = trim( $request->get('parent') ); //need accession number to check if part exists in DB
+        $keytype = trim( $request->get('extra') );
         //echo "key=".$key."   ";
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $key, true );
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $keytype, $key, true );
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
@@ -401,12 +402,13 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $accession = trim( $request->get('key') );
+        $keytype = trim( $request->get('extra') );
         //echo "accession=(".$accession.")   ";
 
         if( $accession && $accession != ""  ) {
 
             $em = $this->getDoctrine()->getManager();
-            $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession);
+            $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession,$keytype);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             if( $part ) {
@@ -445,9 +447,11 @@ class CheckController extends Controller {
 
         $key = trim( $request->get('key') );
         $accession = trim( $request->get('accession') );
+        $keytype = trim( $request->get('extra') );
 
         $extra = array();
         $extra["accession"] = $accession;
+        $extra["keytype"] = $keytype;
 
         //echo "key=".$key." , accession=".$accession."   ";
 
@@ -475,12 +479,13 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $key = trim($request->get('key'));
+        $keytype = trim( $request->get('extra') );
         $accession = trim($request->get('parent')); //need accession number to check if part exists in DB
         $partname = trim($request->get('parent2')); //need accession number to check if part exists in DB
         //echo "key=".$key."   ";
 
         if( $accession != "" && $partname != "" ) {
-            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $partname, $key, true );
+            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $accession, $keytype, $partname, $key, true );
 
             //echo "count=".count($entity)."<br>";
             //echo "partname=".$entity->getPartname()->first()."<br>";
@@ -518,13 +523,14 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $accession = trim($request->get('key'));
+        $keytype = trim( $request->get('extra') );
         $partname = trim($request->get('key2'));
         //echo "accession=(".$accession.")   ";
 
         if( $accession != "" && $partname != "" ) {
 
             $em = $this->getDoctrine()->getManager();
-            $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$partname);
+            $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$keytype,$partname);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             $user = $this->get('security.context')->getToken()->getUser();
@@ -566,10 +572,12 @@ class CheckController extends Controller {
 
         $key = trim($request->get('key'));
         $accession = trim($request->get('accession'));
+        $keytype = trim( $request->get('extra') );
         $partname = trim($request->get('partname'));
 
         $extra = array();
         $extra["accession"] = $accession;
+        $extra["keytype"] = $keytype;
         $extra["partname"] = $partname;
 
         $em = $this->getDoctrine()->getManager();

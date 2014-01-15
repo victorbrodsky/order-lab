@@ -428,7 +428,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$className: Patient
     //$fieldName: mrn
-    public function createElement( $status = null, $provider = null, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $flush=true ) {
+    public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $flush=true ) {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }

@@ -124,7 +124,7 @@ function fieldInputMask() {
 
 //element is check button
 function setDefaultMask( element ) {
-    maskField = element.closest('.row').find("*[class$='-mask']");
+    maskField = getParent(element).find("*[class$='-mask']");
 
     clearErrorField(element);
 
@@ -154,12 +154,12 @@ function getMrnAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
-    var mrnField = elem.closest('.row').find('.patientmrn-mask');
+    var mrnField = getParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -215,7 +215,7 @@ function setMrntypeMask( elem, clean ) {
     }
 }
 
-//this function is called by getComboboxAccessionType() in selectAjax.js when accession type is populated by ajax
+//this function is called by getComboboxAccessionType() in selectAjax.js when accession type is initially populated by ajax
 function setAccessionMask() {
     var acckeytypeField = $('.accessiontype-combobox').not("*[id^='s2id_']");
     acckeytypeField.each( function() {
@@ -249,17 +249,13 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
-    if( orderformtype == "single") {
-        var accField = $('.accession-mask');
-    } else {
-        var accField = elem.closest('.row').find('.accession-mask');
-    }
+    var accField = getParent(elem).find('.accession-mask');
 
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -367,7 +363,7 @@ function validateMaskFields( element, fieldName ) {
 
         console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
 
-        var parent = element.closest('.row');
+        var parent = getParent(element);
         var errorFields = parent.find("."+_maskErrorClass);
 
         if( fieldName == "partname" ) { //if element is provided, then validate only element's input field. Check parent => accession
@@ -378,7 +374,7 @@ function validateMaskFields( element, fieldName ) {
             //console.log("count errorFields=" + errorFields.length );
 
             if( errorFields.length > 0 ) {
-                var partname = element.closest('.row').find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
+                var partname = getParent(element).find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
                 createErrorMessage( partname, "Accession Number above", true );   //create warning well under partname
             }
         }
@@ -438,11 +434,11 @@ function createErrorMessage( element, fieldName, appendWell ) {
 
 function changeMaskToNoProvided( combobox, fieldName ) {
     if( fieldName == "mrn" ) {
-        var mrnField = combobox.closest('.row').find('.patientmrn-mask');
+        var mrnField = getParent(combobox).find('.patientmrn-mask');
         mrnField.inputmask( getMrnAutoGenMask() );
     }
     if( fieldName == "accession" ) {
-        var accField = combobox.closest('.row').find('.accession-mask');
+        var accField = getParent(combobox).find('.accession-mask');
         //printF(accField,"change to noprovided: ");
         accField.inputmask( getAccessionAutoGenMask() );
     }
@@ -500,9 +496,9 @@ function getRepeatMask( repeat, char, allsame ) {
 
 function getParent(elem) {
     if( orderformtype == "single") {
-        var parent = $('.accession-mask');
+        var parent = $('.singleorderinfo');
     } else {
-        var parent = elem.closest('.row').find('.accession-mask');
+        var parent = elem.closest('.row');
     }
     return parent;
 }
