@@ -23,7 +23,7 @@ function waitWhenReady( fieldsArr, count, limit ) {
     var isCheckBtn = checkButton.find("i").hasClass('checkbtn');
 
     if( limit == 0 ) {
-        printF(checkButton,"click button:");
+        //printF(checkButton,"click button:");
         //console.log("count="+count);
         checkButton.trigger("click");   //click only once
     }

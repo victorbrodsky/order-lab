@@ -103,7 +103,7 @@ function checkForm( elem, single ) {
             return false;
         }
 
-        //console.log("Check Button Cliked");
+        console.log("Check Button Cliked");
 
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
@@ -204,7 +204,7 @@ function checkForm( elem, single ) {
             }
         });
     } else {
-        printF(element,"undefined button:"+name);
+        //printF(element,"undefined button:"+name);
     }
 
     return;
@@ -347,7 +347,8 @@ function setPatient( element, keyvalue, extraid, single ) {
                 var mrnArr = new Array();
                 mrnArr['text'] = keyvalue;
                 mrnArr['keytype'] = extraid;
-                setKeyGroup( keyElement.element, mrnArr );
+                var keytypeElement = keyElement.element.closest('.row').find('.combobox').not("*[id^='s2id_']");
+                setKeyGroup( keytypeElement, mrnArr );
 
                 var keyBtn = keyElement.element.parent().parent().find('#check_btn');
                 keyBtn.trigger("click");
@@ -389,7 +390,7 @@ function setElementBlock( element, data, cleanall, key ) {
         } else if( field == "accession" ) {
             //var elements = $('#accession-single').find('.keyfield').not("*[id^='s2id_']");
             var elements = $('.accessiontype-combobox');
-            printF(elements.first(),"get elements for single :");
+           //(elements.first(),"get elements for single :");
         } else {
             console.debug('WARNING: logical error! No key for single order form is found: field='+field);
         }
@@ -678,15 +679,16 @@ function setArrayField(element, dataArr, parent, single) {
 }
 
 //set key type field
+//element - is key type element (combobox)
 function setKeyGroup( element, data ) {
-    //console.log("set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
+    console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
     var holder = element.closest('.row');
-    //printF(holder,"Holder of key group:");
+    printF(holder,"Holder of key group:");
 
     //var keytypeEl = holder.find('select.combobox');
     var keytypeEl = holder.find('.combobox');
-    //printF(keytypeEl,"keytype Element:");
+    printF(keytypeEl,"keytype Element:");
     keytypeEl.select2('val', data['keytype']);
 
     if( element.hasClass('mrntype-combobox') ) {
@@ -698,14 +700,14 @@ function setKeyGroup( element, data ) {
         if( orderformtype == "single") {
             asseccionKeyGlobal = data['text'];
             asseccionKeytypeGlobal = data['keytype'];
-            //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal);
+            console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal);
         }
 
     }
 
     var inputholder = getButtonParent(element);
     var keyEl = inputholder.find('input.keyfield');
-    //console.log("set keytype group: keyEl id="+keyEl.attr("id") + ", class="+keyEl.attr("class")+", keyEl.length="+keyEl.length);
+    console.log("set keytype group: keyEl id="+keyEl.attr("id") + ", class="+keyEl.attr("class")+", keyEl.length="+keyEl.length);
     keyEl.val(data['text']);
 }
 
@@ -1451,7 +1453,7 @@ function findKeyElement( element, single ) {
     var elements = parent.find('.keyfield').not("*[id^='s2id_']");
 
     //console.log("elements.length=" + elements.length);
-    printF(elements," found elements under button parent:");
+    //printF(elements," found elements under button parent:");
 
     var keyElement = null;
     var name = "";
@@ -1489,7 +1491,7 @@ function findKeyElement( element, single ) {
 
     if( name == "partname" ) {
         var accessionNumberElement = getAccessionNumberElement(element,single);
-        printF(accessionNumberElement,"partname: accessionNumberElement=");
+        //printF(accessionNumberElement,"partname: accessionNumberElement=");
         var accessionValue = accessionNumberElement.val();    //i.e. Accession #
         //get extra for accession: keytype
         var keytype = getParent(accessionNumberElement).find('.accessiontype-combobox');
@@ -1498,7 +1500,7 @@ function findKeyElement( element, single ) {
 
     if( name == "blockname" ) {
         var accessionNumberElement = getAccessionNumberElement(element, single);
-        printF(accessionNumberElement,"blockname: accessionNumberElement=");
+        //printF(accessionNumberElement,"blockname: accessionNumberElement=");
         var accessionValue = accessionNumberElement.val();    //i.e. Accession #
         var keytype = getParent(accessionNumberElement).find('.accessiontype-combobox');
         extra = keytype.select2("val");

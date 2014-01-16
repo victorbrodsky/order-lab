@@ -129,7 +129,7 @@ function setDefaultMask( element ) {
 
 function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
-        //console.log("mrn type change listener!!!");
+        console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
     });
 }
@@ -213,7 +213,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        //console.log("accession type listener!!!");
+        console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -255,8 +255,10 @@ function setAccessiontypeMask(elem,clean) {
     {
         case "Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
-            elem.closest('.accessionaccession').find('#check_btn').trigger("click");
-            //console.log('Auto-generated Accession !!!');
+            var btn = elem.closest('.accessionaccession').find('#check_btn');
+            btn.trigger("click");
+            console.log('Auto-generated Accession !!!');
+            printF(btn,"btn to click:");
             break;
         case "Existing Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
@@ -511,7 +513,12 @@ function getParent(elem) {
 
 function getButtonParent(elem) {
     if( orderformtype == "single") {
-        var parent = $('#accession-single');
+        if( elem.hasClass('mrntype-combobox') ) {
+            var parent = $('#patient');
+        }
+        if( elem.hasClass('accessiontype-combobox') ) {
+            var parent = $('#accession-single');
+        }
     } else {
         var parent = elem.closest('.row');
     }
