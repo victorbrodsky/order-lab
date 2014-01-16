@@ -46,7 +46,9 @@ var fieldIndex = 3;     //get 'key'
 var holderIndex = 5;    //get 'patient'
 //console.log("urlCheck="+urlCheck);
 
+//needed by a single slide form
 var asseccionKeyGlobal = "";
+var asseccionKeytypeGlobal = "";
 var partKeyGlobal = "";
 var blockKeyGlobal = "";
 
@@ -101,13 +103,10 @@ function checkForm( elem, single ) {
             return false;
         }
 
-        console.log("Check Button Cliked");
+        //console.log("Check Button Cliked");
 
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
-        //TODO:
-        //process: part: keyValue=NOACCESSIONPROVIDED-0000000004, accessionValue=NOACCESSIONPROVIDED-0000000004, partValue=undefined,extra=8
-        //process: part: keyValue=, accessionValue=NOACCESSIONPROVIDED-0000000002, partValue=undefined,extra=8
         var keyValue =keyElement.element.val();
         var extra =keyElement.extra;
         //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
@@ -115,29 +114,34 @@ function checkForm( elem, single ) {
         var accessionValue = keyElement.accession;
         var partValue = keyElement.partname;
 
-        console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
+        //console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            console.log("key undefined! "+fieldName);
+            //console.log("key undefined! "+fieldName);
+
+            var extraArr = new Array();
+            extraArr['p1'] = accessionValue;
+            extraArr['p2'] = partValue;
+            extraArr['keytype'] = extra;
 
             if( name == "part" || name == "block" ) {
-                console.log("accessionValue is not empty");
-                setKeyValue(element,name+fieldName,new Array(accessionValue,partValue,extra),single);
+                //console.log("accessionValue is not empty");
+                setKeyValue(element,name+fieldName,extraArr,single);
                 return;
             }
 
             //setFieldType(element,fieldName); //for mrn and accession: change type and field mask
 
-            setKeyValue(element,name+fieldName,new Array(extra),single);
+            setKeyValue(element,name+fieldName,extraArr,single);
             return;
         }
 
         element.button('loading');
 
-        console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue+",extra="+extra);
+        //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue+",extra="+extra);
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
@@ -175,6 +179,19 @@ function checkForm( elem, single ) {
                     console.debug("not found");
                     disableInElementBlock(element, false, null, "notkey", null);
                     invertButton(element);
+
+                    //set global block and part key values
+                    //console.log("############### SET GLOBAL "+name+", value="+keyValue);
+                    if( name == "part" ) {
+                        partKeyGlobal = keyValue;
+                    }
+                    if( name == "block" ) {
+                        blockKeyGlobal = keyValue;
+                    }
+                    if( name == "accession" ) {
+                        asseccionKeyGlobal = keyValue;
+                        asseccionKeytypeGlobal = extra;
+                    }
                 } 
 
             },
@@ -310,8 +327,8 @@ function setPatient( element, keyvalue, extraid, single ) {
     function waitWhenParentIsClean( element, maxi ) {
 
         var keyBtn = keyElement.element.parent().parent().find('#check_btn');
-        console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class'));
-        var keyBtnStatusClass = keyBtn.find("i").attr("class");
+        //console.log("keyBtn id=" + keyBtn.attr('id') + ", class="+keyBtn.attr('class'));
+        //var keyBtnStatusClass = keyBtn.find("i").attr("class");
         var isRemoveBtn = keyBtn.find("i").hasClass('checkbtn');
         //console.log("keyBtnStatusClass=" + keyBtnStatusClass);
 
@@ -374,17 +391,17 @@ function setElementBlock( element, data, cleanall, key ) {
             var elements = $('.accessiontype-combobox');
             printF(elements.first(),"get elements for single :");
         } else {
-            console.log('WARNING: logical error! No key for single order form is found: field='+field);
+            console.debug('WARNING: logical error! No key for single order form is found: field='+field);
         }
     } else {
         var elements = parent.find(selectStr);
     }
 
-    console.log("elements.length=" + elements.length);
+    //console.log("elements.length=" + elements.length);
 
     for( var i = 0; i < elements.length; i++ ) {
 
-        console.debug('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        //console.debug('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
@@ -410,7 +427,7 @@ function setElementBlock( element, data, cleanall, key ) {
             if( key == "key" ) {
 
                 if( $.inArray(field, keys) != -1 ) {
-                    console.log("set key field = " + data[field][0]['text'] );
+                    //console.log("set key field = " + data[field][0]['text'] );
                     setArrayField( elements.eq(i), data[field], parent, single );
                     //elements.eq(i).val(data[field]);
                     break;
@@ -482,7 +499,7 @@ function setArrayField(element, dataArr, parent, single) {
     var classs = element.attr("class");
     var tagName = element.prop("tagName");
     var value = element.attr("value");
-    console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
+    //console.debug("Set array: type=" + type + ", id=" + element.attr("id")+", classs="+classs + ", len="+dataArr.length + ", value="+value+", tagName="+tagName);
 
     for (var i = 0; i < dataArr.length; i++) {
 
@@ -573,9 +590,11 @@ function setArrayField(element, dataArr, parent, single) {
 
                 //save keys for single form, because all keys will be removed by the first clean functions
                 if( single ) {
-                    if( fieldName == "accession" ) {
-                        asseccionKeyGlobal = text;
-                    }
+//                    if( fieldName == "accession" ) {
+//                        asseccionKeyGlobal = text;
+//                        asseccionKeytypeGlobal = dataArr[i]["keytype"];
+//                        //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal);
+//                    }
                     if( fieldName == "partname" ) {
                         partKeyGlobal = text;
                     }
@@ -626,8 +645,8 @@ function setArrayField(element, dataArr, parent, single) {
 
         } else if ( tagName == "DIV" && classs.indexOf("select2") != -1 ) {
 
-            console.log("### select field, id="+id+",text="+text);
-            console.log("id="+element.attr("id"));
+            //console.log("### select field, id="+id+",text="+text);
+            //console.log("id="+element.attr("id"));
 
             //set mrntype
             if( fieldName == "mrn" || fieldName == "accession" ) {
@@ -660,14 +679,14 @@ function setArrayField(element, dataArr, parent, single) {
 
 //set key type field
 function setKeyGroup( element, data ) {
-    console.log("set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
+    //console.log("set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
-    //var holder = element.closest('.row');
-    var holder = getParent(element);
+    var holder = element.closest('.row');
+    //printF(holder,"Holder of key group:");
 
     //var keytypeEl = holder.find('select.combobox');
     var keytypeEl = holder.find('.combobox');
-    printF(keytypeEl,"keytype Element:");
+    //printF(keytypeEl,"keytype Element:");
     keytypeEl.select2('val', data['keytype']);
 
     if( element.hasClass('mrntype-combobox') ) {
@@ -675,10 +694,18 @@ function setKeyGroup( element, data ) {
     }
     if( element.hasClass('accessiontype-combobox') ) {
         setAccessiontypeMask(element,true);
+
+        if( orderformtype == "single") {
+            asseccionKeyGlobal = data['text'];
+            asseccionKeytypeGlobal = data['keytype'];
+            //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal);
+        }
+
     }
 
-    var keyEl = holder.find('input.keyfield');
-    console.log("set keytype group: keyEl id="+keyEl.attr("id") + ", class="+keyEl.attr("class"));
+    var inputholder = getButtonParent(element);
+    var keyEl = inputholder.find('input.keyfield');
+    //console.log("set keytype group: keyEl id="+keyEl.attr("id") + ", class="+keyEl.attr("class")+", keyEl.length="+keyEl.length);
     keyEl.val(data['text']);
 }
 
@@ -739,19 +766,6 @@ function processGroup( element, data, disableFlag ) {
 
 function cleanArrayFieldSimple( element, field, single ) {
     //console.log( "clean array field id=" + element.attr("id") );
-
-    //delete keys for single form, because all keys will be removed by the first clean functions
-    if( single ) {
-        if( field == "accession" ) {
-            asseccionKeyGlobal = "";
-        }
-        if( field == "partname" ) {
-            partKeyGlobal = "";
-        }
-        if( field == "blockname" ) {
-            blockKeyGlobal = "";
-        }
-    }
 
     //delete if id != 0
     if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 ) {
@@ -1186,7 +1200,7 @@ function invertButton(btn) {
 
 function setKeyValue( btnElement, name, parentValueArr, single ) {
 
-    console.log("\n\nset Key Value name="+name);
+    //console.log("\n\nset Key Value name="+name);
 
     if( name == "patientmrn" ) {
         setKeyValueSingle( btnElement, name, parentValueArr );
@@ -1202,14 +1216,14 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
 
         var accessionNumberElement = getAccessionNumberElement(btnElement,single);
         var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-        console.log("set Key Value: accessionValue="+accessionValue);
+        //console.log("set Key Value: accessionValue="+accessionValue);
 
         if( accessionValue && accessionValue != "" ) {
-            console.log("set Key Value: accesion field is set => generate part");
+            //console.log("set Key Value: accesion field is set => generate part");
             setKeyValueSingle( btnElement, name, parentValueArr );
             return false;
         } else {    //generate accession #
-            console.log("set Key Value: accesion field is not set => generate accession");
+            //console.log("set Key Value: accesion field is not set => generate accession");
             var holder = btnElement.closest('.panel-procedure');
             var accessionBtn = holder.find('.accessionaccession').find("#check_btn");
             if( single ) {
@@ -1227,14 +1241,14 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
 
         var partNumberElement = getPartNumberElement(btnElement, single);
         var partValue = partNumberElement.select2("val"); //i.e. Part #
-        console.log("blockblockname: partNumberElement.id=" + partNumberElement.attr('id') + ", class=" + partNumberElement.attr('class'));
+        //console.log("blockblockname: partNumberElement.id=" + partNumberElement.attr('id') + ", class=" + partNumberElement.attr('class'));
 
         if( partValue && partValue != "" ) {
-            console.log("generate block! partValue ="+partValue);
+            //console.log("generate block! partValue ="+partValue);
             setKeyValueSingle( btnElement, name, parentValueArr );  //generate block
             return false;
         } else {    //generate partname
-            console.log("partvalue is empty! partValue ="+partValue);
+            //console.log("partvalue is empty! partValue ="+partValue);
             var holder = btnElement.closest('.panel-part');
             var partBtn = holder.find('.partpartname').find("#check_btn");
             if( single ) {
@@ -1257,11 +1271,11 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
             var ParentValue = partNumberElement.select2("val"); //i.e. Part #
         }
 
-        console.log("wait for "+name+": ParentValue="+ParentValue);
+        //console.log("wait for "+name+": ParentValue="+ParentValue);
 
         setTimeout( function(){
             if( ParentValue && ParentValue != "" ) {
-                console.log("triger!, maxi="+maxi+", ParentValue="+ParentValue);
+                //console.log("triger!, maxi="+maxi+", ParentValue="+ParentValue);
                 origBtnElement.trigger("click");
                 return 1;
             }
@@ -1270,7 +1284,7 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
                     return 0;
                 }
                 maxi++;
-                console.log("gen: parent key is not set, maxi="+maxi);
+                //console.log("gen: parent key is not set, maxi="+maxi);
                 waitWhenParentIsGenerated(origBtnElement, name, maxi, single);
             }
         }, 300);
@@ -1284,9 +1298,9 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
 function setKeyValueSingle( btnElement, name, parentValueArr ) {
 
     if( parentValueArr ) {
-        var parentValue = parentValueArr[0];
-        var parentValue2 = parentValueArr[1];
-        var keytype = parentValueArr[2];
+        var parentValue = parentValueArr['p1'];
+        var parentValue2 = parentValueArr['p2'];
+        var keytype = parentValueArr['keytype'];
     } else {
         var parentValue = '';
         var parentValue2 = '';
@@ -1310,7 +1324,7 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
                 disableInElementBlock(btnElement, false, null, "notkey", null);
                 invertButton(btnElement);
             } else {
-                console.log('set key data is null');
+                console.debuf('set key data is null');
             }
         },
         error: function () {
@@ -1331,39 +1345,46 @@ function removeKeyFromDB(element, btnElement, single) {
 
     if( element.name == "partname" || element.name == "blockname" ) {
         var keyValue =element.element.select2("val");
-        //console.debug("select2 case, keyValue="+keyValue);
+        //console.log("select2 case, keyValue="+keyValue+", blockKeyGlobal="+blockKeyGlobal);
     }
+
+    var accessionValue = element.accession;
+    var partValue = element.partname;
+    var extra = element.extra;
 
     //check global keys for single form, because all keys will be removed by the first clean functions
     if( single ) {
         if( name == "accession" && !keyValue ) {
             keyValue = asseccionKeyGlobal;
+            extra = asseccionKeytypeGlobal;
         }
         if( name == "partname" ) {
             keyValue = partKeyGlobal;
+            accessionValue = asseccionKeyGlobal;
+            extra = asseccionKeytypeGlobal;
         }
         if( name == "blockname" ) {
             keyValue = blockKeyGlobal;
+            partValue = partKeyGlobal;
+            accessionValue = asseccionKeyGlobal;
+            extra = asseccionKeytypeGlobal;
         }
     }
 
-    var accessionValue = element.accession;
-    var partValue = element.partname;
-
-    //console.debug("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue);
+    //console.log("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue+", extra="+extra);
 
     if( !keyValue ) {
         return false;
     }
 
-    if( element.extra || accessionValue || partValue ) {
+    if( extra || accessionValue || partValue ) {
         var extraStr = "?";
     } else {
         var extraStr = "";
     }
 
-    if( element.extra ) {
-        extraStr = extraStr + "extra="+element.extra;
+    if( extra ) {
+        extraStr = extraStr + "extra="+extra;
     }
 
     if( accessionValue ) {
@@ -1429,6 +1450,9 @@ function findKeyElement( element, single ) {
     //var elements = parent.find('input,select').not("*[id^='s2id_']");
     var elements = parent.find('.keyfield').not("*[id^='s2id_']");
 
+    //console.log("elements.length=" + elements.length);
+    printF(elements," found elements under button parent:");
+
     var keyElement = null;
     var name = "";
     for (var i = 0; i < elements.length; i++) {
@@ -1440,13 +1464,16 @@ function findKeyElement( element, single ) {
             var field = idsArr[idsArr.length-fieldIndex];
             //console.log("set key value: field=(" + field + ")");
             if( $.inArray(field, keys) != -1 && id.indexOf('_keytype') == -1 ) {
-                console.log("set key value: found key=(" + field + "), id="+elements.eq(i).attr("id"));
+                //console.log("set key value: found key=(" + field + "), id="+elements.eq(i).attr("id"));
                 name = field;
                 keyElement = elements.eq(i);
                 break;
             }
         }
     }
+
+    //printF(keyElement,"found input key field:");
+    //console.log("keyElement val=" + keyElement.val());
 
     //find extra key: keytype
     var extra = null;
@@ -1462,6 +1489,7 @@ function findKeyElement( element, single ) {
 
     if( name == "partname" ) {
         var accessionNumberElement = getAccessionNumberElement(element,single);
+        printF(accessionNumberElement,"partname: accessionNumberElement=");
         var accessionValue = accessionNumberElement.val();    //i.e. Accession #
         //get extra for accession: keytype
         var keytype = getParent(accessionNumberElement).find('.accessiontype-combobox');
@@ -1470,6 +1498,7 @@ function findKeyElement( element, single ) {
 
     if( name == "blockname" ) {
         var accessionNumberElement = getAccessionNumberElement(element, single);
+        printF(accessionNumberElement,"blockname: accessionNumberElement=");
         var accessionValue = accessionNumberElement.val();    //i.e. Accession #
         var keytype = getParent(accessionNumberElement).find('.accessiontype-combobox');
         extra = keytype.select2("val");
@@ -1527,88 +1556,6 @@ function getPartNumberElement( element, single ) {
         //console.log("1="+partNumberElement.val() + " 2="+partNumberElement.select2("val")  );
         return partNumberElement;
     }
-}
-
-//Helpers
-function capitaliseFirstLetter(string)
-{
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function checkSingleFormOnNext( elem ) {
-    //data-target="#orderinfo_param"
-    if( validateMaskFields() > 0 ) {
-        return false;
-    } else {
-        //console.log("no masking errors");
-        $("#next_button").hide();
-
-        var accTypeText = $('.accessiontype-combobox').first().select2('data').text;
-        if( accTypeText != 'TMA Slide' ) {
-            $("#optional_button").show();
-        }
-
-        $('#orderinfo_param').collapse('toggle');
-    }
-    return true;
-}
-
-//Check form single
-function checkFormSingle( elem ) {
-
-    if( validateMaskFields() > 0 ) {
-        return false;
-    }
-
-    if( $('#maincinglebtn').is(":visible") ) {
-        return false;
-    }
-
-    //data-target="#optional_param"
-    $('#optional_param').collapse('toggle');
-
-    //check if accession is not empty
-    var accValue = $('#accession-single').find('.keyfield').val();
-    if( accValue && accValue != "" ) {
-        console.log("gen accession accValue="+accValue);
-        $('.accessionbtn').trigger("click");
-    }
-
-    //check if accession is not empty
-    var partValue = $('#part-single').find('.keyfield').not("*[id^='s2id_']").select2("val");
-    if( partValue && partValue != "" ) {
-        console.log("gen part partValue="+partValue);
-        $('.partbtn').trigger("click");
-    }
-
-    console.log("gen block");
-    $('.blockbtn').trigger("click");
-
-    invertButton($(elem));
-    
-    $('#part-single').css( "width", "20%" );
-    $('#block-single').css( "width", "20%" );
-    $('#maincinglebtn').show();
-
-
-    return;
-}
-
-//Remove form single
-function removeFormSingle( elem ) {
-
-    //console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
-    $('.blockbtn').trigger("click");
-
-    $('.partbtn').trigger("click");
-
-    $('.accessionbtn').trigger("click");
-
-    $('#part-single').css( "width", "25%" );
-    $('#block-single').css( "width", "25%" );
-    $('#maincinglebtn').hide();
-    $('#optional_param').collapse('toggle'); //close optional info
-
 }
 
 //accesion-MRN link validation when the user clicks "Submit" on multi-slide form
@@ -1861,29 +1808,4 @@ function addKeyListener() {
         $(this).removeClass('has-error');
     });
 }
-
-//element is a button element
-//function setFieldType( element, fieldName ) {
-//    console.log("set type for fieldName=" + fieldName);
-//
-//    var combo;
-//    var expectedValue;
-//
-//    if( fieldName == "mrn" ) {
-//        combo = element.closest('.row').find('.mrntype-combobox');
-//        expectedValue = _autogenMrn;
-//    }
-//    if( fieldName == "accession" ) {
-//        combo = element.closest('.row').find('.accessiontype-combobox');
-//        expectedValue = _autogenAcc;
-//    }
-//
-//    changeMaskToNoProvided( combo, fieldName );
-//    combo.select2('val',expectedValue);
-//
-//}
-
-
-
-
 

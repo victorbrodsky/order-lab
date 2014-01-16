@@ -36,9 +36,12 @@ function getAgeDefaultMask() {
 }
 
 function getAccessionDefaultMask() {
+    //console.log('get default accession mask');
     var accessions = [
-        { "mask": "AA99-f[99999]" },
-        { "mask": "A99-f[99999]" }
+//        { "mask": "AA99-f[99999]" },
+//        { "mask": "A99-f[99999]" }
+        { "mask": "AA99-f[9][9][9][9][9]" },
+        { "mask": "A99-f[9][9][9][9][9]" }
     ];
     return accessions;
 }
@@ -54,20 +57,6 @@ function fieldInputMask() {
         }
     });
 
-    //not all zeros
-//    $.extend($.inputmask.defaults.definitions, {
-//        'm': {
-//            //"validator": "/^(?!0+$)[A-Z0-9]{13}$/",    //"^\s*$",
-//            "validator": "^(?!0+$)[a-zA-Z0-9]{1,13}$",
-////            "validator": function (chrs, buffer, pos, strict, opts) {
-////                var valExp2 = new RegExp("2[0-5]|[01][0-9]");
-////                return valExp2.test(buffer[pos - 1] + chrs);
-////            },
-//            "cardinality": 1,
-//            'prevalidator': null
-//        }
-//    });
-
     //any alfa-numeric without leading or ending '-'
     $.extend($.inputmask.defaults.definitions, {
         "m": {
@@ -78,7 +67,9 @@ function fieldInputMask() {
     });
 
     $.extend($.inputmask.defaults, {
-        "onincomplete": function(result){makeErrorField($(this),false);},
+        "onincomplete": function(result){
+            makeErrorField($(this),false);
+        },
         "oncomplete": function(){ clearErrorField($(this)); },
         "oncleared": function(){ clearErrorField($(this)); },
         "onKeyValidation": function(result) {
@@ -114,12 +105,9 @@ function fieldInputMask() {
 
     $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
 
-    //$(".partname-mask").inputmask( {"mask": "A[A]" });
-    //$(".blockname-mask").inputmask( {"mask": "f[9]" });
-
     accessionTypeListener();
     mrnTypeListener();
-    //maskfieldListener();
+
 }
 
 //element is check button
@@ -141,7 +129,7 @@ function setDefaultMask( element ) {
 
 function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
-        console.log("mrn type change listener!!!");
+        //console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
     });
 }
@@ -154,12 +142,12 @@ function getMrnAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var mrnField = getParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    console.log("text=" + text + ", value=" + value);
+    //console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -225,7 +213,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        console.log("accession type listener!!!");
+        //console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -249,13 +237,13 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getParent(elem).find('.accession-mask');
 
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    console.log("text=" + text + ", value=" + value);
+    //console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -302,13 +290,28 @@ function setAccessiontypeMask(elem,clean) {
     }
 }
 
+function noMaskError( element ) {
+    //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
+
+    if( element.hasClass('accession-mask') || element.hasClass('patientage-mask') ) {   //regular mask
+        if( !allZeros(element) && element.inputmask("isComplete") ) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {    //non zero mask
+        if( !allZeros(element) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
 function makeErrorField(element, appendWell) {
     //console.log("make red field id="+element.attr("id")+", class="+element.attr("class"));
 
-    //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
-
-//    if( element.inputmask("isComplete") && !allZeros(element) ) {
-    if( !allZeros(element) ) {
+    if( noMaskError(element) ) {
         clearErrorField(element);
         return;
     }
@@ -342,7 +345,7 @@ function allZeros(element) {
     }
 
     //console.log("element.val()="+element.val());
-    printF(element,"all zeros? :")
+    //printF(element,"all zeros? :")
     var res = element.val().trim().match(/^[0]+$/);
     //console.log("res="+res);
     if( res ) {
@@ -357,11 +360,11 @@ function validateMaskFields( element, fieldName ) {
     var errors = 0;
     $('.maskerror-added').remove();
 
-    console.log("validate mask fields: fieldName="+fieldName);
+    //console.log("validate mask fields: fieldName="+fieldName);
 
     if( element ) {
 
-        console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
+        //console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
 
         var parent = getParent(element);
         var errorFields = parent.find("."+_maskErrorClass);
@@ -385,7 +388,7 @@ function validateMaskFields( element, fieldName ) {
 
     errorFields.each(function() {
         var elem = $(this).find("*[class$='-mask']");
-        console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
+        //console.log("error id=" + elem.attr("id") + ", class=" + elem.attr("class") );
 
         //Please correct the invalid accession number
         var errorHtml = createErrorMessage( elem, null, true );
@@ -402,9 +405,12 @@ function validateMaskFields( element, fieldName ) {
 
 function createErrorMessage( element, fieldName, appendWell ) {
 
-//    if( element.inputmask("hasMaskedValue") && element.inputmask("isComplete") && !allZeros(element) ) {
-    if( !allZeros(element) ) {
-        //clearErrorField(element);
+//    if( !allZeros(element) ) {
+//        //clearErrorField(element);
+//        return;
+//    }
+
+    if( noMaskError(element) ) {
         return;
     }
 
@@ -497,6 +503,15 @@ function getRepeatMask( repeat, char, allsame ) {
 function getParent(elem) {
     if( orderformtype == "single") {
         var parent = $('.singleorderinfo');
+    } else {
+        var parent = elem.closest('.row');
+    }
+    return parent;
+}
+
+function getButtonParent(elem) {
+    if( orderformtype == "single") {
+        var parent = $('#accession-single');
     } else {
         var parent = elem.closest('.row');
     }
