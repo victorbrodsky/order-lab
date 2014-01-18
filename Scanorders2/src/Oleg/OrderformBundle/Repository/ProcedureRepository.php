@@ -17,24 +17,37 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         $em = $this->_em;
 
-        //debugging
-//        $patient = $entity->getParent();
-//        $procedures = $patient->getChildren();
-//        //echo "procedure count=".count($procedures)."<br>";
-//        foreach( $procedures as $procedure ) {
-//            //echo "Procedure process entity: ".$procedure;
-//        }
-
         //find accession
         $accessions = $entity->getAccession();
+
+        if( count($accessions) > 1 ) {
+            throw new \Exception( 'More then one Accession in the Procedure. Number of accession=' . count($accessions) );
+        }
+
         //we should have only one Accession in the Procedure, because Procedure-Accession is considered as one object for now
         $accession = $accessions->first();
 
         //redirect to accession repository (skip procedure, because one procedure is linked to one accession)
         $accessionProcessed = $em->getRepository('OlegOrderformBundle:Accession')->processEntity( $accession, $orderinfo );
+        //echo "exit Accession process<br>";
 
         //process Procedure
         $procedureProcessed = $accessionProcessed->getProcedure();
+
+        if( !$procedureProcessed ) {
+            //$procedureProcessed = $em->getRepository('OlegOrderformBundle:Procedure')->createElement(null,$orderinfo->getProvider()->first(),"Procedure","encounter",$entity->getParent(),null,null);
+            //$procedureProcessed->addChildren($accessionProcessed);
+
+            //$procedureProcessed->addName($entity->getName());
+            $entity->removeChildren($accession);
+            $entity->addChildren($accessionProcessed);
+
+            $procedureProcessed = $entity;
+
+            //echo "NO procedures <br>";
+        }
+
+        //echo "encounter=".$procedureProcessed->getEncounter()."<br>";
 
         //just process procedure (not setResult)
         $procedureProcessed = parent::processEntity( $procedureProcessed, $orderinfo );
@@ -51,20 +64,30 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //CopyFields
         $procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
 
+        if( count($procedure->getAccession()) > 1 ) {
+            throw new \Exception( 'More then one Accession in the Procedure. Number of accession=' . count($procedure->getAccession()) );
+        }
+
         //link orderinfo with accession
         $accession = $procedure->getAccession()->first();
+
+        //TODO: why we have to process accession again? Do we have an oriiginal accession here?
+        $accession = $this->processFieldArrays($accession,$orderinfo);
+        $em = $this->_em;
+        $accession = $em->getRepository('OlegOrderformBundle:Accession')->changeKeytype($accession);
 
         //echo "add Accession to orderinfo <br>";
         $orderinfo->addAccession($accession);
 
         if( !$procedure->getId() || $procedure->getId() == "" ) {
             //echo "persist Procedure<br>";
-            $em = $this->_em;
             $em->persist($procedure);
         } else {
             //echo "merge Procedure<br>";
             //$em->merge($entity);
         }
+
+        //echo "acc proc count=".count($procedure->getAccession()->first()->getProcedure())."<br>";
 
         return $procedure;
     }

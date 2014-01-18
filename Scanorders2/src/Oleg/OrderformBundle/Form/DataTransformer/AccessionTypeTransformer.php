@@ -103,6 +103,8 @@ class AccessionTypeTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
+        //echo "accession type name=".$name."<br>";
+
         //check if it is already exists in db
         $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($name);
         

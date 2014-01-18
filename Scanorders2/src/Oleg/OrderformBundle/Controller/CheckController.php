@@ -294,8 +294,17 @@ class CheckController extends Controller {
         $extra = array();
         $extra["keytype"] = $keytype;
 
-//        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$user,"Accession","accession");
-        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$user,"Accession","accession",null,null,$extra);
+        //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
+        $entity = $em->getRepository('OlegOrderformBundle:Accession')->createElement(
+            null,           //status
+            $user,          //provider
+            "Accession",    //$className
+            "accession",    //$fieldName
+            null,           //$parent
+            null,           //$fieldValue
+            $extra,         //$extra
+            0               //$withfields
+        );
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
         $element = array(

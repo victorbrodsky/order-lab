@@ -22,6 +22,7 @@ class AccessionAccessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        //accession number
         $attr = array(
             'class'=>'form-control form-control-modif keyfield accession-mask',
             'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
@@ -74,6 +75,6 @@ class AccessionAccessionType extends AbstractType
 
     public function getName()
     {
-        return 'oleg_orderformbundle_accessiontype';
+        return 'oleg_orderformbundle_accessionaccessiontype';
     }
 }

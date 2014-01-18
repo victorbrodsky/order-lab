@@ -56,7 +56,7 @@ function finalStepCheck() {
     $('#part-single').css( "width", "20%" );
     $('#block-single').css( "width", "20%" );
     $('#maincinglebtn').show();
-    console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 }
 
 //Check form single
@@ -80,7 +80,7 @@ function checkFormSingle( elem ) {
     fieldsArr[1] = '#part-single';
     fieldsArr[2] = '#block-single';
 
-    console.log("start");
+    //console.log("start");
 
     waitWhenReady( fieldsArr, 0, 0 );
 
@@ -125,4 +125,12 @@ function checkSingleFormOnNext( elem ) {
         $('#orderinfo_param').collapse('toggle');
     }
     return true;
+}
+
+
+function getAccessionInfoDebug(text) {
+    var accTypeText = $('.accessiontype-combobox').select2('data').text;
+    var accTypeVal = $('.accessiontype-combobox').select2('val');
+    var accNum = $('.accession-mask').val();
+    console.log("############ "+text+": Accession #="+accNum+", type text="+accTypeText+", type id="+accTypeVal);
 }

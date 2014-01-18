@@ -258,7 +258,7 @@ function getComboboxAccessionType(urlCommon,ids) {
 
     var url = urlCommon+"accessiontype";
 
-    console.log("orderformtype="+orderformtype);
+    //console.log("orderformtype="+orderformtype);
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;

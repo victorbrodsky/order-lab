@@ -112,15 +112,20 @@ function fieldInputMask() {
 
 //element is check button
 function setDefaultMask( element ) {
-    maskField = getParent(element).find("*[class$='-mask']");
+
+    //printF(element,"Set default mask1:");
+    var maskField = getKeyGroupParent(element).find("*[class$='-mask']");
+    //printF(maskField,"Set default mask2:");
 
     clearErrorField(element);
 
     if( maskField.hasClass('patientmrn-mask') ) {
+        //console.log("Set default mask for MRN");
         maskField.inputmask( getMrnDefaultMask() );
     }
 
     if( maskField.hasClass('accession-mask') ) {
+        //console.log("Set default mask for Accession");
         maskField.inputmask( { "mask": getAccessionDefaultMask() } );
     }
 
@@ -129,7 +134,7 @@ function setDefaultMask( element ) {
 
 function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
-        console.log("mrn type change listener!!!");
+        //console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
     });
 }
@@ -142,12 +147,12 @@ function getMrnAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
-    var mrnField = getParent(elem).find('.patientmrn-mask');
+    var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -213,7 +218,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        console.log("accession type listener!!!");
+        //console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -239,7 +244,8 @@ function getAccessionAutoGenMask() {
 function setAccessiontypeMask(elem,clean) {
     //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
-    var accField = getParent(elem).find('.accession-mask');
+    var accField = getKeyGroupParent(elem).find('.accession-mask');
+    printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
     var text = elem.select2("data").text;
@@ -257,8 +263,8 @@ function setAccessiontypeMask(elem,clean) {
             accField.inputmask( getAccessionAutoGenMask() );
             var btn = elem.closest('.accessionaccession').find('#check_btn');
             btn.trigger("click");
-            console.log('Auto-generated Accession !!!');
-            printF(btn,"btn to click:");
+            //console.log('Auto-generated Accession !!!');
+            //printF(btn,"btn to click:");
             break;
         case "Existing Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
@@ -295,7 +301,9 @@ function setAccessiontypeMask(elem,clean) {
 function noMaskError( element ) {
     //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
 
-    if( element.hasClass('accession-mask') || element.hasClass('patientage-mask') ) {   //regular mask
+    var keytypeText = element.closest(".row").find('.accessiontype-combobox').select2('data').text;
+
+    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) || element.hasClass('patientage-mask')) {   //regular mask
         if( !allZeros(element) && element.inputmask("isComplete") ) {
             return true;
         } else {
@@ -368,7 +376,7 @@ function validateMaskFields( element, fieldName ) {
 
         //console.log("validate mask fields: element id=" + element.attr("id") + ", class=" + element.attr("class") );
 
-        var parent = getParent(element);
+        var parent = getKeyGroupParent(element);
         var errorFields = parent.find("."+_maskErrorClass);
 
         if( fieldName == "partname" ) { //if element is provided, then validate only element's input field. Check parent => accession
@@ -379,7 +387,7 @@ function validateMaskFields( element, fieldName ) {
             //console.log("count errorFields=" + errorFields.length );
 
             if( errorFields.length > 0 ) {
-                var partname = getParent(element).find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
+                var partname = getKeyGroupParent(element).find("*[class$='-mask']");   //find("input").not("*[id^='s2id_']");
                 createErrorMessage( partname, "Accession Number above", true );   //create warning well under partname
             }
         }
@@ -442,11 +450,11 @@ function createErrorMessage( element, fieldName, appendWell ) {
 
 function changeMaskToNoProvided( combobox, fieldName ) {
     if( fieldName == "mrn" ) {
-        var mrnField = getParent(combobox).find('.patientmrn-mask');
+        var mrnField = getKeyGroupParent(combobox).find('.patientmrn-mask');
         mrnField.inputmask( getMrnAutoGenMask() );
     }
     if( fieldName == "accession" ) {
-        var accField = getParent(combobox).find('.accession-mask');
+        var accField = getKeyGroupParent(combobox).find('.accession-mask');
         //printF(accField,"change to noprovided: ");
         accField.inputmask( getAccessionAutoGenMask() );
     }
@@ -502,15 +510,19 @@ function getRepeatMask( repeat, char, allsame ) {
     return repeatStr;
 }
 
-function getParent(elem) {
-    if( orderformtype == "single") {
+//elem: button, combobox (keytype) or input field
+function getKeyGroupParent(elem) {
+    //printF(elem, "@@@@@@@@@@@@@ Get parent for element:");
+    if( orderformtype == "single" && elem.attr('class').indexOf("mrn") == -1) {
         var parent = $('.singleorderinfo');
+
     } else {
         var parent = elem.closest('.row');
     }
     return parent;
 }
 
+//elem is a keytype (combobox)
 function getButtonParent(elem) {
     if( orderformtype == "single") {
         if( elem.hasClass('mrntype-combobox') ) {

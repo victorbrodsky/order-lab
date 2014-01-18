@@ -152,8 +152,21 @@ class MultyScanOrderController extends Controller {
 //        echo "<br>";
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
-//        $form->bind($request);
+
+        //$form->bind($request);
         $form->handleRequest($request);
+
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_field
+//        $patient = $form["patient"][0]->getData();
+//        $mrn = $patient->getMrn()->first()->getField();
+//        echo "mrn=".$mrn."<br>";
+//
+//        $accession = $form["patient"][0]["procedure"][0]["accession"][0]->getData();
+//        $accessionNum = $accession->getAccession()->first()->getField();
+//        $accessionType = $accession->getAccession()->first()->getKeytype();
+//        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_keytype
+//        echo "accessionNum=".$accessionNum.", accessionType=".$accessionType."<br>";
+//        exit();
 
         //check if the orderform already exists, so it's edit case
         //TODO: edit id is empty. Why??

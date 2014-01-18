@@ -119,8 +119,19 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "--------------------------<br>";
 //        }
 
-//        echo $entity;
-//        exit('orderinfo repo exit');
+        //echo $entity;
+//        echo "<br>Accession count=".count($patient->getProcedure()->first()->getAccession())."<br>";
+//        $acc = $patient->getProcedure()->first()->getAccession()->first();
+//        echo "number=".$acc->obtainValidKeyField()."<br>";
+//        echo "original=".$acc->obtainValidKeyField()->getOriginal()."<br>";
+//        echo "keytype=".$acc->obtainValidKeyField()->getKeytype()."<br>";
+//
+//        echo "<br>Patient count=".count($patients)."<br>";
+//        echo "number=".$patient->obtainValidKeyField()."<br>";
+//        echo "original=".$patient->obtainValidKeyField()->getOriginal()."<br>";
+//        echo "keytype=".$patient->obtainValidKeyField()->getKeytype()."<br>";
+//
+        //exit('orderinfo repo exit');
 
         $originalStatus = $entity->getStatus();
 

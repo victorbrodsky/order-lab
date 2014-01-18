@@ -21,9 +21,15 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         //strip zeros and record original
         $originalKey = $key->getField();
+        $key->setOriginal($originalKey);
         $stripedKey = ltrim($originalKey,'0');
         $key->setField($stripedKey);
-        $key->setOriginal($originalKey);
+
+//        echo $entity;
+//        echo "num of keys=".count($entity->obtainKeyField())."<br>";
+//        echo "number=".$entity->obtainValidKeyField()."<br>";
+//        echo "original=".$entity->obtainValidKeyField()->getOriginal()."<br>";
+//        echo "keytype=".$entity->obtainValidKeyField()->getKeytype()."<br>";
 
         return $entity;
     }

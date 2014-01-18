@@ -48,7 +48,7 @@ class PartPaper extends PartArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="paper", cascade={"persist"})
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $part;
 

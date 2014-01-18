@@ -30,7 +30,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function processEntity( $entity, $orderinfo ) {
 
         if( !$entity ) {
-            return $entity;
+            throw new \Exception('Provided entity for processing is null');
+            //return $entity;
         }
 
         $class = new \ReflectionClass($entity);
@@ -145,7 +146,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "persist ".$className."<br>";
             $em->persist($entity);
         } else {
-            //echo "merge ".$className."<br>";
+            //echo "merge ".$className.", id=".$entity->getId()."<br>";
             //$em->merge($entity);
         }
 
@@ -188,14 +189,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "provider=".$provider."<br>";
         }
 
-        //$class_methods = get_class_methods($dest);
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-        //echo "className=".$className."<br>";
-        //$parent = $class->getParentClass();
-
-        //$log->addInfo('Foo');
-        //$log->addError('Bar');
+        //echo "Process Array Fields: className=".$className."<br>";
 
         $class_methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach( $class_methods as $method_name ) {
@@ -231,13 +227,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                         if( is_object($field) && $basename == 'Oleg\OrderformBundle\Entity\ArrayFieldAbstract' ) {
 
+                            $class = new \ReflectionClass($field);
+                            $parent = $class->getParentClass();
 
-                                $class = new \ReflectionClass($field);
-                                $parent = $class->getParentClass();
+                            //echo "Method:".$methodShortName.", field=".$field.", fieldId=".$field->getId().", status=".$field->getStatus()."<br>";
 
-                                //echo "Method:".$methodShortName.", field=".$field.", fieldId=".$field->getId().", status=".$field->getStatus()."<br>";
-
-//                                if( $parent && $field->getField() && $field->getField() != "" ) {     //filter in all objects with parent class. assume it is "PatientArrayFieldAbstract"
                             if( $parent ) {
 
                                 $this->log->addInfo( "###parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>" );
@@ -258,6 +252,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 }
 
                                 //############# set provider to the fields from submitted form
+                                //echo( $methodShortName.": field provider=".$field->getProvider()." <br>" );
                                 if( !$field->getProvider() || $field->getProvider() == "" ) {
                                     //echo( "add provider <br>" );
                                     $field->setProvider($provider); //set provider
@@ -418,6 +413,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $removed = 0;
         foreach( $entities as $entity ) {
+
+            //check if it has children
+            if( count( $entity->getChildren() ) > 0 ) {
+                return -1;
+            }
+
             $em = $this->_em;
             $em->remove($entity);
             $em->flush();
@@ -426,16 +427,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $removed;
     }
 
-    //$className: Patient
-    //$fieldName: mrn
-    public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $flush=true ) {
+    //$className: i.e. Patient
+    //$fieldName: i.e. mrn
+    public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true ) {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
         $em = $this->_em;
 
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
-        $entity = new $entityClass();
+        $entity = new $entityClass($withfields);
 
         if( !$fieldValue ) {
             $fieldValue = $this->getNextNonProvided($entity,$extra,null);
@@ -443,10 +444,18 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "fieldValue=".$fieldValue;
 
         //before create: check if entity with key does not exists in DB
-//        $entityFound = $this->findOneByIdJoinedToField($fieldValue, $className, $fieldName, self::STATUS_RESERVED, true, $extra );
-//        if( $entityFound ) {
-//            return $entityFound;
-//        }
+        $entitiesFound = $this->findOneByIdJoinedToField($fieldValue, $className, $fieldName, null, false, $extra );
+        if( count($entitiesFound) == 1 ) {
+            return $entitiesFound[0];
+        }
+        if( count($entitiesFound) > 1 ) {
+            foreach( $entitiesFound as $entityFound  ) {
+                if( $entityFound->getStatus() == self::STATUS_RESERVED || $entityFound->getStatus() == self::STATUS_VALID ) {
+                    return $entityFound;
+                }
+            }
+            return $entitiesFound->first();
+        }
 
         $fieldEntityName = ucfirst($className).ucfirst($fieldName);
         $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
@@ -461,7 +470,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $field->setStatus(self::STATUS_VALID);
 
-        //if( $className == "Patient" ) {
         if( $field && method_exists($field,'setExtra') ) {
             //find keytype with provided extra (keytype id) from DB
             //echo "extra exists for field=".$field."# ";
@@ -484,7 +492,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "Parent is not set<br>";
         }
 
-        //exit();
         if( $flush ) {
             $em->flush();
         }
@@ -632,7 +639,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( $entity->obtainValidKeyfield() ) {
             $em = $this->_em;
-            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,true,true, $extra);
+            $validity = false; //accept reserved also
+            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,$validity,true, $extra);
         } else {
             //echo "This entity does not have a valid key field<br>";
             $newEntity = null;

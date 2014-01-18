@@ -130,7 +130,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                     $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber,$extra);
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber,$extra,false);
         }
 //        else {
 //            $accession = $accessions[0];
@@ -157,7 +157,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //echo "create part <br>";
         //4) create part object by partname and link it to the parent
-        $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname,$extra);
+        $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname,$extra,false);
 
         return $part;
     }
@@ -171,8 +171,9 @@ class PartRepository extends ArrayFieldAbstractRepository
         $key = $accession->obtainValidKeyfield();
         $accessionNumber = $key."";
         $keytype = $key->getKeytype()->getId();
+        $validity = false;
 
-        return $this->findOnePartByJoinedToField( $accessionNumber, $keytype, $partname, true );
+        return $this->findOnePartByJoinedToField( $accessionNumber, $keytype, $partname, $validity );
     }
 
     public function findOneByIdJoinedToField($fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null ) {

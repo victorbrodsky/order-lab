@@ -13,7 +13,7 @@ class PartDiffDisident extends PartArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="diffDisident")
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)    
+     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $part;
 
