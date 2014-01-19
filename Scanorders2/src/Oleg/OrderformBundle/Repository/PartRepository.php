@@ -202,6 +202,11 @@ class PartRepository extends ArrayFieldAbstractRepository
             }
             $onlyValid = " AND p.status='".$validity."' AND pfield.status='".self::STATUS_VALID."'";
         }
+        
+        $extraStr = "";
+        if( $accession && $accession != "" ) {
+            $extraStr = ' AND aa.field = :accession AND aa.keytype = :keytype';
+        }
 
         $query = $this->getEntityManager()
             ->createQuery('
@@ -209,9 +214,14 @@ class PartRepository extends ArrayFieldAbstractRepository
             JOIN p.partname pfield
             JOIN p.accession a
             JOIN a.accession aa
-            WHERE pfield.field = :field AND aa.field = :accession AND aa.keytype = :keytype'.$onlyValid
+            WHERE pfield.field = :field' . $extraStr . $onlyValid
             )->setParameter('field', $partname."")->setParameter('accession', $accession."")->setParameter('keytype', $keytype."");
 
+        if( $accession && $accession != "" ) {
+           $query->setParameter('accession', $accession."")                  
+                   ->setParameter('keytype', $keytype."");
+        }
+        
         $parts = $query->getResult();
 
         if( $parts ) {

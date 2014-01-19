@@ -50,6 +50,10 @@ class StainTransformer implements DataTransformerInterface
             $stain = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneById($stain);
             //echo "findOneById stain=".$stain."<br>";
         }
+        
+        if( null === $stain ) {
+            return "";
+        }
 
         return $stain->getId();
     }

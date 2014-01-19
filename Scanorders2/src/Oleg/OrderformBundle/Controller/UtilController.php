@@ -33,7 +33,7 @@ class UtilController extends Controller {
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:StainList', 'stain')
-            ->select("stain.orderinlist as id, stain.name as text")
+            ->select("stain.id as id, stain.name as text")
             ->orderBy("stain.orderinlist","ASC"); //ASC DESC
 
         if( $opt ) {

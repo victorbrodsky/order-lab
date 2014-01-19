@@ -54,7 +54,7 @@ abstract class ListAbstract
 
     /**
      * Indicates the order in the list
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      * @Assert\NotBlank
      */
     protected $orderinlist;

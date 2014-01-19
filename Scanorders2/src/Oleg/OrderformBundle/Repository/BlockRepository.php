@@ -69,12 +69,12 @@ class BlockRepository extends ArrayFieldAbstractRepository
     }
 
     //              findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
-    public function findOneByIdJoinedToField($fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null ) {
-
+    public function findOneByIdJoinedToField($fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null ) {      
+               
         $accessionNumber = $extra['accession'];
         $keytype = $extra['keytype'];
         $partname = $extra['partname'];
-
+        
         return $this->findOneBlockByJoinedToField( $accessionNumber, $keytype, $partname, $fieldStr, $validity, $single );
     }
 
@@ -96,6 +96,11 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $onlyValid = " AND b.status='".$validity."' AND bfield.status='".self::STATUS_VALID."'";
         }
 
+        $extraStr = "";
+        if( $accession && $accession != "" && $partname && $partname != "" ) {
+            $extraStr = ' AND aa.field = :accession AND pp.field = :partname AND aa.keytype = :keytype';
+        }
+        
         $query = $this->getEntityManager()
             ->createQuery('
             SELECT b FROM OlegOrderformBundle:Block b
@@ -104,9 +109,15 @@ class BlockRepository extends ArrayFieldAbstractRepository
             JOIN p.partname pp
             JOIN p.accession a
             JOIN a.accession aa
-            WHERE bfield.field = :field AND aa.field = :accession AND pp.field = :partname AND aa.keytype = :keytype'.$onlyValid
-            )->setParameter('field', $blockname."")->setParameter('accession', $accession."")->setParameter('partname', $partname."")->setParameter('keytype', $keytype."");
+            WHERE bfield.field = :field' . $extraStr . $onlyValid           
+            )->setParameter('field', $blockname."");
 
+        if( $accession && $accession != "" && $partname && $partname != "" ) {
+           $query->setParameter('accession', $accession."")
+                   ->setParameter('partname', $partname."")
+                   ->setParameter('keytype', $keytype."");
+        }
+        
         $blocks = $query->getResult();
 
         if( $blocks ) {
@@ -159,6 +170,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //echo "next blockname generated=".$blockname."<br>";
         
         //3) before create: check if element with keys does not exists in DB
+        //echo "before create block: ".$accessionNumber." ". $keytype." ". $partname." ". $blockname."<br>";
         $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($accessionNumber, $keytype, $partname, $blockname, false);  //validity=true if it was called by submit, false - if it was called by check button
 
         if( $blockFound ) {

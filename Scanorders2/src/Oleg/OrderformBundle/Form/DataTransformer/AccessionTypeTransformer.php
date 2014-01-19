@@ -42,7 +42,7 @@ class AccessionTypeTransformer implements DataTransformerInterface
      * @return string
      */
     public function transform($type)
-    {
+    {        
 
         if (null === $type) {
             return "";
@@ -53,6 +53,10 @@ class AccessionTypeTransformer implements DataTransformerInterface
         if( is_int($type) ) {
             $type = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneById($type);
             //echo "findOneById stain=".$stain."<br>";
+        }
+        
+        if (null === $type) {
+            return "";
         }
 
         return $type->getId();

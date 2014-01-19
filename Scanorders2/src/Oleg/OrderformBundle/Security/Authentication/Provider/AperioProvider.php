@@ -17,7 +17,7 @@ class AperioProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
     private $serviceContainer;
-    private $ldap = true;
+    private $ldap = false;
 
     public function __construct(UserProviderInterface $userProvider, $serviceContainer)
     {
@@ -72,7 +72,7 @@ class AperioProvider implements AuthenticationProviderInterface
                 //TDODD: Remove: for testing at home;
                 if( !$this->ldap ) {
                     echo "Aperio Auth: Remove it !!!";
-                    $user->setUsername("testuser9");
+                    $user->setUsername("testuser2");
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 

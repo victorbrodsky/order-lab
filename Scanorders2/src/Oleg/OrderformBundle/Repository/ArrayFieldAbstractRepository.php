@@ -354,7 +354,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
-        //echo " validity=".$validity." ";
+        //echo " validity=".$validity." ";       
 
         $onlyValid = "";
         if( $validity ) {
@@ -377,7 +377,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
-        //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." ";
+        //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." <br> ";
 
         $query = $this->getEntityManager()
             ->createQuery('
@@ -441,7 +441,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( !$fieldValue ) {
             $fieldValue = $this->getNextNonProvided($entity,$extra,null);
         }
-        //echo "fieldValue=".$fieldValue;
+        //echo "fieldValue=".$fieldValue."<br>";
+        //echo "extra accession=".$extra['accession']."<br>";
+        //echo "extra keytype=".$extra['keytype']."<br>";
+        //echo "extra partname=".$extra['partname']."<br>";
 
         //before create: check if entity with key does not exists in DB
         $entitiesFound = $this->findOneByIdJoinedToField($fieldValue, $className, $fieldName, null, false, $extra );
