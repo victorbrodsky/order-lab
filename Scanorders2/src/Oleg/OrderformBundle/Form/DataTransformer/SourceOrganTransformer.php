@@ -101,6 +101,12 @@ class SourceOrganTransformer implements DataTransformerInterface
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
 
+            //get max orderinlist
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:OrganList c');           
+            $nextorder = $query->getSingleResult()['maxorderinlist']+10;
+            //echo "nextorder=".$nextorder;        
+            $newEntity->setOrderinlist($nextorder);
+            
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 

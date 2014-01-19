@@ -103,6 +103,11 @@ class PathServiceTransformer implements DataTransformerInterface
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
 
+            //get max orderinlist
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:PathServiceList c');           
+            $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
+            $newEntity->setOrderinlist($nextorder);
+            
             $this->em->persist($newEntity);
             $this->em->flush($newEntity);
 

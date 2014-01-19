@@ -111,6 +111,11 @@ class StainTransformer implements DataTransformerInterface
             $stain->setType('user-added');
             $stain->setCreator($this->user);
 
+            //get max orderinlist
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:StainList c');           
+            $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
+            $stain->setOrderinlist($nextorder);
+            
             $this->em->persist($stain);
             $this->em->flush($stain);
 
