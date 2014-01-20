@@ -126,6 +126,8 @@ class Patient extends OrderAbstract
     {
         if( $mrn ) {
             if( !$this->mrn->contains($mrn) ) {
+                //echo "Adding MRN = ".$mrn->getField()."<br>";
+                //echo "Adding keytype=".$mrn->getKeytype()."<br>";
                 $mrn->setPatient($this);
                 $this->mrn->add($mrn);
             }

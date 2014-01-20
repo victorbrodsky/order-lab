@@ -152,8 +152,8 @@ class CheckController extends Controller {
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra);
-
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->createElement(null,$user,"Patient","mrn",null,null,$extra,false);       
+        
         $element = array(
             'id'=>$entity->getId(),
             'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('keytype')),
@@ -303,7 +303,7 @@ class CheckController extends Controller {
             null,           //$parent
             null,           //$fieldValue
             $extra,         //$extra
-            0               //$withfields
+            false               //$withfields
         );
         //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 

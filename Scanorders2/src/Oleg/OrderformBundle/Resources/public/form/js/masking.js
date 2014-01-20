@@ -119,15 +119,17 @@ function setDefaultMask( element ) {
 
     clearErrorField(element);
 
-    if( maskField.hasClass('patientmrn-mask') ) {
-        //console.log("Set default mask for MRN");
-        maskField.inputmask( getMrnDefaultMask() );
-    }
+    maskField.each(function() {
+        if( $(this).hasClass('patientmrn-mask') ) {
+            //console.log("Set default mask for MRN");
+            $(this).inputmask( getMrnDefaultMask() );
+        }
 
-    if( maskField.hasClass('accession-mask') ) {
-        //console.log("Set default mask for Accession");
-        maskField.inputmask( { "mask": getAccessionDefaultMask() } );
-    }
+        if( $(this).hasClass('accession-mask') ) {
+            //console.log("Set default mask for Accession");
+            $(this).inputmask( { "mask": getAccessionDefaultMask() } );
+        }
+    });  
 
 }
 
@@ -147,12 +149,12 @@ function getMrnAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    console.log("text=" + text + ", value=" + value);
+    //console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -218,7 +220,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        //console.log("accession type listener!!!");
+        console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -228,6 +230,11 @@ function accessionTypeListener() {
                 $("#optional_button").hide();
             } else {
                 $("#optional_button").show();
+            }
+            
+            if( accTypeText == 'Auto-generated Accession Number' ) {
+                console.log("click on order info");
+                checkFormSingle($('#optional_button'));
             }
         }
 
@@ -245,7 +252,7 @@ function setAccessiontypeMask(elem,clean) {
     //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    printF(accField,"Set Accession Mask:")
+    //printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
     var text = elem.select2("data").text;

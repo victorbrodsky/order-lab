@@ -51,6 +51,7 @@ class AperioProvider implements AuthenticationProviderInterface
             $userManager = $this->serviceContainer->get('fos_user.user_manager');
 
             $user = $userManager->findUserByUsername($token->username);
+            //echo "username=".$token->username."<br>";
 
             if( !$user ) {
                 $userManager = $this->serviceContainer->get('fos_user.user_manager');   //TODO: remove it
@@ -72,7 +73,7 @@ class AperioProvider implements AuthenticationProviderInterface
                 //TDODD: Remove: for testing at home;
                 if( !$this->ldap ) {
                     echo "Aperio Auth: Remove it !!!";
-                    $user->setUsername("testuser2");
+                    $user->setUsername("testuser4");
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 

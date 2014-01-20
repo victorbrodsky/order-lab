@@ -441,13 +441,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( !$fieldValue ) {
             $fieldValue = $this->getNextNonProvided($entity,$extra,null);
         }
-        //echo "fieldValue=".$fieldValue."<br>";
+        //echo "\nfieldValue=".$fieldValue."<br>";
         //echo "extra accession=".$extra['accession']."<br>";
         //echo "extra keytype=".$extra['keytype']."<br>";
         //echo "extra partname=".$extra['partname']."<br>";
 
         //before create: check if entity with key does not exists in DB
         $entitiesFound = $this->findOneByIdJoinedToField($fieldValue, $className, $fieldName, null, false, $extra );
+        //echo "Entities Found count=".count($entitiesFound)."<br>";
+        
         if( count($entitiesFound) == 1 ) {
             return $entitiesFound[0];
         }
@@ -479,8 +481,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $extraEntity = $this->getExtraEntityById($extra);
             $field->setExtra($extraEntity);
         }
-
+        
         $keyAddMethod = "add".ucfirst($fieldName);
+        //echo "keyAddMethod=".$keyAddMethod."<br>";
+        
         $entity->$keyAddMethod($field);
 
         $entity->setStatus($status);
@@ -488,7 +492,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $em->persist($entity);
 
         if( $parent ) {
-            //echo "set Parent = ".$fieldName."<br>";
+            //echo "#########set Parent = ".$fieldName."<br>\n";
             $em->persist($parent);
             $entity->setParent($parent);
         } else {
@@ -497,8 +501,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( $flush ) {
             $em->flush();
-        }
-        //echo "Created=".$fieldEntityName."<br>";
+        }       
 
         return $entity;
     }

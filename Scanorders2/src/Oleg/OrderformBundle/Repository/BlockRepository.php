@@ -80,7 +80,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
     public function findOneBlockByJoinedToField( $accession, $keytype, $partname, $blockname, $validity=null, $single=true ) {
 
-        //echo "block find:".$accession.", ".$partname.", ".$blockname.", ".$validity." ";
+        //echo "BLOCK find:".$accession.", ".$keytype.", ".$partname.", ".$blockname.", ".$validity." \n ";
 
         $onlyValid = "";
         if( $validity ) {
@@ -95,32 +95,32 @@ class BlockRepository extends ArrayFieldAbstractRepository
             }
             $onlyValid = " AND b.status='".$validity."' AND bfield.status='".self::STATUS_VALID."'";
         }
+        //echo "validity=".$onlyValid."\n";
 
         $extraStr = "";
+        $parameters = array();      
+        $parameters['field'] = $blockname."";
         if( $accession && $accession != "" && $partname && $partname != "" ) {
             $extraStr = ' AND aa.field = :accession AND pp.field = :partname AND aa.keytype = :keytype';
-        }
+            $parameters['accession'] = $accession;
+            $parameters['keytype'] = $keytype;
+            $parameters['partname'] = $partname;                      
+        }       
         
         $query = $this->getEntityManager()
             ->createQuery('
-            SELECT b FROM OlegOrderformBundle:Block b
-            JOIN b.blockname bfield
-            JOIN b.part p
-            JOIN p.partname pp
-            JOIN p.accession a
-            JOIN a.accession aa
-            WHERE bfield.field = :field' . $extraStr . $onlyValid           
-            )->setParameter('field', $blockname."");
-
-        if( $accession && $accession != "" && $partname && $partname != "" ) {
-           $query->setParameter('accession', $accession."")
-                   ->setParameter('partname', $partname."")
-                   ->setParameter('keytype', $keytype."");
-        }
+                SELECT b FROM OlegOrderformBundle:Block b
+                JOIN b.blockname bfield
+                JOIN b.part p
+                JOIN p.partname pp
+                JOIN p.accession a
+                JOIN a.accession aa
+                WHERE bfield.field = :field' . $extraStr . $onlyValid           
+            )->setParameters($parameters);  //->setParameter('field', $blockname."");                            
         
         $blocks = $query->getResult();
 
-        if( $blocks ) {
+        if( $blocks ) {           
             if( $single ) {
                 return $blocks[0];
             } else {
@@ -146,6 +146,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $extra = array();
         $extra['keytype'] = $keytype;
         $extra['accession'] = $accessionNumber;
+        $extra['partname'] = $partname;
 
         $em = $this->_em;
 
@@ -170,17 +171,17 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //echo "next blockname generated=".$blockname."<br>";
         
         //3) before create: check if element with keys does not exists in DB
-        //echo "before create block: ".$accessionNumber." ". $keytype." ". $partname." ". $blockname."<br>";
+        //echo "before create block: ".$accessionNumber." ". $keytype." ". $partname." ". $blockname."<br>\n";
         $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($accessionNumber, $keytype, $partname, $blockname, false);  //validity=true if it was called by submit, false - if it was called by check button
 
-        if( $blockFound ) {
+        if( $blockFound ) {            
             return $blockFound;
         }
 
-        //echo "create block, partname=".$part->getPartname()->first().", partid=".$part->getId()."<br>";
+        //echo "#############Create block, partname=".$part->getPartname()->first().", partid=".$part->getId()."<br>";
 
         //4) create block object by blockname and link it to the parent
-        $block = $em->getRepository('OlegOrderformBundle:Block')->createElement(null,null,"Block","blockname",$part,$blockname,null,false);
+        $block = $em->getRepository('OlegOrderformBundle:Block')->createElement(null,null,"Block","blockname",$part,$blockname,$extra,false);
 
         return $block;
     }

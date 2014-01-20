@@ -51,6 +51,8 @@ var asseccionKeyGlobal = "";
 var asseccionKeytypeGlobal = "";
 var partKeyGlobal = "";
 var blockKeyGlobal = "";
+var mrnKeyGlobal = "";
+var mrnKeytypeGlobal = "";
 
 function checkForm( elem, single ) {
 
@@ -114,13 +116,13 @@ function checkForm( elem, single ) {
         var accessionValue = keyElement.accession;
         var partValue = keyElement.partname;
 
-        console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
+        //console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            console.log("key undefined! "+fieldName);
+            //console.log("key undefined! "+fieldName);
 
             var extraArr = new Array();
             extraArr['p1'] = accessionValue;
@@ -142,7 +144,7 @@ function checkForm( elem, single ) {
         element.button('loading');
 
         //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue+",extra="+extra);
-        //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
+        //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
         $.ajax({
             url: urlCheck+name,
@@ -185,16 +187,23 @@ function checkForm( elem, single ) {
 
                     //set global block and part key values
                     //console.log("############### SET GLOBAL "+name+", value="+keyValue);
-                    if( name == "part" ) {
-                        partKeyGlobal = keyValue;
+                    if( single ) {
+                       if( name == "part" ) {
+                            partKeyGlobal = keyValue;
+                        }
+                        if( name == "block" ) {
+                            blockKeyGlobal = keyValue;
+                        }
+                        if( name == "accession" ) {
+                            asseccionKeyGlobal = keyValue;
+                            asseccionKeytypeGlobal = extra;
+                        }
+                        if( name == "mrn" ) {
+                            mrnKeyGlobal = keyValue;
+                            mrnKeytypeGlobal = extra;
+                        } 
                     }
-                    if( name == "block" ) {
-                        blockKeyGlobal = keyValue;
-                    }
-                    if( name == "accession" ) {
-                        asseccionKeyGlobal = keyValue;
-                        asseccionKeytypeGlobal = extra;
-                    }
+                    
                 } 
 
             },
@@ -595,8 +604,8 @@ function setArrayField(element, dataArr, parent, single) {
                 //save keys for single form, because all keys will be removed by the first clean functions
                 if( single ) {
                     if( fieldName == "accession" && element.hasClass('accessiontype-combobox') ) {
-                        asseccionKeyGlobal = text;
-                        asseccionKeytypeGlobal = dataArr[i]["keytype"];
+                        //asseccionKeyGlobal = text;
+                        //asseccionKeytypeGlobal = dataArr[i]["keytype"];
                         setKeyGroup(element,dataArr[i]);
                         continue;
                         //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal);
@@ -657,6 +666,8 @@ function setArrayField(element, dataArr, parent, single) {
 
             //set mrntype
             if( fieldName == "mrn" || fieldName == "accession" ) {
+                //mrnKeyGlobal = text;
+                //mrnKeytypeGlobal = dataArr[i]["keytype"];
                 setKeyGroup(element,dataArr[i]);
             } else {
                 element.select2('data', {id: text, text: text}); //TODO: set by id .select2.('val':id);
@@ -699,17 +710,20 @@ function setKeyGroup( element, data ) {
 
     if( element.hasClass('mrntype-combobox') ) {
         setMrntypeMask(element,true);
+        if( orderformtype == "single" ) {
+            mrnKeyGlobal = data['text'];
+            mrnKeytypeGlobal = data['keytype'];
+        }
     }
     if( element.hasClass('accessiontype-combobox') ) {
         setAccessiontypeMask(element,true);
-
-        if( orderformtype == "single") {
+        if( orderformtype == "single" ) {
             asseccionKeyGlobal = data['text'];
             asseccionKeytypeGlobal = data['keytype'];
             //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
         }
-
     }
+    //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
     var inputholder = getButtonParent(element);
     var keyEl = inputholder.find('input.keyfield');
@@ -1347,7 +1361,8 @@ function removeKeyFromDB(element, btnElement, single) {
 
     var name = element.name;
     //var keyValue =element.element.attr("value");
-    var keyValue =element.element.val();
+    var keyValue = element.element.val();
+    //console.log("delete: name="+name+", keyValue="+keyValue+", single="+single);
 
     if( name == "partname" || name == "blockname" ) {
         var keyValue =element.element.select2("val");
@@ -1359,7 +1374,7 @@ function removeKeyFromDB(element, btnElement, single) {
     var extra = element.extra;
 
     //check global keys for single form, because all keys will be removed by the first clean functions
-    if( single ) {
+    if( orderformtype == "single" ) {
         if( name == "accession" && !keyValue ) {
             keyValue = asseccionKeyGlobal;
             extra = asseccionKeytypeGlobal;
@@ -1375,9 +1390,14 @@ function removeKeyFromDB(element, btnElement, single) {
             accessionValue = asseccionKeyGlobal;
             extra = asseccionKeytypeGlobal;
         }
+        if( name == "mrn" ) {
+            keyValue = mrnKeyGlobal;
+            extra = mrnKeytypeGlobal;           
+        }
     }
 
     //console.log("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue+", extra="+extra);
+    //console.log("delete: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
     if( !keyValue ) {
         return false;

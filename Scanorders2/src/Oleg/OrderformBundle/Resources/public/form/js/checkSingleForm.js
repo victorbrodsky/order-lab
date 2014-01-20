@@ -101,6 +101,10 @@ function removeFormSingle( elem ) {
     $('.partbtn').trigger("click");
 
     $('.accessionbtn').trigger("click");
+    
+    if( $('.patientmrn').find('i').hasClass('removebtn') ) {
+        $('.patientmrn').trigger("click");
+    }  
 
     $('#part-single').css( "width", "25%" );
     $('#block-single').css( "width", "25%" );

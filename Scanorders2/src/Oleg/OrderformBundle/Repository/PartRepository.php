@@ -215,7 +215,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             JOIN p.accession a
             JOIN a.accession aa
             WHERE pfield.field = :field' . $extraStr . $onlyValid
-            )->setParameter('field', $partname."")->setParameter('accession', $accession."")->setParameter('keytype', $keytype."");
+            )->setParameter('field', $partname."");//->setParameter('accession', $accession."")->setParameter('keytype', $keytype."");
 
         if( $accession && $accession != "" ) {
            $query->setParameter('accession', $accession."")                  
