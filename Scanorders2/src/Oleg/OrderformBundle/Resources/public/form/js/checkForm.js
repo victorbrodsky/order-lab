@@ -553,7 +553,7 @@ function setArrayField(element, dataArr, parent) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        //console.log( "set array field i="+i+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
         //console.log("parent id=" + parent.attr("id"));
         var idsArr = parent.attr("id").split("_");
@@ -577,8 +577,6 @@ function setArrayField(element, dataArr, parent) {
         //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
 
         if( $.inArray(fieldName, arrayFieldShow) != -1 ) { //show all fields from DB
-
-            //patient_0_0_0_0_0_0_0_0
 
             //var name = idsArr[0];
             var patient = idsArr[1];
@@ -661,10 +659,19 @@ function setArrayField(element, dataArr, parent) {
                     } else {
                         var firstAttachedElement = attachElement.find('.keyfield ').first();
                     }
+                    printF(firstAttachedElement,"firstAttachedElement=");
                     firstAttachedElement.select2('data', {id: text, text: text});
                 } else {
-                    //console.log("!!!!!!!!!!!! Set Value text="+text);
-                    firstAttachedElement.val(text);
+                    if( classs.indexOf("select2") != -1 ) {
+                        var firstAttachedElement = element;
+                        printF(firstAttachedElement,"firstAttachedElement=");
+                        //console.log("!!!!!!!!!!!! Set Value as select="+text+", id="+id);
+                        firstAttachedElement.select2('data', {id: text, text: text});
+                        //firstAttachedElement.select2('val', id);
+                    } else {
+                        //console.log("!!!!!!!!!!!! Set Value text="+text);
+                        firstAttachedElement.val(text);
+                    }
                 }
 
 
@@ -1087,7 +1094,18 @@ function initAllElements() {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
-    //console.log("disable element.id=" + element.attr('id'));
+    console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
+
+    var parentname = ""; //for multi form
+    if( element.hasClass('accessionbtn') ) {
+        parentname = "accession";
+    }
+    if( element.hasClass('partbtn') ) {
+        parentname = "part";
+    }
+    if( element.hasClass('blockbtn') ) {
+        parentname = "block";
+    }
 
     var parent = element.parent().parent().parent().parent().parent().parent();
 
@@ -1097,7 +1115,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         var single = true;
     }
 
-    //console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+    console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find(selectStr).not("*[id^='s2id_']");
 
@@ -1140,19 +1158,19 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
             //console.log("disable field=(" + field + ")");
 
             if( all == "all" ) {
-                disableElement(elements.eq(i),disabled);
+                disableElement(parentname, elements.eq(i),disabled);
             }
 
             if( flagKey == "notkey" ) {
                 //check if the field is not key
                 if( isKey(elements.eq(i), field) && flagKey == "notkey" ) {
                     if( disabled ) {    //inverse disable flagKey for key field
-                        disableElement(elements.eq(i),false);
+                        disableElement(parentname,elements.eq(i),false);
                     } else {
-                        disableElement(elements.eq(i),true);
+                        disableElement(parentname,elements.eq(i),true);
                     }
                 } else {
-                    disableElement(elements.eq(i),disabled);
+                    disableElement(parentname,elements.eq(i),disabled);
                 }
             }
 
@@ -1161,9 +1179,9 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
                     //console.log("notarrayfield (not '_0_field'): disable array id="+elements.eq(i).attr("id"));
                     if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0_field") != -1 ) {
                         if( disabled ) {    //inverse disable flag for key field
-                            disableElement(elements.eq(i),false);
+                            disableElement(parentname,elements.eq(i),false);
                         } else {
-                            disableElement(elements.eq(i),true);
+                            disableElement(parentname,elements.eq(i),true);
                         }
                     }
                 }               
@@ -1174,13 +1192,26 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
     }
 }
 
-function disableElement(element, flag) {
+function disableElement(parentname,element, flag) {
 
     var type = element.attr('type');
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+    console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+
+    //return if this element does not belong to a pressed key element
+    var idArr = element.attr('id').split("_");
+    var fieldParentName = idArr[idArr.length-holderIndex];
+    if( fieldParentName == "procedure" ) {
+        fieldParentName = "accession";
+    }
+    //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
+    if( parentname == "" || parentname == fieldParentName ) {
+        console.log("continue");
+    } else {
+        return;
+    }
 
     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) { //only for radio group
         //console.debug("radio disable classs="+classs+", id="+element.attr('id'));
@@ -1224,7 +1255,7 @@ function disableElement(element, flag) {
             //console.log("file enable field id="+element.attr("id"));
             element.attr('disabled', false);
         } else {
-            //console.log("general enable field id="+element.attr("id"));
+            console.log("general enable field id="+element.attr("id"));
             element.attr("readonly", false);
             element.removeAttr( "readonly" );
         }
