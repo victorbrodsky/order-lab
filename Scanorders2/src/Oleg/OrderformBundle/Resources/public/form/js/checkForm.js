@@ -58,7 +58,14 @@ function checkForm( elem, single ) {
 
     var element = $(elem);
 
-    //console.log( "check element.id=" + element.attr('id') + ", single="+single);
+    //TODO: mrn check button for single does not send single=true
+//    if( orderformtype == "single") {
+//        single = true;
+//    } else {
+//        single = false;
+//    }
+
+    console.log( "check element.id=" + element.attr('id') + ", single="+single);
 
     if( element.hasClass('disabled') ) {
         //console.log("loading button Cliked => return");
@@ -71,7 +78,7 @@ function checkForm( elem, single ) {
         var elementInput = element.parent().find(".keyfield");
     }
 
-    //console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
+    console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
 
     //print full id=check_btn, class=btn btn-default disabled
     //print full id=undefined, class=checkbtn glyphicon glyphicon-check
@@ -95,7 +102,7 @@ function checkForm( elem, single ) {
     var keyElement = findKeyElement(element, single);
 
     if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
-        //console.log("Remove Button Cliked: fieldName="+fieldName);
+        console.log("Remove Button Cliked: fieldName="+fieldName);
         removeKeyFromDB(keyElement, element, single);
         return;
 
@@ -186,8 +193,9 @@ function checkForm( elem, single ) {
                     invertButton(element);
 
                     //set global block and part key values
-                    //console.log("############### SET GLOBAL "+name+", value="+keyValue+", extra="+extra);
-                    if( single ) {
+                    console.log("############### SET GLOBAL "+name+", value="+keyValue+", extra="+extra+", single="+single);
+//                    if( single ) {
+                    if( orderformtype == "single") {
                        if( name == "part" ) {
                             partKeyGlobal = keyValue;
                         }
@@ -198,7 +206,7 @@ function checkForm( elem, single ) {
                             asseccionKeyGlobal = keyValue;
                             asseccionKeytypeGlobal = extra;
                         }
-                        if( name == "mrn" ) {
+                        if( name == "patient" ) {
                             mrnKeyGlobal = keyValue;
                             mrnKeytypeGlobal = extra;
                         } 
@@ -710,7 +718,7 @@ function setArrayField(element, dataArr, parent) {
 //set key type field
 //element - is key type element (combobox)
 function setKeyGroup( element, data ) {
-    //console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
+    console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
     if( element.attr('class').indexOf("combobox") == -1 ) {
         //console.log("key group: not a a keytype combobox => return");
@@ -740,7 +748,7 @@ function setKeyGroup( element, data ) {
             //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
         }
     }
-    //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
+    console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
     var inputholder = getButtonParent(element);
     var keyEl = inputholder.find('input.keyfield');
@@ -1412,10 +1420,11 @@ function removeKeyFromDB( element, btnElement, single ) {
         }
     }
 
-    //console.log("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue+", extra="+extra);
-    //console.log("delete: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
+    console.log("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue+", extra="+extra);
+    console.log("delete: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
     if( !keyValue ) {
+        console.log('Logical Error: No KeyValue provided to delete. keyValue='+keyValue);
         return false;
     }
 
@@ -1465,7 +1474,7 @@ function removeKeyFromDB( element, btnElement, single ) {
                 }
             });
 
-            //console.log('errors='+errors);
+            console.log('errors='+errors);
             if( errors == 0 ) {
                 deleteSuccess(btnElement,single);
                 return;
@@ -1515,7 +1524,7 @@ function findKeyElement( element, single ) {
     if( single ) {
         var parent = element.parent();
     }
-    //console.log("find key element:: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+    console.log("find key element:: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     //var elements = parent.find('input,select').not("*[id^='s2id_']");
     var elements = parent.find('.keyfield').not("*[id^='s2id_']");
