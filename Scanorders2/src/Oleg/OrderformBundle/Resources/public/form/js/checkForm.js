@@ -1373,7 +1373,7 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
 }
 
 //remove key NOTPROVIDED if it was created by check on empty key field (entity status="reserved").
-function removeKeyFromDB(element, btnElement, single) {
+function removeKeyFromDB( element, btnElement, single ) {
 
     var name = element.name;
     //var keyValue =element.element.attr("value");
@@ -1448,8 +1448,29 @@ function removeKeyFromDB(element, btnElement, single) {
         setDefaultMask(btnElement);
     }
 
-    function deleteError(single) {
+    function deleteError(btnElement,single) {
         if( !single ) {
+            //printF(btnElement,"btnElement:");
+            //check if all children buttons are not checked == has class removebtn
+            var errors = 0;
+            var checkBtns = btnElement.closest('.panel').find('#check_btn');
+            //console.log('checkBtns.length='+checkBtns.length);
+            checkBtns.each( function() {
+                //printF($(this),'check btn=');
+                //printF(btnElement,'btnElement=');
+                if( $(this).attr('class') != btnElement.attr('class') ) {
+                    if( $(this).find('i').hasClass('removebtn') ) {
+                        errors++;
+                    }
+                }
+            });
+
+            //console.log('errors='+errors);
+            if( errors == 0 ) {
+                deleteSuccess(btnElement,single);
+                return;
+            }
+
             var childStr = "Child";
             if( name == "accession" ) {
                 childStr = "Part";
@@ -1474,7 +1495,7 @@ function removeKeyFromDB(element, btnElement, single) {
                 deleteSuccess(btnElement,single);
             } else {
                 //console.debug("Delete ok with Error");
-                deleteError(single);
+                deleteError(btnElement,single);
             }
         },
         error: function () {
