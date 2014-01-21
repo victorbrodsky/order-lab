@@ -105,7 +105,7 @@ function checkForm( elem, single ) {
             return false;
         }
 
-        console.log("Check Button Cliked");
+        //console.log("Check Button Cliked");
 
         //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
 
@@ -116,13 +116,13 @@ function checkForm( elem, single ) {
         var accessionValue = keyElement.accession;
         var partValue = keyElement.partname;
 
-        console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
+        //console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
 
         if( !keyValue ||
             keyValue && name == "part" && !accessionValue ||
             keyValue && name == "block" && (!accessionValue || !partValue)
         ) {
-            console.log("key undefined! "+fieldName);
+            //console.log("key undefined! "+fieldName);
 
             var extraArr = new Array();
             extraArr['p1'] = accessionValue;
@@ -1166,16 +1166,15 @@ function disableElement(element, flag) {
         return;
     }
 
-    if( tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
+    if( tagName == "SELECT" || tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
         //console.debug("select disable classs="+classs+", id="+element.attr('id')+", flag="+flag);
-        //element.select2("disable", flag);
         if( flag ) {    //disable
             element.select2("readonly", true);
         } else {    //enable
+            element.select2("readonly", false);
             element.attr("readonly", false);
             element.removeAttr( "readonly" );
         }
-        //element.select2("readonly", flag);
         return;
     }
 
