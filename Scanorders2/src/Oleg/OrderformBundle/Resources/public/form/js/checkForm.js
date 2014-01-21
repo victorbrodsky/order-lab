@@ -65,7 +65,7 @@ function checkForm( elem, single ) {
 //        single = false;
 //    }
 
-    console.log( "check element.id=" + element.attr('id') + ", single="+single);
+    //console.log( "check element.id=" + element.attr('id') + ", single="+single);
 
     if( element.hasClass('disabled') ) {
         //console.log("loading button Cliked => return");
@@ -78,7 +78,7 @@ function checkForm( elem, single ) {
         var elementInput = element.parent().find(".keyfield");
     }
 
-    console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
+    //console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
 
     //print full id=check_btn, class=btn btn-default disabled
     //print full id=undefined, class=checkbtn glyphicon glyphicon-check
@@ -102,7 +102,7 @@ function checkForm( elem, single ) {
     var keyElement = findKeyElement(element, single);
 
     if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
-        console.log("Remove Button Cliked: fieldName="+fieldName);
+        //console.log("Remove Button Cliked: fieldName="+fieldName);
         removeKeyFromDB(keyElement, element, single);
         return;
 
@@ -153,6 +153,12 @@ function checkForm( elem, single ) {
         //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue+",extra="+extra);
         //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
+        //clean trim
+        keyValue = trimWithCheck(keyValue);
+        extra = trimWithCheck(extra);
+        accessionValue = trimWithCheck(accessionValue);
+        partValue = trimWithCheck(partValue);
+
         $.ajax({
             url: urlCheck+name,
             type: 'GET',
@@ -166,7 +172,7 @@ function checkForm( elem, single ) {
                 if( data.id ) {      
 
                     if( !single ) {
-                        gonext = checkParent(element,keyValue,name,fieldName); //check if this key is not used yet, when a new key field is checked in the added entity
+                        gonext = checkParent(element,keyValue,name,fieldName,extra); //check if this key is not used yet, when a new key field is checked in the added entity
                         //console.debug("1 gonext="+gonext);
                     }
                     
@@ -193,7 +199,7 @@ function checkForm( elem, single ) {
                     invertButton(element);
 
                     //set global block and part key values
-                    console.log("############### SET GLOBAL "+name+", value="+keyValue+", extra="+extra+", single="+single);
+                    //console.log("############### SET GLOBAL "+name+", value="+keyValue+", extra="+extra+", single="+single);
 //                    if( single ) {
                     if( orderformtype == "single") {
                        if( name == "part" ) {
@@ -231,30 +237,38 @@ function checkForm( elem, single ) {
 }
 
 //check if parent has checked sublings with the same key valuess
-function checkParent(element,keyValue,name,fieldName) {
+function checkParent(element,keyValue,name,fieldName,extra) {
     var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
     //console.log("checkParent parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
    
     //if this patient has already another checked accession, then check current accession is not possible
     //get patient accession buttons  
     var retval = 1;
-    
+
+    //console.log("name+fieldName=" + name+fieldName);
+
     var sublingsKey = parentEl.find('.'+name+fieldName).each(function() {
              
-        //console.log("checkParent this.id=" + $(this) + ", class="+$(this));      
+        //printF($(this),"check sublings keys=");
         
         var keyField = $(this).find('.keyfield');
         
-        if( $(this).val() == "" ) {
+        //if( $(this).val() == "" ) {
+        if( keyField.hasClass('select2') ) {
             var sublingsKeyValue = keyField.val();
         } else {
             var sublingsKeyValue = keyField.select2("val");
         }
 
-        //console.log("checkParent sublingsKeyValue=" + sublingsKeyValue);
+        if( name == "accession" || name == "patient" ) {
+            var keytype = $(this).find('.combobox ').not("*[id^='s2id_']").select2('val');
+            var sublingsKeyValue = $(this).find('.keyfield ').val();
+        }
+
+        //console.log("checkParent sublingsKeyValue=" + sublingsKeyValue + ", keyValue="+keyValue + ", keytype="+keytype+", extra="+extra);
 
 //        if( $(this).find('#check_btn').find('i').attr("class") == "glyphicon glyphicon-remove" && sublingsKeyValue == keyValue ) {
-        if( $(this).find('#check_btn').find('i').hasClass('removebtn') && sublingsKeyValue == keyValue ) {
+        if( $(this).find('#check_btn').find('i').hasClass('removebtn') && trimWithCheck(sublingsKeyValue) == trimWithCheck(keyValue) ) {
             alert("This keyfield is already in use and it is checked");
             retval = 0;
             return false;   //break each
@@ -718,7 +732,7 @@ function setArrayField(element, dataArr, parent) {
 //set key type field
 //element - is key type element (combobox)
 function setKeyGroup( element, data ) {
-    console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
+    //console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
     if( element.attr('class').indexOf("combobox") == -1 ) {
         //console.log("key group: not a a keytype combobox => return");
@@ -748,7 +762,7 @@ function setKeyGroup( element, data ) {
             //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
         }
     }
-    console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
+    //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
     var inputholder = getButtonParent(element);
     var keyEl = inputholder.find('input.keyfield');
@@ -1351,6 +1365,10 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
         var keytype = '';
     }
 
+    parentValue = trimWithCheck(parentValue);
+    parentValue2 = trimWithCheck(parentValue2);
+    keytype = trimWithCheck(keytype);
+
     //console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2+", keytype="+keytype);
     btnElement.button('loading');
 
@@ -1420,11 +1438,11 @@ function removeKeyFromDB( element, btnElement, single ) {
         }
     }
 
-    console.log("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue+", extra="+extra);
-    console.log("delete: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
+    //console.log("delete name="+name +", keyvalue="+keyValue + ", accessionValue="+accessionValue+", partValue="+partValue+", extra="+extra);
+    //console.log("delete: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
     if( !keyValue ) {
-        console.log('Logical Error: No KeyValue provided to delete. keyValue='+keyValue);
+        //console.log('Logical Error: No KeyValue provided to delete. keyValue='+keyValue);
         return false;
     }
 
@@ -1474,7 +1492,7 @@ function removeKeyFromDB( element, btnElement, single ) {
                 }
             });
 
-            console.log('errors='+errors);
+            //console.log('errors='+errors);
             if( errors == 0 ) {
                 deleteSuccess(btnElement,single);
                 return;
@@ -1490,6 +1508,10 @@ function removeKeyFromDB( element, btnElement, single ) {
             alert("Can not delete this element. Make sure if " + childStr + " is deleted.");
         }
     }
+
+    keyValue = trimWithCheck(keyValue);
+    extraStr = trimWithCheck(extraStr);
+    //console.log("delete name="+name +", keyvalue="+keyValue + ", extraStr="+extraStr);
 
     $.ajax({
         url: urlCheck+name+"/check/"+keyValue+extraStr,
@@ -1524,7 +1546,7 @@ function findKeyElement( element, single ) {
     if( single ) {
         var parent = element.parent();
     }
-    console.log("find key element:: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+    //console.log("find key element:: parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     //var elements = parent.find('input,select').not("*[id^='s2id_']");
     var elements = parent.find('.keyfield').not("*[id^='s2id_']");
@@ -1758,6 +1780,9 @@ function validateForm() {
 //            var provider = "";
 //            var date = "";
 
+            accValue = trimWithCheck(accValue);
+            acctypeValue = trimWithCheck(acctypeValue);
+
             $.ajax({
                 url: urlCheck+"accession",
                 type: 'GET',
@@ -1888,3 +1913,9 @@ function addKeyListener() {
     });
 }
 
+function trimWithCheck(val) {
+    if( val ) {
+        val = val.trim();
+    }
+    return val;
+}

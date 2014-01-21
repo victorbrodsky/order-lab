@@ -63,7 +63,6 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
-
 });
 
 //add all element to listeners again, the same as in ready
