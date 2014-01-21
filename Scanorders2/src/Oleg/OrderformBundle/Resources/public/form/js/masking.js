@@ -220,7 +220,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        console.log("accession type listener!!!");
+        //console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -233,7 +233,7 @@ function accessionTypeListener() {
             }
             
             if( accTypeText == 'Auto-generated Accession Number' ) {
-                console.log("click on order info");
+                //console.log("click on order info");
                 checkFormSingle($('#optional_button'));
             }
         }

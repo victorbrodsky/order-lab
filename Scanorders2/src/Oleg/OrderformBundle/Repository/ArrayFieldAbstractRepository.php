@@ -403,7 +403,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function deleteIfReserved( $fieldStr, $className, $fieldName, $extra = null ) {
 
-        //echo "fieldStr=".$fieldStr." ";
+        //echo "fieldStr=(".$fieldStr.") ";
+        //echo "keytype=(".$extra['keytype'].") ";
         $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, self::STATUS_RESERVED, false, $extra );
         //echo "found entities = ". count($entities). " ";
 
@@ -414,8 +415,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $removed = 0;
         foreach( $entities as $entity ) {
 
-            //check if it has children
-            if( count( $entity->getChildren() ) > 0 ) {
+            //check if it has children with reserved status
+            $count = 0;
+            foreach( $entity->getChildren() as $child ) {
+                //echo 'status='.$child->getStatus()." ";
+                if( $child->getStatus() == 'reserved' ) {
+                    $count++;
+                }
+            }
+
+            if( $count > 0 ) {
                 return -1;
             }
 

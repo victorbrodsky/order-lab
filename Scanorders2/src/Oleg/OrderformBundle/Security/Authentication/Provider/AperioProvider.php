@@ -17,7 +17,7 @@ class AperioProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
     private $serviceContainer;
-    private $ldap = false;
+    private $ldap = true;
 
     public function __construct(UserProviderInterface $userProvider, $serviceContainer)
     {
