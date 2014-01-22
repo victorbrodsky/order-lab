@@ -155,7 +155,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         if( !$accession ) {
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                                      $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber,$extra,false);
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,null,"Accession","accession",null,$accessionNumber,$extra,true);
         }
 
         //1b) Check part by partname and accession number
@@ -163,7 +163,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         if( !$part ) {
             //1) create Part if not existed. We must create parent , because we will create an object which must be linked to its parent
             //                                                               $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname,$extra,false);
+            $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,null,"Part","partname",$accession,$partname,$extra,true);
         }
 
         //2) find next available part name by accession number
@@ -181,7 +181,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //echo "#############Create block, partname=".$part->getPartname()->first().", partid=".$part->getId()."<br>";
 
         //4) create block object by blockname and link it to the parent
-        $block = $em->getRepository('OlegOrderformBundle:Block')->createElement(null,null,"Block","blockname",$part,$blockname,$extra,false);
+        $block = $em->getRepository('OlegOrderformBundle:Block')->createElement(null,null,"Block","blockname",$part,$blockname,$extra,true);
 
         return $block;
     }

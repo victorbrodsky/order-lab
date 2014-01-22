@@ -445,7 +445,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $em = $this->_em;
 
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
-        $entity = new $entityClass($withfields);
+        $entity = new $entityClass($withfields,'valid',$provider);
 
         if( !$fieldValue ) {
             $fieldValue = $this->getNextNonProvided($entity,$extra,null);
@@ -471,16 +471,24 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return $entitiesFound->first();
         }
 
-        $fieldEntityName = ucfirst($className).ucfirst($fieldName);
-        $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
-        $field = new $fieldClass();
+        //$fieldEntityName = ucfirst($className).ucfirst($fieldName);
+        //echo "fieldEntityName=".$fieldEntityName." ";
+//        $fieldClass = "Oleg\\OrderformBundle\\Entity\\".$fieldEntityName;
+//        $field = new $fieldClass();
+//        $field->setField($fieldValue);
 
-        $field->setField($fieldValue);
+//        if( $provider ) {
+//            $field->setProvider($provider);
+//            $entity->setProvider($provider);
+//        }
 
-        if( $provider ) {
-            $field->setProvider($provider);
-            $entity->setProvider($provider);
+        $fields = $entity->obtainKeyField();
+        if( count($fields) > 1 ) {
+            throw new \Exception('Newly created element has more than one key field. Number of key fields='.count($fields));
         }
+
+        $field = $fields->first();
+        $field->setField($fieldValue);
 
         $field->setStatus(self::STATUS_VALID);
 
@@ -491,10 +499,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $field->setExtra($extraEntity);
         }
         
-        $keyAddMethod = "add".ucfirst($fieldName);
-        //echo "keyAddMethod=".$keyAddMethod."<br>";
-        
-        $entity->$keyAddMethod($field);
+//        $keyAddMethod = "add".ucfirst($fieldName);
+//        echo "keyAddMethod=".$keyAddMethod."<br> ";
+//
+//        $entity->$keyAddMethod($field);
 
         $entity->setStatus($status);
 
