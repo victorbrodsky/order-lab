@@ -23,6 +23,10 @@ security:
 #            id: fos_user.user_provider.username
 #        my_active_directory_provider :
 #                  id: ztec.security.active.directory.user.provider
+
+#        fosuserprovider:
+#            id: fos_user_provider
+
         chain_provider:
             chain:
                 providers: [fos_userbundle, fr3d_ldapbundle]
@@ -30,6 +34,9 @@ security:
             id: fos_user.user_provider.username
         fr3d_ldapbundle:
             id: fr3d_ldap.security.user.provider
+
+        aperioauth:
+            id: aperio_authenticator
 
         in_memory:
             memory:
@@ -39,18 +46,35 @@ security:
 
     firewalls:
 
-       main:    #FR3DLdap
-             pattern: ^/
-             fr3d_ldap:  ~
-             aperio:  true
-             form_login:
+        secured_area:
+            pattern: ^/
+#            provider: authenticator
+            fr3d_ldap:  ~
+            simple-form:
+                always_use_default_target_path: false
+                provider:      aperioauth
+                authenticator: aperio_authenticator
+                use_referer: true
+            form_login:
                  always_use_default_target_path: false
                  provider: chain_provider
-                 #provider: in_memory
                  use_referer: true
                  success_handler: login_sucess_handler
-             logout:     true
-             anonymous:  true
+            logout:     true
+            anonymous:  true
+
+
+#       main:    #FR3DLdap
+#             pattern: ^/
+#             fr3d_ldap:  ~
+##             aperio:  true
+#             form_login:
+#                 always_use_default_target_path: false
+#                 provider: chain_provider
+#                 use_referer: true
+#                 success_handler: login_sucess_handler
+#             logout:     true
+#             anonymous:  true
 
 #       aperio_secured:
 #          pattern:    ^/

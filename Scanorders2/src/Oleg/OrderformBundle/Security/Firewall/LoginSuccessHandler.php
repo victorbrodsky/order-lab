@@ -9,14 +9,17 @@
 
 namespace Oleg\OrderformBundle\Security\Firewall;
 
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
+use Oleg\OrderformBundle\Security\Authentication\AperioAuthenticator;
 
-class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
+class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
     private $router;
     private $security;
@@ -28,6 +31,10 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+
+        //echo "user ok!";
+        //exit();
+
         if( $this->security->isGranted('ROLE_ADMIN') ) {
             $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All Not Filled')));
         }
@@ -49,6 +56,11 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
         }
 
         return $response;
+    }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    {
+        error_log('You are out!');
     }
 
 }

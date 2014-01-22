@@ -52,8 +52,9 @@ fr3d_ldap:
 #               - { ldap_attr: uid,  user_method: setName } # Default
 #               - { ldap_attr: cn,   user_method: setName }     # Optional
     #           - { ldap_attr: ...,  user_method: ... }         # Optional
-    #   service:
-    #       user_manager: fos_user.user_manager          # Overrides default user manager
+    service:
+        ldap_manager:  oleg.security.ldap_manager
+#        user_manager: fos_user.user_manager          # Overrides default user manager
     #       ldap_manager: fr3d_ldap.ldap_manager.default # Overrides default ldap manager
 
 #fos user bundle
@@ -66,26 +67,35 @@ fos_user:
 
 services:
 
-    #custom selector fields
+    #Custom selector fields
     order_form.type.stain_selector:
         class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
         arguments: ["@doctrine.orm.entity_manager","@security.context"]
         tags:
             - { name: form.type, alias: custom_selector }
 
-    #redirect admin to index
+    #Redirect admin to index
     login_sucess_handler:
         class: Oleg\OrderformBundle\Security\Firewall\LoginSuccessHandler
         arguments:  [@router, @security.context]
 
-    #Aperio auth
-    aperio.security.authentication.provider:
-        class:  Oleg\OrderformBundle\Security\Authentication\Provider\AperioProvider
-        arguments: ["", "@service_container"]
+    #Aperio Auth
+    aperio_authenticator:
+        class:     Oleg\OrderformBundle\Security\Authentication\AperioAuthenticator
+        arguments: [@security.encoder_factory, @service_container]
 
-    aperio.security.authentication.listener:
-        class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
-        arguments: ["@security.context", "@security.authentication.manager"]
+    #Override Ldap Manager
+    oleg.security.ldap_manager:
+        class: Oleg\OrderformBundle\Security\Authentication\LdapManager
+        arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%]
+
+#    aperio.security.authentication.provider:
+#        class:  Oleg\OrderformBundle\Security\Authentication\Provider\AperioProvider
+#        arguments: ["", "@service_container"]
+#
+#    aperio.security.authentication.listener:
+#        class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
+#        arguments: ["@security.context", "@security.authentication.manager"]
 
 #    aperio_user_provider:
 #        class: "%aperio_user_provider.class%"

@@ -308,7 +308,7 @@ class MultyScanOrderController extends Controller {
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        //echo $user."<br>";
+        //echo "MultyScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 
         $entity->addProvider($user);

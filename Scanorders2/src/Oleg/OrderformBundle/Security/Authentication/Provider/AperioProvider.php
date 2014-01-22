@@ -27,9 +27,9 @@ class AperioProvider implements AuthenticationProviderInterface
 
     public function authenticate(TokenInterface $token)
     {
-        //echo "Aperio auth, token:<br>";
-        //print_r($token);
-        //exit("AperioProvider");
+//        echo "Aperio auth, token:<br>";
+//        print_r($token);
+//        exit("AperioProvider");
 
         if (!$this->supports($token)) {
             return null;
