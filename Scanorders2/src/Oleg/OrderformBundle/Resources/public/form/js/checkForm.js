@@ -659,12 +659,12 @@ function setArrayField(element, dataArr, parent) {
                     } else {
                         var firstAttachedElement = attachElement.find('.keyfield ').first();
                     }
-                    printF(firstAttachedElement,"firstAttachedElement=");
+                    //printF(firstAttachedElement,"firstAttachedElement=");
                     firstAttachedElement.select2('data', {id: text, text: text});
                 } else {
                     if( classs.indexOf("select2") != -1 ) {
                         var firstAttachedElement = element;
-                        printF(firstAttachedElement,"firstAttachedElement=");
+                        //printF(firstAttachedElement,"firstAttachedElement=");
                         //console.log("!!!!!!!!!!!! Set Value as select="+text+", id="+id);
                         firstAttachedElement.select2('data', {id: text, text: text});
                         //firstAttachedElement.select2('val', id);
@@ -1094,7 +1094,7 @@ function initAllElements() {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
-    console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
+    //console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
 
     var parentname = ""; //for multi form
     if( element.hasClass('accessionbtn') ) {
@@ -1115,7 +1115,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         var single = true;
     }
 
-    console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
+    //console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
     var elements = parent.find(selectStr).not("*[id^='s2id_']");
 
@@ -1198,7 +1198,7 @@ function disableElement(parentname,element, flag) {
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
 
     //return if this element does not belong to a pressed key element
     var idArr = element.attr('id').split("_");
@@ -1208,7 +1208,7 @@ function disableElement(parentname,element, flag) {
     }
     //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
     if( parentname == "" || parentname == fieldParentName ) {
-        console.log("continue");
+        //console.log("continue");
     } else {
         return;
     }
@@ -1255,7 +1255,7 @@ function disableElement(parentname,element, flag) {
             //console.log("file enable field id="+element.attr("id"));
             element.attr('disabled', false);
         } else {
-            console.log("general enable field id="+element.attr("id"));
+            //console.log("general enable field id="+element.attr("id"));
             element.attr("readonly", false);
             element.removeAttr( "readonly" );
         }
