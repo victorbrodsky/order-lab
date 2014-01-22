@@ -37,7 +37,7 @@ class __TwigTemplate_857d8abd455062e88f2ebbcd4959c979 extends Twig_Template
             echo "        <table>
             <thead>
                 <tr>
-                    <th scope=\"col\">Token</th>
+                    <th scope=\"col\">Token_TODEL</th>
                     <th scope=\"col\">IP</th>
                     <th scope=\"col\">Method</th>
                     <th scope=\"col\">URL</th>

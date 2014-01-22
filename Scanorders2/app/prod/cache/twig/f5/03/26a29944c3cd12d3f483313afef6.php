@@ -84,7 +84,7 @@ class __TwigTemplate_f50326a29944c3cd12d3f483313afef6 extends Twig_Template
         echo "</td>
             </tr>
             <tr>
-                <th>Provider</th>
+                <th>Provider_TODEL</th>
                 <td>";
         // line 37
         echo twig_escape_filter($this->env, $this->getAttribute((isset($context["entity"]) ? $context["entity"] : null), "provider"), "html", null, true);

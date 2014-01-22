@@ -477,7 +477,7 @@ class cDatabaseReader
 		}                
     }
     /**
-     * Add Token renewal to SOAP 
+     * Add Token_TODEL renewal to SOAP
      * IF $DoNotRenewToken is true then the dataserver will not renew the token
      * @param SoapParam $ParamsArray
      * @param bool $DoNotRenewToken 

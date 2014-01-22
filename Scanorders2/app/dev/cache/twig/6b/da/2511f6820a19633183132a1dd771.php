@@ -58,7 +58,7 @@ class __TwigTemplate_6bda2511f6820a19633183132a1dd771 extends Twig_Template
         echo twig_escape_filter($this->env, (isset($context["url"]) ? $context["url"] : $this->getContext($context, "url")), "html", null, true);
         echo "\">
         <div class=\"clear-fix\"></div>
-        <label for=\"token\">Token</label>
+        <label for=\"token\">Token_TODEL</label>
         <input type=\"text\" name=\"token\" id=\"token\" value=\"";
         // line 21
         echo twig_escape_filter($this->env, (isset($context["token"]) ? $context["token"] : $this->getContext($context, "token")), "html", null, true);

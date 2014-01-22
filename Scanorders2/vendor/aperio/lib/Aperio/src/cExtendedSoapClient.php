@@ -76,14 +76,14 @@ function GetAuthVars ()
 	{
 		return array
 		(
-			new SoapParam ($_SESSION ['AuthToken'], 'Token'),
+			new SoapParam ($_SESSION ['AuthToken'], 'Token_TODEL'),
 		);
 	}
 	else
 	{
 		return array
 		(
-			new SoapParam ($_SESSION ['AuthToken'], 'Token'),
+			new SoapParam ($_SESSION ['AuthToken'], 'Token_TODEL'),
 			new SoapParam ('1', 'DoNotRenewToken')
 		);
 	}

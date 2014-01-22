@@ -14,8 +14,9 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+//use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
+//use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Doctrine\ORM\EntityRepository;
 
 class UserType extends AbstractType
 {
@@ -31,12 +32,12 @@ class UserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (class_exists('Symfony\Component\Security\Core\Validator\Constraints\UserPassword')) {
-            $constraint = new UserPassword();
-        } else {
-            // Symfony 2.1 support with the old constraint class
-            $constraint = new OldUserPassword();
-        }
+//        if (class_exists('Symfony\Component\Security\Core\Validator\Constraints\UserPassword')) {
+//            $constraint = new UserPassword();
+//        } else {
+//            // Symfony 2.1 support with the old constraint class
+//            $constraint = new OldUserPassword();
+//        }
 
 //        $disabled = "";
 //        if( !$this->roleAdmin ) {
@@ -91,16 +92,29 @@ class UserType extends AbstractType
 
         $attr = array('class' => 'combobox combobox-width');
         if( $this->roleAdmin ) {
-            $builder->add('roles', 'choice', array(
-                'choices'   => array(
-                    'ROLE_SUPER_ADMIN'   => 'Administrator',
-                    'ROLE_ADMIN'   => 'Processor',
-                    'ROLE_USER' => 'Submitter',
-                    'ROLE_ORDERING_PROVIDER' => 'Ordering Provider'
-                ),
-                'attr'=>$attr,
-    //            'property_path' => false,
+//            $builder->add('roles', 'choice', array(
+//                'choices'   => array(
+//                    'ROLE_SUPER_ADMIN'   => 'Administrator',
+//                    'ROLE_ADMIN'   => 'Processor',
+//                    'ROLE_USER' => 'Submitter',
+//                    'ROLE_ORDERING_PROVIDER' => 'Ordering Provider_TODEL'
+//                ),
+//                'attr'=>$attr,
+//    //            'property_path' => false,
+//                'multiple'  => true,
+//            ));
+
+            $builder->add('roles', 'entity', array(
                 'multiple'  => true,
+                'attr'=>$attr,
+                'class' => 'OlegOrderformBundle:Roles',
+                'property' => 'alias',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.name', 'ASC');
+                        //->where('u.type = :type')
+                        //->setParameter('type', 'default');
+                },
             ));
 
             $builder->add('enabled', null, array(

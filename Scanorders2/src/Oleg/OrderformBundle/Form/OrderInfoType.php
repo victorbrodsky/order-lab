@@ -155,7 +155,7 @@ class OrderInfoType extends AbstractType
         ));
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegOrderformBundle:User',
-            'label'=>'Ordering Provider:',
+            'label'=>'Ordering Provider_TODEL:',
             'required' => false,
             //'multiple' => true,
             'attr' => $attr,

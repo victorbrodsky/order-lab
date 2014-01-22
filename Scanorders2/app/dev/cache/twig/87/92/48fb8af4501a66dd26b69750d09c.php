@@ -239,7 +239,7 @@ class __TwigTemplate_879248fb8af4501a66dd26b69750d09c extends Twig_Template
         }
         // line 90
         echo "            <div class=\"sf-toolbar-info-piece\">
-                <b>Token</b>
+                <b>Token_TODEL</b>
                 <span>
                     ";
         // line 93

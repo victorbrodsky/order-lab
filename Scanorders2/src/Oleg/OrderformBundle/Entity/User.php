@@ -89,6 +89,17 @@ class User extends BaseUser
      */
     protected $createdby;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $appliedforaccess;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $appliedforaccessdate;
+
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
@@ -266,6 +277,39 @@ class User extends BaseUser
     {
         return in_array(strtoupper($role), $this->roles, true);
     }
+
+    /**
+     * @param \DateTime $appliedforaccessdate
+     */
+    public function setAppliedforaccessdate($appliedforaccessdate)
+    {
+        $this->appliedforaccessdate = $appliedforaccessdate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getAppliedforaccessdate()
+    {
+        return $this->appliedforaccessdate;
+    }
+
+    /**
+     * @param mixed $appliedforaccess
+     */
+    public function setAppliedforaccess($appliedforaccess)
+    {
+        $this->appliedforaccess = $appliedforaccess;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppliedforaccess()
+    {
+        return $this->appliedforaccess;
+    }
+
 
 }
 

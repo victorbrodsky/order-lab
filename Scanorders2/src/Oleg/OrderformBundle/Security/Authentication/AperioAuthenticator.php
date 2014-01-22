@@ -35,7 +35,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 
     public function createToken(Request $request, $username, $password, $providerKey)
     {
-        //echo "create Token <br>";
+        //echo "create Token_TODEL <br>";
         //exit("AperioAuthenticator");
         return new UsernamePasswordToken($username, $password, $providerKey);
     }
@@ -80,7 +80,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
                     $user->addRole('ROLE_SUPER_ADMIN');
                 }
 
-                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider_TODEL
 
                 $user->setPassword("");
 
@@ -100,7 +100,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 
     public function supportsToken(TokenInterface $token, $providerKey)
     {
-        echo "supports Token <br>";
+        //echo "supports Token_TODEL <br>";
         //exit("AperioAuthenticator");
         return $token instanceof UsernamePasswordToken && $token->getProviderKey() === $providerKey;
     }
@@ -129,8 +129,8 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
             //$loginName = 'oli2002';
         }
 
-//        print_r($AuthResult);
-//        exit();
+        //print_r($AuthResult);
+        //exit();
 
         return $AuthResult;
     }

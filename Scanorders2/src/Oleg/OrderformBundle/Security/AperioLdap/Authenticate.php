@@ -58,7 +58,7 @@ include_once '/Skeleton.php';
 		header("Location: /Login.php?error=$Error");
 		exit();
 	}
-	$_SESSION['AuthToken'] = $AuthResult['Token'];
+	$_SESSION['AuthToken'] = $AuthResult['Token_TODEL'];
 
 	// If the user MUST change their password before proceeding
 	if (isset ($AuthResult['UserMustChangePassword']) && $AuthResult['UserMustChangePassword'] == 'True')

@@ -80,7 +80,7 @@ class __TwigTemplate_07566954daa9c9a9dff802f172f102c4 extends Twig_Template
             if (($this->getAttribute((isset($context["collector"]) ? $context["collector"] : null), "tokenClass") != null)) {
                 // line 22
                 echo "            <div class=\"sf-toolbar-info-piece\">
-                <b>Token class</b>
+                <b>Token_TODEL class</b>
                 ";
                 // line 24
                 echo $this->env->getExtension('code')->abbrClass($this->getAttribute((isset($context["collector"]) ? $context["collector"] : null), "tokenClass"));
@@ -187,7 +187,7 @@ class __TwigTemplate_07566954daa9c9a9dff802f172f102c4 extends Twig_Template
             if (($this->getAttribute((isset($context["collector"]) ? $context["collector"] : null), "tokenClass") != null)) {
                 // line 71
                 echo "            <tr>
-                <th>Token class</th>
+                <th>Token_TODEL class</th>
                 <td>";
                 // line 73
                 echo twig_escape_filter($this->env, $this->getAttribute((isset($context["collector"]) ? $context["collector"] : null), "tokenClass"), "html", null, true);

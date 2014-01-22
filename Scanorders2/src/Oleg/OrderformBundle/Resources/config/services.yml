@@ -76,7 +76,7 @@ services:
 
     #Redirect admin to index
     login_sucess_handler:
-        class: Oleg\OrderformBundle\Security\Firewall\LoginSuccessHandler
+        class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
         arguments:  [@router, @security.context]
 
     #Aperio Auth
@@ -90,7 +90,7 @@ services:
         arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%]
 
 #    aperio.security.authentication.provider:
-#        class:  Oleg\OrderformBundle\Security\Authentication\Provider\AperioProvider
+#        class:  Oleg\OrderformBundle\Security\Authentication\Provider_TODEL\AperioProvider
 #        arguments: ["", "@service_container"]
 #
 #    aperio.security.authentication.listener:

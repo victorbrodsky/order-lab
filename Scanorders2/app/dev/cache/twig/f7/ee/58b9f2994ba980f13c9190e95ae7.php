@@ -89,9 +89,9 @@ class __TwigTemplate_f7ee58b9f2994ba980f13c9190e95ae7 extends Twig_Template
                             ";
         } elseif (((isset($context["about"]) ? $context["about"] : $this->getContext($context, "about")) == "no_token")) {
             // line 28
-            echo "                                <h2>Token not found</h2>
+            echo "                                <h2>Token_TODEL not found</h2>
                                 <p>
-                                    <em>Token \"";
+                                    <em>Token_TODEL \"";
             // line 30
             echo twig_escape_filter($this->env, (isset($context["token"]) ? $context["token"] : $this->getContext($context, "token")), "html", null, true);
             echo "\" was not found in the database.</em>

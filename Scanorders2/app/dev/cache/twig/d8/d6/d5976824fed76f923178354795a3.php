@@ -46,7 +46,7 @@ class __TwigTemplate_d8d6d5976824fed76f923178354795a3 extends Twig_Template
                 <th>Status</th>              
                 <th>Priority</th>               
                 <th>Return Slide</th>             
-                <th>Provider</th>
+                <th>Provider_TODEL</th>
                 <th>Actions</th>
             </tr>
         </thead>

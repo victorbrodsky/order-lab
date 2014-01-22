@@ -406,7 +406,7 @@ function ADB_Authenticate($UserName, $Password)
 	if (is_array($res) && ($res['LogonResult']->ASResult == 0))
 	{
 		$ReturnArray['ReturnCode'] = 0;
-		$ReturnArray['Token'] = $res['Token'];
+		$ReturnArray['Token_TODEL'] = $res['Token_TODEL'];
 		$ReturnArray['UserId'] = $res['UserData']->UserId;
 		$ReturnArray['UserMustChangePassword'] = $res['UserData']->UserMustChangePassword;
 	}
@@ -426,16 +426,16 @@ function ADB_Authenticate($UserName, $Password)
 }
 
 //------------------------------------------------------------------
-// ADB_Logoff - Disconnect and invalidate the existing Auth Token
+// ADB_Logoff - Disconnect and invalidate the existing Auth Token_TODEL
 //------------------------------------------------------------------
 function ADB_Logoff()
 {
 	$client = GetSOAPSecurityClient ();
-	$res = $client->__soapCall('Logoff', array(new SoapParam($_SESSION['AuthToken'], 'Token')));
+	$res = $client->__soapCall('Logoff', array(new SoapParam($_SESSION['AuthToken'], 'Token_TODEL')));
 }
 
 //------------------------------------------------------------------
-// ADB_IsValidToken - Validate an Auth Token
+// ADB_IsValidToken - Validate an Auth Token_TODEL
 //	if $Renew is true, then the valid token is renewed
 //------------------------------------------------------------------
 function ADB_IsValidToken($DoNotRenewToken = false)
@@ -443,7 +443,7 @@ function ADB_IsValidToken($DoNotRenewToken = false)
 	$client = GetSOAPSecurityClient ();
 	
 	$res = $client->__soapCall('IsValidToken',
-								array(new SoapParam($_SESSION['AuthToken'], 'Token'),
+								array(new SoapParam($_SESSION['AuthToken'], 'Token_TODEL'),
 									  new SoapParam($DoNotRenewToken ? '1' : '0', 'DoNotRenewToken')));
 
 	if(is_array($res))
@@ -469,7 +469,7 @@ function ADB_IsValidSignature($Password)
 	$client = GetSOAPSecurityClient ();
 
 	$res = $client->__soapCall(	'IsValidSignature',
-								array(new SoapParam($_SESSION['AuthToken'], 'Token'),
+								array(new SoapParam($_SESSION['AuthToken'], 'Token_TODEL'),
 								new SoapParam($Password, 'Password')));	 	  
 
 	if(is_array($res))
@@ -4282,14 +4282,14 @@ function ADB_SetLicenses ($systemId, $systemDesc, $key)
 
 
 // Return all the system licensing information
-// ent:	$Token - current session's token (needed because this is called from Authenticate.php
+// ent:	$Token_TODEL - current session's token (needed because this is called from Authenticate.php
 // 					where the AuthToken Session var is set but not yet established.
 function ADB_GetLicenses ($Token = NULL, $DoThrow = true)
 {
 	$client = GetSOAPSecurityClient ();
 
 	if ($Token)
-		$ParamsArray = array (new SoapParam($Token, 'Token'));
+		$ParamsArray = array (new SoapParam($Token, 'Token_TODEL'));
 	else
 		$ParamsArray = GetAuthVars();
 

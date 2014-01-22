@@ -29,6 +29,7 @@ class ListController extends Controller
      * @Route("/slidetype/", name="slidetype")
      * @Route("/formtype/", name="formtype")
      * @Route("/status/", name="status")
+     * @Route("/roles/", name="roles")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -65,6 +66,7 @@ class ListController extends Controller
      * @Route("/slidetype/", name="slidetype_create")
      * @Route("/formtype/", name="formtype_create")
      * @Route("/status/", name="status_create")
+     * @Route("/roles/", name="roles_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -147,6 +149,7 @@ class ListController extends Controller
      * @Route("/slidetype/new", name="slidetype_new")
      * @Route("/formtype/new", name="formtype_new")
      * @Route("/status/new", name="status_new")
+     * @Route("/roles/new", name="roles_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -193,6 +196,7 @@ class ListController extends Controller
      * @Route("/slidetype/{id}", name="slidetype_show")
      * @Route("/formtype/{id}", name="formtype_show")
      * @Route("/status/{id}", name="status_show")
+     * @Route("/roles/{id}", name="roles_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -237,6 +241,7 @@ class ListController extends Controller
      * @Route("/slidetype/{id}/edit", name="slidetype_edit")
      * @Route("/formtype/{id}/edit", name="formtype_edit")
      * @Route("/status/{id}/edit", name="status_edit")
+     * @Route("/roles/{id}/edit", name="roles_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -315,6 +320,7 @@ class ListController extends Controller
      * @Route("/slidetype/{id}", name="slidetype_update")
      * @Route("/formtype/{id}", name="formtype_update")
      * @Route("/status/{id}", name="status_update")
+     * @Route("/roles/{id}", name="roles_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -367,6 +373,7 @@ class ListController extends Controller
      * @Route("/slidetype/{id}", name="slidetype_delete")
      * @Route("/formtype/{id}", name="formtype_delete")
      * @Route("/status/{id}", name="status_delete")
+     * @Route("/roles/{id}", name="roles_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

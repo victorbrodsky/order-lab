@@ -64,7 +64,7 @@ security:
             anonymous:  true
 
 
-#       main:    #FR3DLdap
+#        main:    #FR3DLdap
 #             pattern: ^/
 #             fr3d_ldap:  ~
 ##             aperio:  true

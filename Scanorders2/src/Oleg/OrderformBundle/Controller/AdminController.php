@@ -20,6 +20,7 @@ use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\OrderformBundle\Entity\Roles;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -70,6 +71,7 @@ class AdminController extends Controller
         $count_mrntype = $this->generateMrnType();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
+        $count_roles = $this->generateRoles();
 
 
         $this->get('session')->getFlashBag()->add(
@@ -699,6 +701,58 @@ class AdminController extends Controller
             }
 
             $em->persist($accType);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return $count;
+    }
+
+
+    public function generateRoles() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "ROLE_SUPER_ADMIN" => "Admin",
+            "ROLE_ADMIN" => "Processor",
+            //"ROLE_BANNED_USER" => "Banned User",  //not required since we have locked
+            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter",
+            "ROLE_EXTERNAL_SUBMITTER" => "External Submitter",
+            "ROLE_ORDERING_PROVIDER" => "Ordering Provider",
+            "ROLE_EXTERNAL_ORDERING_PROVIDER" => "External Ordering Provider",
+            "ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST" => "Data Quality Assurance Specialist",
+            "ROLE_PATHOLOGY_RESIDENT" => "Pathology Resident",
+            "ROLE_PATHOLOGY_FELLOW" => "Pathology Fellow",
+            "ROLE_PATHOLOGY_FACULTY" => "Pathology Faculty"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $types as $role => $alias ) {
+
+            $entity = new Roles();
+            $entity->setOrderinlist( $count );
+            $entity->setCreator( $username );
+            $entity->setCreatedate( new \DateTime() );
+            $entity->setName( trim($role) );
+            $entity->setAlias( trim($alias) );
+
+            if( $role == "ROLE_SUPER_ADMIN" && $role == "ROLE_ADMIN" ) {
+                $entity->setType('admin');
+            } else {
+                $entity->setType('default');
+            }
+
+            $em->persist($entity);
             $em->flush();
 
             $count = $count + 10;
