@@ -682,7 +682,8 @@ function setArrayField(element, dataArr, parent) {
                     firstAttachedElement.datepicker( 'setDate', new Date(text) );
                     firstAttachedElement.datepicker( 'update');
                 } else {
-                    firstAttachedElement.datepicker({autoclose: true});
+                    //firstAttachedElement.datepicker({autoclose: true});
+                    initSingleDatepicker(firstAttachedElement);
                     //firstAttachedElement.val( 'setDate', new Date() );
                     //firstAttachedElement.datepicker( 'update');
                 }

@@ -41,8 +41,18 @@ class UserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $users = $userManager->findUsers();
 
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
         return array(
             'entities' => $users,
+            'roles' => $rolesArr
         );
     }
 
@@ -58,7 +68,17 @@ class UserController extends Controller
         $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
         //$ps = new PathService();
         //$entity->addPathologyServices($ps);
-        $form = $this->createForm(new UserType('show',$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array('disabled' => true));
+
+        //Roles
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
+        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array('disabled' => true));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -83,7 +103,16 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
 
-        $form = $this->createForm(new UserType('edit',$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        //Roles
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -95,6 +124,10 @@ class UserController extends Controller
 //        ));
 
 //        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        //print_r( $this->get('security.context')->getToken()->getUser()->getRoles() );
+        //echo "Roles of user ".$entity->getUsername().":<br>";
+       // print_r( $entity->getRoles() );
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
@@ -119,7 +152,16 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $form = $this->createForm(new UserType('edit',$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        //Roles
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));

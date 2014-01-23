@@ -105,6 +105,8 @@ function fieldInputMask() {
 
     $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
 
+    $(".datepicker").inputmask( "mm/dd/yyyy" );
+
     accessionTypeListener();
     mrnTypeListener();
 
@@ -310,7 +312,7 @@ function noMaskError( element ) {
 
     var keytypeText = element.closest(".row").find('.accessiontype-combobox').select2('data').text;
 
-    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) || element.hasClass('patientage-mask')) {   //regular mask
+    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) || element.hasClass('patientage-mask') || element.hasClass('datepicker') ) {   //regular mask
         if( !allZeros(element) && element.inputmask("isComplete") ) {
             return true;
         } else {

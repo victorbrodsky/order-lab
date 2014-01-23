@@ -165,6 +165,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         //echo $entity;
+        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
         //exit('orderinfo repo exit');
 
         //create new orderinfo

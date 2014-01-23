@@ -24,6 +24,7 @@ class LdapManager extends BaseLdapManager
 
         if( $user->getUsername() == "oli2002" || $user->getUsername() == "vib9020" ) {
             $user->addRole('ROLE_SUPER_ADMIN');
+            $user->addRole('ROLE_ORDERING_PROVIDER');
         }
 
     }

@@ -23,11 +23,15 @@ class UserType extends AbstractType
 
     protected $cicle;
     protected $roleAdmin;
+    protected $user;
+    protected $roles;
 
-    public function __construct( $cicle = null, $roleAdmin = false )
+    public function __construct( $cicle = null, $user, $roles, $roleAdmin = false )
     {
         $this->cicle = $cicle;
+        $this->user = $user;
         $this->roleAdmin = $roleAdmin;
+        $this->roles = $roles;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -90,31 +94,22 @@ class UserType extends AbstractType
             'classtype' => 'userPathologyServices'
         ));
 
-        $attr = array('class' => 'combobox combobox-width');
-        if( $this->roleAdmin ) {
-//            $builder->add('roles', 'choice', array(
-//                'choices'   => array(
-//                    'ROLE_SUPER_ADMIN'   => 'Administrator',
-//                    'ROLE_ADMIN'   => 'Processor',
-//                    'ROLE_USER' => 'Submitter',
-//                    'ROLE_ORDERING_PROVIDER' => 'Ordering Provider_TODEL'
-//                ),
-//                'attr'=>$attr,
-//    //            'property_path' => false,
-//                'multiple'  => true,
-//            ));
 
-            $builder->add('roles', 'entity', array(
-                'multiple'  => true,
+        //Roles
+//        echo "Roles of user ".$this->user->getUsername().":<br>";
+//        foreach( $this->user->getRoles() as $role ) {
+//            echo $role . "<br>";
+//
+//        }
+
+        $attr = array('class' => 'combobox combobox-width');
+
+        if( $this->roleAdmin ) {
+
+            $builder->add('roles', 'choice', array(
+                'choices' => $this->roles,
                 'attr'=>$attr,
-                'class' => 'OlegOrderformBundle:Roles',
-                'property' => 'alias',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->orderBy('u.name', 'ASC');
-                        //->where('u.type = :type')
-                        //->setParameter('type', 'default');
-                },
+                'multiple'  => true,
             ));
 
             $builder->add('enabled', null, array(

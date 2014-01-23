@@ -53,11 +53,12 @@ function regularCombobox() {
     $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
 
     //preselect with current user
-    if( !proxyuser_id ) {
-        proxyuser_id = user_id;
-        proxyuser_name = user_name;
+    if( proxyuser_id ) {
+//        proxyuser_id = user_id;
+//        proxyuser_name = user_name;
+        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
     }
-    $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
+
 }
 
 function customCombobox() {

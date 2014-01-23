@@ -765,8 +765,10 @@ class OrderInfo
 
     public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
     {
-        if( !$this->proxyuser->contains($proxyuser) ) {
-            $this->proxyuser->add($proxyuser);
+        if( $proxyuser ) {
+            if( !$this->proxyuser->contains($proxyuser) ) {
+                $this->proxyuser->add($proxyuser);
+            }
         }
 
         return $this;
@@ -782,12 +784,15 @@ class OrderInfo
      */
     public function setProxyuser($proxyuser)
     {
-        if( is_array($proxyuser) ) {
-            $this->proxyuser = $proxyuser;
-        } else {
-            $this->proxyuser->clear();
-            $this->proxyuser->add($proxyuser);
+        if( $proxyuser ) {
+            if( is_array($proxyuser) ) {
+                $this->proxyuser = $proxyuser;
+            } else {
+                $this->proxyuser->clear();
+                $this->proxyuser->add($proxyuser);
+            }
         }
+
     }
 
     /**

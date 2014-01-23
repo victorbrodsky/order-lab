@@ -182,7 +182,8 @@ class ScanOrderController extends Controller {
 
 
         //***************** User filter ***************************//
-        $dql->innerJoin("orderinfo.proxyuser", "proxyuser");
+        //TODO: test leftJoin. innerJoin does not show orders without proxyuser link
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
         //show only my order if i'm not an admin and Pathology Services are not choosen
         if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
             //echo " role_user ";
@@ -192,8 +193,10 @@ class ScanOrderController extends Controller {
             $criteriastr .= "( provider.id=".$user->getId();
 
             //***************** Proxy User Orders *************************//
-            $criteriastr .= " OR proxyuser.id=".$user->getId()." )";
+            $criteriastr .= " OR proxyuser.id=".$user->getId();
             //***************** END of Proxy User Orders *************************//
+
+            $criteriastr .= " )";
         }
 
         if( $service == "My Orders" ) {
@@ -207,8 +210,10 @@ class ScanOrderController extends Controller {
                 $criteriastr .= "( provider.id=".$user->getId();
 
                 //***************** Proxy User Orders *************************//
-                $criteriastr .= " OR proxyuser.id=".$user->getId()." )";
+                $criteriastr .= " OR proxyuser.id=".$user->getId();
                 //***************** END of Proxy User Orders *************************//
+
+                $criteriastr .= " )";
             }
         }
         if( $service == "Orders I Personally Placed" ) {

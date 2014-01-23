@@ -31,18 +31,25 @@
         </div>
         <div class="col-xs-6" align="left" class="form_body_toggle_btn">
 
-            <div class="input-group">
-                {#{{ form_widget(field) }}#}
+            <div class="input-group date">
                 {% if attr == "disabled" %}
                     {#value of disabled field will be ignored, but readonly does not work#}
                     {{ form_widget(field,{ 'disabled':'disabled' }) }}
                 {% else %}
                     {{ form_widget(field) }}
                 {% endif %}
-                <span class="input-group-addon btn" data-toggle="datepicker" type="button">
-                    <i class="glyphicon glyphicon-calendar"></i>
-                </span>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                {#<span class="input-group-addon btn" data-toggle="datepicker" type="button">#}
+                    {#<i class="glyphicon glyphicon-calendar"></i>#}
+                {#</span>#}
             </div>
+
+
+            {#<div class="input-group date">#}
+                {#&#123;&#35;<input type="text" class="form-control">&#35;&#125;#}
+                {#{{ form_widget(field) }}#}
+                {#<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>#}
+            {#</div>#}
 
         </div>
         {{ form_rest(field) }}
@@ -50,16 +57,14 @@
     </p>
 {% endmacro %}
 {% macro fielddate( field, attr ) %}
-            <div class="input-group">
+            <div class="input-group date">
                 {% if attr == "disabled" %}
                     {#value of disabled field will be ignored, but readonly does not work#}
                     {{ form_widget(field,{ 'disabled':'disabled' }) }}
                 {% else %}
                     {{ form_widget(field) }}
                 {% endif %}
-                <span class="input-group-addon btn" data-toggle="datepicker" type="button">
-                    <i class="glyphicon glyphicon-calendar"></i>
-                </span>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
 
 {% endmacro %}

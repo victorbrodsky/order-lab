@@ -18,12 +18,9 @@
 
         {{ form_label(form.dob) }}
         <div ng-app="myApp" ng-controller="Ctrl">
-            <div class="input-group">
-                {#<input type="text" class="form-control" b-datepicker ng-model="date">#}
+            <div class="input-group date">
                 {{ form_widget(form.dob) }}
-                <span class="input-group-addon btn" data-toggle="datepicker" type="button">
-                    <i class="glyphicon glyphicon-calendar"></i>
-                </span>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
             </div>
         </div>
         {#{{ form_widget(form.dob) }}#}

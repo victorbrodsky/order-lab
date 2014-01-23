@@ -35,7 +35,7 @@
     {% endstylesheets %}
 
     {% stylesheets
-        'bundles/olegorderform/datepicker/css/*' filter='cssrewrite'
+        'bundles/olegorderform/datepicker/css/datepicker3.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -90,6 +90,7 @@
             {% endblock %}
         </div>
 
+        {#'@OlegOrderformBundle/Resources/public/datepicker/js/*'#}
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/*'
             '@OlegOrderformBundle/Resources/public/bootstrap/js/*'

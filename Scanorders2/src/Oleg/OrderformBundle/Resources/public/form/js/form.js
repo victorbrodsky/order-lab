@@ -595,59 +595,169 @@ function expandTextarea() {
 
 }
 
-//initDatepicker: add or remove click event to the field and its siblings calendar button
-//element: null or jquery object. If null, all element with class datepicker will be assign to calendar click event
-//remove null or "remove"
+var _calendarStatus = 0;
+var _calendarElement;
+//use "eternicode/bootstrap-datepicker": "dev-master"
 function initDatepicker( element, remove ) {
-    //console.debug("init datepicker, cicle="+cicle);
-
-    var hideOrShowCalendar = function(elem) {
-        console.log("hide or cancel! id="+elem.attr("id")+", class="+elem.attr("class"));
-        //Hide the menus if visible
-        //elem.siblings('.datepicker').datepicker('show');
-        if( $('.datepicker-dropdown').is(':visible') ) {
-            console.log("visible");
-            elem.siblings('.datepicker').datepicker('hide');
-        }
-        else {
-            elem.siblings('.datepicker').datepicker('show');
-        }
-    }
 
     if( cicle != "show" ) {
 
         if( !element ) {
-            element = $(".datepicker");
+            element = $('.input-group.date');
         }
-        //console.debug("init datepicker, cicle="+cicle+", class="+element.attr("class"));
+
         if( remove == "remove" ) {
             element.datepicker("remove");
         } else {
-            element.datepicker({autoclose: true});
+            initSingleDatepicker(element);
         }
-        var icons = element.parent().find("span").each(function( index  ) {
-            //console.log( index + ": " + $( this ).attr("class") );
-            if( remove == "remove" ) {
-                $( this ).unbind("click");
-            } else {
 
-                $( this ).click(function(e) {
-                    //$(this).siblings('.datepicker').datepicker('show');
-                    hideOrShowCalendar($(this));
-                });
-
-                //$(this).touch(hideOrShowCalendar).click(hideOrShowCalendar);
-                //iPad
-                $(this).on('touchstart', function(e) {
-                    console.log("touchstart !!!");
-                    hideOrShowCalendar($(this));
-                })
-
-            }
-        });
     }
 
+
+//    $('.input-group-addon').on('click',function(e) {
+//        hideOrShowCalendar($(this));
+//    });
+//
+//    $('.input-group-addon').on('mouseup',function(e) {
+//        console.log("calendarStatus="+_calendarStatus);
+//        if( _calendarElement && _calendarStatus == 0 ) {
+//            _calendarElement.datepicker('hide');
+//        }
+//    });
+
+
+//    $('.input-group-addon').on('touchstart', function(e) {
+//        hideOrShowCalendar($(this));
+//    });
+
 }
+
+function initSingleDatepicker( datepickerElement ) {
+    datepickerElement.datepicker({
+        autoclose: true,
+        clearBtn: true,
+        //todayBtn: "linked",
+        todayHighlight: true
+    });
+}
+
+var hideOrShowCalendar = function(elem) {
+
+    //console.log("hide or cancel! id="+elem.attr("id")+", class="+elem.attr("class"));
+    //Hide the menus if visible
+    //elem.siblings('.datepicker').datepicker('show');
+
+    var datepickers = $('.datepicker-dropdown');
+    //console.log("datepickers.length="+datepickers.length);
+    var datepickerEl = elem.closest('.row').find('.input-group.date');
+
+    if( datepickers.length > 0 ) {
+        if( datepickers.first().is(':visible') ) {
+            printF(datepickerEl, "visible => hide :");
+            _calendarStatus = 0;
+            _calendarElement = datepickerEl;
+            datepickerEl.datepicker('hide');
+        }
+        else {
+            printF(datepickerEl, "not visible => show :");
+            _calendarStatus = 1;
+            _calendarElement = null;
+            datepickerEl.datepicker('show');
+        }
+    }
+
+
+
+//    datepickers.each( function() {
+//        var datepickerEl = $(this);
+//        if( datepickerEl.is(':visible') ) {
+//            console.log("visible => hide");
+//            datepickerEl.siblings('.datepicker').datepicker('hide');
+//        }
+//        else {
+//            console.log("not visible => show");
+//            datepickerEl.siblings('.datepicker').datepicker('show');
+//        }
+//    });
+
+}
+
+//use "eternicode/bootstrap-datepicker": "dev-master"
+//initDatepicker: add or remove click event to the field and its siblings calendar button
+//element: null or jquery object. If null, all element with class datepicker will be assign to calendar click event
+//remove null or "remove"
+//function initDatepicker2( element, remove ) {
+//    console.debug("init datepicker, cicle="+cicle+", remove="+remove);
+//
+//    var hideOrShowCalendar = function(elem) {
+//
+//        console.log("hide or cancel! id="+elem.attr("id")+", class="+elem.attr("class"));
+//        //Hide the menus if visible
+//        //elem.siblings('.datepicker').datepicker('show');
+//
+//        var datepickers = $('.datepicker-dropdown');
+//        console.log("datepickers.length="+datepickers.length);
+//
+//        datepickers.each( function() {
+//            if( $(this).is(':visible') ) {
+//                console.log("visible => hide");
+//                //elem.siblings('.datepicker').datepicker('hide');
+//            }
+//            else {
+//                console.log("not visible => show");
+//                //elem.siblings('.datepicker').datepicker('show');
+//            }
+//        });
+//
+//    }
+//
+//    if( cicle != "show" ) {
+//
+//        if( !element ) {
+//            element = $(".datepicker");
+//            //element = $('.input-group.date');
+//        }
+//
+//        printF(element, "init datepicker element=");
+//        //console.debug("init datepicker, cicle="+cicle+", class="+element.attr("class"));
+//
+//        if( remove == "remove" ) {
+//            element.datepicker("remove");
+//        } else {
+//            initSingleDatepicker(element);
+//        }
+//
+////        $('.input-group-addon').click(function(e) {
+////            hideOrShowCalendar($(this));
+////        });
+//
+//
+//
+////        var icons = element.parent().find("span").each(function( index  ) {
+////            //console.log( index + ": " + $( this ).attr("class") );
+////            if( remove == "remove" ) {
+////                $( this ).unbind("click");
+////            } else {
+////
+////                $( this ).click(function(e) {
+////                    //$(this).siblings('.datepicker').datepicker('show');
+////                    hideOrShowCalendar($(this));
+////                });
+////
+////                //$(this).touch(hideOrShowCalendar).click(hideOrShowCalendar);
+////                //iPad
+////                $(this).on('touchstart', function(e) {
+////                    //console.log("touchstart !!!");
+////                    hideOrShowCalendar($(this));
+////                })
+////
+////            }
+////        });
+//
+//    }
+//
+//}
 
 function printF(element,text) {
     var str = "print full id="+element.attr("id") + ", class=" + element.attr("class")
