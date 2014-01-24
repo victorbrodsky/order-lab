@@ -126,14 +126,21 @@ class OrderInfoType extends AbstractType
             'classtype' => 'returnSlide'
         ));
 
-        $scandeadline = date_modify(new \DateTime(), '+2 week');
+        //scandeadline
+        if( $this->params['cicle'] == 'new' ) {
+            $scandeadline = date_modify(new \DateTime(), '+2 week');
+        } else {
+            $scandeadline = null;
+        }
+
         if( $this->entity && $this->entity->getScandeadline() != '' ) {
             $scandeadline = $this->entity->getScandeadline();
         }
+
         $builder->add('scandeadline','date',array(
             'widget' => 'single_text',
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
+            'attr' => array('class' => 'datepicker form-control scandeadline-mask', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $scandeadline,
             'label'=>'Scan Deadline:',

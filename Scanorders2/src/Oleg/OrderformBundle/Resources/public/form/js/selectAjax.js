@@ -167,7 +167,6 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
             async: asyncflag
         }).success(function(data) {
                 stain = data;
-                console.log("populateSelectCombobox 1");
                 populateSelectCombobox( ".ajax-combobox-staintype", stain, null );
             });
     } else {

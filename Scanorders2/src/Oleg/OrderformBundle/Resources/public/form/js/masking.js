@@ -310,20 +310,34 @@ function setAccessiontypeMask(elem,clean) {
 function noMaskError( element ) {
     //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
 
-    var keytypeText = element.closest(".row").find('.accessiontype-combobox').select2('data').text;
+    var keytypeText = getKeyGroupParent(element).find('.accessiontype-combobox').select2('data').text;
 
-    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) || element.hasClass('patientage-mask') || element.hasClass('datepicker') ) {   //regular mask
-        if( !allZeros(element) && element.inputmask("isComplete") ) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {    //non zero mask
-        if( !allZeros(element) ) {
-            return true;
-        } else {
-            return false;
-        }
+//    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) ||
+//        element.hasClass('patientage-mask') ||
+//        element.hasClass('datepicker') )
+//    {   //regular mask
+
+    //console.log( "no mask error: keytypeText="+ keytypeText );
+
+     if( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ||
+         element.hasClass('datepicker') ||
+         element.hasClass('patientage-mask')
+     ) {  //regular mask + non zero mask
+
+         if( !allZeros(element) && element.inputmask("isComplete") ) {
+             return true;
+         } else {
+             return false;
+         }
+
+    } else {   //non zero mask only
+
+         if( !allZeros(element) ) {
+             return true;
+         } else {
+             return false;
+         }
+
     }
 }
 
@@ -424,11 +438,6 @@ function validateMaskFields( element, fieldName ) {
 
 function createErrorMessage( element, fieldName, appendWell ) {
 
-//    if( !allZeros(element) ) {
-//        //clearErrorField(element);
-//        return;
-//    }
-
     if( noMaskError(element) ) {
         return;
     }
@@ -448,7 +457,18 @@ function createErrorMessage( element, fieldName, appendWell ) {
             'Please correct the invalid ' + fieldName + '.' +
             '</div>';
 
-    //console.log("element id="+element.attr("id")+", class="+element.attr("class"));
+    //console.log("append to element id="+element.attr("id")+", class="+element.attr("class") + ", appendWell="+appendWell);
+
+    //always append error well for datepicker
+    if( element.hasClass('datepicker') ) {
+        appendWell = true;
+        element = element.closest('.input-group.date');
+        var len = element.closest('.row').find('.maskerror-added').length;
+        //console.log('length='+len );
+        if( len > 0 ) {
+            appendWell = false;
+        }
+    }
 
     if( appendWell ) {
         element.after(errorHtml);

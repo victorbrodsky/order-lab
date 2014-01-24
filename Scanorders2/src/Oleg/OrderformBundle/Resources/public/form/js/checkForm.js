@@ -1244,7 +1244,7 @@ function disableElement(parentname,element, flag) {
 
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("disable datepicker classs="+classs);
-            initDatepicker(element,"remove");
+            processDatepicker(element,"remove");
         }
 
         //disable children buttons
@@ -1266,7 +1266,7 @@ function disableElement(parentname,element, flag) {
 
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);
-            initDatepicker(element);
+            processDatepicker(element);
         }
 
     }
