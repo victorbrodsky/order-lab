@@ -62,7 +62,7 @@ class MultyScanOrderController extends Controller {
     public function editAction( $id )
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SUBMITTER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
@@ -93,7 +93,7 @@ class MultyScanOrderController extends Controller {
         //echo "multi new controller !!!! <br>";
         //exit();
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SUBMITTER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig'
 
             );
@@ -299,7 +299,7 @@ class MultyScanOrderController extends Controller {
     public function newMultyAction()
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SUBMITTER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
@@ -390,7 +390,7 @@ class MultyScanOrderController extends Controller {
     public function showMultyAction( $id, $type = "show" )
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SUBMITTER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 

@@ -74,12 +74,15 @@ class UserUtil {
             $user->setOffice($office);
             $user->setPassword("");
             $user->setCreatedby('excel');
+
+            //add Roles
+            //"ROLE_USER" => "Submitter" is added by default
             $user->addRole('ROLE_ORDERING_PROVIDER');
 
             //ROLES: Submitter - ROLE_USER, Processor - ROLE_ADMIN
 
             if( $username == "oli2002" || $username == "vib9020" ) {
-                $user->addRole('ROLE_SUPER_ADMIN');
+                $user->addRole('ROLE_ADMIN');
             }
 
 //            if( $username == "svc_aperio_spectrum" ) {

@@ -73,11 +73,9 @@ function fieldInputMask() {
         "oncomplete": function(){ clearErrorField($(this)); },
         "oncleared": function(){ clearErrorField($(this)); },
         "onKeyValidation": function(result) {
-            //console.log(result);
             makeErrorField($(this),false);
         },
         "onKeyDown": function(result) {
-            //console.log(result);
             makeErrorField($(this),false);
         },
         placeholder: " ",
@@ -106,6 +104,10 @@ function fieldInputMask() {
     $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
 
     $(".datepicker").inputmask( "mm/dd/yyyy" );
+
+    $('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+
+//    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
     accessionTypeListener();
     mrnTypeListener();
@@ -321,7 +323,9 @@ function noMaskError( element ) {
 
      if( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ||
          element.hasClass('datepicker') ||
-         element.hasClass('patientage-mask')
+         element.hasClass('patientage-mask') ||
+         element.hasClass('phone-mask') ||
+         element.hasClass('email-mask')
      ) {  //regular mask + non zero mask
 
          if( !allZeros(element) && element.inputmask("isComplete") ) {

@@ -56,7 +56,7 @@ class AdminController extends Controller
     public function generateAllAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
@@ -720,18 +720,28 @@ class AdminController extends Controller
             return -1;
         }
 
+        //Note: fos user has role ROLE_SUPER_ADMIN
+
         $types = array(
-            "ROLE_SUPER_ADMIN" => "Admin",
-            "ROLE_ADMIN" => "Processor",
-            //"ROLE_BANNED_USER" => "Banned User",  //not required since we have locked
-            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter",
-            "ROLE_EXTERNAL_SUBMITTER" => "External Submitter",
-            "ROLE_ORDERING_PROVIDER" => "Ordering Provider",
-            "ROLE_EXTERNAL_ORDERING_PROVIDER" => "External Ordering Provider",
+            "ROLE_ADMIN" => "Admin",
+            "ROLE_PROCESSOR" => "Processor",
+
             "ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST" => "Data Quality Assurance Specialist",
+
+            "ROLE_USER" => "User",
+
+            "ROLE_SUBMITTER" => "Submitter",
+            "ROLE_ORDERING_PROVIDER" => "Ordering Provider",
+
             "ROLE_PATHOLOGY_RESIDENT" => "Pathology Resident",
             "ROLE_PATHOLOGY_FELLOW" => "Pathology Fellow",
-            "ROLE_PATHOLOGY_FACULTY" => "Pathology Faculty"
+            "ROLE_PATHOLOGY_FACULTY" => "Pathology Faculty",
+
+            //"ROLE_BANNED_USER" => "Banned User",  //not required since we have locked
+            "ROLE_EXTERNAL_SUBMITTER" => "External Submitter",
+            "ROLE_EXTERNAL_ORDERING_PROVIDER" => "External Ordering Provider",
+
+            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter"
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -746,11 +756,7 @@ class AdminController extends Controller
             $entity->setName( trim($role) );
             $entity->setAlias( trim($alias) );
 
-            if( $role == "ROLE_SUPER_ADMIN" && $role == "ROLE_ADMIN" ) {
-                $entity->setType('admin');
-            } else {
-                $entity->setType('default');
-            }
+            $entity->setType('default');
 
             $em->persist($entity);
             $em->flush();

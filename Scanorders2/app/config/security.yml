@@ -8,24 +8,15 @@ security:
 #        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext #Active directory does not support encrypted password yet
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
+
+        ROLE_ALL_SUBMITTER: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER]
+        ROLE_ALL_ORDERING_PROVIDER: [ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]
+
+        ROLE_ADMIN:       [ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_ALL_SUBMITTER, ROLE_ALL_ORDERING_PROVIDER, ROLE_PATHOLOGY_RESIDENT, ROLE_PATHOLOGY_FELLOW, ROLE_PATHOLOGY_FACULTY]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
-    providers:
-#        Oleg: custom user
-#        webservice:
-#            id: webservice_user_provider
-#        daps_ldap:
-#            id: daps_ldap_user_provider   
-#        ldap:
-#            id: imag_ldap.security.user.provider
-#        fos_userbundle:
-#            id: fos_user.user_provider.username
-#        my_active_directory_provider :
-#                  id: ztec.security.active.directory.user.provider
 
-#        fosuserprovider:
-#            id: fos_user_provider
+    providers:
 
         chain_provider:
             chain:
@@ -38,119 +29,36 @@ security:
         aperioauth:
             id: aperio_authenticator
 
-        in_memory:
-            memory:
-                users:
-                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                    admin: { password: adminpass123, roles: [ 'ROLE_ADMIN' ] }
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: adminpass123, roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
 
         secured_area:
             pattern: ^/
-#            provider: authenticator
             fr3d_ldap:  ~
-            simple-form:
-                always_use_default_target_path: false
-                provider:      aperioauth
-                authenticator: aperio_authenticator
-                use_referer: true
             form_login:
                  always_use_default_target_path: false
                  provider: chain_provider
                  use_referer: true
                  success_handler: login_sucess_handler
+            simple-form:
+                 always_use_default_target_path: false
+                 provider:      aperioauth
+                 authenticator: aperio_authenticator
+                 use_referer: true
             logout:     true
             anonymous:  true
-
-
-#        main:    #FR3DLdap
-#             pattern: ^/
-#             fr3d_ldap:  ~
-##             aperio:  true
-#             form_login:
-#                 always_use_default_target_path: false
-#                 provider: chain_provider
-#                 use_referer: true
-#                 success_handler: login_sucess_handler
-#             logout:     true
-#             anonymous:  true
-
-#       aperio_secured:
-#          pattern:    ^/
-          #aperio:  true
-#          form_login:
-#             always_use_default_target_path: false
-#             #provider:    chain_provider
-#             provider: in_memory
-##                 default_target_path: /
-#             use_referer: true
-#          logout:     true
-#          anonymous:  true
           
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/admin/, role: ROLE_ADMIN }
-     - { path: ^/util/, role: ROLE_USER }
+     - { path: ^/util/, role: ROLE_ALL_SUBMITTER }
      - { path: ^/user/, role: ROLE_USER }
-     - { path: ^/check/, role: ROLE_USER }
-
-#    firewalls:
-#       #FOSUser
-#       main:
-#          pattern:    ^/
-#          form_login:
-#            provider: fos_userbundle
-#            csrf_provider: form.csrf_provider
-#          logout:       true
-#          anonymous:    true
-
-#        dev:
-#            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-#            security: false
-
-#        login:
-#            pattern:  ^/demo/secured/login$
-#            security: false
-#            pattern:  ^/login$
-#            security: true           
-
-#        login_firewall:
-#            pattern:    ^/login$
-#            anonymous:  ~
-
-        #Oleg: custom auth provider
-#        wsse_secured:
-#            pattern:   ^/
-##            wsse:      true            
-#            form_login: 
-#                provider: webservice
-            
-#        secured_area:
-#            pattern:    ^/
-#            form_login:
-#                check_path: login_check
-#                login_path: login
-
-#           (ztec ldap active directory)
-#            active_directory: #Sames parameters as form_login
-#                check_path: login_check
-#                login_path: login
-          
-#            pattern:    ^/
-#            anonymous: ~
-#            form-login-ldap: true
-#            form_login:
-#              provider: webservice
-#                login_path:  login
-#                check_path:  login_check
-##                always_use_default_target_path: true           
-#            logout:
-#                path:   logout
-#                target: /
+     - { path: ^/check/, role: [ROLE_PATHOLOGY_RESIDENT, ROLE_PATHOLOGY_FELLOW, ROLE_PATHOLOGY_FACULTY] }
+     - { path: ^/index, role: [ROLE_ALL_SUBMITTER, ROLE_ALL_ORDERING_PROVIDER]}
 
 
-
-#    access_control:
-#        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

@@ -630,7 +630,7 @@ function processDatepicker( element, remove ) {
         //printF(btn,"Datepicker Btn:");
 
         if( remove == "remove" ) {
-            printF(element,"Remove datepicker:");
+            //printF(element,"Remove datepicker:");
             element.datepicker("remove");
 
             //make sure the masking is clear when input is cleared by datepicker

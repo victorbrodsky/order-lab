@@ -19,12 +19,15 @@ class LdapManager extends BaseLdapManager
     {
         parent::hydrate($user, $entry);
 
-        // Your custom code
+
         $user->setCreatedby('ldap');
 
+        $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
+
         if( $user->getUsername() == "oli2002" || $user->getUsername() == "vib9020" ) {
-            $user->addRole('ROLE_SUPER_ADMIN');
-            $user->addRole('ROLE_ORDERING_PROVIDER');
+            $user->addRole('ROLE_ADMIN');
+            $user->addRole('ROLE_SUBMITTER');
+            $user->removeRole('ROLE_UNAPPROVED_SUBMITTER');
         }
 
     }

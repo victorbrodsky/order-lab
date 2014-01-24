@@ -33,9 +33,9 @@ class ScanOrderController extends Controller {
      */
     public function indexAction( Request $request ) {    
         
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -186,7 +186,6 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
         //show only my order if i'm not an admin and Pathology Services are not choosen
         if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
-            //echo " role_user ";
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
@@ -203,7 +202,6 @@ class ScanOrderController extends Controller {
             //show only my order if i'm not an admin and Pathology Services are not choosen
             //Orders I Personally Placed and Proxy Orders Placed For Me
             if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
-                //echo " role_user ";
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
@@ -218,7 +216,6 @@ class ScanOrderController extends Controller {
         }
         if( $service == "Orders I Personally Placed" ) {
             if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
-                //echo " role_user ";
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
@@ -227,7 +224,6 @@ class ScanOrderController extends Controller {
         }
         if( $service == "Proxy Orders Placed For Me" ) {
             if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
-                //echo " role_user ";
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
@@ -292,7 +288,7 @@ class ScanOrderController extends Controller {
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
@@ -330,7 +326,7 @@ class ScanOrderController extends Controller {
      * @Template()
      */
     public function statusAction($id, $status) {
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
         
@@ -384,7 +380,7 @@ class ScanOrderController extends Controller {
     public function getFilter() {
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER') ) {
             $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
         } else {
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Status');

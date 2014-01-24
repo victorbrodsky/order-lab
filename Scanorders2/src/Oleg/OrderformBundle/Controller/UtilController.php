@@ -129,10 +129,6 @@ class UtilController extends Controller {
      */
     public function getPathServiceAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
@@ -217,10 +213,6 @@ class UtilController extends Controller {
      */
     public function getSlideDeliveryAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
         $formHelper = new FormHelper();
         $arr = $formHelper->getSlideDelivery();
 
@@ -256,10 +248,6 @@ class UtilController extends Controller {
      */
     public function getReturnSlideAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
         $formHelper = new FormHelper();
         $arr = $formHelper->getReturnSlide();
 
@@ -294,10 +282,6 @@ class UtilController extends Controller {
      * @Method("POST")
      */
     public function getUserPathServiceAction() {
-
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
         $output = array();
 

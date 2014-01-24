@@ -32,14 +32,14 @@ class UserRequestType extends AbstractType
                 'label'=>'* Email:',
                 'max_length'=>'200',
                 'required'=> true,
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'true'),
         ));
         
         $builder->add( 'phone', 'text', array(
                 'label'=>'Phone Number:',
                 'max_length'=>'20',
                 'required'=> false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class'=>'form-control form-control-modif phone-mask'),
         ));
         
         $builder->add( 'job', 'text', array(

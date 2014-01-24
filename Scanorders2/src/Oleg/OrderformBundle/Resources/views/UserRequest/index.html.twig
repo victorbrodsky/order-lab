@@ -65,8 +65,8 @@
                             <li class="divider"></li>
 
                             {% if entity.status != 'cancel' %}
-                                <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'cancel' }) }}">Cancel</a>
+                                <li><a onclick="return confirm('Are you sure?');"
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'cancel' }) }}">Deny</a>
                                 </li>                  
                             {% endif %}                                                                
 
@@ -78,7 +78,7 @@
 
                             {% if entity.status != 'completed' %}
                                 <li><a onclick="return confirm('Are you sure?');" 
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'completed' }) }}">Completed</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'completed' }) }}">Accept</a>
                                 </li>                  
                             {% endif %}
                          

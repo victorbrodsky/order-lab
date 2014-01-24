@@ -28,7 +28,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 
     public function __construct(EncoderFactoryInterface $encoderFactory, $serviceContainer)
     {
-        //echo "Aperio Authenticator constructor <br>";
+        //exit("Aperio Authenticator constructor <br>");
         $this->encoderFactory = $encoderFactory;
         $this->serviceContainer = $serviceContainer;
     }
@@ -67,20 +67,21 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
-                $user->addRole('ROLE_USER');                //Submitter
+
+                //set Roles: aperio users can submit order by default.
+                $user->addRole('ROLE_SUBMITTER');           //Submitter
+                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
 
                 //TDODD: Remove: for testing at home;
                 if( !$this->ldap ) {
                     echo "Aperio Auth: Remove it !!!";
                     $user->setUsername("testuser4");
-                    $user->addRole('ROLE_SUPER_ADMIN');
+                    $user->addRole('ROLE_ADMIN');
                 }
 
                 if( $token->getUsername() == "oli2002" || $token->getUsername() == "vib9020" ) {
-                    $user->addRole('ROLE_SUPER_ADMIN');
+                    $user->addRole('ROLE_ADMIN');
                 }
-
-                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider_TODEL
 
                 $user->setPassword("");
 
@@ -91,7 +92,6 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
             return new UsernamePasswordToken($user, 'bar', $providerKey, $user->getRoles());
 
         } else {
-            //exit("bad exit AperioProvider");
             throw new AuthenticationException('The Aperio authentication failed.');
         }
 

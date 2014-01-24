@@ -44,20 +44,20 @@
     {% if (type == 'edit' or type == 'show') and (not Amended and not Canceled) %}
         <div class="well well-sm">
         {###############  USER ACTIONS #################}
-        {% if form.vars.value.status != 'Canceled' and not Amended and not Filled or is_granted('ROLE_SUPER_ADMIN') %}
+        {% if form.vars.value.status != 'Canceled' and not Amended and not Filled or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-danger" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
         {% endif %}
 
         {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
                 and form.vars.value.status != 'Amended' and not Filled
-                and not OnHold or is_granted('ROLE_SUPER_ADMIN') and form.vars.value.status != 'Submitted'
+                and not OnHold or is_granted('ROLE_ADMIN') and form.vars.value.status != 'Submitted'
         %}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
         {% endif %}
 
-        {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and not Filled or is_granted('ROLE_SUPER_ADMIN') %}
+        {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and not Filled or is_granted('ROLE_ADMIN') %}
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
                href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
         {% endif %}
@@ -67,7 +67,7 @@
     {% if (type == 'edit' or type == 'show') and form.vars.value.status.action == 'Cancel' %}
         {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
         and form.vars.value.status != 'Amended' and not Filled
-        and not OnHold or is_granted('ROLE_SUPER_ADMIN') and form.vars.value.status != 'Submitted'
+        and not OnHold or is_granted('ROLE_ADMIN') and form.vars.value.status != 'Submitted'
         %}
             <div class="well well-sm">
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"

@@ -66,10 +66,10 @@ class OrderUtil {
 
                 $fieldStatusStr = "deleted-by-canceled-order";
 
-                if( $entity->getProvider() == $user || $user->hasRole("ROLE_ORDERING_PROVIDER") || $user->hasRole("ROLE_USER") ) {
+                if( $entity->getProvider() == $user || $user->hasRole("ROLE_ORDERING_PROVIDER") || $user->hasRole("ROLE_EXTERNAL_ORDERING_PROVIDER") ) {
                     $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
                 } else
-                if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_SUPER_ADMIN") ) {
+                if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_PROCESSOR") ) {
                     $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Processor");
                 } else {
                     $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");

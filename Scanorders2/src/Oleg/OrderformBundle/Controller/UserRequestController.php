@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\UserRequest;
 use Oleg\OrderformBundle\Form\UserRequestType;
+use Oleg\OrderformBundle\Helper\EmailUtil;
 
 /**
  * UserRequest controller.
@@ -50,7 +51,7 @@ class UserRequestController extends Controller
     {
         $entity  = new UserRequest();
         $form = $this->createForm(new UserRequestType(), $entity);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -62,7 +63,7 @@ class UserRequestController extends Controller
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'You successfully submit a request for an Aperio eSlide Manager account!'
+                'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
 
             //return $this->redirect($this->generateUrl('scanorder_new', array('id' => $entity->getId())));
@@ -173,7 +174,7 @@ class UserRequestController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new UserRequestType(), $entity);
-        $editForm->bind($request);
+        $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
 
@@ -207,7 +208,7 @@ class UserRequestController extends Controller
         }
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -248,7 +249,7 @@ class UserRequestController extends Controller
     public function statusAction($id, $status)
     {
         
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
         
@@ -268,5 +269,102 @@ class UserRequestController extends Controller
         return $this->redirect($this->generateUrl('accountrequest'));
             
     }
+
+
+
+    //Access Request
+    /**
+     * @Route("/accessrequest/{id}", name="access_request_new")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:UserRequest:access_request.html.twig")
+     */
+    public function accessRequestCreateAction($id)
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('OlegOrderformBundle:User')->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Unable to find User.');
+        }
+
+        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "1" ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You have already applied for access request! Please contact the slide scan order administrator slidescan@med.cornell.edu for details.'
+            );
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        //echo "userid=".$id."<br>";
+        //exit();
+
+        //$this->get('security.context')->setToken(null);
+        //$this->get('request')->getSession()->invalidate();
+
+        return array(
+            'userid' => $id,
+        );
+
+    }
+
+    /**
+     * @Route("/accessrequest/{id}", name="access_request_create")
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:UserRequest:access_request.html.twig")
+     */
+    public function accessRequestAction($id)
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER')) {
+            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('OlegOrderformBundle:User')->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Unable to find User.');
+        }
+
+        $user->setAppliedforaccess(1);
+        $user->setAppliedforaccessdate( new \DateTime() );
+
+        $em->persist($user);
+        $em->flush();
+
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $email = $user->getEmail();
+        $emailUtil = new EmailUtil();
+
+        $text =
+            "Thank You For Access Request !\r\n"
+            . "Confirmation Email was sent to " . $email . "\r\n";
+
+        $emailUtil->sendEmail( $email, null, $text, null );
+
+        $emailStr = "";
+        if( $email && $email != "" ) {
+            $emailStr = "\r\nConfirmation email was sent to ".$email;
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Your access request was successfully submitted!'.$emailStr
+        );
+
+        return $this->redirect($this->generateUrl('login'));
+
+    }
+
+
+
     
 }

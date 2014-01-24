@@ -13,18 +13,18 @@ class EmailUtil {
         if( !$email || $email == "" ) {
             return false;
         }
+
         ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
         ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
         //ini_set( 'smtp_port', 25 );
 
-        $thanks_txt =
-            "Thank You For Your Order !\r\n"
-            . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
-            . "Confirmation Email was sent to " . $email . "\r\n";
-
         if( $text ) {
             $message = $text;
         } else {
+            $thanks_txt =
+                "Thank You For Your Order !\r\n"
+                . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
+                . "Confirmation Email was sent to " . $email . "\r\n";
             $message = $thanks_txt;
         }
 

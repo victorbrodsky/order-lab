@@ -90,9 +90,9 @@ class CheckController extends Controller {
      */
     public function getPatientAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -136,9 +136,9 @@ class CheckController extends Controller {
      */
     public function createPatientAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -176,9 +176,9 @@ class CheckController extends Controller {
      */
     public function deleteMrnAction( Request $request ) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
@@ -207,9 +207,9 @@ class CheckController extends Controller {
      */
     public function getAccessionAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -279,9 +279,9 @@ class CheckController extends Controller {
      */
     public function createAccessionAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -324,9 +324,9 @@ class CheckController extends Controller {
      */
     public function deleteAccessionAction(Request $request) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
@@ -361,9 +361,9 @@ class CheckController extends Controller {
      */
     public function getPartAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -405,9 +405,9 @@ class CheckController extends Controller {
      */
     public function createPartAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $request = $this->get('request');
         $accession = trim( $request->get('key') );
@@ -450,9 +450,9 @@ class CheckController extends Controller {
      */
     public function deletePartAction(Request $request) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $key = trim( $request->get('key') );
         $accession = trim( $request->get('accession') );
@@ -482,9 +482,9 @@ class CheckController extends Controller {
      */
     public function getBlockAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $request = $this->get('request');
         $key = trim($request->get('key'));
@@ -526,9 +526,9 @@ class CheckController extends Controller {
      */
     public function createBlockAction() {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $request = $this->get('request');
         $accession = trim($request->get('key'));
@@ -575,9 +575,9 @@ class CheckController extends Controller {
      */
     public function deleteBlockAction(Request $request) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
+//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+//        }
 
         $key = trim($request->get('key'));
         $accession = trim($request->get('accession'));

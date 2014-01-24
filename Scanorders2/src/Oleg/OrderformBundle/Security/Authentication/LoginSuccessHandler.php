@@ -32,13 +32,20 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
 
-        //echo "user ok!";
-        //exit();
+        $user = $token->getUser();
+
+        if( $this->security->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
+            //redirect to "Welcome to the Scan Order system! Would you like to receive access to this site?"
+            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
+        }
 
         if( $this->security->isGranted('ROLE_ADMIN') ) {
+
             $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All Not Filled')));
+
         }
-        elseif( $this->security->isGranted('ROLE_USER') ) {
+        elseif( $this->security->isGranted('ROLE_SUBMITTER') ) {
+
             $referer_url = $request->headers->get('referer');
             //echo "user role ok! referer_url=".$referer_url."<br>";
             $last = basename(parse_url($referer_url, PHP_URL_PATH));
@@ -48,11 +55,14 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
             } else {
                 $response = new RedirectResponse($referer_url);
             }
+
         }
         else {
+
             //echo "user role not ok!";
             //exit();
             $response = new RedirectResponse( $this->router->generate('login') );
+            
         }
 
         return $response;
@@ -60,6 +70,8 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        //echo "user is not ok!";
+        //exit();
         error_log('You are out!');
     }
 
