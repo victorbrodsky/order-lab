@@ -73,11 +73,9 @@ function fieldInputMask() {
         "oncomplete": function(){ clearErrorField($(this)); },
         "oncleared": function(){ clearErrorField($(this)); },
         "onKeyValidation": function(result) {
-            //console.log(result);
             makeErrorField($(this),false);
         },
         "onKeyDown": function(result) {
-            //console.log(result);
             makeErrorField($(this),false);
         },
         placeholder: " ",
@@ -105,6 +103,12 @@ function fieldInputMask() {
 
     $(".patientage-mask").inputmask( { "mask": getAgeDefaultMask() });
 
+    $(".datepicker").inputmask( "mm/dd/yyyy" );
+
+    $('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+
+//    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+
     accessionTypeListener();
     mrnTypeListener();
 
@@ -119,15 +123,17 @@ function setDefaultMask( element ) {
 
     clearErrorField(element);
 
-    if( maskField.hasClass('patientmrn-mask') ) {
-        //console.log("Set default mask for MRN");
-        maskField.inputmask( getMrnDefaultMask() );
-    }
+    maskField.each(function() {
+        if( $(this).hasClass('patientmrn-mask') ) {
+            //console.log("Set default mask for MRN");
+            $(this).inputmask( getMrnDefaultMask() );
+        }
 
-    if( maskField.hasClass('accession-mask') ) {
-        //console.log("Set default mask for Accession");
-        maskField.inputmask( { "mask": getAccessionDefaultMask() } );
-    }
+        if( $(this).hasClass('accession-mask') ) {
+            //console.log("Set default mask for Accession");
+            $(this).inputmask( { "mask": getAccessionDefaultMask() } );
+        }
+    });  
 
 }
 
@@ -147,12 +153,12 @@ function getMrnAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
     var text = elem.select2("data").text;
-    console.log("text=" + text + ", value=" + value);
+    //console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -229,6 +235,11 @@ function accessionTypeListener() {
             } else {
                 $("#optional_button").show();
             }
+            
+            if( accTypeText == 'Auto-generated Accession Number' ) {
+                //console.log("click on order info");
+                checkFormSingle($('#optional_button'));
+            }
         }
 
     });
@@ -245,7 +256,7 @@ function setAccessiontypeMask(elem,clean) {
     //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    printF(accField,"Set Accession Mask:")
+    //printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
     var text = elem.select2("data").text;
@@ -301,20 +312,36 @@ function setAccessiontypeMask(elem,clean) {
 function noMaskError( element ) {
     //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
 
-    var keytypeText = element.closest(".row").find('.accessiontype-combobox').select2('data').text;
+    var keytypeText = getKeyGroupParent(element).find('.accessiontype-combobox').select2('data').text;
 
-    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) || element.hasClass('patientage-mask')) {   //regular mask
-        if( !allZeros(element) && element.inputmask("isComplete") ) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {    //non zero mask
-        if( !allZeros(element) ) {
-            return true;
-        } else {
-            return false;
-        }
+//    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) ||
+//        element.hasClass('patientage-mask') ||
+//        element.hasClass('datepicker') )
+//    {   //regular mask
+
+    //console.log( "no mask error: keytypeText="+ keytypeText );
+
+     if( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ||
+         element.hasClass('datepicker') ||
+         element.hasClass('patientage-mask') ||
+         element.hasClass('phone-mask') ||
+         element.hasClass('email-mask')
+     ) {  //regular mask + non zero mask
+
+         if( !allZeros(element) && element.inputmask("isComplete") ) {
+             return true;
+         } else {
+             return false;
+         }
+
+    } else {   //non zero mask only
+
+         if( !allZeros(element) ) {
+             return true;
+         } else {
+             return false;
+         }
+
     }
 }
 
@@ -415,11 +442,6 @@ function validateMaskFields( element, fieldName ) {
 
 function createErrorMessage( element, fieldName, appendWell ) {
 
-//    if( !allZeros(element) ) {
-//        //clearErrorField(element);
-//        return;
-//    }
-
     if( noMaskError(element) ) {
         return;
     }
@@ -439,7 +461,18 @@ function createErrorMessage( element, fieldName, appendWell ) {
             'Please correct the invalid ' + fieldName + '.' +
             '</div>';
 
-    //console.log("element id="+element.attr("id")+", class="+element.attr("class"));
+    //console.log("append to element id="+element.attr("id")+", class="+element.attr("class") + ", appendWell="+appendWell);
+
+    //always append error well for datepicker
+    if( element.hasClass('datepicker') ) {
+        appendWell = true;
+        element = element.closest('.input-group.date');
+        var len = element.closest('.row').find('.maskerror-added').length;
+        //console.log('length='+len );
+        if( len > 0 ) {
+            appendWell = false;
+        }
+    }
 
     if( appendWell ) {
         element.after(errorHtml);

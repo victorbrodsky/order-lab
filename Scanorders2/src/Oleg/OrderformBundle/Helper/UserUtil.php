@@ -146,5 +146,15 @@ class UserUtil {
         //print_r($choicesServ);
         return $choicesServ;
     }
+    
+    public function hasPermission( $security_content, $entity ) {            
+        if( $entity && false === $security_content->isGranted('ROLE_ALL_PATHOLOGY') ) {   
+            $user = $security_content->getToken()->getUser();
+            if( $entity->getProvider()->getId() != $user->getId() ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

@@ -60,6 +60,7 @@ class AdminController extends Controller
             return $this->render('OlegOrderformBundle:Security:login.html.twig');
         }
 
+        $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
         $count_formtype = $this->generateFormType();
         $count_stain = $this->generateStains();
@@ -70,13 +71,13 @@ class AdminController extends Controller
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
         $userutil = new UserUtil();
-        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
-        $count_roles = $this->generateRoles();
+        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());      
 
 
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
+            'Roles='.$count_roles.', '.
             'Accession Types='.$count_acctype.', '.
             'Form Types='.$count_formtype.', '.
             'Stains='.$count_stain.', '.
@@ -709,7 +710,7 @@ class AdminController extends Controller
 
         return $count;
     }
-
+   
 
     public function generateRoles() {
 

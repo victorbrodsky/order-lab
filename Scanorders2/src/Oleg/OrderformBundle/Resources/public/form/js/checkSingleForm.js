@@ -65,7 +65,7 @@ function checkFormSingle( elem ) {
     if( validateMaskFields() > 0 ) {
         //console.log("errors > 0 => return");
         return false;
-    }
+    }      
 
     if( $('#maincinglebtn').is(":visible") ) {
         //console.log("maincinglebtn is visible => return");
@@ -74,6 +74,11 @@ function checkFormSingle( elem ) {
 
     //data-target="#optional_param"
     $('#optional_param').collapse('toggle');
+    
+//    console.log("cancheck="+cancheck);
+//    if( !cancheck ) {         
+//        return;
+//    }
 
     var fieldsArr = new Array();
     fieldsArr[0] = '#accession-single';
@@ -93,7 +98,7 @@ function checkFormSingle( elem ) {
 //Remove form single
 function removeFormSingle( elem ) {
 
-    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
 
     //console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
     $('.blockbtn').trigger("click");

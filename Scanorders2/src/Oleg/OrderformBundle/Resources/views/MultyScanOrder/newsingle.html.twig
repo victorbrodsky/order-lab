@@ -6,7 +6,8 @@
     Scan Order
 {% endblock %}
 
-
+{#{% set cancheck = is_granted('ROLE_ALL_PATHOLOGY') %}#}
+    
 {% block content %}
     
     <h3 class="text-info">Scan Order</h3>
@@ -148,9 +149,11 @@
                                 <button style="display: none;" id="check_btn" class="btn btn-default blockbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="checkbtn glyphicon glyphicon-check"></i></button>
                                 {#{{ formmacros.inputArrayField(form_block.blockname,cycle,"blockblockname","key","","nolabel") }}#}
                             </div>
+{#                            {% if is_granted('ROLE_ALL_PATHOLOGY') %}#}
                             <div style="float:left; width:10%" id="maincinglebtn">
                                 <button id="remove_single_btn" class="btn btn-default maincinglebtn" type="button" onclick="removeFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="removebtn glyphicon glyphicon-remove"></i></button>
                             </div>
+{#                            {% endif %}#}
                         </div>
                     </div>
                 </div>

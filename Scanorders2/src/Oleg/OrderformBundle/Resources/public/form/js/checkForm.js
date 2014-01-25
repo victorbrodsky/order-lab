@@ -169,6 +169,12 @@ function checkForm( elem, single ) {
                 console.debug("get object ajax ok "+name);
                 var gonext = 1;
                 element.button('reset');
+                
+                if( data == -1 ) {
+                    //object exists but no permission to see it (not an author or not pathology role)
+                    return false;
+                }
+                
                 if( data.id ) {      
 
                     if( !single ) {

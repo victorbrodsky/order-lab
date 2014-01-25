@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Oleg\OrderformBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 /**
  * OrderInfo controller.
@@ -105,10 +106,18 @@ class CheckController extends Controller {
         $extra["keytype"] = $keytype;
         //echo "key=".$key.", keytype=".$keytype."; ";
 
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);
-
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);        
+        
+        $element = array();
+        
+        $security_content = $this->get('security.context');
+        $userUtil = new UserUtil();
+        if( !$userUtil->hasPermission($security_content,$entity) ) {
+            $entity = null;               
+            $element = -1;
+        }            
+        
         if( $entity ) {
-
             $element = array(
                 //'inmrn'=>$mrn,
                 'id'=>$entity->getId(),
@@ -119,9 +128,7 @@ class CheckController extends Controller {
                 'age'=>$this->getArrayFieldJson($entity->getAge()),
                 'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
             );
-        } else {
-            $element = array();
-        }
+        } 
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -227,6 +234,15 @@ class CheckController extends Controller {
         //$entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true, true);
         $entity = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true,true,$extra);
 
+        $element = array();
+              
+        $security_content = $this->get('security.context');
+        $userUtil = new UserUtil();
+        if( !$userUtil->hasPermission($security_content,$entity) ) {
+            $entity = null;               
+            $element = -1;
+        }     
+        
         if( $entity ) {
 
             //find patient mrn
@@ -262,9 +278,7 @@ class CheckController extends Controller {
                 'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype')),
             );
-        } else {
-            $element = array();
-        }
+        } 
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -375,6 +389,15 @@ class CheckController extends Controller {
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
+        
+        $element = array();
+        
+        $userUtil = new UserUtil();
+        $security_content = $this->get('security.context');
+        if( !$userUtil->hasPermission($security_content,$entity) ) {
+            $entity = null;               
+            $element = -1;
+        }     
 
         if( $entity ) {
 
@@ -388,9 +411,7 @@ class CheckController extends Controller {
                 'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
                 'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") )
             );
-        } else {
-            $element = array();
-        }
+        } 
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -498,6 +519,15 @@ class CheckController extends Controller {
 
             //echo "count=".count($entity)."<br>";
             //echo "partname=".$entity->getPartname()->first()."<br>";
+            
+            $element = array();
+        
+            $security_content = $this->get('security.context');
+            $userUtil = new UserUtil();
+            if( !$userUtil->hasPermission($security_content,$entity) ) {
+                $entity = null;               
+                $element = -1;
+            }     
 
             if( $entity ) {
 
@@ -506,9 +536,8 @@ class CheckController extends Controller {
                     'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
                     'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
                 );
-            } else {
-                $element = array();
-            }
+            } 
+            
         } else {
             $element = array();
         }

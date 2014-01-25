@@ -63,7 +63,6 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
-
 });
 
 //add all element to listeners again, the same as in ready
@@ -596,62 +595,72 @@ function expandTextarea() {
 
 }
 
-//initDatepicker: add or remove click event to the field and its siblings calendar button
-//element: null or jquery object. If null, all element with class datepicker will be assign to calendar click event
-//remove null or "remove"
-function initDatepicker( element, remove ) {
-    //console.debug("init datepicker, cicle="+cicle);
 
-    var hideOrShowCalendar = function(elem) {
-        console.log("hide or cancel! id="+elem.attr("id")+", class="+elem.attr("class"));
-        //Hide the menus if visible
-        //elem.siblings('.datepicker').datepicker('show');
-        if( $('.datepicker-dropdown').is(':visible') ) {
-            console.log("visible");
-            elem.siblings('.datepicker').datepicker('hide');
-        }
-        else {
-            elem.siblings('.datepicker').datepicker('show');
-        }
-    }
+function initDatepicker() {
 
-    if( cicle != "show" ) {
+    var datepickers = $('.input-group.date');
 
-        if( !element ) {
-            element = $(".datepicker");
-        }
-        //console.debug("init datepicker, cicle="+cicle+", class="+element.attr("class"));
-        if( remove == "remove" ) {
-            element.datepicker("remove");
-        } else {
-            element.datepicker({autoclose: true});
-        }
-        var icons = element.parent().find("span").each(function( index  ) {
-            //console.log( index + ": " + $( this ).attr("class") );
-            if( remove == "remove" ) {
-                $( this ).unbind("click");
-            } else {
+    initSingleDatepicker( datepickers );
 
-                $( this ).click(function(e) {
-                    //$(this).siblings('.datepicker').datepicker('show');
-                    hideOrShowCalendar($(this));
-                });
-
-                //$(this).touch(hideOrShowCalendar).click(hideOrShowCalendar);
-                //iPad
-                $(this).on('touchstart', function(e) {
-                    console.log("touchstart !!!");
-                    hideOrShowCalendar($(this));
-                })
-
-            }
+    //make sure the masking is clear when input is cleared by datepicker
+    datepickers.datepicker().on("clearDate", function(e){
+            var inputField = $(this).find('input');
+            //printF(inputField,"Clear input:");
+            clearErrorField( inputField );
         });
-    }
 
 }
 
+//use "eternicode/bootstrap-datepicker": "dev-master"
+//process Datepicker: add or remove click event to the field and its siblings calendar button
+//element: null or jquery object. If null, all element with class datepicker will be assign to calendar click event
+//remove null or "remove"
+function processDatepicker( element, remove ) {
+
+    if( cicle != "show" ) {
+
+        //replace element (input field) by a parent with class .input-group .date
+        if( !element ) {
+            element = $('.input-group.date');
+        } else {
+            element = element.closest('.input-group.date');
+        }
+
+        //var btn = element.parent().find('.input-group-addon');
+        //printF(btn,"Datepicker Btn:");
+
+        if( remove == "remove" ) {
+            //printF(element,"Remove datepicker:");
+            element.datepicker("remove");
+
+            //make sure the masking is clear when input is cleared by datepicker
+            var inputField = element.find('input');
+            clearErrorField( inputField );
+
+            //btn.attr( "disabled", true );
+        } else {
+            initSingleDatepicker(element);
+            //btn.attr( "disabled", false );
+        }
+
+    }
+}
+
+function initSingleDatepicker( datepickerElement ) {
+    datepickerElement.datepicker({
+        autoclose: true,
+        clearBtn: true,
+        //todayBtn: "linked",
+        todayHighlight: true
+    });
+}
+
+
+
+
+
 function printF(element,text) {
-    var str = "print full id="+element.attr("id") + ", class=" + element.attr("class")
+    var str = "id="+element.attr("id") + ", class=" + element.attr("class")
     if( text ) {
         str = text + " : " + str;
     }
