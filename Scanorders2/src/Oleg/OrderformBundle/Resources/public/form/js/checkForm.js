@@ -175,6 +175,12 @@ function checkForm( elem, single ) {
                     return false;
                 }
                 
+                if( data == -2 ) {
+                    //Existing Auto-generated object does not exist in DB
+                    createErrorWell(keyElement.element,name);
+                    return false;
+                }
+                
                 if( data.id ) {      
 
                     if( !single ) {
@@ -1697,8 +1703,22 @@ function getPartNumberElement( element, single ) {
     }
 }
 
-//accesion-MRN link validation when the user clicks "Submit" on multi-slide form
 function validateForm() {
+    
+//    var checkMrnAcc = checkMrnAccessionConflict();
+//    if( checkMrnAcc ) {
+//        return false;
+//    }
+    
+    var checkExisting = checkExistingKey();
+    if( checkExisting ) {
+        return false;
+    }
+    return false; //testing
+}
+
+//accesion-MRN link validation when the user clicks "Submit" on multi-slide form
+function checkMrnAccessionConflict() {
 
     var totalError = 0;
 
@@ -1830,6 +1850,13 @@ function validateForm() {
                 async: false,
                 success: function (data) {
                     //console.debug("get accession ajax ok");
+                    
+                    if( data == -1 ) {
+                        //object exists but no permission to see it (not an author or not pathology role)
+                        totalError++;
+                        return false;
+                    }
+                                     
                     if( data.id ) {
 
                         var mrn = data['parent'];
@@ -1956,4 +1983,79 @@ function trimWithCheck(val) {
         val = val.trim();
     }
     return val;
+}
+
+function createErrorWell(inputElement,name) {
+    if( name == "patient" ) {
+        errorStr = 'This is not a previously auto-generated MRN. Please correct the MRN or select "Auto-generated MRN" for a new one.';
+    }
+    if( name == "accession" ) {
+        errorStr = 'This is not a previously auto-generated accession number. Please correct the accession number or select "Auto-generated Accession Number" for a new one.';
+    }
+    var errorHtml =
+        '<div class="maskerror-added alert alert-danger">' + 
+            errorStr +
+        '</div>';
+
+    inputElement.after(errorHtml);
+    
+    return errorHtml;
+}
+
+function checkExistingKey() {
+    
+    if( orderformtype == "single") {
+        var accessions = $('#accession-single').find('.keyfield');
+        //console.log("singleform");
+    } else {
+        var accessions = $('.accessionaccession').find('.keyfield');
+        //console.log("not singleform");
+    }
+
+    //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
+    var prototype = $('#form-prototype-data').data('prototype-dataquality');
+    //console.log("prototype="+prototype);
+    var index = 0;
+
+    //for all accession fields
+    accessions.each(function() {
+        
+        var accInput = $(this);
+        var accValue = accInput.val();
+        var acctypeField = accInput.closest('.row').find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+        var acctypeValue = acctypeField.select2("val");
+        var acctypeText = acctypeField.select2("data").text;
+        
+        if(
+            accValue && accValue !="" && acctypeValue && acctypeValue !=""         
+        ) {
+            //console.log("validate accession-mrn-mrntype");
+
+            accValue = trimWithCheck(accValue);
+            acctypeValue = trimWithCheck(acctypeValue);
+
+            $.ajax({
+                url: urlCheck+"accession",
+                type: 'GET',
+                data: {key: accValue, extra: acctypeValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //console.debug("get accession ajax ok");                   
+                    if( data == -2 ) {                        
+                        var errorHtml = createErrorWell(accInput,"accession"); 
+                        $('#validationerror').append(errorHtml);
+                        return false;
+                    }                                                      
+                },
+                error: function () {
+                    console.debug("validation: get object ajax error accession");
+                }
+            });
+
+        }
+    });
+    
+    return true;
 }

@@ -99,6 +99,8 @@ class CheckController extends Controller {
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
 
+        $originalKeytype = $keytype;
+        
         $em = $this->getDoctrine()->getManager();
         $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype);
 
@@ -115,7 +117,13 @@ class CheckController extends Controller {
         if( !$userUtil->hasPermission($security_content,$entity) ) {
             $entity = null;               
             $element = -1;
-        }            
+        }   
+        
+        $originalKeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($originalKeytype);
+        if( $originalKeytype == "Existing Auto-generated MRN" && !$entity ) {
+            $entity = null;               
+            $element = -2;
+        }
         
         if( $entity ) {
             $element = array(
@@ -221,6 +229,8 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
+        
+        $originalKeytype = $keytype;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -242,6 +252,12 @@ class CheckController extends Controller {
             $entity = null;               
             $element = -1;
         }     
+        
+        $originalKeytype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($originalKeytype);
+        if( $originalKeytype == "Existing Auto-generated Accession Number" && !$entity ) {
+            $entity = null;               
+            $element = -2;
+        }
         
         if( $entity ) {
 
