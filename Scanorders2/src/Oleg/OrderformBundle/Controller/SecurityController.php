@@ -48,30 +48,30 @@ class SecurityController extends Controller
 
     }
 
-    /**
-     * @Route("/login_check", name="login_check")
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:ScanOrder:new_orig.html.twig")
-     */
-    public function loginCheckAction( Request $request )
-    {
-        //exit("my login check!");
-    }
+//    /**
+//     * @Route("/login_check", name="login_check")
+//     * @Method("POST")
+//     * @Template("OlegOrderformBundle:ScanOrder:new_orig.html.twig")
+//     */
+//    public function loginCheckAction( Request $request )
+//    {
+//        //exit("my login check!");
+//    }
 
 
-    /**
-     * @Route("/logout", name="logout")
-     * @Template()
-     */
-    public function logoutAction( Request $request )
-    {
-
-        $this->get('security.context')->setToken(null);
-        $this->get('request')->getSession()->invalidate();
-
-        //return $this->forward('OlegOrderformBundle:Security:login');
-        return $this->redirect($this->generateUrl('login'));
-    }
+//    /**
+//     * @Route("/logout", name="logout")
+//     * @Template()
+//     */
+//    public function logoutAction( Request $request )
+//    {
+//
+//        $this->get('security.context')->setToken(null);
+//        $this->get('request')->getSession()->invalidate();
+//
+//        //return $this->forward('OlegOrderformBundle:Security:login');
+//        return $this->redirect($this->generateUrl('login'));
+//    }
 
 
 

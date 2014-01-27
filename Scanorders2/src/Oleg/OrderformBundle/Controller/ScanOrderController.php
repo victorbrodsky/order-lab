@@ -31,11 +31,7 @@ class ScanOrderController extends Controller {
      * @Method("GET")
      * @Template()
      */
-    public function indexAction( Request $request ) {    
-        
-//        if (false === $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+    public function indexAction( Request $request ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -289,7 +285,7 @@ class ScanOrderController extends Controller {
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         $form = $this->createDeleteForm($id);
@@ -326,8 +322,9 @@ class ScanOrderController extends Controller {
      * @Template()
      */
     public function statusAction($id, $status) {
-        if (false === $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+
+        if( false === $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER') ) {
+            return $this->redirect( $this->generateUrl('logout') );
         }
         
         $em = $this->getDoctrine()->getManager();

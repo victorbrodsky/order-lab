@@ -13,6 +13,7 @@ use Oleg\OrderformBundle\Form\GenericListType;
 
 /**
  * Common list controller
+ * @Route("/admin")
  */
 class ListController extends Controller
 {
@@ -35,10 +36,6 @@ class ListController extends Controller
      */
     public function indexAction()
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
         $request = $this->container->get('request');
         $type = $request->get('_route');
@@ -72,10 +69,6 @@ class ListController extends Controller
      */
     public function createAction(Request $request)
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -156,10 +149,6 @@ class ListController extends Controller
     public function newAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
@@ -203,10 +192,6 @@ class ListController extends Controller
     public function showAction($id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
@@ -247,10 +232,6 @@ class ListController extends Controller
      */
     public function editAction($id)
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -327,10 +308,6 @@ class ListController extends Controller
     public function updateAction(Request $request, $id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
-
         //$request = $this->container->get('request');
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
@@ -378,9 +355,6 @@ class ListController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);

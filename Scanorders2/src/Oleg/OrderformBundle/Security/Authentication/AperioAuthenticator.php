@@ -24,7 +24,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 {
     private $encoderFactory;
     private $serviceContainer;
-    private $ldap = false;
+    private $ldap = true;
 
     public function __construct(EncoderFactoryInterface $encoderFactory, $serviceContainer)
     {
@@ -75,13 +75,8 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
                 //TDODD: Remove: for testing at home;
                 if( !$this->ldap ) {
                     echo "Aperio Auth: Remove it !!!";
-                    //also enable read_from: "%kernel.root_dir%/../../../../order" at config.yml
-                    //$user->setUsername("testuser");
-                    $user->setEmail('');
-                    if( $token->getUsername() == "admin" ) {
-                        $user->addRole('ROLE_ADMIN');
-                    }
-                    
+                    $user->setUsername("testuser4");
+                    $user->addRole('ROLE_ADMIN');
                 }
 
                 if( $token->getUsername() == "oli2002" || $token->getUsername() == "vib9020" ) {

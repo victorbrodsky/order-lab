@@ -391,10 +391,6 @@ class CheckController extends Controller {
      */
     public function getPartAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
         $request = $this->get('request');
         $key = trim( $request->get('key') );
         $accession = trim( $request->get('parent') ); //need accession number to check if part exists in DB
@@ -405,8 +401,13 @@ class CheckController extends Controller {
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
-        
+
         $element = array();
+
+        if( !$entity && strpos($key,'NOPARTNAMEPROVIDED-') !== false ) {
+            $entity = null;
+            $element = -2;
+        }
         
         $userUtil = new UserUtil();
         $security_content = $this->get('security.context');
@@ -441,10 +442,6 @@ class CheckController extends Controller {
      * @Method("GET")
      */
     public function createPartAction() {
-
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
 
         $request = $this->get('request');
         $accession = trim( $request->get('key') );
@@ -487,10 +484,6 @@ class CheckController extends Controller {
      */
     public function deletePartAction(Request $request) {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
         $key = trim( $request->get('key') );
         $accession = trim( $request->get('accession') );
         $keytype = trim( $request->get('extra') );
@@ -519,10 +512,6 @@ class CheckController extends Controller {
      */
     public function getBlockAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
         $request = $this->get('request');
         $key = trim($request->get('key'));
         $keytype = trim( $request->get('extra') );
@@ -537,13 +526,18 @@ class CheckController extends Controller {
             //echo "partname=".$entity->getPartname()->first()."<br>";
             
             $element = array();
-        
+
+            if( !$entity && strpos($key,'NOBLOCKNAMEPROVIDED-') !== false ) {
+                $entity = null;
+                $element = -2;
+            }
+
             $security_content = $this->get('security.context');
             $userUtil = new UserUtil();
             if( !$userUtil->hasPermission($security_content,$entity) ) {
                 $entity = null;               
                 $element = -1;
-            }     
+            }
 
             if( $entity ) {
 
@@ -571,9 +565,6 @@ class CheckController extends Controller {
      */
     public function createBlockAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
 
         $request = $this->get('request');
         $accession = trim($request->get('key'));
@@ -619,10 +610,6 @@ class CheckController extends Controller {
      * @Method("DELETE")
      */
     public function deleteBlockAction(Request $request) {
-
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
 
         $key = trim($request->get('key'));
         $accession = trim($request->get('accession'));

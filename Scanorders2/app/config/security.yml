@@ -12,7 +12,8 @@ security:
         ROLE_ALL_SUBMITTER: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER]
         ROLE_ALL_ORDERING_PROVIDER: [ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]
         ROLE_ALL_PATHOLOGY: [ROLE_PATHOLOGY_RESIDENT, ROLE_PATHOLOGY_FELLOW, ROLE_PATHOLOGY_FACULTY]
-       
+
+        ROLE_PROCESSOR:    [ROLE_ALL_SUBMITTER,ROLE_ALL_ORDERING_PROVIDER,ROLE_ALL_PATHOLOGY]
         ROLE_ADMIN:       [ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_ALL_SUBMITTER, ROLE_ALL_ORDERING_PROVIDER, ROLE_ALL_PATHOLOGY]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
@@ -51,7 +52,9 @@ security:
                  provider:      aperioauth
                  authenticator: aperio_authenticator
                  use_referer: true
-            logout:     true
+            logout:
+                path:   /logout
+                target: /login
             anonymous:  true
           
     access_control:

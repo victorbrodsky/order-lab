@@ -44,15 +44,17 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
             $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All Not Filled')));
 
         }
-        elseif( $this->security->isGranted('ROLE_SUBMITTER') ) {
+        elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') ) {
 
             $referer_url = $request->headers->get('referer');
-            //echo "user role ok! referer_url=".$referer_url."<br>";
             $last = basename(parse_url($referer_url, PHP_URL_PATH));
+            //echo "user role ok! referer_url=".$referer_url.", last=".$last."<br>";
             //exit();
             if( $last == 'login' ) {
+                //exit("gen single_new");
                 $response = new RedirectResponse($this->router->generate('single_new'));
             } else {
+                //exit("use ref url=".$referer_url);
                 $response = new RedirectResponse($referer_url);
             }
 
@@ -61,7 +63,7 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
 
             //echo "user role not ok!";
             //exit();
-            $response = new RedirectResponse( $this->router->generate('login') );
+            $response = new RedirectResponse( $this->router->generate('logout') );
             
         }
 

@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\UserRequest;
 use Oleg\OrderformBundle\Form\UserRequestType;
 use Oleg\OrderformBundle\Helper\EmailUtil;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 /**
  * UserRequest controller.
@@ -29,7 +30,7 @@ class UserRequestController extends Controller
     public function indexAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -66,8 +67,7 @@ class UserRequestController extends Controller
                 'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
 
-            //return $this->redirect($this->generateUrl('scanorder_new', array('id' => $entity->getId())));
-            return $this->redirect( $this->generateUrl('login') );
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         return array(
@@ -105,7 +105,7 @@ class UserRequestController extends Controller
     public function showAction($id)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -134,7 +134,7 @@ class UserRequestController extends Controller
     public function editAction($id)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -204,7 +204,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         $form = $this->createDeleteForm($id);
@@ -250,7 +250,7 @@ class UserRequestController extends Controller
     {
         
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -282,7 +282,7 @@ class UserRequestController extends Controller
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -291,21 +291,24 @@ class UserRequestController extends Controller
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User.');
+            //return $this->redirect( $this->generateUrl('logout') );
         }
 
         if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "1" ) {
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You have already applied for access request! Please contact the slide scan order administrator slidescan@med.cornell.edu for details.'
-            );
-            return $this->redirect($this->generateUrl('login'));
+
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+            $dateStr = $transformer->transform($user->getAppliedforaccessdate());
+
+            $text = 'You have applied for access on ' . $dateStr . '. Your application has not been approved yet. Please contact the administrator if you have any questions.';
+
+            $this->get('security.context')->setToken(null);
+            //$this->get('request')->getSession()->invalidate();
+
+            return $this->render('OlegOrderformBundle:UserRequest:request_confirmation.html.twig',array('text'=>$text));
         }
 
         //echo "userid=".$id."<br>";
         //exit();
-
-        //$this->get('security.context')->setToken(null);
-        //$this->get('request')->getSession()->invalidate();
 
         return array(
             'userid' => $id,
@@ -322,7 +325,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER')) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
+            return $this->redirect( $this->generateUrl('logout') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -355,12 +358,18 @@ class UserRequestController extends Controller
             $emailStr = "\r\nConfirmation email was sent to ".$email;
         }
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Your access request was successfully submitted!'.$emailStr
-        );
+        $text = 'Your access request was successfully submitted!'.$emailStr;
 
-        return $this->redirect($this->generateUrl('login'));
+
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $text
+//        );
+
+        $this->get('security.context')->setToken(null);
+        //$this->get('request')->getSession()->invalidate();
+
+        return $this->render('OlegOrderformBundle:UserRequest:request_confirmation.html.twig',array('text'=>$text));
 
     }
 

@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 
 /**
- * StainList controller.
- *
  * @Route("/admin")
  */
 class AdminController extends Controller
@@ -55,10 +53,6 @@ class AdminController extends Controller
      */
     public function generateAllAction()
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        }
 
         $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
@@ -209,10 +203,6 @@ class AdminController extends Controller
     public function generatePathServiceAction()
     {
 
-//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
         $count = $this->generatePathServices();
         if( $count >= 0 ) {
 
@@ -245,10 +235,6 @@ class AdminController extends Controller
     public function generateSlideTypeAction()
     {
 
-//        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
-
         $count = $this->generateSlideType();
         if( $count >= 0 ) {
 
@@ -280,10 +266,6 @@ class AdminController extends Controller
      */
     public function generateMrnTypeAction()
     {
-
-        //if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-        //    return $this->render('OlegOrderformBundle:Security:login.html.twig');
-        //}
 
         $count = $this->generateMrnType();
         if( $count >= 0 ) {
@@ -729,7 +711,7 @@ class AdminController extends Controller
 
             "ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST" => "Data Quality Assurance Specialist",
 
-            "ROLE_USER" => "User",
+            //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.
 
             "ROLE_SUBMITTER" => "Submitter",
             "ROLE_ORDERING_PROVIDER" => "Ordering Provider",
