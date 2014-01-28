@@ -66,6 +66,7 @@ class CheckController extends Controller {
                         $childValue = $field->$getMethod()->getId();
                         //echo "childValue=".$childValue."<br>";
                         $hist[$child] = $childValue;
+                        $hist['keytypename'] = $field->$getMethod()."";
                     } else {
                         $childValue = $field->$getMethod()."";
                         //echo "childValue=".$childValue."<br>";

@@ -552,11 +552,15 @@ function getKeyGroupParent(elem) {
     } else {
         var parent = elem.closest('.row');
     }
+
     return parent;
 }
 
 //elem is a keytype (combobox)
 function getButtonParent(elem) {
+
+    var parent = elem.closest('.row');
+
     if( orderformtype == "single") {
         if( elem.hasClass('mrntype-combobox') ) {
             var parent = $('#patient');
@@ -564,8 +568,13 @@ function getButtonParent(elem) {
         if( elem.hasClass('accessiontype-combobox') ) {
             var parent = $('#accession-single');
         }
-    } else {
-        var parent = elem.closest('.row');
+        if( elem.hasClass('partbtn') ) {
+            var parent = $('#part-single');
+        }
+        if( elem.hasClass('blockbtn') ) {
+            var parent = $('#block-single');
+        }
     }
+
     return parent;
 }
