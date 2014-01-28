@@ -550,7 +550,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
                 //console.log("2 field = " + field);
                 if( data[field] && data[field] != undefined && data[field] != "" ) {
-                    //console.log("data is not null: set text field");    // = " + data[field][0]['text']);
+                    //console.log("data is not null: set text for field " + field);
                     setArrayField( elements.eq(i), data[field], parent );
                 } else {
                     //console.log("data is empty: don't set text field");
@@ -626,8 +626,6 @@ function setArrayField(element, dataArr, parent) {
 
             //console.log("Create array empty field, fieldName=" + fieldName + ", patient="+patient+", part="+part );
 
-            //fieldName = "clinicalHistory";
-
             var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, coll );
             //console.log("newForm="+newForm);
 
@@ -684,13 +682,21 @@ function setArrayField(element, dataArr, parent) {
                 }
 
                 //find the last attached element to attachElement
-                if( fieldName != "diffDisident" && orderformtype == "single" ) {
-                    var firstAttachedElement = element; //for single & disident (Diagnosis) there is only one field: this element
-                } else {
-                    var firstAttachedElement = attachElement.find('input,textarea').first();
-                }
+
+//                if( fieldName != "diffDisident" && orderformtype == "single" ) {
+//
+//                    //var firstAttachedElement = element; //for single & disident (Diagnosis) there is only one field: this element
+//                    var firstAttachedElement = attachElement.find('input,textarea').first();
+//                    //console.log(fieldName+': single');
+//
+//                } else {
+//                    var firstAttachedElement = attachElement.find('input,textarea').first();
+//                }
+
+                var firstAttachedElement = attachElement.find('input,textarea').first();
                 
                 //printF(firstAttachedElement,"firstAttachedElement: ");
+
                 if( fieldName == "partname" || fieldName == "blockname" ) {
                     if( orderformtype == "single" ) {
                         var firstAttachedElement = element;
