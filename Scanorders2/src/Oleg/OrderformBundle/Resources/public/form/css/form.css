@@ -302,3 +302,7 @@
     min-height: 75px;
 }
 
+.dropdown-menu {
+    left: -205%;
+}
+

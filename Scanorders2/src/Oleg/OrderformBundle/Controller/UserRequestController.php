@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 /**
  * UserRequest controller.
  *
- * @Route("/accountrequest")
+ * @Route("/userrequest")
  */
 class UserRequestController extends Controller
 {
@@ -29,7 +29,7 @@ class UserRequestController extends Controller
      */
     public function indexAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('logout') );
         }
         
@@ -41,6 +41,7 @@ class UserRequestController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new UserRequest entity.
      *
@@ -98,13 +99,13 @@ class UserRequestController extends Controller
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/{id}", name="accountrequest_show")
+     * @Route("/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function showAction($id)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('logout') );
         }
 
@@ -127,13 +128,13 @@ class UserRequestController extends Controller
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/{id}/edit", name="accountrequest_edit")
+     * @Route("/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('logout') );
         }
 
@@ -158,7 +159,7 @@ class UserRequestController extends Controller
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/{id}", name="accountrequest_update")
+     * @Route("/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegOrderformBundle:UserRequest:edit.html.twig")
      */
@@ -197,13 +198,13 @@ class UserRequestController extends Controller
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/{id}", name="accountrequest_delete")
+     * @Route("/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('logout') );
         }
 
@@ -242,14 +243,14 @@ class UserRequestController extends Controller
     
     
     /**
-     * @Route("/{id}/{status}/status", name="accountrequest_status")
+     * @Route("/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
      */
     public function statusAction($id, $status)
     {
         
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('logout') );
         }
         
@@ -272,9 +273,12 @@ class UserRequestController extends Controller
 
 
 
-    //Access Request
+
+
+    /////////////// Access Request ////////////////////
+
     /**
-     * @Route("/accessrequest/{id}", name="access_request_new")
+     * @Route("/accessrequest/{id}", name="access_request_new", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:access_request.html.twig")
      */
@@ -294,12 +298,22 @@ class UserRequestController extends Controller
             //return $this->redirect( $this->generateUrl('logout') );
         }
 
-        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "1" ) {
+        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "active" ) {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($user->getAppliedforaccessdate());
 
             $text = 'You have applied for access on ' . $dateStr . '. Your application has not been approved yet. Please contact the administrator if you have any questions.';
+
+            $this->get('security.context')->setToken(null);
+            //$this->get('request')->getSession()->invalidate();
+
+            return $this->render('OlegOrderformBundle:UserRequest:request_confirmation.html.twig',array('text'=>$text));
+        }
+
+        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "denied" ) {
+
+            $text = 'Your application has been denied. Please contact the administrator if you have any questions.';
 
             $this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
@@ -317,7 +331,7 @@ class UserRequestController extends Controller
     }
 
     /**
-     * @Route("/accessrequest/{id}", name="access_request_create")
+     * @Route("/accessrequest/{id}", name="access_request_create", requirements={"id" = "\d+"})
      * @Method("POST")
      * @Template("OlegOrderformBundle:UserRequest:access_request.html.twig")
      */
@@ -336,7 +350,7 @@ class UserRequestController extends Controller
             throw $this->createNotFoundException('Unable to find User.');
         }
 
-        $user->setAppliedforaccess(1);
+        $user->setAppliedforaccess('active');
         $user->setAppliedforaccessdate( new \DateTime() );
 
         $em->persist($user);
@@ -374,6 +388,80 @@ class UserRequestController extends Controller
     }
 
 
+    /**
+     * Lists all Access Request.
+     *
+     * @Route("/accessrequestlist", name="accessrequest_list")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:UserRequest:access_request_list.html.twig")
+     */
+    public function accessRequestIndexAction()
+    {
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('logout') );
+        }
 
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
+        //$entities = $em->getRepository('OlegOrderformBundle:User')->findAll();
+
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
+        return array(
+            'entities' => $entities,
+            'roles' => $rolesArr
+        );
+    }
+
+
+    /**
+     * @Route("/accessrequest/{id}/{status}/{role}/status", name="accessrequest_change", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function accessRequestChangeAction($id, $status, $role)
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('logout') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        $entity->setAppliedforaccess($status);
+
+        if( $status == "approved" && $role == "external" ) {
+            $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            $entity->addRole('ROLE_EXTERNAL_SUBMITTER');
+            $entity->addRole('ROLE_EXTERNAL_ORDERING_PROVIDER');
+        } else
+        if( $status == "approved" && $role == "submitter" ) {
+            $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            $entity->addRole('ROLE_SUBMITTER');
+            $entity->addRole('ROLE_ORDERING_PROVIDER');
+        } else {
+            $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            $entity->setLocked(true);
+        }
+
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('accessrequest_list'));
+
+    }
     
 }

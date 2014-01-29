@@ -21,29 +21,45 @@
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
 
-            {% if is_granted('ROLE_SUBMITTER') or is_granted('ROLE_EXTERNAL_SUBMITTER') or is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_SUBMITTER') or is_granted('ROLE_EXTERNAL_SUBMITTER') %}
 
-            <li id="0" class="hidden-xs divider-vertical new"><a href="{{ path('single_new') }}">One Slide</a></li>
-            <li id="1" class="divider-vertical orderinfo"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>
-            <li id="2" class="divider-vertical accession"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
-            <li id="3" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
-            <li id="4" class="divider-vertical index"><a href="{{ path('index') }}">My Orders</a></li>
+                <li id="0" class="hidden-xs divider-vertical new"><a href="{{ path('single_new') }}">One Slide</a></li>
+                <li id="1" class="divider-vertical orderinfo"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>
+                <li id="2" class="divider-vertical accession"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
+                <li id="3" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
+                <li id="4" class="divider-vertical index"><a href="{{ path('index') }}">My Orders</a></li>
 
             {% endif %}
 
-            {% if is_granted('ROLE_USER') %}
+            {% if is_granted('ROLE_PROCESSOR') %}
 
-            <li id="5" class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li>Logged in as {{ app.security.getToken().getUser().getUsername() }}</li>
-                    <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile</a></li>
-                    <li><a href="{{ path('logout') }}">Log Out</a></li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li><a href="{{ path('admin_index') }}">Admin</a></li>
-                    {% endif %}
-                </ul>
-            </li>
+                <li id="5" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>Logged in as {{ app.security.getToken().getUser().getUsername() }}</li>
+                        <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile</a></li>
+                        <li><a href="{{ path('accessrequest_list') }}">Incoming Orders</a></li>
+                        <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
+                        <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin_index') }}">Tables</a></li>
+                        {% endif %}
+
+                    </ul>
+                </li>
+
+            {% endif %}
+
+            {% if is_granted('ROLE_SUBMITTER') or is_granted('ROLE_EXTERNAL_SUBMITTER') %}
+
+                <li id="5" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>Logged in as {{ app.security.getToken().getUser().getUsername() }}</li>
+                        <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile</a></li>
+                        <li><a href="{{ path('logout') }}">Log Out</a></li>
+                    </ul>
+                </li>
 
             {% endif %}
 

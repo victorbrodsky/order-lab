@@ -112,10 +112,10 @@ class UserType extends AbstractType
                 'multiple'  => true,
             ));
 
-            $builder->add('enabled', null, array(
-                'label' => 'Enabled',
-                'attr' => array('class'=>'form-control form-control-modif')
-            ));
+//            $builder->add('enabled', null, array(
+//                'label' => 'Enabled',
+//                'attr' => array('class'=>'form-control form-control-modif')
+//            ));
             $builder->add('locked', null, array(
                 'label' => 'Locked',
                 'attr' => array('class'=>'form-control form-control-modif')

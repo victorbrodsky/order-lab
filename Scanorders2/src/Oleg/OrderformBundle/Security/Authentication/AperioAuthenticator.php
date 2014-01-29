@@ -25,6 +25,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
     private $encoderFactory;
     private $serviceContainer;
     private $ldap = true;
+    private $test = true;
 
     public function __construct(EncoderFactoryInterface $encoderFactory, $serviceContainer)
     {
@@ -69,8 +70,12 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
                 $user->setCreatedby('aperio');
 
                 //set Roles: aperio users can submit order by default.
-                $user->addRole('ROLE_SUBMITTER');           //Submitter
-                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+                if( $this->test ) {
+                    $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
+                } else {
+                    $user->addRole('ROLE_SUBMITTER');           //Submitter
+                    $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+                }
 
                 //TDODD: Remove: for testing at home;
                 if( !$this->ldap ) {

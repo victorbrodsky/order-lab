@@ -39,7 +39,7 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
             return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
         }
 
-        if( $this->security->isGranted('ROLE_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_PROCESSOR') ) {
 
             $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All Not Filled')));
 

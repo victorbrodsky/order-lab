@@ -65,7 +65,7 @@ class AdminController extends Controller
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
         $userutil = new UserUtil();
-        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());      
+        //$count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
 
         $this->get('session')->getFlashBag()->add(
@@ -81,7 +81,7 @@ class AdminController extends Controller
             'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
             'Mrn Types='.$count_mrntype.', '.
-            'Users='.$count_users.
+            //'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
 

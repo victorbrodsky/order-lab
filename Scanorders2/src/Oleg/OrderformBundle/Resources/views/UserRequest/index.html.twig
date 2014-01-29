@@ -29,10 +29,10 @@
         {% for entity in entities %}
             
             {% if entity.status == 'active' %}
-                <tr class="canceltr" >
-            {% elseif entity.status == 'cancel' %}
                 <tr class="activetr" >
-            {% elseif entity.status == 'completed' %}
+            {% elseif entity.status == 'denied' %}
+                <tr class="canceltr" >
+            {% elseif entity.status == 'accepted' %}
                 <tr class="completedtr" >
             {% elseif entity.status == 'uncompleted' %}
                 <tr class="uncompletedtr" >
@@ -66,7 +66,7 @@
 
                             {% if entity.status != 'cancel' %}
                                 <li><a onclick="return confirm('Are you sure?');"
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'cancel' }) }}">Deny</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'denied' }) }}">Deny</a>
                                 </li>                  
                             {% endif %}                                                                
 
@@ -78,7 +78,7 @@
 
                             {% if entity.status != 'completed' %}
                                 <li><a onclick="return confirm('Are you sure?');" 
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'completed' }) }}">Accept</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'accepted' }) }}">Accept</a>
                                 </li>                  
                             {% endif %}
                          
