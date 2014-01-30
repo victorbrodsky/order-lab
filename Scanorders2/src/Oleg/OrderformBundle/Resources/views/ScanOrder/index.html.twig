@@ -7,19 +7,20 @@
 {% block content %} 
 {% block body -%}
 
-    {% if is_granted('ROLE_ADMIN') and security == 'true' %}
-        <span class="text-info">Total Orders: {{ pagination.getTotalItemCount }}</span> |
-        <a href="{{ path('admin_index') }}">Admin</a> |
-        {% if userreqs is defined %}
-            {% if userreqs | length == 0 %}
-                <span class="text-success">Active User Requests:{{ userreqs | length }}</span> |
-            {% else %}
-                <span class="text-danger">Active User Requests:{{ userreqs | length }}</span> |
-            {% endif %}  
-        {% else %}
-            <span class="text-success">Active User Requests:0</span> |
+    {% if is_granted('ROLE_PROCESSOR') and security == 'true' %}
+
+        {% if userreqs is defined and userreqs | length > 0 %}
+            <a class="text-danger" href="{{ path('accountrequest') }}">Active Account Requests:{{ userreqs | length }}</a>
         {% endif %}
-        <a href="{{ path('accountrequest') }}">All User Requests</a>
+
+        {% if (userreqs is defined and userreqs | length > 0) and (accessreqs is defined and accessreqs | length > 0) %}
+            |
+        {% endif %}
+
+        {% if accessreqs is defined and accessreqs | length > 0 %}
+            <a class="text-danger" href="{{ path('accessrequest_list') }}">Active Access Requests:{{ accessreqs | length }}</a>
+        {% endif %}
+
     {% endif %}
 
     <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">

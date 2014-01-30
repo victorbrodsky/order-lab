@@ -269,6 +269,7 @@ class Slide extends OrderAbstract
         }
 
         return "Slide: id=".$this->getId().", title=".$this->getTitle().", slidetype=".$this->getSlidetype().
+                ", provider=".$this->getProvider().
                 ", parentId=".$this->getParent()->getId().
                 ", orderinfo count=".count($this->getOrderinfo()).", first orderinfo:=".$this->getOrderinfo()->first().
                 ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().

@@ -457,9 +457,16 @@ class Patient extends OrderAbstract
             $orders = $orders . "id=".$order->getId().", oid=".$order->getOid();
         }
 
+        $names = ", nameCount=".count($this->name).": ";
+        foreach( $this->name as $name ) {
+            $names = $names . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
-        ", name=".$this->name->first().", nameID=".$this->name->first()->getId().
+        //", name=".$this->name->first().", nameID=".$this->name->first()->getId().
+        ", names=".$names.
+        ", age=".$this->age->first().", nameID=".$this->age->first()->getId().
         ", procedureCount=".count($this->procedure).
         //", firstprocedureID=".$this->procedure->first()->getId().
         ", orderinfo=".$orders.
@@ -512,44 +519,11 @@ class Patient extends OrderAbstract
         $this->addMrn( new PatientMrn() );
         return $this->obtainKeyField();
     }
-    
-//    public function cloneChildren() {
-//        // Get current collection
-//        $children = $this->getChildren();
-//
-//        $cloneChildren = new ArrayCollection();
-//        foreach( $children as $child ) {
-//            //$this->removeChildren($child);
-//            $cloneChild = clone $child;
-//            $cloneChild->cloneChildren();
-//            $cloneChildren->add($cloneChild);
-//            $this->procedure = $cloneChildren;
-//            //$this->addChildren($cloneChild);
-//            $cloneChild->setParent($this);
-//        }
-//    }
 
-//    //TODO: not used. Remove it later.
-//    //check if procedure-accession is exists
-//    //$entity - procedure
-//    public function containsChild($entity) {
-//        //echo $entity;
-////        if( count($entity->getChildren()) != 1 ) {
-////            throw $this->createNotFoundException( 'This Object must have only one child. Number of children=' . count($entity->getChildren()) );
-////        }
-//        //echo "procedure count=".count($this->procedure)."<br>";
-//        foreach( $this->procedure as $procedure ) {
-//            $acc1 = $entity->getChildren()->first()->obtainValidKeyfield();
-//            $acc2 = $procedure->getChildren()->first()->obtainValidKeyfield();
-//            //echo "compare: ".$acc1."?=".$acc2."<br>";
-//            if( $acc1."" == $acc2."" ) {
-//                echo "exists!!! <br>";
-//                return true;
-//            }
-//        }
-//        echo "not exists!!! <br>";
-//        return false;
-//    }
+    public function getArrayFields() {
+        $fieldsArr = array('Mrn','Name','Sex','Dob','Age','ClinicalHistory');
+        return $fieldsArr;
+    }
 
 
 }

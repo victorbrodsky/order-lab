@@ -171,18 +171,13 @@ function checkForm( elem, single ) {
                 var gonext = 1;
                 element.button('reset');
                 
-                if( data == -1 ) {
-                    //object exists but no permission to see it (not an author or not pathology role)
-                    return false;
-                }
-                
                 if( data == -2 ) {
                     //Existing Auto-generated object does not exist in DB
                     createErrorWell(keyElement.element,name);
                     return false;
                 }
-                
-                if( data.id ) {      
+
+                if( data.id && data['permission'] == true ) {
 
                     if( !single ) {
                         gonext = checkParent(element,keyValue,name,fieldName,extra); //check if this key is not used yet, when a new key field is checked in the added entity

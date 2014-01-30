@@ -24,7 +24,10 @@ class SlideRepository extends ArrayFieldAbstractRepository {
             return $slide;
         }
 
-        $slide->setProvider($orderinfo->getProvider()->first());
+        if( !$slide->getProvider() ) {
+            echo "set slide provider=".$orderinfo->getProvider()->first()."<br>";
+            $slide->setProvider($orderinfo->getProvider()->first());
+        }
 
         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($slide,$orderinfo,$original);
 

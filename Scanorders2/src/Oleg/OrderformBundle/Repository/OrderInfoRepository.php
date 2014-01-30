@@ -164,8 +164,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         }
 
-        //echo $entity;
-        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
+//        echo $entity;
+//        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
+        //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+        //echo $entity->getPatient()->first();
+//        echo "<br>--------------------------<br>";
+//        $this->printTree( $entity->getPatient()->first() );
+//        echo "--------------------------<br>";
+//        foreach( $entity->getSlide() as $slide ) {
+//            echo $slide;
+//        }
         //exit('orderinfo repo exit');
 
         //create new orderinfo
@@ -197,7 +205,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //exit('amended orderinfo repo exit');
             $newId = $entity->getId();
 
-            echo "originalId=".$originalId.", newId=".$newId."<br>";
+            //echo "originalId=".$originalId.", newId=".$newId."<br>";
 
 //            $em->detach($entity);
 

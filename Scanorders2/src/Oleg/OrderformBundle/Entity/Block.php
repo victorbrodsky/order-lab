@@ -245,4 +245,9 @@ class Block extends OrderAbstract
         return $this->obtainKeyField();
     }
 
+    public function getArrayFields() {
+        $fieldsArr = array('Blockname','Sectionsource');
+        return $fieldsArr;
+    }
+
 }

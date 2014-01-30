@@ -244,4 +244,9 @@ class Procedure extends OrderAbstract
         return $this->obtainKeyField();
     }
 
+    public function getArrayFields() {
+        $fieldsArr = array('Name');
+        return $fieldsArr;
+    }
+
 }

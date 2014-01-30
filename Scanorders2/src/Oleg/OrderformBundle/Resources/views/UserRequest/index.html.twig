@@ -30,7 +30,7 @@
             
             {% if entity.status == 'active' %}
                 <tr class="activetr" >
-            {% elseif entity.status == 'denied' %}
+            {% elseif entity.status == 'declined' %}
                 <tr class="canceltr" >
             {% elseif entity.status == 'accepted' %}
                 <tr class="completedtr" >
@@ -58,15 +58,15 @@
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                           Action <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" style="left: -100%;">
 
                             <li><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">View Details</a></li>
 
                             <li class="divider"></li>
 
-                            {% if entity.status != 'cancel' %}
+                            {% if entity.status != 'declined' %}
                                 <li><a onclick="return confirm('Are you sure?');"
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'denied' }) }}">Deny</a>
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'declined' }) }}">Decline</a>
                                 </li>                  
                             {% endif %}                                                                
 

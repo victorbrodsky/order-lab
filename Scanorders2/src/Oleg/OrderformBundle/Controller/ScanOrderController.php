@@ -157,7 +157,7 @@ class ScanOrderController extends Controller {
         //***************** END of Status filetr ***************************//
 
         //***************** Superseded filter ***************************//
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
             $criteriastr .= " status.name != 'Superseded'";
         }
@@ -181,7 +181,7 @@ class ScanOrderController extends Controller {
         //TODO: test leftJoin. innerJoin does not show orders without proxyuser link
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
         //show only my order if i'm not an admin and Pathology Services are not choosen
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') && $service == 0 ) {
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
@@ -197,7 +197,10 @@ class ScanOrderController extends Controller {
         if( $service == "My Orders" ) {
             //show only my order if i'm not an admin and Pathology Services are not choosen
             //Orders I Personally Placed and Proxy Orders Placed For Me
-            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+            if( $service == 0 &&
+                false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')
+
+            ) {
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
@@ -211,7 +214,7 @@ class ScanOrderController extends Controller {
             }
         }
         if( $service == "Orders I Personally Placed" ) {
-            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') && $service == 0 ) {
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
@@ -219,7 +222,7 @@ class ScanOrderController extends Controller {
             }
         }
         if( $service == "Proxy Orders Placed For Me" ) {
-            if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $service == 0 ) {
+            if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') && $service == 0 ) {
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
@@ -261,15 +264,22 @@ class ScanOrderController extends Controller {
 
         //check for active user requests
         $reqs = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {                     
+        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             $reqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
+        }
+
+        //check for active access requests
+        $accessreqs = array();
+        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
         }
         
         return array(
             'form' => $form->createView(),
             'showprovider' => $showprovider,
             'pagination' => $pagination,
-            'userreqs' => $reqs
+            'userreqs' => $reqs,
+            'accessreqs' => $accessreqs
         );
     }
 
@@ -323,7 +333,9 @@ class ScanOrderController extends Controller {
      */
     public function statusAction($id, $status) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
+        ) {
             return $this->redirect( $this->generateUrl('logout') );
         }
         
@@ -377,7 +389,7 @@ class ScanOrderController extends Controller {
     public function getFilter() {
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_ALL_SUBMITTER') ) {
+        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
         } else {
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Status');

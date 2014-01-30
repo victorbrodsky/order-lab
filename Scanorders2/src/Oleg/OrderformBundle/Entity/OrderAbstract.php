@@ -291,4 +291,50 @@ abstract class OrderAbstract
         }
     }
 
+    public function filterArrayFields($user) {
+
+        $fields = $this->getArrayFields();
+
+        foreach( $fields as $field ) {
+            $getMethod = "get".$field;
+            $removeMethod = "remove".$field;
+            //echo "get Method=".$getMethod." ";
+
+            $latestEntity = null;
+            foreach( $this->$getMethod() as $entity ) {
+                if( $entity->getProvider()->getId() != $user->getId() ) {
+                    $this->$removeMethod($entity);
+                } else {
+                    //get the latest entity
+                    if( !$latestEntity || $entity->getCreationdate() > $latestEntity->getCreationdate() ) {
+                        $this->$removeMethod($latestEntity);
+                        $latestEntity = $entity;
+                    }
+                } //if
+            } //foreach
+
+        }
+
+        return $this;
+    }
+
+
+    public function obtainExistingFields() {
+
+        $count = 0;
+
+        $fields = $this->getArrayFields();
+
+        foreach( $fields as $field ) {
+            $getMethod = "get".$field;
+
+            if( count($this->$getMethod()) > 0 ) {
+                $count++;
+            }
+
+        }
+
+        return $count;
+    }
+
 }

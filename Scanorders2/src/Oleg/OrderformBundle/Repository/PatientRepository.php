@@ -44,54 +44,54 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["keytype"]);
     }
 
-    //replace field entity if not existed from source object to destination object
-    public function copyField_TODEL( $entity, $field, $className, $methodName, $fields ) {
-        $em = $this->_em;
-        echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
-
-        //echo $methodName.": this fields count=".count($fields)."<br>";
-
-        //if similar field is already set and provided field is empty => don't add provided field
-        if( !$field || trim($field) == "" ) {
-            if( $this->validFieldIsSet( $fields ) ) {
-                //echo "field is empty and non empty valid field exists => don't add provided field => return<br>";
-                return $entity;
-            }
-        }
-
-        //for Patient $field is not ID, but field value MRN number.
-        //if id=null, check if entity already has mrn field (mrn+mrntype)
-        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
-            //echo "field value=".$field."<br>";
-            $foundFields = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findByField($field.""); //PatientMrn
-            //echo "count foundFields=".count($foundFields)."<br>";
-            foreach( $foundFields as $thisField ) {
-                echo "thisField=".$thisField->getField().", field=".$field->getField().", original=".$field->getOriginal()."<br>";
-                echo "field id=".$field->getId()."<br>";
-                if( $thisField->getId() == $field->getId() && $thisField->getStatus() == self::STATUS_VALID ) {
-                    //this field is already exists in entity => don't add this field
-                    return $entity;
-                }
-            }
-        }
-
-        //if we reach this point, then now we have $field->getId(), exception - if not
-        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
-            throw new \Exception( 'Object '.$className.' does not have ID for field:'.$methodName );
-        }
-
-        $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
-
-        if( !$found ) {
-            //echo( "### ".$methodName." not found !!!!!! => add <br>" );
-            $methodName = "add".$methodName;
-            $entity->$methodName( $field );
-        } else {
-            //
-        }
-
-        return $entity;
-    }
+//    //replace field entity if not existed from source object to destination object
+//    public function copyField_TODEL( $entity, $field, $className, $methodName, $fields ) {
+//        $em = $this->_em;
+//        echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+//
+//        //echo $methodName.": this fields count=".count($fields)."<br>";
+//
+//        //if similar field is already set and provided field is empty => don't add provided field
+//        if( !$field || trim($field) == "" ) {
+//            if( $this->validFieldIsSet( $fields ) ) {
+//                //echo "field is empty and non empty valid field exists => don't add provided field => return<br>";
+//                return $entity;
+//            }
+//        }
+//
+//        //for Patient $field is not ID, but field value MRN number.
+//        //if id=null, check if entity already has mrn field (mrn+mrntype)
+//        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
+//            //echo "field value=".$field."<br>";
+//            $foundFields = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findByField($field.""); //PatientMrn
+//            //echo "count foundFields=".count($foundFields)."<br>";
+//            foreach( $foundFields as $thisField ) {
+//                echo "thisField=".$thisField->getField().", field=".$field->getField().", original=".$field->getOriginal()."<br>";
+//                echo "field id=".$field->getId()."<br>";
+//                if( $thisField->getId() == $field->getId() && $thisField->getStatus() == self::STATUS_VALID ) {
+//                    //this field is already exists in entity => don't add this field
+//                    return $entity;
+//                }
+//            }
+//        }
+//
+//        //if we reach this point, then now we have $field->getId(), exception - if not
+//        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
+//            throw new \Exception( 'Object '.$className.' does not have ID for field:'.$methodName );
+//        }
+//
+//        $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+//
+//        if( !$found ) {
+//            //echo( "### ".$methodName." not found !!!!!! => add <br>" );
+//            $methodName = "add".$methodName;
+//            $entity->$methodName( $field );
+//        } else {
+//            //
+//        }
+//
+//        return $entity;
+//    }
 
     //filter out duplicate virtual (in form, not in DB) patients
     //after js check form, theoretically we should not have duplicate entities submitted by the form, but let's have it just in case ...

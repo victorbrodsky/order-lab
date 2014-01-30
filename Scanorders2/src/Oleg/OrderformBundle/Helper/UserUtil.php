@@ -147,14 +147,21 @@ class UserUtil {
         return $choicesServ;
     }
     
-    public function hasPermission( $security_content, $entity ) {            
-        if( $entity && false === $security_content->isGranted('ROLE_ALL_PATHOLOGY') ) {   
-            $user = $security_content->getToken()->getUser();
-            if( $entity->getProvider()->getId() != $user->getId() ) {
-                return false;
-            }
+    public function hasPermission( $security_content ) {
+        if(
+            //$entity &&
+            false === $security_content->isGranted('ROLE_PATHOLOGY_RESIDENT') &&
+            false === $security_content->isGranted('ROLE_PATHOLOGY_FELLOW') &&
+            false === $security_content->isGranted('ROLE_PATHOLOGY_FACULTY')
+        ) {
+            return false;
+//            $user = $security_content->getToken()->getUser();
+//            if( $entity->getProvider()->getId() != $user->getId() ) {
+//                return false;
+//            }
+        } else {
+            return true;
         }
-        return true;
     }
 
 }

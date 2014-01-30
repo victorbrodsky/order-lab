@@ -508,4 +508,9 @@ class Part extends OrderAbstract
         return $this->obtainKeyField();
     }
 
+    public function getArrayFields() {
+        $fieldsArr = array('Partname','SourceOrgan','Description','Disident','Paper','DiffDisident','DiseaseType');
+        return $fieldsArr;
+    }
+
 }

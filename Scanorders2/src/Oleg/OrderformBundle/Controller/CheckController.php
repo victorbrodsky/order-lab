@@ -110,15 +110,18 @@ class CheckController extends Controller {
         //echo "key=".$key.", keytype=".$keytype."; ";
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);        
-        
+
+
         $element = array();
         
         $security_content = $this->get('security.context');
         $userUtil = new UserUtil();
-        if( !$userUtil->hasPermission($security_content,$entity) ) {
-            $entity = null;               
-            $element = -1;
-        }   
+        $permission = true;
+        if( $entity && !$userUtil->hasPermission($security_content) ) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $entity->filterArrayFields($user);
+            $permission = false;
+        }
         
         $originalKeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($originalKeytype);
         if( $originalKeytype == "Existing Auto-generated MRN" && !$entity ) {
@@ -135,7 +138,8 @@ class CheckController extends Controller {
                 'sex'=>$this->getArrayFieldJson($entity->getSex()),
                 'dob'=>$this->getArrayFieldJson($entity->getDob()),
                 'age'=>$this->getArrayFieldJson($entity->getAge()),
-                'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
+                'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory()),
+                'permission'=>$permission
             );
         } 
 
@@ -249,9 +253,11 @@ class CheckController extends Controller {
               
         $security_content = $this->get('security.context');
         $userUtil = new UserUtil();
-        if( !$userUtil->hasPermission($security_content,$entity) ) {
-            $entity = null;               
-            $element = -1;
+        $permission = true;
+        if( !$userUtil->hasPermission($security_content) ) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $entity->filterArrayFields($user);
+            $permission = false;
         }     
         
         $originalKeytype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($originalKeytype);
@@ -264,8 +270,16 @@ class CheckController extends Controller {
 
             //find patient mrn
             $patient = $entity->getProcedure()->getPatient();
+            if( !$permission ) {
+                $patient->filterArrayFields($user);
+            }
 
+            $parentKey = null;
             if( $patient ) {
+                $parentKey = $patient->obtainValidKeyfield();
+            }
+
+            if( $patient && $parentKey ) {
                 $parentKey = $patient->obtainValidKeyfield();
                 $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
                 $dateStr = $transformer->transform($parentKey->getCreationdate());
@@ -294,6 +308,7 @@ class CheckController extends Controller {
                 'orderinfo'=>$orderinfoString,
                 'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype')),
+                'permission'=>$permission
             );
         } 
 
@@ -412,9 +427,11 @@ class CheckController extends Controller {
         
         $userUtil = new UserUtil();
         $security_content = $this->get('security.context');
-        if( !$userUtil->hasPermission($security_content,$entity) ) {
-            $entity = null;               
-            $element = -1;
+        $permission = true;
+        if( !$userUtil->hasPermission($security_content) ) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $entity->filterArrayFields($user);
+            $permission = false;
         }     
 
         if( $entity ) {
@@ -427,7 +444,8 @@ class CheckController extends Controller {
                 'disident'=>$this->getArrayFieldJson($entity->getDisident()),
                 'paper'=>$this->getArrayFieldJson($entity->getPaper()),
                 'diffDisident'=>$this->getArrayFieldJson($entity->getDiffDisident()),
-                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") )
+                'diseaseType'=>$this->getArrayFieldJson( $entity->getDiseaseType(), array("origin","primaryorgan") ),
+                'permission'=>$permission
             );
         } 
 
@@ -535,9 +553,11 @@ class CheckController extends Controller {
 
             $security_content = $this->get('security.context');
             $userUtil = new UserUtil();
-            if( !$userUtil->hasPermission($security_content,$entity) ) {
-                $entity = null;               
-                $element = -1;
+            $permission = true;
+            if( !$userUtil->hasPermission($security_content) ) {
+                $user = $this->get('security.context')->getToken()->getUser();
+                $entity->filterArrayFields($user);
+                $permission = false;
             }
 
             if( $entity ) {
@@ -546,6 +566,7 @@ class CheckController extends Controller {
                     'id'=>$entity->getId(),
                     'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
                     'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
+                    'permission'=>$permission
                 );
             } 
             
