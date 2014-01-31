@@ -291,7 +291,12 @@ abstract class OrderAbstract
         }
     }
 
-    public function filterArrayFields($user) {
+    public function obtainArrayFieldNames() {
+        return null;
+    }
+
+    //For external submitter users: filter fields by author and keep only latest created fields
+    public function filterArrayFields( $user, $strict = false ) {
 
         $fields = $this->getArrayFields();
 
@@ -300,16 +305,31 @@ abstract class OrderAbstract
             $removeMethod = "remove".$field;
             //echo "get Method=".$getMethod." ";
 
+            //don't remove key fields (current external user can not have different key than a regular user)
+            if( strtolower($this->obtainKeyFieldName()) == strtolower($field) && !$strict ) {  //&& !$strict
+                continue;
+            }
+
             $latestEntity = null;
             foreach( $this->$getMethod() as $entity ) {
+
                 if( $entity->getProvider()->getId() != $user->getId() ) {
+
                     $this->$removeMethod($entity);
+
                 } else {
+
+                    //don't remove array fields
+                    if( $this->obtainArrayFieldNames() && in_array($field,$this->obtainArrayFieldNames()) ) {
+                        continue;
+                    }
+
                     //get the latest entity
                     if( !$latestEntity || $entity->getCreationdate() > $latestEntity->getCreationdate() ) {
                         $this->$removeMethod($latestEntity);
                         $latestEntity = $entity;
                     }
+
                 } //if
             } //foreach
 
@@ -319,7 +339,10 @@ abstract class OrderAbstract
     }
 
 
-    public function obtainExistingFields() {
+    //get number of existing fields.
+    //strict=false => don't count key fields
+    //strict=true => count all, including key fields
+    public function obtainExistingFields( $strict = false ) {
 
         $count = 0;
 
@@ -328,11 +351,20 @@ abstract class OrderAbstract
         foreach( $fields as $field ) {
             $getMethod = "get".$field;
 
+            //don't remove key fields (current external user can not have different key than a regular user)
+            if( strtolower($this->obtainKeyFieldName()) == strtolower($field) && !$strict ) {
+                //echo $field.": DON'T count key fields <br>";
+                continue;
+            }
+
             if( count($this->$getMethod()) > 0 ) {
+                //echo "not empty field=".$field."; ";
                 $count++;
             }
 
         }
+
+        //echo "count existing field=".$count."<br> ";
 
         return $count;
     }

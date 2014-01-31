@@ -177,7 +177,7 @@ function checkForm( elem, single ) {
                     return false;
                 }
 
-                if( data.id && data['permission'] == true ) {
+                if( data.id ) {
 
                     if( !single ) {
                         gonext = checkParent(element,keyValue,name,fieldName,extra); //check if this key is not used yet, when a new key field is checked in the added entity
@@ -1924,11 +1924,11 @@ function checkMrnAccessionConflict() {
                 success: function (data) {
                     //console.debug("get accession ajax ok");
 
-                    if( data == -1 ) {
-                        //object exists but no permission to see it (not an author or not pathology role)
-                        totalError++;
-                        return false;
-                    }
+//                    if( data == -1 ) {
+//                        //object exists but no permission to see it (not an author or not pathology role)
+//                        totalError++;
+//                        return false;
+//                    }
 
                     if( data == -2 ) {
                         //Existing Auto-generated object does not exist in DB

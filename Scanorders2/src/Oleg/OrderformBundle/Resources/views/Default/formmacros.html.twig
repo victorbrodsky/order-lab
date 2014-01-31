@@ -275,10 +275,40 @@
 {% macro inputArrayField(fields,cycle,classname,fieldtype,nobtn,nolabel,withspace,status) %}
     {% import _self as formmacros %}
     {% set count = 1 %}
+
+    {#cycle:{{ cycle }}#}
+    {#status:{{ status }}#}
+    {#{% if is_granted('ROLE_SUBMITTER') %}#}
+        {#submitter!#}
+    {#{% endif %}#}
+    {#{% if is_granted('ROLE_EXTERNAL_SUBMITTER') %}#}
+        {#external!#}
+    {#{% endif %}#}
+
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
-        {% if field.vars.value.status == 'valid' or cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded' %}
+        {#( field.vars.value.status == 'valid' and is_granted('ROLE_SUBMITTER') ) or#}
+        {#get correct field: valid for submitter and all for external submitter (only latest fields are queried by controller for external)#}
+        {% if is_granted('ROLE_SUBMITTER') and field.vars.value.status == 'valid' %}
+            {%  set show = 1 %}
+        {% elseif is_granted('ROLE_EXTERNAL_SUBMITTER') and not is_granted('ROLE_ADMIN') %}
+            {%  set show = 1 %}
+        {% else %}
+            {%  set show = 0 %}
+            {#don't show: {{ form_widget(field) }}#}
+        {% endif %}
+
+        {#to see all data: ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST#}
+        {% if is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST') and field.vars.value.status == 'invalid' %}
+            {%  set show = 1 %}
+        {% endif %}
+
+        {#field.vars.value.status == 'valid' or#}
+        {#( is_granted('ROLE_EXTERNAL_SUBMITTER') and field.vars.value.status == 'invalid' ) or#}
+        {% if show == 1 or
+              cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'
+        %}
 
             {% set btntype = '' %}
             {% if cycle == 'amend' %}
@@ -334,7 +364,14 @@
                     {% else %}
                         {{form_label(fieldThis.field)}}
                     {% endif %}
-                    {% if cycle == "show" %}
+
+                    {#id1:{{  field.vars.value.provider.id }}#}
+                    {#id2:{{ app.security.getToken().getUser().getId() }}#}
+                    {% if ( cycle == "show" or cycle == "amend" ) and
+                          not is_granted('ROLE_EXTERNAL_SUBMITTER') or
+                          ( is_granted('ROLE_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
+                          is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST')
+                    %}
                         {% if field.vars.value.creationdate != "" %}
                             entered on
                             {{field.vars.value.creationdate|date('Y-m-d')}}
@@ -342,7 +379,7 @@
                         {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
                             by
                             {{field.vars.value.provider}}
-                            {% if field.vars.value.status != 'valid' %}
+                            {% if field.vars.value.status != 'valid' and ( not is_granted('ROLE_EXTERNAL_SUBMITTER') or is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST') ) %}
                                 ({{ field.vars.value.status }})
                             {% endif %}
                         {% endif %}

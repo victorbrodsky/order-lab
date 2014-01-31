@@ -513,4 +513,8 @@ class Part extends OrderAbstract
         return $fieldsArr;
     }
 
+//    public function obtainArrayFieldNames() {
+//        return array();
+//    }
+
 }

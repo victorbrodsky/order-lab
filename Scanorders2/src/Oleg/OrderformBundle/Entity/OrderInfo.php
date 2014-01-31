@@ -546,7 +546,7 @@ class OrderInfo
      */
     public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        if( !$this->slide->contains($slide) ) {            
+        if( !$this->slide->contains($slide) ) {
             $this->slide->add($slide);
         }    
     }

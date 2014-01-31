@@ -25,7 +25,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         }
 
         if( !$slide->getProvider() ) {
-            echo "set slide provider=".$orderinfo->getProvider()->first()."<br>";
+            //echo "set slide provider=".$orderinfo->getProvider()->first()."<br>";
             $slide->setProvider($orderinfo->getProvider()->first());
         }
 

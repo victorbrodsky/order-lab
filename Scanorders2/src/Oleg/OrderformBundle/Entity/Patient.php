@@ -462,10 +462,16 @@ class Patient extends OrderAbstract
             $names = $names . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $sexs = ", sexCount=".count($this->sex).": ";
+        foreach( $this->sex as $name ) {
+            $sexs = $sexs . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
         //", name=".$this->name->first().", nameID=".$this->name->first()->getId().
         ", names=".$names.
+        ", sexs=".$sexs.
         ", age=".$this->age->first().", nameID=".$this->age->first()->getId().
         ", procedureCount=".count($this->procedure).
         //", firstprocedureID=".$this->procedure->first()->getId().
@@ -518,6 +524,10 @@ class Patient extends OrderAbstract
     public function createKeyField() {
         $this->addMrn( new PatientMrn() );
         return $this->obtainKeyField();
+    }
+
+    public function obtainArrayFieldNames() {
+        return array('Age','ClinicalHistory');
     }
 
     public function getArrayFields() {

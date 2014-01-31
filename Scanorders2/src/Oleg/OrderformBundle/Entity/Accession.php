@@ -229,11 +229,10 @@ class Accession extends OrderAbstract {
         return $this->obtainKeyField();
     }
 
-    public function filterArrayFields($user) {
+    public function filterArrayFields( $user, $strict = false ) {
 
-        parent::filterArrayFields($user);
-        $this->getProcedure()->filterArrayFields($user);
-        //$this->getProcedure()->getPatient()->filterArrayFields($user);
+        parent::filterArrayFields($user,$strict);
+        $this->getProcedure()->filterArrayFields($user,$strict);
         return $this;
 
     }

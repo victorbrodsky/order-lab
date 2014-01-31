@@ -44,13 +44,19 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
             $procedureProcessed = $entity;
 
-            //echo "NO procedures <br>";
+            //echo "No procedures <br>";
         }
 
-        //echo "encounter=".$procedureProcessed->getEncounter()."<br>";
+        //echo "encounter=".$procedureProcessed->getEncounter()->first().", Name=".$procedureProcessed->getName()->first()."<br>";
+        //echo "before process:".$entity;
 
         //just process procedure (not setResult)
         $procedureProcessed = parent::processEntity( $procedureProcessed, $orderinfo );
+
+        //Exception for procedure: Final Step CopyFields
+        $procedureProcessed = $this->processFieldArrays($procedureProcessed,$orderinfo,$entity);
+
+        //echo "after process:".$entity;
 
         return $procedureProcessed;
 

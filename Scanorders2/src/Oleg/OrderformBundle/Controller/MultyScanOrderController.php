@@ -455,11 +455,11 @@ class MultyScanOrderController extends Controller {
 //            echo "<br>patient has procedure count=".count( $patient->getProcedure() )."<br>";
             if( ! $userUtil->hasPermission($this->get('security.context')) ) {
                 $patient->filterArrayFields($user);
-            }
 
-            if( $patient->obtainExistingFields() == 0 ) {
-                $entity->removePatient($patient);
-                continue;
+                if( $patient->obtainExistingFields(true) == 0 ) {
+                    $entity->removePatient($patient);
+                    continue;
+                }
             }
 
             //procdeure
@@ -468,19 +468,20 @@ class MultyScanOrderController extends Controller {
                 if( !$this->hasOrderInfo($procedure,$id) ) {
                     $patient->removeProcedure($procedure);
 
-                    foreach( $patient->getName() as $names ) {
-                        echo "patient name=".$names."<br>";
-                    }
+//                    foreach( $patient->getName() as $names ) {
+//                        //echo "patient name=".$names."<br>";
+//                    }
                     continue;
                 }
 
                 if( ! $userUtil->hasPermission($this->get('security.context')) ) {
                     $procedure->filterArrayFields($user);
-                }
 
-                if( $procedure->obtainExistingFields() == 0 ) {
-                    $patient->removeChildren($procedure);
-                    continue;
+                    //echo "procedure existing count=".$procedure->obtainExistingFields(true)."<br>";
+                    if( $procedure->obtainExistingFields(true) == 0 ) {
+                        $patient->removeChildren($procedure);
+                        continue;
+                    }
                 }
 
                 //accession
@@ -492,11 +493,12 @@ class MultyScanOrderController extends Controller {
 
                     if( ! $userUtil->hasPermission($this->get('security.context')) ) {
                         $accession->filterArrayFields($user);
-                    }
 
-                    if( $accession->obtainExistingFields() == 0 ) {
-                        $procedure->removeChildren($accession);
-                        continue;
+                        //echo "accession existing count=".$accession->obtainExistingFields(true)."<br>";
+                        if( $accession->obtainExistingFields(true) == 0 ) {
+                            $procedure->removeChildren($accession);
+                            continue;
+                        }
                     }
 
                     //part
@@ -509,11 +511,11 @@ class MultyScanOrderController extends Controller {
 
                         if( ! $userUtil->hasPermission($this->get('security.context')) ) {
                             $part->filterArrayFields($user);
-                        }
 
-                        if( $part->obtainExistingFields() == 0 ) {
-                            $accession->removeChildren($part);
-                            continue;
+                            if( $part->obtainExistingFields(true) == 0 ) {
+                                $accession->removeChildren($part);
+                                continue;
+                            }
                         }
 
                         //block
@@ -525,11 +527,11 @@ class MultyScanOrderController extends Controller {
 
                             if( ! $userUtil->hasPermission($this->get('security.context')) ) {
                                 $block->filterArrayFields($user);
-                            }
 
-                            if( $block->obtainExistingFields() == 0 ) {
-                                $part->removeChildren($block);
-                                continue;
+                                if( $block->obtainExistingFields(true) == 0 ) {
+                                    $part->removeChildren($block);
+                                    continue;
+                                }
                             }
 
                             //slide

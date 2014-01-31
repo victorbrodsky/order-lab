@@ -263,11 +263,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 if( !$validitySet ) {
                                     //echo( "methodShortName=".$methodShortName."<br>" );
                                     if( !$this->validFieldIsSet($entity->$methodShortName()) ) {  //set valid if none of the filed has valid status already
-                                        //echo "Set status to ".self::STATUS_VALID." to field=".$field." !!!<br>";
+                                        //echo "Status:".$field->getStatus()."; Set status to ".self::STATUS_VALID." to field=".$field." !!!<br>";
                                         $field->setStatus(self::STATUS_VALID);
                                     } else {
-                                        $field->setStatus(self::STATUS_INVALID);
-                                        //echo "Do not set status to ".self::STATUS_VALID." to field=".$field." !!!<br>";
+                                        if( !$field->getStatus() || $field->getStatus() == "" )  {   //set if status is not set yet
+                                            //echo "Status:".$field->getStatus()."; Set status to ".self::STATUS_INVALID." to field=".$field." !!!<br>";
+                                            $field->setStatus(self::STATUS_INVALID);
+                                        } else {
+                                            //echo "Status:".$field->getStatus()."; Do not change status of field=".$field." !!!<br>";
+                                        }
                                     }
                                     $validitySet = true;    //indicate that status is already has been set in this field array
                                 }
@@ -309,19 +313,36 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //if similar field is already set and provided field is empty => don't add provided field
         if( !$field || trim($field) == "" ) {
-            if( $this->validFieldIsSet( $fields ) ) {
+            $res = $this->validFieldIsSet( $fields );
+
+            if( $res && $res->getProvider()->getId() == $field->getProvider()->getId() ) {
                 //echo $methodName.": field is empty and non empty valid field exists => don't add provided field => return!!!<br>";
                 return $entity;
+            } else {
+                //echo $methodName.": add provided field <br>";
             }
         }
 
         //add only if the field array does not already contain this valid field (by field name)
         foreach( $fields as $thisField ) {
-            //echo "compare: (".$thisField.") ?= (".$field.") , status=".$thisField->getStatus()." => ";
-            if( $thisField."" == $field."" && $thisField->getStatus() == self::STATUS_VALID ) {
+            //echo $methodName.": compare: (".$thisField.") ?= (".$field.") , status=".$thisField->getStatus()." => ";
+            //echo "authors: ".$thisField->getProvider()->getId() ."==". $field->getProvider()->getId()." => ";
+            if(
+                $thisField."" == $field."" &&
+                $thisField->getStatus() == self::STATUS_VALID &&
+                $thisField->getProvider()->getId() == $field->getProvider()->getId()
+            ) {
                 //echo "found valid field by field name => don't add field!!! <br>";
                 return $entity;
             } else {
+
+                //don't add if it is a key field (only one for submitter and external submitter)
+                //echo "is key?:".strtolower($entity->obtainKeyFieldName()) ."==". strtolower($methodName)." => ";
+                if( strtolower($entity->obtainKeyFieldName()) == strtolower($methodName) ) {
+                    //echo "exception don't add key!!! <br>";
+                    return $entity;
+                }
+
                 //echo "add field!!! <br>";
             }
         }
@@ -333,7 +354,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $addMethodName = "add".$methodName; //i.e. addMrn
             $entity->$addMethodName( $field );
         } else {
-            //
+            //echo( "@@@ ".$methodName." is found !!!!!! => don't add <br>" );
         }
 
         return $entity;
@@ -341,11 +362,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function validFieldIsSet( $fields ) {
 
-        //exception for Part Differential Diagnosis field. Always added as valid
+        //exception for array fields such as Part Differential Diagnosis field. Always added as valid
         $class = new \ReflectionClass($fields->first());
         $className = $class->getShortName();
         //echo "if valid: className=".$className."<br>";
-        if( $className == 'PartDiffDisident' || $className == 'PatientClinicalHistory' || $className == 'PatientAge' ) {
+        if( $className == 'PartDiffDisident' ||
+            $className == 'PatientClinicalHistory' ||
+            $className == 'PatientAge' ||
+            $className == 'RelevantScans' ||
+            $className == 'SpecialStains'
+        ) {
             //echo "skip!!! <br>";
             return false;
         }
@@ -353,7 +379,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         foreach( $fields as $thisField ) {
             if( $thisField->getStatus() == self::STATUS_VALID ) {
                 //echo "found valid field by field name => don't add field <br>";
-                return true;
+                return $thisField;
             }
         }
         return false;
