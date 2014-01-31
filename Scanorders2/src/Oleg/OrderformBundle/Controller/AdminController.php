@@ -21,6 +21,7 @@ use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\UserUtil;
 use Oleg\OrderformBundle\Entity\Roles;
+use Oleg\OrderformBundle\Entity\ReturnSlideTo;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -64,6 +65,7 @@ class AdminController extends Controller
         $count_pathservice = $this->generatePathServices();
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
+        $count_returnslide = $this->generateReturnSlideTo();
         $userutil = new UserUtil();
         //$count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
@@ -81,6 +83,7 @@ class AdminController extends Controller
             'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
             'Mrn Types='.$count_mrntype.', '.
+            'Return Slide To='.$count_returnslide.', '.
             //'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -747,6 +750,40 @@ class AdminController extends Controller
             $count = $count + 10;
 
         } //foreach
+
+        return $count;
+    }
+
+
+    public function generateReturnSlideTo() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Filing Room', 'Me'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $mrnType = new ReturnSlideTo();
+            $mrnType->setOrderinlist( $count );
+            $mrnType->setCreator( $username );
+            $mrnType->setCreatedate( new \DateTime() );
+            $mrnType->setName( trim($type) );
+            $mrnType->setType('default');
+            $em->persist($mrnType);
+            $em->flush();
+
+            $count = $count + 10;
+        }
 
         return $count;
     }

@@ -8,8 +8,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-//use Oleg\OrderformBundle\Entity\MrnType;
+use Oleg\OrderformBundle\Entity\ReturnSlideTo;;
+
 use Oleg\OrderformBundle\Form\GenericListType;
+
 
 /**
  * Common list controller
@@ -31,6 +33,7 @@ class ListController extends Controller
      * @Route("/formtype/", name="formtype")
      * @Route("/status/", name="status")
      * @Route("/roles/", name="roles")
+     * @Route("/returnslideto/", name="returnslideto")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -39,11 +42,15 @@ class ListController extends Controller
 
         $request = $this->container->get('request');
         $type = $request->get('_route');
-        //echo "type=".$type; //mrntype
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:'.$type)->findAll();
+        echo "type=".$type; //mrntype
+
+        //$entities = $em->getRepository('OlegOrderformBundle:'.$type)->findAll();
+
+        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findAll();
+
 
         return array(
             'entities' => $entities,
@@ -64,6 +71,7 @@ class ListController extends Controller
      * @Route("/formtype/", name="formtype_create")
      * @Route("/status/", name="status_create")
      * @Route("/roles/", name="roles_create")
+     * @Route("/returnslideto/", name="returnslideto_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -143,6 +151,7 @@ class ListController extends Controller
      * @Route("/formtype/new", name="formtype_new")
      * @Route("/status/new", name="status_new")
      * @Route("/roles/new", name="roles_new")
+     * @Route("/returnslideto/new", name="returnslideto_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -186,6 +195,7 @@ class ListController extends Controller
      * @Route("/formtype/{id}", name="formtype_show")
      * @Route("/status/{id}", name="status_show")
      * @Route("/roles/{id}", name="roles_show")
+     * @Route("/returnslideto/{id}", name="returnslideto_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -227,6 +237,7 @@ class ListController extends Controller
      * @Route("/formtype/{id}/edit", name="formtype_edit")
      * @Route("/status/{id}/edit", name="status_edit")
      * @Route("/roles/{id}/edit", name="roles_edit")
+     * @Route("/returnslideto/{id}/edit", name="returnslideto_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -302,6 +313,7 @@ class ListController extends Controller
      * @Route("/formtype/{id}", name="formtype_update")
      * @Route("/status/{id}", name="status_update")
      * @Route("/roles/{id}", name="roles_update")
+     * @Route("/returnslideto/{id}", name="returnslideto_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -351,6 +363,7 @@ class ListController extends Controller
      * @Route("/formtype/{id}", name="formtype_delete")
      * @Route("/status/{id}", name="status_delete")
      * @Route("/roles/{id}", name="roles_delete")
+     * @Route("/returnslideto/{id}", name="returnslideto_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
