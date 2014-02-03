@@ -176,10 +176,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        $this->printTree( $entity->getPatient()->first() );
 //        echo "--------------------------<br>";
 
-//        echo "<br><br>final procedure count=".count($entity->getProcedure())."<br>";
-//        foreach( $entity->getProcedure() as $proc ) {
-//            echo $proc;
+//        echo "<br><br>final slide count=".count($entity->getSlide())."<br>";
+//        foreach( $entity->getSlide() as $elem ) {
+//            echo $elem;
 //        }
+
         //exit('orderinfo repo exit');
 
         //create new orderinfo

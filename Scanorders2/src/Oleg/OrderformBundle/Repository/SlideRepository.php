@@ -42,7 +42,13 @@ class SlideRepository extends ArrayFieldAbstractRepository {
             $stain->setProvider($orderinfo->getProvider()->first());
             $stain = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($stain,$orderinfo,$original);
         } //stain
-        
+
+        //this does not work on postgresql because id is set before creating a new element in DB (before flush)
+        if( !$slide->getId() || $slide->getId() == "" ) {
+            //echo "BlockRepo: add orderinfo for Slide, :".$orderinfo;
+            $orderinfo->addSlide($slide);
+        }
+
         return $slide;
     }
     

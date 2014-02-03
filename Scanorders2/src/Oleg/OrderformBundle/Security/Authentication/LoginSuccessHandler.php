@@ -41,7 +41,7 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
 
         if( $this->security->isGranted('ROLE_PROCESSOR') ) {
 
-            $response = new RedirectResponse($this->router->generate('index',array('filter_search_box[filter]' => 'All Not Filled')));
+            $response = new RedirectResponse($this->router->generate('adminindex',array('filter_search_box[filter]' => 'All Not Filled')));
 
         }
         elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') ) {

@@ -34,10 +34,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
             $block->addChildren($slide);    //addSlide
         }
 
-        if( !$slide->getId() || $slide->getId() == "" ) {
-            //echo "BlockRepo: add orderinfo for Slide, :".$orderinfo;
-            $orderinfo->addSlide($slide);
-        }
+//        if( !$slide->getId() || $slide->getId() == "" ) {
+//            //echo "BlockRepo: add orderinfo for Slide, :".$orderinfo;
+//            $orderinfo->addSlide($slide);
+//        }
 
     }
 
