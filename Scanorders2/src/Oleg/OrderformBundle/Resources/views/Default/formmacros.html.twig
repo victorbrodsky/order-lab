@@ -365,25 +365,31 @@
                         {{form_label(fieldThis.field)}}
                     {% endif %}
 
-                    {#id1:{{  field.vars.value.provider.id }}#}
-                    {#id2:{{ app.security.getToken().getUser().getId() }}#}
-                    {% if ( cycle == "show" or cycle == "amend" ) and
-                          not is_granted('ROLE_EXTERNAL_SUBMITTER') or
-                          ( is_granted('ROLE_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
-                          is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST')
-                    %}
-                        {% if field.vars.value.creationdate != "" %}
-                            entered on
-                            {{field.vars.value.creationdate|date('Y-m-d')}}
-                        {% endif %}
-                        {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                            by
-                            {{field.vars.value.provider}}
-                            {% if field.vars.value.status != 'valid' and ( not is_granted('ROLE_EXTERNAL_SUBMITTER') or is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST') ) %}
-                                ({{ field.vars.value.status }})
+                    {% if field.vars.value.provider is defined %}
+
+                        {#id1:{{  field.vars.value.provider.id }}#}
+                        {#id2:{{ app.security.getToken().getUser().getId() }}#}
+
+                        {% if ( cycle == "show" or cycle == "amend" ) and
+                              not is_granted('ROLE_EXTERNAL_SUBMITTER') or
+                              ( is_granted('ROLE_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
+                              is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST')
+                        %}
+                            {% if field.vars.value.creationdate != "" %}
+                                entered on
+                                {{field.vars.value.creationdate|date('Y-m-d')}}
+                            {% endif %}
+                            {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                                by
+                                {{field.vars.value.provider}}
+                                {% if field.vars.value.status != 'valid' and ( not is_granted('ROLE_EXTERNAL_SUBMITTER') or is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST') ) %}
+                                    ({{ field.vars.value.status }})
+                                {% endif %}
                             {% endif %}
                         {% endif %}
+
                     {% endif %}
+
                     <b>:</b>
                 {% endif %}
                 </p>

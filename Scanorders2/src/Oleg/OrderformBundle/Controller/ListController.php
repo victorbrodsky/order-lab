@@ -34,6 +34,8 @@ class ListController extends Controller
      * @Route("/status/", name="status")
      * @Route("/roles/", name="roles")
      * @Route("/returnslideto/", name="returnslideto")
+     * @Route("/slidedelivery/", name="slidedelivery")
+     * @Route("/regiontoscan/", name="regiontoscan")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -45,12 +47,9 @@ class ListController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        echo "type=".$type; //mrntype
+        //echo "type=".$type; //mrntype
 
-        //$entities = $em->getRepository('OlegOrderformBundle:'.$type)->findAll();
-
-        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findAll();
-
+        $entities = $em->getRepository('OlegOrderformBundle:'.$type)->findAll();
 
         return array(
             'entities' => $entities,
@@ -72,6 +71,8 @@ class ListController extends Controller
      * @Route("/status/", name="status_create")
      * @Route("/roles/", name="roles_create")
      * @Route("/returnslideto/", name="returnslideto_create")
+     * @Route("/slidedelivery/", name="slidedelivery_create")
+     * @Route("/regiontoscan/", name="regiontoscan_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -152,6 +153,8 @@ class ListController extends Controller
      * @Route("/status/new", name="status_new")
      * @Route("/roles/new", name="roles_new")
      * @Route("/returnslideto/new", name="returnslideto_new")
+     * @Route("/slidedelivery/new", name="slidedelivery_new")
+     * @Route("/regiontoscan/new", name="regiontoscan_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -196,6 +199,8 @@ class ListController extends Controller
      * @Route("/status/{id}", name="status_show")
      * @Route("/roles/{id}", name="roles_show")
      * @Route("/returnslideto/{id}", name="returnslideto_show")
+     * @Route("/slidedelivery/{id}", name="slidedelivery_show")
+     * @Route("/regiontoscan/{id}", name="regiontoscan_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -238,6 +243,8 @@ class ListController extends Controller
      * @Route("/status/{id}/edit", name="status_edit")
      * @Route("/roles/{id}/edit", name="roles_edit")
      * @Route("/returnslideto/{id}/edit", name="returnslideto_edit")
+     * @Route("/slidedelivery/{id}/edit", name="slidedelivery_edit")
+     * @Route("/regiontoscan/{id}/edit", name="regiontoscan_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -314,6 +321,8 @@ class ListController extends Controller
      * @Route("/status/{id}", name="status_update")
      * @Route("/roles/{id}", name="roles_update")
      * @Route("/returnslideto/{id}", name="returnslideto_update")
+     * @Route("/slidedelivery/{id}", name="slidedelivery_update")
+     * @Route("/regiontoscan/{id}", name="regiontoscan_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -364,6 +373,8 @@ class ListController extends Controller
      * @Route("/status/{id}", name="status_delete")
      * @Route("/roles/{id}", name="roles_delete")
      * @Route("/returnslideto/{id}", name="returnslideto_delete")
+     * @Route("/slidedelivery/{id}", name="slidedelivery_delete")
+     * @Route("/regiontoscan/{id}", name="regiontoscan_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

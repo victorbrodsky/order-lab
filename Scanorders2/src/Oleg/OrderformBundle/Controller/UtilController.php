@@ -159,15 +159,19 @@ class UtilController extends Controller {
     public function getScanRegionAction() {
 
 //        $em = $this->getDoctrine()->getManager();
-//
 //        $query = $em->createQuery(
-//            'SELECT proc.id as id, proc.name as text
-//            FROM OlegOrderformBundle:ProcedureList proc'
+//            'SELECT obj.name FROM OlegOrderformBundle:RegionToScan obj'
 //        );
-//        $output = $query->getResult();
-        
-        $formHelper = new FormHelper();
-        $arr = $formHelper->getScanRegion();
+//        $res = $query->getResult();
+
+        $arr = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findAll();
+
+        foreach( $entities as $entity ) {
+            $arr[] = $entity."";
+        }
 
 //        //add custom added values
 //        //TODO: add custom values, added by ordering provider
@@ -213,8 +217,14 @@ class UtilController extends Controller {
      */
     public function getSlideDeliveryAction() {
 
-        $formHelper = new FormHelper();
-        $arr = $formHelper->getSlideDelivery();
+        $arr = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findAll();
+
+        foreach( $entities as $entity ) {
+            $arr[] = $entity."";
+        }
 
         //add custom added values by order id
         $request = $this->get('request');
@@ -248,8 +258,14 @@ class UtilController extends Controller {
      */
     public function getReturnSlideAction() {
 
-        $formHelper = new FormHelper();
-        $arr = $formHelper->getReturnSlide();
+        $arr = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findAll();
+
+        foreach( $entities as $entity ) {
+            $arr[] = $entity."";
+        }
 
         //add custom added values by order id
         $request = $this->get('request');

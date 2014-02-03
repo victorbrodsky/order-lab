@@ -22,6 +22,8 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\UserUtil;
 use Oleg\OrderformBundle\Entity\Roles;
 use Oleg\OrderformBundle\Entity\ReturnSlideTo;
+use Oleg\OrderformBundle\Entity\RegionToScan;
+use Oleg\OrderformBundle\Entity\SlideDelivery;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -66,6 +68,8 @@ class AdminController extends Controller
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
         $count_returnslide = $this->generateReturnSlideTo();
+        $count_SlideDelivery = $this->generateSlideDelivery();
+        $count_RegionToScan = $this->generateRegionToScan();
         $userutil = new UserUtil();
         //$count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
@@ -84,6 +88,8 @@ class AdminController extends Controller
             'Slide Types='.$count_slidetype.', '.
             'Mrn Types='.$count_mrntype.', '.
             'Return Slide To='.$count_returnslide.', '.
+            'Slide Delivery='.$count_SlideDelivery.', '.
+            'Region To Scan='.$count_RegionToScan.', '.
             //'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -773,13 +779,13 @@ class AdminController extends Controller
         $count = 1;
         foreach( $types as $type ) {
 
-            $mrnType = new ReturnSlideTo();
-            $mrnType->setOrderinlist( $count );
-            $mrnType->setCreator( $username );
-            $mrnType->setCreatedate( new \DateTime() );
-            $mrnType->setName( trim($type) );
-            $mrnType->setType('default');
-            $em->persist($mrnType);
+            $listEntity = new ReturnSlideTo();
+            $listEntity->setOrderinlist( $count );
+            $listEntity->setCreator( $username );
+            $listEntity->setCreatedate( new \DateTime() );
+            $listEntity->setName( trim($type) );
+            $listEntity->setType('default');
+            $em->persist($listEntity);
             $em->flush();
 
             $count = $count + 10;
@@ -788,5 +794,83 @@ class AdminController extends Controller
         return $count;
     }
 
+
+    public function generateSlideDelivery() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "I'll give slides to Noah - ST1015E (212) 746-2993",
+            "I have given slides to Noah already",
+            "I will drop the slides off at F540 (212) 746-6406",
+            "I have handed the slides to Liza already",
+            "I will write S on the slide & submit as a consult",
+            "I will write S4 on the slide & submit as a consult",
+            "I will email slidescan@med.cornell.edu about it",
+            "Please e-mail me to set the time & pick up slides",
+        );
+
+        $count = 1;
+        $rescount = 0;
+        foreach( $types as $type ) {
+
+            $listEntity = new SlideDelivery();
+            $listEntity->setOrderinlist( $count );
+            $listEntity->setCreator( $username );
+            $listEntity->setCreatedate( new \DateTime() );
+            $listEntity->setName( trim($type) );
+            $listEntity->setType('default');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+            $rescount++;
+        }
+
+        return $rescount;
+    }
+
+
+    public function generateRegionToScan() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Entire Slide",
+            "Any one of the levels",
+            "Region circled by marker"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new RegionToScan();
+            $listEntity->setOrderinlist( $count );
+            $listEntity->setCreator( $username );
+            $listEntity->setCreatedate( new \DateTime() );
+            $listEntity->setName( trim($type) );
+            $listEntity->setType('default');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
 
 }
