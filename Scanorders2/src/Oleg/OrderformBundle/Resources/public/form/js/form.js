@@ -547,9 +547,22 @@ function setNavBar() {
         id = 3;
     }
 
-    if( full.indexOf("login") !== -1 ) {
+    if( full.indexOf("/user/listusers") !== -1 ) {
         id = 5;
     }
+    
+    if( full.indexOf("/admin/") !== -1 ) {
+        id = 5;
+    }   
+    
+    if( full.indexOf("/user/") !== -1 ) {
+        if( $('#5') ) {
+           id = 6; 
+        } else {
+           id = 5;
+        }
+        
+    }  
 
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
@@ -600,14 +613,16 @@ function initDatepicker() {
 
     var datepickers = $('.input-group.date');
 
-    initSingleDatepicker( datepickers );
-
-    //make sure the masking is clear when input is cleared by datepicker
-    datepickers.datepicker().on("clearDate", function(e){
-            var inputField = $(this).find('input');
-            //printF(inputField,"Clear input:");
-            clearErrorField( inputField );
+    if( cicle != "show" ) {
+        initSingleDatepicker( datepickers );
+    
+        //make sure the masking is clear when input is cleared by datepicker
+        datepickers.datepicker().on("clearDate", function(e){
+                var inputField = $(this).find('input');
+                //printF(inputField,"Clear input:");
+                clearErrorField( inputField );
         });
+    }
 
 }
 

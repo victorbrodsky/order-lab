@@ -12,11 +12,13 @@ class FilterType extends AbstractType
 
     protected $statuses;
     protected $user;
+    protected $services;
 
-    public function __construct( $statuses = null, $user = null )
+    public function __construct( $statuses = null, $user = null, $services = null )
     {
         $this->statuses = $statuses;
         $this->user = $user;
+        $this->services = $services;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -40,25 +42,32 @@ class FilterType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
+        
+        if( $this->services ) {
+            
+            $userUtil = new UserUtil();
 
-//        $services = $this->user->getPathologyServices();
-//        //echo "count services=".count($services);
-//        //exit();
-//
-//        $choicesServ = array();
-//        $choicesServ[] = 'My Orders';
-//        foreach( $services as $service ) {
-//            $choicesServ[] = "All ".$service->getName()." Orders";
-//        }
+            $builder->add('service', 'choice', array(
+                'label'     => 'Services',
+                'required'  => true,
+                'choices' => $this->services,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+            
+        } else {
+            
+            $userUtil = new UserUtil();
 
-        $userUtil = new UserUtil();
-
-        $builder->add('service', 'choice', array(
-            'label'     => 'Services',
-            'required'  => true,
-            'choices' => $userUtil->generateUserPathServices($this->user),
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
+            $builder->add('service', 'choice', array(
+                'label'     => 'Services',
+                'required'  => true,
+                'choices' => $userUtil->generateUserPathServices($this->user),
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+            
+        }
+        
+        
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

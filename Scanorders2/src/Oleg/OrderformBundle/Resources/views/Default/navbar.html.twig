@@ -36,7 +36,7 @@
                 <li id="5" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ path('accessrequest_list') }}">Incoming Orders</a></li>
+                        <li><a href="{{ path('adminindex') }}">Incoming Orders</a></li>
                         <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
                         <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
                         {% if is_granted('ROLE_ADMIN') %}

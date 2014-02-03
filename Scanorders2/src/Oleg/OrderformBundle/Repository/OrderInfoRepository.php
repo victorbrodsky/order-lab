@@ -59,6 +59,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             $entity->setType($formtype);
         }
+        
+        if( $entity->getPriority() == "Routine" ) {      
+            $entity->setScandeadline(NULL);
+        }
 
         //return $entity;
         return $this->setOrderInfoResult( $entity );

@@ -23,7 +23,7 @@
 
     {% endif %}
 
-    <form action="{{ path('index') }}" method="get" {{ form_enctype(form) }} class="well form-search">
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(form) }} class="well form-search">
         <div class="row">
             <div class="col-xs-3">
                 {{ form_widget(form.service) }}
@@ -45,17 +45,36 @@
     <table class="table table-hover table-condensed">
         <thead>
             <tr>
-                <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.oid') }}</th>
-                {#<th>Slides</th>#}
-                <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
-                {% if showprovider is defined and showprovider == 'true' %}
-                   <th>{{ knp_pagination_sortable(pagination, 'Provider_TODEL', 'provider.username') }}</th>
+                
+                {% if routename == 'index' %}
+                
+                    <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.oid') }}</th>
+                    {#<th>Slides</th>#}
+                    <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
+                    {% if showprovider is defined and showprovider == 'true' %}
+                       <th>{{ knp_pagination_sortable(pagination, 'Provider_TODEL', 'provider.username') }}</th>
+                    {% endif %}
+                
                 {% endif %}
+                       
+                       
+                {% if routename == 'adminindex' %}
+                       
+                    <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.oid') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.scandeadline') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>  
+                    <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Return To', 'orderinfo.returnSlide') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>                   
+                    
+                {% endif %}
+                   
                 <th>Actions</th>
             </tr>
         </thead>
@@ -76,7 +95,10 @@
             {% else %}
                 <tr>
             {% endif %}
-                <td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H:i') }}{% endif %}</td>
+                 
+            {% if routename == 'index' %}        
+                    
+                <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>{{ entity.status }}</td>
                 <td>
                     {#<a href="{{ path('scanorder_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
@@ -95,6 +117,27 @@
                         {% endfor %}
                     </td>
                 {% endif %}
+                    
+            {% endif %}
+                    
+            {% if routename == 'adminindex' %}    
+                                   
+                <td>                  
+                    <a href="{{ path('multy_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a>
+                </td>
+                {% if entity.scandeadline != '' %}
+                    <td>{{ entity.scandeadline|date('m/d/Y H:i') }}</td>
+                {% else %}    
+                    <td></td>
+                {% endif %}
+                <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
+                <td>{{ entity.provider|first }}</td>
+                <td>{{ entity.slide|length }}</td> 
+                <td>{{ entity.returnSlide }}</td>
+                <td>{{ entity.type }}</td>
+                    
+            {% endif %}        
+                    
                 <td>  
                     
                     {{ include('OlegOrderformBundle::Default/action.html.twig') }}
