@@ -34,10 +34,7 @@ $(document).ready(function() {
     //primaryOrganOption();
    
     //tab
-    $('#optional_param_tab a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    })
+    initOptionalParam();
 
     //multy form toggle button
     $('.form_body_toggle_btn').on('click', function(e) {

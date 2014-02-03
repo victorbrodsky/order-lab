@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var _max_tab_height = 0;
+
 //inputField - input field element which is tested for value is being set
 function waitWhenReady( fieldsArr, count, limit ) {
 
@@ -169,4 +171,59 @@ function getAccessionInfoDebug(text) {
     var accTypeVal = $('.accessiontype-combobox').select2('val');
     var accNum = $('.accession-mask').val();
     console.log("############ "+text+": Accession #="+accNum+", type text="+accTypeText+", type id="+accTypeVal);
+}
+
+//open a tab with max height
+function initOptionalParam() {
+
+    $('#optional_param_tab a').click(function (e) {
+
+        e.preventDefault();
+
+        var elem = $(this);
+
+        elem.tab('show');
+
+        setPanelHeight(elem);
+        //setTimeout( function(){setPanelHeight(elem)}, 500);
+
+        //var this_height = $(this).closest('.panel-body').height();
+        //var this_height = $('#optional_param_tab_body').height();
+        //console.log( 'height='+this_height );
+
+//        if( this_height > _max_tab_height ) {
+//            _max_tab_height = this_height;
+//        }
+//        $(this).closest('.panel-body').height(_max_tab_height);
+
+    });
+
+
+//    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+//        e.target // activated tab
+//        e.relatedTarget // previous tab
+//        printF(e.target,"e.target:");
+//
+//    })
+
+
+}
+
+function setPanelHeight(elem) {
+
+    var this_height = $('.option_info_panel').find('.active').height();
+    console.log( 'height='+this_height + ", max_height=" + _max_tab_height );
+
+    if( this_height > _max_tab_height ) {
+        _max_tab_height = this_height;
+        console.log( 'set max height='+_max_tab_height );
+        //$('#optional_param_tab_body .tab-pane').height(_max_tab_height);
+        //$('.option_info_panel').find('.active').height(_max_tab_height);
+    }
+
+    $('.option_info_panel').find('.active').height(_max_tab_height);
+
+    //$('#optional_param_tab_body .tab-pane').css('height', $('#optional_param_tab_body .tab-pane').css('height') )
+    //$('#optional_param_tab_body .tab-pane').height(_max_tab_height);
+
 }

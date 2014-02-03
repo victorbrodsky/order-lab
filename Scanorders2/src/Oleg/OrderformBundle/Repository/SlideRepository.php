@@ -45,7 +45,6 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         //this does not work on postgresql because id is set before creating a new element in DB (before flush)
         if( !$slide->getId() || $slide->getId() == "" ) {
-            //echo "BlockRepo: add orderinfo for Slide, :".$orderinfo;
             $orderinfo->addSlide($slide);
         }
 
