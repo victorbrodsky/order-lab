@@ -1877,7 +1877,10 @@ function checkMrnAccessionConflict() {
 
         var accInput = $(this);
         var accValue = accInput.val();
-        var acctypeField = accInput.closest('.row').find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+
+        //var acctypeField = accInput.closest('.row').find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+        var acctypeField = getKeyGroupParent(accInput).find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+
         var acctypeValue = acctypeField.select2("val");
         //var acctypeText = acctypeField.select2("data").text;
 
@@ -1899,7 +1902,7 @@ function checkMrnAccessionConflict() {
         var mrntypeText = mrntypeData.text;
         //console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
 
-        //console.log("accValue="+accValue + " mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
+        //console.log("accValue="+accValue + ", acctypeValue=" + acctypeValue + "; mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
 
         if(
             accValue && accValue !="" && acctypeValue && acctypeValue !="" &&
@@ -2081,7 +2084,8 @@ function addKeyListener() {
 }
 
 function trimWithCheck(val) {
-    if( val ) {
+    if( val && typeof val != 'undefined' && val != "" ) {
+        val = val.toString();
         val = val.trim();
     }
     return val;

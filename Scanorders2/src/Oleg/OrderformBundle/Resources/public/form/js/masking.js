@@ -357,7 +357,7 @@ function makeErrorField(element, appendWell) {
         return;
     }
 
-    var value =  element.val().trim();
+    var value =  trimWithCheck(element.val());
     //console.log("error: value="+value);
     if( value != "" ) {
         element.parent().addClass(_maskErrorClass);
@@ -387,7 +387,8 @@ function allZeros(element) {
 
     //console.log("element.val()="+element.val());
     //printF(element,"all zeros? :")
-    var res = element.val().trim().match(/^[0]+$/);
+    var res = trimWithCheck(element.val());
+    var res = res.match(/^[0]+$/);
     //console.log("res="+res);
     if( res ) {
         //console.log("all zeros!");
@@ -503,7 +504,7 @@ function getCleanMaskStr( str) {
     var defarr = $.inputmask.defaults.definitions;
 
     for( var index in defarr ) {
-        index = index.trim();
+        index = trimWithCheck(index);
         if( index != "*" ) {
             //console.log( "index="+index);
             var replaceValue = "\\\\"+index;
