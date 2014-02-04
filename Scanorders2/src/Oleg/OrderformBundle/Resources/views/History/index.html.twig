@@ -1,0 +1,115 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
+
+    <h3 class="text-info">Progress & Comments</h3>
+
+    <table class="records_list table">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                {#<th>Currentid</th>#}
+                {#<th>Newid</th>#}
+
+                <th>Timestamp</th>
+                <th>Action</th>
+                <th>Status</th>
+                <th>Performed By</th>
+                <th>Role(s)</th>
+                <th>Comment</th>
+                <th>Viewed</th>
+
+                <th>Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                {#<td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                {#<td>{{ entity.currentid }}</td>#}
+                {#<td>{{ entity.newid }}</td>#}
+
+                <td>{% if entity.changedate %}{{ entity.changedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    {% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}
+                        Comment Added
+                    {% else %}
+                        Status Changed
+                    {% endif %}
+                </td>
+                <td>
+                    {{ entity.newstatus }}
+                </td>
+                <td>
+                    {{ entity.provider }}
+                </td>
+                <td>
+                    {% for role in entity.roles %}
+                        {% if role != "ROLE_USER" %}
+                            {#"{{ role }}"#}
+                            "{{ attribute(roles, role) }}"
+                        {% endif %}
+
+                    {% endfor %}
+                </td>
+                <td>{{ entity.note }}</td>
+
+                <td>
+                    {% if entity.viewed == '' %}
+                        No
+                    {% else %}
+                        {{ entity.viewed }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="{{ path('history_show', { 'id': entity.id }) }}">show</a>
+                    <a href="{{ path('history_edit', { 'id': entity.id }) }}">edit</a>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    {% if orderid is defined %}
+        {#<a href="{{ path('history_orderinfo_new',{ 'id': orderid }) }}">#}
+            {#Add Comment#}
+        {#</a>#}
+
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addComment">
+            Add Comment
+        </button>
+
+    {% else %}
+        <a href="{{ path('history_new') }}">
+            Create a new entry
+        </a>
+    {% endif %}
+
+
+    {#<!-- Modal -->#}
+    {#<div class="modal fade" id="addComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
+        {#<div class="modal-dialog">#}
+            {#<div class="modal-content">#}
+                {#<div class="modal-header">#}
+                    {#<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+                    {#<h4 class="modal-title" id="myModalLabel">Add Comment</h4>#}
+                {#</div>#}
+                {#<div class="modal-body">#}
+                    {#{% include 'OlegOrderformBundle::History/add_comment.html.twig' %}#}
+                {#</div>#}
+                {#<div class="modal-footer">#}
+                    {#<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
+                    {#&#123;&#35;<button type="button" class="btn btn-primary">Add Comment</button>&#35;&#125;#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+
+    {% endblock %}

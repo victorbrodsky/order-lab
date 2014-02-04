@@ -79,6 +79,12 @@ class History
     private $note;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinColumn(name="viewed_id", referencedColumnName="id", nullable=true)
+     */
+    private $viewed;
+
+    /**
      * @param int $id
      */
     public function setId($id)
@@ -171,38 +177,6 @@ class History
         return $this->currentstatus;
     }
 
-//    /**
-//     * @param string $currentcicle
-//     */
-//    public function setCurrentcicle($currentcicle)
-//    {
-//        $this->currentcicle = $currentcicle;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getCurrentcicle()
-//    {
-//        return $this->currentcicle;
-//    }
-//
-//    /**
-//     * @param string $newcicle
-//     */
-//    public function setNewcicle($newcicle)
-//    {
-//        $this->newcicle = $newcicle;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getNewcicle()
-//    {
-//        return $this->newcicle;
-//    }
-
     /**
      * @param mixed $provider
      */
@@ -251,26 +225,22 @@ class History
         return $this->newid;
     }
 
+    /**
+     * @param mixed $viewed
+     */
+    public function setViewed($viewed)
+    {
+        $this->viewed = $viewed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViewed()
+    {
+        return $this->viewed;
+    }
 
 
-
-//    public function getOrderinfo()
-//    {
-//        return $this->orderinfo;
-//    }
-//
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\Orderinfo $orderinfo)
-//    {
-//        if( !$this->orderinfo->contains($orderinfo) ) {
-//            $this->orderinfo->add($orderinfo);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeProvider(\Oleg\OrderformBundle\Entity\Orderinfo $orderinfo)
-//    {
-//        $this->orderinfo->removeElement($orderinfo);
-//    }
 
 }

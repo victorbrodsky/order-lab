@@ -61,6 +61,9 @@
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
                href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
         {% endif %}
+
+        <a class="btn btn-info" href="{{ path('history_orderinfo_show', { 'id': form.vars.value.oid }) }}">View Progress & Comments</a>
+
         </div>
     {% endif %}
 

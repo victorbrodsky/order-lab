@@ -2,6 +2,9 @@
 
 {% block navbar %}
 
+    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
+
+
 <nav class="navbar navbar-default" role="navigation">
 
     <div class="container-fluid">
@@ -28,7 +31,14 @@
                     <li id="1" class="divider-vertical orderinfo"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>
                     <li id="2" class="divider-vertical accession"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
                     <li id="3" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
-                    <li id="4" class="divider-vertical index"><a href="{{ path('index') }}">My Orders</a></li>
+                    <li id="4" class="divider-vertical index">
+                        <a href="{{ path('index') }}">
+                            My Orders
+                            {% if comments is defined and comments > 0 %}
+                                <span class="badge">{{ comments }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
 
                 </ul>
 

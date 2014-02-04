@@ -5,7 +5,9 @@
 {% set OnHold = "On Hold" in entity.status %}
 
 {% block action %}
-    
+
+    {% include 'OlegOrderformBundle::History/add_comment.html.twig' with {'orderid': entity.oid}  %}
+
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
           Action <span class="caret"></span>
@@ -15,6 +17,14 @@
         <ul class="dropdown-menu dropdown-menu-right">
             
             <li><a href="{{ path('multy_show', { 'id': entity.oid }) }}">View Details</a></li>
+            <li><a href="{{ path('history_orderinfo_show', { 'id': entity.oid }) }}">View Progress & Comments</a></li>
+
+            {#<li><a href="{{ path('history_orderinfo_show', { 'id': entity.oid }) }}">Add Comment</a></li>#}
+            <li>
+                <a href="#" data-toggle="modal" data-target="#addComment">
+                    Add Comment
+                </a>
+            </li>
 
             <li class="divider"></li>
 

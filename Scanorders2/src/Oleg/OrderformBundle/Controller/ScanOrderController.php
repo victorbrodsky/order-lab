@@ -291,6 +291,16 @@ class ScanOrderController extends Controller {
         if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
         }
+
+        //check for unviewed comments
+//        $comments = 0;
+//        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+//        $res = $repository->findBy(
+//            array('viewed' => null)
+//        );
+//        if( $res ) {
+//            $comments = count($res);
+//        }
         
         return array(
             'form' => $form->createView(),
@@ -298,7 +308,8 @@ class ScanOrderController extends Controller {
             'pagination' => $pagination,
             'userreqs' => $reqs,
             'accessreqs' => $accessreqs,
-            'routename'=>$routeName
+            'routename' => $routeName
+//            'comments' => $comments
         );
     }
 

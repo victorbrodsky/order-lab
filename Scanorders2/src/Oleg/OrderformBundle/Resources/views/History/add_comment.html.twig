@@ -1,0 +1,60 @@
+
+
+{#<form id="addcomment" action="{{ path('history_orderinfo_new',{ 'id': orderid }) }}" method="post">#}
+
+    {#<div class="row">#}
+        {#<div class="col-xs-12">#}
+
+        {#<p>#}
+            {#&#123;&#35;<textarea  type="textarea" class="textarea form-control">&#35;&#125;#}
+            {#<textarea id="addcomment" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>#}
+        {#</p>#}
+
+        {#</div>#}
+    {#</div>#}
+
+    {#<button class="btn btn-primary" type="submit">Add Comment</button>#}
+
+{#</form>#}
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="addComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add Comment</h4>
+            </div>
+            <div class="modal-body">
+
+
+                {#{% include 'OlegOrderformBundle::History/add_comment.html.twig' %}#}
+                <form id="addcomment" action="{{ path('history_orderinfo_new',{ 'id': orderid }) }}" method="post">
+
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <p>
+                                {#<textarea  type="textarea" class="textarea form-control">#}
+                                <textarea id="addcomment" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Add Comment</button>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                {#<button type="button" class="btn btn-primary">Add Comment</button>#}
+            </div>
+        </div>
+    </div>
+</div>
