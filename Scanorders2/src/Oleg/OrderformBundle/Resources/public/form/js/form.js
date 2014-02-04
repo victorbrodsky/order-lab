@@ -33,8 +33,8 @@ $(document).ready(function() {
     //originOption();
     //primaryOrganOption();
    
-    //tab
-    initOptionalParam();
+    //tabs for single form
+    //initOptionalParam();
 
     //multy form toggle button
     $('.form_body_toggle_btn').on('click', function(e) {

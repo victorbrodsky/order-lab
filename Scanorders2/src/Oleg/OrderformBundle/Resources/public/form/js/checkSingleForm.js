@@ -117,7 +117,8 @@ function checkFormSingle( elem ) {
         return false;
     }
 
-
+    setMaxHeightSingleForm();
+    initOptionalParam();
     //console.log("ready!!!");
 
     return true;
@@ -182,19 +183,13 @@ function initOptionalParam() {
 
         var elem = $(this);
 
+        //console.log( "max_height=" + _max_tab_height );
+        //$('.option_info_panel .tab-pane').height(_max_tab_height);
+
         elem.tab('show');
 
-        setPanelHeight(elem);
+        //setPanelHeight(elem);
         //setTimeout( function(){setPanelHeight(elem)}, 500);
-
-        //var this_height = $(this).closest('.panel-body').height();
-        //var this_height = $('#optional_param_tab_body').height();
-        //console.log( 'height='+this_height );
-
-//        if( this_height > _max_tab_height ) {
-//            _max_tab_height = this_height;
-//        }
-//        $(this).closest('.panel-body').height(_max_tab_height);
 
     });
 
@@ -214,16 +209,64 @@ function setPanelHeight(elem) {
     var this_height = $('.option_info_panel').find('.active').height();
     console.log( 'height='+this_height + ", max_height=" + _max_tab_height );
 
-    if( this_height > _max_tab_height ) {
-        _max_tab_height = this_height;
-        console.log( 'set max height='+_max_tab_height );
-        //$('#optional_param_tab_body .tab-pane').height(_max_tab_height);
-        //$('.option_info_panel').find('.active').height(_max_tab_height);
-    }
+//    if( this_height > _max_tab_height ) {
+//        _max_tab_height = this_height;
+//        console.log( 'set max height='+_max_tab_height );
+//        //$('#optional_param_tab_body .tab-pane').height(_max_tab_height);
+//        //$('.option_info_panel').find('.active').height(_max_tab_height);
+//    }
 
-    $('.option_info_panel').find('.active').height(_max_tab_height);
+    //$('.option_info_panel').find('.active').height(_max_tab_height);
 
     //$('#optional_param_tab_body .tab-pane').css('height', $('#optional_param_tab_body .tab-pane').css('height') )
     //$('#optional_param_tab_body .tab-pane').height(_max_tab_height);
 
 }
+
+function setMaxHeightSingleForm() {
+
+    removeMaxHeightSingleForm();
+
+    var menuH = $('#optional_param_tab').height();
+
+    $('.option_info_panel').find('.tab-pane').each( function() {
+        $(this).removeAttr('style');
+        $(this)
+            .css({
+                position:   'absolute', // Optional if #myDiv is already absolute
+                visibility: 'hidden',
+                display:    'block'
+            });
+
+        var optionHeight = $(this).height();
+
+        //if( $(this).find('.partdiseasetype') ) {
+            var totalH = optionHeight + 4*menuH;
+        //}
+
+        if( totalH > _max_tab_height ) {
+            _max_tab_height = totalH;
+        }
+        console.log("optionHeight="+optionHeight+", menuH="+menuH);
+
+        $(this).removeAttr('style');
+//        $(this)
+//            .css({
+//                position:   '', // Again optional if #myDiv is already absolute
+//                visibility: '',
+//                display:    '',
+//                height:     ''
+//            });
+
+    });
+
+    console.log( 'set max height='+_max_tab_height );
+    $('.option_info_panel .tab-pane').height(_max_tab_height);
+}
+
+function removeMaxHeightSingleForm() {
+    _max_tab_height = 0;
+    $('.option_info_panel').find('.tab-pane').removeAttr('style');
+}
+
+
