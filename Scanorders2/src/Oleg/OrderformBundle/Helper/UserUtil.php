@@ -146,10 +146,12 @@ class UserUtil {
         //print_r($choicesServ);
         return $choicesServ;
     }
-    
+
+    //TODO: what to use ROLE_SUBMITTER or ROLE_PATHOLOGY_RESIDENT?
     public function hasPermission( $security_content ) {
         if(
             //$entity &&
+            false === $security_content->isGranted('ROLE_SUBMITTER') &&
             false === $security_content->isGranted('ROLE_PATHOLOGY_RESIDENT') &&
             false === $security_content->isGranted('ROLE_PATHOLOGY_FELLOW') &&
             false === $security_content->isGranted('ROLE_PATHOLOGY_FACULTY')

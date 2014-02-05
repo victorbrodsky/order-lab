@@ -139,18 +139,9 @@
             {% endif %}        
                     
                 <td>  
-                    
-                    {{ include('OlegOrderformBundle::Default/action.html.twig') }}
-{#             
-                    <a class="btn btn-small btn-info" href="{{ path('scanorder_show', { 'id': entity.id }) }}">Show</a>
-                    
-                    {% if entity.status != 'canceled' %}
-                    <a onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" href="{{ path('scanorder_cancel', { 'id': entity.id }) }}">Cancel</a>
-                    {% endif %}
-                    {% if is_granted('ROLE_ADMIN') %}  
-                    <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a>    
-                    {% endif %}
- #}                   
+
+                    {% include 'OlegOrderformBundle::Default/action.html.twig' %}
+
                 </td>
             </tr>
         {% endfor %}

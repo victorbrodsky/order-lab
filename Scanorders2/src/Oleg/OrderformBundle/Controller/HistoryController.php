@@ -264,23 +264,52 @@ class HistoryController extends Controller
             false === $this->get('security.context')->isGranted('ROLE_ORDERING_PROVIDER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_ORDERING_PROVIDER')
-        ) {
+        )
+        {
             return $this->redirect( $this->generateUrl('logout') );
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id);
+        $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
 
         foreach( $entities as $entity ) {
+
+            if( $entity->getViewed() ) {
+                //echo "viewed! ";
+                continue;
+            }
+
             $provider = $entity->getProvider();
+
             $user = $this->get('security.context')->getToken()->getUser();
-            if( //u * ( P + !P*!A)
-                $provider->getId() != $user->getId() &&
-                ( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) ||
-                ( !$provider->hasRole('ROLE_PROCESSOR') && !$provider->hasRole('ROLE_ADMIN') && $provider->getId() != $user->getId() )
-            ) {
+
+            $viewed = false;
+
+            if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+                //processor can see only histories created by user without processor role
+                if( !$entity->hasProviderRole('ROLE_PROCESSOR') ) {
+                    $viewed = true;
+                }
+            } else {
+                //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
+                if( $entity->hasProviderRole('ROLE_PROCESSOR') || $entity->hasProviderRole('ROLE_ADMIN') ) {
+                    //echo "role admin! <br>";
+                    $viewed = true;
+                }
+            }
+
+            //echo "admin role=".$entity->hasProviderRole('ROLE_ADMIN')."<br>";
+            //echo "viewed=".$viewed." <br>";
+
+            //if the user the same as author of comment => $viewed = false ( proxy user will make this history as viewed! )
+            if( $viewed && $provider->getId() == $user->getId() ) {
+                $viewed = false;
+            }
+
+            if( $viewed ) {
                 $entity->setViewed($user);
+                $entity->setVieweddate( new \DateTime() );
                 $em->persist($entity);
                 $em->flush();
             }
@@ -311,25 +340,21 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity for OrderInfo.
      *
-     * @Route("/order/create/{id}", name="history_orderinfo_new")
+     * @Route("/order/create/", name="history_orderinfo_new")
      * @Method("POST")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */
-    public function createHistoryOrderinfoAction( Request $request, $id )
+    public function createHistoryOrderinfoAction(Request $request)
     {
 
-        $data = $request->request->all();
-        //var_dump($data);
-        $text_value = $data['addcomment'];
-
+        $text_value = $request->request->get('text');
+        $id = $request->request->get('id');
         //echo "id=".$id.", text_value=".$text_value."<br>";
-        //exit();
+
+        $res = 1;
 
         if( $text_value == "" ) {
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Comment was not provided'
-            );
+            $res = 'Comment was not provided';
         } else {
 
             $em = $this->getDoctrine()->getManager();
@@ -338,6 +363,7 @@ class HistoryController extends Controller
 
             $history = new History();
 
+            $history->setOrderinfo($orderinfo);
             $history->setProvider($user);
             $history->setCurrentid($id);
             //$history->setNewid($id);
@@ -350,12 +376,16 @@ class HistoryController extends Controller
                 $history->addRole($role."");
             }
 
+            //echo "ok";
             $em->persist($history);
             $em->flush();
 
         }
 
-        return $this->redirect( $this->generateUrl('history_orderinfo_show',array('id'=>$id) ) );
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
     }
 
 
@@ -363,30 +393,53 @@ class HistoryController extends Controller
      * Finds and displays a History entity for OrderInfo.
      *
      * @Route("/order/notviewedcomments/", name="history_not_viewed_comments")
-     * @Method("POST")
+     * @Method("GET")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */
     public function notViewedCommentsAction()
     {
         $comments = 0;
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+        $dql =  $repository->createQueryBuilder('history');
+        //$dql->select('COUNT(history) as historycount');
+        $dql->select('history');
+        //$dql->groupBy('history');
+        $dql->innerJoin("history.provider", "provider");
+        $dql->innerJoin("history.orderinfo", "orderinfo");
+        $dql->innerJoin("orderinfo.provider", "orderinfo_provider");
+        $dql->leftJoin("orderinfo.proxyuser", "orderinfo_proxyuser");
+        $role = "ROLE_PROCESSOR";
+        $role2 = "ROLE_ADMIN";
+        $user = $this->get('security.context')->getToken()->getUser();
+        $criteriastr = 'history.viewed is NULL';
 
         if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            $res = $repository->findBy(
-                array('viewed' => null)
-            );
+            //processor can see all histories created by user without processor role
+            $criteriastr = $criteriastr . " AND history.roles NOT LIKE :role AND history.roles NOT LIKE :role2";
         } else {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $res = $repository->findBy(
-                array(
-                    'viewed' => null,
-                    //'provider' => $user
-                )
-            );
+            //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
+            $criteriastr = $criteriastr . " AND ( history.roles LIKE :role OR history.roles LIKE :role2 )";
+            $criteriastr = $criteriastr . " AND ( orderinfo_provider = :provider OR orderinfo_proxyuser = :provider )";
         }
 
+        $dql->where($criteriastr);
+        //$dql->addGroupBy('history.changedate');
+        $dql->addOrderBy("history.changedate","DESC");
+        $query = $dql->getQuery()->setParameter('role', '%"'.$role.'"%')->setParameter('role2', '%"'.$role2.'"%');
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            $query->setParameter('provider', $user);
+        }
+
+        $res = $query->getResult();
+
         if( $res ) {
+            //var_dump($res);
             $comments = count($res);
+            //$comments = $res['historycount'];
+            //echo "comments=".$comments." <br>";
+        } else {
+            //echo "no res found <br>";
         }
 
         $response = new Response();

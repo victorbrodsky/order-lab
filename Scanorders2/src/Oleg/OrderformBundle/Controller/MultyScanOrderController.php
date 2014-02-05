@@ -179,7 +179,7 @@ class MultyScanOrderController extends Controller {
 //        $id = $form["id"]->getData();
 //        $provider = $form["provider"]->getData();
 //        echo "form field id=".$id.", provider=".$provider."<br>";
-//        //$request  = $this->getRequest();
+//        //$request  = $this->get('request_stack')->getCurrentRequest();
 //        $idrequest = $request->query->get('id');
 //        echo "idreq=".$idrequest."<br>";
 //        exit();

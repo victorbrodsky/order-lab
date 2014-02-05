@@ -4,7 +4,9 @@
 
     {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
 
-    <h3 class="text-info">Progress & Comments</h3>
+    <h3 class="text-info">Progress & Comments of Order# {{ orderid }}</h3>
+
+    <input type="hidden" id="reload_page_after_modal" value="1" />
 
     <table class="records_list table">
         <thead>
@@ -32,7 +34,7 @@
                 {#<td>{{ entity.currentid }}</td>#}
                 {#<td>{{ entity.newid }}</td>#}
 
-                <td>{% if entity.changedate %}{{ entity.changedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.changedate %}{{ entity.changedate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>
                     {% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}
                         Comment Added
@@ -61,7 +63,7 @@
                     {% if entity.viewed == '' %}
                         No
                     {% else %}
-                        {{ entity.viewed }}
+                        {{ entity.viewed.username }} on {{ entity.vieweddate|date('m/d/Y H:i') }}
                     {% endif %}
                 </td>
 
@@ -81,7 +83,7 @@
             {#Add Comment#}
         {#</a>#}
 
-        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addComment">
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addComment_{{ orderid }}">
             Add Comment
         </button>
 

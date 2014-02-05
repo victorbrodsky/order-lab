@@ -247,8 +247,8 @@ class ScanOrderController extends Controller {
             $dql->where($criteriastr);
         }
 
-        $params = $this->getRequest()->query->all();
-        $sort = $this->getRequest()->query->get('sort');
+        $params = $this->get('request_stack')->getCurrentRequest()->query->all();
+        $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
         
         if( $routeName == "index" ) {          
             if( $params == null || count($params) == 0 ) {

@@ -50,6 +50,7 @@ class OrderUtil {
 
             //record history
             $history = new History();
+            $history->setOrderinfo($entity);
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
             $history->setProvider($user);

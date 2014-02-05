@@ -24,6 +24,7 @@ class HistoryType extends AbstractType
             ->add('currentstatus')
             ->add('newstatus')
             ->add('viewed')
+            ->add('vieweddate')
         ;
     }
     

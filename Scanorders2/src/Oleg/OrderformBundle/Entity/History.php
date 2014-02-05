@@ -22,14 +22,11 @@ class History
      */
     private $id;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="OrderInfo", cascade={"persist"})
-//     * @ORM\JoinTable(name="history_orderinfo",
-//     *      joinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")}
-//     * )
-//     */
-//    private $orderinfo;
+    /**
+     * @ORM\ManyToOne(targetEntity="OrderInfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     */
+    protected $orderinfo;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -85,6 +82,16 @@ class History
     private $viewed;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="vieweddate", type="datetime", nullable=true)
+     *
+     */
+    private $vieweddate;
+
+
+
+    /**
      * @param int $id
      */
     public function setId($id)
@@ -113,6 +120,13 @@ class History
         //$this->roles->add($role);
     }
 
+    public function hasProviderRole($role)
+    {
+        if( !is_array($this->getRoles()) ) {
+            return false;
+        }
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
 
     /**
      * @ORM\PrePersist
@@ -239,6 +253,39 @@ class History
     public function getViewed()
     {
         return $this->viewed;
+    }
+
+    /**
+     * @param mixed $vieweddate
+     */
+    public function setVieweddate($vieweddate)
+    {
+        $this->vieweddate = $vieweddate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVieweddate()
+    {
+        return $this->vieweddate;
+    }
+
+
+    /**
+     * @param mixed $orderinfo
+     */
+    public function setOrderinfo($orderinfo)
+    {
+        $this->orderinfo = $orderinfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
     }
 
 

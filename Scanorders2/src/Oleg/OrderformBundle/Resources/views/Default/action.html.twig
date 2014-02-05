@@ -21,7 +21,7 @@
 
             {#<li><a href="{{ path('history_orderinfo_show', { 'id': entity.oid }) }}">Add Comment</a></li>#}
             <li>
-                <a href="#" data-toggle="modal" data-target="#addComment">
+                <a href="#" data-toggle="modal" data-target="#addComment_{{ entity.oid }}">
                     Add Comment
                 </a>
             </li>
@@ -130,15 +130,6 @@
       </div>
 
 
-{#
-        <a class="btn btn-small btn-info" href="{{ path('scanorder_show', { 'id': entity.oid }) }}">Show</a>
-                    
-        {% if entity.status != 'canceled' %}
-        <a onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" href="{{ path('scanorder_cancel', { 'id': entity.oid }) }}">Cancel</a>
-        {% endif %}
-        {% if is_granted('ROLE_ADMIN') %}  
-        <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.oid }) }}">Edit</a>
-        {% endif %}
-#}
-{#                    <a onclick="return confirm('Are you sure?');" class="btn btn-small btn-danger" href="{{ path('scanorder_delete', { 'id': entity.oid }) }}">Delete</a>#}
+
 {% endblock %}
+
