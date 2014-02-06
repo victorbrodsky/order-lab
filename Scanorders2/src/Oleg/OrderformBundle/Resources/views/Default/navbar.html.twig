@@ -34,11 +34,11 @@
                     <li id="4" class="divider-vertical index">
                         <a href="{{ path('index') }}">
                             My Orders
-                            {% if comments is defined and comments > 0 %}
-                                <span class="badge">{{ comments }}</span>
-                            {% endif %}
                         </a>
                     </li>
+                    {% if comments is defined and comments > 0 %}
+                        <li id="4_1" class="divider-vertical comments-nav"><a href="javascript:;">New Comments<span class="badge">{{ comments }}</span></a></li>
+                    {% endif %}
 
                 </ul>
 

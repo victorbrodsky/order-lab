@@ -73,7 +73,7 @@ class ScanOrderController extends Controller {
         $service = $form->get('service')->getData();
 
         //service
-        //echo "<br>service=".$service;
+        //echo "<br>filter=".$filter;
         //exit();
 
         $criteriastr = "";
@@ -129,6 +129,26 @@ class ScanOrderController extends Controller {
 
             switch( $filter ) {
 
+                case "With Comments":
+                    //$dql->innerJoin("orderinfo.slide", "slides");
+                    $orderUtil = new OrderUtil($em);
+                    $entities = $orderUtil->getNotViewedComments($this->get('security.context'));
+                    $countHistory = count($entities);
+                    //echo "count=".$countHistory."<br>";
+                    $countH = 1;
+                    foreach( $entities as $history ) {
+                        $criteriastr .= "( orderinfo.oid = ".$history->getCurrentid();
+                        if( $countHistory > $countH ) {
+                            $criteriastr .= " OR ";
+                        } else {
+                            $criteriastr .= " ) ";
+                        }
+                        $countH++;
+                    }
+                    if( $countHistory == 0 ) {
+                        $criteriastr .= "( orderinfo.oid = '' )";   //no orders
+                    }
+                    break;
                 case "All Filled":
                     $criteriastr .= " status.name LIKE '%Filled%'";
                     break;
@@ -157,6 +177,9 @@ class ScanOrderController extends Controller {
         //***************** Superseded filter ***************************//
         if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
             $criteriastr .= " status.name != 'Superseded'";
         }
         //***************** END of Superseded filetr ***************************//
@@ -291,16 +314,6 @@ class ScanOrderController extends Controller {
         if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
         }
-
-        //check for unviewed comments
-//        $comments = 0;
-//        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-//        $res = $repository->findBy(
-//            array('viewed' => null)
-//        );
-//        if( $res ) {
-//            $comments = count($res);
-//        }
         
         return array(
             'form' => $form->createView(),
@@ -309,7 +322,6 @@ class ScanOrderController extends Controller {
             'userreqs' => $reqs,
             'accessreqs' => $accessreqs,
             'routename' => $routeName
-//            'comments' => $comments
         );
     }
 
@@ -436,7 +448,8 @@ class ScanOrderController extends Controller {
             "All Filled and Returned" => "All Filled and Returned",
             "All Filled and Not Returned" => "All Filled and Not Returned",
             "All Not Filled" => "All Not Filled",
-            "All On Hold" => "All On Hold"
+            "All On Hold" => "All On Hold",
+            "With Comments" => "With Comments"
         );
 
         $filterType = array();

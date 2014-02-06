@@ -544,13 +544,17 @@ function setNavBar() {
         id = 3;
     }
 
+    if( full.indexOf("/history/") !== -1 ) {
+        id = "4_1";
+    }
+
     if( full.indexOf("/user/listusers") !== -1 ) {
         id = 5;
     }
     
     if( full.indexOf("/admin/") !== -1 ) {
         id = 5;
-    }   
+    }
     
     if( full.indexOf("/user/") !== -1 ) {
         if( $('#5') ) {

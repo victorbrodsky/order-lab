@@ -2,9 +2,14 @@
 
 {% block content %}
 
-    {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
+    {% if orderid is defined %}
 
-    <h3 class="text-info">Progress & Comments of Order# {{ orderid }}</h3>
+        {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
+        <h3 class="text-info">Progress & Comments of Order# {{ orderid }}</h3>
+
+    {% else %}
+        <h3 class="text-info">Progress & Comments List</h3>
+    {% endif %}
 
     <input type="hidden" id="reload_page_after_modal" value="1" />
 
@@ -14,7 +19,9 @@
                 {#<th>Id</th>#}
                 {#<th>Currentid</th>#}
                 {#<th>Newid</th>#}
-
+                {% if orderid is not defined %}
+                    <th>Order</th>
+                {% endif %}
                 <th>Timestamp</th>
                 <th>Action</th>
                 <th>Status</th>
@@ -23,7 +30,7 @@
                 <th>Comment</th>
                 <th>Viewed</th>
 
-                <th>Actions</th>
+                {#<th>Actions</th>#}
 
             </tr>
         </thead>
@@ -33,6 +40,10 @@
                 {#<td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
                 {#<td>{{ entity.currentid }}</td>#}
                 {#<td>{{ entity.newid }}</td>#}
+
+                {% if orderid is not defined %}
+                    <td>{{ entity.currentid }}</td>
+                {% endif %}
 
                 <td>{% if entity.changedate %}{{ entity.changedate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>
@@ -67,10 +78,10 @@
                     {% endif %}
                 </td>
 
-                <td>
-                    <a href="{{ path('history_show', { 'id': entity.id }) }}">show</a>
-                    <a href="{{ path('history_edit', { 'id': entity.id }) }}">edit</a>
-                </td>
+                {#<td>#}
+                    {#<a href="{{ path('history_show', { 'id': entity.id }) }}">show</a>#}
+                    {#<a href="{{ path('history_edit', { 'id': entity.id }) }}">edit</a>#}
+                {#</td>#}
 
             </tr>
         {% endfor %}
@@ -92,26 +103,6 @@
             Create a new entry
         </a>
     {% endif %}
-
-
-    {#<!-- Modal -->#}
-    {#<div class="modal fade" id="addComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
-        {#<div class="modal-dialog">#}
-            {#<div class="modal-content">#}
-                {#<div class="modal-header">#}
-                    {#<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
-                    {#<h4 class="modal-title" id="myModalLabel">Add Comment</h4>#}
-                {#</div>#}
-                {#<div class="modal-body">#}
-                    {#{% include 'OlegOrderformBundle::History/add_comment.html.twig' %}#}
-                {#</div>#}
-                {#<div class="modal-footer">#}
-                    {#<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
-                    {#&#123;&#35;<button type="button" class="btn btn-primary">Add Comment</button>&#35;&#125;#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
 
 
     {% endblock %}

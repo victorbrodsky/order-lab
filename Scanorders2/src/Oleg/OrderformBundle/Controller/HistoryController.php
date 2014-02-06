@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Form\HistoryType;
+use Oleg\OrderformBundle\Helper\OrderUtil;
 
 /**
  * History controller.
@@ -28,12 +29,28 @@ class HistoryController extends Controller
      */
     public function indexAction()
     {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl('logout') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
 
+        if( count($entities) > 0 ) {
+            $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+            $rolesArr = array();
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        } else {
+            $rolesArr = '';
+        }
+
         return array(
             'entities' => $entities,
+            'roles' => $rolesArr
         );
     }
     /**
@@ -399,45 +416,13 @@ class HistoryController extends Controller
     public function notViewedCommentsAction()
     {
         $comments = 0;
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-        $dql =  $repository->createQueryBuilder('history');
-        //$dql->select('COUNT(history) as historycount');
-        $dql->select('history');
-        //$dql->groupBy('history');
-        $dql->innerJoin("history.provider", "provider");
-        $dql->innerJoin("history.orderinfo", "orderinfo");
-        $dql->innerJoin("orderinfo.provider", "orderinfo_provider");
-        $dql->leftJoin("orderinfo.proxyuser", "orderinfo_proxyuser");
-        $role = "ROLE_PROCESSOR";
-        $role2 = "ROLE_ADMIN";
-        $user = $this->get('security.context')->getToken()->getUser();
-        $criteriastr = 'history.viewed is NULL';
 
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            //processor can see all histories created by user without processor role
-            $criteriastr = $criteriastr . " AND history.roles NOT LIKE :role AND history.roles NOT LIKE :role2";
-        } else {
-            //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
-            $criteriastr = $criteriastr . " AND ( history.roles LIKE :role OR history.roles LIKE :role2 )";
-            $criteriastr = $criteriastr . " AND ( orderinfo_provider = :provider OR orderinfo_proxyuser = :provider )";
-        }
+        $em = $this->getDoctrine()->getManager();
+        $orderUtil = new OrderUtil($em);
+        $histories = $orderUtil->getNotViewedComments($this->get('security.context'));
 
-        $dql->where($criteriastr);
-        //$dql->addGroupBy('history.changedate');
-        $dql->addOrderBy("history.changedate","DESC");
-        $query = $dql->getQuery()->setParameter('role', '%"'.$role.'"%')->setParameter('role2', '%"'.$role2.'"%');
-
-        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            $query->setParameter('provider', $user);
-        }
-
-        $res = $query->getResult();
-
-        if( $res ) {
-            //var_dump($res);
-            $comments = count($res);
-            //$comments = $res['historycount'];
-            //echo "comments=".$comments." <br>";
+        if( $histories ) {
+            $comments = count($histories);
         } else {
             //echo "no res found <br>";
         }
@@ -447,6 +432,9 @@ class HistoryController extends Controller
 
         return $response;
     }
+
+
+
 
 
 }

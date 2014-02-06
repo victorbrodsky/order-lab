@@ -32,7 +32,7 @@ class FilterType extends AbstractType
                 'required' => true,
                 //'multiple' => true,
                 //'expanded' => true,
-                'attr' => array('class' => 'combobox combobox-width')
+                'attr' => array('class' => 'combobox combobox-width order-status-filter')
         ));                       
         
         $builder->add('search', 'text', array(
