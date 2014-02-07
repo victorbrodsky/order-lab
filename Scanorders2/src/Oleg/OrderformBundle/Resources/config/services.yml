@@ -1,4 +1,15 @@
 parameters:
+
+    #idle time in seconds: 60 min * 60 sec = 3600 seconds
+    session_max_idle_time: 1800
+
+
+#framework:
+#    session:
+#        cookie_lifetime: 20
+#        gc_maxlifetime: 10
+
+
 #    aperio_user_provider.class: Oleg\OrderformBundle\Security\AperioUser\AperioUserProvider
 
 #    ztec.security.active_directory.settings:
@@ -89,22 +100,11 @@ services:
         class: Oleg\OrderformBundle\Security\Authentication\LdapManager
         arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%]
 
-#    aperio.security.authentication.provider:
-#        class:  Oleg\OrderformBundle\Security\Authentication\Provider_TODEL\AperioProvider
-#        arguments: ["", "@service_container"]
-#
-#    aperio.security.authentication.listener:
-#        class:  Oleg\OrderformBundle\Security\Firewall\AperioListener
-#        arguments: ["@security.context", "@security.authentication.manager"]
 
-#    aperio_user_provider:
-#        class: "%aperio_user_provider.class%"
-#        calls:
-#          - [setServiceContainer, ["@service_container"]]
+    oleg.handler.session_idle:
+        class: Oleg\OrderformBundle\Helper\SessionIdleHandler
+        arguments: ["@session", "@security.context", "@router", %session_max_idle_time%]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-#    #override FOSUSER profile form. TODO: not working?
-#    oleg_user.profile.form.type:
-#        class: Oleg\OrderformBundle\Form\Type\ProfileFormType
-#        arguments: [%fos_user.model.user.class%]
-#        tags:
-#            - { name: form.type, alias: oleg_user_profile }
+

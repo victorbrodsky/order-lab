@@ -29,8 +29,6 @@ $(document).ready(function() {
         arrayFieldShow.push("disident")
     }
 
-    $('#maincinglebtn').hide(); //hide remove button
-
     //validation on form submit
     $("#scanorderform").on("submit", function () {
         return validateForm();

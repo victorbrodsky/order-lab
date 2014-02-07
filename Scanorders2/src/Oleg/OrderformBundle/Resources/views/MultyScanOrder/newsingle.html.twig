@@ -148,7 +148,7 @@
                                 {{ form_widget(form_block.blockname|first) }}
                                 <button style="display: none;" id="check_btn" class="btn btn-default blockbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="checkbtn glyphicon glyphicon-check"></i></button>
                             </div>
-                            <div style="float:left; width:10%" id="maincinglebtn">
+                            <div style="float:left; width:10%; display:none;" id="maincinglebtn">
                                 <button id="remove_single_btn" class="btn btn-default maincinglebtn" type="button" onclick="removeFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="removebtn glyphicon glyphicon-remove"></i></button>
                             </div>
                         </div>

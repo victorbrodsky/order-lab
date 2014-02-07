@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
@@ -50,6 +51,19 @@ class SecurityController extends Controller
             )
         );
 
+    }
+
+    /**
+     * @Route("/keepalive/", name="keepalive")
+     * @Method("GET")
+     */
+    public function loginCheckAction( Request $request )
+    {
+        $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
+        $response->setContent('OK');
+        return $response;
+        //return "OK";
     }
 
 //    /**

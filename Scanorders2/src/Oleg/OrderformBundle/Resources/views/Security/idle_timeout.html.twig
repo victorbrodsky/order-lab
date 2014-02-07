@@ -1,0 +1,25 @@
+
+{% block idletimeout %}
+
+<!-- Modal -->
+<div class="modal fade" id="idle-timeout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close idle-timeout_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Your session is about to expire!</h4>
+            </div>
+            <div class="modal-body">
+
+                You will be logged off in <span id="dialog-countdown" style="font-weight:bold"></span> seconds.
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default idle-timeout_modal_close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

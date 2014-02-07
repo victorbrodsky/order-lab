@@ -3,6 +3,9 @@
 
 <head>
 
+    {#timeout after 1800 seconds#}
+    {#<meta http-equiv="refresh" content = "1800; url={{ path('logout') }}">#}
+
     {% if security is not defined %}
         {% set security = 'true' %}
     {% endif %}
@@ -40,7 +43,6 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-
     <title>
         {% block title %}
             Scan Order
@@ -50,6 +52,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    <!-- we want to force people to click a button, so hide the close link in the toolbar -->
+    <style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>
 
 </head> 
              
@@ -68,6 +72,9 @@
             {% endblock %}
 
         </div>
+
+        {% include 'OlegOrderformBundle::Security/idle_timeout.html.twig' %}
+
 
         <div class="order-content">
 
@@ -105,6 +112,8 @@
             '@OlegOrderformBundle/Resources/public/form/js/masking.js'
             '@OlegOrderformBundle/Resources/public/form/js/form.js'
             '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+            '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+            '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
