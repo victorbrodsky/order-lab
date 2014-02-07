@@ -7,22 +7,28 @@
     <table class="records_list table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Creationdate</th>
-                <th>Roles</th>
-                <th>Username</th>
-                <th>Ip</th>
-                <th>Useragent</th>
-                <th>Width</th>
-                <th>Height</th>
-                <th>Event</th>
-                <th>Server Response</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Id', 'logger.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Creationdate', 'logger.creationdate') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Username', 'logger.username') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Ip', 'logger.ip') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Server Response', 'logger.serverresponse') }}</th>
                 {#<th>Actions</th>#}
             </tr>
         </thead>
         <tbody>
-        {% for entity in entities %}
-            <tr>
+        {% for entity in pagination %}
+
+            {% if 'Successful Login' in entity.event %}
+                <tr class="canceltr" >
+            {% else %}
+                <tr class="activetr" >
+            {% endif %}
+
                 <td>
                     {{ entity.id }}
                     {#<a href="{{ path('logger_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
@@ -64,6 +70,10 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
         {#<ul>#}
         {#<li>#}

@@ -12,6 +12,7 @@ namespace Oleg\OrderformBundle\Security\Authentication;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,7 +106,9 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-        $response = new RedirectResponse( $this->router->generate('logout') );
+        $request->getSession()->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);
+
+        $response = new RedirectResponse( $this->router->generate('login') );
         return $response;
 
     }

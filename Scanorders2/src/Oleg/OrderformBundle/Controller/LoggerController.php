@@ -29,7 +29,21 @@ class LoggerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:Logger')->findBy(array(), array('creationdate' => 'DESC'));
+        //$entities = $em->getRepository('OlegOrderformBundle:Logger')->findBy(array(), array('creationdate' => 'DESC'));
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Logger');
+        $dql =  $repository->createQueryBuilder("logger");
+        $dql->select('logger');
+        $dql->orderBy("logger.creationdate","DESC");
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
 
         $em = $this->getDoctrine()->getManager();
         $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
@@ -41,7 +55,7 @@ class LoggerController extends Controller
         }
 
         return array(
-            'entities' => $entities,
+            'pagination' => $pagination,
             'roles' => $rolesArr
         );
     }
