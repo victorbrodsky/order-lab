@@ -24,6 +24,10 @@ class SecurityController extends Controller
     public function loginAction()
     {
 
+        //$user = $this->get('security.context')->getToken()->getUser();
+        //echo "Login page. User=".$user."<br>";
+        //exit();
+
         $request = $this->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
 

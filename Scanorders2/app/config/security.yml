@@ -50,7 +50,8 @@ security:
                  always_use_default_target_path: false
                  provider: chain_provider
                  use_referer: true
-                 success_handler: login_sucess_handler
+                 success_handler: authentication_handler
+                 failure_handler: authentication_handler
             simple-form:
                  always_use_default_target_path: false
                  provider:      aperioauth
@@ -64,6 +65,7 @@ security:
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/admin/, role: ROLE_ADMIN }
+     - { path: ^/logger/, role: ROLE_ADMIN }
      - { path: ^/util/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
      - { path: ^/user/, role: ROLE_USER }
      - { path: ^/check/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }

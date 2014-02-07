@@ -130,24 +130,29 @@ class ScanOrderController extends Controller {
             switch( $filter ) {
 
                 case "With Comments":
-                    //$dql->innerJoin("orderinfo.slide", "slides");
                     $orderUtil = new OrderUtil($em);
                     $entities = $orderUtil->getNotViewedComments($this->get('security.context'));
                     $countHistory = count($entities);
                     //echo "count=".$countHistory."<br>";
                     $countH = 1;
+                    if( $countHistory > 0 ) {
+                        $criteriastr .= "( ";   //no orders
+                    }
                     foreach( $entities as $history ) {
-                        $criteriastr .= "( orderinfo.oid = ".$history->getCurrentid();
+                        //echo $history->getId().": getCurrentid=".$history->getCurrentid()."<br>";
+                        $criteriastr .= " orderinfo.oid = ".$history->getCurrentid();
                         if( $countHistory > $countH ) {
                             $criteriastr .= " OR ";
-                        } else {
-                            $criteriastr .= " ) ";
                         }
                         $countH++;
+                    }
+                    if( $countHistory > 0 ) {
+                        $criteriastr .= " ) ";   //no orders
                     }
                     if( $countHistory == 0 ) {
                         $criteriastr .= "( orderinfo.oid = '' )";   //no orders
                     }
+                    //echo "criteriastr=".$criteriastr."<br>";
                     break;
                 case "All Filled":
                     $criteriastr .= " status.name LIKE '%Filled%'";

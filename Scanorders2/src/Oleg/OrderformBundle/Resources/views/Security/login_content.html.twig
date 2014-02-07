@@ -27,6 +27,9 @@
     
 <form class="form-signin" action="{{ path('login_check') }}" method="post">
 
+    <input type="hidden" name="display_height" id="display_height" value="" />
+    <input type="hidden" name="display_width" id="display_width" value="" />
+
     <div class="row">
     <div class="col-xs-12">
 
@@ -59,3 +62,12 @@
     </p>
     </p>
 </div>
+
+
+<script language="Javascript">
+    <!--
+        console.log("width="+screen.width+"x"+screen.height);
+        document.getElementById("display_height").value = screen.height;
+        document.getElementById("display_width").value = screen.width;
+    //-->
+</script>

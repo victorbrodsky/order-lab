@@ -54,11 +54,7 @@ class OrderUtil {
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
             $history->setProvider($user);
-
-            foreach( $user->getRoles() as $role ) {
-                //echo "Role=".$role."<br>";
-                $history->addRole($role."");
-            }
+            $history->setRoles($user->getRoles());
 
             //change status for all orderinfo children to "deleted-by-canceled-order"
             //IF their source is ="scanorder" AND there are no child objects with status == 'valid'

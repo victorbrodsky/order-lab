@@ -388,10 +388,7 @@ class HistoryController extends Controller
             //$history->setNewstatus($orderinfo->getStatus());
             $history->setChangedate( new \DateTime() );
             $history->setNote($text_value);
-
-            foreach( $user->getRoles() as $role ) {
-                $history->addRole($role."");
-            }
+            $history->setRoles($user->getRoles());
 
             //echo "ok";
             $em->persist($history);

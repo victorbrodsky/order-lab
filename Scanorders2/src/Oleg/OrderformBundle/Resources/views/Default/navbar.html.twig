@@ -37,7 +37,7 @@
                         </a>
                     </li>
                     {% if comments is defined and comments > 0 %}
-                        <li id="4_1" class="divider-vertical comments-nav"><a href="javascript:;">New Comments<span class="badge">{{ comments }}</span></a></li>
+                        <li id="4_1" class="divider-vertical comments-nav"><a href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}">New Comments<span class="badge">{{ comments }}</span></a></li>
                     {% endif %}
 
                 </ul>
@@ -56,7 +56,8 @@
                             <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
-                                <li><a href="{{ path('admin_index') }}">Tables</a></li>
+                                <li><a href="{{ path('admin_index') }}">DB Manager</a></li>
+                                <li><a href="{{ path('logger') }}">Login Logs</a></li>
                             {% endif %}
 
                         </ul>

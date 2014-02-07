@@ -12,6 +12,7 @@ namespace Oleg\OrderformBundle\Helper;
 use Oleg\OrderformBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Entity\PathServiceList;
+use Oleg\OrderformBundle\Entity\Logger;
 
 class UserUtil {
 
@@ -164,6 +165,45 @@ class UserUtil {
         } else {
             return true;
         }
+    }
+
+
+    public function setLoginAttempt( $request, $security_content, $em, $options ) {
+
+        $user = null;
+        $username = null;
+        $roles = null;
+
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+        //echo "userAgent=".$userAgent."<br>";
+
+        $token = $security_content->getToken();
+
+        if( $token ) {
+            $user = $security_content->getToken()->getUser();
+            $username = $token->getUsername();
+            $roles = $user->getRoles();
+        } else {
+            $username = $request->get('_username');
+        }
+
+        $logger = new Logger();
+        $logger->setUser($user);
+        $logger->setRoles($roles);
+        $logger->setUsername($username);
+        $logger->setIp($request->getClientIp());
+        $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+        $logger->setWidth($request->get('display_width'));
+        $logger->setHeight($request->get('display_height'));
+        $logger->setEvent($options['event']);
+        $logger->setServerresponse($options['serverresponse']);
+
+        //exit();
+
+        $em->persist($logger);
+        $em->flush();
+
     }
 
 }

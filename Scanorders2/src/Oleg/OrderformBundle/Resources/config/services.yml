@@ -75,9 +75,9 @@ services:
             - { name: form.type, alias: custom_selector }
 
     #Redirect admin to index
-    login_sucess_handler:
+    authentication_handler:
         class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
-        arguments:  [@router, @security.context]
+        arguments:  [@router, @security.context, @doctrine.orm.entity_manager]
 
     #Aperio Auth
     aperio_authenticator:

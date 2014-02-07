@@ -108,7 +108,9 @@ class History
     }
 
     public function setRoles($roles) {
-        $this->roles = roles;
+        foreach( $roles as $role ) {
+            $this->addRole($role."");
+        }
     }
 
     public function getRoles() {

@@ -1,0 +1,76 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h3 class="text-info">Logger List</h3>
+
+    <table class="records_list table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Creationdate</th>
+                <th>Roles</th>
+                <th>Username</th>
+                <th>Ip</th>
+                <th>Useragent</th>
+                <th>Width</th>
+                <th>Height</th>
+                <th>Event</th>
+                <th>Server Response</th>
+                {#<th>Actions</th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>
+                    {{ entity.id }}
+                    {#<a href="{{ path('logger_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
+                </td>
+                <td>{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    {% for role in entity.roles %}
+                        {% if role != "ROLE_USER" %}
+                            "{{ attribute(roles, role) }}"
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ entity.username }}</td>
+                <td>{{ entity.ip }}</td>
+                <td>
+                    <div class="textarea_widget">
+                        <textarea class="textarea form-control">{{ entity.useragent }}</textarea>
+                    </div>
+                </td>
+                <td>{{ entity.width }}</td>
+                <td>{{ entity.height }}</td>
+                <td>{{ entity.event }}</td>
+                <td>
+                    <div class="textarea_widget">
+                        <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>
+                    </div>
+                </td>
+                {#<td>#}
+                {#<ul>#}
+                    {#<li>#}
+                        {#<a href="{{ path('logger_show', { 'id': entity.id }) }}">show</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="{{ path('logger_edit', { 'id': entity.id }) }}">edit</a>#}
+                    {#</li>#}
+                {#</ul>#}
+                {#</td>#}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        {#<ul>#}
+        {#<li>#}
+            {#<a href="{{ path('logger_new') }}">#}
+                {#Create a new entry#}
+            {#</a>#}
+        {#</li>#}
+        {#</ul>#}
+
+{% endblock %}

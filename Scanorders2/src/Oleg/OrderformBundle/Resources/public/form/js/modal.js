@@ -33,10 +33,10 @@ $(document).ready(function() {
     });
 
 
-    $('.comments-nav').on( "click", function(){
-        $('.order-status-filter').select2('val','With Comments');
-        $('.order-filter-btn').trigger("click");
-    });
+//    $('.comments-nav').on( "click", function(){
+//        $('.order-status-filter').select2('val','With Comments');
+//        $('.order-filter-btn').trigger("click");
+//    });
 
 });
 
