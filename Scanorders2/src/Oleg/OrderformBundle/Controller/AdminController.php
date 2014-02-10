@@ -24,6 +24,7 @@ use Oleg\OrderformBundle\Entity\Roles;
 use Oleg\OrderformBundle\Entity\ReturnSlideTo;
 use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
+use Oleg\OrderformBundle\Entity\SiteParameters;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -70,6 +71,7 @@ class AdminController extends Controller
         $count_returnslide = $this->generateReturnSlideTo();
         $count_SlideDelivery = $this->generateSlideDelivery();
         $count_RegionToScan = $this->generateRegionToScan();
+        $count_siteParameters = $this->generateSiteParameters();
         $userutil = new UserUtil();
         //$count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
@@ -90,6 +92,7 @@ class AdminController extends Controller
             'Return Slide To='.$count_returnslide.', '.
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
+            'Site Parameters='.$count_siteParameters.' '.
             //'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -869,6 +872,34 @@ class AdminController extends Controller
 
             $count = $count + 10;
         }
+
+        return $count;
+    }
+
+    public function generateSiteParameters() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "maxIdleTime" => "30"
+        );
+
+        $params = new SiteParameters();
+
+        $count = 0;
+        foreach( $types as $key => $value ) {
+            $method = "set".$key;
+            $params->$method( $value );
+            $count = $count++;
+        }
+
+        $em->persist($params);
+        $em->flush();
 
         return $count;
     }

@@ -84,6 +84,8 @@
                 </div>
             {% endfor %}
 
+            <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
             {% block content %}{% endblock %}
 
         </div>
@@ -114,6 +116,7 @@
             '@OlegOrderformBundle/Resources/public/form/js/modal.js'
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+            '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

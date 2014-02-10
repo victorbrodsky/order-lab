@@ -36,6 +36,13 @@
         </thead>
         <tbody>
         {% for entity in entities %}
+
+            {% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}
+                {% set type = 'Comment Added' %}
+            {% else %}
+                {% set type = 'Status Changed' %}
+            {% endif %}
+
             <tr>
                 {#<td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
                 {#<td>{{ entity.currentid }}</td>#}
@@ -47,11 +54,7 @@
 
                 <td>{% if entity.changedate %}{{ entity.changedate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>
-                    {% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}
-                        Comment Added
-                    {% else %}
-                        Status Changed
-                    {% endif %}
+                    {{ type }}
                 </td>
                 <td>
                     {{ entity.newstatus }}

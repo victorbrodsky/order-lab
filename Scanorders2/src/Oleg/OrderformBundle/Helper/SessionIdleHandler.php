@@ -16,6 +16,10 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+use Oleg\OrderformBundle\Helper\UserUtil;
+
+//This handle will (independently from JS) verify if max idle time out is reached and logout user on the first page redirect or reload
+
 class SessionIdleHandler
 {
 
@@ -23,17 +27,22 @@ class SessionIdleHandler
     protected $securityContext;
     protected $router;
     protected $maxIdleTime;
+    protected $em;
 
-    public function __construct(SessionInterface $session, SecurityContextInterface $securityContext, RouterInterface $router, $maxIdleTime = 0)
+    public function __construct(SessionInterface $session, SecurityContextInterface $securityContext, RouterInterface $router, $em )
     {
         $this->session = $session;
         $this->securityContext = $securityContext;
         $this->router = $router;
-        $this->maxIdleTime = $maxIdleTime;
+        $this->em = $em;
+
+        $userUtil = new UserUtil();
+        $this->maxIdleTime = $userUtil->getMaxIdleTime($this->em);
     }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+
         if (HttpKernelInterface::MASTER_REQUEST != $event->getRequestType()) {
 
             return;
@@ -44,18 +53,17 @@ class SessionIdleHandler
             $this->session->start();
             $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
 
-            //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
-            //echo "console.log(".$msg.")";
+            $msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
+            //echo $msg;
+            //exit();
 
             if ($lapse > $this->maxIdleTime) {
 
-                $this->securityContext->setToken(null);
-                $this->session->getFlashBag()->set('info', 'You have been logged out due to inactivity.');
+                $event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
 
-                // Change the route if you are not using FOSUserBundle.
-                $event->setResponse(new RedirectResponse($this->router->generate('fos_user_security_login')));
             }
         }
     }
+
 
 }

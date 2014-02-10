@@ -222,6 +222,11 @@ class MultyScanOrderController extends Controller {
                 $entity->setStatus($status);
             }
 
+            if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
+                $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
+                $entity->setStatus($status);
+            }
+
             //echo "cicle=".$cicle."<br>";
             //exit();
 
@@ -229,12 +234,7 @@ class MultyScanOrderController extends Controller {
 
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type );
 
-            if( isset($_POST['btnSave']) ) {
-                $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');             
-                $entity->setStatus($status);
-            }
-
-            if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) ) {
+            if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) ) {
 
                 $conflictStr = "";
                 foreach( $entity->getDataquality() as $dq ) {
@@ -247,11 +247,16 @@ class MultyScanOrderController extends Controller {
                 $email = $user->getEmail();
                 $emailUtil = new EmailUtil();
 
-
                 if( isset($_POST['btnAmend']) ) {
                     $text =
                         "Thank You For Your Order !\r\n"
                         . "Order #" . $entity->getId() . " Successfully Amended.\r\n"
+                        . "Confirmation Email was sent to " . $email . "\r\n";
+                } else
+                if( isset($_POST['btnSave']) ) {
+                    $text =
+                        "Thank You For Your Order !\r\n"
+                        . "Your Order #" . $entity->getId() . " is saved but not submitted.\r\n"
                         . "Confirmation Email was sent to " . $email . "\r\n";
                 } else {
                     $text = null;
@@ -272,11 +277,8 @@ class MultyScanOrderController extends Controller {
                 ));
             }
 
-            if (isset($_POST['btnSave'])) {
-//                $response = $this->forward('OlegOrderformBundle:ScanOrder:multi', array(
-//                    'id'  => $entity->getId(),
-//                ));
-                $this->showMultyAction($entity->getId(), "edit");
+            if( isset($_POST['btnSaveOnIdleTimeout']) ) {
+                return $this->redirect($this->generateUrl('idlelogout'));
             }
 
         }
@@ -437,6 +439,14 @@ class MultyScanOrderController extends Controller {
             $entity = $entities[0];
         }
 
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+
+        //if show not submitted => change url
+        if( $entity->getStatus()."" == "Not Submitted" && $routeName != "multy_edit" ) {
+            return $this->redirect($this->generateUrl('multy_edit',array('id'=>$entity->getId())));
+        }
+
         //echo $entity;
         //echo $entity->getStatus();
         //echo "<br>Procedure count=".count( $entity->getProcedure() );
@@ -568,9 +578,6 @@ class MultyScanOrderController extends Controller {
         }
 
         $disable = true;
-
-        $request = $this->container->get('request');
-        $routeName = $request->get('_route');
 
         if( $type == "edit" || $routeName == "multy_edit") {
             $disable = false;

@@ -58,6 +58,7 @@
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><a href="{{ path('admin_index') }}">DB Manager</a></li>
                                 <li><a href="{{ path('logger') }}">Login Logs</a></li>
+                                <li><a href="{{ path('siteparameters') }}">Site Parameters</a></li>
                             {% endif %}
 
                         </ul>

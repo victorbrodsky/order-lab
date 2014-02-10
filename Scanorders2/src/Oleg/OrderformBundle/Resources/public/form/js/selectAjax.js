@@ -154,7 +154,7 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
     }
 
     var targetid = "";
-    if( cicle == "new" || cicle == "amend" && preset ) {
+    if( cicle == "new" || (cicle == "amend" && preset) || (cicle == "edit" && preset) ) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         targetid = id+"specialStains_"+ids[6]+"_staintype";

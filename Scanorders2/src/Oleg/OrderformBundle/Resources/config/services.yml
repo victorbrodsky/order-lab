@@ -1,7 +1,7 @@
 parameters:
 
     #idle time in seconds: 60 min * 60 sec = 3600 seconds
-    session_max_idle_time: 1800
+#    session_max_idle_time: 3600
 
 
 #framework:
@@ -100,10 +100,10 @@ services:
         class: Oleg\OrderformBundle\Security\Authentication\LdapManager
         arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%]
 
-
+    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
     oleg.handler.session_idle:
         class: Oleg\OrderformBundle\Helper\SessionIdleHandler
-        arguments: ["@session", "@security.context", "@router", %session_max_idle_time%]
+        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

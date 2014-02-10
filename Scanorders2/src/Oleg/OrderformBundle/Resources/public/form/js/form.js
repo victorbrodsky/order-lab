@@ -674,52 +674,6 @@ function initSingleDatepicker( datepickerElement ) {
     });
 }
 
-//https://github.com/ehynds/jquery-idle-timeout
-function idleTimeout() {
-
-//    jQuery("#dialog").dialog({
-//        autoOpen: false,
-//        modal: true,
-//        width: 400,
-//        height: 200,
-//        closeOnEscape: false,
-//        draggable: false,
-//        resizable: false,
-//        buttons: {
-//            'Yes, Keep Working': function(){
-//                jQuery(this).dialog('close');
-//            },
-//            'No, Logoff': function(){
-//                // fire whatever the configured onTimeout callback is.
-//                // using .call(this) keeps the default behavior of "this" being the warning
-//                // element (the dialog in this case) inside the callback.
-//                $.idleTimeout.options.onTimeout.call(this);
-//            }
-//        }
-//    });
-
-    // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
-    var $countdown = $("#dialog-countdown");
-
-    // start the idle timer plugin
-//    $.idleTimeout('#idle-timeout', '', {
-//        idleAfter: 10,
-//        pollingInterval: 5,
-//        keepAliveURL: 'keepalive/',
-//        //serverResponseEquals: 'OK',
-//        onTimeout: function(){
-//            //window.location = "timeout.htm";
-//        },
-//        onIdle: function(){
-//            //$(this).dialog("open");
-//        },
-//        onCountdown: function(counter){
-//            $countdown.html(counter); // update the counter
-//        }
-//    });
-}
-
-
 
 function printF(element,text) {
     var str = "id="+element.attr("id") + ", class=" + element.attr("class")

@@ -2044,7 +2044,7 @@ function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
 }
 
 function cleanValidationAlert() {
-    if( cicle == "new" || cicle == "amend" ) {
+    if( cicle == "new" || cicle == "amend" || cicle == "edit" ) {
         $('.validationerror-added').each(function() {
             $(this).remove();
         });

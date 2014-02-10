@@ -12,11 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Oleg\OrderformBundle\Entity\User;
+//use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Oleg\OrderformBundle\Helper\SessionIdleHandler;
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 class SecurityController extends Controller
 {
+
     /**
      * @Route("/login", name="login")
      * @Method("GET")
@@ -28,6 +30,15 @@ class SecurityController extends Controller
         //$user = $this->get('security.context')->getToken()->getUser();
         //echo "Login page. User=".$user."<br>";
         //exit();
+
+        //display_width and height are null because html page is rendered after php code.
+        //To get width and height we can use ajax call to php.
+        $request = $this->container->get('request');
+        $options = array();
+        $em = $this->getDoctrine()->getManager();
+        $userUtil = new UserUtil();
+        $options['event'] = "Login Page Visit";
+        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
 
         $request = $this->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
@@ -53,19 +64,86 @@ class SecurityController extends Controller
 
     }
 
+
+    //////////////// Idle Time Out ////////////////////
+
     /**
      * @Route("/keepalive/", name="keepalive")
      * @Method("GET")
      */
-    public function loginCheckAction( Request $request )
+    public function keepAliveAction( Request $request )
     {
+        //echo "keep Alive Action! <br>";
+
         $response = new Response();
-        //$response->headers->set('Content-Type', 'application/json');
-        $response->setContent('OK');
+
+        $userUtil = new UserUtil();
+        $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+
+        if( $maxIdleTime > 0 ) {
+
+            $session = $request->getSession();
+            //$this->session->start();
+            $lapse = time() - $session->getMetadataBag()->getLastUsed();
+
+            $msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
+            //echo "console.log(".$msg.")";
+            //echo $msg;
+            //$this->logoutUser($event);
+            //exit();
+
+            if( $lapse > $maxIdleTime ) {
+                $response->setContent('over lapse = '.($lapse-$maxIdleTime));
+            } else {
+                $response->setContent('OK');
+            }
+
+        } else {
+            $response->setContent('NOTOK');
+        }
+
         return $response;
-        //return "OK";
     }
 
+    /**
+     * @Route("/idlelogout", name="idlelogout")
+     * @Template()
+     */
+    public function idlelogoutAction()
+    {
+        echo "logout Action! <br>";
+        //exit();
+
+        $userUtil = new UserUtil();
+        $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.'
+        );
+
+        $this->get('security.context')->setToken(null);
+        //$this->get('request')->getSession()->invalidate();
+        return $this->redirect($this->generateUrl('login'));
+    }
+
+    /**
+     * @Route("/getmaxidletime/", name="getmaxidletime")
+     * @Method("GET")
+     */
+    public function getmaxidletimeAction( Request $request )
+    {
+
+        $userUtil = new UserUtil();
+        $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+
+        $response = new Response();
+        $response->setContent($maxIdleTime);
+
+        return $response;
+    }
+
+   
 //    /**
 //     * @Route("/login_check", name="login_check")
 //     * @Method("POST")
@@ -81,18 +159,15 @@ class SecurityController extends Controller
 //     * @Route("/logout", name="logout")
 //     * @Template()
 //     */
-//    public function logoutAction( Request $request )
+//    public function logoutAction()
 //    {
+//        echo "logout Action! <br>";
+//        //exit();
 //
 //        $this->get('security.context')->setToken(null);
 //        $this->get('request')->getSession()->invalidate();
-//
-//        //return $this->forward('OlegOrderformBundle:Security:login');
 //        return $this->redirect($this->generateUrl('login'));
 //    }
-
-
-
 
 }
 

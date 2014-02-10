@@ -49,9 +49,12 @@
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
         {% endif %}
 
-        {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
-                and form.vars.value.status != 'Amended' and not Filled
-                and not OnHold or is_granted('ROLE_ADMIN') and form.vars.value.status != 'Submitted'
+        {% if   form.vars.value.status != 'Submitted' and
+                form.vars.value.status != 'Canceled' and
+                form.vars.value.status != 'Amended' and not
+                Filled and not
+                OnHold or
+                is_granted('ROLE_ADMIN') and form.vars.value.status != 'Submitted'
         %}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
@@ -109,8 +112,6 @@
     {#<input type="hidden" id="formtype" value="multi" />#}
     <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcicle" value="{{ type }}" />
-    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-
 
     {#{{ formmacros.dataQualityWidget(form.dataquality)}}#}
 
@@ -422,7 +423,9 @@
                     <p><button class="btn_margin_top btn btn-primary btn-success" name="btnAmend" type="submit">Amend</button></p>
                 {% else %}
                     <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
-                    <p><button id="save_order_btn" class="btn btn-default" name="btnSave" type="submit" style="display: none;">Save and Continue Later</button></p>
+                    {#style="display: none;"#}
+                    <p><button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;">Save and Continue Later</button></p>
+                    {#<p><button id="save_order_btn" class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>#}
                 {% endif %}
             </div>
         </div>

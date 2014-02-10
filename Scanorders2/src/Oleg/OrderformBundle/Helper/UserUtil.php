@@ -174,16 +174,21 @@ class UserUtil {
         $username = null;
         $roles = null;
 
-        $userAgent = $_SERVER['HTTP_USER_AGENT'];
-
-        //echo "userAgent=".$userAgent."<br>";
+        if( !array_key_exists('serverresponse', $options) ) {
+            $options['serverresponse'] = null;
+        }
 
         $token = $security_content->getToken();
 
         if( $token ) {
             $user = $security_content->getToken()->getUser();
             $username = $token->getUsername();
-            $roles = $user->getRoles();
+            //print_r($user);
+            if( $user && is_object($user) ) {
+                $roles = $user->getRoles();
+            } else {
+                $user = null;
+            }
         } else {
             $username = $request->get('_username');
         }
@@ -204,6 +209,27 @@ class UserUtil {
         $em->persist($logger);
         $em->flush();
 
+    }
+
+    public function getMaxIdleTime($em) {
+
+        $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+
+        if( !$params ) {
+            throw new \Exception( 'Parameter object is not found' );
+        }
+
+        if( count($params) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+        }
+
+        $param = $params[0];
+        $maxIdleTime = $param->getMaxIdleTime();
+
+        //return time in seconds
+        $maxIdleTime = $maxIdleTime * 60;
+
+        return $maxIdleTime;
     }
 
 }

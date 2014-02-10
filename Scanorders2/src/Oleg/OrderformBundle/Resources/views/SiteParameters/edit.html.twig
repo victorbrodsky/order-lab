@@ -1,0 +1,23 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block content %}
+
+    <h3 class="text-info">Site Parameters</h3>
+
+    <br>
+
+    {#{{ formmacros.field(edit_form.maxIdleTime) }}#}
+    {#{{ form_rest(edit_form) }}#}
+
+    {{ form(edit_form) }}
+
+    <br>
+    <br>
+
+    <a href="{{ path('siteparameters') }}">
+        Back to the list
+    </a>
+
+{% endblock %}
