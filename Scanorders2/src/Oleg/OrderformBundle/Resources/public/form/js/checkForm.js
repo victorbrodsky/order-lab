@@ -29,6 +29,10 @@ $(document).ready(function() {
         arrayFieldShow.push("disident")
     }
 
+    $("#save_order_onidletimeout_btn").click(function() {
+        $(this).attr("clicked", "true");
+    });
+
     //validation on form submit
     $("#scanorderform").on("submit", function () {
         return validateForm();
@@ -1754,11 +1758,19 @@ function getPartNumberElement( element, single ) {
 
 function validateForm() {
 
-    //var existingErrors = 0;
+    //console.log("validateForm enter");
+    //return false;
+
+    var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
+    //console.log("saveClick="+ saveClick);
 
     var checkExisting = checkExistingKey("accession");
     if( !checkExisting ) {
         if( orderformtype == "single") {
+            if( saveClick == 'true' ) {
+                //console.log( " single accession existing error => logout without saving");
+                idlelogout();   //we have errors on the form, so logout without saving form
+            }
             return false;
         }
         //existingErrors++;
@@ -1771,17 +1783,29 @@ function validateForm() {
     }
 
     if( $('.maskerror-added').length > 0 ) {
+        if( saveClick == 'true' ) {
+            //console.log( " mrn existing error => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
         return false;
     }
 
     var checkMrnAcc = checkMrnAccessionConflict();
     if( !checkMrnAcc ) {
+        if( saveClick == 'true' ) {
+            //console.log( " mrn-accession conflict => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
         return false;
     }
 
     //console.log("validateForm: error length="+$('.maskerror-added').length);
 
     if( $('.maskerror-added').length > 0 ) {
+        if( saveClick == 'true' ) {
+            //console.log( $('.maskerror-added').length+ " error(s) => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
         return false;
     }
 
@@ -1953,7 +1977,7 @@ function checkMrnAccessionConflict() {
 
                         //console.log('mrn='+mrn+', mrntype='+mrntype);
 
-                        if( mrn == mrnValue && mrntype == mrntypeValue ) {
+                        if( mrn == mrnValue && ( mrntype == mrntypeValue || 13 == mrntypeValue ) ) {    //13 - Auto-generated MRN. Need it for edit or amend form
                             //console.log("validated successfully !");
                         } else {
                             //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);

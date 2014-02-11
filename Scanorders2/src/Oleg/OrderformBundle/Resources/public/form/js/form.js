@@ -529,7 +529,7 @@ function setNavBar() {
 
     var full = window.location.pathname;
 
-    var id = 0;
+    var id = 4;
 
     if( full.indexOf("/index") !== -1 || full.indexOf("/multi/") !== -1 ) {
         id = 4;

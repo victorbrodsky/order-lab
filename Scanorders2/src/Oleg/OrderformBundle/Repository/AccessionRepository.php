@@ -54,11 +54,14 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             return $accession;
         }
 
-        echo "process Accession: ".$accession;
-        $this->printTree( $accession->getParent()->getParent() );
+        //echo "process Accession: ".$accession;
+        //$this->printTree( $accession->getParent()->getParent() );
 
         //process data quality
         $currentDataquality = null;
+
+        //echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
+
         foreach( $orderinfo->getDataquality() as $dataquality) {
 
             $accessionConflict = false;
@@ -66,12 +69,21 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
             //check if this dataquality's patient is corresponds to accession patient
             $mrn = $dataquality->getMrn();
-            $mrntype = $dataquality->getMrntype()->getId();
+            $mrntype = $dataquality->getMrntype();
             $validMrn = $accession->getParent()->getParent()->obtainValidKeyfield();
             $accmrn = $validMrn->getField();
-            $accmrntype = $validMrn->getKeytype()->getId();
-            //echo "compare patient: ".$mrn ."==". $accmrn ."&&". $mrntype ."==". $accmrntype."<br>";
-            if( $mrn == $accmrn && $mrntype == $accmrntype ) {
+            $accmrntype = $validMrn->getKeytype();
+            //echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
+
+            if( $mrn && $mrn != '' && $accmrn && $accmrn != '' ) {
+                //valid values are not empty
+            } else {
+                //echo "skip!!! <br>";
+                $orderinfo->removeDataquality($dataquality);
+                continue;   //remove and skip this dataquality
+            }
+
+            if( $mrn == $accmrn && trim($mrntype) == trim($accmrntype) ) {
                 $patientConflict = true;
                 //break;
             }

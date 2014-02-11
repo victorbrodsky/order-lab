@@ -294,6 +294,7 @@ class CheckController extends Controller {
                 $extraid = $parentKey->getKeytype()->getId()."";
                 $mrnkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extraid);
                 if( $mrnkeytype == "Auto-generated MRN" ) {
+                    //set to "Existing Auto-generated MRN" in order to correct set select2 to "Existing Auto-generated MRN"
                     $newkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
                     $extraid = $newkeytype->getId()."";
                 }

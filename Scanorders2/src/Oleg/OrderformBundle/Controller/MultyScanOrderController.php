@@ -223,6 +223,7 @@ class MultyScanOrderController extends Controller {
             }
 
             if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
+                $cicle = 'edit';
                 $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
                 $entity->setStatus($status);
             }
@@ -232,9 +233,10 @@ class MultyScanOrderController extends Controller {
 
             //$entity->setCicle($cicle);
 
+            /////////////////// process and save form //////////////////////////////
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type );
 
-            if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) ) {
+            if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
                 $conflictStr = "";
                 foreach( $entity->getDataquality() as $dq ) {
@@ -253,7 +255,7 @@ class MultyScanOrderController extends Controller {
                         . "Order #" . $entity->getId() . " Successfully Amended.\r\n"
                         . "Confirmation Email was sent to " . $email . "\r\n";
                 } else
-                if( isset($_POST['btnSave']) ) {
+                if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
                     $text =
                         "Thank You For Your Order !\r\n"
                         . "Your Order #" . $entity->getId() . " is saved but not submitted.\r\n"
@@ -270,6 +272,10 @@ class MultyScanOrderController extends Controller {
                     $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
                 }
 
+                if( isset($_POST['btnSaveOnIdleTimeout']) ) {
+                    return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));
+                }
+
                 return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                     'oid' => $entity->getOid(),
                     'conflicts' => $conflicts,
@@ -277,9 +283,6 @@ class MultyScanOrderController extends Controller {
                 ));
             }
 
-            if( isset($_POST['btnSaveOnIdleTimeout']) ) {
-                return $this->redirect($this->generateUrl('idlelogout'));
-            }
 
         }
 

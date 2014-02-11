@@ -32,7 +32,7 @@ function idleTimeout() {
     var $countdown = $("#dialog-countdown");
 
     var urlCommonIdleTimeout = "http://"+urlBase+"/keepalive/";
-    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
+    //var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
 
     //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
     //idleAfter: 1800 sec => 30min*60sec =
@@ -48,27 +48,32 @@ function idleTimeout() {
         keepAliveURL: urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
         onTimeout: function(){
-            console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
-            //collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/logout
-            if( $('#save_order_onidletimeout_btn').length > 0 ) {
-                console.log("save!!!!!!!!!!!");
-                //save if all fields are not empty
+            //$('#next_button_multi').trigger('click');
+            keepWorking();
+            $('#save_order_onidletimeout_btn').show();
+            //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
+
+            if( $('#save_order_onidletimeout_btn').length > 0 &&
+                ( cicle == "new" || cicle == "amend" || cicle == "edit" )
+            ) {
+                //console.log("save!!!!!!!!!!!");
+                //save if all fields are not empty; don't validate
                 $('#save_order_onidletimeout_btn').trigger('click');
             } else {
-                console.log("logout");
-                window.location = urlIdleTimeoutLogout;
+                //console.log("logout");
+                idlelogout();
             }
         },
         onIdle: function(){
-            console.log("on idle");
+            //console.log("on idle");
             $('#idle-timeout').modal('show');
         },
         onCountdown: function(counter){
-            console.log("on Countdown");
+            //console.log("on Countdown");
             $countdown.html(counter); // update the counter
         },
         onAbort: function(){
-            window.location = urlIdleTimeoutLogout;
+            idlelogout();
         }
     });
 }
@@ -82,4 +87,15 @@ function logoff() {
     //console.log("logoff");
     var urlRegularLogout = "http://"+urlBase+"/logout";
     window.location = urlRegularLogout;
+}
+
+function idlelogout() {
+    //console.log("logoff");
+//    var str = "";
+//    if( saveorder && saveorder == 'saveorder'  ) {
+//        str = "?opt=saveorder";
+//    }
+    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout"; //+str;
+    //console.log("urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+    window.location = urlIdleTimeoutLogout;
 }

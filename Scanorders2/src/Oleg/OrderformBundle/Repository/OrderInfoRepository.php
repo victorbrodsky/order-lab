@@ -81,12 +81,18 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //set correct mrntype
             $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $dataquality->getMrntype() );
             $dataquality->setMrntype($mrntype);
+
+            //set correct accessiontype
+            $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $dataquality->getAccessiontype() );
+            $dataquality->setAccessiontype($accessiontype);
+
             $dataquality->setOrderinfo($entity);
             $dataquality->setProvider($entity->getProvider()->first());
             $dataquality->setStatus('active');
 
 //            echo "dataquality: description=".$dataquality->getDescription()."<br>";
 //            echo "dataquality: accession=".$dataquality->getAccession()."<br>";
+//            echo "dataquality: accessionType=".$dataquality->getAccessiontype()."<br>";
 //            echo "dataquality: mrn=".$dataquality->getMrn()."<br>";
 //            echo "dataquality: mrn text=".$dataquality->getMrntype()."<br>";
 
@@ -139,6 +145,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         $originalStatus = $entity->getStatus();
 
+        if( $originalStatus == 'Not Submitted' ) {
+            $entity->setOid(null);
+        }
+
         if( $originalStatus == 'Amended' ) {
 
             $originalId = $entity->getOid();
@@ -181,6 +191,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo $elem;
 //        }
 
+        //echo "oid=".$entity->getOid()."<br>";
+        //echo "id=".$entity->getId()."<br>";
         //exit('orderinfo repo exit');
 
         //create new orderinfo

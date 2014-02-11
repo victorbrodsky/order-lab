@@ -107,9 +107,10 @@ class SecurityController extends Controller
 
     /**
      * @Route("/idlelogout", name="idlelogout")
+     * @Route("/idlelogout/{flag}", name="idlelogout-saveorder")
      * @Template()
      */
-    public function idlelogoutAction()
+    public function idlelogoutAction( Request $request, $flag = null )
     {
         echo "logout Action! <br>";
         //exit();
@@ -117,9 +118,20 @@ class SecurityController extends Controller
         $userUtil = new UserUtil();
         $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
 
+//        if( !$flag || $flag == '' ) {
+//            //$request = $this->get('request');
+//            $flag = trim( $request->get('opt') );
+//        }
+
+        if( $flag && $flag == 'saveorder' ) {
+            $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+        } else {
+            $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
+        }
+
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.'
+            $msg
         );
 
         $this->get('security.context')->setToken(null);

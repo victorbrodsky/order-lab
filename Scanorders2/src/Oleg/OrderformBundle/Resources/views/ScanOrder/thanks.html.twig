@@ -5,6 +5,8 @@
 
     {% if cicle == 'new' %}
         {% set cicleStr = 'Submitted' %}
+    {% elseif cicle == 'edit' %}
+        {% set cicleStr = 'Saved' %}
     {% else %}
         {% set cicleStr = 'Amended' %}
     {% endif %}
