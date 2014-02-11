@@ -11,20 +11,22 @@ namespace Oleg\OrderformBundle\Repository;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
-    public function attachToParentAndOrderinfo( $part, $block, $orderinfo ) {
+    public function attachToParent( $part, $block ) {
 
         $childClass = new \ReflectionClass($block);
         $childClassName = $childClass->getShortName();
         //echo "childClassName=".$childClassName."<br>";
+
         if( $childClassName == "Slide" ) {
-            parent::attachToParentAndOrderinfo( $part, $block, $orderinfo );
+            parent::attachToParent( $part, $block );
             return;
         }
 
         if( $block ) {
-            //echo $block;
-            //do it, if the block is new. If nlock has ID then it was found in DB and it was created by someone else.
-            if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) {
+
+            //echo "adding block?:  ".$block;
+            //do it, if the block is new. If block has ID then it was found in DB and it was created by someone else.
+            //if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) {
                 //echo "block slides=".count($block->getChildren())."<br>";
                 //add only if this block has slides
                 if( count($block->getChildren()) > 0 ) {
@@ -36,11 +38,8 @@ class PartRepository extends ArrayFieldAbstractRepository
                     $part->removeBlock($block);
                     $block->setPart(null);
                 }
-            }
+            //}
             //echo $block;
-
-            $orderinfo->addBlock($block);
-            //echo "PartRepo: add orderinfo for Block, :".$orderinfo;
 
         }
 

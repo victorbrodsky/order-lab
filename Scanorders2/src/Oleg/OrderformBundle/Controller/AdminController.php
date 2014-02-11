@@ -73,7 +73,7 @@ class AdminController extends Controller
         $count_RegionToScan = $this->generateRegionToScan();
         $count_siteParameters = $this->generateSiteParameters();
         $userutil = new UserUtil();
-        //$count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
+        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
 
         $this->get('session')->getFlashBag()->add(
@@ -93,7 +93,7 @@ class AdminController extends Controller
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Site Parameters='.$count_siteParameters.' '.
-            //'Users='.$count_users.
+            'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
 

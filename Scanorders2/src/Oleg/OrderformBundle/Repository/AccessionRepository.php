@@ -48,6 +48,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         return $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($extra["keytype"]);
     }
 
+    //process conflict if exists
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
         if( count($orderinfo->getDataquality()) == 0 ) {

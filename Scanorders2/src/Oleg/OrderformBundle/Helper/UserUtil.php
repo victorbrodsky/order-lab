@@ -216,7 +216,9 @@ class UserUtil {
         $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
 
         if( !$params ) {
-            throw new \Exception( 'Parameter object is not found' );
+            //new DB does not have SiteParameters object
+            return 1800; //30 min
+            //throw new \Exception( 'Parameter object is not found' );
         }
 
         if( count($params) != 1 ) {

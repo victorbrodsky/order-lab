@@ -82,8 +82,11 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $em = $this->_em;
         $accession = $em->getRepository('OlegOrderformBundle:Accession')->changeKeytype($accession);
 
-        //echo "add Accession to orderinfo <br>";
-        $orderinfo->addAccession($accession);
+        //add accession and procedure to orderinfo
+        $attached = $this->attachToOrderinfo($accession,$orderinfo);
+        if( $attached ) {
+            $this->attachToOrderinfo($procedure,$orderinfo);
+        }
 
         if( !$procedure->getId() || $procedure->getId() == "" ) {
             //echo "persist Procedure<br>";
@@ -92,8 +95,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             //echo "merge Procedure<br>";
             //$em->merge($entity);
         }
-
-        //echo "acc proc count=".count($procedure->getAccession()->first()->getProcedure())."<br>";
 
         return $procedure;
     }

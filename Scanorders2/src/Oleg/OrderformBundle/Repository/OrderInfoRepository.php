@@ -114,8 +114,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->addPatient($patient);
         }
        
-//        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-//        foreach( $entity->getPatient() as $patient ) {
+        //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+        //foreach( $entity->getPatient() as $patient ) {
 //            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first().", status=".$patient->getName()->first()->getStatus()."<br>";
 //////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 //////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
@@ -127,7 +127,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "<br>--------------------------<br>";
 //            $this->printTree( $patient );
 //            echo "--------------------------<br>";
-//        }
+        //}
 
         //echo $entity;
 //        echo "<br>Accession count=".count($patient->getProcedure()->first()->getAccession())."<br>";

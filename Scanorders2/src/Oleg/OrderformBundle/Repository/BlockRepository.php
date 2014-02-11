@@ -15,7 +15,7 @@ namespace Oleg\OrderformBundle\Repository;
 class BlockRepository extends ArrayFieldAbstractRepository
 {
 
-    public function attachToParentAndOrderinfo( $block, $slide, $orderinfo ) {
+    public function attachToParent( $block, $slide ) {
 
 //        //echo "slide type=".$slide->getSlidetype()."<br>";
 //        //echo $slide;

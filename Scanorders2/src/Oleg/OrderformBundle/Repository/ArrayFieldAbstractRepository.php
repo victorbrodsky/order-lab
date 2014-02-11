@@ -87,7 +87,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             if( $found ) {
                 //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
-                //CopyChildren
+                //CopyChildren: copy form's object children to the found one.
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
                     $found->addChildren( $child );
@@ -137,10 +137,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $entity->removeChildren($child);
             $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
 
-            //add children and orderinfo
-            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParentAndOrderinfo( $entity, $child, $orderinfo );
+            //add children
+            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParent( $entity, $child );
 
         }
+
+        //link entity with orderinfo
+        $em->getRepository('OlegOrderformBundle:'.$className)->attachToOrderinfo( $entity, $orderinfo );
 
         if( !$entity->getId() || $entity->getId() == "" ) {
             //echo "persist ".$className."<br>";
@@ -158,19 +161,32 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
-    public function attachToParentAndOrderinfo( $entity, $child, $orderinfo ) {
+    public function attachToParent( $entity, $child ) {
         //echo "start adding to orderinfo <br>";
         if( $child ) {
             $entity->addChildren($child);
-
-            //add orderinfo if oid is not set yet => new orderinfo. If oid is set then it is un-canceled order and it already has links to its children objects(patients, parts, blocks, slides ...)
-            //link entity with orderinfo
-            $childClass = new \ReflectionClass($child);
-            $childClassName = $childClass->getShortName();
-            $addClassMethod = "add".$childClassName;    //"addPatient"
-            $orderinfo->$addClassMethod($child);
-
         }
+    }
+
+    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
+    public function attachToOrderinfo( $entity, $orderinfo ) {
+
+        $ret = 0;
+
+        $className = new \ReflectionClass($entity);
+        $shortClassName = $className->getShortName();
+        $addClassMethod = "add".$shortClassName;    //"addPatient"
+
+        if( count($entity->getChildren()) > 0 ) {
+        //if( $entity->countChildrenWithOrderinfo($orderinfo) > 0 ) {
+            $orderinfo->$addClassMethod($entity);
+            $ret = 1;
+        }
+
+        //echo "added to orderinfo: ".$shortClassName." ret=".$ret.", count=".count($entity->getChildren())."<br>";
+        //echo $entity."<br>";
+
+        return $ret;
     }
 
     public function processDuplicationKeyField($entity,$orderinfo) {
