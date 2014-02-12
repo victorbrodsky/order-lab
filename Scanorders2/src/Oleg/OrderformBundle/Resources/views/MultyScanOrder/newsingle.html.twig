@@ -56,7 +56,7 @@
     <input type="hidden" id="orderformtype" value="single" />
     {#<input type="hidden" id="formtype" value="multi" />#}
     <input type="hidden" id="formcicle" value="{{ cycle }}" />
-    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+    {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
     
     <form id="scanorderform" action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}

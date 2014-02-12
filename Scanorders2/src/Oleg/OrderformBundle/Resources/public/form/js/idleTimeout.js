@@ -19,7 +19,7 @@ function idleTimeout() {
         //dataType: 'json',
         async: false,
         success: function (data) {
-            console.debug("data="+data);
+            //console.debug("data="+data);
             _idleAfter = data;
         },
         error: function () {

@@ -523,54 +523,56 @@ function bindDeleteBtn( uid ) {
 
 function setNavBar() {
 
-    var index_arr = window.location.pathname.split('/');
-
     $('ul.li').removeClass('active');
 
     var full = window.location.pathname;
 
-    var id = 4;
+    var id = 'single';
 
     if( full.indexOf("/index") !== -1 || full.indexOf("/multi/") !== -1 ) {
-        id = 4;
+        id = 'index';
     }
 
     if( full.indexOf("multi/clinical") !== -1 ) {
-        id = 1;
+        id = 'clinical';
     }
 
     if ( full.indexOf("multi/educational") !== -1 ) {
-        id = 2;
+        id = 'edu';
     }
 
     if( full.indexOf("multi/research") !== -1 ) {
-        id = 3;
+        id = 'res';
+    }
+
+    if( full.indexOf("multi/table") !== -1 ) {
+        id = 'table';
     }
 
     if( full.indexOf("/history/") !== -1 ) {
-        id = "4_1";
+        id = "history";
     }
 
     if( full.indexOf("/user/listusers") !== -1 ) {
-        id = 5;
+        id = 'admin';
     }
     
     if( full.indexOf("/admin/") !== -1 ) {
-        id = 5;
+        id = 'admin';
     }
     
     if( full.indexOf("/user/") !== -1 ) {
-        if( $('#5') ) {
-           id = 6; 
+        if( $('#nav-bar-admin') ) {
+           id = 'user';
         } else {
-           id = 5;
+           id = 'admin';
         }
         
     }  
 
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
-    $('#'+id).addClass('active');
+    $('#nav-bar-'+id).addClass('active');
 }
 
 

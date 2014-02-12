@@ -48,34 +48,29 @@ class OrderInfoType extends AbstractType
         ));
 
         //add children
-        $builder->add('patient', 'collection', array(
-            'type' => new PatientType($this->params,$this->entity),    //$this->type),
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => " ",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patient__',
-        ));
+        if( $this->params['type'] != 'Multi-Slide Table' ) {
+            $builder->add('patient', 'collection', array(
+                'type' => new PatientType($this->params,$this->entity),    //$this->type),
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => " ",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patient__',
+            ));
+        }
 
         //echo "<br>type=".$this->type."<br>";
 
-        if( $this->params['type'] == 'Educational Multi-Slide Scan Order' ) {
-            //echo " add type educational ";
+        if( $this->params['type'] == 'Educational Multi-Slide Scan Order' || $this->params['type'] == 'Multi-Slide Table' ) {
             $builder->add( 'educational', new EducationalType(), array('label'=>'Educational:') );
         }
 
-        if( $this->params['type'] == 'Research Multi-Slide Scan Order' ) {
-            //echo " add type research ";
+        if( $this->params['type'] == 'Research Multi-Slide Scan Order' || $this->params['type'] == 'Multi-Slide Table' ) {
             $builder->add( 'research', new ResearchType(), array('label'=>'Research:') );
         }
 
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-//            $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'form-control form-control-modif');    //show
-//        }
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');
         $builder->add('pathologyService', 'custom_selector', array(
             'label' => 'Pathology Service:',
@@ -99,11 +94,6 @@ class OrderInfoType extends AbstractType
         $builder->add( 'priority', 'choice', $priorityArr);
 
         //slideDelivery
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-//            $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'form-control form-control-modif');    //show
-//        }
         $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
         $builder->add('slideDelivery', 'custom_selector', array(
             'label' => '* Slide Delivery:',           
@@ -111,12 +101,6 @@ class OrderInfoType extends AbstractType
             'required'=>true,
             'classtype' => 'slideDelivery'
         ));
-
-//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-//            $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');    //new
-//        } else {
-//            $attr = array('class' => 'form-control form-control-modif');    //show
-//        }
 
         $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');
         $builder->add('returnSlide', 'custom_selector', array(

@@ -32,6 +32,7 @@
     {% stylesheets
         'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
         'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+        'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
         'bundles/olegorderform/form/css/form.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -106,6 +107,7 @@
             '@OlegOrderformBundle/Resources/public/datepicker/js/*'
             '@OlegOrderformBundle/Resources/public/select2/select2.js'
             '@OlegOrderformBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+            '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
             '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
             '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
             '@OlegOrderformBundle/Resources/public/form/js/partRadios.js'
@@ -117,6 +119,7 @@
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
             '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+            '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

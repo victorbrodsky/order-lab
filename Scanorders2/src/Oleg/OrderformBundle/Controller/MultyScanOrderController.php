@@ -687,4 +687,44 @@ class MultyScanOrderController extends Controller {
         return $html;
 
     }
+
+    /**
+     * @Route("/multi/table/new", name="table_create")
+     * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
+     */
+    public function multiTableCreationAction()
+    {
+
+        $entity = new OrderInfo();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $source = 'scanorder';
+
+        $entity->setProvider($user);
+
+        $patient = new Patient(true,'invalid',$user,$source);
+        $entity->addPatient($patient);
+
+
+        $type = "Educational Multi-Slide Scan Order";
+        $edu = new Educational();
+        $entity->setEducational($edu);
+
+        $type = "Research Multi-Slide Scan Order";
+        $res = new Research();
+        $entity->setResearch($res);
+
+        $service = $user->getPathologyServices();
+
+        $type = "Multi-Slide Table";
+
+        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
+        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
+
+        return $this->render('OlegOrderformBundle:MultyScanOrder:newtable.html.twig', array(
+            'form' => $form->createView(),
+            'cycle' => 'new'
+        ));
+    }
+
 }
