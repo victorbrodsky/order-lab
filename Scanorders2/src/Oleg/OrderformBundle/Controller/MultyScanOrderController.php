@@ -112,23 +112,24 @@ class MultyScanOrderController extends Controller {
         $entity->setProvider($user);
 
         $status = 'invalid';
+        $source = 'scanorder';
 
-        $patient = new Patient(true,$status,$user);
+        $patient = new Patient(true,$status,$user,$source);
         $entity->addPatient($patient);
 
-        $procedure = new Procedure(true,$status,$user);
+        $procedure = new Procedure(true,$status,$user,$source);
         $patient->addProcedure($procedure);
 
-        $accession = new Accession(true,$status,$user);
+        $accession = new Accession(true,$status,$user,$source);
         $procedure->addAccession($accession);
 
-        $part = new Part(true,$status,$user);
+        $part = new Part(true,$status,$user,$source);
         $accession->addPart($part);
 
-        $block = new Block(true,$status,$user);
+        $block = new Block(true,$status,$user,$source);
         $part->addBlock($block);
 
-        $slide = new Slide(true,'valid',$user); //Slides are always valid by default
+        $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
         $block->addSlide($slide);
         
 
@@ -322,24 +323,26 @@ class MultyScanOrderController extends Controller {
         //echo "MultyScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 
+        $source = 'scanorder';
+
         $entity->setProvider($user);
 
-        $patient = new Patient(true,'invalid',$user);
+        $patient = new Patient(true,'invalid',$user,$source);
         $entity->addPatient($patient);
 
-        $procedure = new Procedure(true,'invalid',$user);
+        $procedure = new Procedure(true,'invalid',$user,$source);
         $patient->addProcedure($procedure);
 
-        $accession = new Accession(true,'invalid',$user);
+        $accession = new Accession(true,'invalid',$user,$source);
         $procedure->addAccession($accession);
 
-        $part = new Part(true,'invalid',$user);
+        $part = new Part(true,'invalid',$user,$source);
         $accession->addPart($part);
 
-        $block = new Block(true,'invalid',$user);
+        $block = new Block(true,'invalid',$user,$source);
         $part->addBlock($block);
 
-        $slide = new Slide(true,'valid',$user); //Slides are always valid by default
+        $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
         $block->addSlide($slide);
 
         $request = $this->container->get('request');

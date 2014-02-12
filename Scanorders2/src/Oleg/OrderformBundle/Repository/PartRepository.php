@@ -11,6 +11,52 @@ namespace Oleg\OrderformBundle\Repository;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
+    //ift this element does not have any slide belonging to this order (with id=null) or children (empty branch for this orderinfo),
+    //so remove this element and all its parents from orderinfo
+    public function attachToOrderinfo( $entity, $orderinfo ) {
+
+        $children = $entity->getChildren();
+
+        $ret = 0;
+        $countNotEmptyChildren = 0;
+
+        foreach( $children as $child ) {
+            $childClass = new \ReflectionClass($child);
+            $childClassName = $childClass->getShortName();
+            if( $childClassName == "Block" ) {
+                //echo "check if this block has slides belongs to this orderinfo <br>";
+                $slides = $child->getChildren();
+                foreach( $slides as $slide ) {
+                    $res = $this->isEntityBelongsToOrderinfo( $slide, $orderinfo );
+                    if( $res ) {
+                        $countNotEmptyChildren++;
+                    }
+                }
+            } else
+            if( $childClassName == "Slide") {
+                //echo "check if this slide belongs to this orderinfo <br>";
+                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+                if( $res ) {
+                    $countNotEmptyChildren++;
+                }
+            } else {
+                throw new \Exception('Part has not valid child of the class ' . $childClassName );
+            }
+        }
+
+        if( $countNotEmptyChildren == 0 ) {
+            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+            $ret = -1;
+        } else {
+            //echo "added to orderinfo: Part ret=".$ret.", count=".count($entity->getChildren())."<br>";
+            //echo $entity."<br>";
+            $orderinfo->addPart($entity);
+            $ret = 1;
+        }
+
+        return $ret;
+    }
+
     public function attachToParent( $part, $block ) {
 
         $childClass = new \ReflectionClass($block);

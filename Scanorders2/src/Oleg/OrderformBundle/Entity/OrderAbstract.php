@@ -369,17 +369,17 @@ abstract class OrderAbstract
         return $count;
     }
 
-    //TODO: compare two orderinfo: dirty and from db?
-    //get children which belongs to provided orderinfo
-    public function countChildrenWithOrderinfo($orderinfo) {
-        $children = $this->getChildren();
-        $count = 0;
-        foreach( $children as $child ) {
-            if( $child->getOrderinfo() == $orderinfo ) {
-                $count ++;
-            }
-        }
-        return $count;
-    }
+//    //TODO: compare two orderinfo: dirty and from db?
+//    //get children which belongs to provided orderinfo
+//    public function countChildrenWithOrderinfo( $orderinfo ) {
+//        $children = $this->getChildren();
+//        $count = 0;
+//        foreach( $children as $child ) {
+//            if( $child->getOrderinfo() == $orderinfo ) {
+//                $count ++;
+//            }
+//        }
+//        return $count;
+//    }
 
 }

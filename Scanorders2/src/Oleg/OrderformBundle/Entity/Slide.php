@@ -81,7 +81,7 @@ class Slide extends OrderAbstract
      **/
     protected $orderinfo; 
     
-    public function __construct( $withfields=false, $status='valid', $provider=null )
+    public function __construct( $withfields=false, $status='valid', $provider=null, $source=null )
     {
         parent::__construct($status,$provider);
         $this->scan = new ArrayCollection();
@@ -90,10 +90,10 @@ class Slide extends OrderAbstract
         $this->relevantScans = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addRelevantScan( new RelevantScans($status,$provider) );
-            $this->addSpecialStain( new SpecialStains($status,$provider) );
-            $this->addScan( new Scan($status,$provider) );
-            $this->addStain( new Stain($status,$provider) );
+            $this->addRelevantScan( new RelevantScans($status,$provider,$source) );
+            $this->addSpecialStain( new SpecialStains($status,$provider,$source) );
+            $this->addScan( new Scan($status,$provider,$source) );
+            $this->addStain( new Stain($status,$provider,$source) );
         }
     }
 

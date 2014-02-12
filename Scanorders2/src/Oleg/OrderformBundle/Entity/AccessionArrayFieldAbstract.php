@@ -27,7 +27,7 @@ abstract class AccessionArrayFieldAbstract extends ArrayFieldAbstract {
      * Set accession
      *
      * @param \Oleg\OrderformBundle\Entity\Accession $accession
-     * @return AccessionArrayFieldAbstract
+     * @return Accession Field
      */
     public function setAccession(\Oleg\OrderformBundle\Entity\Accession $accession = null)
     {

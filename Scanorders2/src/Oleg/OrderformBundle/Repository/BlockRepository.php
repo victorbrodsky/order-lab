@@ -15,6 +15,44 @@ namespace Oleg\OrderformBundle\Repository;
 class BlockRepository extends ArrayFieldAbstractRepository
 {
 
+    //ift this element does not have any slide belonging to this order (with id=null) (empty branch for this orderinfo),
+    //so remove this element and all its parents from orderinfo
+    public function attachToOrderinfo( $entity, $orderinfo ) {
+
+        $children = $entity->getChildren();
+
+        $ret = 0;
+        $countNotEmptyChildren = 0;
+
+        foreach( $children as $child ) {
+            $childClass = new \ReflectionClass($child);
+            $childClassName = $childClass->getShortName();
+            if( $childClassName == "Slide") {
+                //echo "check if this slide belongs to this orderinfo <br>";
+                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+                if( $res ) {
+                    $countNotEmptyChildren++;
+                }
+            } else {
+                throw new \Exception('Block has not valid child of the class ' . $childClassName );
+            }
+        }
+
+        if( $countNotEmptyChildren == 0 ) {
+            //echo "block: start removing parents ################################ <br>";
+            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+            //echo "block: finished removing parents ############################### <br>";
+            $ret = -1;
+        } else {
+            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
+            //echo $entity."<br>";
+            $orderinfo->addBlock($entity);
+            $ret = 1;
+        }
+
+        return $ret;
+    }
+
     public function attachToParent( $block, $slide ) {
 
 //        //echo "slide type=".$slide->getSlidetype()."<br>";

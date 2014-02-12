@@ -40,7 +40,7 @@ class Accession extends OrderAbstract {
      **/
     protected $orderinfo;
       
-    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+    public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);
         $this->part = new ArrayCollection();
 
@@ -48,7 +48,7 @@ class Accession extends OrderAbstract {
         $this->accession = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addAccession( new AccessionAccession($status,$provider) );
+            $this->addAccession( new AccessionAccession($status,$provider,$source) );
         }
     }
 

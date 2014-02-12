@@ -9,6 +9,9 @@ namespace Oleg\OrderformBundle\Repository;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
+    public function attachToOrderinfo( $entity, $orderinfo ) {
+        return 0;   //don't add accession here. Added in Procedure's 'setResult' method
+    }
 
     public function changeKeytype($entity) {
         $key = $entity->obtainValidKeyField();
@@ -119,21 +122,24 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //1) take care of mrn-accession conflict: replace accession# with ACCESSIONNONPROVIDED:
         $accession->setId(null); //make sure to generate a new accession
         $accession->setStatusAllKeyfield(self::STATUS_INVALID);
-        $nextKey = $this->getNextNonProvided($accession,null,$orderinfo);
         $accession->createKeyField();
 
-        //set new accession number to dataquality
-        $currentDataquality->setNewaccession($nextKey);
         $em = $this->_em;
         $acctype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
-        $currentDataquality->setNewaccessiontype($acctype);
 
         //we should have only one key field !!!
         $key = $accession->obtainValidKeyField();
-        $key->setField($nextKey);
         $key->setKeytype($acctype);
         $key->setStatus(self::STATUS_VALID);
+        $key->setSource('scanorder');
         $key->setProvider($orderinfo->getProvider()->first());
+
+        $nextKey = $this->getNextNonProvided($accession,null,$orderinfo);
+        $key->setField($nextKey);
+
+        //set new accession number to dataquality
+        $currentDataquality->setNewaccession($nextKey);
+        $currentDataquality->setNewaccessiontype($acctype);
 
 //        echo "<br>-----------------Original Accession:<br>";
 //        $this->printTree( $accession );

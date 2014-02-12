@@ -46,6 +46,9 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         //this does not work on postgresql because id is set before creating a new element in DB (before flush)
         if( !$slide->getId() || $slide->getId() == "" ) {
             $orderinfo->addSlide($slide);
+        } else {
+            //the potential parent of this slide is an empty branch for this orderinfo (it does not have a slide belonging to this order), so remove all parents from orderinfo
+            //do this removal in part and block repo
         }
 
         return $slide;

@@ -81,7 +81,7 @@ class Part extends OrderAbstract
      */
     protected $slide;
     
-    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+    public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
@@ -96,13 +96,13 @@ class Part extends OrderAbstract
         $this->diseaseType = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addPartname( new PartPartname($status,$provider) );
-            $this->addSourceOrgan( new PartSourceOrgan($status,$provider) );
-            $this->addDescription( new PartDescription($status,$provider) );
-            $this->addDisident( new PartDisident($status,$provider) );
-            $this->addPaper( new PartPaper($status,$provider) );
-            $this->addDiffDisident( new PartDiffDisident($status,$provider) );
-            $this->addDiseaseType( new PartDiseaseType($status,$provider) );
+            $this->addPartname( new PartPartname($status,$provider,$source) );
+            $this->addSourceOrgan( new PartSourceOrgan($status,$provider,$source) );
+            $this->addDescription( new PartDescription($status,$provider,$source) );
+            $this->addDisident( new PartDisident($status,$provider,$source) );
+            $this->addPaper( new PartPaper($status,$provider,$source) );
+            $this->addDiffDisident( new PartDiffDisident($status,$provider,$source) );
+            $this->addDiseaseType( new PartDiseaseType($status,$provider,$source) );
         }
     }
 

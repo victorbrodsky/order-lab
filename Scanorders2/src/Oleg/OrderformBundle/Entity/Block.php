@@ -45,7 +45,7 @@ class Block extends OrderAbstract
     protected $orderinfo; 
 
     
-    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+    public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);
         $this->slide = new ArrayCollection();
 
@@ -54,8 +54,8 @@ class Block extends OrderAbstract
         $this->sectionsource = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addBlockname( new BlockBlockname($status,$provider) );
-            $this->addSectionsource( new BlockSectionsource($status,$provider) );
+            $this->addBlockname( new BlockBlockname($status,$provider,$source) );
+            $this->addSectionsource( new BlockSectionsource($status,$provider,$source) );
         }
     }
 

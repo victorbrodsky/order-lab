@@ -41,7 +41,7 @@ class Procedure extends OrderAbstract
      **/
     protected $orderinfo; 
 
-    public function __construct( $withfields=false, $status='invalid', $provider=null ) {
+    public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);
         $this->accession = new ArrayCollection();
 
@@ -50,8 +50,8 @@ class Procedure extends OrderAbstract
         $this->encounter = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addName( new ProcedureName($status,$provider) );
-            $this->addEncounter( new ProcedureEncounter($status,$provider) );
+            $this->addName( new ProcedureName($status,$provider,$source) );
+            $this->addEncounter( new ProcedureEncounter($status,$provider,$source) );
         }
     }
 

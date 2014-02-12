@@ -169,7 +169,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
-    public function attachToOrderinfo( $entity, $orderinfo ) {
+    public function attachToOrderinfo_OLD( $entity, $orderinfo ) {
 
         $ret = 0;
 
@@ -178,7 +178,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $addClassMethod = "add".$shortClassName;    //"addPatient"
 
         if( count($entity->getChildren()) > 0 ) {
-        //if( $entity->countChildrenWithOrderinfo($orderinfo) > 0 ) {
+            //if( $entity->countChildrenWithOrderinfo($orderinfo) > 0 ) {
             $orderinfo->$addClassMethod($entity);
             $ret = 1;
         }
@@ -187,6 +187,84 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo $entity."<br>";
 
         return $ret;
+    }
+
+    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
+    public function attachToOrderinfo( $entity, $orderinfo ) {
+
+        $className = new \ReflectionClass($entity);
+        $shortClassName = $className->getShortName();
+        $addClassMethod = "add".$shortClassName;    //"addPatient"
+
+        $ret = 0;
+        $countNotEmptyChildren = 0;
+
+        $children = $entity->getChildren();
+
+        foreach( $children as $child ) {
+            //echo "check if this slide belongs to this orderinfo <br>";
+            $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+            if( $res ) {
+                $countNotEmptyChildren++;
+            }
+        }
+
+        if( $countNotEmptyChildren == 0 ) {
+            //echo "block: start removing parents ################################ <br>";
+            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+            //echo "block: finished removing parents ############################### <br>";
+            $ret = -1;
+        } else {
+            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
+            //echo $entity."<br>";
+            $orderinfo->$addClassMethod($entity);
+            $ret = 1;
+        }
+
+        //echo "added to orderinfo?: ".$shortClassName." ret=".$ret.", childCount=".count($entity->getChildren())."<br>";
+        //echo $entity."<br>";
+
+        return $ret;
+    }
+
+    //TODO: this method wwill not work on postgresql because id is pre-set for not flushed entity
+    public function isEntityBelongsToOrderinfo( $entity, $orderinfo ) {
+
+        //echo "check if belongs to orderinfo. entity: ".$entity;
+
+        //this condition will not work on postgresql because id is preset for not existing entity
+        if( $orderinfo->getId() && $orderinfo->getId() != '' ) {
+//            if( $entity->getOrderinfo()->first()->getId() == $orderinfo->getId() ) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+            //echo "no: orderinfo has id <br>";
+            return false;
+        } else {
+            //if slide does not have id then this is a new slide which belongs to this new orderinfo
+            if( $entity->getId() && $entity->getId() != '' ) {
+                //echo "no: entity has id <br>";
+                return false;
+            } else {
+                //echo "yes !!!<br>";
+                return true;
+            }
+        }
+
+    }
+
+    public function removeThisAndAllParentsFromOrderinfo( $entity, $orderinfo ) {
+        $className = new \ReflectionClass($entity);
+        $shortClassName = $className->getShortName();
+        $removeClassMethod = "remove".$shortClassName;    //"removePatient"
+        //echo 'removing '.$shortClassName."<br>";
+
+        $orderinfo->$removeClassMethod($entity);
+        $parent = $entity->getParent();
+        if( $parent ) {
+            $this->removeThisAndAllParentsFromOrderinfo( $parent, $orderinfo );
+        }
     }
 
     public function processDuplicationKeyField($entity,$orderinfo) {
@@ -596,9 +674,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             if( $validKeyField && method_exists($validKeyField,'obtainExtraKey') ) {
                 $extra = $validKeyField->obtainExtraKey();
                 $keytype = $extra["keytype"];
+                //echo "keytype=".$keytype."<br>";
                 $extraStr = " cfield.keytype = ".$keytype." AND ";
             }
         }
+
+        //echo "name=".$name.", fieldName=".$fieldName.", className=".$className."<br>";
+        //echo "extraStr=".$extraStr.",<br>";
 
         $query = $this->getEntityManager()
         ->createQuery('

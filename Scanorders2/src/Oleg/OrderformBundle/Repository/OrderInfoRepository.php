@@ -180,8 +180,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
 //        echo $entity;
 //        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
-        //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-        //echo $entity->getPatient()->first();
+//        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+//        echo $entity->getPatient()->first();
 //        echo "<br>--------------------------<br>";
 //        $this->printTree( $entity->getPatient()->first() );
 //        echo "--------------------------<br>";
@@ -191,9 +191,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo $elem;
 //        }
 
-        //echo "oid=".$entity->getOid()."<br>";
-        //echo "id=".$entity->getId()."<br>";
-        //exit('orderinfo repo exit');
+//        echo "patients=".count($entity->getPatient())."<br>";
+//        echo "procedures=".count($entity->getProcedure())."<br>";
+//        echo "accessions=".count($entity->getAccession())."<br>";
+//        echo "parts=".count($entity->getPart())."<br>";
+//        echo "blocks=".count($entity->getBlock())."<br>";
+//        exit('orderinfo repo exit');
 
         //create new orderinfo
         $em = $this->_em;

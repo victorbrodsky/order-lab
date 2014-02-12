@@ -21,7 +21,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $accessions = $entity->getAccession();
 
         if( count($accessions) > 1 ) {
-            throw new \Exception( 'More then one Accession in the Procedure. Number of accession=' . count($accessions) );
+            throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
         }
 
         //we should have only one Accession in the Procedure, because Procedure-Accession is considered as one object for now
@@ -50,7 +50,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //echo "encounter=".$procedureProcessed->getEncounter()->first().", Name=".$procedureProcessed->getName()->first()."<br>";
         //echo "before process:".$entity;
 
-        //just process procedure (not setResult)
+        //process parent procedure processEntity method (setResult method is provided here)
         $procedureProcessed = parent::processEntity( $procedureProcessed, $orderinfo );
 
         //Exception for procedure: Final Step CopyFields
@@ -71,22 +71,26 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $procedure = $this->processFieldArrays($procedure,$orderinfo,$original);
 
         if( count($procedure->getAccession()) > 1 ) {
-            throw new \Exception( 'More then one Accession in the Procedure. Number of accession=' . count($procedure->getAccession()) );
+            throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($procedure->getAccession()) );
         }
 
         //link orderinfo with accession
         $accession = $procedure->getAccession()->first();
 
-        //TODO: why we have to process accession again? Do we have an oriiginal accession here?
+        //we have to process accession again because the original accession's methods exexutes by the end of orderinfo process
         $accession = $this->processFieldArrays($accession,$orderinfo);
         $em = $this->_em;
         $accession = $em->getRepository('OlegOrderformBundle:Accession')->changeKeytype($accession);
 
         //add accession and procedure to orderinfo
         $attached = $this->attachToOrderinfo($accession,$orderinfo);
-        if( $attached ) {
+        if( $attached > 0 ) {
             $this->attachToOrderinfo($procedure,$orderinfo);
+        } else {
+            //echo "do not add procedure:".$procedure;
         }
+
+        //echo "acc children=".count();
 
         if( !$procedure->getId() || $procedure->getId() == "" ) {
             //echo "persist Procedure<br>";

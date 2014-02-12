@@ -65,7 +65,7 @@ class Patient extends OrderAbstract
     /**
      * Constructor
      */
-    public function __construct( $withfields=false, $status='invalid', $provider=null )
+    public function __construct( $withfields=false, $status='invalid', $provider=null, $source = null )
     {
         parent::__construct($status,$provider);
         $this->procedure = new ArrayCollection();
@@ -79,12 +79,12 @@ class Patient extends OrderAbstract
         $this->clinicalHistory = new ArrayCollection();
 
         if( $withfields ) {
-            $this->addMrn( new PatientMrn($status,$provider) );
-            $this->addName( new PatientName($status,$provider) );
-            $this->addSex( new PatientSex($status,$provider) );
-            $this->addDob( new PatientDob($status,$provider) );
-            $this->addAge( new PatientAge($status,$provider) );
-            $this->addClinicalHistory( new PatientClinicalHistory($status,$provider) );
+            $this->addMrn( new PatientMrn($status,$provider,$source) );
+            $this->addName( new PatientName($status,$provider,$source) );
+            $this->addSex( new PatientSex($status,$provider,$source) );
+            $this->addDob( new PatientDob($status,$provider,$source) );
+            $this->addAge( new PatientAge($status,$provider,$source) );
+            $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$source) );
         }
 
     }
