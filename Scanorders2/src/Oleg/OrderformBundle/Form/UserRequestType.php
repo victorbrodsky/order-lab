@@ -77,7 +77,7 @@ class UserRequestType extends AbstractType
             'label'=>'Reason for account request:',
             'max_length'=>'1000',
             'required'=> false,
-            'attr' => array('class'=>'form-control form-control-modif'),
+            'attr' => array('class'=>'textarea form-control form-control-modif'),
         ));    
 
     }

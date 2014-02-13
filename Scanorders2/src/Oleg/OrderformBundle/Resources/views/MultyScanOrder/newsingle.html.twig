@@ -87,6 +87,8 @@
 
         <div id="form-prototype-data"
 
+             data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,cycle)|e }}"
+
              data-prototype-patientmrn=               "{{ mrnHtml|e }}"
              data-prototype-patientname=              "{{ nameHtml|e }}"
              data-prototype-patientsex=               "{{ sexHtml|e }}"
@@ -306,9 +308,11 @@
         {% endfor %}
     {% endfor %}
 
+
+    <div id="validationerror" style="padding-top: 2%"></div>
+
     {#{{ form_end(form) }}#}
     </form>
 
-    <div id="validationerror" style="padding-top: 2%"></div>
 
 {% endblock %}

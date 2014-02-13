@@ -8,16 +8,25 @@
 
     <br>
 
-    {#{{ formmacros.field(edit_form.maxIdleTime) }}#}
-    {#{{ form_rest(edit_form) }}#}
+    {#<form id="site-parameter" action="{{ path('siteparameters_update') }}" method="post" {{ form_enctype(edit_form) }}>#}
 
-    {{ form(edit_form) }}
+        {#{{ formmacros.field(edit_form.maxIdleTime) }}#}
+        {#{{ form_rest(edit_form) }}#}
+
+        {{ form(edit_form) }}
+
+
+        {#<p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Update</button></p>#}
+
+    {#</form>#}
 
     <br>
     <br>
 
+    <p>
     <a href="{{ path('siteparameters') }}">
         Back to the list
     </a>
+    </p>
 
 {% endblock %}

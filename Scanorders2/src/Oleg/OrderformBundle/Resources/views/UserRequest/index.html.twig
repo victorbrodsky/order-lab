@@ -6,7 +6,7 @@
 
 {% block content %} 
 
-    <h3 class="text-info">User Request List</h3>
+    <h3 class="text-info">Account Requests</h3>
 
     <table class="table table-hover table-condensed">
         <thead>
@@ -49,7 +49,11 @@
                 <td>{{ entity.organization }}</td>
                 <td>{{ entity.department }}</td>
                 <td>{{ entity.pathologyService }}</td>
-                <td> {{ entity.request[:10] ~ '...' }}</td>
+                <td>
+                    <textarea class="textarea form-control form-control-modif">
+                        {{ entity.request }}
+                    </textarea>
+                </td>
                 <td>
                     
 {#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}

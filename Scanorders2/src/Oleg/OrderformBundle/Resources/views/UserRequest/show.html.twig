@@ -47,11 +47,15 @@
             </tr>
             <tr>            
                 <th>Request</th>
+                {#<td>#}
+                    {#<textarea rows="4" cols="50">#}
+                        {#{{ entity.request }}#}
+                    {#</textarea>#}
+                    {##}
+                {#</td>             #}
                 <td>
-                    <textarea rows="4" cols="50">
-                        {{ entity.request }}
-                    </textarea>
-                </td>             
+                    <textarea class="textarea form-control form-control-modif">{{ entity.request }}</textarea>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -62,9 +66,9 @@
         </a>
     </p>
     
-    <form action="{{ path('accountrequest_delete', { 'id': entity.id }) }}" method="post">
-        <input type="hidden" name="_method" value="DELETE" />
-        {{ form_widget(delete_form) }}
-        <button type="submit">Delete</button>
-    </form>
+    {#<form action="{{ path('accountrequest_delete', { 'id': entity.id }) }}" method="post">#}
+        {#<input type="hidden" name="_method" value="DELETE" />#}
+        {#{{ form_widget(delete_form) }}#}
+        {#<button type="submit">Delete</button>#}
+    {#</form>#}
 {% endblock %}

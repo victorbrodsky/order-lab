@@ -225,6 +225,7 @@ class Accession extends OrderAbstract {
     }
 
     public function createKeyField() {
+        //echo "creating a new keyfield <br>";
         $this->addAccession( new AccessionAccession() );
         return $this->obtainKeyField();
     }

@@ -53,8 +53,11 @@ abstract class ArrayFieldAbstract {
     {
         $this->status = $status;
         $this->provider = $provider;
-//        $this->source = "scanorder";
-        $this->source = $source;
+        if( $source ) {
+            $this->source = $source;
+        } else {
+            $this->source = "scanorder";
+        }
     }
 
     public function __clone() {

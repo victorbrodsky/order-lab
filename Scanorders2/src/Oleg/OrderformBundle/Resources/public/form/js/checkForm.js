@@ -1765,12 +1765,14 @@ function validateForm() {
     //console.log("saveClick="+ saveClick);
 
     var checkExisting = checkExistingKey("accession");
+    //console.log( "accession checkExisting="+checkExisting);
     if( !checkExisting ) {
         if( orderformtype == "single") {
             if( saveClick == 'true' ) {
                 //console.log( " single accession existing error => logout without saving");
                 idlelogout();   //we have errors on the form, so logout without saving form
             }
+            //console.log( "WARNING SINGLE RETURN: checkExisting="+checkExisting);
             return false;
         }
         //existingErrors++;
@@ -1787,15 +1789,18 @@ function validateForm() {
             //console.log( " mrn existing error => logout without saving");
             idlelogout();   //we have errors on the form, so logout without saving form
         }
+        //console.log( "WARNING RETURN 1: maskerror-added.length="+$('.maskerror-added').length);
         return false;
     }
 
     var checkMrnAcc = checkMrnAccessionConflict();
+    //console.log( "checkMrnAcc="+checkMrnAcc);
     if( !checkMrnAcc ) {
         if( saveClick == 'true' ) {
             //console.log( " mrn-accession conflict => logout without saving");
             idlelogout();   //we have errors on the form, so logout without saving form
         }
+        //console.log( "WARNING RETURN: checkMrnAcc="+checkMrnAcc);
         return false;
     }
 
@@ -1806,6 +1811,7 @@ function validateForm() {
             //console.log( $('.maskerror-added').length+ " error(s) => logout without saving");
             idlelogout();   //we have errors on the form, so logout without saving form
         }
+        //console.log( "WARNING RETURN 2: maskerror-added.length="+$('.maskerror-added').length);
         return false;
     }
 
@@ -2000,6 +2006,7 @@ function checkMrnAccessionConflict() {
                             var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";
 
                             if( !prototype ) {
+                                //console.log('WARNING: conflict prototype is not found!!!');
                                 return false;
                             }
 
@@ -2022,8 +2029,10 @@ function checkMrnAccessionConflict() {
 
                             setDataqualityData( index, accValue, acctypeValue, mrnValue, mrntypeValue );
 
-                            totalError++;
                             index++;
+                            totalError++;
+
+                            //console.log('end of conflict process');
 
                         }
 
@@ -2060,7 +2069,7 @@ function setDataquality(index,message) {
 
 function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
-    //console.log(accession + " " + acctype + " " + mrn + " " + mrntype);
+    //console.log("setDataqualityData: "+accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'accessiontype').val(acctype);
     $(partid+'mrn').val(mrn);

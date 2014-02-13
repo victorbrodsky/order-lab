@@ -477,8 +477,9 @@ class CheckController extends Controller {
 
         if( $accession && $accession != ""  ) {
 
+            $user = $this->get('security.context')->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
-            $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession,$keytype);
+            $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($accession,$keytype,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             if( $part ) {
@@ -605,8 +606,9 @@ class CheckController extends Controller {
 
         if( $accession != "" && $partname != "" ) {
 
+            $user = $this->get('security.context')->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
-            $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$keytype,$partname);
+            $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($accession,$keytype,$partname,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             $user = $this->get('security.context')->getToken()->getUser();

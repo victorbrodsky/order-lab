@@ -75,6 +75,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $patients = $entity->getPatient();
         //echo $patients->first();
 
+//        echo "dataquality=".count($entity->getDataquality())."<br>";
+
         //process data quality
         foreach( $entity->getDataquality() as $dataquality) {
 
@@ -113,7 +115,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
             $entity->addPatient($patient);
         }
-       
+
+        //add slide's parnets recursevely to this orderinfo
+        $slides = $entity->getSlide();
+        foreach( $slides as $slide ) {
+            $this->addOrderinfoToThisAndAllParents( $slide, $entity );
+        }
+
+
         //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
         //foreach( $entity->getPatient() as $patient ) {
 //            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first().", status=".$patient->getName()->first()->getStatus()."<br>";
@@ -196,7 +205,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        echo "accessions=".count($entity->getAccession())."<br>";
 //        echo "parts=".count($entity->getPart())."<br>";
 //        echo "blocks=".count($entity->getBlock())."<br>";
-//        exit('orderinfo repo exit');
+//        echo "slides=".count($entity->getSlide())."<br>";
+        //exit('orderinfo repo exit');
 
         //create new orderinfo
         $em = $this->_em;
@@ -248,6 +258,46 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $em->clear();
 
         return $entity;
+    }
+
+
+    public function addOrderinfoToThisAndAllParents( $entity, $orderinfo ) {
+        $className = new \ReflectionClass($entity);
+        $shortClassName = $className->getShortName();
+        $addClassMethod = "add".$shortClassName;    //"addPatient"
+
+        if( $shortClassName == 'Patient' ) {    //don't add patient because it was added at the beginning on the controller
+            return false;
+        }
+
+        //echo '<br>adding '.$shortClassName."<br>";
+
+        //add if this object does not have yet this orderinfo (id=null)
+        $orders = $entity->getOrderinfo();
+        //echo "orders=".count($orders)."<br>";
+
+        //if at least one order of this object does not have id => new order => this order => return true
+        $thisOrderinfoCount = 0;
+        foreach( $orders as $order ) {
+            //echo "order id=".$order->getId()."<br>";
+            if( $order->getId() && $order->getId() != '' ) {
+                //echo "object has orderinfo with ID <br>";
+            } else {
+                $thisOrderinfoCount++;
+                //echo "order no ID !!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
+            }
+        }
+
+        //echo $shortClassName.': thisOrderinfoCount='.$thisOrderinfoCount.'<br>';
+        if( $thisOrderinfoCount == 0 ) {
+            $orderinfo->$addClassMethod($entity);
+        }
+
+        $parent = $entity->getParent();
+        //echo "parent = ".$parent;
+        if( $parent ) {
+            $this->addOrderinfoToThisAndAllParents( $parent, $orderinfo );
+        }
     }
 
 }

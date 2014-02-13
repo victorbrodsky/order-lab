@@ -53,6 +53,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( count($keys) == 0 ) {
             $entity->createKeyField();  //this should never execute in normal situation
+            throw new \Exception( 'Key field does not exists for '.$className );
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
             //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
@@ -143,7 +144,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //link entity with orderinfo
-        $em->getRepository('OlegOrderformBundle:'.$className)->attachToOrderinfo( $entity, $orderinfo );
+        //$em->getRepository('OlegOrderformBundle:'.$className)->attachToOrderinfo( $entity, $orderinfo );
 
         if( !$entity->getId() || $entity->getId() == "" ) {
             //echo "persist ".$className."<br>";
@@ -168,66 +169,98 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
     }
 
-    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
-    public function attachToOrderinfo_OLD( $entity, $orderinfo ) {
+//    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
+//    public function attachToOrderinfo_OLD( $entity, $orderinfo ) {
+//
+//        $ret = 0;
+//
+//        $className = new \ReflectionClass($entity);
+//        $shortClassName = $className->getShortName();
+//        $addClassMethod = "add".$shortClassName;    //"addPatient"
+//
+//        if( count($entity->getChildren()) > 0 ) {
+//            //if( $entity->countChildrenWithOrderinfo($orderinfo) > 0 ) {
+//            $orderinfo->$addClassMethod($entity);
+//            $ret = 1;
+//        }
+//
+//        //echo "added to orderinfo: ".$shortClassName." ret=".$ret.", count=".count($entity->getChildren())."<br>";
+//        //echo $entity."<br>";
+//
+//        return $ret;
+//    }
+//
+//    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
+//    public function attachToOrderinfo( $entity, $orderinfo ) {
+//
+//        return false;
+//
+//        $className = new \ReflectionClass($entity);
+//        $shortClassName = $className->getShortName();
+//        $addClassMethod = "add".$shortClassName;    //"addPatient"
+//        echo "<br>add to orderinfo: ".$shortClassName."<br>";
+//
+//        $ret = 0;
+//        $countNotEmptyChildren = 0;
+//
+//        $children = $entity->getChildren();
+//        echo "childrens=".count($entity->getChildren())."<br>";
+//
+//        foreach( $children as $child ) {
+//            //echo "check if this slide belongs to this orderinfo <br>";
+//            $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+//            if( $res ) {
+//                $countNotEmptyChildren++;
+//            }
+//        }
+//
+//        if( $countNotEmptyChildren == 0 ) {
+//            //echo "block: start removing parents ################################ <br>";
+//            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+//            //echo "block: finished removing parents ############################### <br>";
+//            $ret = -1;
+//        } else {
+//            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
+//            //echo $entity."<br>";
+//            $orderinfo->$addClassMethod($entity);
+//            $ret = 1;
+//        }
+//
+//        echo "added to orderinfo?: ".$shortClassName." ret=".$ret.", childCount=".count($entity->getChildren())."<br>";
+//        echo $entity."<br>";
+//
+//        return $ret;
+//    }
 
-        $ret = 0;
+    //if child has orderinfo without id => child belongs to this orderinfo
+    public function isEntityBelongsToOrderinfo_NEW( $entity, $orderinfo ) {
 
-        $className = new \ReflectionClass($entity);
-        $shortClassName = $className->getShortName();
-        $addClassMethod = "add".$shortClassName;    //"addPatient"
+        //echo "check if belongs to orderinfo. entity: ".$entity;
 
-        if( count($entity->getChildren()) > 0 ) {
-            //if( $entity->countChildrenWithOrderinfo($orderinfo) > 0 ) {
-            $orderinfo->$addClassMethod($entity);
-            $ret = 1;
+        $orders = $entity->getOrderinfo();
+
+        //echo "orders=".count($orders)."<br>";
+
+        //1) if object (ie part) does not have orderinfo => does not belong => return true
+        if( count($orders) == 0 ) {
+            //echo "yes!!! no orders <br>";
+            return true;
         }
 
-        //echo "added to orderinfo: ".$shortClassName." ret=".$ret.", count=".count($entity->getChildren())."<br>";
-        //echo $entity."<br>";
-
-        return $ret;
-    }
-
-    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
-    public function attachToOrderinfo( $entity, $orderinfo ) {
-
-        $className = new \ReflectionClass($entity);
-        $shortClassName = $className->getShortName();
-        $addClassMethod = "add".$shortClassName;    //"addPatient"
-
-        $ret = 0;
-        $countNotEmptyChildren = 0;
-
-        $children = $entity->getChildren();
-
-        foreach( $children as $child ) {
-            //echo "check if this slide belongs to this orderinfo <br>";
-            $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
-            if( $res ) {
-                $countNotEmptyChildren++;
+        //2a) if at least one order of this object does not have id => new order => this order => return true
+        foreach( $orders as $order ) {
+            //echo "order id=".$order->getId()."<br>";
+            if( $order->getId() && $order->getId() != '' ) {
+                //previous order
+                //echo "object has orderinfo with ID <br>";
+            } else {
+                //echo "order no ID !!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
+                return true;
             }
         }
-
-        if( $countNotEmptyChildren == 0 ) {
-            //echo "block: start removing parents ################################ <br>";
-            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
-            //echo "block: finished removing parents ############################### <br>";
-            $ret = -1;
-        } else {
-            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
-            //echo $entity."<br>";
-            $orderinfo->$addClassMethod($entity);
-            $ret = 1;
-        }
-
-        //echo "added to orderinfo?: ".$shortClassName." ret=".$ret.", childCount=".count($entity->getChildren())."<br>";
-        //echo $entity."<br>";
-
-        return $ret;
     }
 
-    //TODO: this method wwill not work on postgresql because id is pre-set for not flushed entity
+    //TODO: this method will not work on postgresql because id is pre-set for not flushed entity
     public function isEntityBelongsToOrderinfo( $entity, $orderinfo ) {
 
         //echo "check if belongs to orderinfo. entity: ".$entity;
@@ -242,14 +275,35 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "no: orderinfo has id <br>";
             return false;
         } else {
-            //if slide does not have id then this is a new slide which belongs to this new orderinfo
+
+            $orders = $entity->getOrderinfo();
+            //echo "orders=".count($orders)."<br>";
+
+            //1) if object (ie part) does not have orderinfo => does not belong => return true
+            if( count($orders) == 0 ) {
+                //echo "yes!!! no orders <br>";
+                return true;
+            }
+
+            //2a) if at least one order of this object does not have id => new order => this order => return true
+//            foreach( $orders as $order ) {
+//                if( $order->getId() && $order->getId() != '' ) {
+//                    //previous order
+//                    echo "object has orderinfo with ID <br>";
+//                } else {
+//                    return true;
+//                }
+//            }
+
+            //2) if object (ie part) does not have id then this is a new object which belongs to this new orderinfo
             if( $entity->getId() && $entity->getId() != '' ) {
-                //echo "no: entity has id <br>";
+                //echo "no: entity has id :".$entity;
                 return false;
             } else {
                 //echo "yes !!!<br>";
                 return true;
             }
+
         }
 
     }
@@ -400,10 +454,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function copyField( $entity, $field, $className, $methodName ) {
         $em = $this->_em;
         //echo "copyField!!!: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
-        //echo "this fields count=".count($fields)."<br>";
 
         $getMethod = "get".$methodName;
         $fields = $entity->$getMethod();
+
+        //echo "this fields count=".count($fields)."<br>";
 
         //if similar field is already set and provided field is empty => don't add provided field
         if( !$field || trim($field) == "" ) {
@@ -419,8 +474,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //add only if the field array does not already contain this valid field (by field name)
         foreach( $fields as $thisField ) {
+
+            //echo "authors field: ".$field->getProvider()."<br>";
+            //echo "author thisField: ".$thisField->getProvider()."<br>";
             //echo $methodName.": compare: (".$thisField.") ?= (".$field.") , status=".$thisField->getStatus()." => ";
-            //echo "authors: ".$thisField->getProvider()->getId() ."==". $field->getProvider()->getId()." => ";
+            //echo "author thisField: ".$thisField->getProvider()->getId() . " ";
+            //echo "authors field: ".$field->getProvider()->getId()." => ";
+
             if(
                 $thisField."" == $field."" &&
                 $thisField->getStatus() == self::STATUS_VALID &&
@@ -567,6 +627,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
     public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true ) {
+
+        //echo "Create Element: className=".$className."<br>";
+
+        if( !$provider ) {
+            throw new \Exception('Provider is not provided for creation of element '.$className);
+        }
+
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
@@ -625,6 +692,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "extra exists for field=".$field."# ";
             $extraEntity = $this->getExtraEntityById($extra);
             $field->setExtra($extraEntity);
+        }
+
+        if( $field && method_exists($field,'setOriginal') ) {
+            //strip zeros and record original
+            $originalKey = $field->getField();
+            $field->setOriginal($originalKey);
+            $stripedKey = ltrim($originalKey,'0');
+            $field->setField($stripedKey);
         }
         
 //        $keyAddMethod = "add".ucfirst($fieldName);

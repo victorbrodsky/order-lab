@@ -83,12 +83,14 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $accession = $em->getRepository('OlegOrderformBundle:Accession')->changeKeytype($accession);
 
         //add accession and procedure to orderinfo
-        $attached = $this->attachToOrderinfo($accession,$orderinfo);
-        if( $attached > 0 ) {
-            $this->attachToOrderinfo($procedure,$orderinfo);
-        } else {
-            //echo "do not add procedure:".$procedure;
-        }
+//        $attached = $this->attachToOrderinfo($accession,$orderinfo);
+//        if( $attached > 0 ) {
+//            //echo "add procedure ".$attached."<br>";
+//            //$this->attachToOrderinfo($procedure,$orderinfo);
+//            $orderinfo->addProcedure($procedure);
+//        } else {
+//            //echo "do not add procedure:".$procedure;
+//        }
 
         //echo "acc children=".count();
 

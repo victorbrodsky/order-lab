@@ -172,6 +172,10 @@ class MultyScanOrderController extends Controller {
 //        echo "accessionNum=".$accessionNum.", accessionType=".$accessionType."<br>";
 //        exit();
 
+        //$dataq = $form["dataquality"][0]["accession"]->getData();
+        //echo "dataq=".$dataq."<br>";
+        //exit();
+
         //check if the orderform already exists, so it's edit case
         //TODO: edit id is empty. Why??
 //        echo "id=".$entity->getId()."<br>";
