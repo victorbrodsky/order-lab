@@ -118,7 +118,7 @@ function checkFormSingle( elem ) {
     }
 
     //set when open options tabs
-    setMaxHeightSingleForm();
+    //setMaxHeightSingleForm();
 
     initOptionalParam();
 
