@@ -209,6 +209,8 @@
 
                             <div class="row">
 
+{% if 1 == 1 %}
+
                                 <ul class="nav nav-tabs" id="optional_param_tab">
                                     <li class="active"><a href="#patient" data-toggle="tab">Patient</a></li>
                                     <li><a href="#procedure" data-toggle="tab">Procedure</a></li>
@@ -230,19 +232,19 @@
                                     </div>
 
                                     <div class="tab-pane fade" id="part">
-                                      {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+                                          {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
 
-                                      {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+                                          {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
 
-                                      {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+                                          {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
 
-                                      <div id="partdisident_marker"></div>
-                                      {#{{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}#}
+                                          <div id="partdisident_marker"></div>
+                                          {#{{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}#}
 
-                                      {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
+                                          {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
 
-                                      {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
-                                </div>
+                                          {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
+                                    </div>
 
                                 <div class="tab-pane fade" id="block">
                                   {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
@@ -277,6 +279,123 @@
                                     {{ formmacros.field(form_slide.scan|first.scanregion) }}
                                 </div>
 
+{% else %}
+
+                                <div class="panel-group" id="accordion">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#patient">
+                                                    Patient
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="patient" class="panel-collapse collapse in">
+                                            {#<div class="panel-body" id="patient">#}
+                                                {{ formmacros.patientForm(form_patient,"check","0","new",form.vars.value.status) }}
+                                            {#</div>#}
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#procedure">
+                                                    Procedure
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="procedure" class="panel-collapse collapse">
+                                            {#<div class="panel-body" id="procedure">#}
+                                                {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
+                                            {#</div>#}
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#part">
+                                                    Part
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="part" class="panel-collapse collapse">
+                                            {#<div class="panel-body" id="part">#}
+
+                                                {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+
+                                                {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+
+                                                {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+
+                                                <div id="partdisident_marker"></div>
+
+                                                {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
+
+                                                {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
+                                            {#</div>#}
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#block">
+                                                    Block
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="block" class="panel-collapse collapse">
+                                            {#<div class="panel-body" id="part">#}
+                                                {#<div class="tab-pane fade" id="block">#}
+                                                {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
+                                                {#</div>#}
+                                            {#</div>#}
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#slide">
+                                                    Slide
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="slide" class="panel-collapse collapse">
+                                            {#<div class="tab-pane fade" id="slide">#}
+
+                                            {{ formmacros.field(form_slide.title) }}
+                                            {{ formmacros.field(form_slide.slidetype) }}
+                                            {{ formmacros.field(form_slide.microscopicdescr) }}
+                                            {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
+                                            {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
+
+                                            {#</div>#}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#scan">
+                                                    Scan
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="scan" class="panel-collapse collapse">
+                                            {{ formmacros.field(form_slide.scan|first.scanregion) }}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+{% endif %}
+
+
+
+
                             </div> <!-- row -->
 
                         </div>
@@ -296,7 +415,12 @@
             {#{{ form_rest(form_stain) }}#}
             
         </div>  <!-- class="panel panel-patient" -->
-    </div> <!-- singleorderinfo -->
+
+
+
+
+
+        </div> <!-- singleorderinfo -->
 
     </div>
 {#        <a class='btn_margin_top btn btn-primary' href="{{ path('orderinfo') }}">Back to the list</a>#}

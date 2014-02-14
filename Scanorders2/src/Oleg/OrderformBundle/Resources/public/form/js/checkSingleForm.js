@@ -186,14 +186,14 @@ function initOptionalParam() {
 
         elem.tab('show');
 
-//        window.setTimeout(
-//            function(){
-//                setMaxHeightSingleForm_one();
-//            },
-//            1000
-//        );
+        window.setTimeout(
+            function(){
+                setMaxHeightSingleForm_one();
+            },
+            500
+        );
 
-        //setMaxHeightSingleForm_one(elem);
+//        setMaxHeightSingleForm_one(elem);
 
     });
 
@@ -207,29 +207,37 @@ function setMaxHeightSingleForm_one() {
     var menuH = $('#optional_param_tab').height();
     console.log("menuH="+menuH);
 
-    var element = $('#optional_param_tab_body').find('.row');
-    //var element = $('#optional_param_tab_body').find('.option_info_panel');//.find('.active');
+    //var elementRownH = $('#optional_param_tab_body').find('.row').height();
+
+    var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
 
     printF(element);
 
     //var optionHeight = element.closest('.row').find('.option_info_panel').find('.active').height();
     var optionHeight = element.height();
 
-    var offset = menuH + 31;
+    //console.log("elementRownH="+elementRownH+", optionHeight="+optionHeight);
+    //var offset = elementRownH - optionHeight;   //8*menuH;
+    var offset = 7*menuH;
     console.log("offset="+offset);
 
-//    var partEl = element.find('.partdiseasetype');
-//    if( partEl.length > 0 ) {
-//        if( _countChange == 0 ) {
-//            optionHeight = optionHeight + offset;
-//            offset = 0;
-//        }
-//        _countChange++;
-//    }
+    var disEl = element.find('.partdiseasetype');
+    if( disEl.length > 0 ) {
+        console.log('disEl height='+disEl.height());
+        if( _countChange == 0 ) {
+            optionHeight = optionHeight + offset;
+            offset = 0;
+        }
+        _countChange++;
+    }
 
     console.log("1 optionHeight="+optionHeight+", _max_tab_height="+_max_tab_height);
 
     if( optionHeight > _max_tab_height ) {
+
+        if( _countChange > 1 ) {
+            optionHeight = optionHeight - offset;
+        }
 
         _max_tab_height = optionHeight;
 
@@ -258,6 +266,9 @@ function setMaxHeightSingleForm_one() {
 function setMaxHeightSingleForm() {
 
     removeMaxHeightSingleForm();
+
+    var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
+    $('.option_info_panel .tab-pane').height(element.height());
 
     return false;   //testing
 
