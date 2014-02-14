@@ -174,6 +174,7 @@
         <button id="next_button" type="button" class="btn btn-success" onclick="checkSingleFormOnNext(this)" data-toggle="collapse">Next</button>
 
 
+
         <div id="orderinfo_param" class="collapse">
             {{ formmacros.orderinfo_panel(form,"Order Info") }}
 
@@ -192,8 +193,8 @@
                     </button>
                 </p>
             </div>
-  
-            
+
+
             <div id="optional_param" class="collapse">
                 <div  class="panel panel-patient">
 
@@ -207,9 +208,13 @@
 
                         <div id="optional_param_tab_body" class="panel-body collapse in">
 
-                            <div class="row">
+                        <div class="row">
 
-{% if 1 == 1 %}
+{% set viewoption = 'tabs' %}
+{#{% set viewoption = 'verticaltabs' %}#}
+{#{% set viewoption = 'accordion' %}#}
+
+{% if viewoption == 'tabs' %}
 
                                 <ul class="nav nav-tabs" id="optional_param_tab">
                                     <li class="active"><a href="#patient" data-toggle="tab">Patient</a></li>
@@ -279,7 +284,66 @@
                                     {{ formmacros.field(form_slide.scan|first.scanregion) }}
                                 </div>
 
-{% else %}
+{% endif %}
+
+
+{% if viewoption == 'verticaltabs' %}
+    <!-- tabs left -->
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li><a href="#a" data-toggle="tab">One</a></li>
+            <li><a href="#b" data-toggle="tab">Two</a></li>
+            <li><a href="#c" data-toggle="tab">Twee</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="a">Lorem ipsum dolor sit amet, charetra varius quam sit amet vulputate.
+                Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero.</div>
+            <div class="tab-pane" id="b">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
+                Aliquam in felis sit amet augue.</div>
+            <div class="tab-pane" id="c">Thirdamuno, ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
+                Quisque mauris augue, molestie tincidunt condimentum vitae. </div>
+        </div>
+    </div>
+    <!-- /tabs -->
+
+                                <div class="tabbable tabs-left">
+                                    <ul class="nav nav-tabs " data-tabs="tabs">
+                                        <li class="active"><a href="#patient" data-toggle="tab">Patient</a></li>
+                                        <li><a href="#part" data-toggle="tab">Part</a></li>
+                                        <li><a href="#clothesTab" data-toggle="tab">Clothes</a></li>
+                                        <li><a href="#booksTab" data-toggle="tab">Book</a></li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade in active" id="patient">
+                                            {{ formmacros.patientForm(form_patient,"check","0","new",form.vars.value.status) }}
+                                        </div>
+                                        <div class="tab-pane fade" id="part">
+                                            {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+
+                                            {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+
+                                            {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+
+                                            <div id="partdisident_marker"></div>
+                                            {#{{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}#}
+
+                                            {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
+
+                                            {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
+                                        </div>
+                                        <div class="tab-pane fade" id="clothesTab">
+                                            clothing tab
+                                        </div>
+                                        <div class="tab-pane fade" id="booksTab">
+                                            books books books
+                                        </div>
+                                    </div>
+                                </div>
+
+{% endif %}
+
+{% if viewoption == 'accordion' %}
 
                                 <div class="panel-group" id="accordion">
                                     <div class="panel panel-info">

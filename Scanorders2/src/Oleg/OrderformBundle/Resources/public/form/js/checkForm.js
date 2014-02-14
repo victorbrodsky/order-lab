@@ -1563,7 +1563,7 @@ function removeKeyFromDB( element, btnElement, single ) {
         disableInElementBlock(btnElement, true, null, "notkey", null);
         invertButton(btnElement);
         setDefaultMask(btnElement);
-        setMaxHeightSingleForm();
+        //setMaxHeightSingleForm();
     }
 
     function deleteError(btnElement,single) {
