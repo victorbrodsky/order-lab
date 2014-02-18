@@ -214,64 +214,6 @@ function initOptionalParam() {
 
 }
 
-function setDiseaseRadioSingleTab() {
-    console.log('set Disease Radio Single Tab !!!!');
-    removeMaxHeightSingleForm();
-    window.setTimeout(
-        function(){
-            setOneTabMaxHeightSingleForm();
-        },
-        500
-    );
-}
-
-var _countChange = 0;
-function setOneTabMaxHeightSingleForm_OLD() {
-
-    //removeMaxHeightSingleForm();
-    //printF(element);
-
-    //var elementRownH = $('#optional_param_tab_body').find('.row').height();
-    //var elementRownH = $('#optional_param_tab_body').height();
-    //var elementRownH = $('#optional_param').height();
-    //console.log("elementRownH="+elementRownH);
-
-    var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
-    var optionHeight = element.height();
-
-    console.log("1 optionHeight="+optionHeight+", _max_tab_height="+_max_tab_height + ", _countChange="+_countChange);
-
-    //calculate offset
-    var ua = window.navigator.userAgent
-    //console.log('ua='+ua);
-    //if( 0 ) {
-    if( ua.toLowerCase().indexOf('chrome') != -1 ) {  //chrome
-
-        console.log('chrome!');
-
-        var menuH = $('#optional_param_tab').height()
-        console.log("menuH="+menuH);
-        var offset = 10*menuH;
-
-        var partdiseasetypeH = $('.partdiseasetype').height();
-        console.log('partdiseasetypeH='+partdiseasetypeH);
-        var offset = partdiseasetypeH;
-
-        optionHeight = calculateHeight();
-        offset = 0;
-
-    } else {    //others
-
-        console.log('others!');
-        //chrome does not detect height correctly
-        var elementRownH = $('#optional_param_tab_body').find('.row').height();
-        var offset = elementRownH - optionHeight;
-
-    }
-
-    setHeight(optionHeight,offset);
-
-}
 
 function setOneTabMaxHeightSingleForm() {
     var optionHeight = calculateHeight();
@@ -289,6 +231,8 @@ function calculateHeight() {
 
         var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
         var optionHeight = element.height();
+        //console.log('optionHeight='+optionHeight);
+        //console.log( 'optional_param_tab_body H=' + $('#optional_param_tab_body').height() );
 
 //        var disEl = element.find('.partdiseasetype');
 //        if( disEl.length > 0 ) {
@@ -325,18 +269,37 @@ function calculateHeight() {
 //        }
 
 
-        var menuH = $('#optional_param_tab').height()
-        console.log("menuH="+menuH);
-        var offset = 10*menuH;
+//        var menuH = $('#optional_param_tab').height()
+//        console.log("menuH="+menuH);
+//        var offset = 10*menuH;
 
     } else {
         var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
         var optionHeight = element.height();
     }
 
+
+    var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
+    var optionHeight = element.height();
+
+    //element.removeAttr('style');
+    element.css({
+            position:   'absolute', // Optional if #myDiv is already absolute
+            //visibility: 'hidden',
+            display:    'block'
+        });
+
+    var optionHeight = element.height();
+
+    //element.removeAttr('style');
+
+    console.log('optionHeight='+optionHeight);
+    console.log( 'optional_param_tab_body H=' + $('#optional_param_tab_body').height() );
+
+
     //return optionHeight;
 
-    //setHeight( optionHeight, offset );
+    setHeight( optionHeight, offset );
 }
 
 function setHeight( optionHeight, offset ) {
@@ -358,9 +321,9 @@ function setHeight( optionHeight, offset ) {
     console.log("optionHeight="+optionHeight+", _max_tab_height="+_max_tab_height + ", _countChange="+_countChange);
     if( optionHeight > _max_tab_height ) {
 
-        if( offset && _countChange > 1 ) {
-            optionHeight = optionHeight - offset;
-        }
+//        if( offset && _countChange > 1 ) {
+//            optionHeight = optionHeight - offset;
+//        }
 
         _max_tab_height = optionHeight;
 
@@ -384,43 +347,4 @@ function removeMaxHeightSingleForm() {
     //$('.option_info_panel .tab-pane').height('auto');
 }
 
-
-//function setMaxHeightSingleForm_OLD() {
-//
-//    removeMaxHeightSingleForm();
-//
-//    var element = $('#optional_param_tab_body').find('.option_info_panel').find('.active');
-//    $('.option_info_panel .tab-pane').height(element.height());
-//
-//    return false;   //testing
-//
-//    var menuH = $('#optional_param_tab').height();
-//
-//    $('.option_info_panel').find('.tab-pane').each( function() {
-//        $(this).removeAttr('style');
-//        $(this).css({
-//            position:   'absolute', // Optional if #myDiv is already absolute
-//            visibility: 'hidden',
-//            display:    'block'
-//        });
-//
-//        var optionHeight = $(this).height();
-//        var totalH = optionHeight;
-//
-//        //if( $(this).find('.partdiseasetype') ) {
-//        //var totalH = optionHeight + 4*menuH;
-//        //}
-//
-//        if( totalH > _max_tab_height ) {
-//            _max_tab_height = totalH;
-//        }
-//        //console.log("optionHeight="+optionHeight+", menuH="+menuH);
-//
-//        $(this).removeAttr('style');
-//
-//    });
-//
-//    //console.log( 'set max height='+_max_tab_height );
-//    $('.option_info_panel .tab-pane').height(_max_tab_height);
-//}
 

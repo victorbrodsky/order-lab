@@ -366,6 +366,10 @@ class MultyScanOrderController extends Controller {
             $entity->setResearch($res);
         } elseif( $routeName == "single_new") {
             $type = "One Slide Scan Order";
+            $edu = new Educational();
+            $entity->setEducational($edu);
+            $res = new Research();
+            $entity->setResearch($res);
         } else {
             $type = "One Slide Scan Order";
         }

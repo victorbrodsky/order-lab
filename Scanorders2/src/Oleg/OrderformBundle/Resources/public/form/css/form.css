@@ -116,7 +116,7 @@
 }
 
 .footer {
-    margin-top: 5%;
+    margin-top: 10%;
     /*float: left;*/
     /*width: 100%;*/
 }
@@ -186,14 +186,14 @@
     text-align:center;
 }
 
-.panel {
-    /*border-top: 7px solid #428bca;*/
+/*.panel*/
+.panel-multi-form {
     border-left: 7px solid;
 }
 
-.panel-heading {
-    height: 43px;
-}
+/*.panel-heading {*/
+    /*//height: 43px;*/
+/*}*/
 
 .panel-patient {
     border-color: #90BEE4;
@@ -276,10 +276,10 @@
 }
 
 /*shift left the buttons on the each form menu*/
-.form-btn-options {
-    float:right;
+/*.form-btn-options {*/
+    /*float:right;*/
     /*width: 20%;*/
-}
+/*}*/
 .element-title {
     float: left;
     padding-left: 1%;

@@ -54,7 +54,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- we want to force people to click a button, so hide the close link in the toolbar -->
-    <style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>
+    {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
 
 </head> 
              
@@ -90,6 +90,8 @@
             {% block content %}{% endblock %}
 
         </div>
+
+        {#<div style="height: 200px;">&nbsp;</div>#}
 
         <div class="footer">
             {% block footer %}

@@ -132,12 +132,13 @@
 {% macro orderinfo_panel(form, header) %}
 
     {% import _self as formmacros %}
-
+    {#panel-patient panel-primary#}
     <div  class="panel panel-patient">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-xs-12">
-                    <h4>{{ header }}</h4>
+                    {#<h4>{{ header }}</h4>#}
+                    <h4 class="panel-title">{{ header }}</h4>
                 </div>
             </div>
         </div>
@@ -161,35 +162,46 @@
     stainCount
 ) %}
 
-    <div class="panel-heading" align="left">
+    <div class="panel-heading">
+
         <div id="form_body_toggle_{{ name }}_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}"></div>
+
         {% if name == 'procedure' %}
             {% set title = 'accession' %}
         {% else %}
             {% set title = name %}
         {% endif %}
-        <div class="element-title">{{ title | capitalize }} {{ count+1 }}</div>        
+
+        {#<div class="element-title text-left">{{ title | capitalize }} {{ count+1 }}</div>#}
+        <h4 class="panel-title element-title">{{ title | capitalize }} {{ count+1 }}</h4>
+
         {% if name != "scan" and name != "stain" %}
-        {% if type == 'new' or type == 'edit' or type == 'amend' %}
-            <div class="form-btn-options">
-                <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
-                        class="add_form_btn btn-xs btn btn_margin btn-default"
-                        onclick="addSameForm(
-                            '{{ name }}',
-                            {{ patientCount }},
-                            {{ procedureCount }},
-                            {{ accessionCount }},
-                            {{ partCount }},
-                            {{ blockCount }},
-                            {{ slideCount }},
-                            {{ scanCount }},
-                            {{ stainCount }}
-                        )">Add</button>
-                {#<button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>#}
-            </div>
+
+            {% if type == 'new' or type == 'edit' or type == 'amend' %}
+
+                <div class="form-btn-options">
+                    <button id="form_add_btn_{{ name }}_{{ uid }}" type="button"
+                            class="btn btn-default btn-xs add_form_btn pull-right"
+                            onclick="addSameForm(
+                                '{{ name }}',
+                                {{ patientCount }},
+                                {{ procedureCount }},
+                                {{ accessionCount }},
+                                {{ partCount }},
+                                {{ blockCount }},
+                                {{ slideCount }},
+                                {{ scanCount }},
+                                {{ stainCount }}
+                            )">Add</button>
+                    {#<button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>#}
+                </div>
+                <div class="clearfix"></div>
+
+            {% endif %}
+
         {% endif %}
-        {% endif %}
-    </div>
+
+    </div> <!-- panel-heading -->
 
 {% endmacro %}
 

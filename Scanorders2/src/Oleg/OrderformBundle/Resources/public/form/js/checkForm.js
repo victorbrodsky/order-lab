@@ -1563,7 +1563,6 @@ function removeKeyFromDB( element, btnElement, single ) {
         disableInElementBlock(btnElement, true, null, "notkey", null);
         invertButton(btnElement);
         setDefaultMask(btnElement);
-        //setMaxHeightSingleForm();
     }
 
     function deleteError(btnElement,single) {
@@ -1913,7 +1912,7 @@ function checkMrnAccessionConflict() {
         //var acctypeText = acctypeField.select2("data").text;
 
         if( orderformtype == "single") {
-            var mrnHolder = $('.panel-patient').find(".patientmrn");
+            var mrnHolder = $('#optional_param').find(".patientmrn");
         } else {
             var mrnHolder = accInput.closest('.panel-patient').find(".patientmrn");
         }
