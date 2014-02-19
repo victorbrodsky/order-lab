@@ -568,7 +568,7 @@ function getButtonParent(elem) {
 
     if( orderformtype == "single") {
         if( elem.hasClass('mrntype-combobox') ) {
-            var parent = $('#patient');
+            var parent = $('#patient_0');
         }
         if( elem.hasClass('accessiontype-combobox') ) {
             var parent = $('#accession-single');

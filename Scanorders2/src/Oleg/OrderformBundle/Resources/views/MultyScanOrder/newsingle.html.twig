@@ -185,8 +185,12 @@
                 <p><button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;">Save and Continue Later</button></p>
             </div>
 
+
+            <div id="validationerror" style="padding-top: 2%"></div>
+
+
             {#        The optional parameter    #}
-            <div class="row">
+            <div class="row" style="padding-bottom: 2%">
                 <p>
                     <button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse">
                         Add Optional Info
@@ -211,339 +215,88 @@
 
                         <div class="row">
 
-{% set viewoption = 'panels' %}
-{#{% set viewoption = 'tabs' %}#}
-{#{% set viewoption = 'verticaltabs' %}#}
-{#{% set viewoption = 'accordion' %}#}
+                            <div class="tab-content option_info_panel">
 
-{% if viewoption == 'panels' %}
+                                <!-- optional elements -->
 
-    <div class="tab-content option_info_panel">
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Patient</h4></div>
-            <div class="panel-body">
-                {{ formmacros.patientForm(form_patient,"check","0","new",form.vars.value.status) }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Procedure</h4></div>
-            <div class="panel-body">
-                {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Part</h4></div>
-            <div class="panel-body">
-                {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
-
-                {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
-
-                {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
-
-                <div id="partdisident_marker"></div>
-
-                {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
-
-                {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Block</h4></div>
-            <div class="panel-body">
-                {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Slide</h4></div>
-            <div class="panel-body">
-                {{ formmacros.field(form_slide.title) }}
-                {{ formmacros.field(form_slide.slidetype) }}
-                {{ formmacros.field(form_slide.microscopicdescr) }}
-                {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
-                {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Scan</h4></div>
-            <div class="panel-body">
-                {{ formmacros.field(form_slide.scan|first.scanregion) }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Education</h4></div>
-            <div class="panel-body">
-                {{ formmacros.field(form.educational.goal) }}
-                {{ formmacros.field(form.educational.course) }}
-                {{ formmacros.field(form.educational.lesson) }}
-            </div>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading"><h4 class="panel-title">Research</h4></div>
-            <div class="panel-body">
-                {{ formmacros.field(form.research.project) }}
-                {{ formmacros.field(form.research.principal) }}
-            </div>
-        </div>
-
-{% endif %}
-
-{% if viewoption == 'tabs' %}
-
-                                <ul class="nav nav-tabs" id="optional_param_tab">
-                                    <li class="active"><a href="#patient" data-toggle="tab">Patient</a></li>
-                                    <li><a href="#procedure" data-toggle="tab">Procedure</a></li>
-                                    {#<li><a href="#accession">Accession</a></li>#}
-                                    <li><a href="#part" data-toggle="tab">Part</a></li>
-                                    <li><a href="#block" data-toggle="tab">Block</a></li>
-                                    <li><a href="#slide" data-toggle="tab">Slide</a></li>
-                                    <li><a href="#scan" data-toggle="tab">Scan</a></li>
-
-                                </ul>
-
-                                <div class="tab-content option_info_panel">
-                                    <div class="tab-pane fade in active" id="patient">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Patient</h3></div>
+                                    <div class="panel-body">
                                         {{ formmacros.patientForm(form_patient,"check","0","new",form.vars.value.status) }}
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade" id="procedure">
-                                      {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Procedure</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade" id="part">
-                                          {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Part</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
 
-                                          {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
+                                        {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
 
-                                          {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
+                                        {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
 
-                                          <div id="partdisident_marker"></div>
-                                          {#{{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}#}
+                                        <div id="partdisident_marker"></div>
 
-                                          {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
+                                        {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
 
-                                          {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
+                                        {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade" id="block">
-                                      {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Block</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade" id="slide">
-
-                                      {{ formmacros.field(form_slide.title) }}
-
-                                      {{ formmacros.field(form_slide.slidetype) }}
-
-                                      {#{{ formmacros.field(form_slide.diagnosis) }}#}
-                                      {{ formmacros.field(form_slide.microscopicdescr) }}
-                                      {#{{ formmacros.field(form_slide.specialStains) }}#}
-                                      {#{% if form_slide.specialStains|length > 0 %}#}
-                                          {#{{ formmacros.collInput(form_slide.specialStains, 'new', 'single', 'specialStains', 0, 0, 0, 0, 0, 0) }}#}
-                                      {#{% endif %}#}
-                                      {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
-
-                                      {#{{ formmacros.field(form_slide.relevantScans) }}#}
-                                      {#{% if form_slide.relevantScans|length > 0 %}#}
-                                          {#&#123;&#35;{{ formmacros.collInput(form_slide.relevantScans, 'new', 'single', 'relevantScans', 0, 0, 0, 0, 0, 0) }}&#35;&#125;#}
-                                          {#{{ formmacros.collectionInput(form_slide.relevantScans, 'relevantScans', 'new', 'single', 0, 0, 0, 0, 0, 0) }}#}
-                                      {#{% endif %}#}
-                                      {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
-
-                                      {#{{ formmacros.slideForm(form_slide, "check", "0_0_0_0_0_0_0_0", 'new') }}#}
-
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Slide</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.field(form_slide.title) }}
+                                        {{ formmacros.field(form_slide.slidetype) }}
+                                        {{ formmacros.field(form_slide.microscopicdescr) }}
+                                        {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
+                                        {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade" id="scan">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Scan</h3></div>
+                                    <div class="panel-body">
                                         {{ formmacros.field(form_slide.scan|first.scanregion) }}
                                     </div>
+                                </div>
 
-{% endif %}
-
-
-{% if viewoption == 'verticaltabs' %}
-    <!-- tabs left -->
-    <div class="tabbable tabs-left">
-        <ul class="nav nav-tabs">
-            <li><a href="#a" data-toggle="tab">One</a></li>
-            <li><a href="#b" data-toggle="tab">Two</a></li>
-            <li><a href="#c" data-toggle="tab">Twee</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="a">Lorem ipsum dolor sit amet, charetra varius quam sit amet vulputate.
-                Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero.</div>
-            <div class="tab-pane" id="b">Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                Aliquam in felis sit amet augue.</div>
-            <div class="tab-pane" id="c">Thirdamuno, ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                Quisque mauris augue, molestie tincidunt condimentum vitae. </div>
-        </div>
-    </div>
-    <!-- /tabs -->
-
-                                <div class="tabbable tabs-left">
-                                    <ul class="nav nav-tabs " data-tabs="tabs">
-                                        <li class="active"><a href="#patient" data-toggle="tab">Patient</a></li>
-                                        <li><a href="#part" data-toggle="tab">Part</a></li>
-                                        <li><a href="#clothesTab" data-toggle="tab">Clothes</a></li>
-                                        <li><a href="#booksTab" data-toggle="tab">Book</a></li>
-                                    </ul>
-
-                                    <div class="tab-content">
-                                        <div class="tab-pane fade in active" id="patient">
-                                            {{ formmacros.patientForm(form_patient,"check","0","new",form.vars.value.status) }}
-                                        </div>
-                                        <div class="tab-pane fade" id="part">
-                                            {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
-
-                                            {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
-
-                                            {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
-
-                                            <div id="partdisident_marker"></div>
-                                            {#{{ formmacros.inputArrayField(form_part.disident,'new',"partdisident") }}#}
-
-                                            {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
-
-                                            {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
-                                        </div>
-                                        <div class="tab-pane fade" id="clothesTab">
-                                            clothing tab
-                                        </div>
-                                        <div class="tab-pane fade" id="booksTab">
-                                            books books books
-                                        </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Education</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.field(form.educational.goal) }}
+                                        {{ formmacros.field(form.educational.course) }}
+                                        {{ formmacros.field(form.educational.lesson) }}
                                     </div>
                                 </div>
 
-{% endif %}
-
-{% if viewoption == 'accordion' %}
-
-                                <div class="panel-group" id="accordion">
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#patient">
-                                                    Patient
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="patient" class="panel-collapse collapse in">
-                                            {#<div class="panel-body" id="patient">#}
-                                                {{ formmacros.patientForm(form_patient,"check","0","new",form.vars.value.status) }}
-                                            {#</div>#}
-                                        </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Research</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.field(form.research.project) }}
+                                        {{ formmacros.field(form.research.principal) }}
                                     </div>
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#procedure">
-                                                    Procedure
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="procedure" class="panel-collapse collapse">
-                                            {#<div class="panel-body" id="procedure">#}
-                                                {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
-                                            {#</div>#}
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#part">
-                                                    Part
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="part" class="panel-collapse collapse">
-                                            {#<div class="panel-body" id="part">#}
-
-                                                {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}
-
-                                                {{ formmacros.inputArrayField(form_part.paper,'new',"partpaper","paper") }}
-
-                                                {{ formmacros.inputArrayField(form_part.description,'new',"partdescription") }}
-
-                                                <div id="partdisident_marker"></div>
-
-                                                {{ formmacros.inputArrayField(form_part.diffDisident,'new',"partdiffdisident","partdiffDisident") }}
-
-                                                {{ formmacros.inputArrayField(form_part.diseaseType,'new',"partdiseasetype","diseaseType") }}
-                                            {#</div>#}
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#block">
-                                                    Block
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="block" class="panel-collapse collapse">
-                                            {#<div class="panel-body" id="part">#}
-                                                {#<div class="tab-pane fade" id="block">#}
-                                                {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
-                                                {#</div>#}
-                                            {#</div>#}
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#slide">
-                                                    Slide
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="slide" class="panel-collapse collapse">
-                                            {#<div class="tab-pane fade" id="slide">#}
-
-                                            {{ formmacros.field(form_slide.title) }}
-                                            {{ formmacros.field(form_slide.slidetype) }}
-                                            {{ formmacros.field(form_slide.microscopicdescr) }}
-                                            {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
-                                            {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
-
-                                            {#</div>#}
-                                        </div>
-                                    </div>
-
-
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#scan">
-                                                    Scan
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="scan" class="panel-collapse collapse">
-                                            {{ formmacros.field(form_slide.scan|first.scanregion) }}
-                                        </div>
-                                    </div>
-
-
                                 </div>
 
-{% endif %}
+                                <!-- end of optional elements -->
 
+                            </div>
 
-
-
-                            </div> <!-- row -->
-
-                        </div>
+                        </div> <!-- row -->
 
                 </div> <!-- class="panel panel-primary" -->
             </div> <!-- optional_param -->
@@ -576,9 +329,6 @@
             {% endfor %}
         {% endfor %}
     {% endfor %}
-
-
-    <div id="validationerror" style="padding-top: 2%"></div>
 
     {#{{ form_end(form) }}#}
     </form>

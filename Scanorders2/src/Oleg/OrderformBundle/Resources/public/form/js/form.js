@@ -43,12 +43,13 @@ $(document).ready(function() {
     $('.form_body_toggle_btn').on('click', function(e) {
         var className = $(this).attr("class");
         var id = this.id;
-        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
-            $("#"+id).removeClass('glyphicon glyphicon-folder-open');
-            $("#"+id).addClass('glyphicon glyphicon-folder-close');
+//        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
+        if( $(this).hasClass('glyphicon-folder-open') ) {
+            $("#"+id).removeClass('glyphicon-folder-open');
+            $("#"+id).addClass('glyphicon-folder-close');
         } else {
-            $("#"+id).removeClass('glyphicon glyphicon-folder-close');
-            $("#"+id).addClass('glyphicon glyphicon-folder-open');
+            $("#"+id).removeClass('glyphicon-folder-close');
+            $("#"+id).addClass('glyphicon-folder-open');
         }
     });
 
@@ -206,7 +207,9 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     var thisParent = $("#"+thisId).parent();
     var childrens = thisParent.children( ".panel" );
 
-    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
+    //var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="testjs add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
+    var addbtn =  getHeaderAddBtn( name, ids );
+
     for (var i = 0; i < childrens.length; i++) {
         var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
         addBtnToReplace.replaceWith( addbtn );
@@ -273,9 +276,8 @@ function getForm( name, id, idsorig, ids, idsm ) {
         var deletebtn = "";
         //var itemCount = (id+2);
     } else {
-        var addbtn = '<button id="form_add_btn_' + name + '_' + idsu + '" type="button" class="add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + idsc + ')">Add</button>';
-        var deletebtn = ' <button id="delete_form_btn_'+name+'_'+idsu+'" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">'+deleteStr+'</button>';
-        //var itemCount = (id+1);
+        var addbtn = getHeaderAddBtn( name, ids );
+        var deletebtn = getHeaderDeleteBtn( name, ids, deleteStr );
     }
 
     //get itemCount from partialId
@@ -288,17 +290,27 @@ function getForm( name, id, idsorig, ids, idsm ) {
     }
 
     var formhtml =
-        '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+'">' +
-            '<div class="panel-heading" align="left">' +
-            '<div id="form_body_toggle_'+ name + '_' + idsu +'" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></div>' +
-            '&nbsp;' +
-            '<div class="element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</div>' +           
-            '<div class="form-btn-options">' +
-            addbtn +
-            deletebtn +
+        '<div id="formpanel_' +name + '_' + idsu + '" class="panel panel-'+name+' panel-multi-form">' +
+            '<div class="panel-heading">' +
+
+                '<button id="form_body_toggle_'+ name + '_' + idsu +'" type="button"' +
+                    'class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"' +
+                    'data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'">'+
+                '</button>'+
+
+//            '<button id="form_body_toggle_'+ name + '_' + idsu +'" type="button" class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open black" data-toggle="collapse" data-target="#form_body_'+name+'_'+idsu+'"></button>' +
+//            '&nbsp;' +
+//            '<div class="element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</div>' +
+                '<h4 class="panel-title element-title">' + capitaliseFirstLetter(title) + ' ' + itemCount + '</h4>' +
+                '<div class="form-btn-options">' +
+                    addbtn +
+                    deletebtn +
+                '</div>' +
+                '<div class="clearfix"></div>' +
+            '</div>' +  //panel-heading
+            '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' +
+                formbody +
             '</div>' +
-            '</div>' +
-            '<div id="form_body_' + name + '_' + idsu + '" class="panel-body collapse in">' + formbody + '</div>' +
             '</div>';
 
     return formhtml;
@@ -341,6 +353,21 @@ function getFormBody( name, patientid, procedureid, accessionid, partid, blockid
     //console.log("newForm="+newForm);
 
     return newForm;
+}
+
+function getHeaderAddBtn( name, ids ) {
+    var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button"'+
+                    'class="btn btn-default btn-xs add_form_btn pull-right"' +
+                    'onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add'+
+                '</button>';
+    return addbtn;
+}
+
+function getHeaderDeleteBtn( name, ids, deleteStr ) {
+    var deletebtn = '<button id="delete_form_btn_' + name + '_' + ids.join("_") + '" type="button"'+ ' style="margin-right:1%;" ' +
+                        'class="btn btn-danger btn-xs delete_form_btn pull-right">' + deleteStr +
+                    '</button>';
+    return deletebtn;
 }
 
 //Helpers
@@ -502,12 +529,13 @@ function bindToggleBtn( uid ) {
         var id = this.id;
         //alert(className);
 
-        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
-            $("#"+id).removeClass('glyphicon glyphicon-folder-open');
-            $("#"+id).addClass('glyphicon glyphicon-folder-close');
+//        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
+        if( $(this).hasClass('glyphicon-folder-open') ) {
+            $("#"+id).removeClass('glyphicon-folder-open');
+            $("#"+id).addClass('glyphicon-folder-close');
         } else {
-            $("#"+id).removeClass('glyphicon glyphicon-folder-close');
-            $("#"+id).addClass('glyphicon glyphicon-folder-open');
+            $("#"+id).removeClass('glyphicon-folder-close');
+            $("#"+id).addClass('glyphicon-folder-open');
         }
     });
 }

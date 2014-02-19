@@ -116,7 +116,7 @@
 }
 
 .footer {
-    margin-top: 10%;
+    margin-top: 15%;
     /*float: left;*/
     /*width: 100%;*/
 }
@@ -293,10 +293,10 @@
     width: 100%;
 }
 
-.form_body_toggle_btn {
-    padding-right: 1%;
-    float: left;
-}
+/*.form_body_toggle_btn {*/
+    /*padding-right: 1%;*/
+    /*float: left;*/
+/*}*/
 
 .textarea {
     min-height: 75px;

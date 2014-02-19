@@ -133,7 +133,7 @@
 
     {% import _self as formmacros %}
     {#panel-patient panel-primary#}
-    <div  class="panel panel-patient">
+    <div  class="panel panel-primary">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-xs-12">
@@ -164,7 +164,11 @@
 
     <div class="panel-heading">
 
-        <div id="form_body_toggle_{{ name }}_{{ uid }}" class="form_body_toggle_btn glyphicon glyphicon-folder-open" data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}"></div>
+        <button
+             id="form_body_toggle_{{ name }}_{{ uid }}" type="button"
+             class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-open pull-left"
+             data-toggle="collapse" data-target="#form_body_{{ name }}_{{ uid }}">
+        </button>
 
         {% if name == 'procedure' %}
             {% set title = 'accession' %}
@@ -176,7 +180,6 @@
         <h4 class="panel-title element-title">{{ title | capitalize }} {{ count+1 }}</h4>
 
         {% if name != "scan" and name != "stain" %}
-
             {% if type == 'new' or type == 'edit' or type == 'amend' %}
 
                 <div class="form-btn-options">
@@ -195,11 +198,10 @@
                             )">Add</button>
                     {#<button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Clear</button>#}
                 </div>
-                <div class="clearfix"></div>
 
             {% endif %}
-
         {% endif %}
+        <div class="clearfix"></div>
 
     </div> <!-- panel-heading -->
 

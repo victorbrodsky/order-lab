@@ -151,7 +151,7 @@
     {% endif %}
 
     {% if formtype == 'Research Multi-Slide Scan Order' %}
-        <div  class="panel panel-patient panel-multi-form">
+        <div class="panel panel-patient panel-multi-form">
             <div class="panel-heading">
                 <h4 class="panel-title">Research Project Info</h4>
             </div>
@@ -277,9 +277,10 @@
         {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
         {#{% set patientCountNext = patientCount + 1 %}#}
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
+
             {{ formmacros.orderinfo_panel_header(
-            'patient', type, patientCount, form.patient|length, uid,
-            patientCount, 0, 0, 0, 0, 0, 0, 0)
+                'patient', type, patientCount, form.patient|length, uid,
+                patientCount, 0, 0, 0, 0, 0, 0, 0)
             }}
 
             <div id="form_body_patient_{{ uid }}" class="panel-body collapse in">

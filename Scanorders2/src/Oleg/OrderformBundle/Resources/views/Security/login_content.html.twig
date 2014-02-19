@@ -1,6 +1,6 @@
 <h2 class="alert alert-info well-lg safary-fix" align="center">Scan Order Submission</h2>
 
-<br><br>
+<br>
 
 {% for flashMessage in app.session.flashbag.get('notice') %}
     <div class="flash-notice" align="center">
@@ -22,8 +22,7 @@
         Bad credentials
     </p>
 {% endif %}
- 
-<br><br>    
+
     
 <form class="form-signin" action="{{ path('login_check') }}" method="post">
 

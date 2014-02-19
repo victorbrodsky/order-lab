@@ -1757,7 +1757,7 @@ function getPartNumberElement( element, single ) {
 
 function validateForm() {
 
-    //console.log("validateForm enter");
+    console.log("validateForm enter");
     //return false;
 
     var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
