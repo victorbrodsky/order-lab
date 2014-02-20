@@ -60,7 +60,7 @@
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
         {% endif %}
 
-        {% if form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' and not Filled or is_granted('ROLE_ADMIN') %}
+        {% if form.vars.value.status != 'Not Submitted' and form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' %}
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
                href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
         {% endif %}
@@ -157,6 +157,7 @@
             </div>
             <div class="panel-body">
                 {{ formmacros.field(form.research.project) }}
+                {{ formmacros.field(form.research.settitle) }}
                 {{ formmacros.field(form.research.principal) }}
             </div>
         </div>

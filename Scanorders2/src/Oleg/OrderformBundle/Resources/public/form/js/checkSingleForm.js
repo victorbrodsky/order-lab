@@ -38,30 +38,6 @@ function waitWhenReady( fieldsArr, count, limit ) {
     }
 
     return true;
-
-//    setTimeout( function(){
-//        //console.log( "testValue="+testValue+", isCheckBtn="+isCheckBtn);
-//        if( testValue && testValue != "" && !isCheckBtn ) {
-//            console.log("ok!!! limit="+limit);
-//            count++;
-//            if( count < fieldsArr.length ) {
-//                waitWhenReady( fieldsArr, count, 0 );   //process next button
-//            }   else {
-//                finalStepCheck();
-//            }
-//
-//            return 1;
-//        }
-//        else{
-//            if( limit > 20 ) {
-//                return false;
-//            }
-//            limit++;
-//            console.log("not ready ... limit="+limit);
-//            waitWhenReady( fieldsArr, count, limit );  //process the same button
-//        }
-//    }, 300);
-//    return true;
 }
 
 function finalStepCheck() {
@@ -91,22 +67,32 @@ function checkFormSingle( elem ) {
 
     //$('#optional_param').collapse('toggle');    //open. Need to open to populate patient (if existed) linked to accession
 
+    //console.log("start ajax");
+    $("#loading-modal").modal('show');
+
     var fieldsArr = new Array();
     fieldsArr[0] = '#accession-single';
     fieldsArr[1] = '#part-single';
     fieldsArr[2] = '#block-single';
 
-    //console.log("start");
+    var ajaxOK = true;
 
     if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
-        return false;
+        ajaxOK = false;
     }
 
     if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
-        return false;
+        ajaxOK = false;
     }
 
     if( !waitWhenReady( fieldsArr, 2, 0 ) ) {
+        ajaxOK = false;
+    }
+
+    //console.log("stop ajax");
+    $("#loading-modal").modal('hide');
+
+    if( !ajaxOK ) {
         return false;
     }
 
@@ -130,6 +116,8 @@ function removeFormSingle( elem ) {
 
     //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
 
+    $("#loading-modal").modal('show');
+
     //console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
     $('.blockbtn').trigger("click");
 
@@ -145,6 +133,8 @@ function removeFormSingle( elem ) {
     $('#block-single').css( "width", "25%" );
     $('#maincinglebtn').hide();
     collapseElementFix($('#optional_param'));   //close optional info
+
+    $("#loading-modal").modal('hide');
 
 }
 

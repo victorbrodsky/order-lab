@@ -3,9 +3,8 @@
 
 {% block content %}
 
-{#<form action="{{ path('user_update') }}" {{ form_enctype(form) }} method="PUT">#}
-
-    {{ form_start(form) }}
+{#<form action="{{ path('user_update',{'id':entity.id}) }}" method="PUT" {{ form_enctype(form) }}>#}
+{{ form_start(form) }}
 
     <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
     <input type="hidden" id="formcicle" value="edit_user" />
@@ -40,22 +39,22 @@
     {#{{ form_rest(form) }}#}
     {{ form_widget(form._token) }}
 
-    {{ form(form) }}
+    {#{{ form(form) }}#}
 
-    {{ form_end(form) }}
+    {% if cicle != "show" %}
+    <p>
+        <div>
+            <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
+            <button class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}">Cancel</button>
+        </div>
+    </p>
+    {% endif %}
 
-    {#<p>#}
-        {#<div>#}
-        {#<input class="btn btn-warning" type="submit" value="Update" />#}
-        {#</div>#}
-    {#</p>#}
-
-</form>
+{{ form_end(form) }}
+{#</form>#}
 
     {% if cicle == "show" %}
         <p><a class="btn btn-success" href="{{ path('user_edit',{'id':entity.id}) }}">Edit</a></p>
-    {% else %}
-        <br><p><a class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}">Cancel</a></p>
     {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}

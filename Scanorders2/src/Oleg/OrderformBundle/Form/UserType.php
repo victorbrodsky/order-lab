@@ -49,44 +49,44 @@ class UserType extends AbstractType
 //        }
 
         $builder->add('username', null, array(
-            'label' => 'Username',
+            'label' => 'Username:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('firstName', null, array(
-            'label' => 'First Name',
+            'label' => 'First Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('lastName', null, array(
-            'label' => 'Last Name',
+            'label' => 'Last Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('email', 'email', array(
-            'label' => 'Email',
+            'label' => 'Email:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('displayName', null, array(
-            'label' => 'Display Name',
+            'label' => 'Display Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('title', null, array(
-            'label' => 'Title',
+            'label' => 'Title:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('phone', null, array(
-            'label' => 'Phone',
+            'label' => 'Phone:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('fax', null, array(
-            'label' => 'Fax',
+            'label' => 'Fax:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('office', null, array(
-            'label' => 'Office',
+            'label' => 'Office:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
 
-        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
+        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden', 'name' => 'select2[]');    //new
         $builder->add('pathologyServices', 'custom_selector', array(
             'label' => 'Pathology Service:',
             'attr' => $attr,
@@ -96,18 +96,13 @@ class UserType extends AbstractType
 
 
         //Roles
-//        echo "Roles of user ".$this->user->getUsername().":<br>";
-//        foreach( $this->user->getRoles() as $role ) {
-//            echo $role . "<br>";
-//
-//        }
-
         $attr = array('class' => 'combobox combobox-width');
 
         if( $this->roleAdmin ) {
 
             $builder->add('roles', 'choice', array(
                 'choices' => $this->roles,
+                'label' => 'Roles:',
                 'attr'=>$attr,
                 'multiple'  => true,
             ));
@@ -117,7 +112,7 @@ class UserType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif')
 //            ));
             $builder->add('locked', null, array(
-                'label' => 'Locked',
+                'label' => 'Locked:',
                 'attr' => array('class'=>'form-control form-control-modif')
             ));
 //            $builder->add('expired', null, array(

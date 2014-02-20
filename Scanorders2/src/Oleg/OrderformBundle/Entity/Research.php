@@ -20,12 +20,17 @@ class Research
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $project;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $settitle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $principal;
 
@@ -89,6 +94,22 @@ class Research
     public function getPrincipal()
     {
         return $this->principal;
+    }
+
+    /**
+     * @param mixed $settitle
+     */
+    public function setSettitle($settitle)
+    {
+        $this->settitle = $settitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSettitle()
+    {
+        return $this->settitle;
     }
 
 

@@ -83,12 +83,18 @@ function customCombobox() {
     }
 }
 
-function populateSelectCombobox( targetid, data, placeholder ) {
+function populateSelectCombobox( targetid, data, placeholder, multiple ) {
 
     if( placeholder ) {
         var allowClear = true;
     } else {
         var allowClear = false;
+    }
+
+    if( multiple ) {
+        var multiple = true;
+    } else {
+        var multiple = false;
     }
 
     $(targetid).select2({
@@ -99,6 +105,7 @@ function populateSelectCombobox( targetid, data, placeholder ) {
         selectOnBlur: true,
         dataType: 'json',
         quietMillis: 100,
+        multiple: multiple,
         data: data,
         createSearchChoice:function(term, data) {
             //if( term.match(/^[0-9]+$/) != null ) {
@@ -425,16 +432,23 @@ function getComboboxPathService(urlCommon,ids) {
         url = url + "?opt=default";
     }
 
+    //console.log("cicle="+cicle);
+    if( cicle == 'edit_user' ) {
+        var multiple = true;
+    } else {
+        var multiple = false;
+    }
+
     if( pathservice.length == 0 ) {
         $.ajax({
             url: url,
             async: asyncflag
         }).success(function(data) {
             pathservice = data;
-            populateSelectCombobox( targetid, pathservice, "Pathology Service" );
+            populateSelectCombobox( targetid, pathservice, "Pathology Service", multiple );
         });
     } else {
-        populateSelectCombobox( targetid, pathservice, "Pathology Service" );
+        populateSelectCombobox( targetid, pathservice, "Pathology Service", multiple );
     }
 
 //    //******************* user pathology service *************************//

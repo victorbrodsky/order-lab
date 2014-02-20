@@ -8,7 +8,7 @@
 
     <h3 class="text-info">Account Requests</h3>
 
-    <table class="table table-hover table-condensed">
+    <table class="table table-hover table-condensed text-justify">
         <thead>
             <tr>
                 <th>Id</th>
@@ -39,7 +39,8 @@
             {% else %}
                 <tr>
             {% endif %}
-                <td><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                {#<td><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                <td>{{ entity.id }}</td>
                 <td>{{ entity.status }}</td>
                 <td>{{ entity.cwid }}</td>
                 <td>{{ entity.name }}</td>
@@ -64,9 +65,9 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            <li><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">View Details</a></li>
+                            {#<li><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">View Details</a></li>#}
 
-                            <li class="divider"></li>
+                            {#<li class="divider"></li>#}
 
                             {% if entity.status != 'declined' %}
                                 <li><a onclick="return confirm('Are you sure?');"

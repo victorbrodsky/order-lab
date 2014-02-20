@@ -4,7 +4,7 @@
 
     <h3 class="text-info">Site Parameters</h3>
 
-    <table class="records_list table">
+    <table class="records_list table table-hover table-condensed text-justify">
         <thead>
             <tr>
                 <th>Parameter</th>
@@ -18,7 +18,7 @@
                 <td>Max Idle Time (minutes)</td>
                 <td>{{ entity.maxIdleTime }}</td>
                 <td>
-                   <a href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">edit</a>
+                   <a href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>
                 </td>
             </tr>
         {% endfor %}

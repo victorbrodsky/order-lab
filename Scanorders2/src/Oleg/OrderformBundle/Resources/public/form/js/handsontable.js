@@ -23,10 +23,10 @@ $(document).ready(function() {
         ["2010", 30, 15, 12, 13]
     ];
 
-    $("#multi-dataTable").handsontable({
-        data: data,
-        startRows: 6,
-        startCols: 8
-    });
+//    $("#multi-dataTable").handsontable({
+//        data: data,
+//        startRows: 6,
+//        startCols: 8
+//    });
 
 });

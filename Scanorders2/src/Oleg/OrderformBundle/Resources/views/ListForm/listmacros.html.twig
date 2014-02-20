@@ -37,7 +37,7 @@
 
 {% macro listIndex( entities, type ) %}
 
-    <table class="records_list table">
+    <table class="records_list table table-hover table-condensed text-justify">
         <thead>
         <tr>
             <th>Id</th>
@@ -49,7 +49,7 @@
             <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody data-link="row" class="rowlink">
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path(type~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
@@ -59,8 +59,7 @@
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
-                    <a href="{{ path(type~'_show', { 'id': entity.id }) }}">show</a>
-                    <a href="{{ path(type~'_edit', { 'id': entity.id }) }}">edit</a>
+                    <a class="btn btn-xs btn-default" href="{{ path(type~'_edit', { 'id': entity.id }) }}">Edit</a>
                 </td>
             </tr>
         {% endfor %}

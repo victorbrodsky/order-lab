@@ -15,15 +15,22 @@ class ResearchType extends AbstractType
 //        $helper = new FormHelper();
         
         $builder->add( 'project', 'text', array(
-                'label'=>'Project/Paper/Abstract Title:',
-                'max_length'=>'200',
+                'label'=>'Research Project Title:',
+                'max_length'=>'500',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
+        ));
+
+        $builder->add( 'settitle', 'text', array(
+            'label'=>'Research Set Title:',
+            'max_length'=>'500',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'principal', 'text', array(
             'label'=>'Principal Investigator:',
-            'max_length'=>'200',
+            'max_length'=>'500',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));

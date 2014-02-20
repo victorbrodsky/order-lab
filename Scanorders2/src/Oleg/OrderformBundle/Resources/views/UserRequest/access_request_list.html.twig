@@ -8,7 +8,7 @@
 
     <h3 class="text-info">User Request List</h3>
 
-    <table class="table table-hover table-condensed">
+    <table class="table table-hover table-condensed text-justify">
         <thead>
             <tr>
                 <th>Id</th>
@@ -24,7 +24,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody data-link="row" class="rowlink">
         {% for entity in entities %}
             
             {% if entity.appliedforaccess == 'active' %}
@@ -72,7 +72,7 @@
 
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            <li><a href="{{ path('showuser', { 'id': entity.id }) }}">View Details</a></li>
+                            <li><a href="{{ path('showuser', { 'id': entity.id }) }}">View User Details</a></li>
 
                             <li class="divider"></li>
 

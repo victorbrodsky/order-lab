@@ -288,6 +288,7 @@
                                     <div class="panel-heading"><h3 class="panel-title">Research</h3></div>
                                     <div class="panel-body">
                                         {{ formmacros.field(form.research.project) }}
+                                        {{ formmacros.field(form.research.settitle) }}
                                         {{ formmacros.field(form.research.principal) }}
                                     </div>
                                 </div>
@@ -333,6 +334,9 @@
     {#{{ form_end(form) }}#}
     </form>
 
-    {#<div style="height: 200px;">&nbsp;</div>#}
+    {#<button id="loading-modal-button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#loading-modal">#}
+        {#Launch demo modal#}
+    {#</button>#}
+
 
 {% endblock %}

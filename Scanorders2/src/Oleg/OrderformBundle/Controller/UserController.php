@@ -112,24 +112,14 @@ class UserController extends Controller
             }
         }
 
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
+
         $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
+//        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
 
-//        $update_form = $this->createForm(new UserType(), $user, array(
-//            'action' => $this->generateUrl('update_user', array('id' => $user->getId())),
-//            'method' => 'PUT',
-//        ));
-
-//        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        //print_r( $this->get('security.context')->getToken()->getUser()->getRoles() );
-        //echo "Roles of user ".$entity->getUsername().":<br>";
-       // print_r( $entity->getRoles() );
-
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -171,7 +161,6 @@ class UserController extends Controller
 
         if ($form->isValid()) {
             $em->flush();
-
             return $this->redirect($this->generateUrl('showuser', array('id' => $id)));
         }
 

@@ -20,17 +20,17 @@ class Educational
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $goal;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $course;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $lesson;
 

@@ -50,6 +50,11 @@ class User extends BaseUser
     protected $pathologyServices;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $primaryPathologyService;
+
+    /**
      * @ORM\Column(name="phone", type="string", nullable=true)
      */
     protected $phone;
@@ -111,6 +116,11 @@ class User extends BaseUser
      */
     public function setPathologyServices($pathologyServices)
     {
+        if( $pathologyServices->first() ) {
+            $this->primaryPathologyService = $pathologyServices->first()->getId();
+        } else {
+            $this->primaryPathologyService = NULL;
+        }
         $this->pathologyServices = $pathologyServices;
     }
 
@@ -310,6 +320,21 @@ class User extends BaseUser
         return $this->appliedforaccess;
     }
 
+    /**
+     * @param mixed $primaryPathologyService
+     */
+    public function setPrimaryPathologyService($primaryPathologyService)
+    {
+        $this->primaryPathologyService = $primaryPathologyService;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryPathologyService()
+    {
+        return $this->primaryPathologyService;
+    }
 
 }
 

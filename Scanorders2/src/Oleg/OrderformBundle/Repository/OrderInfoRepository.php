@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Helper\OrderUtil;
+use Oleg\OrderformBundle\Entity\History;
 
 /**
  * OrderInfoRepository
@@ -153,6 +154,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //exit('orderinfo repo exit');
 
         $originalStatus = $entity->getStatus();
+        //echo "status=".$originalStatus."<br>";
+        //exit();
 
         if( $originalStatus == 'Not Submitted' ) {
             $entity->setOid(null);
@@ -254,6 +257,19 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $em->flush();
         }
 
+        //record history
+        $history = new History();
+        $history->setOrderinfo($entity);
+        $history->setCurrentid($entity->getOid());
+        $history->setCurrentstatus($entity->getStatus());
+        $history->setProvider($entity->getProvider()->first());
+        $history->setRoles($entity->getProvider()->first()->getRoles());
+        $history->setCurrentstatus($entity->getStatus());
+        if( $entity->getStatus() == 'Not Submitted' ) {
+            $history->setNote('Auto-Saved Draft; Submit this order to Process');
+        }
+        $em->persist($history);
+        $em->flush();
 
         $em->clear();
 

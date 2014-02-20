@@ -64,6 +64,16 @@ $(document).ready(function() {
         deleteItem(id);
     });
 
+    //loading ajax
+//    $( document ).ajaxStart(function() {
+//        console.log('ajax Start');
+//        $("#loading-modal").modal('show');
+//    });
+//    $(document).ajaxComplete(function() {
+//        console.log('ajax Complete');
+//        $("#loading-modal").modal('hide');
+//    });
+
 });
 
 //add all element to listeners again, the same as in ready

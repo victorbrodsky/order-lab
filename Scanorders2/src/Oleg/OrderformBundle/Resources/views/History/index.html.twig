@@ -5,7 +5,7 @@
     {% if orderid is defined %}
 
         {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
-        <h3 class="text-info">Progress & Comments of Order# {{ orderid }}</h3>
+        <h3 class="text-info">Progress & Comments of <a href="{{ path('multy_show', { 'id': orderid }) }}">Order# {{ orderid }}</a></h3>
 
     {% else %}
         <h3 class="text-info">Progress & Comments List</h3>
@@ -13,7 +13,7 @@
 
     <input type="hidden" id="reload_page_after_modal" value="1" />
 
-    <table class="records_list table">
+    <table class="records_list table table-hover table-condensed text-justify">
         <thead>
             <tr>
                 {#<th>Id</th>#}
@@ -23,11 +23,11 @@
                     <th>Order</th>
                 {% endif %}
                 <th>Timestamp</th>
-                <th>Action</th>
+                <th>Event Type</th>
                 <th>Status</th>
                 <th>Performed By</th>
                 <th>Role(s)</th>
-                <th>Comment</th>
+                <th style="width: 25%">Comment</th>
                 <th>Viewed</th>
 
                 {#<th>Actions</th>#}
@@ -41,6 +41,14 @@
                 {% set type = 'Comment Added' %}
             {% else %}
                 {% set type = 'Status Changed' %}
+            {% endif %}
+
+            {% if entity.currentstatus == 'Submitted' %}
+                {% set type = 'Initial Order Submission' %}
+            {% endif %}
+
+            {% if entity.currentstatus == 'Not Submitted' %}
+                {% set type = 'Auto-Saved Draft' %}
             {% endif %}
 
             <tr>
@@ -58,6 +66,7 @@
                 </td>
                 <td>
                     {{ entity.newstatus }}
+                    {{ entity.currentstatus }}
                 </td>
                 <td>
                     {{ entity.provider }}
@@ -71,7 +80,11 @@
 
                     {% endfor %}
                 </td>
-                <td>{{ entity.note }}</td>
+                <td>
+                    <div class="textarea_widget">
+                        <textarea class="textarea form-control">{{ entity.note }}</textarea>
+                    </div>
+                </td>
 
                 <td>
                     {% if entity.viewed == '' %}

@@ -14,7 +14,7 @@
 
         <p>
         <!-- Nav tabs -->
-        <ul class="nav nav-pills">
+        <ul class="nav nav-tabs">
             <li class="active"><a href="#research" data-toggle="tab">Research</a></li>
             <li><a href="#educational" data-toggle="tab">Educational</a></li>
         </ul>
@@ -25,6 +25,7 @@
                 <div  class="panel panel-patient">
                     <div class="panel-body">
                         {{ formmacros.field(form.research.project) }}
+                        {{ formmacros.field(form.research.settitle) }}
                         {{ formmacros.field(form.research.principal) }}
                     </div>
                 </div>

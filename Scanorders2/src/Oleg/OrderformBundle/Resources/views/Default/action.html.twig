@@ -35,14 +35,15 @@
                 </li>                  
             {% endif %}
 
+            {#or is_granted('ROLE_ADMIN')#}
             {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and entity.status != 'Submitted' and entity.status != 'Amended' and
-                ( not Filled and not OnHold or is_granted('ROLE_ADMIN') ) %}
+                ( not Filled and not OnHold ) %}
                 <li><a onclick="return confirm('Are you sure?');"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Submit' }) }}">Submit</a>
                 </li>
             {% endif %}
 
-            {% if entity.status != 'Superseded' and entity.status.action != 'Cancel' and not Filled %}
+            {% if entity.status != 'Not Submitted' and entity.status != 'Superseded' and entity.status.action != 'Cancel' and not Filled %}
                 <li><a onclick="return confirm('Are you sure?');" class="btn-warning"
                        href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
                 </li>

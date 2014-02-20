@@ -49,11 +49,14 @@ class SiteParametersController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            echo "par not valid!";
+            exit();
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('siteparameters_show', array('id' => $entity->getId())));
+//            return $this->redirect($this->generateUrl('siteparameters_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('siteparameters'));
         }
 
         return array(
@@ -193,7 +196,8 @@ class SiteParametersController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('siteparameters_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('siteparameters'));
+            //return $this->redirect($this->generateUrl('siteparameters_edit', array('id' => $id)));
         }
 
         return array(

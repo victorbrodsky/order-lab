@@ -10,7 +10,7 @@
     <br>
 
     <h3 class="text-info">User List</h3>
-    <table class="records_list table">
+    <table class="records_list table table-hover table-condensed text-justify">
         <thead>
         <tr>
             <th>Id</th>
@@ -27,7 +27,7 @@
             <th>Path Services</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody data-link="row" class="rowlink">
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>

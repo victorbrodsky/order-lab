@@ -44,7 +44,7 @@ function idleTimeout() {
         failedRequests: 1,
         idleAfter: _idleAfter,
         warningLength: 30,
-        pollingInterval: _idleAfter-30,
+        pollingInterval: _idleAfter-50,
         keepAliveURL: urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
         onTimeout: function(){
