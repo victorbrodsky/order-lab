@@ -30,12 +30,33 @@ class UserUtil {
         //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
         //var_dump($sheetData);
 
+        $count = 0;
+
+        ////////////// add system user /////////////////
+        $user = new User();
+        $user->setEmail('slidescan@med.cornell.edu');
+        $user->setEmailCanonical('slidescan@med.cornell.edu');
+        $user->setUsername('system');
+        $user->setUsernameCanonical('system');
+        $user->setPassword("");
+        $user->setCreatedby('system');
+        $user->addRole('ROLE_PROCESSOR');
+        $user->setEnabled(true);
+        $user->setLocked(true); //system is locked, so no one can logged in with this account
+        $user->setExpired(false);
+        $found_user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+        if( !$found_user ) {
+            $em->persist($user);
+            $em->flush();
+            $count++;
+        }
+        ////////////// end of add system user /////////////////
+
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
         //for each user
-        $count = 0;
         for ($row = 2; $row <= $highestRow; $row++){
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -61,6 +82,7 @@ class UserUtil {
             //echo "<br>pathservices=".$rowData[0][2]." == ";
             //print_r($pathlogyServices);
 
+            //create system user
             $user = new User();
             $user->setEmail($email);
             $user->setEmailCanonical($email);

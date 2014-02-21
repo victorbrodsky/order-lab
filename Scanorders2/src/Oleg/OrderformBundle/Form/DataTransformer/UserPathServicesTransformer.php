@@ -25,7 +25,7 @@ class UserPathServicesTransformer extends PathServiceTransformer
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
 
-        if( null === $entities->toArray() ) {
+        if( !$entities || null === $entities->toArray() ) {
             return $array;
         }
 
@@ -36,8 +36,13 @@ class UserPathServicesTransformer extends PathServiceTransformer
         if( count($entities) > 1 ) {
             $idArr = [];
             foreach( $entities as $entity ) {
-                $idArr[] = $entity->getId();
+                if( $entity->getId()."" == $this->user->getPrimaryPathologyService()."" ) {
+                    array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
+                } else {
+                    $idArr[] = $entity->getId();
+                }
             }
+            //return array with primaryPathologyService as the first element
             return implode(",", $idArr);
         }
 
@@ -76,42 +81,13 @@ class UserPathServicesTransformer extends PathServiceTransformer
 
         }
 
-
-//        if( is_numeric ( $text ) ) {    //number => most probably it is id
-//
-//            $entity = $this->getThisEm()->getRepository('OlegOrderformBundle:PathServiceList')->findOneById($text);
-//
-//            if( null === $entity ) {
-//
-//                $newList = $this->createNew($text); //create a new record in db
-//
-//                $newListArr->add($newList);
-//
-//                return $newListArr;
-//
-//            } else {
-//
-//                $newListArr->add($entity);
-//
-//                return $newListArr;
-//
-//            }
-//
-//        } else {    //text => most probably it is new name or multiple ids
-//
-//            $newList = $this->createNew($text); //create a new record in db
-//
-//            $newListArr->add($newList);
-//
-//            return $newListArr;
-//
-//        }
-
     }
 
     public function addSingleService( $newListArr, $service ) {
 
         if( is_numeric ( $service ) ) {    //number => most probably it is id
+
+            //echo "service=".$service." => numeric => most probably it is id<br>";
 
             $entity = $this->getThisEm()->getRepository('OlegOrderformBundle:PathServiceList')->findOneById($service);
 
@@ -133,9 +109,14 @@ class UserPathServicesTransformer extends PathServiceTransformer
 
         } else {    //text => most probably it is new name or multiple ids
 
+            //echo "service=".$service." => text => most probably it is new name or multiple ids<br>";
+
             $newList = $this->createNew($service); //create a new record in db
 
-            $newListArr->add($newList);
+            if( $newList ) {
+                //echo "newList="+$newList+"<br>";
+                $newListArr->add($newList);
+            }
 
             return $newListArr;
 

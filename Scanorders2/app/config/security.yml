@@ -67,6 +67,7 @@ security:
      - { path: ^/admin/, role: ROLE_ADMIN }
      - { path: ^/logger/, role: ROLE_ADMIN }
      - { path: ^/siteparameters/, role: ROLE_ADMIN }
+     - { path: ^/util/pathservice, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/util/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
      - { path: ^/user/, role: ROLE_USER }
      - { path: ^/check/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }

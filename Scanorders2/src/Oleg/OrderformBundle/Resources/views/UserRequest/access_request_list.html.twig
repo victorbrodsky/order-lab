@@ -1,26 +1,26 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
 {% block title %}
-    Access Request List
+    Access Requests
 {% endblock %}
 
 {% block content %} 
 
-    <h3 class="text-info">User Request List</h3>
+    <h3 class="text-info">Access Requests</h3>
 
     <table class="table table-hover table-condensed text-justify">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Access</th>
-                <th>User</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Title</th>
-                <th>Phone</th>
-                <th>Last Login</th>
-                <th>Roles</th>
-                <th>Path Services</th>
+                <th>{{ knp_pagination_sortable(entities, 'ID', 'accreq.id') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Access', 'accreq.appliedforaccess') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'User', 'accreq.username') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Name', 'accreq.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.title') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Phone', 'accreq.phone') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Last Login', 'accreq.lastLogin') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Roles', 'accreq.roles') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Service / Division', 'pathologyServices.name') }}</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -48,12 +48,10 @@
                 <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
                 <td>
                     {% for role in entity.roles %}
-
                         {#{{ role }}#}
                         {% if role != "ROLE_USER" %}
                             "{{ attribute(roles, role) }}"
                         {% endif %}
-
                     {% endfor %}
                 </td>
                 <td>

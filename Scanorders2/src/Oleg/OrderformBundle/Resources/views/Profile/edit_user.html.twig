@@ -29,25 +29,26 @@
     {{ formmacros.field(form.phone) }}
     {{ formmacros.field(form.fax) }}
     {{ formmacros.field(form.office) }}
-    {% if is_granted('ROLE_ADMIN') %}
+
+    {% if is_granted('ROLE_ADMIN') and app.security.getToken().getUser().getId() != entity.id %}
         {{ formmacros.field(form.locked) }}
-        {#{{ formmacros.field(form.expired) }}#}
-        {#{{ formmacros.field(form.enabled) }}#}
+    {% else %}
+        {% do form.locked.setRendered %}
     {% endif %}
 
     <br>
-    {#{{ form_rest(form) }}#}
-    {{ form_widget(form._token) }}
+    {{ form_rest(form) }}
+    {#{{ form_widget(form._token) }}#}
 
     {#{{ form(form) }}#}
 
     {% if cicle != "show" %}
-    <p>
-        <div>
-            <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
-            <button class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}">Cancel</button>
-        </div>
-    </p>
+        <p>
+            <div>
+                <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
+                <button class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}">Cancel</button>
+            </div>
+        </p>
     {% endif %}
 
 {{ form_end(form) }}

@@ -65,20 +65,37 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
-        $builder->add( 'pathologyService', 'choice', array(
-            'label' => 'Service / Division:',
-            'max_length'=>200,
-            'choices' => $helper->getPathologyService(),
-            'required'=>false,
-            'attr' => array('class' => 'combobox combobox-width', 'style'=>'width: 70%;'),
+//        $builder->add( 'pathologyService', 'choice', array(
+//            'label' => 'Service / Division:',
+//            'max_length'=>200,
+//            'choices' => $helper->getPathologyService(),
+//            'required'=>false,
+//            'attr' => array('class' => 'combobox combobox-width', 'style'=>'width: 70%;'),
+//        ));
+        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
+        $builder->add('pathologyServices', 'custom_selector', array(
+            'label' => 'Pathology Service:',
+            'attr' => $attr,
+            'required' => false,
+            'classtype' => 'userPathologyServices'
         ));
         
         $builder->add('request', 'textarea', array(
             'label'=>'Reason for account request:',
-            'max_length'=>'1000',
             'required'=> false,
             'attr' => array('class'=>'textarea form-control form-control-modif'),
-        ));    
+        ));
+
+        $builder->add('creationdate');
+
+        $builder->add("cwidyesno", "choice", array(
+            'mapped' => false,
+            'multiple' => false,
+            'expanded' => true,
+            'label' => false,
+            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'attr' => array('class' => 'horizontal_type patientsexclass')
+        ));
 
     }
 

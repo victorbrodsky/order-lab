@@ -12,10 +12,9 @@ use Oleg\OrderformBundle\Form\UserRequestType;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+//@Route("/userrequest")
 /**
  * UserRequest controller.
- *
- * @Route("/userrequest")
  */
 class UserRequestController extends Controller
 {
@@ -23,7 +22,7 @@ class UserRequestController extends Controller
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/", name="accountrequest")
+     * @Route("/account-requests", name="accountrequest")
      * @Method("GET")
      * @Template()
      */
@@ -35,31 +34,47 @@ class UserRequestController extends Controller
         
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:UserRequest')->findAll();
+        //$entities = $em->getRepository('OlegOrderformBundle:UserRequest')->findAll();
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:UserRequest');
+        $dql =  $repository->createQueryBuilder("accreq");
+        $dql->select('accreq');
+        $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
+        $dql->orderBy("accreq.creationdate","DESC");
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
 
         return array(
-            'entities' => $entities,
+            'entities' => $pagination
         );
     }
 
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/", name="accountrequest_create")
+     * @Route("/create/", name="accountrequest_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:UserRequest:new.html.twig")
      */
     public function createAction(Request $request)
     {
+        //exit("createAction");
+
         $entity  = new UserRequest();
         $form = $this->createForm(new UserRequestType(), $entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            //echo "form valid!";
             $em = $this->getDoctrine()->getManager();
 
-            $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->processEntity( $entity );
-            
             $em->persist($entity);
             $em->flush();
 
@@ -80,7 +95,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/new", name="accountrequest_new")
+     * @Route("/account-requests/new", name="accountrequest_new")
      * @Method("GET")
      * @Template()
      */
@@ -99,7 +114,7 @@ class UserRequestController extends Controller
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -128,7 +143,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -159,7 +174,7 @@ class UserRequestController extends Controller
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegOrderformBundle:UserRequest:edit.html.twig")
      */
@@ -179,8 +194,6 @@ class UserRequestController extends Controller
 
         if ($editForm->isValid()) {
 
-            $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->processEntity( $entity );
-
             $em->persist($entity);
             $em->flush();
 
@@ -198,7 +211,7 @@ class UserRequestController extends Controller
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -243,7 +256,7 @@ class UserRequestController extends Controller
     
     
     /**
-     * @Route("/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
      */
@@ -278,7 +291,7 @@ class UserRequestController extends Controller
     /////////////// Access Request ////////////////////
 
     /**
-     * @Route("/accessrequest/{id}", name="access_request_new", requirements={"id" = "\d+"})
+     * @Route("/access-requests/{id}", name="access_request_new", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:access_request.html.twig")
      */
@@ -331,7 +344,7 @@ class UserRequestController extends Controller
     }
 
     /**
-     * @Route("/accessrequest/{id}", name="access_request_create", requirements={"id" = "\d+"})
+     * @Route("/access-requests/{id}", name="access_request_create", requirements={"id" = "\d+"})
      * @Method("POST")
      * @Template("OlegOrderformBundle:UserRequest:access_request.html.twig")
      */
@@ -391,7 +404,7 @@ class UserRequestController extends Controller
     /**
      * Lists all Access Request.
      *
-     * @Route("/accessrequestlist", name="accessrequest_list")
+     * @Route("/access-requests", name="accessrequest_list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:access_request_list.html.twig")
      */
@@ -403,8 +416,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
-        //$entities = $em->getRepository('OlegOrderformBundle:User')->findAll();
+        //$entities = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
 
         $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
         $rolesArr = array();
@@ -414,15 +426,33 @@ class UserRequestController extends Controller
             }
         }
 
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
+        $dql =  $repository->createQueryBuilder("accreq");
+        $dql->select('accreq');
+        $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
+        $dql->where("accreq.appliedforaccess = 'active'");
+        $dql->orderBy("accreq.appliedforaccess","DESC");
+        //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
+
         return array(
-            'entities' => $entities,
+            'entities' => $pagination,
             'roles' => $rolesArr
         );
+
     }
 
 
     /**
-     * @Route("/accessrequest/{id}/{status}/{role}/status", name="accessrequest_change", requirements={"id" = "\d+"})
+     * @Route("/access-requests/{id}/{status}/{role}/status", name="accessrequest_change", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */

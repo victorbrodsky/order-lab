@@ -112,8 +112,6 @@ class UserController extends Controller
             }
         }
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
-
         $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
@@ -167,6 +165,7 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'cicle' => 'edit'
 //            'delete_form' => $deleteForm->createView(),
         );
     }

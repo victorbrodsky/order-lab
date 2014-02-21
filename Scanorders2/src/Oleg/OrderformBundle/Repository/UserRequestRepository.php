@@ -14,22 +14,4 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 class UserRequestRepository extends EntityRepository
 {
 
-    public function processEntity( $entity ) {
-
-        $helper = new FormHelper();
-
-        $key = $entity->getPathologyService();
-
-        if( isset($key) && $key >= 0 ) {
-
-            $pathologyService = $helper->getPathologyService();
-
-            $entity->setPathologyService( $pathologyService[$key] );
-
-        }
-
-        $entity->setStatus('active');
-        
-        return $entity;
-    }
 }

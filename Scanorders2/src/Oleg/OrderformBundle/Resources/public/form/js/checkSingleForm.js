@@ -68,7 +68,7 @@ function checkFormSingle( elem ) {
     //$('#optional_param').collapse('toggle');    //open. Need to open to populate patient (if existed) linked to accession
 
     //console.log("start ajax");
-    $("#loading-modal").modal('show');
+    $("#optional_button").button('loading');
 
     var fieldsArr = new Array();
     fieldsArr[0] = '#accession-single';
@@ -90,7 +90,7 @@ function checkFormSingle( elem ) {
     }
 
     //console.log("stop ajax");
-    $("#loading-modal").modal('hide');
+    $("#optional_button").button('reset');
 
     if( !ajaxOK ) {
         return false;
@@ -116,7 +116,7 @@ function removeFormSingle( elem ) {
 
     //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
 
-    $("#loading-modal").modal('show');
+    $("#remove_single_btn").button('loading');
 
     //console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
     $('.blockbtn').trigger("click");
@@ -134,7 +134,7 @@ function removeFormSingle( elem ) {
     $('#maincinglebtn').hide();
     collapseElementFix($('#optional_param'));   //close optional info
 
-    $("#loading-modal").modal('hide');
+    $("#remove_single_btn").button('reset');
 
 }
 

@@ -4,11 +4,11 @@
     My Orders
 {% endblock %}
 
-{% block content %} 
-{% block body -%}
+{% block content %}
 
     {% if is_granted('ROLE_PROCESSOR') and security == 'true' %}
 
+        <p>
         {% if userreqs is defined and userreqs | length > 0 %}
             <a class="text-danger" href="{{ path('accountrequest') }}">Active Account Requests:{{ userreqs | length }}</a>
         {% endif %}
@@ -20,6 +20,7 @@
         {% if accessreqs is defined and accessreqs | length > 0 %}
             <a class="text-danger" href="{{ path('accessrequest_list') }}">Active Access Requests:{{ accessreqs | length }}</a>
         {% endif %}
+        </p>
 
     {% endif %}
 
@@ -129,7 +130,7 @@
                     <a href="{{ path('multy_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a>
                 </td>
                 {% if entity.scandeadline != '' %}
-                    <td>{{ entity.scandeadline|date('m/d/Y H:i') }}</td>
+                    <td>{{ entity.scandeadline|date('m/d') }}</td>
                 {% else %}    
                     <td></td>
                 {% endif %}
@@ -154,6 +155,5 @@
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>
-      
-{% endblock %}
+
 {% endblock %}

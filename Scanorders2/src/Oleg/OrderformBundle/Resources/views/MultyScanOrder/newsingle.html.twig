@@ -52,11 +52,8 @@
 
     {#{% set diffDiagnosesHtml = formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"") %}#}
 
-    {#<input type="hidden" id="formtype" value="single" />#}
     <input type="hidden" id="orderformtype" value="single" />
-    {#<input type="hidden" id="formtype" value="multi" />#}
     <input type="hidden" id="formcicle" value="{{ cycle }}" />
-    {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
     
     <form id="scanorderform" action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
@@ -191,8 +188,9 @@
 
             {#        The optional parameter    #}
             <div class="row" style="padding-bottom: 2%">
+                {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
                 <p>
-                    <button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse">
+                    <button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-loading-text="<img src='{{ imgLoading }}' />">
                         Add Optional Info
                     </button>
                 </p>

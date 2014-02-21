@@ -266,6 +266,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $history->setRoles($entity->getProvider()->first()->getRoles());
         $history->setCurrentstatus($entity->getStatus());
         if( $entity->getStatus() == 'Not Submitted' ) {
+            $systemUser = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+            $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
         }
         $em->persist($history);

@@ -43,13 +43,14 @@ class UserType extends AbstractType
 //            $constraint = new OldUserPassword();
 //        }
 
-//        $disabled = "";
-//        if( !$this->roleAdmin ) {
-//            $disabled = "disabled='disabled'";
-//        }
+        $read_only = false;
+        if( !$this->roleAdmin ) {
+            $read_only = true;
+        }
 
         $builder->add('username', null, array(
             'label' => 'Username:',
+            'read_only' => $read_only,
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('firstName', null, array(
@@ -81,12 +82,12 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('office', null, array(
-            'label' => 'Office:',
+            'label' => 'Office Location:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
 
-        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden', 'name' => 'select2[]');    //new
+        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
         $builder->add('pathologyServices', 'custom_selector', array(
             'label' => 'Pathology Service:',
             'attr' => $attr,
@@ -112,7 +113,7 @@ class UserType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif')
 //            ));
             $builder->add('locked', null, array(
-                'label' => 'Locked:',
+                'label' => 'Prevent user from logging in (lock):',
                 'attr' => array('class'=>'form-control form-control-modif')
             ));
 //            $builder->add('expired', null, array(

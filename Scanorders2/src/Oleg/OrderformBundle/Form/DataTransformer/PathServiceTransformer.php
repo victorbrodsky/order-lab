@@ -9,6 +9,7 @@
 
 namespace Oleg\OrderformBundle\Form\DataTransformer;
 
+use Oleg\OrderformBundle\Entity\User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -19,8 +20,8 @@ class PathServiceTransformer implements DataTransformerInterface
     /**
      * @var ObjectManager
      */
-    private $em;
-    private $user;
+    protected $em;
+    protected $user;
 
     /**
      * @param ObjectManager $om
@@ -96,6 +97,13 @@ class PathServiceTransformer implements DataTransformerInterface
         $entity = $this->em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($name);
         
         if( null === $entity ) {
+
+            //echo "create new<br>";
+            //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
+            if( !$this->user instanceof User ) {
+                //user = system user
+                $this->user = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+            }
 
             $newEntity = new PathServiceList();
             $newEntity->setName($name);

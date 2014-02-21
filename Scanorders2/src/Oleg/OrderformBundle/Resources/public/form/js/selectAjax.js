@@ -63,6 +63,8 @@ function regularCombobox() {
 
 function customCombobox() {
 
+    //console.log("cicle="+cicle);
+
     if( cicle && cicle != 'edit_user' && urlBase ) {
         getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
@@ -432,7 +434,7 @@ function getComboboxPathService(urlCommon,ids) {
         url = url + "?opt=default";
     }
 
-    //console.log("cicle="+cicle);
+    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid);
     if( cicle == 'edit_user' ) {
         var multiple = true;
     } else {
