@@ -24,6 +24,11 @@ class SiteParameters {
     protected $maxIdleTime;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $environment;
+
+    /**
      * @param mixed $maxIdleTime
      */
     public function setMaxIdleTime($maxIdleTime)
@@ -46,6 +51,23 @@ class SiteParameters {
     {
         return $this->id;
     }
+
+    /**
+     * @param mixed $environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
 
 
 }

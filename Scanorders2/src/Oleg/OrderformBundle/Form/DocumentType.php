@@ -31,7 +31,7 @@ class DocumentType extends AbstractType
 
             //echo " => new, create or edit set file ";
             $builder->add('file', 'file', array(
-                'label'=>'Relevant Paper or Abstract:',
+                'label'=>'Relevant Paper or Abstract',
                 'required'=>false,
             ));
 
@@ -39,7 +39,7 @@ class DocumentType extends AbstractType
 
             //echo "show set name ";
             $builder->add('name', 'text', array(
-                'label'=>'Relevant Paper or Abstract:',
+                'label'=>'Relevant Paper or Abstract',
                 'required'=>false,
             ));
 

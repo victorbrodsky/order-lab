@@ -97,7 +97,8 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
             return new UsernamePasswordToken($user, 'bar', $providerKey, $user->getRoles());
 
         } else {
-            throw new AuthenticationException('The Aperio authentication failed.');
+            $authres = print_r($AuthResult);
+            throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
         }
 
         throw new AuthenticationException('Aperio: Invalid username or password');

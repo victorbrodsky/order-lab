@@ -164,7 +164,7 @@ class ScanOrderController extends Controller {
                     $criteriastr .= " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
                     break;
                 case "All Not Filled":
-                    $criteriastr .= " status.name NOT LIKE '%Filled%'";
+                    $criteriastr .= " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'";
                     break;
                 case "All On Hold":
                     $criteriastr .= " status.name LIKE '%On Hold%'";

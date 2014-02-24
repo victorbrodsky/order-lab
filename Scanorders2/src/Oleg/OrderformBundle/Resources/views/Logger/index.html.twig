@@ -2,19 +2,19 @@
 
 {% block content %}
 
-    <h3 class="text-info">Logger List</h3>
+    <h3 class="text-info">Event Log</h3>
 
     <table class="records_list table table-hover table-condensed text-justify">
         <thead>
             <tr>
-                <th>{{ knp_pagination_sortable(pagination, 'Id', 'logger.id') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Creationdate', 'logger.creationdate') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Username', 'logger.username') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Ip', 'logger.ip') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event ID', 'logger.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Timestamp', 'logger.creationdate') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'IP', 'logger.ip') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Server Response', 'logger.serverresponse') }}</th>
                 {#<th>Actions</th>#}
@@ -29,19 +29,8 @@
                 <tr class="activetr" >
             {% endif %}
 
-                <td>
-                    {{ entity.id }}
-                    {#<a href="{{ path('logger_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
-                </td>
+                <td>{{ entity.id }}</td>
                 <td>{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                    {% for role in entity.roles %}
-                        {% if role != "ROLE_USER" %}
-                            "{{ attribute(roles, role) }}"
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                <td>{{ entity.username }}</td>
                 <td>{{ entity.ip }}</td>
                 <td>
                     <div class="textarea_widget">
@@ -50,22 +39,27 @@
                 </td>
                 <td>{{ entity.width }}</td>
                 <td>{{ entity.height }}</td>
+                <td>
+                    {% if entity.username == 'anon.' %}
+                        {% set username = 'unknown' %}
+                    {% else %}
+                        {% set username = entity.username %}
+                    {% endif %}
+                    {{ username }}
+                </td>
+                <td>
+                    {% for role in entity.roles %}
+                        {% if role != "ROLE_USER" %}
+                            "{{ attribute(roles, role) }}"<br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
                 <td>{{ entity.event }}</td>
                 <td>
                     <div class="textarea_widget">
                         <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>
                     </div>
                 </td>
-                {#<td>#}
-                {#<ul>#}
-                    {#<li>#}
-                        {#<a href="{{ path('logger_show', { 'id': entity.id }) }}">show</a>#}
-                    {#</li>#}
-                    {#<li>#}
-                        {#<a href="{{ path('logger_edit', { 'id': entity.id }) }}">edit</a>#}
-                    {#</li>#}
-                {#</ul>#}
-                {#</td>#}
             </tr>
         {% endfor %}
         </tbody>

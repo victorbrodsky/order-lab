@@ -257,13 +257,13 @@ class MultyScanOrderController extends Controller {
                 if( isset($_POST['btnAmend']) ) {
                     $text =
                         "Thank You For Your Order !\r\n"
-                        . "Order #" . $entity->getId() . " Successfully Amended.\r\n"
+                        . "Order " . $entity->getId() . " Successfully Amended.\r\n"
                         . "Confirmation Email was sent to " . $email . "\r\n";
                 } else
                 if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
                     $text =
                         "Thank You For Your Order !\r\n"
-                        . "Your Order #" . $entity->getId() . " is saved but not submitted.\r\n"
+                        . "Your Order " . $entity->getId() . " is saved but not submitted.\r\n"
                         . "Confirmation Email was sent to " . $email . "\r\n";
                 } else {
                     $text = null;

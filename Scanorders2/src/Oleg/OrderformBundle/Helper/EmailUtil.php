@@ -23,7 +23,7 @@ class EmailUtil {
         } else {
             $thanks_txt =
                 "Thank You For Your Order !\r\n"
-                . "Order #" . $entity->getId() . " Successfully Submitted.\r\n"
+                . "Order " . $entity->getId() . " Successfully Submitted.\r\n"
                 . "Confirmation Email was sent to " . $email . "\r\n";
             $message = $thanks_txt;
         }

@@ -44,7 +44,16 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('OlegOrderformBundle:Admin:index.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $params = $roles = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        if( count($params) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+        }
+
+        $param = $params[0];
+        $environment = $param->getEnvironment();
+
+        return $this->render('OlegOrderformBundle:Admin:index.html.twig', array('environment'=>$environment));
     }
 
 
@@ -718,7 +727,7 @@ class AdminController extends Controller
         //Note: fos user has role ROLE_SUPER_ADMIN
 
         $types = array(
-            "ROLE_ADMIN" => "Admin",
+            "ROLE_ADMIN" => "Administrator",
             "ROLE_PROCESSOR" => "Processor",
 
             "ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST" => "Data Quality Assurance Specialist",

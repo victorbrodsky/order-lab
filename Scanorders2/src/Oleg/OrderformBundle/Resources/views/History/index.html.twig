@@ -5,7 +5,7 @@
     {% if orderid is defined %}
 
         {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
-        <h3 class="text-info">Progress & Comments of <a href="{{ path('multy_show', { 'id': orderid }) }}">Order# {{ orderid }}</a></h3>
+        <h3 class="text-info">Progress & Comments of <a href="{{ path('multy_show', { 'id': orderid }) }}">Order {{ orderid }}</a></h3>
 
     {% else %}
         <h3 class="text-info">Progress & Comments List</h3>
@@ -28,7 +28,7 @@
                 <th>Performed By</th>
                 <th>Role(s)</th>
                 <th style="width: 25%">Comment</th>
-                <th>Viewed</th>
+                {#<th>Viewed</th>#}
 
                 {#<th>Actions</th>#}
 
@@ -37,19 +37,19 @@
         <tbody>
         {% for entity in entities %}
 
-            {% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}
-                {% set type = 'Comment Added' %}
-            {% else %}
-                {% set type = 'Status Changed' %}
-            {% endif %}
+            {#{% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}#}
+                {#{% set type = 'Comment Added' %}#}
+            {#{% else %}#}
+                {#{% set type = 'Status Changed' %}#}
+            {#{% endif %}#}
 
-            {% if entity.currentstatus == 'Submitted' %}
-                {% set type = 'Initial Order Submission' %}
-            {% endif %}
+            {#{% if entity.currentstatus == 'Submitted' %}#}
+                {#{% set type = 'Initial Order Submission' %}#}
+            {#{% endif %}#}
 
-            {% if entity.currentstatus == 'Not Submitted' %}
-                {% set type = 'Auto-Saved Draft' %}
-            {% endif %}
+            {#{% if entity.currentstatus == 'Not Submitted' %}#}
+                {#{% set type = 'Auto-Saved Draft' %}#}
+            {#{% endif %}#}
 
             <tr>
                 {#<td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
@@ -62,7 +62,7 @@
 
                 <td>{% if entity.changedate %}{{ entity.changedate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>
-                    {{ type }}
+                    {{ entity.eventtype }}
                 </td>
                 <td>
                     {{ entity.newstatus }}
@@ -81,18 +81,19 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <div class="textarea_widget">
-                        <textarea readonly class="textarea form-control">{{ entity.note }}</textarea>
-                    </div>
+                    {{ entity.note }}
+                    {#<div class="textarea_widget">#}
+                        {#<textarea readonly class="textarea form-control">{{ entity.note }}</textarea>#}
+                    {#</div>#}
                 </td>
 
-                <td>
-                    {% if entity.viewed == '' %}
-                        No
-                    {% else %}
-                        {{ entity.viewed.username }} on {{ entity.vieweddate|date('m/d/Y H:i') }}
-                    {% endif %}
-                </td>
+                {#<td>#}
+                    {#{% if entity.viewed == '' %}#}
+                        {#No#}
+                    {#{% else %}#}
+                        {#{{ entity.viewed.username }} on {{ entity.vieweddate|date('m/d/Y H:i') }}#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 {#<td>#}
                     {#<a href="{{ path('history_show', { 'id': entity.id }) }}">show</a>#}

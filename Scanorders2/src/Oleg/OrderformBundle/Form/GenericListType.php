@@ -28,7 +28,12 @@ class GenericListType extends AbstractType
 
         if( $this->className == "Status" ) {
             $builder
-                ->add('action');
+                ->add('action',null,array('label'=>'Action:'));
+        }
+
+        if( $this->className == "Roles" ) {
+            $builder
+                ->add('alias',null,array('label'=>'Alias:'));
         }
 
         $builder->add('list', new ListType(), array(

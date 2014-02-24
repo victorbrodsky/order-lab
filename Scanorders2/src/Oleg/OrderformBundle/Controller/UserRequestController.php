@@ -491,7 +491,6 @@ class UserRequestController extends Controller
         $em->flush();
 
         return $this->redirect($this->generateUrl('accessrequest_list'));
-
     }
     
 }

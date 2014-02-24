@@ -600,14 +600,14 @@ function setNavBar() {
     }
     
     if( full.indexOf("/user/") !== -1 ) {
-        if( $('#nav-bar-admin') ) {
-           id = 'user';
-        } else {
+        if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
+        } else {
+           id = 'user';
         }
-        
-    }  
+    }
 
+    //console.log("id="+id);
     //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
 
     $('#nav-bar-'+id).addClass('active');

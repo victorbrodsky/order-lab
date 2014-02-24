@@ -4,11 +4,7 @@
 
     <h3 class="text-info">Admin Manager</h3>
 
-    <p>
-        <a href="{{ path('generate_all') }}">Generate All</a>
-    </p>
 
-    <br>
 
     <h3 class="text-info">Stains</h3>
     <p>
@@ -105,13 +101,7 @@
         <a href="{{ path('regiontoscan') }}">Region To Scan</a>
     </p>
 
-
-
-
     <hr>
-
-
-
 
     <br>
     <h3 class="text-info">Statuses</h3>
@@ -122,15 +112,27 @@
     <br>
     <hr>
 
-    <h3 class="text-info">Users</h3>
-    <p>
-        <a href="{{ path('listusers') }}">Users</a>
-    </p>
-
     <h3 class="text-info">Roles</h3>
     <p>
         <a href="{{ path('roles') }}">Roles</a>
     </p>
+
+    <br>
+    <hr>
+
+
+    {% if environment is not defined %}
+        {% set environment = 'dev' %}
+    {% endif %}
+
+    <!--show this only for dev. Don't show for live-->
+    {% if is_granted('ROLE_ADMIN') and environment == 'dev' %}
+        <p><a onclick="return confirm('Are you sure you want to overwrite all data?');"
+               href="{{ path('generate_all') }}">Generate All</a>
+        </p>
+    {% endif %}
+
+    <br>
 
 {% endblock %}
 

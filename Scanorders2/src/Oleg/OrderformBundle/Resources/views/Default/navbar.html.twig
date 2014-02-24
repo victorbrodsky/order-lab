@@ -56,6 +56,7 @@
                             <li><a href="{{ path('adminindex') }}">Incoming Orders</a></li>
                             <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path('listusers') }}">Users</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><a href="{{ path('admin_index') }}">DB Manager</a></li>
                                 <li><a href="{{ path('logger') }}">Login Logs</a></li>

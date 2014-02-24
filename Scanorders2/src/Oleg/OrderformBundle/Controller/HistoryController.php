@@ -290,6 +290,8 @@ class HistoryController extends Controller
 
         $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
 
+        $viewcount = 0;
+
         foreach( $entities as $entity ) {
 
             if( $entity->getViewed() ) {
@@ -329,12 +331,40 @@ class HistoryController extends Controller
                 $entity->setVieweddate( new \DateTime() );
                 $em->persist($entity);
                 $em->flush();
+
+                $viewcount++;
             }
         }
 
 //        if( !$entities || count($entities) == 0 ) {
 //            throw $this->createNotFoundException('Unable to find History entity.');
 //        }
+
+        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+
+        if( $viewcount > 0 && $orderinfo->getProvider()->first()->getId() != $user->getId()) {
+            //add a new record in history
+            $history = new History();
+            $history->setEventtype('Progress & Comments Viewed');
+            $history->setOrderinfo($orderinfo);
+            $history->setProvider($user);
+            $history->setCurrentid($id);
+            //$history->setNewid($id);
+            $history->setCurrentstatus($orderinfo->getStatus());
+            //$history->setNewstatus($orderinfo->getStatus());
+            $history->setChangedate( new \DateTime() );
+            //$history->setNote($text_value);
+            //$history->setSelectednote($selectednote);
+            $history->setRoles($user->getRoles());
+            $history->setViewed($user);
+            $history->setVieweddate( new \DateTime() );
+
+            $em->persist($history);
+            $em->flush();
+            echo "viewed !!! <br>";
+        } else {
+            echo "not viewed <br>";
+        }
 
         if( count($entities) > 0 ) {
             $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
@@ -366,6 +396,7 @@ class HistoryController extends Controller
 
         $text_value = $request->request->get('text');
         $id = $request->request->get('id');
+        $selectednote = $request->request->get('selectednote');
         //echo "id=".$id.", text_value=".$text_value."<br>";
 
         $res = 1;
@@ -379,7 +410,7 @@ class HistoryController extends Controller
             $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
             $history = new History();
-
+            $history->setEventtype('Comment Added');
             $history->setOrderinfo($orderinfo);
             $history->setProvider($user);
             $history->setCurrentid($id);
@@ -388,6 +419,7 @@ class HistoryController extends Controller
             //$history->setNewstatus($orderinfo->getStatus());
             $history->setChangedate( new \DateTime() );
             $history->setNote($text_value);
+            $history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
 
             //echo "ok";

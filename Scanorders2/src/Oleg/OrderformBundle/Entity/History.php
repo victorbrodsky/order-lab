@@ -76,6 +76,11 @@ class History
     private $note;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $selectednote;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="viewed_id", referencedColumnName="id", nullable=true)
      */
@@ -89,6 +94,10 @@ class History
      */
     private $vieweddate;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $eventtype;
 
 
     /**
@@ -288,6 +297,38 @@ class History
     public function getOrderinfo()
     {
         return $this->orderinfo;
+    }
+
+    /**
+     * @param mixed $selectednote
+     */
+    public function setSelectednote($selectednote)
+    {
+        $this->selectednote = $selectednote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSelectednote()
+    {
+        return $this->selectednote;
+    }
+
+    /**
+     * @param mixed $eventtype
+     */
+    public function setEventtype($eventtype)
+    {
+        $this->eventtype = $eventtype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEventtype()
+    {
+        return $this->eventtype;
     }
 
 

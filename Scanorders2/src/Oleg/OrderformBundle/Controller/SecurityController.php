@@ -33,12 +33,12 @@ class SecurityController extends Controller
 
         //display_width and height are null because html page is rendered after php code.
         //To get width and height we can use ajax call to php.
-        $request = $this->container->get('request');
-        $options = array();
-        $em = $this->getDoctrine()->getManager();
-        $userUtil = new UserUtil();
-        $options['event'] = "Login Page Visit";
-        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+//        $request = $this->container->get('request');
+//        $options = array();
+//        $em = $this->getDoctrine()->getManager();
+//        $userUtil = new UserUtil();
+//        $options['event'] = "Login Page Visit";
+//        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
 
         $request = $this->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
@@ -152,6 +152,24 @@ class SecurityController extends Controller
         $response = new Response();
         $response->setContent($maxIdleTime);
 
+        return $response;
+    }
+
+    /**
+     * @Route("/setloginvisit/", name="setloginvisit")
+     * @Method("GET")
+     */
+    public function setAjaxLoginVisit( Request $request )
+    {
+        //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
+        $options = array();
+        $em = $this->getDoctrine()->getManager();
+        $userUtil = new UserUtil();
+        $options['event'] = "Login Page Visit";
+        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+
+        $response = new Response();
+        $response->setContent('OK');
         return $response;
     }
 

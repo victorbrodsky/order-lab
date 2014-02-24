@@ -215,6 +215,7 @@ class ListController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        $form = $this->createEditForm($entity,true);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
@@ -224,6 +225,7 @@ class ListController extends Controller
 
         return array(
             'entity'      => $entity,
+            'edit_form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
             'type' => $type
         );
@@ -280,14 +282,11 @@ class ListController extends Controller
     * @param $entity The entity
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm($entity)
+    private function createEditForm($entity,$disabled=false)
     {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-
-        //$formClass = "Oleg\\OrderformBundle\\Form\\".$className."Type";
-        //$newForm = new $formClass();
 
         $options = array();
         if( method_exists($entity,'getOriginal') ) {
@@ -299,11 +298,14 @@ class ListController extends Controller
         $create_path = strtolower($className);
 
         $form = $this->createForm($newForm, $entity, array(
-            'action' => $this->generateUrl($create_path.'_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl($create_path.'_show', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'disabled' => $disabled
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        if( !$disabled ) {
+            $form->add('submit', 'submit', array('label' => 'Update'));
+        }
 
         return $form;
     }
@@ -349,7 +351,7 @@ class ListController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl($type.'_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl($type.'_show', array('id' => $id)));
         }
 
         return array(

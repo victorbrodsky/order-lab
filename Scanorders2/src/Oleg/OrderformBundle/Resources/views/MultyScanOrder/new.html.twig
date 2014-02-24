@@ -29,7 +29,7 @@
     <h3 class="text-info">
         {{ form.vars.value.type  }} Scan Order
         {% if form.vars.value.oid != "" %}
-            #{{ form.vars.value.oid }}
+            {{ form.vars.value.oid }}
             ({{ form.vars.value.status }})
         {% endif %}
     </h3>

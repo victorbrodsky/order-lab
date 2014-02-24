@@ -38,8 +38,8 @@ class UserController extends Controller
             return $this->redirect($this->generateUrl('index'));
         }
 
-        $userManager = $this->container->get('fos_user.user_manager');
-        $users = $userManager->findUsers();
+        //$userManager = $this->container->get('fos_user.user_manager');
+        //$users = $userManager->findUsers();
 
         $em = $this->getDoctrine()->getManager();
         $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
@@ -50,8 +50,25 @@ class UserController extends Controller
             }
         }
 
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.pathologyServices", "pathologyServices");
+        //$dql->where("user.appliedforaccess = 'active'");
+        $dql->orderBy("user.id","ASC");
+        //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
+
         return array(
-            'entities' => $users,
+            'entities' => $pagination,
             'roles' => $rolesArr
         );
     }

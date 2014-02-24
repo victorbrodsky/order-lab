@@ -19,7 +19,7 @@
 {% if error %} 
     <p class="alert alert-danger" align="middle">
         {#{{ error }}#}
-        Bad credentials
+        There was an error with your User Name/Password combination. Please try again.
     </p>
 {% endif %}
 
@@ -41,7 +41,7 @@
     </div>
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
 
 </form>
 
@@ -51,7 +51,9 @@
     <p>
         Please use your
         <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>
-        or the Aperio eSlide Manager account to log in.
+        or the
+        <a href="http://c.med.cornell.edu">Aperio eSlide Manager</a>
+        account to log in.
     </p>
     <p>
         <a href="{{ path('accountrequest_new') }}">

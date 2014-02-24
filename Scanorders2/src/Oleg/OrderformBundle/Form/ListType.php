@@ -22,10 +22,10 @@ class ListType extends AbstractType
     {
 
         $builder
-            ->add('orderinlist')
-            ->add('name')
-            ->add('type')
-            ->add('creator')
+            ->add('orderinlist',null,array('label'=>'Order:'))
+            ->add('name',null,array('label'=>'Name:'))
+            ->add('type',null,array('label'=>'Type:'))
+            ->add('creator',null,array('label'=>'Creator:'))
         ;
 
         $builder->add( 'createdate', 'date', array(

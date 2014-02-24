@@ -18,6 +18,12 @@ class SiteParametersType extends AbstractType
             'label'=>'Max Idle Time (min):',
             //'attr' => array('class'=>'form-control','style'=>'width:100px')
         ));
+
+        $builder->add('environment','choice',array(
+            'label'=>'Environment:',
+            'choices' => array("live"=>"live", "dev"=>"dev"),
+            //'attr' => array('class'=>'form-control','style'=>'width:100px')
+        ));
     }
     
     /**

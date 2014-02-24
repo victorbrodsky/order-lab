@@ -31,8 +31,12 @@ class SiteParametersController extends Controller
 
         $entities = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
 
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+
         return array(
-            'entities' => $entities,
+            'entity' => $entities[0],
         );
     }
     /**

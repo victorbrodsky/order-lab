@@ -259,6 +259,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //record history
         $history = new History();
+        $history->setEventtype('Initial Order Submission');
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());
@@ -269,6 +270,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $systemUser = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
+            $history->setEventtype('Auto-Saved Draft');
         }
         $em->persist($history);
         $em->flush();

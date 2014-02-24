@@ -21,14 +21,18 @@ $(document).ready(function() {
     $('.combobox').on("change", function(e) {
 
         var data = $(this).select2('data');
+        console.log('data='+data);
         if( data ) {
-            var text = data.text;
+            var text = $(".modal-body").find('textarea').val();
+            console.log('text='+text);
+            if( text != '' ) {
+                text = text + '\n';
+            }
+            text = text + data.text+'.';
+            $(".modal-body").find('textarea').val(text);
         } else {
-            var text = '';
+            //var text = '';
         }
-
-        //console.log("text="+text);
-        $(".modal-body").find('textarea').val(text);
 
     });
 
@@ -46,17 +50,16 @@ function submitNewComment(id) {
     var urlCommentSubmit = "http://"+urlBase+"/history/order/create/";
 
     var text = $('#addComment_'+id).find('.textarea').val();
-    //var text = $("#addcomment_text").val();
+    var selectednote = $('.combobox').select2('data').text;
 
-    //console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text);
+    console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text + ", selectednote="+selectednote);
 
     var comment_modal = $('#addComment_'+id);
-
 
     $.ajax({
         url: urlCommentSubmit,
         type: 'POST',
-        data: {id: id, text: text},
+        data: {id: id, selectednote: selectednote, text: text},
         success: function (data) {
             //console.log("OK submit a new comment");
             comment_modal.modal('hide');
@@ -77,7 +80,7 @@ function submitNewComment(id) {
 
 function cleanModal() {
     $(".modal_error_div").html('');
-    $(".modal-body").find('textarea').val('');
+    //$(".modal-body").find('textarea').val('');
     $('.combobox').select2('data',null);
     //console.log("close: clean modal");
     //$(this).closest('.modal').find('.modal_error_div').html('');

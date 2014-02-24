@@ -3,12 +3,12 @@
 {% import "OlegOrderformBundle::ListForm/listmacros.html.twig" as listmacros %}
 
 {% block title %}
-    {{ type|capitalize }}
+    {{ type|capitalize }} New
 {% endblock %}
 
 {% block content %}
-    <h1>{{ type|capitalize }} creation</h1>
-    <br>
+
+    <h3 class="text-info">{{ type|capitalize }} New</h3>
 
     {{ listmacros.listNew( form, type ) }}
 

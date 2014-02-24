@@ -127,9 +127,35 @@ class User extends BaseUser
     /**
      * @return mixed
      */
+//    public function getPathologyServices()
+//    {
+//        return $this->pathologyServices;
+//    }
+    /**
+     * @return mixed
+     */
     public function getPathologyServices()
     {
-        return $this->pathologyServices;
+        //return $this->pathologyServices;
+
+        $resArr = new ArrayCollection();
+        foreach( $this->pathologyServices as $service ) {
+            if( $service->getId()."" == $this->getPrimaryPathologyService()."" ) {
+                //$resArr->removeElement($service);
+                //$resArr->first();
+                if( count($this->pathologyServices) > 1 ) {
+                    $firstEl = $resArr->get(0);
+                    $resArr->set(0,$service);
+                    $resArr->add($firstEl);
+                } else {
+                    $resArr->add($service);
+                }
+            } else {
+                $resArr->add($service);
+            }
+        }
+
+        return $resArr;
     }
 
     /**

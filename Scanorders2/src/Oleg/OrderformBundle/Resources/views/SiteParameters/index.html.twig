@@ -9,28 +9,23 @@
             <tr>
                 <th>Parameter</th>
                 <th>Value</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for entity in entities %}
             <tr>
                 <td>Max Idle Time (minutes)</td>
                 <td>{{ entity.maxIdleTime }}</td>
-                <td>
-                   <a href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>
-                </td>
             </tr>
-        {% endfor %}
+            <tr>
+                <td>Environment</td>
+                <td>{{ entity.environment }}</td>
+            </tr>
         </tbody>
     </table>
 
-    {#<ul>#}
-        {#<li>#}
-            {#<a href="{{ path('siteparameters_new') }}">#}
-                {#Create a new entry#}
-            {#</a>#}
-        {#</li>#}
-    {#</ul>#}
+    <br>
+    <p>
+        <a href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>
+    </p>
 
-    {% endblock %}
+{% endblock %}

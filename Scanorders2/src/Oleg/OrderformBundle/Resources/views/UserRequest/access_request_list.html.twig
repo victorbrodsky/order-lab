@@ -44,11 +44,10 @@
                 <td>{{ entity.displayName }}</td>
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.title }}</td>
-                <td>{{ entity.phone }}</td>
+                <td >{{ entity.phone }}</td>
                 <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
                 <td>
                     {% for role in entity.roles %}
-                        {#{{ role }}#}
                         {% if role != "ROLE_USER" %}
                             "{{ attribute(roles, role) }}"
                         {% endif %}

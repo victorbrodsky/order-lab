@@ -50,6 +50,7 @@ class OrderUtil {
 
             //record history
             $history = new History();
+            $history->setEventtype('Status Changed');
             $history->setOrderinfo($entity);
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
@@ -203,7 +204,7 @@ class OrderUtil {
 
             }
 
-            $message = 'Status of Order #'.$id.' has been changed to "'.$status.'"'.$message;
+            $message = 'Status of Order '.$id.' has been changed to "'.$status.'"'.$message;
 
         } else {
             //$message = 'Status: "'.$status.'" is not found';

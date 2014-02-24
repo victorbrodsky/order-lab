@@ -38,14 +38,12 @@ class PartPaperType extends AbstractType
 
             //echo "show set name ";
             $builder->add('name', 'text', array(
-                'label'=>'Relevant Paper or Abstract:',
+                'label'=>'Relevant Paper or Abstract',
                 'required'=>false,
                 'attr'=>array('class'=>'form-control')
             ));
 
         }
-
-
 
         $builder->add('partothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
