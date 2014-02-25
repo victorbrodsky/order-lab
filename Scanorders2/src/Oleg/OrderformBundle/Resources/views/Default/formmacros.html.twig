@@ -374,16 +374,11 @@
                     {#no label#}
                 {% else %}
                     {% if fieldtype == "paper" and cycle == "show" %}
-                        {{form_label(fieldThis.name)}}
+                        {{form_label(fieldThis.name)}}<!--
                     {% else %}
-                        {{form_label(fieldThis.field)}}
+                        {{form_label(fieldThis.field)}}<!--
                     {% endif %}
-
                     {% if field.vars.value.provider is defined %}
-
-                        {#id1:{{  field.vars.value.provider.id }}#}
-                        {#id2:{{ app.security.getToken().getUser().getId() }}#}
-
                         {% if ( cycle == "show" or cycle == "amend" ) and
                               not is_granted('ROLE_EXTERNAL_SUBMITTER') or
                               ( is_granted('ROLE_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
@@ -401,10 +396,8 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-
                     {% endif %}
-
-                    <b>:</b>
+                    --><strong>:</strong>
                 {% endif %}
                 </p>
             </div>

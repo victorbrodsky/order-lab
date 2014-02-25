@@ -32,14 +32,27 @@
                     <li id="nav-bar-edu" class="divider-vertical accession"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
                     <li id="nav-bar-res" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
                     <li id="nav-bar-table" class="divider-vertical order"><a href="{{ path('table_create') }}">Multi-Slide Table</a></li>
+
+    {% if 1 == 1 %}
                     <li id="nav-bar-index" class="divider-vertical index">
-                        <a href="{{ path('index') }}">
-                            My Orders
-                        </a>
+                        <a id="incoming-orders-menu-title" href="{{ path('index') }}">My Orders</a><!--
+                        {% if comments is defined and comments > 0 %}
+                        --><a id="incoming-orders-menu-badge" href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                        {% endif %}
+                        <!---->
                     </li>
-                    {% if comments is defined and comments > 0 %}
-                        <li id="nav-bar-history" class="divider-vertical comments-nav"><a href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}">New Comments<span class="badge">{{ comments }}</span></a></li>
-                    {% endif %}
+    {% endif %}
+    {% if 1 == 0 %}
+                    <li id="nav-bar-index" class="divider-vertical index" style="display: inline-block !important; !important; padding-right: 2px; margin-right: 0px !important;">
+                        {#style="padding-right: 2px !important; margin-right: 0px !important;"#}
+                        <a href="{{ path('index') }}" >My Orders</a>
+                    </li>
+                    <li id="nav-bar-index-badge" class="divider-vertical index" style="display: inline-block !important; padding-left: 0px !important; margin-left: 0px !important;">
+                        {% if comments is defined and comments > 0 %}
+                            <a href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}" style="padding-left: 0px !important; margin-left: 0px !important;"><span class="badge">{{ comments }}</span></a>
+                        {% endif %}
+                    </li>
+    {% endif %}
 
                 </ul>
 
@@ -59,7 +72,7 @@
                             <li><a href="{{ path('listusers') }}">Users</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><a href="{{ path('admin_index') }}">DB Manager</a></li>
-                                <li><a href="{{ path('logger') }}">Login Logs</a></li>
+                                <li><a href="{{ path('logger') }}">Event Log</a></li>
                                 <li><a href="{{ path('siteparameters') }}">Site Parameters</a></li>
                             {% endif %}
 

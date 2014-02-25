@@ -44,38 +44,39 @@
 
 {% macro listIndex( entities, type ) %}
 
-    <table class="records_list table table-hover table-condensed text-justify">
+    <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
 
             {% if entities|first.action is defined %}
-                <th>Action</th>
+                <th>{{ knp_pagination_sortable(entities, 'Action', 'ent.action') }}</th>
             {% endif %}
 
             {% if entities|first.alias is defined %}
-                <th>Alias</th>
+                <th>{{ knp_pagination_sortable(entities, 'Alias', 'ent.alias') }}</th>
             {% endif %}
 
-            <th>Type</th>
-            <th>Order</th>
-            <th>Creator</th>
-            <th>Createdate</th>
+            <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Order', 'ent.orderinlist') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Createdate', 'ent.createdate') }}</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
+
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path(type~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
 
-                {% if entities|first.action is defined %}
+                {% if entity.action is defined %}
                     <td>{{ entity.action }}</td>
                 {% endif %}
 
-                {% if entities|first.alias is defined %}
+                {% if entity.alias is defined %}
                     <td>{{ entity.alias }}</td>
                 {% endif %}
 
@@ -83,14 +84,18 @@
                 <td>{{ entity.orderinlist }}</td>
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
+                <td class="rowlink-skip">
                     <a class="btn btn-xs btn-default" href="{{ path(type~'_edit', { 'id': entity.id }) }}">Edit</a>
                 </td>
             </tr>
         {% endfor %}
+
         </tbody>
     </table>
 
+    <div class="navigation">
+        {{ knp_pagination_render(entities) }}
+    </div>
 
     <a href="{{ path(type~'_new') }}">
         Create a new entry

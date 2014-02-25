@@ -116,7 +116,7 @@
 /*}*/
 
 .footer {
-    margin-top: 15%;
+    margin-top: 100px;
     /*float: left;*/
     /*width: 100%;*/
 }
@@ -173,17 +173,6 @@
 .uncompletedtr {
     /*background-color: rgb(252, 248, 227);*/
     background-color: white;
-}
-
-/*align tabs to center*/
-.nav-tabs > li, .nav-pills > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-     zoom:1; /* hasLayout ie7 trigger */
-}
-.nav-tabs, .nav-pills {
-    text-align:center;
 }
 
 /*.panel*/
@@ -302,3 +291,63 @@
     min-height: 75px;
 }
 
+/*Comment counter*/
+#incoming-orders-menu-title, #incoming-orders-menu-badge {
+    display: inline-block !important;
+}
+
+#incoming-orders-menu-title {
+    padding-right: 3px !important;
+    box-shadow: none;
+}
+
+#incoming-orders-menu-badge {
+    padding-left: 3px !important;
+    box-shadow: none;
+}
+
+/*Multi-Slide Table Order nav bar*/
+
+/*align tabs to center*/
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    zoom:1; /* hasLayout ie7 trigger */
+}
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+
+/*make border*/
+.tab-content {
+    border-left: 1px solid #428bca;
+    border-right: 1px solid #428bca;
+    border-bottom: 1px solid #428bca;
+    padding: 10px;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+
+.tabbable>.nav-tabs>.active>a, .tabbable>.nav-tabs>.active>a:hover, .tabbable>.nav-tabs>.active>a:focus {
+    border: 1px solid #428bca;
+    border-bottom-color: transparent;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #428bca;
+}
+
+.nav-tabs > li > a {
+    color: #428bca
+}
+
+.nav-tabs > li > a:hover {
+    background-color: #428bca;
+    border: 1px solid #428bca;
+    border-bottom-color: transparent;
+    color: #ffffff
+}
+/*end of nav bar*/

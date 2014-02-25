@@ -86,13 +86,18 @@
                 </div>
             {% endfor %}
 
+            {% for flashMessage in app.session.flashbag.get('status-changed') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+            {% endfor %}
+
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
             {% block content %}{% endblock %}
 
         </div>
 
-        {#<div style="height: 200px;">&nbsp;</div>#}
+        {#<div style="height: 100px;">&nbsp;</div>#}
 
         <div class="footer">
             {% block footer %}

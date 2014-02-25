@@ -13,33 +13,28 @@
     <form id="scanorderform" action="{{ path('clinical_create') }}" method="post" {{ form_enctype(form) }}>
 
         <p>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#research" data-toggle="tab">Research</a></li>
-            <li><a href="#educational" data-toggle="tab">Educational</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="research">
-                <div  class="panel panel-patient">
-                    <div class="panel-body">
-                        {{ formmacros.field(form.research.project) }}
-                        {{ formmacros.field(form.research.settitle) }}
-                        {{ formmacros.field(form.research.principal) }}
+            <div  class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#research">Research</a></li>
+                    <li class=""><a data-toggle="tab" href="#educational">Educational</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="research" class="tab-pane active">
+                        <p>
+                            {{ formmacros.field(form.research.project) }}
+                            {{ formmacros.field(form.research.settitle) }}
+                            {{ formmacros.field(form.research.principal) }}
+                        </p>
+                    </div>
+                    <div id="educational" class="tab-pane">
+                        <p>
+                            {{ formmacros.field(form.educational.goal) }}
+                            {{ formmacros.field(form.educational.course) }}
+                            {{ formmacros.field(form.educational.lesson) }}
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="educational">
-                <div  class="panel panel-patient">
-                    <div class="panel-body">
-                        {{ formmacros.field(form.educational.goal) }}
-                        {{ formmacros.field(form.educational.course) }}
-                        {{ formmacros.field(form.educational.lesson) }}
-                    </div>
-                </div>
-            </div>
-        </div>
         </p>
 
         <!-- handsontable -->

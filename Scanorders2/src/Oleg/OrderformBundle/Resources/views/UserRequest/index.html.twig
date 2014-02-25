@@ -8,7 +8,7 @@
 
     <h3 class="text-info">Account Requests</h3>
 
-    <table class="table table-hover table-condensed text-justify">
+    <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'Account Request ID', 'accreq.id') }}</th>
@@ -107,5 +107,8 @@
         </tbody>
     </table>
 
+    <div class="navigation">
+        {{ knp_pagination_render(entities) }}
+    </div>
         
     {% endblock %}

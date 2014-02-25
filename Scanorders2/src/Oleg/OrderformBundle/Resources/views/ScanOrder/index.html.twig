@@ -47,7 +47,7 @@
         {{ form_rest(form) }}
     </form>
 
-    <table class="table table-hover table-condensed text-justify">
+    <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
                 
@@ -84,6 +84,7 @@
             </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
+        {#<tbody>#}
         {#{% for entity in entities %}#}
         {% for entitycomplex in pagination  %}
 
@@ -142,10 +143,8 @@
                     
             {% endif %}        
                     
-                <td>  
-
+                <td class="rowlink-skip">
                     {% include 'OlegOrderformBundle::Default/action.html.twig' %}
-
                 </td>
             </tr>
         {% endfor %}

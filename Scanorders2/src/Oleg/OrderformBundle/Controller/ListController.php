@@ -36,6 +36,7 @@ class ListController extends Controller
      * @Route("/returnslideto/", name="returnslideto")
      * @Route("/slidedelivery/", name="slidedelivery")
      * @Route("/regiontoscan/", name="regiontoscan")
+     * @Route("/lists/scan-order-processor-comments/", name="processorcomments")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -49,7 +50,22 @@ class ListController extends Controller
 
         //echo "type=".$type; //mrntype
 
-        $entities = $em->getRepository('OlegOrderformBundle:'.$type)->findAll();
+        //$entities = $em->getRepository('OlegOrderformBundle:'.$type)->findAll();
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:'.$type);
+        $dql =  $repository->createQueryBuilder("ent");
+        $dql->select('ent');
+        $dql->innerJoin("ent.creator", "creator");
+        //$dql->orderBy("ent.createdate","DESC");
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $entities = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1), /*page number*/
+            $limit/*limit per page*/
+        );
 
         return array(
             'entities' => $entities,
@@ -73,6 +89,7 @@ class ListController extends Controller
      * @Route("/returnslideto/", name="returnslideto_create")
      * @Route("/slidedelivery/", name="slidedelivery_create")
      * @Route("/regiontoscan/", name="regiontoscan_create")
+     * @Route("/lists/scan-order-processor-comments/", name="processorcomments_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -155,6 +172,7 @@ class ListController extends Controller
      * @Route("/returnslideto/new", name="returnslideto_new")
      * @Route("/slidedelivery/new", name="slidedelivery_new")
      * @Route("/regiontoscan/new", name="regiontoscan_new")
+     * @Route("/lists/scan-order-processor-comments/new", name="processorcomments_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -201,6 +219,7 @@ class ListController extends Controller
      * @Route("/returnslideto/{id}", name="returnslideto_show")
      * @Route("/slidedelivery/{id}", name="slidedelivery_show")
      * @Route("/regiontoscan/{id}", name="regiontoscan_show")
+     * @Route("/lists/scan-order-processor-comments/{id}", name="processorcomments_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -247,6 +266,7 @@ class ListController extends Controller
      * @Route("/returnslideto/{id}/edit", name="returnslideto_edit")
      * @Route("/slidedelivery/{id}/edit", name="slidedelivery_edit")
      * @Route("/regiontoscan/{id}/edit", name="regiontoscan_edit")
+     * @Route("/lists/scan-order-processor-comments/{id}/edit", name="processorcomments_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -325,6 +345,7 @@ class ListController extends Controller
      * @Route("/returnslideto/{id}", name="returnslideto_update")
      * @Route("/slidedelivery/{id}", name="slidedelivery_update")
      * @Route("/regiontoscan/{id}", name="regiontoscan_update")
+     * @Route("/lists/scan-order-processor-comments/{id}", name="processorcomments_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -377,6 +398,7 @@ class ListController extends Controller
      * @Route("/returnslideto/{id}", name="returnslideto_delete")
      * @Route("/slidedelivery/{id}", name="slidedelivery_delete")
      * @Route("/regiontoscan/{id}", name="regiontoscan_delete")
+     * @Route("/lists/scan-order-processor-comments/{id}", name="processorcomments_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

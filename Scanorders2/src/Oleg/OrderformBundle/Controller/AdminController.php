@@ -25,6 +25,7 @@ use Oleg\OrderformBundle\Entity\ReturnSlideTo;
 use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\SiteParameters;
+use Oleg\OrderformBundle\Entity\ProcessorComments;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -81,6 +82,7 @@ class AdminController extends Controller
         $count_SlideDelivery = $this->generateSlideDelivery();
         $count_RegionToScan = $this->generateRegionToScan();
         $count_siteParameters = $this->generateSiteParameters();
+        $count_comments = $this->generateProcessorComments();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
 
@@ -101,6 +103,7 @@ class AdminController extends Controller
             'Return Slide To='.$count_returnslide.', '.
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
+            'Processor Comments='.$count_comments.', '.
             'Site Parameters='.$count_siteParameters.' '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
@@ -909,6 +912,42 @@ class AdminController extends Controller
 
         $em->persist($params);
         $em->flush();
+
+        return $count;
+    }
+
+
+    public function generateProcessorComments() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            "Slide(s) damaged and can not be scanned",
+            "Slide(s) returned before being scanned",
+            "Slide(s) could not be scanned due to focusing issues"
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new ProcessorComments();
+            $listEntity->setOrderinlist( $count );
+            $listEntity->setCreator( $username );
+            $listEntity->setCreatedate( new \DateTime() );
+            $listEntity->setName( trim($type) );
+            $listEntity->setType('default');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
 
         return $count;
     }

@@ -138,7 +138,7 @@ class OrderUtil {
                     $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionKey,"Accession","accession",true, true);
 
                     $mrn = $patientKey; //mrn
-                    $mrnTypeId = $patientKey->getMrntype()->getId();
+                    $mrnTypeId = $patientKey->getKeytype()->getId();
                     //$extra = $patientKey->obtainExtraKey();
 
                     if( $accessionDb ) {
@@ -146,7 +146,7 @@ class OrderUtil {
                         $patientDb = $accessionDb->getParent()->getParent();
                         if( $patientDb ) {
                             $mrnDb = $patientDb->obtainValidKeyField();
-                            $mrnTypeIdDb = $mrnDb->getMrntype()->getId();
+                            $mrnTypeIdDb = $mrnDb->getKeytype()->getId();
 
                             //echo $mrn . "?=". $mrnDb ." && ". $mrnTypeId . "==". $mrnTypeIdDb . "<br>";
 
@@ -204,7 +204,8 @@ class OrderUtil {
 
             }
 
-            $message = 'Status of Order '.$id.' has been changed to "'.$status.'"'.$message;
+            //$message = 'Status of Order '.$id.' has been changed to "'.$status.'"'.$message;
+            $message = 'Status of Order '.$id.' succesfully changed to "'.$status.'"';
 
         } else {
             //$message = 'Status: "'.$status.'" is not found';

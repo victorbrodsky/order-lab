@@ -319,6 +319,8 @@ class ScanOrderController extends Controller {
         if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
             $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
         }
+
+        $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
         
         return array(
             'form' => $form->createView(),
@@ -326,7 +328,8 @@ class ScanOrderController extends Controller {
             'pagination' => $pagination,
             'userreqs' => $reqs,
             'accessreqs' => $accessreqs,
-            'routename' => $routeName
+            'routename' => $routeName,
+            'comments' => $processorComments
         );
     }
 
@@ -398,7 +401,7 @@ class ScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl( 'order_amend', array('id' => $res['oid']) ) );
         }
 
-        $this->get('session')->getFlashBag()->add('notice',$res['message']);
+        $this->get('session')->getFlashBag()->add('status-changed',$res['message']);
 
         return $this->redirect($this->generateUrl('index'));
     }

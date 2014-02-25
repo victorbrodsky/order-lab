@@ -18,13 +18,13 @@ $(document).ready(function() {
     _reload_page_after_modal = $('#reload_page_after_modal').val();
 
     //admin: copy combobox to textfield
-    $('.combobox').on("change", function(e) {
+    $('#modal-processor-comment').on("change", function(e) {
 
         var data = $(this).select2('data');
-        console.log('data='+data);
+        //console.log('data='+data);
         if( data ) {
             var text = $(".modal-body").find('textarea').val();
-            console.log('text='+text);
+            //console.log('text='+text);
             if( text != '' ) {
                 text = text + '\n';
             }
@@ -50,9 +50,14 @@ function submitNewComment(id) {
     var urlCommentSubmit = "http://"+urlBase+"/history/order/create/";
 
     var text = $('#addComment_'+id).find('.textarea').val();
-    var selectednote = $('.combobox').select2('data').text;
 
-    console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text + ", selectednote="+selectednote);
+    if( $('#modal-processor-comment').select2('data') ) {
+        var selectednote = $('#modal-processor-comment').select2('data').text;
+    } else {
+        var selectednote = "";
+    }
+
+    //console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text + ", selectednote="+selectednote);
 
     var comment_modal = $('#addComment_'+id);
 
@@ -72,6 +77,7 @@ function submitNewComment(id) {
             //console.log("Error submit a new comment");
             var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
             $('#modal_error_'+id).html(errormsg);
+            return false;
             //comment_modal.modal('hide');
         }
     });
@@ -80,8 +86,8 @@ function submitNewComment(id) {
 
 function cleanModal() {
     $(".modal_error_div").html('');
-    //$(".modal-body").find('textarea').val('');
-    $('.combobox').select2('data',null);
+    $(".modal-body").find('textarea').val('');
+    $('#modal-processor-comment').select2('data',null);
     //console.log("close: clean modal");
     //$(this).closest('.modal').find('.modal_error_div').html('');
 }

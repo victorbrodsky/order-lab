@@ -6,7 +6,7 @@
 
 {% block action %}
 
-    {% include 'OlegOrderformBundle::History/add_comment.html.twig' with {'orderid': entity.oid}  %}
+    {% include 'OlegOrderformBundle::History/add_comment.html.twig' with {'orderid': entity.oid,'comments': comments}  %}
 
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -21,16 +21,14 @@
 
             {#<li><a href="{{ path('history_orderinfo_show', { 'id': entity.oid }) }}">Add Comment</a></li>#}
             <li>
-                <a href="#" data-toggle="modal" data-target="#addComment_{{ entity.oid }}">
-                    Add Comment
-                </a>
+                <a href="#" data-toggle="modal" data-target="#addComment_{{ entity.oid }}">Add Comment</a>
             </li>
 
             <li class="divider"></li>
 
             {###############  USER ACTIONS #################}
             {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and not Filled %}
-                <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
+                <li><a onclick="return confirm('Are you sure?');" class="btn-danger"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Cancel' }) }}">Cancel</a>
                 </li>                  
             {% endif %}

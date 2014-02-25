@@ -361,9 +361,9 @@ class HistoryController extends Controller
 
             $em->persist($history);
             $em->flush();
-            echo "viewed !!! <br>";
+            //echo "viewed !!! <br>";
         } else {
-            echo "not viewed <br>";
+            //echo "not viewed <br>";
         }
 
         if( count($entities) > 0 ) {
@@ -376,10 +376,14 @@ class HistoryController extends Controller
             $rolesArr = '';
         }
 
+        $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+
         return array(
-            'entities'      => $entities,
-            'orderid'      => $id,
-            'roles' => $rolesArr
+            'entities' => $entities,
+            'orderid' => $id,
+            'orderdate' => $orderinfo->getOrderdate(),
+            'roles' => $rolesArr,
+            'comments' => $processorComments
         );
     }
 

@@ -3,7 +3,7 @@
 {% block content %}
 
     <h3 class="text-info">Users</h3>
-    <table class="records_list table table-hover table-condensed text-justify">
+    <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>
@@ -49,7 +49,7 @@
                     {% endfor %}
                 </td>
 
-                <td>
+                <td class="rowlink-skip">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                             Action <span class="caret"></span>
