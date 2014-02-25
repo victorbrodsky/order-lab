@@ -18,18 +18,18 @@ $(document).ready(function() {
     _reload_page_after_modal = $('#reload_page_after_modal').val();
 
     //admin: copy combobox to textfield
-    $('#modal-processor-comment').on("change", function(e) {
+    $('.modal').find('.combobox').on("change", function(e) {
 
         var data = $(this).select2('data');
         //console.log('data='+data);
         if( data ) {
-            var text = $(".modal-body").find('textarea').val();
+            var text = $(this).closest(".modal-body").find('textarea').val();
             //console.log('text='+text);
             if( text != '' ) {
                 text = text + '\n';
             }
             text = text + data.text+'.';
-            $(".modal-body").find('textarea').val(text);
+            $(this).closest(".modal-body").find('textarea').val(text);
         } else {
             //var text = '';
         }
