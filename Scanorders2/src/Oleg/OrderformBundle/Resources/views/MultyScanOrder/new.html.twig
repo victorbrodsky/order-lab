@@ -130,10 +130,10 @@
         {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
     {% endif %}
 
-    {% if formtype == 'Educational Multi-Slide Scan Order' %}
+    {% if formtype == 'Educational Multi-Slide Scan Order' or formtype == 'One Slide Scan Order' %}
         <div class="panel panel-patient panel-multi-form">
             <div class="panel-heading">
-                <h4 class="panel-title">Topic</h4>
+                <h4 class="panel-title">Educational Topic</h4>
             </div>
             <div class="panel-body">
                 {{ formmacros.field(form.educational.goal) }}
@@ -143,7 +143,7 @@
         </div>
     {% endif %}
 
-    {% if formtype == 'Research Multi-Slide Scan Order' %}
+    {% if formtype == 'Research Multi-Slide Scan Order' or formtype == 'One Slide Scan Order' %}
         <div class="panel panel-patient panel-multi-form">
             <div class="panel-heading">
                 <h4 class="panel-title">Research Project Info</h4>

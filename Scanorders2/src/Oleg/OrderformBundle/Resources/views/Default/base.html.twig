@@ -27,13 +27,13 @@
         {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
+    {#'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'#}
     {#'bundles/olegorderform/form/css/form.css'#}
     {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
     {% stylesheets
         'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
         'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
         'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
-        'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
         'bundles/olegorderform/form/css/form.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -61,8 +61,7 @@
              
 <body>
 
-    <div class="container page-content col-xs-12">
-
+    <div class="container text-center col-xs-12">
 
         <div class="header">
 

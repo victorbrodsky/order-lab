@@ -34,19 +34,9 @@
   margin-top: 3%;
 }
 
-.page-content {
-    /*padding-left: 5%;*/
-    /*padding-right: 5%;*/
-    /*padding-top: 0%;*/
-    /*padding-bottom: 5%;*/
-    /*float: left;*/
-    /*width: 100%;*/
-    text-align: center;
-}
-
-.page-content-top {
-   padding-top: 10%; 
-}
+/*.page-content-top {*/
+   /*padding-top: 10%; */
+/*}*/
 
 /*sign in login*/
 .form-signin {
@@ -91,32 +81,15 @@
     //width: 70%;
 }
 
-/*.fieldInputColl {*/
-    /*float: left;*/
-    /*width: 50%;*/
-    /*position: relative;*/
-/*}*/
-/*.addDelBtnColl {*/
-    /*float: right;*/
-    /*width: 50%;*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*right: 0;*/
-/*}*/
 
 .header {
     float: left;
     width: 100%;
 }
 
-/*.order-content {*/
-    /*//margin-top: 5%;*/
-    /*float: left;*/
-    /*width: 100%;*/
-/*}*/
-
 .footer {
     margin-top: 100px;
+    margin-bottom: 100px;
     /*float: left;*/
     /*width: 100%;*/
 }
@@ -179,10 +152,6 @@
 .panel-multi-form {
     border-left: 7px solid;
 }
-
-/*.panel-heading {*/
-    /*//height: 43px;*/
-/*}*/
 
 .panel-patient {
     border-color: #90BEE4;
@@ -265,10 +234,6 @@
 }
 
 /*shift left the buttons on the each form menu*/
-/*.form-btn-options {*/
-    /*float:right;*/
-    /*width: 20%;*/
-/*}*/
 .element-title {
     float: left;
     padding-left: 1%;
@@ -281,11 +246,6 @@
 .combobox-width {
     width: 100%;
 }
-
-/*.form_body_toggle_btn {*/
-    /*padding-right: 1%;*/
-    /*float: left;*/
-/*}*/
 
 .textarea {
     min-height: 75px;

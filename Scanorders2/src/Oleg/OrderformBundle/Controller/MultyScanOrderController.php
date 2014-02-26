@@ -401,7 +401,7 @@ class MultyScanOrderController extends Controller {
 
 
     /**
-     * Displays a form to create a new OrderInfo + Scan entities.
+     * Displays a form to view, update, amend an OrderInfo + Scan entities.
      * @Route("/edit/{id}", name="multy_edit")
      * @Route("/amend/{id}", name="order_amend")
      * @Route("/show/{id}", name="multy_show")

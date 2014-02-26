@@ -19,6 +19,7 @@ class LdapManager extends BaseLdapManager
     {
         parent::hydrate($user, $entry);
 
+        //exit("using Ldap Manager");
 
         $user->setCreatedby('ldap');
 
@@ -31,4 +32,5 @@ class LdapManager extends BaseLdapManager
         }
 
     }
+
 }

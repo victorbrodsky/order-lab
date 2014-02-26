@@ -44,7 +44,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         //echo "AperioAuthenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
-        //exit("AperioAuthenticator: authenticateToken");
+        //exit("using Aperio Authenticator: authenticate Token");
 
         $AuthResult = $this->AperioAuth( $token->getUsername(), $token->getCredentials() );
 
@@ -52,7 +52,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
         //exit();
 
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
-            //echo "<br>Aperio got UserId!<br>";
+            echo "<br>Aperio got UserId!<br>";
 
 //            $user = $userProvider->findUser($token->getUsername());
             $userManager = $this->serviceContainer->get('fos_user.user_manager');
@@ -97,7 +97,6 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
             return new UsernamePasswordToken($user, 'bar', $providerKey, $user->getRoles());
 
         } else {
-            $authres = print_r($AuthResult);
             throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
         }
 
@@ -120,10 +119,36 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 
         if( $this->ldap ) {
             include_once '\Skeleton.php';
+            include_once '\DatabaseRoutines.php';
+            //include_once '\cDataClient.php';
+            //include_once '\Roles.php';
+            //include_once '\cFilter.php';
             //$DataServerURL = "http://127.0.0.1:86";
             $DataServerURL = GetDataServerURL();
             $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
             $AuthResult = $client->Authenticate($loginName,$password);
+
+            //check if auth is ok: define ('LOGON_FAILED', '-7004');           // UserName is incorrect
+            echo "ReturnCode=".$AuthResult['ReturnCode']."<br>";
+            if( $AuthResult['ReturnCode'] == '-7004' || !isset($AuthResult['UserId']) ) {
+                echo "LOGON_FAILED!!! <br>";
+                return $AuthResult;
+            }
+
+            //get roles
+            $_SESSION ['AuthToken'] = $AuthResult['Token'];
+            $userid = $AuthResult['UserId'];
+            //$roles = $client->GetUserRoleRecordsById($userid); //ADB_GetUserRoles
+            //$roles = ADB_GetCurrentUserRoles();
+            $roles = ADB_GetUserRoles($userid); //ADB_GetUserRoles
+            //$roles = GetUserRoles($userid); //ADB_GetUserRoles
+            echo "roles:";
+            print_r($roles);
+            echo "end of roles<br><br>";
+
+            foreach( $roles as $role ) {
+                echo "Role: Id = ".$role->Id.", Description=".$role->Description.", Name=".$role->Name."<br>";
+            }
 
         } else {
             echo "Aperio Auth Changeit back !!!";
@@ -135,7 +160,8 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
             //$loginName = 'oli2002';
         }
 
-        //print_r($AuthResult);
+        echo "<br>AuthResult:<br>";
+        print_r($AuthResult);
         //exit();
 
         return $AuthResult;

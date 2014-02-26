@@ -41,8 +41,8 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
         $em = $this->em;
         $userUtil = new UserUtil();
 
-//        echo "Success. User=".$user.", width=".$width."<br>";
-//        exit();
+        //echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
+        //exit();
 
         if( $this->security->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
             //redirect to "Welcome to the Scan Order system! Would you like to receive access to this site?"

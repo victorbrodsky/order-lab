@@ -6,6 +6,16 @@
 
 {% block content %}
 
+    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>
+
+    <button title="111" data-placement="bottom" data-toggle="tooltip" class="btn btn-default" type="button" data-original-title="Tooltip on bottom">Tooltip on bottom</button>
+
+
+    <select class="combobox">
+        <option value="AL">Alabama</option>
+        <option value="WY">Wyoming</option>
+    </select>
+
     {% if is_granted('ROLE_PROCESSOR') and security == 'true' %}
 
         <p>
