@@ -381,7 +381,6 @@ class HistoryController extends Controller
         return array(
             'entities' => $entities,
             'orderid' => $id,
-            'orderdate' => $orderinfo->getOrderdate(),
             'roles' => $rolesArr,
             'comments' => $processorComments
         );

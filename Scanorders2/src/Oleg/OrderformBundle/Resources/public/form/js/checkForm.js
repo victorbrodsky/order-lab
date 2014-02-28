@@ -56,207 +56,223 @@ var blockKeyGlobal = "";
 var mrnKeyGlobal = "";
 var mrnKeytypeGlobal = "";
 
+//TODO:
+// http://www.html5rocks.com/en/tutorials/es6/promises/
+// http://tech.pro/blog/1402/five-patterns-to-help-you-tame-asynchronous-javascript
+// https://github.com/kriskowal/q
+
 function checkForm( elem, single ) {
 
-    var element = $(elem);
+    return Q.promise(function(resolve, reject) {
 
-    //TODO: mrn check button for single does not send single=true
-//    if( orderformtype == "single") {
-//        single = true;
-//    } else {
-//        single = false;
-//    }
+        var element = $(elem);
 
-    //console.log( "check element.id=" + element.attr('id') + ", single="+single);
+        //TODO: mrn check button for single does not send single=true
+    //    if( orderformtype == "single") {
+    //        single = true;
+    //    } else {
+    //        single = false;
+    //    }
 
-    if( element.hasClass('disabled') ) {
-        //console.log("loading button Cliked => return");
-        return false; //loading button => prevent multiple clicked
-    }
+        //console.log( "check element.id=" + element.attr('id') + ", single="+single);
 
-    var elementInput = element.parent().parent().find(".keyfield");
-
-    if( single ) {
-        var elementInput = element.parent().find(".keyfield");
-    }
-
-    //console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
-
-    //print full id=check_btn, class=btn btn-default disabled
-    //print full id=undefined, class=checkbtn glyphicon glyphicon-check
-    //elementInput.class=form-control keyfield patientmrn-mask, id=oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
-    //printF( element, "check button: " );
-    //printF( element.find("i"), "check button find(i): " );
-
-    //  0         1              2           3   4  5  6   7
-    //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
-    var inputId = elementInput.attr('id');
-    //console.log("\n\n inputId="+inputId);
-
-    var idsArr = inputId.split("_");
-
-    var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
-    var fieldName = idsArr[idsArr.length-fieldIndex];
-    //console.log("name="+name+", fieldName="+fieldName);
-    //var patient = idsArr[4];
-    //var key = idsArr[4];
-
-    var keyElement = findKeyElement(element, single);
-
-    if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
-        //console.log("Remove Button Cliked for "+fieldName);
-        removeKeyFromDB(keyElement, element, single);
-        return true;
-
-    } else if( element.find("i").hasClass('checkbtn') ) { //Check Button Cliked //TODO: test if it is ok here to change glyphicon-check to checkbtn
-
-        if( validateMaskFields(element, fieldName) > 0 ) {
-            return false;
+        if( element.hasClass('disabled') ) {
+            //console.log("loading button Cliked => return");
+            return reject(Error("Button is disabled"));
+            //return false; //loading button => prevent multiple clicked
         }
 
-        //console.log("Check Button Cliked for " + fieldName);
+        var elementInput = element.parent().parent().find(".keyfield");
 
-        //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
-
-        var keyValue =keyElement.element.val();
-        var extra =keyElement.extra;
-        //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
-
-        var accessionValue = keyElement.accession;
-        var partValue = keyElement.partname;
-
-        //console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
-
-        if( !keyValue ||
-            keyValue && name == "part" && !accessionValue ||
-            keyValue && name == "block" && (!accessionValue || !partValue)
-        ) {
-            //console.log("key undefined! "+fieldName);
-
-            var extraArr = new Array();
-            extraArr['p1'] = accessionValue;
-            extraArr['p2'] = partValue;
-            extraArr['keytype'] = extra;
-
-//            if( name == "part" || name == "block" ) {
-//                //console.log("accessionValue is not empty");
-//                setKeyValue(element,name+fieldName,extraArr,single);
-//                return true;
-//            }
-
-            //setFieldType(element,fieldName); //for mrn and accession: change type and field mask
-
-            setKeyValue(element,name+fieldName,extraArr,single);
-            return true;
+        if( single ) {
+            var elementInput = element.parent().find(".keyfield");
         }
 
-        element.button('loading');
+        //console.log("elementInput.class="+elementInput.attr('class') + ", id="+elementInput.attr('id'));
 
-        //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue+",extra="+extra);
-        //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
+        //print full id=check_btn, class=btn btn-default disabled
+        //print full id=undefined, class=checkbtn glyphicon glyphicon-check
+        //elementInput.class=form-control keyfield patientmrn-mask, id=oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
+        //printF( element, "check button: " );
+        //printF( element.find("i"), "check button find(i): " );
 
-        //clean trim
-        keyValue = trimWithCheck(keyValue);
-        extra = trimWithCheck(extra);
-        accessionValue = trimWithCheck(accessionValue);
-        partValue = trimWithCheck(partValue);
+        //  0         1              2           3   4  5  6   7
+        //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_field
+        var inputId = elementInput.attr('id');
+        //console.log("\n\n inputId="+inputId);
 
-        $.ajax({
-            url: urlCheck+name,
-            type: 'GET',
-            data: {key: keyValue, extra: extra, parent: accessionValue, parent2: partValue},
-            contentType: 'application/json',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                console.debug("get object ajax ok "+name);
-                var gonext = 1;
-                element.button('reset');
-                
-                if( data == -2 ) {
-                    //Existing Auto-generated object does not exist in DB
-                    createErrorWell(keyElement.element,name);
-                    return false;
-                }
+        var idsArr = inputId.split("_");
 
-                if( data.id ) {
+        var name = idsArr[idsArr.length-holderIndex];   //i.e. "patient"
+        var fieldName = idsArr[idsArr.length-fieldIndex];
+        //console.log("name="+name+", fieldName="+fieldName);
+        //var patient = idsArr[4];
+        //var key = idsArr[4];
 
-                    if( !single ) {
-                        gonext = checkParent(element,keyValue,name,fieldName,extra); //check if this key is not used yet, when a new key field is checked in the added entity
-                        //console.debug("0 gonext="+gonext);
+        var keyElement = findKeyElement(element, single);
+
+        if( element.find("i").hasClass('removebtn') ) { //Remove Button Cliked
+            //console.log("Remove Button Cliked for "+fieldName);
+            removeKeyFromDB(keyElement, element, single);
+            return resolve("key is removed");
+            //return true;
+
+        } else if( element.find("i").hasClass('checkbtn') ) { //Check Button Cliked //TODO: test if it is ok here to change glyphicon-check to checkbtn
+
+            if( validateMaskFields(element, fieldName) > 0 ) {
+                return reject(Error("Mask is not valid"));
+                //return false;
+            }
+
+            console.log("Check Button Cliked for " + fieldName);
+
+            //get key field for this patient: oleg_orderformbundle_orderinfotype_patient_0_mrn
+
+            var keyValue =keyElement.element.val();
+            var extra =keyElement.extra;
+            //console.log("keyElement id="+keyElement.element.attr("id")+", class="+keyElement.element.attr("class")+",val="+keyValue+", extra="+keyElement.extra+",name="+name);
+
+            var accessionValue = keyElement.accession;
+            var partValue = keyElement.partname;
+
+            //console.log("process: "+name+": keyValue="+keyValue+", accessionValue="+accessionValue+", partValue="+partValue+",extra="+extra);
+
+            if( !keyValue ||
+                keyValue && name == "part" && !accessionValue ||
+                keyValue && name == "block" && (!accessionValue || !partValue)
+            ) {
+                console.log("key undefined! "+fieldName);
+
+                var extraArr = new Array();
+                extraArr['p1'] = accessionValue;
+                extraArr['p2'] = partValue;
+                extraArr['keytype'] = extra;
+
+    //            if( name == "part" || name == "block" ) {
+    //                //console.log("accessionValue is not empty");
+    //                setKeyValue(element,name+fieldName,extraArr,single);
+    //                return true;
+    //            }
+
+                //setFieldType(element,fieldName); //for mrn and accession: change type and field mask
+
+                setKeyValue(element,name+fieldName,extraArr,single);
+                return resolve("key is set");
+                //return true;
+            }
+
+            element.button('loading');
+
+            //console.log("get element name="+name+"key="+ keyValue+", parent="+ accessionValue + ", parent2="+ partValue+",extra="+extra);
+            //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
+
+            //clean trim
+            keyValue = trimWithCheck(keyValue);
+            extra = trimWithCheck(extra);
+            accessionValue = trimWithCheck(accessionValue);
+            partValue = trimWithCheck(partValue);
+
+            $.ajax({
+                url: urlCheck+name,
+                type: 'GET',
+                data: {key: keyValue, extra: extra, parent: accessionValue, parent2: partValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.debug("get object ajax ok "+name);
+                    var gonext = 1;
+                    element.button('reset');
+
+                    if( data == -2 ) {
+                        //Existing Auto-generated object does not exist in DB
+                        createErrorWell(keyElement.element,name);
+                        //return false;
+                        return reject(Error("Existing Auto-generated object does not exist in DB"));
                     }
 
-                    //console.log("1 gonext="+gonext);
-                    if( gonext == 1 ) {
+                    if( data.id ) {
 
-                        //set this element
-                        //console.debug("continue gonext="+gonext);
-                        //first: set elements
-                        setElementBlock(element, data);
-                        //second: disable or enable element. Make sure this function runs after set Element Block
-                        disableInElementBlock(element, true, "all", null, "notarrayfield");
+                        if( !single ) {
+                            gonext = checkParent(element,keyValue,name,fieldName,extra); //check if this key is not used yet, when a new key field is checked in the added entity
+                            //console.debug("0 gonext="+gonext);
+                        }
+
+                        //console.log("1 gonext="+gonext);
+                        if( gonext == 1 ) {
+
+                            //set this element
+                            //console.debug("continue gonext="+gonext);
+                            //first: set elements
+                            setElementBlock(element, data);
+                            //second: disable or enable element. Make sure this function runs after set Element Block
+                            disableInElementBlock(element, true, "all", null, "notarrayfield");
+                            invertButton(element);
+
+                            //set patient (in accession case)
+                            if( name == "accession" && gonext == 1) {
+                                var parentkeyvalue = data['parent'];
+                                var extraid = data['extraid'];
+                                //console.log("key parent="+parentkeyvalue+", extraid="+extraid);
+                                gonext = setPatient(element,parentkeyvalue,extraid,single);
+                            }
+
+                        }
+
+    //                    //console.debug("1 gonext="+gonext);
+    //                    if( gonext == 1 ) {
+    //                        //console.debug("continue gonext="+gonext);
+    //                        //first: set elements
+    //                        setElementBlock(element, data);
+    //                        //second: disable or enable element. Make sure this function runs after set Element Block
+    //                        disableInElementBlock(element, true, "all", null, "notarrayfield");
+    //                        invertButton(element);
+    //                    }
+                        //getAccessionInfoDebug("After find element "+name);
+                    } else {
+                        console.debug("not found");
+                        disableInElementBlock(element, false, null, "notkey", null);
                         invertButton(element);
 
-                        //set patient (in accession case)
-                        if( name == "accession" && gonext == 1) {
-                            var parentkeyvalue = data['parent'];
-                            var extraid = data['extraid'];
-                            //console.log("key parent="+parentkeyvalue+", extraid="+extraid);
-                            gonext = setPatient(element,parentkeyvalue,extraid,single);
+                        //set global block and part key values
+                        //console.log("############### SET GLOBAL "+name+", value="+keyValue+", extra="+extra+", single="+single);
+    //                    if( single ) {
+                        if( orderformtype == "single") {
+                           if( name == "part" ) {
+                                partKeyGlobal = keyValue;
+                            }
+                            if( name == "block" ) {
+                                blockKeyGlobal = keyValue;
+                            }
+                            if( name == "accession" ) {
+                                asseccionKeyGlobal = keyValue;
+                                asseccionKeytypeGlobal = extra;
+                            }
+                            if( name == "patient" ) {
+                                mrnKeyGlobal = keyValue;
+                                mrnKeytypeGlobal = extra;
+                            }
                         }
 
                     }
-                       
-//                    //console.debug("1 gonext="+gonext);
-//                    if( gonext == 1 ) {
-//                        //console.debug("continue gonext="+gonext);
-//                        //first: set elements
-//                        setElementBlock(element, data);
-//                        //second: disable or enable element. Make sure this function runs after set Element Block
-//                        disableInElementBlock(element, true, "all", null, "notarrayfield");
-//                        invertButton(element);
-//                    }
-                    //getAccessionInfoDebug("After find element "+name);
-                } else {
-                    console.debug("not found");
-                    disableInElementBlock(element, false, null, "notkey", null);
+                    resolve(true);
+
+                },
+                error: function () {
+                    console.debug("get object ajax error "+name);
+                    cleanFieldsInElementBlock( element, null, single );
+                    disableInElementBlock(element, false, "all", null, null);
                     invertButton(element);
+                    reject(Error("get object ajax error "+name));
+                }
+            });
+        } else {
+            //printF(element,"undefined button:"+name);
+        }
 
-                    //set global block and part key values
-                    //console.log("############### SET GLOBAL "+name+", value="+keyValue+", extra="+extra+", single="+single);
-//                    if( single ) {
-                    if( orderformtype == "single") {
-                       if( name == "part" ) {
-                            partKeyGlobal = keyValue;
-                        }
-                        if( name == "block" ) {
-                            blockKeyGlobal = keyValue;
-                        }
-                        if( name == "accession" ) {
-                            asseccionKeyGlobal = keyValue;
-                            asseccionKeytypeGlobal = extra;
-                        }
-                        if( name == "patient" ) {
-                            mrnKeyGlobal = keyValue;
-                            mrnKeytypeGlobal = extra;
-                        } 
-                    }
-                    
-                } 
-
-            },
-            error: function () {
-                console.debug("get object ajax error "+name);
-                cleanFieldsInElementBlock( element, null, single );
-                disableInElementBlock(element, false, "all", null, null);
-                invertButton(element);
-            }
-        });
-    } else {
-        //printF(element,"undefined button:"+name);
-    }
-
-    return true;
+        //return true;
+        return resolve(true);
+    });
 }
 
 //check if parent has checked sublings with the same key valuess
@@ -1340,39 +1356,86 @@ function invertButton(btn) {
 
 function setKeyValue( btnElement, name, parentValueArr, single ) {
 
-    //console.log("\n\nset Key Value name="+name);
+    console.log("\n\nset Key Value name="+name);
 
     if( name == "patientmrn" ) {
         setKeyValueSingle( btnElement, name, parentValueArr );
         return false;
+
+//        setKeyValueSingle( btnElement, name, parentValueArr ).then(function(response) {
+//            console.log("MRN Success!", response);
+//            return false;
+//        }, function(error) {
+//            console.error("MRN Failed!", error);
+//            return false;
+//        });
     }
 
     if( name == "accessionaccession" ) {
         setKeyValueSingle( btnElement, name, parentValueArr );
         return false;
+
+//        setKeyValueSingle( btnElement, name, parentValueArr ).then(function(response) {
+//            console.log("accession Success!", response);
+//            return false;
+//        }, function(error) {
+//            console.error("accessionFailed!", error);
+//            return false;
+//        });
     }
 
     if( name == "partpartname" ) {
 
         var accessionNumberElement = getAccessionNumberElement(btnElement,single);
         var accessionValue = accessionNumberElement.val();    //i.e. Accession #
-        //console.log("set Key Value: accessionValue="+accessionValue);
+        console.log("set Key Value: accessionValue="+accessionValue);
 
         if( accessionValue && accessionValue != "" ) {
-            //console.log("set Key Value: accesion field is set => generate part");
+            console.log("set Key Value: accesion field is set => generate part");
             setKeyValueSingle( btnElement, name, parentValueArr );
             return false;
+
+//            setKeyValueSingle( btnElement, name, parentValueArr ).then(function(response) {
+//                console.log("accession Success!", response);
+//                return false;
+//            }, function(error) {
+//                console.error("accessionFailed!", error);
+//                return false;
+//            });
+
         } else {    //generate accession #
-            //console.log("set Key Value: accesion field is not set => generate accession");
+
+            console.log("set Key Value: accesion field is not set => generate accession");
             var holder = btnElement.closest('.panel-procedure');
             var accessionBtn = holder.find('.accessionaccession').find("#check_btn");
             if( single ) {
                 var accessionBtn = $('.accessionbtn');
             }
-            //console.log("set Key Value: accessionBtn.id="+accessionBtn.attr("id")+", class="+accessionBtn.attr("class"));
-            accessionBtn.trigger("click");
-            btnElement.trigger("click");
+            console.log("set Key Value: accessionBtn.id="+accessionBtn.attr("id")+", class="+accessionBtn.attr("class"));
+            //accessionBtn.trigger("click");
+            //btnElement.trigger("click");
             //waitWhenParentIsGenerated( btnElement, name, 0, single );
+
+            Q.spread([
+                checkForm( accessionBtn, single ),
+                checkForm( btnElement, single )
+            ],
+                function( acc, part ){
+                    console.log("finished with acc="+acc+", part="+part);
+                }
+            );
+
+//            checkForm( accessionBtn, single)
+//            .then( checkForm( btnElement, single ) )
+//            .then( function (result) {
+//               console.log("finished with result="+result);
+//            })
+//            .catch(function (error) {
+//                // Handle any error from all above steps
+//                console.log("Error:"+error);
+//            })
+//            .done( console.log("Done!") );
+
             return false;
         }
         return false;
@@ -1395,8 +1458,20 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
             if( single ) {
                 var partBtn = $('.partbtn');
             }
-            partBtn.trigger("click");
-            btnElement.trigger("click");
+
+//            partBtn.trigger("click");
+//            btnElement.trigger("click");
+
+
+            Q.spread([
+                checkForm( partBtn, single ),
+                checkForm( btnElement, single )
+            ],
+                function( res1, res2 ){
+                    console.log("finished with res1="+res1+", res2="+res2);
+                }
+            );
+
             //waitWhenParentIsGenerated( btnElement, name, 0, single );
             return false;
         }
@@ -1439,55 +1514,61 @@ function setKeyValue( btnElement, name, parentValueArr, single ) {
 //name: field name, i.e. partpartname
 function setKeyValueSingle( btnElement, name, parentValueArr ) {
 
-    if( !btnElement.find('i').hasClass('checkbtn') ) {
-        return false;
-    }
+    //return Q.promise(function(resolve, reject) {
 
-    if( parentValueArr ) {
-        var parentValue = parentValueArr['p1'];
-        var parentValue2 = parentValueArr['p2'];
-        var keytype = parentValueArr['keytype'];
-    } else {
-        var parentValue = '';
-        var parentValue2 = '';
-        var keytype = '';
-    }
-
-    parentValue = trimWithCheck(parentValue);
-    parentValue2 = trimWithCheck(parentValue2);
-    keytype = trimWithCheck(keytype);
-
-    //console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2+", keytype="+keytype);
-    btnElement.button('loading');
-
-    $.ajax({
-        url: urlCheck+name,
-        type: 'GET',
-        contentType: 'application/json',
-        dataType: 'json',
-        async: true,    //use synchronous call
-        data: {key: parentValue, key2: parentValue2, extra: keytype },
-        success: function (data) {
-            if( data ) {
-                console.debug("ajax key value data is found");
-                btnElement.button('reset');
-                invertButton(btnElement);
-                setElementBlock(btnElement, data, null, "key");
-                disableInElementBlock(btnElement, false, null, "notkey", null);
-            } else {
-                console.debug('set key data is null');
-            }
-            //_lbtn.stop();
-        },
-        always: function() {
-            //_lbtn.stop();
-            //$('.spinner-image').remove();
-        },
-        error: function () {
-            //_lbtn.stop();
-            console.debug("set key ajax error");
+        if( !btnElement.find('i').hasClass('checkbtn') ) {
+            return false;
+            //reject(Error("button is not a check button"));
         }
-    });
+
+        if( parentValueArr ) {
+            var parentValue = parentValueArr['p1'];
+            var parentValue2 = parentValueArr['p2'];
+            var keytype = parentValueArr['keytype'];
+        } else {
+            var parentValue = '';
+            var parentValue2 = '';
+            var keytype = '';
+        }
+
+        parentValue = trimWithCheck(parentValue);
+        parentValue2 = trimWithCheck(parentValue2);
+        keytype = trimWithCheck(keytype);
+
+        console.log("ajax set key value name="+ name+", parentValue="+parentValue+",parentValue2="+parentValue2+", keytype="+keytype);
+        btnElement.button('loading');
+
+        $.ajax({
+            url: urlCheck+name,
+            type: 'GET',
+            contentType: 'application/json',
+            dataType: 'json',
+            async: true,    //use synchronous call
+            data: {key: parentValue, key2: parentValue2, extra: keytype },
+            success: function (data) {
+                if( data ) {
+                    console.debug("ajax key value data is found");
+                    btnElement.button('reset');
+                    invertButton(btnElement);
+                    setElementBlock(btnElement, data, null, "key");
+                    disableInElementBlock(btnElement, false, null, "notkey", null);
+                } else {
+                    console.debug('set key data is null');
+                }
+                //resolve("ajax key value data is found");
+            },
+    //        always: function() {
+    //            //_lbtn.stop();
+    //            //$('.spinner-image').remove();
+    //        },
+            error: function () {
+                btnElement.button('reset');
+                //reject(Error("set key ajax error"));
+                console.debug("set key ajax error");
+            }
+        });
+
+    //});
 
     return;
 }

@@ -23,6 +23,23 @@ $(document).ready(function() {
 
 });
 
+function checkButtonPromise( fieldsArr, count, limit ) {
+
+    var ajaxOK, promise;
+
+    promise = new Promise();
+
+    ajaxOK = waitWhenReady(fieldsArr, count, limit);
+
+    if( ajaxOK ) {
+        promise.resolve(ajaxOK);
+    } else {
+        promise.reject(ajaxOK);
+    }
+
+    return promise;
+}
+
 //inputField - input field element which is tested for value is being set
 function waitWhenReady( fieldsArr, count, limit ) {
 
@@ -64,8 +81,75 @@ function finalStepCheck() {
 
 //var _lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
 
+function addAsync(a, b) {
+    console.log("addAsync");
+    var deferred = Q.defer();
+    deferred.reject(Error("Network Error"));
+    // Wait 2 seconds and then add a + b
+    setTimeout(function() {
+        console.log("deferred.resolve");
+        deferred.resolve(a + b);
+    }, 2000);
+    console.log("deferred.promise");
+    return deferred.promise;
+}
+
 //Check form single
 function checkFormSingle( elem ) {
+
+//    (function () {
+//        "use strict";
+//
+//        var deferredAnimate = Q.async(function* (element) {
+//            for (var i = 0; i < 100; ++i) {
+//                element.style.marginLeft = i + "px";
+//                yield Q.delay(20);
+//            }
+//        });
+//
+//        Q.spawn(function* () {
+//            yield deferredAnimate(document.getElementById("box"));
+//            alert("Done!");
+//        });
+//    }());
+//    return false;
+
+    Q.all([
+            addAsync(1, 1),
+            addAsync(2, 2),
+            addAsync(3, 3)
+        ]).then(
+            function(result1, result2, result3) {
+                console.log(result1, result2, result3);
+            },
+            function(error) {
+                console.log("error="+error);
+            }
+        );
+
+//    addAsync(3, 4).then(
+//        function(result) {
+//            console.log(result);
+//        },
+//        function(error) {
+//            console.log("error="+error);
+//        }
+//    );
+
+    console.log("chaining");
+    var promise = Q.promise(function(resolve, reject) {
+        resolve(1);
+    });
+
+    promise.then(function(val) {
+        console.log(val); // 1
+        return val + 2;
+    }).then(function(val) {
+            console.log(val); // 3
+        });
+
+    console.log("finished");
+    return false;
 
     if( validateMaskFields() > 0 ) {
         //console.log("errors > 0 => return");
@@ -102,13 +186,14 @@ function checkFormSingle( elem ) {
 
     //window.setTimeout( callWaitStack, 300 );
     //console.log('before');
-    //pausecomp(2000);
     //console.log('after');
+
     var ajaxOK = callWaitStack();
 
+
     console.log("stop ajax");
-    //btn.button('reset');
-    //_lbtn.stop();
+//    //btn.button('reset');
+    _lbtn.stop();
 
     if( !ajaxOK ) {
         return false;
@@ -128,13 +213,6 @@ function checkFormSingle( elem ) {
     return true;
 }
 
-function pausecomp(millis)
-{
-    var date = new Date();
-    var curDate = null;
-    do { curDate = new Date(); }
-    while(curDate-date < millis);
-}
 
 function callWaitStack() {
     var fieldsArr = new Array();
@@ -144,9 +222,21 @@ function callWaitStack() {
 
     var ajaxOK = true;
 
-    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
-        ajaxOK = false;
-    }
+    Q.spread([
+        waitWhenReady( fieldsArr, 0, 0 ),
+        waitWhenReady( fieldsArr, 1, 0 ),
+        waitWhenReady( fieldsArr, 2, 0 )
+    ],
+        function( acc, part, block ){
+            if( !acc ) ajaxOK = false;
+            if( !part ) ajaxOK = false;
+            if( !block ) ajaxOK = false;
+        }
+    );
+
+//    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
+//        ajaxOK = false;
+//    }
 
 //    if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
 //        ajaxOK = false;
