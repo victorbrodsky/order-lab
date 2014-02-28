@@ -54,15 +54,10 @@
                 </li>
             {% endif %}
 
-            <li class="divider"></li>
-
             {###############  ADMIN ACTIONS #################}
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROCESSOR') and entity.status != 'Superseded' %}
 
-                {#<li>#}
-                    {#<a class="btn-warning" #}
-                       {#href="{{ path('multy_edit', { 'id': entity.oid }) }}">Edit</a>#}
-                {#</li>             #}
+                <li class="divider"></li>
                 
                 {% if entity.status != 'Filled: Scanned' %}
                     <li><a onclick="return confirm('Are you sure?');" 

@@ -6,24 +6,14 @@
 
 {% block content %}
 
-    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>
-
-    <button title="111" data-placement="bottom" data-toggle="tooltip" class="btn btn-default" type="button" data-original-title="Tooltip on bottom">Tooltip on bottom</button>
-
-
-    <select class="combobox">
-        <option value="AL">Alabama</option>
-        <option value="WY">Wyoming</option>
-    </select>
-
     {% if is_granted('ROLE_PROCESSOR') and security == 'true' %}
 
         <p>
-        {% if userreqs is defined and userreqs | length > 0 %}
-            <a class="text-danger" href="{{ path('accountrequest') }}">Active Account Requests:{{ userreqs | length }}</a>
+        {% if accountreqs is defined and accountreqs | length > 0 %}
+            <a class="text-danger" href="{{ path('accountrequest') }}">Active Account Requests:{{ accountreqs | length }}</a>
         {% endif %}
 
-        {% if (userreqs is defined and userreqs | length > 0) and (accessreqs is defined and accessreqs | length > 0) %}
+        {% if (accountreqs is defined and accountreqs | length > 0) and (accessreqs is defined and accessreqs | length > 0) %}
             |
         {% endif %}
 
@@ -65,7 +55,7 @@
                 
                     <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.oid') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
                     {#<th>Slides</th>#}
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Priority', 'orderinfo.priority') }}</th>
@@ -80,7 +70,7 @@
                        
                 {% if routename == 'adminindex' %}
                        
-                    <th>{{ knp_pagination_sortable(pagination, 'Id', 'orderinfo.oid') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.scandeadline') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>  

@@ -8,6 +8,21 @@
 
 var _max_tab_height = 0;
 
+$(document).ready(function() {
+//    $('a, button').click(function() {
+//        $(this).toggleClass('active');
+//    });
+
+//    $('.has-spinner').click(function() {
+//        console.log('button pressed');
+//        $(this).toggleClass('active');
+//    });
+
+    // Bind normal buttons
+    Ladda.bind( '.btntest', { timeout: 2000 } );
+
+});
+
 //inputField - input field element which is tested for value is being set
 function waitWhenReady( fieldsArr, count, limit ) {
 
@@ -47,6 +62,8 @@ function finalStepCheck() {
     //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 }
 
+//var _lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
+
 //Check form single
 function checkFormSingle( elem ) {
 
@@ -67,30 +84,31 @@ function checkFormSingle( elem ) {
 
     //$('#optional_param').collapse('toggle');    //open. Need to open to populate patient (if existed) linked to accession
 
-    //console.log("start ajax");
-    $("#optional_button").button('loading');
+    console.log("start ajax");
+    //var lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
+    //_lbtn.start();
+    //Ladda.bind(elem);
 
-    var fieldsArr = new Array();
-    fieldsArr[0] = '#accession-single';
-    fieldsArr[1] = '#part-single';
-    fieldsArr[2] = '#block-single';
+    //Ladda.bind( '.singleform-optional-button', { timeout: 2000 } );
+    //return false;
+    //btn.button('loading');
+    //$("elem").toggleClass('active');
+    var _lbtn = Ladda.create(elem);
+    _lbtn.start();
 
-    var ajaxOK = true;
+    //$('.singleform-optional-button').append('<img class="spinner-image" src="http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif"/></div>');
 
-    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
-        ajaxOK = false;
-    }
+    //alert('pause');
 
-    if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
-        ajaxOK = false;
-    }
+    //window.setTimeout( callWaitStack, 300 );
+    //console.log('before');
+    //pausecomp(2000);
+    //console.log('after');
+    var ajaxOK = callWaitStack();
 
-    if( !waitWhenReady( fieldsArr, 2, 0 ) ) {
-        ajaxOK = false;
-    }
-
-    //console.log("stop ajax");
-    $("#optional_button").button('reset');
+    console.log("stop ajax");
+    //btn.button('reset');
+    //_lbtn.stop();
 
     if( !ajaxOK ) {
         return false;
@@ -110,6 +128,37 @@ function checkFormSingle( elem ) {
     return true;
 }
 
+function pausecomp(millis)
+{
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while(curDate-date < millis);
+}
+
+function callWaitStack() {
+    var fieldsArr = new Array();
+    fieldsArr[0] = '#accession-single';
+    fieldsArr[1] = '#part-single';
+    fieldsArr[2] = '#block-single';
+
+    var ajaxOK = true;
+
+    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
+        ajaxOK = false;
+    }
+
+//    if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
+//        ajaxOK = false;
+//    }
+//
+//    if( !waitWhenReady( fieldsArr, 2, 0 ) ) {
+//        ajaxOK = false;
+//    }
+
+    return ajaxOK;
+}
+
 
 //Remove form single
 function removeFormSingle( elem ) {
@@ -117,8 +166,8 @@ function removeFormSingle( elem ) {
     //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
 
     $("#remove_single_btn").button('loading');
+    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
 
-    //console.log("trigger blockbtn: class="+$('.blockbtn').attr("class"));
     $('.blockbtn').trigger("click");
 
     $('.partbtn').trigger("click");
@@ -134,6 +183,7 @@ function removeFormSingle( elem ) {
     $('#maincinglebtn').hide();
     collapseElementFix($('#optional_param'));   //close optional info
 
+    console.log("end of remove");
     $("#remove_single_btn").button('reset');
 
 }

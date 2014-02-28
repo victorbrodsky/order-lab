@@ -91,6 +91,22 @@ class UserRequest
      */
     protected $creationdate;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $referencename;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $referenceemail;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $referencephone;
+
+
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
@@ -305,5 +321,55 @@ class UserRequest
     {
         return $this->primaryPathologyService;
     }
+
+    /**
+     * @param mixed $referenceemail
+     */
+    public function setReferenceemail($referenceemail)
+    {
+        $this->referenceemail = $referenceemail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferenceemail()
+    {
+        return $this->referenceemail;
+    }
+
+    /**
+     * @param mixed $referencename
+     */
+    public function setReferencename($referencename)
+    {
+        $this->referencename = $referencename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencename()
+    {
+        return $this->referencename;
+    }
+
+    /**
+     * @param mixed $referencephone
+     */
+    public function setReferencephone($referencephone)
+    {
+        $this->referencephone = $referencephone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencephone()
+    {
+        return $this->referencephone;
+    }
+
+
 
 }

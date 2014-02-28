@@ -23,6 +23,9 @@
                 <th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Service / Division', 'pathologyServices.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reference Phone Number', 'accreq.referencephone') }}</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -62,6 +65,9 @@
                         {{- entity.request }}
                     </textarea>
                 </td>
+                <td>{{ entity.referencename }}</td>
+                <td>{{ entity.referenceemail }}</td>
+                <td>{{ entity.referencephone }}</td>
                 <td>
                     
 {#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}

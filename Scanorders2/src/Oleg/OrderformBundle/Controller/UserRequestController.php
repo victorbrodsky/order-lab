@@ -61,7 +61,7 @@ class UserRequestController extends Controller
      *
      * @Route("/create/", name="accountrequest_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:UserRequest:new.html.twig")
+     * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -74,6 +74,8 @@ class UserRequestController extends Controller
         if ($form->isValid()) {
             //echo "form valid!";
             $em = $this->getDoctrine()->getManager();
+
+            $entity->setStatus('active');
 
             $em->persist($entity);
             $em->flush();
@@ -97,7 +99,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests/new", name="accountrequest_new")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
      */
     public function newAction()
     {

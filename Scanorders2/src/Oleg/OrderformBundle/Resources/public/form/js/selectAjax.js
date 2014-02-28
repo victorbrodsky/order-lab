@@ -80,7 +80,7 @@ function customCombobox() {
         slideType(new Array("0","0","0","0","0","0"));
     }
 
-    if( cicle && cicle == 'edit_user' && urlBase ) {
+    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq')  ) {
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
     }
 }
@@ -430,12 +430,12 @@ function getComboboxPathService(urlCommon,ids) {
     var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
-    if( cicle == "new" || cicle == "create" ) {
+    if( cicle == "new" || cicle == "create" || cicle == "accountreq" ) {
         url = url + "?opt=default";
     }
 
     //console.log("cicle="+cicle+", url="+url+", targetid="+targetid);
-    if( cicle == 'edit_user' ) {
+    if( cicle == 'accountreq' ) {
         var multiple = true;
     } else {
         var multiple = false;

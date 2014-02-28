@@ -30,11 +30,18 @@
     {#'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'#}
     {#'bundles/olegorderform/form/css/form.css'#}
     {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
+
+    {#'bundles/olegorderform/form/css/spinner.css' filter='cssrewrite'#}
+    {#'bundles/olegorderform/font-awesome/css/font-awesome.css' filter='cssrewrite'#}
+
+    {#jasny is used for clickable rows#}
     {% stylesheets
         'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
         'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
         'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
-        'bundles/olegorderform/form/css/form.css'
+        'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
+        'bundles/olegorderform/ladda/ladda-themeless.css' filter='cssrewrite'
+        'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -107,14 +114,14 @@
             {% endblock %}
         </div>
 
-        {#'@OlegOrderformBundle/Resources/public/datepicker/js/*'#}
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
             '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+            '@OlegOrderformBundle/Resources/public/ladda/spin.min.js'
+            '@OlegOrderformBundle/Resources/public/ladda/ladda.min.js'
             '@OlegOrderformBundle/Resources/public/datepicker/js/*'
             '@OlegOrderformBundle/Resources/public/select2/select2.js'
             '@OlegOrderformBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-            '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
             '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
             '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
             '@OlegOrderformBundle/Resources/public/form/js/partRadios.js'
@@ -122,12 +129,14 @@
             '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
             '@OlegOrderformBundle/Resources/public/form/js/masking.js'
             '@OlegOrderformBundle/Resources/public/form/js/form.js'
+            '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
             '@OlegOrderformBundle/Resources/public/form/js/modal.js'
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
             '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
-            '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
             '@OlegOrderformBundle/Resources/public/jasny/js/rowlink.js'
+            '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+            '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

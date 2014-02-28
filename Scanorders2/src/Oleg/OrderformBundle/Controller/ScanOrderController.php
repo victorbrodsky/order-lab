@@ -309,9 +309,9 @@ class ScanOrderController extends Controller {
         );
 
         //check for active user requests
-        $reqs = array();
+        $accountreqs = array();
         if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            $reqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
+            $accountreqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
         }
 
         //check for active access requests
@@ -326,7 +326,7 @@ class ScanOrderController extends Controller {
             'form' => $form->createView(),
             'showprovider' => $showprovider,
             'pagination' => $pagination,
-            'userreqs' => $reqs,
+            'accountreqs' => $accountreqs,
             'accessreqs' => $accessreqs,
             'routename' => $routeName,
             'comments' => $processorComments

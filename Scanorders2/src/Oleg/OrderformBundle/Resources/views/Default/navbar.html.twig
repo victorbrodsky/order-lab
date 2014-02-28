@@ -37,7 +37,7 @@
                     <li id="nav-bar-index" class="divider-vertical index">
                         {% if comments is defined and comments > 0 %}
                             <a id="incoming-orders-menu-title" href="{{ path('index') }}">My Orders</a><!--
-                            --><a id="incoming-orders-menu-badge" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}"><span class="badge">{{ comments }}</span></a>
                         {% else %}
                             <a href="{{ path('index') }}" >My Orders</a>
                         {% endif %}

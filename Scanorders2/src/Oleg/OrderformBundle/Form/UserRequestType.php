@@ -94,7 +94,25 @@ class UserRequestType extends AbstractType
             'expanded' => true,
             'label' => false,
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
-            'attr' => array('class' => 'horizontal_type patientsexclass')
+            'attr' => array('class' => 'horizontal_type cwidyesno')
+        ));
+
+        $builder->add( 'referencename', 'text', array(
+            'label'=>'Reference Name:',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif element-with-tooltip', 'data-toggle'=>'tooltip', 'title' => 'name of your supervisor or of the person who can confirm the validity of your request'),
+        ));
+
+        $builder->add( 'referenceemail', 'text', array(
+            'label'=>'Reference Email:',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
+        ));
+
+        $builder->add( 'referencephone', 'text', array(
+            'label'=>'Reference Phone Number:',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
     }

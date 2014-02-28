@@ -108,7 +108,7 @@ function checkForm( elem, single ) {
         removeKeyFromDB(keyElement, element, single);
         return true;
 
-    } else if( element.find("i").hasClass('glyphicon-check') ) { //Check Button Cliked
+    } else if( element.find("i").hasClass('checkbtn') ) { //Check Button Cliked //TODO: test if it is ok here to change glyphicon-check to checkbtn
 
         if( validateMaskFields(element, fieldName) > 0 ) {
             return false;
@@ -247,7 +247,6 @@ function checkForm( elem, single ) {
             },
             error: function () {
                 console.debug("get object ajax error "+name);
-                element.button('reset');
                 cleanFieldsInElementBlock( element, null, single );
                 disableInElementBlock(element, false, "all", null, null);
                 invertButton(element);
@@ -1466,21 +1465,26 @@ function setKeyValueSingle( btnElement, name, parentValueArr ) {
         type: 'GET',
         contentType: 'application/json',
         dataType: 'json',
-        async: false,
+        async: true,    //use synchronous call
         data: {key: parentValue, key2: parentValue2, extra: keytype },
         success: function (data) {
-            btnElement.button('reset');
             if( data ) {
                 console.debug("ajax key value data is found");
+                btnElement.button('reset');
                 invertButton(btnElement);
                 setElementBlock(btnElement, data, null, "key");
                 disableInElementBlock(btnElement, false, null, "notkey", null);
             } else {
                 console.debug('set key data is null');
             }
+            //_lbtn.stop();
+        },
+        always: function() {
+            //_lbtn.stop();
+            //$('.spinner-image').remove();
         },
         error: function () {
-            btnElement.button('reset');
+            //_lbtn.stop();
             console.debug("set key ajax error");
         }
     });
