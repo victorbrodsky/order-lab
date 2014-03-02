@@ -34,19 +34,9 @@
   margin-top: 3%;
 }
 
-.page-content {
-    /*padding-left: 5%;*/
-    /*padding-right: 5%;*/
-    /*padding-top: 0%;*/
-    /*padding-bottom: 5%;*/
-    /*float: left;*/
-    /*width: 100%;*/
-    text-align: center;
-}
-
-.page-content-top {
-   padding-top: 10%; 
-}
+/*.page-content-top {*/
+   /*padding-top: 10%; */
+/*}*/
 
 /*sign in login*/
 .form-signin {
@@ -91,32 +81,15 @@
     //width: 70%;
 }
 
-/*.fieldInputColl {*/
-    /*float: left;*/
-    /*width: 50%;*/
-    /*position: relative;*/
-/*}*/
-/*.addDelBtnColl {*/
-    /*float: right;*/
-    /*width: 50%;*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*right: 0;*/
-/*}*/
 
 .header {
     float: left;
     width: 100%;
 }
 
-.order-content {
-    margin-top: 5%;
-    /*float: left;*/
-    /*width: 100%;*/
-}
-
 .footer {
-    margin-top: 5%;
+    margin-top: 100px;
+    margin-bottom: 50px;
     /*float: left;*/
     /*width: 100%;*/
 }
@@ -175,24 +148,9 @@
     background-color: white;
 }
 
-/*align tabs to center*/
-.nav-tabs > li, .nav-pills > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-     zoom:1; /* hasLayout ie7 trigger */
-}
-.nav-tabs, .nav-pills {
-    text-align:center;
-}
-
-.panel {
-    /*border-top: 7px solid #428bca;*/
+/*.panel*/
+.panel-multi-form {
     border-left: 7px solid;
-}
-
-.panel-heading {
-    height: 43px;
 }
 
 .panel-patient {
@@ -276,10 +234,6 @@
 }
 
 /*shift left the buttons on the each form menu*/
-.form-btn-options {
-    float:right;
-    /*width: 20%;*/
-}
 .element-title {
     float: left;
     padding-left: 1%;
@@ -293,12 +247,67 @@
     width: 100%;
 }
 
-.form_body_toggle_btn {
-    padding-right: 1%;
-    float: left;
-}
-
 .textarea {
     min-height: 75px;
 }
 
+/*Comment counter*/
+#incoming-orders-menu-title, #incoming-orders-menu-badge {
+    display: inline-block !important;
+}
+
+#incoming-orders-menu-title {
+    padding-right: 3px !important;
+    box-shadow: none;
+}
+
+#incoming-orders-menu-badge {
+    padding-left: 3px !important;
+    box-shadow: none;
+}
+
+/*Multi-Slide Table Order nav bar*/
+
+/*align tabs to center*/
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    zoom:1; /* hasLayout ie7 trigger */
+}
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+
+/*make border*/
+.tab-content {
+    border-left: 1px solid #428bca;
+    border-right: 1px solid #428bca;
+    border-bottom: 1px solid #428bca;
+    padding: 10px;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+
+.tabbable>.nav-tabs>.active>a, .tabbable>.nav-tabs>.active>a:hover, .tabbable>.nav-tabs>.active>a:focus {
+    border: 1px solid #428bca;
+    border-bottom-color: transparent;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #428bca;
+}
+
+.nav-tabs > li > a {
+    color: #428bca
+}
+
+.nav-tabs > li > a:hover {
+    background-color: #428bca;
+    border: 1px solid #428bca;
+    border-bottom-color: transparent;
+    color: #ffffff
+}
+/*end of nav bar*/

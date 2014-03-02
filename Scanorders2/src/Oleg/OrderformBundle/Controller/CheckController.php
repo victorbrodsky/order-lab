@@ -87,7 +87,7 @@ class CheckController extends Controller {
 
     /**
      * Find an element in DB
-     * @Route("/patient", name="get-patientdata")
+     * @Route("/patient/check", name="get-patientdata")
      * @Method("GET")   //TODO: use POST?
      */
     public function getPatientAction() {
@@ -153,7 +153,7 @@ class CheckController extends Controller {
 
     /**
      * Create new element with status RESERVED
-     * @Route("/patientmrn", name="create-mrn")
+     * @Route("/patient/generate", name="create-mrn")
      * @Method("GET")
      */
     public function createPatientAction() {
@@ -193,7 +193,7 @@ class CheckController extends Controller {
     }
 
     /**
-     * @Route("/mrn/check/{key}", name="delete-mrn-keytype")
+     * @Route("/patient/delete/{key}", name="delete-mrn-keytype")
      * @Method("DELETE")
      */
     public function deleteMrnAction( Request $request ) {
@@ -224,7 +224,7 @@ class CheckController extends Controller {
     /************************ ACCESSION *************************/
     /**
      * Find accession by #
-     * @Route("/accession", name="get-accession")
+     * @Route("/accession/check", name="get-accession")
      * @Method("GET")
      */
     public function getAccessionAction() {
@@ -327,7 +327,7 @@ class CheckController extends Controller {
 
     /**
      * Get next available Accession from DB
-     * @Route("/accessionaccession", name="create-accession")
+     * @Route("/accession/generate", name="create-accession")
      * @Method("GET")
      */
     public function createAccessionAction() {
@@ -372,7 +372,7 @@ class CheckController extends Controller {
     }
 
     /**
-     * @Route("/accession/check/{key}", name="delete-accession")
+     * @Route("/accession/delete/{key}", name="delete-accession")
      * @Method("DELETE")
      */
     public function deleteAccessionAction(Request $request) {
@@ -383,6 +383,7 @@ class CheckController extends Controller {
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
+        //echo "key=".$key.",keytype=".$keytype." | ";
 
 //        $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneById($keytype);
 //        if( $typeEntity->getId() == $keytype ) {
@@ -409,15 +410,15 @@ class CheckController extends Controller {
     /************************ PART *************************/
     /**
      * Get Part from DB if existed
-     * @Route("/part", name="get-part")
+     * @Route("/part/check", name="get-part")
      * @Method("GET")
      */
     public function getPartAction() {
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
-        $accession = trim( $request->get('parent') ); //need accession number to check if part exists in DB
-        $keytype = trim( $request->get('extra') );
+        $accession = trim( $request->get('parentkey') ); //need accession number to check if part exists in DB
+        $keytype = trim( $request->get('parentextra') );
         //echo "key=".$key."   ";
 
         $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $keytype, $key, true );
@@ -465,14 +466,14 @@ class CheckController extends Controller {
 
     /**
      * Get next available Part from DB by giving Accession number
-     * @Route("/partpartname", name="create-part")
+     * @Route("/part/generate", name="create-part")
      * @Method("GET")
      */
     public function createPartAction() {
 
         $request = $this->get('request');
-        $accession = trim( $request->get('key') );
-        $keytype = trim( $request->get('extra') );
+        $accession = trim( $request->get('parentkey') );
+        $keytype = trim( $request->get('parentextra') );
         //echo "accession=(".$accession.")   ";
 
         if( $accession && $accession != ""  ) {
@@ -507,14 +508,14 @@ class CheckController extends Controller {
     }
 
     /**
-     * @Route("/partname/check/{key}", name="delete-part")
+     * @Route("/part/delete/{key}", name="delete-part")
      * @Method("DELETE")
      */
     public function deletePartAction(Request $request) {
 
         $key = trim( $request->get('key') );
-        $accession = trim( $request->get('accession') );
-        $keytype = trim( $request->get('extra') );
+        $accession = trim( $request->get('parentkey') );
+        $keytype = trim( $request->get('parentextra') );
 
         $extra = array();
         $extra["accession"] = $accession;
@@ -535,16 +536,16 @@ class CheckController extends Controller {
     /************************ BLOCK *************************/
     /**
      * Get BLOCK from DB if existed
-     * @Route("/block", name="get-block")
+     * @Route("/block/check", name="get-block")
      * @Method("GET")
      */
     public function getBlockAction() {
 
         $request = $this->get('request');
-        $key = trim($request->get('key'));
-        $keytype = trim( $request->get('extra') );
-        $accession = trim($request->get('parent')); //need accession number to check if part exists in DB
-        $partname = trim($request->get('parent2')); //need accession number to check if part exists in DB
+        $key = trim($request->get('key'));       
+        $partname = trim($request->get('parentkey')); //need partname to check if part exists in DB
+        $accession = trim($request->get('grandparentkey')); //need accession number to check if part exists in DB 
+        $keytype = trim($request->get('grandparentextra'));    
         //echo "key=".$key."   ";
 
         if( $accession != "" && $partname != "" ) {
@@ -592,16 +593,16 @@ class CheckController extends Controller {
 
     /**
      * Get next available Block from DB by giving Accession number and Part name
-     * @Route("/blockblockname", name="create-block")
+     * @Route("/block/generate", name="create-block")
      * @Method("GET")
      */
     public function createBlockAction() {
 
 
-        $request = $this->get('request');
-        $accession = trim($request->get('key'));
-        $keytype = trim( $request->get('extra') );
-        $partname = trim($request->get('key2'));
+        $request = $this->get('request');           
+        $partname = trim($request->get('parentkey'));
+        $accession = trim($request->get('grandparentkey')); //need accession number to check if part exists in DB 
+        $keytype = trim( $request->get('grandparentextra') );
         //echo "accession=(".$accession.")   ";
 
         if( $accession != "" && $partname != "" ) {
@@ -639,15 +640,15 @@ class CheckController extends Controller {
     }
 
     /**
-     * @Route("/blockname/check/{key}", name="delete-block")
+     * @Route("/block/delete/{key}", name="delete-block")
      * @Method("DELETE")
      */
     public function deleteBlockAction(Request $request) {
 
-        $key = trim($request->get('key'));
-        $accession = trim($request->get('accession'));
-        $keytype = trim( $request->get('extra') );
-        $partname = trim($request->get('partname'));
+        $key = trim($request->get('key'));            
+        $partname = trim($request->get('parentkey'));
+        $accession = trim($request->get('grandparentkey'));
+        $keytype = trim( $request->get('grandparentextra') );
 
         $extra = array();
         $extra["accession"] = $accession;
