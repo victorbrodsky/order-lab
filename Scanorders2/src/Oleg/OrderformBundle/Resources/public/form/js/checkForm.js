@@ -82,25 +82,32 @@ function btnObject( btn ){
         return null;
     }
 
-   this.btn = btn;
-   this.element = null;
-   this.key = "";
-   this.type = null;
-   this.typename = null;
-   this.parentbtn = null;
-   this.name = null;
-   this.fieldname = null;
-   this.remove = false;
+    //printF(btn,"btn object:");
 
-   var inputEl = btn.closest('.row').find('input.keyfield'); 
-   this.element = inputEl;
-   if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
-       if( inputEl.select2('data') ) {
+    this.btn = btn;
+    this.element = null;
+    this.key = "";
+    this.type = null;
+    this.typename = null;
+    this.parentbtn = null;
+    this.name = null;
+    this.fieldname = null;
+    this.remove = false;
+
+    var inputEl = btn.closest('.row').find('input.keyfield');
+    this.element = inputEl;
+    if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
+       //var selectEl = btn.closest('.row').find('div.keyfield');
+       //console.log('ajax-combobox OK: testval='+selectEl.select2("val"));
+       if( inputEl.select2("val") ) {
+           //console.log('select2 data OK');
            this.key = inputEl.select2('data').text;
-       }           
-   } else {
-       this.key = inputEl.val(); 
-   }
+       } else {
+           //console.log('select2 data not OK ?');
+       }
+    } else {
+       this.key = inputEl.val();
+    }
    
     //get type
     var typeEl = inputEl.prev();
@@ -125,6 +132,7 @@ function btnObject( btn ){
     }
     
     console.log(this);
+    console.log('finished: this.name='+this.name+', this.key='+this.key+', this.type='+this.type);
 }
 
 function getParentBtn(btn) {
@@ -153,8 +161,78 @@ function getParentBtn(btn) {
     return parentBtn;
 }
 
-//called by button click
+
+
+
 function checkForm( btnel ) {
+
+return new Q.promise(function(resolve, reject) {
+
+    var btn = $(btnel);
+    var clickParent = true;
+    var parentBtnObj = null;
+    var casetype = 'check';
+
+    var btnObj = new btnObject(btn);
+    console.log('check form: name='+btnObj.name+', input='+btnObj.key+', type='+btnObj.type);
+
+    parentBtnObj = new btnObject(btnObj.parentbtn);
+    if( parentBtnObj && parentBtnObj.key != '' ) {
+        clickParent = false;
+    }
+
+    if( clickParent ) {
+        console.log('execute click parent then this');
+
+//        checkForm( parentBtnObj.btn ).then(function(response) {
+//            console.log("Success!", response);
+//            executeClick( btnObj );
+//            //checkForm( btnObj.btn );
+//        }).then(function(response) {
+//                console.log("Yey JSON!", response);
+//                resolve("OK: "+response);
+//            },function(error) {
+//                console.error("Failed!", error);
+//                reject(Error("Error on check form with parent"));
+//            }
+//        );
+
+        checkForm( parentBtnObj.btn ).
+        then(
+            function(response) {
+                console.log("Success!", response);
+                return executeClick( btnObj );
+            }
+        ).
+        then(
+            function(response) {
+                console.log("Yey JSON!", response);
+                resolve("OK: "+response);
+            }
+        );
+
+
+    } else {
+        console.log('execute click this');
+        executeClick( btnObj ).
+        then(function(response) {
+                console.log("Yey JSON!", response);
+                resolve("OK: "+response);
+        },function(error) {
+                console.error("Failed!", error);
+                reject(Error("Error on check form no parent"));
+            }
+        );
+    }
+
+});
+    //return;
+}
+
+
+
+/////////////// called by button click //////////////////////
+function checkForm_WORKING( btnel ) {
     
     var btn = $(btnel);         
     var btnObj = new btnObject(btn);      
@@ -237,11 +315,13 @@ function checkForm( btnel ) {
          
     return; 
 }
+/////////////// end of button click //////////////////////
 
-function executeClick( btnObj ) {
+function executeClick( btnObjInit ) {
        
     return Q.promise(function(resolve, reject) {
-    
+
+        var btnObj = new btnObject(btnObjInit.btn);
         var casetype = 'check';       
         var btn = btnObj.btn;
         var urlcasename = null;
@@ -254,7 +334,7 @@ function executeClick( btnObj ) {
         var grandparentType = null;
         var single = false; //temp
 
-        console.log('executeClick: key='+key+', parentKey='+parentKey+', parentType='+parentType);
+        console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
                
         if( btnObj && btnObj.key == '' && !btnObj.remove ) {
             console.log('Case 1: key not exists => generate');
@@ -286,17 +366,16 @@ function executeClick( btnObj ) {
               
         //get parent
         var parentBtnObj = new btnObject(btnObj.parentbtn);
-        
         if( parentBtnObj ) {
             parentKey = parentBtnObj.key;
             parentType = parentBtnObj.type;
         }
         
-        if( parentBtnObj && parentType && parentKey == '' ) {
-            console.log('parent key is empty');
-            reject(Error("parent key is empty"));          
-            //return;
-        }
+//        if( parentBtnObj && parentType && parentKey == '' ) {
+//            console.log('parent key is empty');
+//            reject(Error("parent key is empty"));
+//            //return;
+//        }
         
         //get grand parent
         var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
@@ -305,11 +384,11 @@ function executeClick( btnObj ) {
             grandparentType = grandparentBtnObj.type;
         }
                     
-        if( parentBtnObj && parentType && parentKey == '' ) {
-            console.log('parent key is empty');
-            reject(Error("parent key is empty"));          
-            //return;
-        }
+//        if( grandparentBtnObj && grandparentType && grandparentKey == '' ) {
+//            console.log('grandparent key is empty');
+//            reject(Error("grandparent key is empty"));
+//            //return;
+//        }
         
         //trim values
         key = trimWithCheck(key);
@@ -335,12 +414,22 @@ function executeClick( btnObj ) {
             data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
             success: function (data) {
                 btn.button('reset');
-                
+
+                if( data == null && casetype == 'generate' ) {
+
+                    console.debug("Object was not generated");
+                    reject(Error("Object was not generated"));
+
+                } else
                 if( data == -2 ) {
+
                     //Existing Auto-generated object does not exist in DB
                     createErrorWell(btnObj.element,btnObj.name);
-                    reject(Error("Existing Auto-generated object does not exist in DB"));                  
-                } else if( data && data.id ) {
+                    reject(Error("Existing Auto-generated object does not exist in DB"));
+
+                } else
+                if( data && data.id ) {
+
                     console.debug("ajax key value data is found");                                    
                     
                     if( casetype == 'generate' ) {
@@ -368,7 +457,8 @@ function executeClick( btnObj ) {
                         invertButton(btn);
                     //}    
                     
-                    //resolve("ajax key value data is found");
+                    resolve("ajax key value data is found");
+
                 } else {
                     
                     if( casetype == 'check' ) {
@@ -380,15 +470,14 @@ function executeClick( btnObj ) {
                     }
                     
                     console.debug('set key data is null');
+                    resolve("ajax key value data is found");
                 } 
-                
-                resolve("ajax key value data is found");
+
             },
             error: function () {
                 btn.button('reset');
-                reject(Error("set key ajax error"));
-                //resolve("set key ajax error");
                 console.debug("set key ajax error");
+                reject(Error("set key ajax error"));
             }
         }); //ajax               
         

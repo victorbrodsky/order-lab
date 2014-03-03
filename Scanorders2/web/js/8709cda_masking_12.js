@@ -173,7 +173,7 @@ function setMrntypeMask( elem, clean ) {
         case "Auto-generated MRN":
             mrnField.inputmask( getMrnAutoGenMask() );
             var parent = elem.closest('.patientmrn');
-            if( parent.find('#check_btn').hasClass('checkbtn') ) {
+            if( parent.find('#check_btn').find('i').hasClass('checkbtn') ) {
                 parent.find('#check_btn').trigger("click");
             }
             //console.log('Auto-generated MRN !!!');

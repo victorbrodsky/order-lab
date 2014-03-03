@@ -24,7 +24,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 {
     private $encoderFactory;
     private $serviceContainer;
-    private $ldap = false;
+    private $ldap = true;
     private $test = false;
 
     public function __construct(EncoderFactoryInterface $encoderFactory, $serviceContainer)
