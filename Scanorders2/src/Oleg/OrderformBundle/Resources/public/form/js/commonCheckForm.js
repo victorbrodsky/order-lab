@@ -63,18 +63,91 @@ function trimWithCheck(val) {
 
 function invertButton(btn) {
     //console.log("invert Button: glyphicon class="+btn.find("i").attr("class"));
-//    if( btn.find("i").attr("class") == "glyphicon glyphicon-check" ) {
-    if( btn.find("i").hasClass('checkbtn') ) {
-        //console.log("check=>remove");
+    if( btn.hasClass('checkbtn') ) {
+        console.log("check=>remove");
         btn.find("i").removeClass('glyphicon-check').addClass('glyphicon-remove');
-        btn.find("i").removeClass('checkbtn').addClass('removebtn');
+        btn.removeClass('checkbtn').addClass('removebtn');
     } else {
-        //console.log("remove=>check");
+        console.log("remove=>check");
         btn.find("i").removeClass('glyphicon-remove').addClass('glyphicon-check');
-        btn.find("i").removeClass('removebtn').addClass('checkbtn');
+        btn.removeClass('removebtn').addClass('checkbtn');
     }
-    //console.log("finish invert Button: glyphicon class="+btn.find("i").attr("class"));
+    console.log("finish invert Button: glyphicon class="+btn.attr("class"));
 }
+
+function createErrorWell(inputElement,name) {
+    if( name == "patient" ) {
+        errorStr = 'This is not a previously auto-generated MRN. Please correct the MRN or select "Auto-generated MRN" for a new one.';
+    } else
+    if( name == "accession" ) {
+        errorStr = 'This is not a previously auto-generated accession number. Please correct the accession number or select "Auto-generated Accession Number" for a new one.';
+    } else {
+        errorStr = 'This is not a previously auto-generated number. Please correct this number or empty this field and click the check box to generate a new one.';
+    }
+
+    var errorHtml =
+        '<div class="maskerror-added alert alert-danger">' + 
+            errorStr +
+        '</div>';
+
+    inputElement.after(errorHtml);
+    
+    return errorHtml;
+}
+
+function deleteSuccess(btnElement,single) {
+    //printF(btnElement,"Delete on Success:")
+    cleanFieldsInElementBlock( btnElement, "all", single );
+    disableInElementBlock(btnElement, true, null, "notkey", null);
+    invertButton(btnElement);
+    setDefaultMask(btnElement);
+}
+
+function deleteError(btnElement,single) {
+    if( !single ) {
+        //printF(btnElement,"btnElement:");
+        //check if all children buttons are not checked == has class removebtn
+        var errors = 0;
+        var checkBtns = btnElement.closest('.panel').find('#check_btn');
+        //console.log('checkBtns.length='+checkBtns.length);
+        checkBtns.each( function() {
+            //printF($(this),'check btn=');
+            //printF(btnElement,'btnElement=');
+            if( $(this).attr('class') != btnElement.attr('class') ) {
+                if( $(this).find('i').hasClass('removebtn') ) {
+                    errors++;
+                }
+            }
+        });
+
+        //console.log('errors='+errors);
+        if( errors == 0 ) {
+            deleteSuccess(btnElement,single);
+            return;
+        }
+
+        var childStr = "Child";
+        if( name == "accession" ) {
+            childStr = "Part";
+        }
+        if( name == "partname" ) {
+            childStr = "Block";
+        }
+        alert("Can not delete this element. Make sure if " + childStr + " is deleted.");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+//TODO: functions to rewrite
 
 //all: "all" => disable/enable all fields including key field
 //flagKey: "notkey" => disable/enable all fields, but not key field (inverse key)

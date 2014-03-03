@@ -144,18 +144,18 @@
                         <div style="float:left; width:100%">
                             <div style="float:left; width:50%" id="accession-single">
                                 {{ form_widget(form_accession.accession|first.field) }}
-                                <button style="display: none;" id="check_btn" class="btn btn-default accessionbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="checkbtn glyphicon glyphicon-check"></i></button>
+                                <button style="display: none;" id="check_btn" class="btn btn-default checkbtn accessionbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
                             </div>
                             <div style="float:left; width:25%" id="part-single">
                                 {{ form_widget(form_part.partname|first) }}
-                                <button style="display: none;" id="check_btn" class="btn btn-default partbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="checkbtn glyphicon glyphicon-check"></i></button>
+                                <button style="display: none;" id="check_btn" class="btn btn-default checkbtn partbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
                             </div>
                             <div style="float:left; width:25%" id="block-single">
                                 {{ form_widget(form_block.blockname|first) }}
-                                <button style="display: none;" id="check_btn" class="btn btn-default blockbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="checkbtn glyphicon glyphicon-check"></i></button>
+                                <button style="display: none;" id="check_btn" class="btn btn-default checkbtn blockbtn" type="button" onclick="checkForm(this,true)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-check"></i></button>
                             </div>
                             <div style="float:left; width:10%; display:none;" id="maincinglebtn">
-                                <button id="remove_single_btn" class="btn btn-default maincinglebtn" type="button" onclick="removeFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="removebtn glyphicon glyphicon-remove"></i></button>
+                                <button id="remove_single_btn" class="btn btn-default removebtn maincinglebtn" type="button" onclick="removeFormSingle(this)" data-loading-text="<img src='{{ imgLoading }}' />"><i class="glyphicon glyphicon-remove"></i></button>
                             </div>
                         </div>
                     </div>

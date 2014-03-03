@@ -75,82 +75,6 @@ function addKeyListener() {
     });
 }
 
-
-function checkForm( btnel ) {
-    
-    var btn = $(btnel);
-    var clickParent = true;
-    var parentBtnObj = null;   
-    var casetype = 'check';
-    
-    var btnObj = new btnObject(btn);
-    console.log('input='+btnObj.key+', type='+btnObj.type);
-    
-    parentBtnObj = new btnObject(btnObj.parentbtn);
-    if( parentBtnObj && parentBtnObj.key != '' ) {
-        clickParent = false;
-    }     
-       
-    if( btnObj && btnObj.key == '' && !btnObj.remove ) {
-        console.log('Case 1: key not exists => generate');
-        casetype = 'generate';      
-    } else if( btnObj && btnObj.key != '' && !btnObj.remove ) {
-        console.log('Case 2: key exists => check');
-        casetype = 'check';
-    } else if( btnObj && btnObj.remove ) {
-        console.log('Case 3: key exists and button delete => delete');
-        casetype = 'delete';
-    } else {
-        console.log('Logical error: invalid key');
-    }
-    
-    if( clickParent ) {
-        console.log('execute click parent then this');
-
-//        Q.spread([
-//                executeClick( parentBtnObj, casetype ),
-//                executeClick( btnObj, casetype )
-//            ],
-//            function( parentel, thisel ){
-//                console.log("finished with parentel="+parentel+", thisel="+thisel);
-//            }
-//        );
-            
-//        executeClick( parentBtnObj, casetype )
-//        .then( executeClick( btnObj, casetype ) )
-//        .then( function (result) {
-//           console.log("finished with result="+result);
-//        })
-//        .catch(function (error) {
-//            // Handle any error from all above steps
-//            console.log("Error:"+error);
-//        })
-//        .done( console.log("Done!") );
-
-//        executeClick( parentBtnObj, casetype ).then(function(response) {
-//            console.log("Success!", response);
-//            executeClick( btnObj, casetype )
-//        }, function(error) {
-//            console.error("Failed!", error);
-//        });
-        
-        
-        executeClick( parentBtnObj, casetype ).then(function(response) {
-            console.log("Success!", response);
-            return executeClick( btnObj, casetype );
-        }).then(function(response) {
-            console.log("Yey JSON!", response);
-        });
-        
-
-    } else {
-        console.log('execute click this');
-        executeClick( btnObj, casetype );
-    }
-         
-    return; 
-}
-
 //object contains: input value, type, parent (btn element), name, fieldname
 function btnObject( btn ){
 
@@ -159,6 +83,7 @@ function btnObject( btn ){
     }
 
    this.btn = btn;
+   this.element = null;
    this.key = "";
    this.type = null;
    this.typename = null;
@@ -168,6 +93,7 @@ function btnObject( btn ){
    this.remove = false;
 
    var inputEl = btn.closest('.row').find('input.keyfield'); 
+   this.element = inputEl;
    if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
        if( inputEl.select2('data') ) {
            this.key = inputEl.select2('data').text;
@@ -194,7 +120,7 @@ function btnObject( btn ){
     } 
     
     //if remove
-    if( btn.find('i').hasClass('removebtn') ) {
+    if( btn.hasClass('removebtn') ) {
         this.remove = true;
     }
     
@@ -227,14 +153,98 @@ function getParentBtn(btn) {
     return parentBtn;
 }
 
-function executeClick( btnObj, casetype ) {
+//called by button click
+function checkForm( btnel ) {
     
+    var btn = $(btnel);         
+    var btnObj = new btnObject(btn);      
+    var parentBtnObj = null;
+    var grandparentBtnObj = null;
+      
+    console.log('input='+btnObj.key+', type='+btnObj.type);        
+    
+    //if delete button?
+    if( btnObj && btnObj.remove ) {
+        console.log('execute click this');
+        executeClick( btnObj );
+        return;
+    }
+    
+    //patient 
+    if( btnObj.name == 'patient' ) {
+        console.log('execute click this');
+        executeClick( btnObj );
+        return;
+    }
+    
+    //accession 
+    if( btnObj.name == 'accession' ) {
+        console.log('execute click this');
+        executeClick( btnObj );
+        return;
+    }
+    
+    //part
+    if( btnObj.name == 'part' ) {
+        console.log('execute click parent then this');
+        
+        parentBtnObj = new btnObject(btnObj.parentbtn);
+        
+        //working!
+        executeClick( parentBtnObj ).
+        then( 
+            function(response) {
+                console.log("Success!", response);
+                return executeClick( btnObj );
+            } 
+        ).
+        then(
+            function(response) {
+                console.log("Yey JSON!", response);
+            }
+        ); 
+        return;
+    }
+    
+    //block
+    if( btnObj.name == 'block' ) {
+        console.log('execute click grandparent then parent then this');
+        
+        parentBtnObj = new btnObject(btnObj.parentbtn);
+        grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
+        
+        //working!
+        executeClick( grandparentBtnObj ).
+        then( 
+            function(response) {
+                console.log("Success!", response);
+                return executeClick( parentBtnObj );
+            } 
+        ).
+        then( 
+            function(response) {
+                console.log("Success!", response);
+                return executeClick( btnObj );
+            } 
+        ).            
+        then(
+            function(response) {
+                console.log("Yey JSON!", response);
+            }
+        );
+        return;    
+    }     
+         
+    return; 
+}
+
+function executeClick( btnObj ) {
+       
     return Q.promise(function(resolve, reject) {
     
-        console.log('executeClick: casetype='+casetype);
-
+        var casetype = 'check';       
         var btn = btnObj.btn;
-        var urlcasename = btnObj.name+'/'+casetype;
+        var urlcasename = null;
         var ajaxType = 'GET';
         var key = btnObj.key;
         var type = btnObj.type;
@@ -242,9 +252,27 @@ function executeClick( btnObj, casetype ) {
         var parentType = null;
         var grandparentKey = null;
         var grandparentType = null;
+        var single = false; //temp
 
-        console.log('key='+key+', parentKey='+parentKey+', parentType='+parentType);
-                
+        console.log('executeClick: key='+key+', parentKey='+parentKey+', parentType='+parentType);
+               
+        if( btnObj && btnObj.key == '' && !btnObj.remove ) {
+            console.log('Case 1: key not exists => generate');
+            casetype = 'generate';      
+        } else if( btnObj && btnObj.key != '' && !btnObj.remove ) {
+            console.log('Case 2: key exists => check');
+            casetype = 'check';
+        } else if( btnObj && btnObj.remove ) {
+            console.log('Case 3: key exists and button delete => delete');
+            casetype = 'delete';
+        } else {
+            console.log('Logical error: invalid key');
+        }
+        
+        console.log('executeClick: casetype='+casetype);
+        
+        urlcasename = btnObj.name+'/'+casetype;
+        
         if( casetype == 'delete' ) {
             ajaxType = 'DELETE'; 
            
@@ -291,6 +319,11 @@ function executeClick( btnObj, casetype ) {
         grandparentKey = trimWithCheck(grandparentKey);
         grandparentType = trimWithCheck(grandparentType);
         
+        //temp
+        if( orderformtype == "single" ) {
+            single = true;
+        }
+        
         btn.button('loading');
         
         $.ajax({
@@ -302,30 +335,64 @@ function executeClick( btnObj, casetype ) {
             data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
             success: function (data) {
                 btn.button('reset');
-                if( data ) {
-                    console.debug("ajax key value data is found");                 
-                    invertButton(btn);
-                    setElementBlock(btn, data, null, "key");
-                    disableInElementBlock(btn, false, null, "notkey", null);
+                
+                if( data == -2 ) {
+                    //Existing Auto-generated object does not exist in DB
+                    createErrorWell(btnObj.element,btnObj.name);
+                    reject(Error("Existing Auto-generated object does not exist in DB"));                  
+                } else if( data && data.id ) {
+                    console.debug("ajax key value data is found");                                    
+                    
+                    if( casetype == 'generate' ) {
+                        setElementBlock(btn, data, null, "key");
+                        disableInElementBlock(btn, false, null, "notkey", null);
+                    }
+                    
+                    if( casetype == 'check' ) {
+                        setElementBlock(btn, data);
+                        //second: disable or enable element. Make sure this function runs after set Element Block
+                        disableInElementBlock(btn, true, "all", null, "notarrayfield");
+                    }
+                    
+                    if( casetype == 'delete' ) {
+                        if( data != '-1' || single ) {
+                            //console.debug("Delete Success");
+                            deleteSuccess(btn,single);
+                        } else {
+                            //console.debug("Delete ok with Error");
+                            deleteError(btn,single);
+                        }
+                    }                  
+                    
+                    //if( casetype != 'check' ) {
+                        invertButton(btn);
+                    //}    
+                    
                     //resolve("ajax key value data is found");
                 } else {
+                    
+                    if( casetype == 'check' ) {
+                        invertButton(btn);
+                    }
+                    
+                    if( casetype == 'delete' ) {
+                        deleteError(btn,single);
+                    }
+                    
                     console.debug('set key data is null');
-                }              
+                } 
+                
                 resolve("ajax key value data is found");
             },
-    //        always: function() {
-    //            //_lbtn.stop();
-    //            //$('.spinner-image').remove();
-    //        },
             error: function () {
                 btn.button('reset');
                 reject(Error("set key ajax error"));
                 //resolve("set key ajax error");
                 console.debug("set key ajax error");
             }
-        }); //ajax
+        }); //ajax               
         
     }); //promise
-       
+     
 }
 
