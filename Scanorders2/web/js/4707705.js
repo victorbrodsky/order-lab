@@ -7551,22 +7551,6 @@ $(document).ready(function() {
 
 });
 
-function checkButtonPromise( fieldsArr, count, limit ) {
-
-    var ajaxOK, promise;
-
-    promise = new Promise();
-
-    ajaxOK = waitWhenReady(fieldsArr, count, limit);
-
-    if( ajaxOK ) {
-        promise.resolve(ajaxOK);
-    } else {
-        promise.reject(ajaxOK);
-    }
-
-    return promise;
-}
 
 //inputField - input field element which is tested for value is being set
 function waitWhenReady( fieldsArr, count, limit ) {
@@ -7588,7 +7572,7 @@ function waitWhenReady( fieldsArr, count, limit ) {
         //printF(checkButton,"click button:");
         //console.log("check single form: count="+count);
         //checkButton.trigger("click");   //click only once
-        var checkres = checkForm( checkButton, true );
+        var checkres = checkForm( checkButton );
     }
 
     //console.log("error length="+$('.maskerror-added').length);
@@ -7609,200 +7593,229 @@ function finalStepCheck() {
 
 //var _lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
 
-function addAsync(a, b) {
-    console.log("addAsync");
-    var deferred = Q.defer();
-    deferred.reject(Error("Network Error"));
-    // Wait 2 seconds and then add a + b
-    setTimeout(function() {
-        console.log("deferred.resolve");
-        deferred.resolve(a + b);
-    }, 2000);
-    console.log("deferred.promise");
-    return deferred.promise;
+function clickSingleBtn( btn ) {
+
+    return new Q.promise(function(resolve, reject) {
+
+        printF(btn,"######## Button for click single button func: ");
+
+        checkForm( btn, 'none' ).
+        then(
+            function(response) {
+                console.log("Success!", response);
+                if( $('.maskerror-added').length > 0 ) {
+                    console.log("Validation error");
+                    //reject(Error("Validation error"));
+                    return false;
+                } else {
+                    console.log("Chaining with parent OK: "+response);
+                    //resolve("Chaining with parent OK: "+response);
+                    return true;
+                }
+            }
+        ).
+        then(
+            function(response) {
+                if( response ) {
+                    resolve("Chaining with parent OK: "+response);
+                } else {
+                    reject(Error("Validation error"));
+                }
+            },
+            function(error) {
+                console.error("Single check failed!", error);
+                reject(Error("Single check failed, error="+error));
+            }
+        );
+
+    });
 }
 
 //Check form single
 function checkFormSingle( elem ) {
 
-//    (function () {
-//        "use strict";
-//
-//        var deferredAnimate = Q.async(function* (element) {
-//            for (var i = 0; i < 100; ++i) {
-//                element.style.marginLeft = i + "px";
-//                yield Q.delay(20);
-//            }
-//        });
-//
-//        Q.spawn(function* () {
-//            yield deferredAnimate(document.getElementById("box"));
-//            alert("Done!");
-//        });
-//    }());
-//    return false;
+//    var promise = new Q.promise(function(resolve, reject) {
+//        resolve(1);
+//    });
+//    promise.then(function(val) {
+//        console.log(val); // 1
+//        return val + 2;
+//    }).then(function(val) {
+//            console.log(val); // 3
+//    });
+//    //return false;
 
-    Q.all([
-            addAsync(1, 1),
-            addAsync(2, 2),
-            addAsync(3, 3)
-        ]).then(
-            function(result1, result2, result3) {
-                console.log(result1, result2, result3);
-            },
-            function(error) {
-                console.log("error="+error);
+    var lbtn = Ladda.create(elem);
+
+    var promiseValidateMask = function() {
+        return new Q.promise(function(resolve, reject) {
+            if( validateMaskFields() > 0 ) {
+                console.log("errors > 0 => return");
+                reject('mask errors');
+            } else {
+                console.log("mask ok");
+                resolve('mask ok');
             }
-        );
-
-//    addAsync(3, 4).then(
-//        function(result) {
-//            console.log(result);
-//        },
-//        function(error) {
-//            console.log("error="+error);
-//        }
-//    );
-
-    console.log("chaining");
-    var promise = Q.promise(function(resolve, reject) {
-        resolve(1);
-    });
-
-    promise.then(function(val) {
-        console.log(val); // 1
-        return val + 2;
-    }).then(function(val) {
-            console.log(val); // 3
         });
-
-    console.log("finished");
-    return false;
-
-    if( validateMaskFields() > 0 ) {
-        //console.log("errors > 0 => return");
-        return false;
-    }      
-
-    if( $('#maincinglebtn').is(":visible") ) {
-        //console.log("maincinglebtn is visible => return");
-        return false;
     }
 
-//    console.log("cancheck="+cancheck);
-//    if( !cancheck ) {         
-//        return;
-//    }
-
-    //$('#optional_param').collapse('toggle');    //open. Need to open to populate patient (if existed) linked to accession
-
-    console.log("start ajax");
-    //var lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
-    //_lbtn.start();
-    //Ladda.bind(elem);
-
-    //Ladda.bind( '.singleform-optional-button', { timeout: 2000 } );
-    //return false;
-    //btn.button('loading');
-    //$("elem").toggleClass('active');
-    var _lbtn = Ladda.create(elem);
-    _lbtn.start();
+    var promiseNoMainSingleBtn = function(response) {
+        return new Q.promise(function(resolve, reject) {
+            if( $('#maincinglebtn').is(":visible") ) {
+                console.log("maincinglebtn is visible => return");
+                reject('maincinglebtn is visible => return');
+            } else {
+                console.log("start ajax");
+                lbtn.start();
+                resolve('maincinglebtn is ok');
+            }
+        });
+    }
 
     //$('.singleform-optional-button').append('<img class="spinner-image" src="http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif"/></div>');
+    //var ajaxOK = callWaitStack();
 
-    //alert('pause');
+    promiseValidateMask().
+    then(promiseNoMainSingleBtn).
+    then(
+        function(response) {
+            console.log("validation promises success!", response);
+            return clickSingleBtn( $('.checkbtn.accessionbtn') );
+        }
+    ).
+    then(
+        function(response) {
+            console.log("Accession success!", response);
+            return clickSingleBtn( $('.checkbtn.partbtn') );
+        }
+    ).
+    then(
+        function(response) {
+            console.log("Part success!", response);
+            return clickSingleBtn( $('.checkbtn.blockbtn') );
+        }
+    ).
+    then(
+        function(response) {
+            console.log("Block success!", response);
+            if( $('.maskerror-added').length > 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    ).
+    then(
+        function(response) {
 
-    //window.setTimeout( callWaitStack, 300 );
-    //console.log('before');
-    //console.log('after');
+            if( response ) {
 
-    var ajaxOK = callWaitStack();
+                console.log("All Success!", response);
 
+                if( $('.maskerror-added').length == 0 ) {
+                    collapseElementFix($('#optional_param'));
+                    finalStepCheck();
+                } else {
+                    //return false;
+                }
 
-    console.log("stop ajax");
-//    //btn.button('reset');
-    _lbtn.stop();
+                initOptionalParam();
 
-    if( !ajaxOK ) {
-        return false;
-    }
+            } else {
+                console.log("Response is false: ", response);
+            }
 
-    if( $('.maskerror-added').length == 0 ) {
-        collapseElementFix($('#optional_param'));
-        finalStepCheck();
-    } else {
-        return false;
-    }
-
-    initOptionalParam();
-
-    //console.log("ready!!!");
-
-    return true;
-}
-
-
-function callWaitStack() {
-    var fieldsArr = new Array();
-    fieldsArr[0] = '#accession-single';
-    fieldsArr[1] = '#part-single';
-    fieldsArr[2] = '#block-single';
-
-    var ajaxOK = true;
-
-    Q.spread([
-        waitWhenReady( fieldsArr, 0, 0 ),
-        waitWhenReady( fieldsArr, 1, 0 ),
-        waitWhenReady( fieldsArr, 2, 0 )
-    ],
-        function( acc, part, block ){
-            if( !acc ) ajaxOK = false;
-            if( !part ) ajaxOK = false;
-            if( !block ) ajaxOK = false;
+        }
+    ).
+    then(
+        function(response) {
+            console.log("All chaining with parent OK:", response);
+            //return true;
+            console.log("stop ajax");
+            lbtn.stop();
+        },
+        function(error) {
+            console.error("All chaining with parent Error", error);
+            //return false;
+            console.log("stop ajax");
+            lbtn.stop();
         }
     );
 
-//    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
-//        ajaxOK = false;
-//    }
+    //console.log("ready!!!");
 
-//    if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
-//        ajaxOK = false;
-//    }
-//
-//    if( !waitWhenReady( fieldsArr, 2, 0 ) ) {
-//        ajaxOK = false;
-//    }
-
-    return ajaxOK;
+    //return false;
 }
 
 
 //Remove form single
 function removeFormSingle( elem ) {
 
-    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 
-    $("#remove_single_btn").button('loading');
-    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
+    var btn = $(elem);
 
-    $('.blockbtn').trigger("click");
+    btn.button('loading');
 
-    $('.partbtn').trigger("click");
+    checkForm( $('.blockbtn'), 'none' ).
+    then(
+        checkForm( $('.partbtn'), 'none' )
+    ).
+    then(
+        checkForm( $('.accessionbtn'), 'none' )
+    ).
+    then(
+        function(response) {
+            if( $('.patientmrn').hasClass('removebtn') ) {
+                console.log("no patient delete");
+                checkForm( $('.patientmrn'), 'none' );
+            }
+            return "patient processing ok";
+        }
+    ).
+    then(
+        function(response) {
+            console.log("All delete chaining with parent OK:", response);
+            //return true;
+            console.log("delete stop ajax");
 
-    $('.accessionbtn').trigger("click");
-    
-    if( $('.patientmrn').find('i').hasClass('removebtn') ) {
-        $('.patientmrn').trigger("click");
-    }  
+            $('#part-single').css( "width", "25%" );
+            $('#block-single').css( "width", "25%" );
+            $('#maincinglebtn').hide();
+            collapseElementFix($('#optional_param'));   //close optional info
 
-    $('#part-single').css( "width", "25%" );
-    $('#block-single').css( "width", "25%" );
-    $('#maincinglebtn').hide();
-    collapseElementFix($('#optional_param'));   //close optional info
+            btn.button('reset');
+        },
+        function(error) {
+            console.error("All delete chaining with parent Error", error);
+            //return false;
+            console.log("delete stop ajax");
+            btn.button('reset');
+        }
+    );
 
-    console.log("end of remove");
-    $("#remove_single_btn").button('reset');
+//    $("#remove_single_btn").button('loading');
+//    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
+//
+//    $('.blockbtn').trigger("click");
+//
+//    $('.partbtn').trigger("click");
+//
+//    $('.accessionbtn').trigger("click");
+//
+//    if( $('.patientmrn').hasClass('removebtn') ) {
+//        $('.patientmrn').trigger("click");
+//    }
+
+//    $('#part-single').css( "width", "25%" );
+//    $('#block-single').css( "width", "25%" );
+//    $('#maincinglebtn').hide();
+//    collapseElementFix($('#optional_param'));   //close optional info
+//
+//    console.log("end of remove");
+//    $("#remove_single_btn").button('reset');
+//
+//    btn.button('reset');
 
 }
 
@@ -9012,17 +9025,19 @@ function deleteError(btnElement,single) {
             //printF($(this),'check btn=');
             //printF(btnElement,'btnElement=');
             if( $(this).attr('class') != btnElement.attr('class') ) {
-                if( $(this).find('i').hasClass('removebtn') ) {
+                if( $(this).hasClass('removebtn') ) {
                     errors++;
                 }
             }
         });
 
-        //console.log('errors='+errors);
+        console.log('errors='+errors);
         if( errors == 0 ) {
             deleteSuccess(btnElement,single);
             return;
         }
+
+        invertButton(btnElement); //invert back to remove button, because btn.button('reset') revret back to checl button
 
         var childStr = "Child";
         if( name == "accession" ) {
@@ -9035,11 +9050,555 @@ function deleteError(btnElement,single) {
     }
 }
 
+//check if parent has checked sublings with the same key value
+function checkParent(element,keyValue,name,fieldName,extra) {
+    var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    //console.log("checkParent parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+
+    //if this patient has already another checked accession, then check current accession is not possible
+    //get patient accession buttons
+    var retval = 1;
+
+    //console.log("name+fieldName=" + name+fieldName);
+
+    var sublingsKey = parentEl.find('.'+name+fieldName).each(function() {
+
+        //printF($(this),"check sublings keys=");
+
+        var keyField = $(this).find('.keyfield');
+
+        //if( $(this).val() == "" ) {
+        if( keyField.hasClass('select2') ) {
+            var sublingsKeyValue = keyField.val();
+        } else {
+            var sublingsKeyValue = keyField.select2("val");
+        }
+
+        if( name == "accession" || name == "patient" ) {
+            var keytype = $(this).find('.combobox ').not("*[id^='s2id_']").select2('val');
+            var sublingsKeyValue = $(this).find('.keyfield ').val();
+        }
+
+        console.log("checkParent sublingsKeyValue=" + sublingsKeyValue + ", keyValue="+keyValue + ", keytype="+keytype+", extra="+extra);
+
+        if( $(this).find('#check_btn').hasClass('removebtn') && trimWithCheck(sublingsKeyValue) == trimWithCheck(keyValue) ) {
+            alert("This keyfield is already in use and it is checked");
+            retval = 0;
+            return false;   //break each
+        }
+    });
+
+    if( retval == 0 ) {
+        return 0;
+    }
+    return 1;
+}
+
+//element: accession button
+//set Patient by data from accession check
+function setPatient( btn, keyvalue, extraid, single ) {
+
+    var btnObj = new btnObject(btn,'full'); //'full' => get parent for accession too
+    var parentBtnObj = new btnObject(btnObj.parentbtn);
+    var parentKey = null;
+
+    if( !parentBtnObj || !btnObj.parentbtn || keyvalue == '' ) {
+        console.log("WARNING: Parent (here Patient) does not exists");
+    }
+
+    parentKey = trimWithCheck(parentBtnObj.key);
+
+    //check if parent has the same key and type combination
+    if( keyvalue == parentKey && extraid == parentBtnObj.type ) {
+        return 1;
+    }
+
+    //parent has different key type combination and button is check
+    if( !parentBtnObj.remove && parentKey && parentBtnObj.type && !(keyvalue == parentKey && extraid == parentBtnObj.type) ) {
+        var r=confirm('Different MRN '+ parentKey +' is already set in this form. Are you sure that you want to change the patient?');
+        if( r == true ) {
+            //console.log("you decide to continue");
+        } else {
+            //console.log("you canceled");
+            return 0;
+        }
+    }
+
+    //Button is removed and key and type combination is different
+    if( parentBtnObj.remove && parentKey && parentBtnObj.type && !(keyvalue == parentKey && extraid == parentBtnObj.type) ) {
+        var r=confirm('Patient with MRN '+ parentKey +' is already set in this form. Are you sure that you want to change the patient?');
+        if( r == true ) {
+            //console.log("you decide to continue");
+        } else {
+            //console.log("you canceled");
+            return 0;
+        }
+    }
+
+    //if parent key field is already checked: clean it first
+    if( parentBtnObj.remove ) {
+        //console.log("parent key field is already checked: clean it first");
+        //parentBtnObj.btn.trigger("click");
+
+        checkForm( parentBtnObj.btn ).
+            then(
+            function(response) {
+                console.log("Success!", response);
+                return setAndClickPatient();
+            }
+        ).
+            then(
+            function(response) {
+                console.log("Chaining with parent OK:", response);
+            },
+            function(error) {
+                console.error("Failed!", error);
+            }
+        );
+
+    } else {
+        return setAndClickPatient();
+    }
+
+    function setAndClickPatient() {
+        var mrnArr = new Array();
+        mrnArr['text'] = keyvalue;
+        mrnArr['keytype'] = extraid;
+        var keytypeElement = parentBtnObj.btn.closest('.row').find('.combobox').not("*[id^='s2id_']");
+        setKeyGroup( keytypeElement, mrnArr );
+        //console.log("trig ger parent key button");
+        parentBtnObj.btn.trigger("click");
+
+        return 1;
+    }
+
+}
 
 
+/////////////////////// validtion related functions /////////////////////////
+function validateForm() {
+
+    console.log("validateForm enter");
+    //return false;
+
+    var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
+    //console.log("saveClick="+ saveClick);
+
+    var checkExisting = checkExistingKey("accession");
+    //console.log( "accession checkExisting="+checkExisting);
+    if( !checkExisting ) {
+        if( orderformtype == "single") {
+            if( saveClick == 'true' ) {
+                //console.log( " single accession existing error => logout without saving");
+                idlelogout();   //we have errors on the form, so logout without saving form
+            }
+            //console.log( "WARNING SINGLE RETURN: checkExisting="+checkExisting);
+            return false;
+        }
+        //existingErrors++;
+    }
+
+    var checkExisting = checkExistingKey("patient");
+    if( !checkExisting ) {
+//        return false;
+        //existingErrors++;
+    }
+
+    if( $('.maskerror-added').length > 0 ) {
+        if( saveClick == 'true' ) {
+            //console.log( " mrn existing error => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        //console.log( "WARNING RETURN 1: maskerror-added.length="+$('.maskerror-added').length);
+        return false;
+    }
+
+    var checkMrnAcc = checkMrnAccessionConflict();
+    //console.log( "checkMrnAcc="+checkMrnAcc);
+    if( !checkMrnAcc ) {
+        if( saveClick == 'true' ) {
+            //console.log( " mrn-accession conflict => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        //console.log( "WARNING RETURN: checkMrnAcc="+checkMrnAcc);
+        return false;
+    }
+
+    //console.log("validateForm: error length="+$('.maskerror-added').length);
+
+    if( $('.maskerror-added').length > 0 ) {
+        if( saveClick == 'true' ) {
+            //console.log( $('.maskerror-added').length+ " error(s) => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        //console.log( "WARNING RETURN 2: maskerror-added.length="+$('.maskerror-added').length);
+        return false;
+    }
+
+    //return false; //testing
+    return true;
+}
+
+//accesion-MRN link validation when the user clicks "Submit" on multi-slide form
+function checkMrnAccessionConflict() {
+
+    var totalError = 0;
+
+    if( validateMaskFields() > 0 ) {
+        return false;
+    }
+
+    //Initial check: get total number of checkboxes
+    var totalcheckboxes = 0;
+
+    var reruncount = 0;
+
+    //console.log( "dataquality_message1[0]="+dataquality_message1[0] );
+    //console.log( "dataquality_message2[0]="+dataquality_message2[0] );
+
+    var countErrorBoxes = 0;
+
+    var errorBoxes = $('#validationerror').find('.validationerror-added');
+    //console.log("errorBoxes.length="+errorBoxes.length);
+
+    for (var i = 0; i < errorBoxes.length; i++) {
+
+        var errorBox = errorBoxes.eq(i);
+
+        var checkedEl = errorBox.find("input:checked");
+        //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+
+        //console.log("value="+checkedEl.val());
+        if( checkedEl.is(":checked") ){
+            //console.log("checked value="+checkedEl.val());
+            if( checkedEl.val() == "OPTION3" ) {
+                reruncount++;
+            }
+            if( checkedEl.val() == "OPTION1" ) {
+                setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+            }
+            if( checkedEl.val() == "OPTION2" ) {
+                setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
+            }
+        } else {
+            //
+        }
+        totalcheckboxes++;
+
+        countErrorBoxes++;
+
+    }
+
+    //clear array
+    dataquality_message1.length = 0;
+    dataquality_message2.length = 0;
+
+    //console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
 
 
+    if( totalcheckboxes == 0 ) {
+        //continue
+//    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
+//        cleanValidationAlert();
+    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
+        cleanValidationAlert();
+    } else {    //return true;
+        //return false; //testing
+        return true;
+    }
 
+    if( orderformtype == "single") {
+        var accessions = $('#accession-single').find('.keyfield');
+        //console.log("singleform");
+    } else {
+        var accessions = $('.accessionaccession').find('.keyfield');
+        //console.log("not singleform");
+    }
+
+    //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
+    var prototype = $('#form-prototype-data').data('prototype-dataquality');
+    //console.log("prototype="+prototype);
+    var index = 0;
+
+    //for all accession fields
+    accessions.each(function() {
+
+        var accInput = $(this);
+        var accValue = accInput.val();
+
+        //var acctypeField = accInput.closest('.row').find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+        var acctypeField = getKeyGroupParent(accInput).find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+
+        var acctypeValue = acctypeField.select2("val");
+        //var acctypeText = acctypeField.select2("data").text;
+
+        if( orderformtype == "single") {
+            var mrnHolder = $('#optional_param').find(".patientmrn");
+        } else {
+            var mrnHolder = accInput.closest('.panel-patient').find(".patientmrn");
+        }
+
+        var patientInputs = mrnHolder.find('.keyfield').not("*[id^='s2id_']").first();
+        var mrnValue = patientInputs.val();
+        //console.log("patientInputs.first().id=" + patientInputs.first().attr('id') + ", class=" + patientInputs.first().attr('class'));
+
+        var patientMrnInputs = mrnHolder.find('.mrntype-combobox').not("*[id^='s2id_']").first();
+        //var mrntypeValue = patientMrnInputs.select2("val");
+        var mrntypeValue = patientMrnInputs.select2("val");
+        var mrntypeData = patientMrnInputs.select2("data");
+        //console.log("sel id="+mrntypeData.id);
+        var mrntypeText = mrntypeData.text;
+        //console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
+
+        //console.log("accValue="+accValue + ", acctypeValue=" + acctypeValue + "; mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
+
+        if(
+            accValue && accValue !="" && acctypeValue && acctypeValue !="" &&
+                mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !=""
+            ) {
+            //console.log("validate accession-mrn-mrntype");
+
+//            var mrn = "";
+//            var mrntype = "";
+//            var provider = "";
+//            var date = "";
+
+            accValue = trimWithCheck(accValue);
+            acctypeValue = trimWithCheck(acctypeValue);
+
+            $.ajax({
+                url: urlCheck+"accession/check",
+                type: 'GET',
+                data: {key: accValue, extra: acctypeValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //console.debug("get accession ajax ok");
+
+//                    if( data == -1 ) {
+//                        //object exists but no permission to see it (not an author or not pathology role)
+//                        totalError++;
+//                        return false;
+//                    }
+
+                    if( data == -2 ) {
+                        //Existing Auto-generated object does not exist in DB
+                        var errorHtml = createErrorWell(accInput,"accession");
+                        $('#validationerror').append(errorHtml);
+                        return false;
+                    }
+
+                    if( data.id ) {
+
+                        var mrn = data['parent'];
+                        var mrntype = data['extraid'];
+                        var mrnstring = data['mrnstring'];
+                        var orderinfo = data['orderinfo'];
+
+                        mrn = trimWithCheck(mrn);
+                        mrntype = trimWithCheck(mrntype);
+                        mrnValue = trimWithCheck(mrnValue);
+                        mrntypeValue = trimWithCheck(mrntypeValue);
+
+                        //console.log('mrn='+mrn+', mrntype='+mrntype);
+
+                        if( mrn == mrnValue && ( mrntype == mrntypeValue || 13 == mrntypeValue ) ) {    //13 - Auto-generated MRN. Need it for edit or amend form
+                            //console.log("validated successfully !");
+                        } else {
+                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+
+                            var nl = "\n";    //"&#13;&#10;";
+
+                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+","+acctypeValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
+                                +mrnValue+", "+mrntypeText+" as you have entered.";
+                            var message = message_short + " Please correct ether the MRN or the Accession Number above.";
+
+
+                            var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
+                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
+                            dataquality_message1.push(dataquality_message_1);
+
+                            var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
+                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient "+mrnstring+" (as stated by "+orderinfo+")";
+                            dataquality_message2.push(dataquality_message_2);
+
+                            var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";
+
+                            if( !prototype ) {
+                                //console.log('WARNING: conflict prototype is not found!!!');
+                                return false;
+                            }
+
+                            var newForm = prototype.replace(/__dataquality__/g, index);
+
+                            newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
+
+                            newForm = newForm.replace("TEXT1", message1);
+                            newForm = newForm.replace("TEXT2", message2);
+                            newForm = newForm.replace("TEXT3", message3);
+
+                            //console.log("newForm="+newForm);
+
+                            var newElementsAppended = $('#validationerror').append(newForm);
+                            //var newElementsAppended = newForm.appendTo("#validationerror");
+
+                            //red
+                            accInput.parent().addClass("has-error");
+                            patientInputs.parent().addClass("has-error");
+
+                            setDataqualityData( index, accValue, acctypeValue, mrnValue, mrntypeValue );
+
+                            index++;
+                            totalError++;
+
+                            //console.log('end of conflict process');
+
+                        }
+
+                    } else {
+                        console.debug("validation: accession object not found");
+                    }
+                },
+                error: function () {
+                    console.debug("validation: get object ajax error accession");
+                    return false;
+                }
+            });
+
+        }
+
+    });
+
+    //console.log("totalError="+totalError);
+    //return false; //testing
+
+    if( totalError == 0 ) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+function setDataquality(index,message) {
+    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    //console.log("message=" + message);
+    $(partid+'description').val(message);
+}
+
+
+function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
+    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    //console.log("setDataqualityData: "+accession + " " + acctype + " " + mrn + " " + mrntype);
+    $(partid+'accession').val(accession);
+    $(partid+'accessiontype').val(acctype);
+    $(partid+'mrn').val(mrn);
+    $(partid+'mrntype').val(mrntype);
+}
+
+function cleanValidationAlert() {
+    if( cicle == "new" || cicle == "amend" || cicle == "edit" ) {
+        $('.validationerror-added').each(function() {
+            $(this).remove();
+        });
+        //$('#validationerror').html('')
+        dataquality_message1.length = 0;
+        dataquality_message2.length = 0;
+    }
+}
+
+function checkExistingKey(name) {
+
+    if( orderformtype == "single") {
+        if( name == 'accession' ) {
+            //var elements = $('#accession-single').find('.keyfield');
+            var elements = $('.btn.btn-default.accessionbtn');
+        }
+        if( name == 'patient' ) {
+            //var elements = $('.patientmrn').find('.keyfield');
+            var elements = $('.btn.btn-default.patientmrn');
+        }
+    } else {
+        if( name == 'accession' ) {
+            //var elements = $('.accessionaccession').find('.keyfield');
+            var elements = $('.btn.btn-default.accessionaccession');
+        }
+        if( name == 'patient' ) {
+            var elements = $('.btn.btn-default.patientmrn');
+        }
+    }
+
+    var len = elements.length;
+    //console.log("len="+len);
+    if( len == 0 ) {
+        return false;
+    }
+
+    //for all accession or mrn buttons
+    elements.each(function() {
+
+        var elInput = $(this);
+        //printF(elInput,"elInput element:");
+
+        if( orderformtype == "single") {
+            var single = true;
+        } else {
+            var single = false;
+        }
+
+        //var keyElement = findKeyElement(elInput, false);
+        var keyElement = new btnObject(elInput);
+
+        if( !keyElement || !keyElement.element ) {
+            return false;
+        }
+
+        var elValue = keyElement.key;
+        var eltypeValue = keyElement.type;
+        var eltypeValueText = keyElement.typename;
+
+        //printF(elInput,"input element:");
+        //console.log("elValue="+elValue + ", eltypeValue=" + eltypeValue );
+
+        //return false;
+
+        if(
+            elValue && elValue != "" && eltypeValueText && eltypeValueText.indexOf("Existing Auto-generated") != -1
+        )
+        {
+
+            elValue = trimWithCheck(elValue);
+            eltypeValue = trimWithCheck(eltypeValue);
+
+            $.ajax({
+                url: urlCheck+name+'/check',
+                type: 'GET',
+                data: {key: elValue, extra: eltypeValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //console.debug("get element ajax ok");
+                    if( data == -2 ) {
+                        var errorHtml = createErrorWell(keyElement.element,name);
+                        $('#validationerror').append(errorHtml);
+                        return false;
+                    }
+                },
+                error: function () {
+                    console.debug("validation: get object ajax error "+name);
+                    return false;
+                }
+            });
+
+        }
+    });
+
+    //return false;
+    return true;
+}
+////////////////////// end of validtion related functions //////////////////////
 
 
 
@@ -9982,67 +10541,149 @@ function addKeyListener() {
 }
 
 //object contains: input value, type, parent (btn element), name, fieldname
-function btnObject( btn ){
+//parent = null - get parent for part and block only
+//parent = 'full' - get parent if it exists even for accession
+//parent = 'none' - don't get parent
+function btnObject( btn, parent ) {
 
-    if( !btn ) {
+    this.btn = btn;
+    this.element = null;
+    this.key = "";
+    this.type = null;
+    this.typename = null;
+    this.parentbtn = null;
+    this.name = null;
+    this.fieldname = null;
+    this.remove = false;
+
+    var gocontinue = true;
+
+    if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
+        console.log('button is null => exit button object');
+        //return null;
+        gocontinue = false;
+    }
+
+    if( gocontinue ) {
+        var parentEl = getParentElByBtn(btn);
+
+        var inputEl = parentEl.find('input.keyfield');
+
+        if( !inputEl || inputEl.attr('class') == '' ) {
+            //return null;
+            gocontinue = false;
+        }
+    }
+
+    if( gocontinue ) {
+
+        this.element = inputEl;
+        if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
+            if( inputEl.select2("val") ) {
+                //console.log('select2 data OK');
+                this.key = inputEl.select2('data').text;
+            }
+        } else {
+            this.key = inputEl.val();
+        }
+
+        //get type
+        var typeObj = new typeByKeyInput(inputEl);
+        this.type = typeObj.type;
+        this.typename = typeObj.typename;
+
+        //get name
+        var idsArr = inputEl.attr('id').split("_");
+        this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
+        this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
+
+        //get parent
+//        console.log("parent="+parent);
+//        if( parent == 'none' ) {
+//            //don't get parent at all. Need it for manual operations.
+//            console.log("don't get parent at all. Need it for manual operations.");
+//        } else
+        if( this.name == 'part' || this.name == 'block' || parent == 'full' ) {
+            console.log("get parent");
+            this.parentbtn = getParentBtn( btn, this.name );
+        }
+
+        //if remove
+        if( btn.hasClass('removebtn') ) {
+            this.remove = true;
+        }
+
+    }
+
+    console.log(this);
+    //console.log('finished btn object: this.name='+this.name+', this.key='+this.key+', this.type='+this.type);
+}
+
+
+//elem is a keytype (combobox)
+function typeByKeyInput(keyEl) {
+
+    this.type = null;
+    this.typename = null;
+
+    if( orderformtype == "single") {
+        this.type = $('.accessiontype-combobox').select2('val');
+        this.typename = $('.accessiontype-combobox').select2('data').text;
+    } else {
+        var typeEl = keyEl.prev();
+        if( typeEl.hasClass('combobox') ) {    //type exists
+            this.type = typeEl.select2('val');
+            this.typename = typeEl.select2('data').text;
+        }
+    }
+
+}
+
+
+//elem is a keytype (combobox)
+function getParentElByBtn(btn) {
+
+    if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
+        console.log('WARNING: button is not defined');
         return null;
     }
 
-   this.btn = btn;
-   this.element = null;
-   this.key = "";
-   this.type = null;
-   this.typename = null;
-   this.parentbtn = null;
-   this.name = null;
-   this.fieldname = null;
-   this.remove = false;
+    printF(btn,"get Parent By Btn: ");
 
-   var inputEl = btn.closest('.row').find('input.keyfield'); 
-   this.element = inputEl;
-   if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
-       if( inputEl.select2('data') ) {
-           this.key = inputEl.select2('data').text;
-       }           
-   } else {
-       this.key = inputEl.val(); 
-   }
-   
-    //get type
-    var typeEl = inputEl.prev();
-    if( typeEl.hasClass('combobox') ) {    //type exists
-        this.type = typeEl.select2('val');
-        this.typename = typeEl.select2('data').text;
+    var parent = btn.closest('.row');
+
+    if( orderformtype == "single") {
+        if( btn.hasClass('patientmrn') ) {
+            var parent = $('#patient_0');
+        }
+        if( btn.hasClass('accessionbtn') ) {
+            var parent = $('#accession-single');
+        }
+        if( btn.hasClass('partbtn') ) {
+            var parent = $('#part-single');
+        }
+        if( btn.hasClass('blockbtn') ) {
+            var parent = $('#block-single');
+        }
     }
-    
-    //get name
-    var idsArr = inputEl.attr('id').split("_");
-    this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
-    this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
-    
-    //get parent
-    if( this.name == 'part' || this.name == 'block' ) {      
-        this.parentbtn = getParentBtn(btn);             
-    } 
-    
-    //if remove
-    if( btn.hasClass('removebtn') ) {
-        this.remove = true;
-    }
-    
-    console.log(this);
+
+    return parent;
 }
 
-function getParentBtn(btn) {
+//get parent check button by using current button
+function getParentBtn( btn, name ) {
     
     var parentBtn = null;
     
     if( orderformtype == "single" ) {
+        if( name == 'accession' ) {
+            parentBtn = $('.patientmrn');
+        }
         if( name == 'part' ) {
-            parentBtn = $('#accessionbtn');
+            parentBtn = $('.accessionbtn');
         } 
         if( name == 'block' ) {
-            parentBtn = $('#partbtn');
+            parentBtn = $('.partbtn');
         }    
     } else {
         var parentEl1 = btn.closest('.panel');      
@@ -10051,7 +10692,9 @@ function getParentBtn(btn) {
         //console.log(parentEl2);
         parentBtn = parentEl2.find('#check_btn');     
     }
-    
+
+    console.log("parentBtn.length="+parentBtn.length);
+
     if( parentBtn.length == 0 ) {
         parentBtn = null;
     }
@@ -10059,8 +10702,83 @@ function getParentBtn(btn) {
     return parentBtn;
 }
 
-//called by button click
-function checkForm( btnel ) {
+
+
+/////////////// called by button click //////////////////////
+
+//use this one: this function is automatically detect the parent and run chaining according if this button has parent.
+//if parent exists, than parent button clicked first, then this button is processed.
+//parent = 'none' : don't use parent (no chaining)
+function checkForm( btnel, parent ) {
+
+    return new Q.promise(function(resolve, reject) {
+
+        var btn = $(btnel);
+        var hasParent = false;
+        var parentBtnObj = null;
+
+        var btnObj = new btnObject(btn);
+        console.log('check form: name='+btnObj.name+', input='+btnObj.key+', type='+btnObj.type);
+
+        //if delete button?
+        if( btnObj && btnObj.remove ) {
+            console.log('execute click this');
+            executeClick( btnObj );
+            resolve("Delete => no children");
+            return;
+        }
+
+        parentBtnObj = new btnObject(btnObj.parentbtn);
+        if( parentBtnObj && parentBtnObj.btn ) {
+            hasParent = true;
+        }
+
+        if( parent == 'none' ) {
+            hasParent = false;
+        }
+
+        if( hasParent ) {
+            console.log('execute click parent then this');
+            //alert('execute click parent then this, name='+btnObj.name);
+
+            checkForm( parentBtnObj.btn ).
+            then(
+                function(response) {
+                    console.log("Success!", response);
+                    return executeClick( btnObj );
+                }
+            ).
+            then(
+                function(response) {
+                    console.log("Chaining with parent OK:", response);
+                    resolve("Chaining with parent OK: "+response);
+                },
+                function(error) {
+                    console.error("Failed!", error);
+                    reject(Error("Failed to execute click with parent, error="+error));
+                }
+            );
+
+
+        } else {
+            console.log('execute click this');
+            //alert('execute click this, name='+btnObj.name);
+            executeClick( btnObj ).
+            then(function(response) {
+                    console.log("Check click this OK:", response);
+                    resolve("Check click this OK: "+response);
+            },function(error) {
+                    console.error("Failed!", error);
+                    reject(Error("Failed to execute click with no parent, error="+error));
+                }
+            );
+        }
+
+    });
+}
+
+//this function is strait forward chaining by button name
+function checkForm_ChainByName( btnel ) {
     
     var btn = $(btnel);         
     var btnObj = new btnObject(btn);      
@@ -10143,163 +10861,214 @@ function checkForm( btnel ) {
          
     return; 
 }
+/////////////// end of button click //////////////////////
 
-function executeClick( btnObj ) {
-       
+function executeClick( btnObjInit ) {
+
     return Q.promise(function(resolve, reject) {
-    
-        var casetype = 'check';       
-        var btn = btnObj.btn;
-        var urlcasename = null;
-        var ajaxType = 'GET';
-        var key = btnObj.key;
-        var type = btnObj.type;
-        var parentKey = null;
-        var parentType = null;
-        var grandparentKey = null;
-        var grandparentType = null;
-        var single = false; //temp
 
-        console.log('executeClick: key='+key+', parentKey='+parentKey+', parentType='+parentType);
-               
-        if( btnObj && btnObj.key == '' && !btnObj.remove ) {
-            console.log('Case 1: key not exists => generate');
-            casetype = 'generate';      
-        } else if( btnObj && btnObj.key != '' && !btnObj.remove ) {
-            console.log('Case 2: key exists => check');
-            casetype = 'check';
-        } else if( btnObj && btnObj.remove ) {
-            console.log('Case 3: key exists and button delete => delete');
-            casetype = 'delete';
-        } else {
-            console.log('Logical error: invalid key');
+        var gocontinue = true;
+
+        if( !btnObjInit || typeof btnObjInit === 'undefined' || btnObjInit.length == 0 ) {
+            gocontinue = false;
+            reject(Error("parent key is empty"));
         }
-        
-        console.log('executeClick: casetype='+casetype);
-        
-        urlcasename = btnObj.name+'/'+casetype;
-        
-        if( casetype == 'delete' ) {
-            ajaxType = 'DELETE'; 
-           
-            var extraStr = "";
-            if( type ) {
-                extraStr = "?extra="+type;
-            }           
-           
-           urlcasename = urlcasename + '/' + key + extraStr;
-        } 
-              
-        //get parent
-        var parentBtnObj = new btnObject(btnObj.parentbtn);
-        
-        if( parentBtnObj ) {
-            parentKey = parentBtnObj.key;
-            parentType = parentBtnObj.type;
-        }
-        
-        if( parentBtnObj && parentType && parentKey == '' ) {
-            console.log('parent key is empty');
-            reject(Error("parent key is empty"));          
-            //return;
-        }
-        
-        //get grand parent
-        var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
-        if( grandparentBtnObj ) {
-            grandparentKey = grandparentBtnObj.key;
-            grandparentType = grandparentBtnObj.type;
-        }
-                    
-        if( parentBtnObj && parentType && parentKey == '' ) {
-            console.log('parent key is empty');
-            reject(Error("parent key is empty"));          
-            //return;
-        }
-        
-        //trim values
-        key = trimWithCheck(key);
-        type = trimWithCheck(type);
-        parentKey = trimWithCheck(parentKey);
-        parentType = trimWithCheck(parentType);
-        grandparentKey = trimWithCheck(grandparentKey);
-        grandparentType = trimWithCheck(grandparentType);
-        
-        //temp
-        if( orderformtype == "single" ) {
-            single = true;
-        }
-        
-        btn.button('loading');
-        
-        $.ajax({
-            url: urlCheck+urlcasename,
-            type: ajaxType,
-            contentType: 'application/json',
-            dataType: 'json',
-            async: true,    //use synchronous call
-            data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
-            success: function (data) {
-                btn.button('reset');
-                
-                if( data == -2 ) {
-                    //Existing Auto-generated object does not exist in DB
-                    createErrorWell(btnObj.element,btnObj.name);
-                    reject(Error("Existing Auto-generated object does not exist in DB"));                  
-                } else if( data && data.id ) {
-                    console.debug("ajax key value data is found");                                    
-                    
+
+        if( gocontinue ) {
+
+            var btnObj = new btnObject(btnObjInit.btn);
+            var casetype = 'check';
+            var btn = btnObj.btn;
+            var urlcasename = null;
+            var ajaxType = 'GET';
+            var key = btnObj.key;
+            var type = btnObj.type;
+            var parentKey = null;
+            var parentType = null;
+            var grandparentKey = null;
+            var grandparentType = null;
+            var single = false; //temp
+
+            console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
+
+            if( btnObj && btnObj.key == '' && !btnObj.remove ) {
+                console.log('Case 1: key not exists => generate');
+                casetype = 'generate';
+            } else if( btnObj && btnObj.key != '' && !btnObj.remove ) {
+                console.log('Case 2: key exists => check');
+                casetype = 'check';
+            } else if( btnObj && btnObj.remove ) {
+                console.log('Case 3: key exists and button delete => delete');
+                casetype = 'delete';
+            } else {
+                console.log('Logical error: invalid key');
+            }
+
+            console.log('executeClick: casetype='+casetype);
+
+            urlcasename = btnObj.name+'/'+casetype;
+
+            if( casetype == 'delete' ) {
+                ajaxType = 'DELETE';
+
+                var extraStr = "";
+                if( type ) {
+                    extraStr = "?extra="+type;
+                }
+
+                urlcasename = urlcasename + '/' + key + extraStr;
+            }
+
+            //get parent
+            var parentBtnObj = new btnObject(btnObj.parentbtn);
+            if( parentBtnObj ) {
+                parentKey = parentBtnObj.key;
+                parentType = parentBtnObj.type;
+            }
+
+//        if( parentBtnObj && parentType && parentKey == '' ) {
+//            console.log('parent key is empty');
+//            reject(Error("parent key is empty"));
+//            //return;
+//        }
+
+            //get grand parent
+            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
+            if( grandparentBtnObj ) {
+                grandparentKey = grandparentBtnObj.key;
+                grandparentType = grandparentBtnObj.type;
+            }
+
+//        if( grandparentBtnObj && grandparentType && grandparentKey == '' ) {
+//            console.log('grandparent key is empty');
+//            reject(Error("grandparent key is empty"));
+//            //return;
+//        }
+
+            //trim values
+            key = trimWithCheck(key);
+            type = trimWithCheck(type);
+            parentKey = trimWithCheck(parentKey);
+            parentType = trimWithCheck(parentType);
+            grandparentKey = trimWithCheck(grandparentKey);
+            grandparentType = trimWithCheck(grandparentType);
+
+            //temp
+            if( orderformtype == "single" ) {
+                single = true;
+            }
+
+            btn.button('loading');
+
+            $.ajax({
+                url: urlCheck+urlcasename,
+                type: ajaxType,
+                contentType: 'application/json',
+                dataType: 'json',
+                async: true,    //use synchronous call
+                data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
+                success: function (data) {
+
+                    btn.button('reset');
+
+                    console.debug("ajax casetype="+casetype);
+
                     if( casetype == 'generate' ) {
-                        setElementBlock(btn, data, null, "key");
-                        disableInElementBlock(btn, false, null, "notkey", null);
-                    }
-                    
-                    if( casetype == 'check' ) {
-                        setElementBlock(btn, data);
-                        //second: disable or enable element. Make sure this function runs after set Element Block
-                        disableInElementBlock(btn, true, "all", null, "notarrayfield");
-                    }
-                    
+                        if( data ) {
+                            console.debug("ajax key value data is found");
+                            invertButton(btn);
+                            setElementBlock(btn, data, null, "key");
+                            disableInElementBlock(btn, false, null, "notkey", null);
+                            resolve("Object was generated successfully");
+                        } else {
+                            console.debug("Object was not generated");
+                            reject(Error("Object was not generated"));
+                        }
+                    } //generate
+
                     if( casetype == 'delete' ) {
                         if( data != '-1' || single ) {
-                            //console.debug("Delete Success");
+                            console.debug("Delete Success");
                             deleteSuccess(btn,single);
                         } else {
-                            //console.debug("Delete ok with Error");
+                            console.debug("Delete ok with Error");
                             deleteError(btn,single);
+                            invertButton(btn);
                         }
-                    }                  
-                    
-                    //if( casetype != 'check' ) {
-                        invertButton(btn);
-                    //}    
-                    
-                    //resolve("ajax key value data is found");
-                } else {
-                    
+                        resolve("Object was deleted, data="+data);
+                    } //delete
+
                     if( casetype == 'check' ) {
-                        invertButton(btn);
+                        if( data == -2 ) {
+
+                            //Existing Auto-generated object does not exist in DB
+                            createErrorWell(btnObj.element,btnObj.name);
+                            reject(Error("Existing Auto-generated object does not exist in DB"));
+
+                        } else
+                        if( data.id ) {
+
+                            var gonext = 1;
+
+                            if( !single ) {
+                                gonext = checkParent(btn,key,btnObj.name,btnObj.fieldname,btnObj.type); //check if this key is not used yet, when a new key field is checked in the added entity
+                                //console.debug("0 gonext="+gonext);
+                            }
+
+                            //console.log("gonext="+gonext);
+                            if( gonext == 1 ) {
+
+                                //set this element
+                                //console.debug("continue gonext="+gonext);
+                                //first: set elements
+                                setElementBlock(btn, data);
+                                //second: disable or enable element. Make sure this function runs after set Element Block
+                                disableInElementBlock(btn, true, "all", null, "notarrayfield");
+                                invertButton(btn);
+
+                                //set patient (in accession case)
+                                if( btnObj.name == "accession" && gonext == 1) {
+                                    var parentkeyvalue = data['parent'];
+                                    var extraid = data['extraid'];
+                                    //console.log("key parent="+parentkeyvalue+", extraid="+extraid);
+                                    gonext = setPatient(btn,parentkeyvalue,extraid,single);
+                                }
+
+                            }
+
+                            resolve("ajax key value data is found");
+
+                        } else {
+                            console.debug("not found");
+                            disableInElementBlock(btn, false, null, "notkey", null);
+                            invertButton(btn);
+                            resolve("data is null");
+                        }
+
+                    } //check
+
+                },
+                error: function () {
+                    btn.button('reset');
+
+                    if( casetype == 'check' ) {
+                        cleanFieldsInElementBlock( btn, null, single );
+                        disableInElementBlock(btn, false, "all", null, null);
+                        invertButton(element);
                     }
-                    
+
                     if( casetype == 'delete' ) {
                         deleteError(btn,single);
                     }
-                    
-                    console.debug('set key data is null');
-                } 
-                
-                resolve("ajax key value data is found");
-            },
-            error: function () {
-                btn.button('reset');
-                reject(Error("set key ajax error"));
-                //resolve("set key ajax error");
-                console.debug("set key ajax error");
-            }
-        }); //ajax               
+
+                    console.debug(btnObj.name+": ajax error for casetype="+casetype);
+                    reject(Error(btnObj.name+": ajax error for casetype="+casetype));
+                }
+            }); //ajax
+
+        } //if gocontinue
         
     }); //promise
-     
 }
 
 
@@ -10478,7 +11247,7 @@ function setMrntypeMask( elem, clean ) {
         case "Auto-generated MRN":
             mrnField.inputmask( getMrnAutoGenMask() );
             var parent = elem.closest('.patientmrn');
-            if( parent.find('#check_btn').find('i').hasClass('checkbtn') ) {
+            if( parent.find('#check_btn').hasClass('checkbtn') ) {
                 parent.find('#check_btn').trigger("click");
             }
             //console.log('Auto-generated MRN !!!');
@@ -10580,7 +11349,7 @@ function setAccessiontypeMask(elem,clean) {
         case "Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
             var btn = elem.closest('.accessionaccession').find('#check_btn');
-            if( btn.find('i').hasClass('checkbtn') ) {
+            if( btn.hasClass('checkbtn') ) {
                 btn.trigger("click");
             }
             //console.log('Auto-generated Accession !!!');

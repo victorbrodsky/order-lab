@@ -49,7 +49,7 @@ assetic:
         #yui_css:
         #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
 #    read_from: "%kernel.root_dir%/../../../../order"
-#    read_from: "%kernel.root_dir%/../../.."
+    read_from: "%kernel.root_dir%/../../.."
 
 #bootstrap assets; maybe I don't need it
 #    assets:

@@ -60,11 +60,15 @@
                     url: url,
                     type: 'GET',
                     async: false,
+                    timeout: _ajaxTimeout,
                     data: { display_height: screen.height, display_width: screen.width },
                     success: function (data) {
                        //console.debug('send browser data ok');
                     },
-                    error: function () {
+                    error: function (x , t, m) {
+                        if( t === "timeout" ) {
+                            getAjaxTimeoutMsg();
+                        }
                        //console.debug('send browser data error');
                     }
                 });

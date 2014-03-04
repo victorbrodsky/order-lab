@@ -75,6 +75,18 @@ function invertButton(btn) {
     console.log("finish invert Button: glyphicon class="+btn.attr("class"));
 }
 
+function fixCheckRemoveButton(btn) {
+    printF(btn," fix button: ");
+    if( btn.hasClass('checkbtn') ) {
+        console.log("fix check");
+        btn.find("i").removeClass('glyphicon-remove').addClass('glyphicon-check');
+    }
+    if( btn.hasClass('removebtn') ) {
+        console.log("fix remove");
+        btn.find("i").removeClass('glyphicon-check').addClass('glyphicon-remove');
+    }
+}
+
 function createErrorWell(inputElement,name) {
     if( name == "patient" ) {
         errorStr = 'This is not a previously auto-generated MRN. Please correct the MRN or select "Auto-generated MRN" for a new one.';
@@ -95,7 +107,8 @@ function createErrorWell(inputElement,name) {
     return errorHtml;
 }
 
-function deleteSuccess(btnElement,single) {
+function deleteSuccess(btnObj,single) {
+    var btnElement = btnObj.btn;
     //printF(btnElement,"Delete on Success:")
     cleanFieldsInElementBlock( btnElement, "all", single );
     disableInElementBlock(btnElement, true, null, "notkey", null);
@@ -103,13 +116,18 @@ function deleteSuccess(btnElement,single) {
     setDefaultMask(btnElement);
 }
 
-function deleteError(btnElement,single) {
+function deleteError(btnObj,single) {
+
+    fixCheckRemoveButton(btnObj.btn); //fix button, because btn.button('reset') revert back glyphicon to check button
+
     if( !single ) {
         //printF(btnElement,"btnElement:");
         //check if all children buttons are not checked == has class removebtn
         var errors = 0;
+        var btnElement = btnObj.btn;
         var checkBtns = btnElement.closest('.panel').find('#check_btn');
         //console.log('checkBtns.length='+checkBtns.length);
+
         checkBtns.each( function() {
             //printF($(this),'check btn=');
             //printF(btnElement,'btnElement=');
@@ -126,16 +144,15 @@ function deleteError(btnElement,single) {
             return;
         }
 
-        invertButton(btnElement); //invert back to remove button, because btn.button('reset') revret back to checl button
-
         var childStr = "Child";
-        if( name == "accession" ) {
+        if( btnObj.name == "accession" ) {
             childStr = "Part";
         }
-        if( name == "partname" ) {
+        if( btnObj.name == "part" ) {
             childStr = "Block";
         }
         alert("Can not delete this element. Make sure if " + childStr + " is deleted.");
+
     }
 }
 
@@ -192,7 +209,7 @@ function setPatient( btn, keyvalue, extraid, single ) {
     var parentKey = null;
 
     if( !parentBtnObj || !btnObj.parentbtn || keyvalue == '' ) {
-        console.log("WARNING: Parent does not exists");
+        console.log("WARNING: Parent (here Patient) does not exists");
     }
 
     parentKey = trimWithCheck(parentBtnObj.key);
@@ -263,6 +280,10 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
+function getAjaxTimeoutMsg() {
+    alert("Could not communicate with server: no answer after 15 seconds.");
+    return false;
+}
 
 /////////////////////// validtion related functions /////////////////////////
 function validateForm() {
@@ -456,11 +477,12 @@ function checkMrnAccessionConflict() {
             acctypeValue = trimWithCheck(acctypeValue);
 
             $.ajax({
-                url: urlCheck+"accession",
+                url: urlCheck+"accession/check",
                 type: 'GET',
                 data: {key: accValue, extra: acctypeValue},
                 contentType: 'application/json',
                 dataType: 'json',
+                timeout: _ajaxTimeout,
                 async: false,
                 success: function (data) {
                     //console.debug("get accession ajax ok");
@@ -549,8 +571,12 @@ function checkMrnAccessionConflict() {
                         console.debug("validation: accession object not found");
                     }
                 },
-                error: function () {
+                error: function ( x, t, m ) {
                     console.debug("validation: get object ajax error accession");
+                    if( t === "timeout" ) {
+                        getAjaxTimeoutMsg();
+                    }
+                    return false;
                 }
             });
 
@@ -660,11 +686,12 @@ function checkExistingKey(name) {
             eltypeValue = trimWithCheck(eltypeValue);
 
             $.ajax({
-                url: urlCheck+name,
+                url: urlCheck+name+'/check',
                 type: 'GET',
                 data: {key: elValue, extra: eltypeValue},
                 contentType: 'application/json',
                 dataType: 'json',
+                timeout: _ajaxTimeout,
                 async: false,
                 success: function (data) {
                     //console.debug("get element ajax ok");
@@ -674,8 +701,12 @@ function checkExistingKey(name) {
                         return false;
                     }
                 },
-                error: function () {
+                error: function ( x, t, m ) {
                     console.debug("validation: get object ajax error "+name);
+                    if( t === "timeout" ) {
+                        getAjaxTimeoutMsg();
+                    }
+                    return false;
                 }
             });
 

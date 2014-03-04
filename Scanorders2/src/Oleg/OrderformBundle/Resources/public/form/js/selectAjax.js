@@ -133,7 +133,8 @@ function getComboboxStain(urlCommon, ids) {
         //console.log("stain 0");
         $.ajax({
             url: url,
-            async: asyncflag
+            async: asyncflag,
+            timeout: _ajaxTimeout
         }).success(function(data) {
             stain = data;
             populateSelectCombobox( ".ajax-combobox-stain", stain, null );
@@ -173,6 +174,7 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
     if( stain.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
                 stain = data;
@@ -201,6 +203,7 @@ function getComboboxScanregion(urlCommon,ids) {
     if( scanregion.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             scanregion = data;
@@ -231,6 +234,7 @@ function getComboboxOrgan(urlCommon,ids) {
     if( organ.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             organ = data;
@@ -257,6 +261,7 @@ function getComboboxProcedure(urlCommon,ids) {
     if( procedure.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             procedure = data;
@@ -282,6 +287,7 @@ function getComboboxAccessionType(urlCommon,ids) {
     if( accessiontype.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
                 accessiontype = data;
@@ -317,6 +323,7 @@ function getComboboxPartname(urlCommon,ids) {
     if( partname.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             partname = data;
@@ -343,6 +350,7 @@ function getComboboxBlockname(urlCommon,ids) {
     if( blockname.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             blockname = data;
@@ -372,6 +380,7 @@ function getComboboxDelivery(urlCommon,ids) {
     if( delivery.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             delivery = data;
@@ -404,6 +413,7 @@ function getComboboxReturn(urlCommon,ids) {
     if( returnslide.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             returnslide = data;
@@ -444,6 +454,7 @@ function getComboboxPathService(urlCommon,ids) {
     if( pathservice.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             pathservice = data;

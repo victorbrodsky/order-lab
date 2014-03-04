@@ -19,7 +19,7 @@ $(document).ready(function() {
 //    });
 
     // Bind normal buttons
-    Ladda.bind( '.btntest', { timeout: 2000 } );
+    //Ladda.bind( '.btntest', { timeout: 2000 } );
 
 });
 
@@ -66,21 +66,33 @@ function finalStepCheck() {
 //var _lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
 
 function clickSingleBtn( btn ) {
+
     return new Q.promise(function(resolve, reject) {
 
-        checkForm( $('.checkbtn.accessionbtn'), 'none' ).
+        printF(btn,"######## Button for click single button func: ");
+
+        checkForm( btn, 'none' ).
         then(
             function(response) {
                 console.log("Success!", response);
                 if( $('.maskerror-added').length > 0 ) {
-                    reject(Error("Validation error, error"));
+                    console.log("Validation error");
+                    //reject(Error("Validation error"));
+                    return false;
+                } else {
+                    console.log("Chaining with parent OK: "+response);
+                    //resolve("Chaining with parent OK: "+response);
+                    return true;
                 }
             }
         ).
         then(
             function(response) {
-                console.log("Chaining with parent OK:", response);
-                resolve("Chaining with parent OK: "+response);
+                if( response ) {
+                    resolve("Chaining with parent OK: "+response);
+                } else {
+                    reject(Error("Validation error"));
+                }
             },
             function(error) {
                 console.error("Single check failed!", error);
@@ -94,86 +106,111 @@ function clickSingleBtn( btn ) {
 //Check form single
 function checkFormSingle( elem ) {
 
-    var _lbtn = Ladda.create(elem);
+//    var promise = new Q.promise(function(resolve, reject) {
+//        resolve(1);
+//    });
+//    promise.then(function(val) {
+//        console.log(val); // 1
+//        return val + 2;
+//    }).then(function(val) {
+//            console.log(val); // 3
+//    });
+//    //return false;
 
-    var promiseValidateMask = Q.promise(function(resolve, reject) {
-        if( validateMaskFields() > 0 ) {
-            console.log("errors > 0 => return");
-            reject('mask errors');
-        } else {
-            resolve('mask ok');
-        }
-    });
+    var lbtn = Ladda.create(elem);
 
-    var promiseNoMainSingleBtn = Q.promise(function(resolve, reject) {
-        if( $('#maincinglebtn').is(":visible") ) {
-            console.log("maincinglebtn is visible => return");
-            reject('maincinglebtn is visible => return');
-        } else {
-            console.log("start ajax");
-            _lbtn.start();
-            resolve('maincinglebtn is ok');
-        }
-    });
+    var promiseValidateMask = function() {
+        return new Q.promise(function(resolve, reject) {
+            if( validateMaskFields() > 0 ) {
+                console.log("errors > 0 => return");
+                reject('mask errors');
+            } else {
+                console.log("mask ok");
+                resolve('mask ok');
+            }
+        });
+    }
 
+    var promiseNoMainSingleBtn = function(response) {
+        return new Q.promise(function(resolve, reject) {
+            if( $('#maincinglebtn').is(":visible") ) {
+                console.log("maincinglebtn is visible => return");
+                reject('maincinglebtn is visible => return');
+            } else {
+                console.log("start ajax");
+                lbtn.start();
+                resolve('maincinglebtn is ok');
+            }
+        });
+    }
 
     //$('.singleform-optional-button').append('<img class="spinner-image" src="http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif"/></div>');
-
     //var ajaxOK = callWaitStack();
-    promiseValidateMask.
+
+    promiseValidateMask().
     then(promiseNoMainSingleBtn).
     then(
         function(response) {
-            console.log("promises success!", response);
-            clickSingleBtn( $('.checkbtn.accessionbtn') );
+            console.log("validation promises success!", response);
+            return clickSingleBtn( $('.checkbtn.accessionbtn') );
         }
     ).
     then(
         function(response) {
             console.log("Accession success!", response);
-            clickSingleBtn( $('.checkbtn.partbtn') )
+            return clickSingleBtn( $('.checkbtn.partbtn') );
         }
     ).
     then(
         function(response) {
             console.log("Part success!", response);
-            clickSingleBtn( $('.checkbtn.blockbtn') )
+            return clickSingleBtn( $('.checkbtn.blockbtn') );
         }
     ).
     then(
         function(response) {
             console.log("Block success!", response);
             if( $('.maskerror-added').length > 0 ) {
-                //return false;
-            }
-        }
-    ).
-    then(
-        function(response) {
-            console.log("All Success!", response);
-
-            console.log("stop ajax");
-            _lbtn.stop();
-
-            if( $('.maskerror-added').length == 0 ) {
-                collapseElementFix($('#optional_param'));
-                finalStepCheck();
+                return false;
             } else {
-                //return false;
+                return true;
             }
+        }
+    ).
+    then(
+        function(response) {
 
-            initOptionalParam();
+            if( response ) {
+
+                console.log("All Success!", response);
+
+                if( $('.maskerror-added').length == 0 ) {
+                    collapseElementFix($('#optional_param'));
+                    finalStepCheck();
+                } else {
+                    //return false;
+                }
+
+                initOptionalParam();
+
+            } else {
+                console.log("Response is false: ", response);
+            }
 
         }
     ).
     then(
         function(response) {
-            console.log("Chaining with parent OK:", response);
+            console.log("All chaining with parent OK:", response);
             //return true;
+            console.log("stop ajax");
+            lbtn.stop();
         },
         function(error) {
-            console.error("Single check failed!", error);
+            console.error("All chaining with parent Error", error);
             //return false;
+            console.log("stop ajax");
+            lbtn.stop();
         }
     );
 
@@ -183,67 +220,78 @@ function checkFormSingle( elem ) {
 }
 
 
-function callWaitStack() {
-    var fieldsArr = new Array();
-    fieldsArr[0] = '#accession-single';
-    fieldsArr[1] = '#part-single';
-    fieldsArr[2] = '#block-single';
-
-    var ajaxOK = true;
-
-    Q.spread([
-        waitWhenReady( fieldsArr, 0, 0 ),
-        waitWhenReady( fieldsArr, 1, 0 ),
-        waitWhenReady( fieldsArr, 2, 0 )
-    ],
-        function( acc, part, block ){
-            if( !acc ) ajaxOK = false;
-            if( !part ) ajaxOK = false;
-            if( !block ) ajaxOK = false;
-        }
-    );
-
-//    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
-//        ajaxOK = false;
-//    }
-
-//    if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
-//        ajaxOK = false;
-//    }
-//
-//    if( !waitWhenReady( fieldsArr, 2, 0 ) ) {
-//        ajaxOK = false;
-//    }
-
-    return ajaxOK;
-}
-
-
 //Remove form single
 function removeFormSingle( elem ) {
 
-    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 
-    $("#remove_single_btn").button('loading');
-    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
+    var btn = $(elem);
 
-    $('.blockbtn').trigger("click");
+    btn.button('loading');
 
-    $('.partbtn').trigger("click");
+    checkForm( $('.blockbtn'), 'none' ).
+    then(
+        function(response) {
+            return checkForm( $('.partbtn'), 'none' );
+        }
+    ).
+    then(
+        function(response) {
+            return checkForm( $('.accessionbtn'), 'none' );
+        }
+    ).
+    then(
+        function(response) {
+            if( $('.patientmrn').hasClass('removebtn') ) {
+                console.log("no patient delete");
+                checkForm( $('.patientmrn'), 'none' );
+            }
+            return "patient processing ok";
+        }
+    ).
+    then(
+        function(response) {
+            console.log("All delete chaining with parent OK:", response);
+            //return true;
+            console.log("delete stop ajax");
 
-    $('.accessionbtn').trigger("click");
-    
-    if( $('.patientmrn').hasClass('removebtn') ) {
-        $('.patientmrn').trigger("click");
-    }  
+            $('#part-single').css( "width", "25%" );
+            $('#block-single').css( "width", "25%" );
+            $('#maincinglebtn').hide();
+            collapseElementFix($('#optional_param'));   //close optional info
 
-    $('#part-single').css( "width", "25%" );
-    $('#block-single').css( "width", "25%" );
-    $('#maincinglebtn').hide();
-    collapseElementFix($('#optional_param'));   //close optional info
+            btn.button('reset');
+        },
+        function(error) {
+            console.error("All delete chaining with parent Error", error);
+            //return false;
+            console.log("delete stop ajax");
+            btn.button('reset');
+        }
+    );
 
-    console.log("end of remove");
-    $("#remove_single_btn").button('reset');
+//    $("#remove_single_btn").button('loading');
+//    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
+//
+//    $('.blockbtn').trigger("click");
+//
+//    $('.partbtn').trigger("click");
+//
+//    $('.accessionbtn').trigger("click");
+//
+//    if( $('.patientmrn').hasClass('removebtn') ) {
+//        $('.patientmrn').trigger("click");
+//    }
+
+//    $('#part-single').css( "width", "25%" );
+//    $('#block-single').css( "width", "25%" );
+//    $('#maincinglebtn').hide();
+//    collapseElementFix($('#optional_param'));   //close optional info
+//
+//    console.log("end of remove");
+//    $("#remove_single_btn").button('reset');
+//
+//    btn.button('reset');
 
 }
 

@@ -65,6 +65,7 @@ function submitNewComment(id) {
         url: urlCommentSubmit,
         type: 'POST',
         data: {id: id, selectednote: selectednote, text: text},
+        timeout: _ajaxTimeout,
         success: function (data) {
             //console.log("OK submit a new comment");
             comment_modal.modal('hide');
@@ -73,7 +74,12 @@ function submitNewComment(id) {
                 window.parent.location.reload();
             }
         },
-        error: function () {
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
             //console.log("Error submit a new comment");
             var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
             $('#modal_error_'+id).html(errormsg);
