@@ -275,7 +275,7 @@ function setAccessiontypeMask(elem,clean) {
         case "Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
             var btn = elem.closest('.accessionaccession').find('#check_btn');
-            if( btn.find('i').hasClass('checkbtn') ) {
+            if( btn.hasClass('checkbtn') ) {
                 btn.trigger("click");
             }
             //console.log('Auto-generated Accession !!!');

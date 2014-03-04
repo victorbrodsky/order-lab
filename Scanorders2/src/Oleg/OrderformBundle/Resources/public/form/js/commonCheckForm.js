@@ -114,17 +114,19 @@ function deleteError(btnElement,single) {
             //printF($(this),'check btn=');
             //printF(btnElement,'btnElement=');
             if( $(this).attr('class') != btnElement.attr('class') ) {
-                if( $(this).find('i').hasClass('removebtn') ) {
+                if( $(this).hasClass('removebtn') ) {
                     errors++;
                 }
             }
         });
 
-        //console.log('errors='+errors);
+        console.log('errors='+errors);
         if( errors == 0 ) {
             deleteSuccess(btnElement,single);
             return;
         }
+
+        invertButton(btnElement); //invert back to remove button, because btn.button('reset') revret back to checl button
 
         var childStr = "Child";
         if( name == "accession" ) {
@@ -137,11 +139,553 @@ function deleteError(btnElement,single) {
     }
 }
 
+//check if parent has checked sublings with the same key value
+function checkParent(element,keyValue,name,fieldName,extra) {
+    var parentEl = element.parent().parent().parent().parent().parent().parent().parent().parent().parent();
+    //console.log("checkParent parentEl.id=" + parentEl.attr('id') + ", class="+parentEl.attr('class'));
+
+    //if this patient has already another checked accession, then check current accession is not possible
+    //get patient accession buttons
+    var retval = 1;
+
+    //console.log("name+fieldName=" + name+fieldName);
+
+    var sublingsKey = parentEl.find('.'+name+fieldName).each(function() {
+
+        //printF($(this),"check sublings keys=");
+
+        var keyField = $(this).find('.keyfield');
+
+        //if( $(this).val() == "" ) {
+        if( keyField.hasClass('select2') ) {
+            var sublingsKeyValue = keyField.val();
+        } else {
+            var sublingsKeyValue = keyField.select2("val");
+        }
+
+        if( name == "accession" || name == "patient" ) {
+            var keytype = $(this).find('.combobox ').not("*[id^='s2id_']").select2('val');
+            var sublingsKeyValue = $(this).find('.keyfield ').val();
+        }
+
+        console.log("checkParent sublingsKeyValue=" + sublingsKeyValue + ", keyValue="+keyValue + ", keytype="+keytype+", extra="+extra);
+
+        if( $(this).find('#check_btn').hasClass('removebtn') && trimWithCheck(sublingsKeyValue) == trimWithCheck(keyValue) ) {
+            alert("This keyfield is already in use and it is checked");
+            retval = 0;
+            return false;   //break each
+        }
+    });
+
+    if( retval == 0 ) {
+        return 0;
+    }
+    return 1;
+}
+
+//element: accession button
+//set Patient by data from accession check
+function setPatient( btn, keyvalue, extraid, single ) {
+
+    var btnObj = new btnObject(btn,'full'); //'full' => get parent for accession too
+    var parentBtnObj = new btnObject(btnObj.parentbtn);
+    var parentKey = null;
+
+    if( !parentBtnObj || !btnObj.parentbtn || keyvalue == '' ) {
+        console.log("WARNING: Parent does not exists");
+    }
+
+    parentKey = trimWithCheck(parentBtnObj.key);
+
+    //check if parent has the same key and type combination
+    if( keyvalue == parentKey && extraid == parentBtnObj.type ) {
+        return 1;
+    }
+
+    //parent has different key type combination and button is check
+    if( !parentBtnObj.remove && parentKey && parentBtnObj.type && !(keyvalue == parentKey && extraid == parentBtnObj.type) ) {
+        var r=confirm('Different MRN '+ parentKey +' is already set in this form. Are you sure that you want to change the patient?');
+        if( r == true ) {
+            //console.log("you decide to continue");
+        } else {
+            //console.log("you canceled");
+            return 0;
+        }
+    }
+
+    //Button is removed and key and type combination is different
+    if( parentBtnObj.remove && parentKey && parentBtnObj.type && !(keyvalue == parentKey && extraid == parentBtnObj.type) ) {
+        var r=confirm('Patient with MRN '+ parentKey +' is already set in this form. Are you sure that you want to change the patient?');
+        if( r == true ) {
+            //console.log("you decide to continue");
+        } else {
+            //console.log("you canceled");
+            return 0;
+        }
+    }
+
+    //if parent key field is already checked: clean it first
+    if( parentBtnObj.remove ) {
+        //console.log("parent key field is already checked: clean it first");
+        //parentBtnObj.btn.trigger("click");
+
+        checkForm( parentBtnObj.btn ).
+            then(
+            function(response) {
+                console.log("Success!", response);
+                return setAndClickPatient();
+            }
+        ).
+            then(
+            function(response) {
+                console.log("Chaining with parent OK:", response);
+            },
+            function(error) {
+                console.error("Failed!", error);
+            }
+        );
+
+    } else {
+        return setAndClickPatient();
+    }
+
+    function setAndClickPatient() {
+        var mrnArr = new Array();
+        mrnArr['text'] = keyvalue;
+        mrnArr['keytype'] = extraid;
+        var keytypeElement = parentBtnObj.btn.closest('.row').find('.combobox').not("*[id^='s2id_']");
+        setKeyGroup( keytypeElement, mrnArr );
+        //console.log("trig ger parent key button");
+        parentBtnObj.btn.trigger("click");
+
+        return 1;
+    }
+
+}
 
 
+/////////////////////// validtion related functions /////////////////////////
+function validateForm() {
+
+    console.log("validateForm enter");
+    //return false;
+
+    var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
+    //console.log("saveClick="+ saveClick);
+
+    var checkExisting = checkExistingKey("accession");
+    //console.log( "accession checkExisting="+checkExisting);
+    if( !checkExisting ) {
+        if( orderformtype == "single") {
+            if( saveClick == 'true' ) {
+                //console.log( " single accession existing error => logout without saving");
+                idlelogout();   //we have errors on the form, so logout without saving form
+            }
+            //console.log( "WARNING SINGLE RETURN: checkExisting="+checkExisting);
+            return false;
+        }
+        //existingErrors++;
+    }
+
+    var checkExisting = checkExistingKey("patient");
+    if( !checkExisting ) {
+//        return false;
+        //existingErrors++;
+    }
+
+    if( $('.maskerror-added').length > 0 ) {
+        if( saveClick == 'true' ) {
+            //console.log( " mrn existing error => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        //console.log( "WARNING RETURN 1: maskerror-added.length="+$('.maskerror-added').length);
+        return false;
+    }
+
+    var checkMrnAcc = checkMrnAccessionConflict();
+    //console.log( "checkMrnAcc="+checkMrnAcc);
+    if( !checkMrnAcc ) {
+        if( saveClick == 'true' ) {
+            //console.log( " mrn-accession conflict => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        //console.log( "WARNING RETURN: checkMrnAcc="+checkMrnAcc);
+        return false;
+    }
+
+    //console.log("validateForm: error length="+$('.maskerror-added').length);
+
+    if( $('.maskerror-added').length > 0 ) {
+        if( saveClick == 'true' ) {
+            //console.log( $('.maskerror-added').length+ " error(s) => logout without saving");
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        //console.log( "WARNING RETURN 2: maskerror-added.length="+$('.maskerror-added').length);
+        return false;
+    }
+
+    //return false; //testing
+    return true;
+}
+
+//accesion-MRN link validation when the user clicks "Submit" on multi-slide form
+function checkMrnAccessionConflict() {
+
+    var totalError = 0;
+
+    if( validateMaskFields() > 0 ) {
+        return false;
+    }
+
+    //Initial check: get total number of checkboxes
+    var totalcheckboxes = 0;
+
+    var reruncount = 0;
+
+    //console.log( "dataquality_message1[0]="+dataquality_message1[0] );
+    //console.log( "dataquality_message2[0]="+dataquality_message2[0] );
+
+    var countErrorBoxes = 0;
+
+    var errorBoxes = $('#validationerror').find('.validationerror-added');
+    //console.log("errorBoxes.length="+errorBoxes.length);
+
+    for (var i = 0; i < errorBoxes.length; i++) {
+
+        var errorBox = errorBoxes.eq(i);
+
+        var checkedEl = errorBox.find("input:checked");
+        //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+
+        //console.log("value="+checkedEl.val());
+        if( checkedEl.is(":checked") ){
+            //console.log("checked value="+checkedEl.val());
+            if( checkedEl.val() == "OPTION3" ) {
+                reruncount++;
+            }
+            if( checkedEl.val() == "OPTION1" ) {
+                setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+            }
+            if( checkedEl.val() == "OPTION2" ) {
+                setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
+            }
+        } else {
+            //
+        }
+        totalcheckboxes++;
+
+        countErrorBoxes++;
+
+    }
+
+    //clear array
+    dataquality_message1.length = 0;
+    dataquality_message2.length = 0;
+
+    //console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
 
 
+    if( totalcheckboxes == 0 ) {
+        //continue
+//    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
+//        cleanValidationAlert();
+    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
+        cleanValidationAlert();
+    } else {    //return true;
+        //return false; //testing
+        return true;
+    }
 
+    if( orderformtype == "single") {
+        var accessions = $('#accession-single').find('.keyfield');
+        //console.log("singleform");
+    } else {
+        var accessions = $('.accessionaccession').find('.keyfield');
+        //console.log("not singleform");
+    }
+
+    //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
+    var prototype = $('#form-prototype-data').data('prototype-dataquality');
+    //console.log("prototype="+prototype);
+    var index = 0;
+
+    //for all accession fields
+    accessions.each(function() {
+
+        var accInput = $(this);
+        var accValue = accInput.val();
+
+        //var acctypeField = accInput.closest('.row').find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+        var acctypeField = getKeyGroupParent(accInput).find('.accessiontype-combobox').not("*[id^='s2id_']").first();
+
+        var acctypeValue = acctypeField.select2("val");
+        //var acctypeText = acctypeField.select2("data").text;
+
+        if( orderformtype == "single") {
+            var mrnHolder = $('#optional_param').find(".patientmrn");
+        } else {
+            var mrnHolder = accInput.closest('.panel-patient').find(".patientmrn");
+        }
+
+        var patientInputs = mrnHolder.find('.keyfield').not("*[id^='s2id_']").first();
+        var mrnValue = patientInputs.val();
+        //console.log("patientInputs.first().id=" + patientInputs.first().attr('id') + ", class=" + patientInputs.first().attr('class'));
+
+        var patientMrnInputs = mrnHolder.find('.mrntype-combobox').not("*[id^='s2id_']").first();
+        //var mrntypeValue = patientMrnInputs.select2("val");
+        var mrntypeValue = patientMrnInputs.select2("val");
+        var mrntypeData = patientMrnInputs.select2("data");
+        //console.log("sel id="+mrntypeData.id);
+        var mrntypeText = mrntypeData.text;
+        //console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
+
+        //console.log("accValue="+accValue + ", acctypeValue=" + acctypeValue + "; mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
+
+        if(
+            accValue && accValue !="" && acctypeValue && acctypeValue !="" &&
+                mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !=""
+            ) {
+            //console.log("validate accession-mrn-mrntype");
+
+//            var mrn = "";
+//            var mrntype = "";
+//            var provider = "";
+//            var date = "";
+
+            accValue = trimWithCheck(accValue);
+            acctypeValue = trimWithCheck(acctypeValue);
+
+            $.ajax({
+                url: urlCheck+"accession",
+                type: 'GET',
+                data: {key: accValue, extra: acctypeValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //console.debug("get accession ajax ok");
+
+//                    if( data == -1 ) {
+//                        //object exists but no permission to see it (not an author or not pathology role)
+//                        totalError++;
+//                        return false;
+//                    }
+
+                    if( data == -2 ) {
+                        //Existing Auto-generated object does not exist in DB
+                        var errorHtml = createErrorWell(accInput,"accession");
+                        $('#validationerror').append(errorHtml);
+                        return false;
+                    }
+
+                    if( data.id ) {
+
+                        var mrn = data['parent'];
+                        var mrntype = data['extraid'];
+                        var mrnstring = data['mrnstring'];
+                        var orderinfo = data['orderinfo'];
+
+                        mrn = trimWithCheck(mrn);
+                        mrntype = trimWithCheck(mrntype);
+                        mrnValue = trimWithCheck(mrnValue);
+                        mrntypeValue = trimWithCheck(mrntypeValue);
+
+                        //console.log('mrn='+mrn+', mrntype='+mrntype);
+
+                        if( mrn == mrnValue && ( mrntype == mrntypeValue || 13 == mrntypeValue ) ) {    //13 - Auto-generated MRN. Need it for edit or amend form
+                            //console.log("validated successfully !");
+                        } else {
+                            //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
+
+                            var nl = "\n";    //"&#13;&#10;";
+
+                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+","+acctypeValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
+                                +mrnValue+", "+mrntypeText+" as you have entered.";
+                            var message = message_short + " Please correct ether the MRN or the Accession Number above.";
+
+
+                            var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
+                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
+                            dataquality_message1.push(dataquality_message_1);
+
+                            var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
+                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient "+mrnstring+" (as stated by "+orderinfo+")";
+                            dataquality_message2.push(dataquality_message_2);
+
+                            var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";
+
+                            if( !prototype ) {
+                                //console.log('WARNING: conflict prototype is not found!!!');
+                                return false;
+                            }
+
+                            var newForm = prototype.replace(/__dataquality__/g, index);
+
+                            newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
+
+                            newForm = newForm.replace("TEXT1", message1);
+                            newForm = newForm.replace("TEXT2", message2);
+                            newForm = newForm.replace("TEXT3", message3);
+
+                            //console.log("newForm="+newForm);
+
+                            var newElementsAppended = $('#validationerror').append(newForm);
+                            //var newElementsAppended = newForm.appendTo("#validationerror");
+
+                            //red
+                            accInput.parent().addClass("has-error");
+                            patientInputs.parent().addClass("has-error");
+
+                            setDataqualityData( index, accValue, acctypeValue, mrnValue, mrntypeValue );
+
+                            index++;
+                            totalError++;
+
+                            //console.log('end of conflict process');
+
+                        }
+
+                    } else {
+                        console.debug("validation: accession object not found");
+                    }
+                },
+                error: function () {
+                    console.debug("validation: get object ajax error accession");
+                }
+            });
+
+        }
+
+    });
+
+    //console.log("totalError="+totalError);
+    //return false; //testing
+
+    if( totalError == 0 ) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+function setDataquality(index,message) {
+    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    //console.log("message=" + message);
+    $(partid+'description').val(message);
+}
+
+
+function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
+    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    //console.log("setDataqualityData: "+accession + " " + acctype + " " + mrn + " " + mrntype);
+    $(partid+'accession').val(accession);
+    $(partid+'accessiontype').val(acctype);
+    $(partid+'mrn').val(mrn);
+    $(partid+'mrntype').val(mrntype);
+}
+
+function cleanValidationAlert() {
+    if( cicle == "new" || cicle == "amend" || cicle == "edit" ) {
+        $('.validationerror-added').each(function() {
+            $(this).remove();
+        });
+        //$('#validationerror').html('')
+        dataquality_message1.length = 0;
+        dataquality_message2.length = 0;
+    }
+}
+
+function checkExistingKey(name) {
+
+    if( orderformtype == "single") {
+        if( name == 'accession' ) {
+            //var elements = $('#accession-single').find('.keyfield');
+            var elements = $('.btn.btn-default.accessionbtn');
+        }
+        if( name == 'patient' ) {
+            //var elements = $('.patientmrn').find('.keyfield');
+            var elements = $('.btn.btn-default.patientmrn');
+        }
+    } else {
+        if( name == 'accession' ) {
+            //var elements = $('.accessionaccession').find('.keyfield');
+            var elements = $('.btn.btn-default.accessionaccession');
+        }
+        if( name == 'patient' ) {
+            var elements = $('.btn.btn-default.patientmrn');
+        }
+    }
+
+    var len = elements.length;
+    //console.log("len="+len);
+    if( len == 0 ) {
+        return false;
+    }
+
+    //for all accession or mrn buttons
+    elements.each(function() {
+
+        var elInput = $(this);
+        //printF(elInput,"elInput element:");
+
+        if( orderformtype == "single") {
+            var single = true;
+        } else {
+            var single = false;
+        }
+
+        //var keyElement = findKeyElement(elInput, false);
+        var keyElement = new btnObject(elInput);
+
+        if( !keyElement || !keyElement.element ) {
+            return false;
+        }
+
+        var elValue = keyElement.key;
+        var eltypeValue = keyElement.type;
+        var eltypeValueText = keyElement.typename;
+
+        //printF(elInput,"input element:");
+        //console.log("elValue="+elValue + ", eltypeValue=" + eltypeValue );
+
+        //return false;
+
+        if(
+            elValue && elValue != "" && eltypeValueText && eltypeValueText.indexOf("Existing Auto-generated") != -1
+        )
+        {
+
+            elValue = trimWithCheck(elValue);
+            eltypeValue = trimWithCheck(eltypeValue);
+
+            $.ajax({
+                url: urlCheck+name,
+                type: 'GET',
+                data: {key: elValue, extra: eltypeValue},
+                contentType: 'application/json',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //console.debug("get element ajax ok");
+                    if( data == -2 ) {
+                        var errorHtml = createErrorWell(keyElement.element,name);
+                        $('#validationerror').append(errorHtml);
+                        return false;
+                    }
+                },
+                error: function () {
+                    console.debug("validation: get object ajax error "+name);
+                }
+            });
+
+        }
+    });
+
+    //return false;
+    return true;
+}
+////////////////////// end of validtion related functions //////////////////////
 
 
 

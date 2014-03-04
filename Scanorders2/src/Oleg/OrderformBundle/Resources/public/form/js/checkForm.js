@@ -76,13 +76,14 @@ function addKeyListener() {
 }
 
 //object contains: input value, type, parent (btn element), name, fieldname
-function btnObject( btn ){
+//parent = null - get parent for part and block only
+//parent = 'full' - get parent if it exists even for accession
+//parent = 'none' - don't get parent
+function btnObject( btn, parent ) {
 
     if( !btn ) {
         return null;
     }
-
-    //printF(btn,"btn object:");
 
     this.btn = btn;
     this.element = null;
@@ -94,35 +95,33 @@ function btnObject( btn ){
     this.fieldname = null;
     this.remove = false;
 
-    var inputEl = btn.closest('.row').find('input.keyfield');
+    var parentEl = getParentByBtn(btn);
+
+    var inputEl = parentEl.find('input.keyfield');
+
     this.element = inputEl;
     if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
-       //var selectEl = btn.closest('.row').find('div.keyfield');
-       //console.log('ajax-combobox OK: testval='+selectEl.select2("val"));
        if( inputEl.select2("val") ) {
            //console.log('select2 data OK');
            this.key = inputEl.select2('data').text;
-       } else {
-           //console.log('select2 data not OK ?');
        }
     } else {
        this.key = inputEl.val();
     }
    
     //get type
-    var typeEl = inputEl.prev();
-    if( typeEl.hasClass('combobox') ) {    //type exists
-        this.type = typeEl.select2('val');
-        this.typename = typeEl.select2('data').text;
-    }
-    
+    var typeObj = new typeByKeyInput(inputEl);
+    this.type = typeObj.type;
+    this.typename = typeObj.typename;
+
     //get name
     var idsArr = inputEl.attr('id').split("_");
     this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
     this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
     
     //get parent
-    if( this.name == 'part' || this.name == 'block' ) {      
+    if( parent != 'none' && ( this.name == 'part' || this.name == 'block' || parent == 'full') ) {
+        //console.log("get parent");
         this.parentbtn = getParentBtn(btn);             
     } 
     
@@ -132,7 +131,51 @@ function btnObject( btn ){
     }
     
     console.log(this);
-    console.log('finished: this.name='+this.name+', this.key='+this.key+', this.type='+this.type);
+    //console.log('finished btn object: this.name='+this.name+', this.key='+this.key+', this.type='+this.type);
+}
+
+
+//elem is a keytype (combobox)
+function typeByKeyInput(keyEl) {
+
+    this.type = null;
+    this.typename = null;
+
+    if( orderformtype == "single") {
+        this.type = $('.accessiontype-combobox').select2('val');
+        this.typename = $('.accessiontype-combobox').select2('data').text;
+    } else {
+        var typeEl = keyEl.prev();
+        if( typeEl.hasClass('combobox') ) {    //type exists
+            this.type = typeEl.select2('val');
+            this.typename = typeEl.select2('data').text;
+        }
+    }
+
+}
+
+
+//elem is a keytype (combobox)
+function getParentByBtn(btn) {
+
+    var parent = btn.closest('.row');
+
+    if( orderformtype == "single") {
+        if( btn.hasClass('patientmrn') ) {
+            var parent = $('#patient_0');
+        }
+        if( btn.hasClass('accessionbtn') ) {
+            var parent = $('#accession-single');
+        }
+        if( btn.hasClass('partbtn') ) {
+            var parent = $('#part-single');
+        }
+        if( btn.hasClass('blockbtn') ) {
+            var parent = $('#block-single');
+        }
+    }
+
+    return parent;
 }
 
 function getParentBtn(btn) {
@@ -153,7 +196,9 @@ function getParentBtn(btn) {
         //console.log(parentEl2);
         parentBtn = parentEl2.find('#check_btn');     
     }
-    
+
+    //console.log("parentBtn.length="+parentBtn.length);
+
     if( parentBtn.length == 0 ) {
         parentBtn = null;
     }
@@ -163,76 +208,71 @@ function getParentBtn(btn) {
 
 
 
+/////////////// called by button click //////////////////////
 
-function checkForm( btnel ) {
+//use this one: this function is automatically detect the parent and run chaining according if this button has parent.
+//if parent exists, than parent button clicked first, then this button is processed.
+//parent = 'none' : don't use parent (no chaining)
+function checkForm( btnel, parent ) {
 
-return new Q.promise(function(resolve, reject) {
+    return new Q.promise(function(resolve, reject) {
 
-    var btn = $(btnel);
-    var clickParent = true;
-    var parentBtnObj = null;
-    var casetype = 'check';
+        var btn = $(btnel);
+        var hasParent = true;
+        var parentBtnObj = null;
 
-    var btnObj = new btnObject(btn);
-    console.log('check form: name='+btnObj.name+', input='+btnObj.key+', type='+btnObj.type);
+        var btnObj = new btnObject(btn);
+        console.log('check form: name='+btnObj.name+', input='+btnObj.key+', type='+btnObj.type);
 
-    parentBtnObj = new btnObject(btnObj.parentbtn);
-    if( parentBtnObj && parentBtnObj.key != '' ) {
-        clickParent = false;
-    }
+        parentBtnObj = new btnObject(btnObj.parentbtn);
+        if( parentBtnObj && parentBtnObj.key != '' ) {
+            hasParent = false;
+        }
 
-    if( clickParent ) {
-        console.log('execute click parent then this');
+        if( parent == 'none' ) {
+            hasParent = false;
+        }
 
-//        checkForm( parentBtnObj.btn ).then(function(response) {
-//            console.log("Success!", response);
-//            executeClick( btnObj );
-//            //checkForm( btnObj.btn );
-//        }).then(function(response) {
-//                console.log("Yey JSON!", response);
-//                resolve("OK: "+response);
-//            },function(error) {
-//                console.error("Failed!", error);
-//                reject(Error("Error on check form with parent"));
-//            }
-//        );
+        if( hasParent ) {
+            console.log('execute click parent then this');
 
-        checkForm( parentBtnObj.btn ).
-        then(
-            function(response) {
-                console.log("Success!", response);
-                return executeClick( btnObj );
-            }
-        ).
-        then(
-            function(response) {
-                console.log("Yey JSON!", response);
-                resolve("OK: "+response);
-            }
-        );
+            checkForm( parentBtnObj.btn ).
+            then(
+                function(response) {
+                    console.log("Success!", response);
+                    return executeClick( btnObj );
+                }
+            ).
+            then(
+                function(response) {
+                    console.log("Chaining with parent OK:", response);
+                    resolve("Chaining with parent OK: "+response);
+                },
+                function(error) {
+                    console.error("Failed!", error);
+                    reject(Error("Failed to execute click with parent, error="+error));
+                }
+            );
 
 
-    } else {
-        console.log('execute click this');
-        executeClick( btnObj ).
-        then(function(response) {
-                console.log("Yey JSON!", response);
-                resolve("OK: "+response);
-        },function(error) {
-                console.error("Failed!", error);
-                reject(Error("Error on check form no parent"));
-            }
-        );
-    }
+        } else {
+            console.log('execute click this');
+            executeClick( btnObj ).
+            then(function(response) {
+                    console.log("Check click this OK:", response);
+                    resolve("Check click this OK: "+response);
+            },function(error) {
+                    console.error("Failed!", error);
+                    reject(Error("Failed to execute click with no parent, error="+error));
+                }
+            );
+        }
 
-});
-    //return;
+    });
 }
 
-
-
-/////////////// called by button click //////////////////////
-function checkForm_WORKING( btnel ) {
+//this function is strait forward chaining by button name
+function checkForm_ChainByName( btnel ) {
     
     var btn = $(btnel);         
     var btnObj = new btnObject(btn);      
@@ -413,75 +453,104 @@ function executeClick( btnObjInit ) {
             async: true,    //use synchronous call
             data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
             success: function (data) {
+
                 btn.button('reset');
 
-                if( data == null && casetype == 'generate' ) {
+                console.debug("ajax casetype="+casetype);
 
-                    console.debug("Object was not generated");
-                    reject(Error("Object was not generated"));
-
-                } else
-                if( data == -2 ) {
-
-                    //Existing Auto-generated object does not exist in DB
-                    createErrorWell(btnObj.element,btnObj.name);
-                    reject(Error("Existing Auto-generated object does not exist in DB"));
-
-                } else
-                if( data && data.id ) {
-
-                    console.debug("ajax key value data is found");                                    
-                    
-                    if( casetype == 'generate' ) {
+                if( casetype == 'generate' ) {
+                    if( data ) {
+                        console.debug("ajax key value data is found");
+                        invertButton(btn);
                         setElementBlock(btn, data, null, "key");
                         disableInElementBlock(btn, false, null, "notkey", null);
+                        resolve("Object was generated successfully");
+                    } else {
+                        console.debug("Object was not generated");
+                        reject(Error("Object was not generated"));
                     }
-                    
-                    if( casetype == 'check' ) {
-                        setElementBlock(btn, data);
-                        //second: disable or enable element. Make sure this function runs after set Element Block
-                        disableInElementBlock(btn, true, "all", null, "notarrayfield");
-                    }
-                    
-                    if( casetype == 'delete' ) {
-                        if( data != '-1' || single ) {
-                            //console.debug("Delete Success");
-                            deleteSuccess(btn,single);
-                        } else {
-                            //console.debug("Delete ok with Error");
-                            deleteError(btn,single);
-                        }
-                    }                  
-                    
-                    //if( casetype != 'check' ) {
-                        invertButton(btn);
-                    //}    
-                    
-                    resolve("ajax key value data is found");
+                } //generate
 
-                } else {
-                    
-                    if( casetype == 'check' ) {
+                if( casetype == 'delete' ) {
+                    if( data != '-1' || single ) {
+                        console.debug("Delete Success");
+                        deleteSuccess(btn,single);
+                    } else {
+                        console.debug("Delete ok with Error");
+                        deleteError(btn,single);
                         invertButton(btn);
                     }
-                    
-                    if( casetype == 'delete' ) {
-                        deleteError(btn,single);
+                    resolve("Object was deleted, data="+data);
+                } //delete
+
+                if( casetype == 'check' ) {
+                    if( data == -2 ) {
+
+                        //Existing Auto-generated object does not exist in DB
+                        createErrorWell(btnObj.element,btnObj.name);
+                        reject(Error("Existing Auto-generated object does not exist in DB"));
+
+                    } else
+                    if( data.id ) {
+
+                        var gonext = 1;
+
+                        if( !single ) {
+                            gonext = checkParent(btn,key,btnObj.name,btnObj.fieldname,btnObj.type); //check if this key is not used yet, when a new key field is checked in the added entity
+                            //console.debug("0 gonext="+gonext);
+                        }
+
+                        //console.log("gonext="+gonext);
+                        if( gonext == 1 ) {
+
+                            //set this element
+                            //console.debug("continue gonext="+gonext);
+                            //first: set elements
+                            setElementBlock(btn, data);
+                            //second: disable or enable element. Make sure this function runs after set Element Block
+                            disableInElementBlock(btn, true, "all", null, "notarrayfield");
+                            invertButton(btn);
+
+                            //set patient (in accession case)
+                            if( btnObj.name == "accession" && gonext == 1) {
+                                var parentkeyvalue = data['parent'];
+                                var extraid = data['extraid'];
+                                //console.log("key parent="+parentkeyvalue+", extraid="+extraid);
+                                gonext = setPatient(btn,parentkeyvalue,extraid,single);
+                            }
+
+                        }
+
+                        resolve("ajax key value data is found");
+
+                    } else {
+                        console.debug("not found");
+                        disableInElementBlock(btn, false, null, "notkey", null);
+                        invertButton(btn);
+                        resolve("data is null");
                     }
-                    
-                    console.debug('set key data is null');
-                    resolve("ajax key value data is found");
-                } 
+
+                } //check
 
             },
             error: function () {
                 btn.button('reset');
-                console.debug("set key ajax error");
-                reject(Error("set key ajax error"));
+
+                if( casetype == 'check' ) {
+                    cleanFieldsInElementBlock( btn, null, single );
+                    disableInElementBlock(btn, false, "all", null, null);
+                    invertButton(element);
+                }
+
+                if( casetype == 'delete' ) {
+                    deleteError(btn,single);
+                }
+
+                console.debug(btnObj.name+": ajax error for casetype="+casetype);
+                reject(Error(btnObj.name+": ajax error for casetype="+casetype));
             }
         }); //ajax               
         
     }); //promise
-     
 }
 
