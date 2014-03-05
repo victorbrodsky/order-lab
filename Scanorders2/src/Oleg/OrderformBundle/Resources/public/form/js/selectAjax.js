@@ -65,7 +65,7 @@ function customCombobox() {
 
     //console.log("cicle="+cicle);
 
-    if( cicle && cicle != 'edit_user' && urlBase ) {
+    if( cicle && urlBase && cicle != 'edit_user' && cicle != 'accountreq' ) {
         getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
@@ -80,7 +80,7 @@ function customCombobox() {
         slideType(new Array("0","0","0","0","0","0"));
     }
 
-    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq')  ) {
+    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
     }
 }

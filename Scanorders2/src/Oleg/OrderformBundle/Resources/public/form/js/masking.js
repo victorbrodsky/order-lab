@@ -115,32 +115,26 @@ function fieldInputMask() {
 }
 
 //element is check button
-function setDefaultMask( element ) {
+function setDefaultMask( btnObj ) {
 
-    //printF(element,"Set default mask1:");
-    var maskField = getKeyGroupParent(element).find("*[class$='-mask']");
-    //printF(maskField,"Set default mask2:");
+    clearErrorField(btnObj.btn);
 
-    clearErrorField(element);
+    if( btnObj.name == "patient" ) {
+        //console.log("Set default mask for MRN");
+        btnObj.typeelement.inputmask( getMrnDefaultMask() );
+    }
 
-    maskField.each(function() {
-        if( $(this).hasClass('patientmrn-mask') ) {
-            //console.log("Set default mask for MRN");
-            $(this).inputmask( getMrnDefaultMask() );
-        }
-
-        if( $(this).hasClass('accession-mask') ) {
-            //console.log("Set default mask for Accession");
-            $(this).inputmask( { "mask": getAccessionDefaultMask() } );
-        }
-    });  
+    if( btnObj.name == "accession" ) {
+        //console.log("Set default mask for Accession");
+        btnObj.typeelement.inputmask( { "mask": getAccessionDefaultMask() } );
+    }
 
 }
 
 
 function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
-        //console.log("mrn type change listener!!!");
+        console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
     });
 }
@@ -153,12 +147,13 @@ function getMrnAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setMrntypeMask( elem, clean ) {
-    //console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("mrn type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
+    console.log("value=" + value);
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
@@ -226,7 +221,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        //console.log("accession type listener!!!");
+        console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -255,14 +250,15 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    //printF(accField,"Set Accession Mask:")
+    printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
+    console.log("value=" + value);
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {

@@ -50,6 +50,7 @@
         {% endjavascripts %}
 
         <script language="Javascript">
+            var _ajaxTimeout = 15000;  //15000 => 15 sec
             var urlBase = $("#baseurl").val();
             var url = "http://"+urlBase+"/setloginvisit/";
             //console.log(screen.height + " " + screen.width);
