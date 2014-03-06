@@ -386,7 +386,7 @@ class OrderUtil {
         } else {
             //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
             $criteriastr = $criteriastr . " AND ( history.roles LIKE '%".$role."%' OR history.roles LIKE '%".$role2."%' )";
-            $criteriastr = $criteriastr . " AND ( orderinfo_provider = ".$user." OR orderinfo_proxyuser = ".$user." )";
+            $criteriastr = $criteriastr . " AND ( orderinfo_provider = ".$user->getId()." OR orderinfo_proxyuser = ".$user->getId()." )";
         }
 
         return $criteriastr;

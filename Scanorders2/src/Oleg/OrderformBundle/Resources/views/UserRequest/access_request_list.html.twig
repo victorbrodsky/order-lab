@@ -77,6 +77,9 @@
                                 <li><a onclick="return confirm('Are you sure?');"
                                        href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'declined', 'role': 'declined' }) }}">Decline</a>
                                 </li>
+                            {% endif %}
+
+                            {% if entity.appliedforaccess == 'declined' %}
                                 <li><a onclick="return confirm('Are you sure?');"
                                        href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}">Approve as External Submitter</a>
                                 </li>

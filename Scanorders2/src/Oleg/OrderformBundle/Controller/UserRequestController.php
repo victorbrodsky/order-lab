@@ -432,7 +432,7 @@ class UserRequestController extends Controller
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
-        $dql->where("accreq.appliedforaccess = 'active'");
+        $dql->where("accreq.appliedforaccess = 'active' OR accreq.appliedforaccess = 'declined' OR accreq.appliedforaccess = 'approved'");
         $dql->orderBy("accreq.appliedforaccess","DESC");
         //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
 
@@ -479,11 +479,13 @@ class UserRequestController extends Controller
             $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
             $entity->addRole('ROLE_EXTERNAL_SUBMITTER');
             $entity->addRole('ROLE_EXTERNAL_ORDERING_PROVIDER');
+            $entity->setLocked(false);
         } else
         if( $status == "approved" && $role == "submitter" ) {
             $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
             $entity->addRole('ROLE_SUBMITTER');
             $entity->addRole('ROLE_ORDERING_PROVIDER');
+            $entity->setLocked(false);
         } else {
             $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
             $entity->setLocked(true);
