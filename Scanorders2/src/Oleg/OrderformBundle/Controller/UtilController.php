@@ -129,19 +129,31 @@ class UtilController extends Controller {
      */
     public function getPathServiceAction() {
 
+        $whereServicesList = "";
+
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
         $opt = trim( $request->get('opt') );
+
+        //find user's pathservices to include them in the list
+        $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($opt);
+        $getPathologyServices = $user->getPathologyServices();
+
+        foreach( $getPathologyServices as $serviceId ) {
+            $whereServicesList = $whereServicesList . " OR e.id=".$serviceId->getId();
+        }
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:PathServiceList', 'e')
             ->select("e.id as id, e.name as text")
             ->orderBy("e.orderinlist","ASC");
 
-        if( $opt ) {
-            $query->where('e.type = :type')->setParameter('type', 'default');
-        }
+//        if( $opt == 'default' ) {
+//            $query->where('e.type = :type')->setParameter('type', 'default');
+//        } else {
+            $query->where('e.type = :type OR e.creator = :user_id ' . $whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
+//        }
 
         $output = $query->getQuery()->getResult();
 

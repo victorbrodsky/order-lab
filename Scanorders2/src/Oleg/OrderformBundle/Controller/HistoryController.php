@@ -50,7 +50,7 @@ class HistoryController extends Controller
 
         return array(
             'entities' => $entities,
-            'roles' => $rolesArr
+            'roles' => $rolesArr,
         );
     }
     /**
@@ -377,6 +377,8 @@ class HistoryController extends Controller
         }
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+
+        $curdatetime = new \DateTime();
 
         return array(
             'entities' => $entities,

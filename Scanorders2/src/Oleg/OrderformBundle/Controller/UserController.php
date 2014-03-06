@@ -105,7 +105,8 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => 'show'
+            'cicle' => 'show_user',
+            'user_id' => $id
         );
     }
 
@@ -138,7 +139,8 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'cicle' => 'edit'
+            'cicle' => 'edit_user',
+            'user_id' => $id
         );
     }
 
@@ -182,7 +184,8 @@ class UserController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'cicle' => 'edit'
+            'cicle' => 'edit_user',
+            'user_id' => $id
 //            'delete_form' => $deleteForm->createView(),
         );
     }

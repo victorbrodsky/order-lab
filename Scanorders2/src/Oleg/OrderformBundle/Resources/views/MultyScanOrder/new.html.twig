@@ -34,64 +34,67 @@
         {% endif %}
     </h3>
 
-    {% set Filled = "Filled" in form.vars.value.status %}
-    {% set Amended = "Amended" in form.vars.value.status %}
-    {% set Canceled = "Canceled" in form.vars.value.status %}
-    {% set OnHold = "On Hold" in form.vars.value.status %}
+    {% set statusname = form.vars.value.status.name %}
+    {% set Filled = "Filled" in statusname %}
+    {% set Amended = "Amended" in statusname %}
+    {% set Canceled = "Canceled" in statusname %}
+    {% set OnHold = "On Hold" in statusname %}
     {#form.vars.value.status.type.name != "Filled"#}
+
+    <div class="well well-sm">
 
     {#action buttons#}
     {% if (type == 'edit' or type == 'show') and (not Amended and not Canceled) %}
-        <div class="well well-sm">
+
         {###############  USER ACTIONS #################}
-        {% if form.vars.value.status != 'Canceled' and not Amended and not Filled or is_granted('ROLE_ADMIN') %}
+        {% if statusname != 'Canceled' and not Amended and not Filled or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-danger" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
         {% endif %}
 
-        {% if   form.vars.value.status != 'Submitted' and
-                form.vars.value.status != 'Canceled' and
-                form.vars.value.status != 'Amended' and not
+        {% if   statusname != 'Submitted' and
+                statusname != 'Canceled' and
+                statusname != 'Amended' and not
                 Filled and not
                 OnHold or
-                is_granted('ROLE_ADMIN') and form.vars.value.status != 'Submitted'
+                is_granted('ROLE_ADMIN') and statusname != 'Submitted'
         %}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
         {% endif %}
 
-        {% if form.vars.value.status != 'Not Submitted' and form.vars.value.status != 'Amended' and form.vars.value.status != 'Canceled' %}
+        {% if statusname != 'Not Submitted' and statusname != 'Amended' and statusname != 'Canceled' %}
             <a onclick="return confirm('Are you sure?');" class="btn btn-warning"
                href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
         {% endif %}
 
-        <a class="btn btn-info" href="{{ path('history_orderinfo_show', { 'id': form.vars.value.oid }) }}">View Progress & Comments</a>
-
-        </div>
     {% endif %}
 
     {% if (type == 'edit' or type == 'show') and form.vars.value.status.action == 'Cancel' %}
-        {% if form.vars.value.status != 'Submitted' and form.vars.value.status != 'Canceled'
-        and form.vars.value.status != 'Amended' and not Filled
-        and not OnHold or is_granted('ROLE_ADMIN') and form.vars.value.status != 'Submitted'
+        {% if statusname != 'Submitted' and statusname != 'Canceled'
+        and statusname != 'Amended' and not Filled
+        and not OnHold or is_granted('ROLE_ADMIN') and statusname != 'Submitted'
         %}
-            <div class="well well-sm">
+            {#<div class="well well-sm">#}
             <a class="btn btn-info" onclick="return confirm('Are you sure?');"
                href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Un-Cancel</a>
-            </div>
+            {#</div>#}
         {% endif %}
     {% endif %}
 
-    {% if type == 'amend' and form.vars.value.status == "Submitted" %}
-        <div class="well well-sm">
+    {% if type == 'amend' and statusname == "Submitted" %}
+        {#<div class="well well-sm">#}
             <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Amend</a>
-        </div>
+        {#</div>#}
     {% endif %}
-    {% if type == 'amend' and form.vars.value.status == "Canceled" %}
-        <div class="well well-sm">
+    {% if type == 'amend' and statusname == "Canceled" %}
+        {#<div class="well well-sm">#}
             <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Un-Canceling</a>
-        </div>
+        {#</div>#}
     {% endif %}
+
+        <a class="btn btn-info" href="{{ path('history_orderinfo_show', { 'id': form.vars.value.oid }) }}">View Progress & Comments</a>
+    </div>
 
     {#history#}
     {% if backhistory is defined and backhistory %}

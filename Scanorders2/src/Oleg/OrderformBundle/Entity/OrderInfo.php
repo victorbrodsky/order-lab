@@ -112,10 +112,14 @@ class OrderInfo
     protected $proxyuser;
 
     /**
-     * Accession Number
      * @ORM\OneToMany(targetEntity="DataQuality", mappedBy="orderinfo", cascade={"persist"})
      */
     private $dataquality;
+
+    /**
+     * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
+     */
+    private $history;
 
     /////////////////    OBJECTS    //////////////////////
 
@@ -199,6 +203,7 @@ class OrderInfo
         $this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
         $this->dataquality = new ArrayCollection();
+        $this->history = new ArrayCollection();
     }
 
     public function __clone() {
@@ -221,10 +226,12 @@ class OrderInfo
             $providers = $this->getProvider();
             $proxys = $this->getProxyuser();
             $dataqualities = $this->getDataquality();
+            $histories = $this->getHistory();
 
             $this->provider = new ArrayCollection();
             $this->proxyuser = new ArrayCollection();
             $this->dataquality = new ArrayCollection();
+            $this->history = new ArrayCollection();
 
             foreach( $providers as $thisprov ) {
                 $this->addProvider($thisprov);
@@ -236,6 +243,10 @@ class OrderInfo
 
             foreach( $dataqualities as $dataquality ) {
                 $this->addDataquality($dataquality);
+            }
+
+            foreach( $histories as $history ) {
+                $this->addHistory($history);
             }
 
             foreach( $children as $child ) {
@@ -384,6 +395,23 @@ class OrderInfo
     public function removeDataquality($dataquality)
     {
         $this->dataquality->removeElement($dataquality);
+    }
+
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    public function addHistory($history)
+    {
+        if( !$this->history->contains($history) ) {
+            $this->history->add($history);
+        }
+    }
+
+    public function removeHistory($history)
+    {
+        $this->history->removeElement($history);
     }
 
 

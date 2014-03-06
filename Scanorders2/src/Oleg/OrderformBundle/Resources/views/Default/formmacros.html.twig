@@ -71,6 +71,8 @@
 
 {% macro fieldicon( field, extra, classname ) %}
 
+    {% set classname = classname~"btn" %}
+
     {% import _self as formmacros %}
     {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
 
@@ -624,7 +626,7 @@
         {% set key = "" %}
     {% endif %}
 
-    <div id="patient_{{ uid }}">
+    <div id="patient_{{ uid }}" class="form-element-holder">
 
         {% if mrnHtml is not defined or mrnHtml == "" %}
             {{ formmacros.inputArrayField(patient.mrn,cycle,"patientmrn",key,"","","",status) }}
@@ -676,7 +678,7 @@
         {% set key = "" %}
     {% endif %}
 
-    <div id="accession_{{ uid }}">
+    <div id="accession_{{ uid }}" class="form-element-holder">
         {% if accessionHtml is not defined or accessionHtml == "" %}
             {{ formmacros.inputArrayField(accession.accession,cycle,"accessionaccession",key,"","","",status) }}
         {% else  %}
@@ -711,7 +713,7 @@
         {% set key = "" %}
     {% endif %}
 
-    <div id="part_{{ uid }}">
+    <div id="part_{{ uid }}" class="form-element-holder">
 
         {% if partnameHtml is not defined or partnameHtml == "" %}
             {{ formmacros.inputArrayField(part.partname,cycle,"partpartname",key,"","","",status) }}
@@ -771,7 +773,7 @@
         {% set key = "" %}
     {% endif %}
 
-    <div id="block_{{ uid }}">
+    <div id="block_{{ uid }}" class="form-element-holder">
 
         {% if blocknameHtml is not defined or blocknameHtml == "" %}
             {{ formmacros.inputArrayField(block.blockname,cycle,"blockblockname",key,"","","",status) }}
@@ -794,7 +796,7 @@
 {% macro slideForm( slide, flag, uid, cycle, slidetypeHtml, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml, specialStainsHtml ) %}
     {% import _self as formmacros %}
 
-    <div id="slide_{{ uid }}">
+    <div id="slide_{{ uid }}" class="form-element-holder">
 
         {{ formmacros.field(slide.title) }}
 

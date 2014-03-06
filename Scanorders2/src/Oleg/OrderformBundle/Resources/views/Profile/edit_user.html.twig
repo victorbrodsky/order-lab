@@ -1,11 +1,16 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+{% block title %}
+    Profile
+{% endblock %}
+
 {% block content %}
 
 {#<form action="{{ path('user_update',{'id':entity.id}) }}" method="PUT" {{ form_enctype(form) }}>#}
 {{ form_start(form) }}
 
+    <input type="hidden" id="user_id" value="{{ user_id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
     <input type="hidden" id="formcicle" value="edit_user" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
@@ -44,7 +49,7 @@
 
     {#{{ form(form) }}#}
 
-    {% if cicle != "show" %}
+    {% if cicle != "show_user" %}
         <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
@@ -56,7 +61,7 @@
 {{ form_end(form) }}
 {#</form>#}
 
-    {% if cicle == "show" %}
+    {% if cicle == "show_user" %}
         <p><a class="btn btn-success" href="{{ path('user_edit',{'id':entity.id}) }}">Edit</a></p>
     {% endif %}
 

@@ -89,7 +89,7 @@ class UserType extends AbstractType
 
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
         $builder->add('pathologyServices', 'custom_selector', array(
-            'label' => 'Pathology Service(s):',
+            'label' => 'Service(s):',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'userPathologyServices'

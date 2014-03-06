@@ -440,12 +440,13 @@ function getComboboxPathService(urlCommon,ids) {
     var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
-    if( cicle == "new" || cicle == "create" || cicle == "accountreq" ) {
-        url = url + "?opt=default";
+    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" ) {
+        var optStr = user_id;
+        url = url + "?opt=" + optStr;
     }
 
-    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid);
-    if( cicle == 'accountreq' ) {
+    console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
+    if( cicle == "accountreq" || cicle == "edit_user" ) {
         var multiple = true;
     } else {
         var multiple = false;

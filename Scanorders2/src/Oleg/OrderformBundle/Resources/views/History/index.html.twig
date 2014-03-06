@@ -4,8 +4,9 @@
 
     {% if orderid is defined %}
 
+        {#10:54am, February 27th, 2014#}
         {% include 'OlegOrderformBundle::History/add_comment.html.twig' %}
-        <h3 class="text-info">Progress & Comments of <a href="{{ path('multy_show', { 'id': orderid }) }}">Order {{ orderid }}</a> as of {{ "now"|date('m/d/Y H:i',"America/New_York") }}</h3>
+        <h3 class="text-info">Progress & Comments of <a href="{{ path('multy_show', { 'id': orderid }) }}">Order {{ orderid }}</a> as of {{ "now"|date('h:i a, F jS, Y',"America/New_York") }}</h3>
 
     {% else %}
         <h3 class="text-info">Progress & Comments List</h3>

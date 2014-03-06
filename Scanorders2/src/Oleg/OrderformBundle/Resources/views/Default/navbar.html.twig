@@ -37,7 +37,7 @@
                     <li id="nav-bar-index" class="divider-vertical index">
                         {% if comments is defined and comments > 0 %}
                             <a id="incoming-orders-menu-title" href="{{ path('index') }}">My Orders</a><!--
-                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('index',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
                         {% else %}
                             <a href="{{ path('index') }}" >My Orders</a>
                         {% endif %}
@@ -50,7 +50,7 @@
                     </li>
                     <li id="nav-bar-index-badge" class="divider-vertical index" style="display: inline-block !important; padding-left: 0px !important; margin-left: 0px !important;">
                         {% if comments is defined and comments > 0 %}
-                            <a href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}" title="New Comments" data-toggle="tooltip" data-placement="bottom" style="padding-left: 0px !important; margin-left: 0px !important;"><span class="badge">{{ comments }}</span></a>
+                            <a href="{{ path('index',{'filter_search_box[filter]': 'With New Comments'}) }}" title="New Comments" data-toggle="tooltip" data-placement="bottom" style="padding-left: 0px !important; margin-left: 0px !important;"><span class="badge">{{ comments }}</span></a>
                         {% endif %}
                     </li>
     {% endif %}

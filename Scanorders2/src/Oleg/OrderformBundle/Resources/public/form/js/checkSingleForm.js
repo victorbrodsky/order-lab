@@ -17,13 +17,13 @@ function clickSingleBtn( btn ) {
         checkForm( btn, 'none' ).
         then(
             function(response) {
-                console.log("Success!", response);
+                //console.log("Success!", response);
                 if( $('.maskerror-added').length > 0 ) {
                     console.log("Validation error");
                     //reject(Error("Validation error"));
                     return false;
                 } else {
-                    console.log("Chaining with parent OK: "+response);
+                    //console.log("Chaining with parent OK: "+response);
                     //resolve("Chaining with parent OK: "+response);
                     return true;
                 }
@@ -57,7 +57,7 @@ function checkFormSingle( elem ) {
                 console.log("errors > 0 => return");
                 reject('mask errors');
             } else {
-                console.log("mask ok");
+                //console.log("mask ok");
                 resolve('mask ok');
             }
         });
@@ -66,10 +66,10 @@ function checkFormSingle( elem ) {
     var promiseNoMainSingleBtn = function(response) {
         return new Q.promise(function(resolve, reject) {
             if( $('#maincinglebtn').is(":visible") ) {
-                console.log("maincinglebtn is visible => return");
+                //console.log("maincinglebtn is visible => return");
                 reject('maincinglebtn is visible => return');
             } else {
-                console.log("start ajax");
+                //console.log("start ajax");
                 lbtn.start();
                 resolve('maincinglebtn is ok');
             }
@@ -98,6 +98,7 @@ function checkFormSingle( elem ) {
     ).
     then(
         function(response) {
+            finalStepCheck();
             //console.log("Block success!", response);
             if( $('.maskerror-added').length > 0 ) {
                 return false;
@@ -114,8 +115,7 @@ function checkFormSingle( elem ) {
                 //console.log("All Success!", response);
 
                 if( $('.maskerror-added').length == 0 ) {
-                    collapseElementFix($('#optional_param'));
-                    finalStepCheck();
+                    //ok
                 } else {
                     //return false;
                 }
@@ -130,7 +130,7 @@ function checkFormSingle( elem ) {
     ).
     then(
         function(response) {
-            console.log("All check single form chaining with parent OK:", response);
+            //console.log("All check single form chaining with parent OK:", response);
             lbtn.stop();
         },
         function(error) {
@@ -151,161 +151,48 @@ function removeFormSingle( elem ) {
 
     btn.button('loading');
 
-//    var blockBtnObj = new btnObject( $('.blockbtn') );
-//    var partBtnObj = new btnObject( $('.partbtn') );
-//    var accBtnObj = new btnObject( $('.accessionbtn') );
-//    var patientBtnObj = new btnObject( $('.patientmrn') );
-
-
     //working!
     executeClick( new btnObject( $('.blockbtn') ) ).
-//    Q.fcall(
-//        function() {
-//            var blockBtnObj = new btnObject( $('.blockbtn') );
-//            return executeClick( blockBtnObj );
-//        }
-//    ).
     then(
         function(response) {
-            console.log(" Block Success!", response);
+            //console.log(" Block Success!", response);
             var partBtnObj = new btnObject( $('.partbtn') );
             return executeClick( partBtnObj );
         }
     ).
     then(
         function(response) {
-            console.log("Part Success!", response);
+            //console.log("Part Success!", response);
             var accBtnObj = new btnObject( $('.accessionbtn') );
             return executeClick( accBtnObj );
         }
     ).
     then(
         function(response) {
-            console.log("Acc Success!", response);
-            if( $('.patientmrn').hasClass('removebtn') ) {
-                var patientBtnObj = new btnObject( $('.patientmrn') );
-                executeClick( patientBtnObj );
-                finalStepDelete();
-                return "patient is deleted";
+            //console.log("Acc Success!", response);
+            finalStepDelete();  //acc succ, so show delete button
+            if( $('.patientmrnbtn').hasClass('removebtn') ) {
+                var patientBtnObj = new btnObject( $('.patientmrnbtn') );
+                return executeClick( patientBtnObj );
             }
             return "patient was empty";
         }
     ).
     then(
         function(response) {
-            console.log("All delete chaining with parent OK:", response);
-            finalStepDelete();
+            //console.log("All delete chaining with parent OK:", response);
         },
         function(error) {
             console.error("Single form delete chaining with parent Error", error);
         }
     ).done(
         function(response) {
-            console.log("Done ", response);
+            //console.log("Done ", response);
             btn.button('reset');
         }
     );
 
     return;
-
-
-//
-//    var promiseValidateMask = function() {
-//        return new Q.promise(function(resolve, reject) {
-//            if( validateMaskFields() > 0 ) {
-//                console.log("errors > 0 => return");
-//                reject('mask errors');
-//            } else {
-//                console.log("mask ok");
-//                resolve('mask ok');
-//            }
-//        });
-//    }
-//
-//    var checkFormPatient = checkForm( $('.patientmrn'), 'none' );
-//
-//    var checkFormAcc = checkForm( $('.accessionbtn'), 'none' );
-//
-//    var checkFormPart = checkForm( $('.partbtn'), 'none' );
-//
-//    var checkFormBlock = checkForm( $('.blockbtn'), 'none' );
-//
-//    promiseValidateMask().
-//    then(
-//        function(response) {
-//            //return checkForm( $('.partbtn'), 'none' );
-//            return checkFormBlock;
-//            //return "Block OK";
-//        }
-//    ).
-//    then(
-//        function(response) {
-//            //return checkForm( $('.partbtn'), 'none' );
-//            return  checkFormPart;
-//            //return "Part OK";
-//        }
-//    ).
-//    then(
-//        function(response) {
-//            //return checkForm( $('.accessionbtn'), 'none' );
-//            return  checkFormAcc;
-//            //return "Acc OK";
-//        }
-//    ).
-//    then(
-//        function(response) {
-//            if( $('.patientmrn').hasClass('removebtn') ) {
-//                //console.log("no patient delete");
-//                //checkForm( $('.patientmrn'), 'none' );
-//                return  checkFormPatient;
-//                //return "Patient OK";
-//            }
-//            return "patient processing ok";
-//        }
-//    ).
-//    then(
-//        function(response) {
-//            //console.log("All delete chaining with parent OK:", response);
-//            //return true;
-//            //console.log("delete stop ajax");
-//
-//            $('#part-single').css( "width", "25%" );
-//            $('#block-single').css( "width", "25%" );
-//            $('#maincinglebtn').hide();
-//            collapseElementFix($('#optional_param'));   //close optional info
-//
-//            btn.button('reset');
-//        },
-//        function(error) {
-//            console.error("Single form delete chaining with parent Error", error);
-//            //return false;
-//            //console.log("delete stop ajax");
-//            btn.button('reset');
-//        }
-//    );
-
-//    $("#remove_single_btn").button('loading');
-//    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
-//
-//    $('.blockbtn').trigger("click");
-//
-//    $('.partbtn').trigger("click");
-//
-//    $('.accessionbtn').trigger("click");
-//
-//    if( $('.patientmrn').hasClass('removebtn') ) {
-//        $('.patientmrn').trigger("click");
-//    }
-
-//    $('#part-single').css( "width", "25%" );
-//    $('#block-single').css( "width", "25%" );
-//    $('#maincinglebtn').hide();
-//    collapseElementFix($('#optional_param'));   //close optional info
-//
-//    console.log("end of remove");
-//    $("#remove_single_btn").button('reset');
-//
-//    btn.button('reset');
 
 }
 
@@ -313,6 +200,7 @@ function finalStepCheck() {
     $('#part-single').css( "width", "20%" );
     $('#block-single').css( "width", "20%" );
     $('#maincinglebtn').show();
+    collapseElementFix($('#optional_param'));
     //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 }
 

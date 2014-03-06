@@ -67,6 +67,7 @@ class ScanOrderController extends Controller {
         $dql->innerJoin("orderinfo.slide", "slides");
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->innerJoin("orderinfo.type", "formtype");
+        $dql->innerJoin("orderinfo.history", "history");
 
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
@@ -129,29 +130,37 @@ class ScanOrderController extends Controller {
 
             switch( $filter ) {
 
-                case "With Comments":
+                case "With New Comments":
                     $orderUtil = new OrderUtil($em);
-                    $entities = $orderUtil->getNotViewedComments($this->get('security.context'));
-                    $countHistory = count($entities);
-                    //echo "count=".$countHistory."<br>";
-                    $countH = 1;
-                    if( $countHistory > 0 ) {
-                        $criteriastr .= "( ";   //no orders
-                    }
-                    foreach( $entities as $history ) {
-                        //echo $history->getId().": getCurrentid=".$history->getCurrentid()."<br>";
-                        $criteriastr .= " orderinfo.oid = ".$history->getCurrentid();
-                        if( $countHistory > $countH ) {
-                            $criteriastr .= " OR ";
-                        }
-                        $countH++;
-                    }
-                    if( $countHistory > 0 ) {
-                        $criteriastr .= " ) ";   //no orders
-                    }
-                    if( $countHistory == 0 ) {
-                        $criteriastr .= "( orderinfo.oid = '' )";   //no orders
-                    }
+//                    $entities = $orderUtil->getNotViewedComments($this->get('security.context'));
+//                    $countHistory = count($entities);
+
+//                    echo "count=".$countHistory."<br>";
+//                    $countH = 1;
+//                    if( $countHistory > 0 ) {
+//                        $criteriastr .= "( ";
+//                    }
+
+//                    //TODO: this foreach might slow down when number of comment will be high. Solution add comments to orderinfo
+//                    foreach( $entities as $history ) {
+//                        //echo $history->getId().": getCurrentid=".$history->getCurrentid()."<br>";
+//                        $criteriastr .= " orderinfo.oid = ".$history->getCurrentid();
+//                        if( $countHistory > $countH ) {
+//                            $criteriastr .= " OR ";
+//                        }
+//                        $countH++;
+//                    }
+
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getNewCommentsCriteriaStr($this->get('security.context')) . " ) ";
+                    //echo "newCommentsCriteriaStr=".$newCommentsCriteriaStr."<br>";
+                    $criteriastr = $criteriastr . $newCommentsCriteriaStr;
+
+//                    if( $countHistory > 0 ) {
+//                        $criteriastr .= " ) ";
+//                    }
+//                    if( $countHistory == 0 ) {
+//                        $criteriastr .= "( orderinfo.oid = '' )";   //no orders
+//                    }
                     //echo "criteriastr=".$criteriastr."<br>";
                     break;
                 case "All Filled":
@@ -457,7 +466,7 @@ class ScanOrderController extends Controller {
             "All Filled and Not Returned" => "All Filled and Not Returned",
             "All Not Filled" => "All Not Filled",
             "All On Hold" => "All On Hold",
-            "With Comments" => "With Comments"
+            "With New Comments" => "With New Comments"
         );
 
         $filterType = array();

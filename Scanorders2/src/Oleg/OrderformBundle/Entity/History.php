@@ -23,7 +23,7 @@ class History
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrderInfo", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="history", cascade={"persist"})
      * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $orderinfo;

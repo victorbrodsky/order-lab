@@ -148,7 +148,7 @@ function btnObject( btn, parent ) {
 
     }
 
-    console.log(this);
+    //console.log(this);
     //console.log('finished btn object: this.name='+this.name+', this.key='+this.key+', this.type='+this.type);
 }
 
@@ -182,7 +182,7 @@ function typeByKeyInput(keyEl) {
         }
     }
 
-    console.log(this);
+    //console.log(this);
 }
 
 
@@ -199,7 +199,7 @@ function getParentElByBtn(btn) {
     var parent = btn.closest('.row');
 
     if( orderformtype == "single") {
-        if( btn.hasClass('patientmrn') ) {
+        if( btn.hasClass('patientmrnbtn') ) {
             var parent = $('#patient_0');
         }
         if( btn.hasClass('accessionbtn') ) {
@@ -223,7 +223,7 @@ function getParentBtn( btn, name ) {
     
     if( orderformtype == "single" ) {
         if( name == 'accession' ) {
-            parentBtn = $('.patientmrn');
+            parentBtn = $('.patientmrnbtn');
         }
         if( name == 'part' ) {
             parentBtn = $('.accessionbtn');

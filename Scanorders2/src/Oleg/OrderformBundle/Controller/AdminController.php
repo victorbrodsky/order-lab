@@ -45,14 +45,20 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
+
+        $environment = 'dev'; //default
+
         $em = $this->getDoctrine()->getManager();
         $params = $roles = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-        if( count($params) != 1 ) {
+
+        if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
         }
 
-        $param = $params[0];
-        $environment = $param->getEnvironment();
+        if( count($params) == 1 ) {
+            $param = $params[0];
+            $environment = $param->getEnvironment();
+        }
 
         return $this->render('OlegOrderformBundle:Admin:index.html.twig', array('environment'=>$environment));
     }
@@ -898,7 +904,8 @@ class AdminController extends Controller
         }
 
         $types = array(
-            "maxIdleTime" => "30"
+            "maxIdleTime" => "30",
+            "environment" => "dev"
         );
 
         $params = new SiteParameters();
