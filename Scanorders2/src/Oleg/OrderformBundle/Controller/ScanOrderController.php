@@ -132,36 +132,13 @@ class ScanOrderController extends Controller {
 
                 case "With New Comments":
                     $orderUtil = new OrderUtil($em);
-//                    $entities = $orderUtil->getNotViewedComments($this->get('security.context'));
-//                    $countHistory = count($entities);
-
-//                    echo "count=".$countHistory."<br>";
-//                    $countH = 1;
-//                    if( $countHistory > 0 ) {
-//                        $criteriastr .= "( ";
-//                    }
-
-//                    //TODO: this foreach might slow down when number of comment will be high. Solution add comments to orderinfo
-//                    foreach( $entities as $history ) {
-//                        //echo $history->getId().": getCurrentid=".$history->getCurrentid()."<br>";
-//                        $criteriastr .= " orderinfo.oid = ".$history->getCurrentid();
-//                        if( $countHistory > $countH ) {
-//                            $criteriastr .= " OR ";
-//                        }
-//                        $countH++;
-//                    }
-
                     $newCommentsCriteriaStr = "( " . $orderUtil->getNewCommentsCriteriaStr($this->get('security.context')) . " ) ";
-                    //echo "newCommentsCriteriaStr=".$newCommentsCriteriaStr."<br>";
-                    $criteriastr = $criteriastr . $newCommentsCriteriaStr;
-
-//                    if( $countHistory > 0 ) {
-//                        $criteriastr .= " ) ";
-//                    }
-//                    if( $countHistory == 0 ) {
-//                        $criteriastr .= "( orderinfo.oid = '' )";   //no orders
-//                    }
-                    //echo "criteriastr=".$criteriastr."<br>";
+                    $criteriastr .= $newCommentsCriteriaStr;
+                    break;
+                case "With Comments":
+                    $orderUtil = new OrderUtil($em);
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getNewCommentsCriteriaStr($this->get('security.context'),'all_comments') . " ) ";
+                    $criteriastr .= $newCommentsCriteriaStr;
                     break;
                 case "All Filled":
                     $criteriastr .= " status.name LIKE '%Filled%'";
@@ -178,8 +155,20 @@ class ScanOrderController extends Controller {
                 case "All On Hold":
                     $criteriastr .= " status.name LIKE '%On Hold%'";
                     break;
-                case "Canceled (All)":
+                case "All Canceled":
                     $criteriastr .= " status.name = 'Canceled by Submitter' OR status.name = 'Canceled by Processor'";
+                    break;
+                case "All Submitted & Amended":
+                    $criteriastr .= " status.name = 'Submitted' OR status.name = 'Amended'";
+                    break;
+                case "All Stat":
+                    $criteriastr .= " orderinfo.priority = 'Stat'";
+                    break;
+                case "Stat & Not Filled":
+                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name NOT LIKE '%Filled%'";
+                    break;
+                case "Stat & Filled":
+                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
                     break;
                 default:
                     ;
@@ -466,7 +455,12 @@ class ScanOrderController extends Controller {
             "All Filled and Not Returned" => "All Filled and Not Returned",
             "All Not Filled" => "All Not Filled",
             "All On Hold" => "All On Hold",
-            "With New Comments" => "With New Comments"
+            "With Comments" => "With Comments",
+            "With New Comments" => "With New Comments",
+            "All Submitted & Amended" => "All Submitted & Amended",
+            "All Stat" => "All Stat",
+            "Stat & Not Filled" => "Stat & Not Filled",
+            "Stat & Filled" => "Stat & Filled"
         );
 
         $filterType = array();
@@ -479,7 +473,7 @@ class ScanOrderController extends Controller {
             //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
             $filterType[$status->getId()] = $status->getName();
             if( $status->getName() == "Not Submitted" ) {
-                $filterType["Canceled (All)"] = "Canceled (All)";
+                $filterType["All Canceled"] = "All Canceled";
             }
         }
 

@@ -368,9 +368,13 @@ class OrderUtil {
         return $entities;
     }
 
-    public function getNewCommentsCriteriaStr($security_context) {
+    public function getNewCommentsCriteriaStr($security_context, $flag = 'new_comments') {
 
-        $criteriastr = "history.viewed is NULL AND history.eventtype='Comment Added' ";
+        $criteriastr = "history.eventtype='Comment Added' ";
+
+        if( $flag != 'all_comments' ) {
+            $criteriastr = $criteriastr . "AND history.viewed is NULL ";
+        }
 
         $role = "ROLE_PROCESSOR";
         $role2 = "ROLE_ADMIN";
