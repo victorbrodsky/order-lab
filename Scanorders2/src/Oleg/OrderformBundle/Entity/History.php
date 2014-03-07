@@ -33,10 +33,10 @@ class History
      */
     private $currentid;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $newid;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $newid;
 
     /**
      * @var \DateTime
@@ -58,11 +58,11 @@ class History
      */
     private $currentstatus;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Status", cascade={"persist"})
-     * @ORM\JoinColumn(name="newstatus_id", referencedColumnName="id", nullable=true)
-     */
-    private $newstatus;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Status", cascade={"persist"})
+//     * @ORM\JoinColumn(name="newstatus_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $newstatus;
 
     /**
      * @var array
@@ -81,6 +81,7 @@ class History
     private $selectednote;
 
     /**
+     * User id
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="viewed_id", referencedColumnName="id", nullable=true)
      */
@@ -154,21 +155,21 @@ class History
         return $this->changedate;
     }
 
-    /**
-     * @param mixed $newstatus
-     */
-    public function setNewstatus($newstatus)
-    {
-        $this->newstatus = $newstatus;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNewstatus()
-    {
-        return $this->newstatus;
-    }
+//    /**
+//     * @param mixed $newstatus
+//     */
+//    public function setNewstatus($newstatus)
+//    {
+//        $this->newstatus = $newstatus;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getNewstatus()
+//    {
+//        return $this->newstatus;
+//    }
 
     /**
      * @param mixed $note
@@ -234,21 +235,21 @@ class History
         return $this->currentid;
     }
 
-    /**
-     * @param mixed $newid
-     */
-    public function setNewid($newid)
-    {
-        $this->newid = $newid;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNewid()
-    {
-        return $this->newid;
-    }
+//    /**
+//     * @param mixed $newid
+//     */
+//    public function setNewid($newid)
+//    {
+//        $this->newid = $newid;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getNewid()
+//    {
+//        return $this->newid;
+//    }
 
     /**
      * @param mixed $viewed

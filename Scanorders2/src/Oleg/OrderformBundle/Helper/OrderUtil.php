@@ -68,18 +68,21 @@ class OrderUtil {
                     $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
                 } else
                 if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_PROCESSOR") ) {
-                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction("Canceled by Processor");
+                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
                 } else {
                     $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
                 }
 
+                if( $status_entity == null ) {
+                    throw new \Exception( 'Unable to find status' );
+                }
+
                 $entity->setStatus($status_entity);
                 $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
-                //$entity->setOid($entity->getId()."-c");
 
                 //record history
-                $history->setNewid($entity->getOid());
-                $history->setNewstatus($entity->getStatus());
+                $history->setCurrentid($entity->getOid());
+                $history->setCurrentstatus($entity->getStatus());
 
                 $em->persist($entity);
                 $em->persist($history);
@@ -96,8 +99,8 @@ class OrderUtil {
                 //$entity->setCicle("superseded");
 
                 //record history
-                $history->setNewid($entity->getOid());
-                $history->setNewstatus($entity->getStatus());
+                $history->setCurrentid($entity->getOid());
+                $history->setCurrentstatus($entity->getStatus());
 
                 $em->persist($entity);
                 $em->persist($history);
@@ -178,8 +181,8 @@ class OrderUtil {
                     //record new history for modifying Superseded Order
                     $entity->setStatus($status_entity);
                     $message = $this->processObjects( $entity, $status_entity, 'valid' );
-                    $history->setNewid($entity->getOid());
-                    $history->setNewstatus($entity->getStatus());
+                    $history->setCurrentid($entity->getOid());
+                    $history->setCurrentstatus($entity->getStatus());
 
                     $em->persist($entity);
                     $em->persist($history);
@@ -194,8 +197,8 @@ class OrderUtil {
                 $entity->setStatus($status_entity);
 
                 //record history
-                $history->setNewid($entity->getOid());
-                $history->setNewstatus($entity->getStatus());
+                $history->setCurrentid($entity->getOid());
+                $history->setCurrentstatus($entity->getStatus());
 
                 $em->persist($entity);
                 $em->persist($history);

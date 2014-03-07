@@ -16,13 +16,13 @@ class HistoryType extends AbstractType
     {
         $builder
             ->add('currentid')
-            ->add('newid')
+            //->add('newid')
             ->add('changedate')
             ->add('roles')
             ->add('note')
             ->add('provider')
             ->add('currentstatus')
-            ->add('newstatus')
+            //->add('newstatus')
             ->add('viewed')
             ->add('vieweddate')
         ;

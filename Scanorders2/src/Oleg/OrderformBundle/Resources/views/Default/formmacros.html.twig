@@ -209,6 +209,28 @@
 
 {% endmacro %}
 
+{#history info#}
+{% macro history_info(histories, status, oid) %}
+    <div class="well well-sm">
+        <p>
+            This Order has been {{ status|lower }} on
+            {{ histories|last.changedate|date('Y-m-d @H:i') }}
+            by
+            {{ histories|last.provider }} {#(ROLES: {{ histories|last.roles|join(', ') }}).#}
+        </p>
+        {% if histories|length > 1 %}
+            {% for history in histories %}
+                {% if oid != history.currentid %}
+                    <p>
+                        The previous version of the order has been saved as
+                        <a href="{{ path('multy_show',{'id':history.currentid}) }}">Order ID {{ history.currentid }}</a> on {{ history.changedate|date('Y-m-d @H:i') }}.
+                    </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}
+
 {#history info for un-canceled or new amended orders#}
 {% macro backhistory_info(histories, status, oid) %}
     <div class="well well-sm">

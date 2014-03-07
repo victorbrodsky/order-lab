@@ -104,12 +104,12 @@
     {% endif %}
 
     {#history#}
-    {% if backhistory is defined and backhistory %}
-        {{ formmacros.backhistory_info(backhistory,form.vars.value.status,form.vars.value.oid) }}
+    {% if history is defined and history %}
+        {{ formmacros.history_info(history,form.vars.value.status,form.vars.value.oid) }}
     {% endif %}
-    {% if forwardhistory is defined and forwardhistory %}
-        {{ formmacros.forwardhistory_info(forwardhistory,allhistory,form.vars.value.status,form.vars.value.oid) }}
-    {% endif %}
+    {#{% if forwardhistory is defined and forwardhistory %}#}
+        {#{{ formmacros.forwardhistory_info(forwardhistory,allhistory,form.vars.value.status,form.vars.value.oid) }}#}
+    {#{% endif %}#}
 
 
     {#<input type="hidden" id="formtype" value="multi" />#}

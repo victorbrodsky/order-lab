@@ -624,31 +624,25 @@ class MultyScanOrderController extends Controller {
 //        echo "id=".$id.", provider=".$provider.", type=".$type."<br>";
 
         //History
-        $allhistory = null;
-        $backhistory = null;
-        $forwardhistory = null;
+        $history = null;
+        //$backhistory = null;
+        //$forwardhistory = null;
 
         if( $routeName == "multy_show") {
-            $backhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'ASC') );
-            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+            $history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'ASC') );
 
-            $dql = $repository->createQueryBuilder("h");
-            $dql->where('h.currentid != h.newid AND h.newid=:id');
-            $dql->orderBy('h.changedate','ASC');
-            $dql->setParameter('id',$entity->getOid());
-            $forwardhistory = $dql->getQuery()->getResult();
-
-//            foreach( $backhistory as $hist ) {
-//                //echo "backhistory=".$hist->getRoles()."<br>";
-//                foreach( $hist->getRoles() as $role ) {
-//                    echo "Role=".$role."<br>";
-//                }
-//            }
+//            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+//
+//            $dql = $repository->createQueryBuilder("h");
+//            $dql->where('h.currentid=:id');
+//            $dql->orderBy('h.changedate','ASC');
+//            $dql->setParameter('id',$entity->getOid());
+//            $history = $dql->getQuery()->getResult();
 
             //get all histories to get the chain to the most recent order id (we can have only 1 forwardhistory)
-            if( count($forwardhistory) > 0 ) {
-                $allhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($forwardhistory[0]->getCurrentid(),array('changedate' => 'DESC'));
-            }
+//            if( count($forwardhistory) > 0 ) {
+//                $allhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($forwardhistory[0]->getCurrentid(),array('changedate' => 'DESC'));
+//            }
 
         }
 
@@ -656,9 +650,9 @@ class MultyScanOrderController extends Controller {
             'form' => $form->createView(),
             'type' => $type,    //form cicle: new, show, amend ...
             'formtype' => $entity->getType(),
-            'backhistory' => $backhistory,
-            'forwardhistory' => $forwardhistory,
-            'allhistory' => $allhistory
+            'history' => $history,
+            //'forwardhistory' => $forwardhistory,
+            //'allhistory' => $allhistory
         );
     }
 

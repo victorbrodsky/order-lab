@@ -40,20 +40,6 @@
         <tbody>
         {% for entity in entities %}
 
-            {#{% if entity.currentstatus == entity.newstatus or entity.newstatus == '' %}#}
-                {#{% set type = 'Comment Added' %}#}
-            {#{% else %}#}
-                {#{% set type = 'Status Changed' %}#}
-            {#{% endif %}#}
-
-            {#{% if entity.currentstatus == 'Submitted' %}#}
-                {#{% set type = 'Initial Order Submission' %}#}
-            {#{% endif %}#}
-
-            {#{% if entity.currentstatus == 'Not Submitted' %}#}
-                {#{% set type = 'Auto-Saved Draft' %}#}
-            {#{% endif %}#}
-
             <tr>
                 {#<td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
                 {#<td>{{ entity.currentid }}</td>#}
@@ -68,8 +54,7 @@
                     {{ entity.eventtype }}
                 </td>
                 <td>
-                    <p>{{ entity.newstatus }}</p>
-                    {#{{ entity.currentstatus }}#}
+                    <p>{{ entity.currentstatus }}</p>
                 </td>
                 <td>
                     {{ entity.provider }}
