@@ -143,10 +143,10 @@ class ScanOrderController extends Controller {
                 case "All Filled":
                     $criteriastr .= " status.name LIKE '%Filled%'";
                     break;
-                case "All Filled and Returned":
+                case "All Filled & Returned":
                     $criteriastr .= " status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
                     break;
-                case "All Filled and Not Returned":
+                case "All Filled & Not Returned":
                     $criteriastr .= " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
                     break;
                 case "All Not Filled":
@@ -447,18 +447,19 @@ class ScanOrderController extends Controller {
             $statuses = $dql->getQuery()->getResult();
         }
 
-        //add special cases
+        //add special cases statuses
         $specials = array(
             "All" => "All Statuses",
-            "All Filled" => "All Filled",
-            "All Filled and Returned" => "All Filled and Returned",
-            "All Filled and Not Returned" => "All Filled and Not Returned",
             "All Not Filled" => "All Not Filled",
             "All On Hold" => "All On Hold",
-            "With Comments" => "With Comments",
-            "With New Comments" => "With New Comments",
-            "All Submitted & Amended" => "All Submitted & Amended",
             "All Stat" => "All Stat",
+            //All Canceled here
+            "All Submitted & Amended" => "All Submitted & Amended",
+            "All Filled" => "All Filled",
+            "All Filled & Not Returned" => "All Filled & Not Returned",
+            "All Filled & Returned" => "All Filled & Returned",
+            "With New Comments" => "With New Comments",
+            "With Comments" => "With Comments",
             "Stat & Not Filled" => "Stat & Not Filled",
             "Stat & Filled" => "Stat & Filled"
         );
@@ -466,15 +467,15 @@ class ScanOrderController extends Controller {
         $filterType = array();
         foreach( $specials as $key => $value ) {
             $filterType[$key] = $value;
+            if( $value == "All Stat" ) {
+                $filterType["All Canceled"] = "All Canceled";   //add after Not Submitted
+            }
         }
 
-        //add statuses
+        //add statuses from DB
         foreach( $statuses as $status ) {
             //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
             $filterType[$status->getId()] = $status->getName();
-            if( $status->getName() == "Not Submitted" ) {
-                $filterType["All Canceled"] = "All Canceled";
-            }
         }
 
         return $filterType;

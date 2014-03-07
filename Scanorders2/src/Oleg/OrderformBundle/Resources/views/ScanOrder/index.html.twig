@@ -89,20 +89,76 @@
         {% for entitycomplex in pagination  %}
 
             {% set entity = entitycomplex|first %}
+            {% set trclassname = "" %}
+            {% set statAndNotFilled = false  %}
+            {% set Filled = "Filled" in entity.status.name %}
 
-            {% if entity.status.name == 'Submitted' or entity.status.name == 'Amended' %}
-                <tr class="activetr" >
-            {% elseif entity.status.action == 'Cancel' or entity.status.name == 'Superseded' %}
-                <tr class="canceltr" >
-            {% elseif entity.status.name == 'Filled: Scanned' %}
-                <tr class="completedtr" >
-            {% elseif entity.status.name == 'Not Submitted' %}
-                <tr class="uncompletedtr" >
-            {% else %}
-                <tr>
+            {% if Filled == false and entity.priority == "Stat" %}
+                {% set statAndNotFilled = true  %}
             {% endif %}
-                 
-            {% if routename == 'index' %}        
+
+            {% if routename == 'index' %}   <!-- index -->
+
+                {% if entity.status.name == 'Submitted' or entity.status.name == 'Amended'
+                        or entity.status.name == 'On Hold: Slides Received'
+                        or entity.status.name == 'Canceled by Submitter'
+                %}
+
+                    {#No attention required#}
+
+                {% elseif entity.status.name == 'Filled: Scanned' or entity.status.name == 'Filled: Scanned & Returned' %}
+
+                    {#No attention required - plain completed order#}
+                    {% set trclassname = "order-neutral-status" %}
+
+                {% elseif entity.status.action == 'Canceled by Processor' or entity.status.name == 'Filled: Not Scanned' or entity.status.name == 'Filled: Not Scanned & Returned' %}
+
+                    {#urgent attention required#}
+                    {% set trclassname = "order-urgent-status" %}
+
+                {% elseif entity.status.action == 'Not Submitted' or entity.status.name == 'Filled: Some Scanned'
+                    or entity.status.name == 'Filled: Some Scanned & Returned' or entity.status.name == 'On Hold: Awaiting Slides'
+                %}
+
+                    {#some attention required#}
+                    {% set trclassname = "order-someattention-status" %}
+
+                {% endif %}
+
+            {% else %}  <!-- adminindex -->
+
+                {% if entity.status.name == 'Submitted' %}
+
+                    {#No attention required#}
+
+                {% elseif entity.status.name == 'Filled: Scanned' or entity.status.name == 'Filled: Scanned & Returned'
+                    or entity.status.name == 'Filled: Some Scanned' or entity.status.name == 'Filled: Some Scanned & Returned'
+                    or entity.status.name == 'Canceled by Processor' or entity.status.name == 'Filled: Not Scanned'
+                    or entity.status.name == 'Filled: Not Scanned & Returned' or entity.status.name == 'Not Submitted'
+                %}
+
+                    {#No attention required - plain completed order#}
+                    {% set trclassname = "order-neutral-status" %}
+
+                {% elseif entity.status.action == 'Amended' or entity.status.name == 'Canceled by Submitter' or statAndNotFilled %}
+
+                    {#urgent attention required#}
+                    {% set trclassname = "order-urgent-status" %}
+
+                {% elseif entity.status.action == 'On Hold: Awaiting Slides' or entity.status.name == 'On Hold: Slides Received' %}
+
+                    {#some attention required#}
+                    {% set trclassname = "order-someattention-status" %}
+
+                {% endif %}
+
+            {% endif %}
+
+            {% set trclassname = "" %}
+
+            <tr class="{{ trclassname }}" >
+
+            {% if routename == 'index' %}
                     
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>{{ entity.status }}</td>

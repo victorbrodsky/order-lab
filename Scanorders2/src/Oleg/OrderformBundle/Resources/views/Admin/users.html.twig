@@ -7,15 +7,17 @@
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'User', 'user.username') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Name', 'user.displayName') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Title', 'user.title') }}</th>
-            <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Phone', 'user.phone') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
+            <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Phone Number', 'user.phone') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.locked') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Roles', 'user.roles') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Service / Division', 'pathologyServices.name') }}</th>
+
+
             <th>Actions</th>
         </tr>
         </thead>
@@ -23,19 +25,16 @@
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.username }}</td>
-                <td>{{ entity.displayName }}</td>
-                <td>{{ entity.email }}</td>
-                <td>{{ entity.title }}</td>
-                <td>{{ entity.phone }}</td>
-                <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
                 <td>
-                    {% if entity.locked == 1 %}
-                        true
-                    {% else %}
-                        false
-                    {% endif %}
+                    {% for pathologyServices in entity.pathologyServices %}
+                        "{{ pathologyServices }}"<br>
+                    {% endfor %}
                 </td>
+                <td>{{ entity.displayName }}</td>
+                <td>{{ entity.title }}</td>
+                <td>{{ entity.username }}</td>
+                <td>{{ entity.email }}</td>
+                <td>{{ entity.phone }}</td>
                 <td>
                     {% for role in entity.roles %}
                         {% if role != "ROLE_USER" %}
@@ -43,10 +42,13 @@
                         {% endif %}
                     {% endfor %}
                 </td>
+                <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
                 <td>
-                    {% for pathologyServices in entity.pathologyServices %}
-                        "{{ pathologyServices }}"<br>
-                    {% endfor %}
+                    {% if entity.locked == 1 %}
+                        true
+                    {% else %}
+                        false
+                    {% endif %}
                 </td>
 
                 <td class="rowlink-skip">

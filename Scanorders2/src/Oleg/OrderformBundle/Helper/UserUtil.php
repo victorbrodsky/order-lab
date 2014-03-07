@@ -196,7 +196,7 @@ class UserUtil {
         $username = null;
         $roles = null;
 
-        if( !array_key_exists('serverresponse', $options) || !$options['serverresponse']) {
+        if( !array_key_exists('serverresponse', $options) ) {
             //$options['serverresponse'] = null;
             $options['serverresponse'] = http_response_code();
         }

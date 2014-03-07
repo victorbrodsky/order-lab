@@ -28,7 +28,7 @@
 
             {###############  USER ACTIONS #################}
             {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and not Filled %}
-                <li><a onclick="return confirm('Are you sure?');" class="btn-danger"
+                <li><a onclick="return confirm('Are you sure?');" class="action-cancel-status"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Cancel' }) }}">Cancel</a>
                 </li>                  
             {% endif %}
@@ -42,7 +42,7 @@
             {% endif %}
 
             {% if entity.status != 'Not Submitted' and entity.status != 'Superseded' and entity.status.action != 'Cancel' and not Filled %}
-                <li><a onclick="return confirm('Are you sure?');" class="btn-warning"
+                <li><a onclick="return confirm('Are you sure?');" class="action-amend-status"
                        href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
                 </li>
             {% endif %}

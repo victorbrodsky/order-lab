@@ -13,15 +13,16 @@
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'Account Request ID', 'accreq.id') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Date', 'accreq.creationdate') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Status', 'accreq.status') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Request Status', 'accreq.status') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'CWID', 'accreq.cwid') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Has CWID', 'accreq.cwid') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'accreq.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Job', 'accreq.job') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Organization', 'accreq.organization') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Service / Division', 'pathologyServices.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
@@ -33,13 +34,13 @@
         {% for entity in entities %}
             
             {% if entity.status == 'active' %}
-                <tr class="activetr" >
+                <tr class="order-urgent-status" >
             {% elseif entity.status == 'declined' %}
-                <tr class="canceltr" >
+                <tr class="order-neutral-status" >
             {% elseif entity.status == 'accepted' %}
-                <tr class="completedtr" >
+                <tr>
             {% elseif entity.status == 'uncompleted' %}
-                <tr class="uncompletedtr" >
+                <tr class="order-someattention-status" >
             {% else %}
                 <tr>
             {% endif %}
@@ -48,6 +49,7 @@
                 <td>{{ entity.creationdate|date('m/d/Y H:i') }}</td>
                 <td>{{ entity.status }}</td>
                 <td>{{ entity.cwid }}</td>
+                <td>{{ entity.hascwid }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.phone }}</td>
@@ -61,9 +63,10 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <textarea readonly class="textarea form-control">
-                        {{- entity.request }}
-                    </textarea>
+                    {#<textarea readonly class="textarea form-control">#}
+                        {#{{- entity.request }}#}
+                    {#</textarea>#}
+                    {{ entity.request }}
                 </td>
                 <td>{{ entity.referencename }}</td>
                 <td>{{ entity.referenceemail }}</td>
@@ -94,7 +97,7 @@
                                 </li>                  
                             {% endif %}
 
-                            {% if entity.status != 'completed' %}
+                            {% if entity.status != 'accepted' %}
                                 <li><a onclick="return confirm('Are you sure?');" 
                                        href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'accepted' }) }}">Accept</a>
                                 </li>                  

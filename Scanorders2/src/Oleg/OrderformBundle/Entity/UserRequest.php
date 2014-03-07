@@ -29,6 +29,11 @@ class UserRequest
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $hascwid;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $name;
     
     /**
@@ -62,10 +67,12 @@ class UserRequest
      */
     protected $request;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $pathologyService;
+    /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinColumn(name="similaruser_id", referencedColumnName="id")
+     */
+    protected $similaruser;
+
     /**
      * @ORM\ManyToMany(targetEntity="PathServiceList")
      * @ORM\JoinTable(name="accountrequest_pathservice",
@@ -370,6 +377,37 @@ class UserRequest
         return $this->referencephone;
     }
 
+    /**
+     * @param mixed $similaruser
+     */
+    public function setSimilaruser($similaruser)
+    {
+        $this->similaruser = $similaruser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSimilaruser()
+    {
+        return $this->similaruser;
+    }
+
+    /**
+     * @param mixed $hascwid
+     */
+    public function setHascwid($hascwid)
+    {
+        $this->hascwid = $hascwid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHascwid()
+    {
+        return $this->hascwid;
+    }
 
 
 }

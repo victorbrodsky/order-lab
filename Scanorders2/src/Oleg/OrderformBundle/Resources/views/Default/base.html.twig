@@ -31,9 +31,6 @@
     {#'bundles/olegorderform/form/css/form.css'#}
     {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
 
-    {#'bundles/olegorderform/form/css/spinner.css' filter='cssrewrite'#}
-    {#'bundles/olegorderform/font-awesome/css/font-awesome.css' filter='cssrewrite'#}
-
     {#jasny is used for clickable rows#}
     {% stylesheets
         'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
@@ -42,6 +39,7 @@
         'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
         'bundles/olegorderform/ladda/ladda-themeless.css' filter='cssrewrite'
         'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
+        'bundles/olegorderform/form/css/action.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}

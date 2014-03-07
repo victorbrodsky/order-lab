@@ -442,6 +442,9 @@ function getComboboxPathService(urlCommon,ids) {
 
     if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" ) {
         var optStr = user_id;
+        if( !optStr || typeof optStr === 'undefined' ) {
+            optStr = "default";
+        }
         url = url + "?opt=" + optStr;
     }
 
@@ -459,34 +462,17 @@ function getComboboxPathService(urlCommon,ids) {
             async: asyncflag
         }).success(function(data) {
             pathservice = data;
-            populateSelectCombobox( targetid, pathservice, "Pathology Service", multiple );
+            populateSelectCombobox( targetid, pathservice, "Departmental Division(s) / Service(s)", multiple );
         });
     } else {
-        populateSelectCombobox( targetid, pathservice, "Pathology Service", multiple );
+        populateSelectCombobox( targetid, pathservice, "Departmental Division(s) / Service(s)", multiple );
     }
 
-//    //******************* user pathology service *************************//
-//    //var targetid = ".ajax-combobox-pathservice";    //"#oleg_orderformbundle_user_pathologyServices";
-//    populateSelectCombobox( targetid, pathservice, "Pathology Service" );
-//
-//    //console.log("userpathservice.length="+userpathservice.length);
-//    if( userpathservice.length == 0 && !userpathserviceflag ) {
-//        $.ajax({
-//            url: urlCommon+"userpathservice",
-//            type: 'POST',
-//            data: {username: user_name},
-//            dataType: 'json',
-//            async: asyncflag,
-//            success: function(data) {
-//                userpathserviceflag = true;
-//                userpathservice = data;
-//            }
-//        });
-//    }
-//
-//    if( cicle == "new" ) {
-//        $(targetid).select2('data', userpathservice);
-//    }
+//    $(targetid).select2("container").find("ul.select2-choices").sortable({
+//        containment: 'parent',
+//        start: function() { $(targetid).select2("onSortStart"); },
+//        update: function() { $(targetid).select2("onSortEnd"); }
+//    });
 
 }
 

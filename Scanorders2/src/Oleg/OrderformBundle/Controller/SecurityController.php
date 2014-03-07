@@ -166,6 +166,7 @@ class SecurityController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userUtil = new UserUtil();
         $options['event'] = "Login Page Visit";
+        $options['serverresponse'] = "";
         $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
 
         $response = new Response();

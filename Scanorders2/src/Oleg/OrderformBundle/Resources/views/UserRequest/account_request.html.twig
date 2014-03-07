@@ -52,21 +52,23 @@
                         <b>Do you (the requester) have a <a href="javascript:;" onclick="window.open('http://weill.cornell.edu/its/identity-security/identity/cwid/');return false;">CWID</a> username?</b>
                     </div>
                     <div class="col-xs-6" align="left">
-                        {{ form_widget(form.cwidyesno) }}
+                        {{ form_widget(form.hascwid) }}
                     </div>
                 </div>
             </p>
 
-            <p>
-                <div class="row">
-                    <div class="col-xs-6" align="right">
-                        {{ form_label(form.cwid) }}
-                    </div>
-                    <div class="col-xs-6" align="left">
-                        {{ form_widget(form.cwid) }}
-                    </div>
-                </div>
-            </p>
+            {#<p>#}
+                {#<div class="row">#}
+                    {#<div class="col-xs-6" align="right">#}
+                        {#{{ form_label(form.cwid) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-6" align="left">#}
+                        {#{{ form_widget(form.cwid) }}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</p>#}
+
+            {{ myform.field(form.cwid) }}
 
             {{ myform.field(form.name) }}
             {{ myform.field(form.email) }}
@@ -76,6 +78,18 @@
             {{ myform.field(form.department) }}
             {{ myform.field(form.pathologyServices) }}
             {{ myform.field(form.request) }}
+            {{ myform.field(form.similaruser) }}
+
+            <p style="padding-top:3px;">
+            <div class="row">
+                <div class="col-xs-6" align="right">
+
+                </div>
+                <div class="col-xs-6" align="left">
+                    For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below:
+                </div>
+            </div>
+            </p>
 
             {{ myform.field(form.referencename) }}
             {{ myform.field(form.referenceemail) }}
@@ -125,6 +139,7 @@
         '@OlegOrderformBundle/Resources/public/form/js/masking.js'
         '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
         '@OlegOrderformBundle/Resources/public/form/js/form.js'
+        '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -137,11 +152,18 @@
             fieldInputMask();
             expandTextarea();
 
+            $("select.combobox").select2({
+                width: combobox_width,
+                dropdownAutoWidth: true,
+                placeholder: "Choose a similar user",
+                allowClear: true
+            });
+
             $('.element-with-tooltip').tooltip();
 
-            $(".cwidyesno").find('input:radio').on('change', function(){
+            $(".hascwid").find('input:radio').on('change', function(){
                 var checkedValue = $(this).val();
-                console.log("checkedValue="+checkedValue);
+                //console.log("checkedValue="+checkedValue);
 
                 if( checkedValue == "Yes" ) {
                     $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', false);

@@ -49,7 +49,7 @@ class UserType extends AbstractType
         }
 
         $builder->add('username', null, array(
-            'label' => 'Username:',
+            'label' => 'User Name:',
             'read_only' => $read_only,
             'attr' => array('class'=>'form-control form-control-modif')
         ));
@@ -74,7 +74,7 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('phone', null, array(
-            'label' => 'Phone:',
+            'label' => 'Phone Number:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('fax', null, array(
@@ -103,7 +103,7 @@ class UserType extends AbstractType
 
             $builder->add('roles', 'choice', array(
                 'choices' => $this->roles,
-                'label' => 'Roles:',
+                'label' => 'Role(s):',
                 'attr'=>$attr,
                 'multiple'  => true,
             ));

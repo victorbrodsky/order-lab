@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -19,6 +20,17 @@ class UserRequestType extends AbstractType
                 'max_length'=>'10',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
+        ));
+
+        //hascwid
+        $builder->add( 'hascwid', 'choice', array(
+            'label'=>'Do you (the requester) have a CWID username?',
+            //'max_length'=>20,
+            //'required'=>false,
+            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type hascwid')
         ));
         
         $builder->add( 'name', 'text', array(
@@ -74,7 +86,7 @@ class UserRequestType extends AbstractType
 //        ));
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
         $builder->add('pathologyServices', 'custom_selector', array(
-            'label' => 'Pathology Service(s):',
+            'label' => 'Departmental Division(s) / Service(s):',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'userPathologyServices'
@@ -86,21 +98,36 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'textarea form-control form-control-modif'),
         ));
 
+        $attr = array('class' => 'combobox combobox-width ');
+        $builder->add('similaruser', 'entity', array(
+            'class' => 'OlegOrderformBundle:User',
+            'label'=>'Access permissions similar to:',
+            'required' => false,
+            //'multiple' => true,
+            'attr' => $attr,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->where('u.username <> :username')
+                    ->setParameter('username', 'system');
+            },
+        ));
+
         $builder->add('creationdate');
 
-        $builder->add("cwidyesno", "choice", array(
-            'mapped' => false,
-            'multiple' => false,
-            'expanded' => true,
-            'label' => false,
-            'choices' => array("Yes"=>"Yes", "No"=>"No"),
-            'attr' => array('class' => 'horizontal_type cwidyesno')
-        ));
+//        $builder->add("cwidyesno", "choice", array(
+//            'mapped' => false,
+//            'multiple' => false,
+//            'expanded' => true,
+//            'label' => false,
+//            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+//            'attr' => array('class' => 'horizontal_type cwidyesno')
+//        ));
 
         $builder->add( 'referencename', 'text', array(
             'label'=>'Reference Name:',
             'required'=> false,
-            'attr' => array('class'=>'form-control form-control-modif element-with-tooltip', 'data-toggle'=>'tooltip', 'title' => 'name of your supervisor or of the person who can confirm the validity of your request'),
+//            'attr' => array('class'=>'form-control form-control-modif element-with-tooltip', 'data-toggle'=>'tooltip', 'title' => 'name of your supervisor or of the person who can confirm the validity of your request'),
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
         $builder->add( 'referenceemail', 'text', array(

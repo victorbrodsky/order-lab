@@ -15,18 +15,18 @@
                 <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Server Response', 'logger.serverresponse') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'logger.event') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>
                 {#<th>Actions</th>#}
             </tr>
         </thead>
         <tbody>
         {% for entity in pagination %}
 
-            {% if 'Successful Login' in entity.event %}
-                <tr class="canceltr" >
+            {% if entity.event == 'Bad Credentials' %}
+                <tr class="order-someattention-status">
             {% else %}
-                <tr class="activetr" >
+                <tr>
             {% endif %}
 
                 <td>{{ entity.id }}</td>

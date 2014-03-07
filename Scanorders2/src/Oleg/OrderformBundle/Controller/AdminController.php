@@ -438,10 +438,11 @@ class AdminController extends Controller
         }
 
         $statuses = array(
-            "Submitted", "Not Submitted", "Canceled by Submitter", "Canceled by Processor", "Amended", "Superseded",
-            "On Hold: Slides Received", "On Hold: Awaiting Slides",
-            "Filled: Scanned", "Filled: Not Scanned", "Filled: Some Scanned", "Filled: Scanned & Returned",
-            "Filled: Not Scanned & Returned", "Filled: Some Scanned & Returned",
+            "Not Submitted", "Submitted", "Amended",
+            "Superseded", "Canceled by Submitter", "Canceled by Processor",
+            "On Hold: Awaiting Slides", "On Hold: Slides Received",
+            "Filled: Scanned", "Filled: Some Scanned", "Filled: Not Scanned",
+            "Filled: Scanned & Returned", "Filled: Some Scanned & Returned", "Filled: Not Scanned & Returned"
         );
 
         $count = 1;
@@ -454,13 +455,17 @@ class AdminController extends Controller
             switch( $statusStr )
             {
 
+                case "Not Submitted":
+                    $status->setName("Not Submitted");
+                    $status->setAction("On Hold");
+                    break;
                 case "Submitted":
                     $status->setName("Submitted");
                     $status->setAction("Submit");
                     break;
-                case "Not Submitted":
-                    $status->setName("Not Submitted");
-                    $status->setAction("On Hold");
+                case "Amended":
+                    $status->setName("Amended");
+                    $status->setAction("Amend");
                     break;
                 case "Canceled by Submitter":
                     $status->setName("Canceled by Submitter");
@@ -470,10 +475,7 @@ class AdminController extends Controller
                     $status->setName("Canceled by Processor");
                     $status->setAction("Cancel");
                     break;
-                case "Amended":
-                    $status->setName("Amended");
-                    $status->setAction("Amend");
-                    break;
+
                 case "Superseded":
                     $status->setName("Superseded");
                     $status->setAction("Supersede");

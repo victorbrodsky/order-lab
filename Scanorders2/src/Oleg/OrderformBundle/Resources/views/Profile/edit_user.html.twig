@@ -37,7 +37,21 @@
 
     {% if is_granted('ROLE_ADMIN') %}
         {% if app.security.getToken().getUser().getId() != entity.id %}
-            {{ formmacros.field(form.locked) }}
+
+            {#{{ formmacros.field(form.locked) }}#}
+            {#{{ form_widget(form.locked) }}#}
+            {#{% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
+            <p>
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    {{ form_label(form.locked) }}
+                </div>
+                <div class="col-xs-6" align="left" style="width: auto;">
+                    {{ form_widget(form.locked) }}
+                </div>
+            </div>
+            </p>
+
         {% else %}
             {% do form.locked.setRendered %}
         {% endif %}
@@ -68,7 +82,7 @@
     {% if is_granted('ROLE_ADMIN') %}
         <br>
         <p>
-            <a href="{{ path('listusers') }}">All Users</a>
+            <a href="{{ path('listusers') }}">View the list of all users</a>
         </p>
     {% endif %}
 
