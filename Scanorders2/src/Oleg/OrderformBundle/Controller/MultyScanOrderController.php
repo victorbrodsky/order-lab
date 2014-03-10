@@ -629,19 +629,28 @@ class MultyScanOrderController extends Controller {
         //$forwardhistory = null;
 
         if( $routeName == "multy_show") {
+
             $history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'ASC') );
 
-//            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-//
-//            $dql = $repository->createQueryBuilder("h");
-//            $dql->where('h.currentid=:id');
-//            $dql->orderBy('h.changedate','ASC');
-//            $dql->setParameter('id',$entity->getOid());
-//            $history = $dql->getQuery()->getResult();
+            //$forwardhistory = $em->getRepository('OlegOrderformBundle:History')->findByOrderinfo( $entity, array('changedate' => 'ASC') ); //superseded history
 
-            //get all histories to get the chain to the most recent order id (we can have only 1 forwardhistory)
-//            if( count($forwardhistory) > 0 ) {
-//                $allhistory = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($forwardhistory[0]->getCurrentid(),array('changedate' => 'DESC'));
+            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+
+            $dql = $repository->createQueryBuilder("h");
+            $dql->innerJoin("h.orderinfo", "orderinfo");
+            $dql->where('orderinfo.oid=:id');
+            $dql->orderBy('h.changedate','ASC');
+            $dql->setParameter('id',$entity->getId());
+            $forwardhistory = $dql->getQuery()->getResult();
+
+//            echo "oid=".$entity->getOid().", history count = ".count($history)."<br>";
+//            foreach( $history as $hist ) {
+//                echo "oid=".$hist->getOrderinfo()->getOid().", id=".$hist->getOrderinfo()->getId().", curid=".$hist->getCurrentid().", event=".$hist->getEventtype()."<br>";
+//            }
+//
+//            echo "forwardhistory count = ".count($forwardhistory)."<br>";
+//            foreach( $forwardhistory as $hist ) {
+//                echo "oid=".$hist->getOrderinfo()->getOid().", id=".$hist->getOrderinfo()->getId().", curid=".$hist->getCurrentid().", event=".$hist->getEventtype()."<br>";
 //            }
 
         }
@@ -651,8 +660,7 @@ class MultyScanOrderController extends Controller {
             'type' => $type,    //form cicle: new, show, amend ...
             'formtype' => $entity->getType(),
             'history' => $history,
-            //'forwardhistory' => $forwardhistory,
-            //'allhistory' => $allhistory
+            'forwardhistory' => $forwardhistory
         );
     }
 

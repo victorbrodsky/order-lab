@@ -209,25 +209,86 @@
 
 {% endmacro %}
 
+
+
 {#history info#}
-{% macro history_info(histories, status, oid) %}
+{% macro history_info(histories, forwardhistory, form) %}
     <div class="well well-sm">
         <p>
-            This Order has been {{ status|lower }} on
+            This Order has been {{ form.vars.value.status.name|lower }} on
             {{ histories|last.changedate|date('Y-m-d @H:i') }}
             by
             {{ histories|last.provider }} {#(ROLES: {{ histories|last.roles|join(', ') }}).#}
         </p>
-        {% if histories|length > 1 %}
-            {% for history in histories %}
-                {% if oid != history.currentid %}
-                    <p>
-                        The previous version of the order has been saved as
-                        <a href="{{ path('multy_show',{'id':history.currentid}) }}">Order ID {{ history.currentid }}</a> on {{ history.changedate|date('Y-m-d @H:i') }}.
-                    </p>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+
+        {% for history in histories %}
+            {% if history.orderinfo.id != history.currentid and history.changedate > histories|last.changedate %}
+                <p>
+                    This Order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
+                    <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                    on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.
+                </p>
+            {% endif %}
+        {% endfor %}
+
+        {% for history in forwardhistory %}
+            {% if history.orderinfo.id < history.currentid %}
+                <p>
+                    {#This Order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by#}
+                    The latest version of this order is <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>.
+                    {#on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.#}
+                </p>
+            {% endif %}
+            {% if history.orderinfo.id > history.currentid and history.changedate > histories|last.changedate %}
+                <p>
+                    Older version of this order:
+                    <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                    {{ form.vars.value.status.name|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}
+                </p>
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+{% endmacro %}
+
+{#history info for canceled or amended orders#}
+{% macro forwardhistory_info(histories, form) %}
+    {% set count = 1  %}
+    <div class="well well-sm">
+        {% for history in histories %}
+            cid:{{ history.currentid }} id:{{ history.orderinfo.id }}
+            {% if history.orderinfo.id < history.currentid %}
+                <p>
+                    This Order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
+                    <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                    on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.
+                </p>
+            {% endif %}
+            {% if history.orderinfo.id > history.currentid %}
+                <p>
+                    Older version of this order:
+                    <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                    {{ form.vars.value.status.name|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}
+                </p>
+            {% endif %}
+
+        {% endfor %}
+
+        {#{% if histories|length > 1 %}#}
+            {#<p>#}
+                {#{% for history in histories %}#}
+                    {#{% if  history.currentid > history.orderinfo.oid %}#}
+                        {#<p>#}
+                            {#Older version of this order:#}
+                            {#<a href="{{ path('multy_show',{'id':history.currentid}) }}">Order ID {{ history.currentid }}</a>#}
+                            {#{{ form.vars.value.status.name|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}#}
+                        {#</p>#}
+                    {#{% endif %}#}
+                    {#{% set count = count + 1 %}#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
     </div>
 {% endmacro %}
 
@@ -253,34 +314,7 @@
     </div>
 {% endmacro %}
 
-{#history info for canceled or amended orders#}
-{% macro forwardhistory_info(histories, allhistories, status, oid) %}
-    {% set count = 1  %}
-    <div class="well well-sm">
-        {% for history in histories %}
-            <p>
-            This Order is the older archived version of and has been {{ status|lower }} by
-            <a href="{{ path('multy_show',{'id':history.currentid}) }}">Order ID {{ history.currentid }}</a>
-            on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.
-            </p>
-        {% endfor %}
 
-        {#{% if histories|length > 1 %}#}
-            <p>
-                {% for history in allhistories %}
-                    {% if history.newid != history.currentid and oid != history.newid %}
-                        <p>
-                            Older version of this order:
-                            <a href="{{ path('multy_show',{'id':history.newid}) }}">Order ID {{ history.newid }}</a>
-                            {{ status|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}
-                        </p>
-                    {% endif %}
-                    {% set count = count + 1 %}
-                {% endfor %}
-            </p>
-        {#{% endif %}#}
-    </div>
-{% endmacro %}
 
 
 {#disease type form#}

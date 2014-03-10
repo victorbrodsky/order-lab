@@ -259,7 +259,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //record history
         $history = new History();
-        $history->setEventtype('Initial Order Submission');
+
+        if( $originalStatus == 'Amended' ) {
+            $history->setEventtype('Amended Order Submission');
+        } else {
+            $history->setEventtype('Initial Order Submission');
+        }
+
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());

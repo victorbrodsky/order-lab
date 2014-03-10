@@ -41,162 +41,156 @@ class OrderUtil {
             $statusSearch = $status;
         }
 
-//        echo "status=".$status."<br>";
+        //echo "status=".$status."<br>";
         $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction($statusSearch);
-//        echo "status_entity=".$status_entity->getName()."<br>";
-//        //exit();
+        //echo "status_entity=".$status_entity->getName()."<br>";
+        //exit();
 
-        if( $status_entity ) {
+        if( $status_entity == null ) {
+            throw new \Exception( 'Unable to find status for status=' . $statusSearch );
+        }
+
+        //record history
+        $history = new History();
+        $history->setEventtype('Status Changed');
+        $history->setOrderinfo($entity);
+        $history->setCurrentid($entity->getOid());
+        $history->setCurrentstatus($entity->getStatus());
+        $history->setProvider($user);
+        $history->setRoles($user->getRoles());
+
+        //change status for all orderinfo children to "deleted-by-canceled-order"
+        //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
+        //AND there are no fields that belong to this object that were added by another order
+        if( $status == 'Cancel' ) {
+
+            //exit('case Cancel');
+
+            $fieldStatusStr = "deleted-by-canceled-order";
+
+            if( $entity->getProvider() == $user || $user->hasRole("ROLE_ORDERING_PROVIDER") || $user->hasRole("ROLE_EXTERNAL_ORDERING_PROVIDER") ) {
+                $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+            } else
+            if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_PROCESSOR") ) {
+                $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
+            } else {
+                $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+            }
+
+            if( $status_entity == null ) {
+                throw new \Exception( 'Unable to find status for canceled order' );
+            }
+
+            $entity->setStatus($status_entity);
+            $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
 
             //record history
-            $history = new History();
-            $history->setEventtype('Status Changed');
-            $history->setOrderinfo($entity);
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
-            $history->setProvider($user);
-            $history->setRoles($user->getRoles());
 
-            //change status for all orderinfo children to "deleted-by-canceled-order"
-            //IF their source is ="scanorder" AND there are no child objects with status == 'valid'
-            //AND there are no fields that belong to this object that were added by another order
-            if( $status == 'Cancel' ) {
+            $em->persist($entity);
+            $em->persist($history);
+            $em->flush();
+            $em->clear();
 
-                $fieldStatusStr = "deleted-by-canceled-order";
+        } else if( $status == 'Supersede' ) {
 
-                if( $entity->getProvider() == $user || $user->hasRole("ROLE_ORDERING_PROVIDER") || $user->hasRole("ROLE_EXTERNAL_ORDERING_PROVIDER") ) {
-                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
-                } else
-                if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_PROCESSOR") ) {
-                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
-                } else {
-                    $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+            //exit('case Supersede');
+
+            //$status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Superseded");
+            $fieldStatusStr = "deleted-by-amended-order";
+            $entity->setStatus($status_entity);
+            $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
+            $entity->setOid($swapId);
+            //$entity->setCicle("superseded");
+
+            //record history
+            $history->setCurrentid($entity->getOid());
+            $history->setCurrentstatus($entity->getStatus());
+
+            $em->persist($entity);
+            $em->persist($history);
+            $em->flush();
+            //$em->clear();
+
+        } else if( $status == 'Un-Cancel' || $status == 'Submit' ) {  //this is un-cancel action
+
+            //exit('case Un-Cancel or Submit');
+
+            //1) clone orderinfo object
+            //2) validate MRN-Accession
+            //3) change status to 'valid' and 'submit'
+
+//            echo "<br><br>newOrderinfo Patient's count=".count($entity->getPatient())."<br>";
+//            echo $entity;
+//            foreach( $entity->getPatient() as $patient ) {
+//                echo "<br>--------------------------<br>";
+//                $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
+//                echo "--------------------------<br>";
+//            }
+            //exit();
+
+            //VALIDATION Accession-MRN
+            $conflict = false;
+            foreach( $entity->getAccession() as $accession ) {
+                $patient = $accession->getParent()->getParent();
+
+                $patientKey = $patient->obtainValidKeyField();
+                if( !$patientKey ) {
+                    throw new \Exception( 'Object does not have a valid key field. Object: '.$patient );
                 }
 
-                if( $status_entity == null ) {
-                    throw new \Exception( 'Unable to find status' );
+                $accessionKey = $accession->obtainValidKeyField();
+                if( !$accessionKey ) {
+                    throw new \Exception( 'Object does not have a valid key field. Object: '.$accession );
                 }
 
-                $entity->setStatus($status_entity);
-                $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
+                //echo "accessionKey=".$accessionKey."<br>";
+                $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionKey,"Accession","accession",true, true);
 
-                //record history
-                $history->setCurrentid($entity->getOid());
-                $history->setCurrentstatus($entity->getStatus());
+                $mrn = $patientKey; //mrn
+                $mrnTypeId = $patientKey->getKeytype()->getId();
+                //$extra = $patientKey->obtainExtraKey();
 
-                $em->persist($entity);
-                $em->persist($history);
-                $em->flush();
-                $em->clear();
+                if( $accessionDb ) {
+                    //echo "similar accession found=".$accessionDb;
+                    $patientDb = $accessionDb->getParent()->getParent();
+                    if( $patientDb ) {
+                        $mrnDb = $patientDb->obtainValidKeyField();
+                        $mrnTypeIdDb = $mrnDb->getKeytype()->getId();
 
-            } else if( $status == 'Supersede' ) {
+                        //echo $mrn . "?=". $mrnDb ." && ". $mrnTypeId . "==". $mrnTypeIdDb . "<br>";
 
-                //$status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Superseded");
-                $fieldStatusStr = "deleted-by-amended-order";
-                $entity->setStatus($status_entity);
-                $message = $this->processObjects( $entity, $status_entity, $fieldStatusStr );
-                $entity->setOid($swapId);
-                //$entity->setCicle("superseded");
-
-                //record history
-                $history->setCurrentid($entity->getOid());
-                $history->setCurrentstatus($entity->getStatus());
-
-                $em->persist($entity);
-                $em->persist($history);
-                $em->flush();
-                //$em->clear();
-
-            } else if( $status == 'Un-Cancel' ) {  //this is un-cancel action
-
-                //1) clone orderinfo object
-                //2) validate MRN-Accession
-                //3) change status to 'valid' and 'submit'
-
-//                echo "<br><br>newOrderinfo Patient's count=".count($entity->getPatient())."<br>";
-//                echo $entity;
-//                foreach( $entity->getPatient() as $patient ) {
-//                    echo "<br>--------------------------<br>";
-//                    $em->getRepository('OlegOrderformBundle:OrderInfo')->printTree( $patient );
-//                    echo "--------------------------<br>";
-//                }
-//                //exit();
-
-                //VALIDATION Accession-MRN
-                $conflict = false;
-                foreach( $entity->getAccession() as $accession ) {
-                    $patient = $accession->getParent()->getParent();
-
-                    $patientKey = $patient->obtainValidKeyField();
-                    if( !$patientKey ) {
-                        throw new \Exception( 'Object does not have a valid key field. Object: '.$patient );
-                    }
-
-                    $accessionKey = $accession->obtainValidKeyField();
-                    if( !$accessionKey ) {
-                        throw new \Exception( 'Object does not have a valid key field. Object: '.$accession );
-                    }
-
-                    //echo "accessionKey=".$accessionKey."<br>";
-                    $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionKey,"Accession","accession",true, true);
-
-                    $mrn = $patientKey; //mrn
-                    $mrnTypeId = $patientKey->getKeytype()->getId();
-                    //$extra = $patientKey->obtainExtraKey();
-
-                    if( $accessionDb ) {
-                        //echo "similar accession found=".$accessionDb;
-                        $patientDb = $accessionDb->getParent()->getParent();
-                        if( $patientDb ) {
-                            $mrnDb = $patientDb->obtainValidKeyField();
-                            $mrnTypeIdDb = $mrnDb->getKeytype()->getId();
-
-                            //echo $mrn . "?=". $mrnDb ." && ". $mrnTypeId . "==". $mrnTypeIdDb . "<br>";
-
-                            if( $mrn == $mrnDb && $mrnTypeId == $mrnTypeIdDb ) {
-                                //ok
-                                //echo "no conflict <br>";
-                            } else {
-                                //echo "there is a conflict <br>";
-                                //conflict => render the orderinfo in the amend view 'order_amend'
-                                //exit('un-canceling order. id='.$newOrderinfo->getOid());
-                                $conflict = true;
-                            }
+                        if( $mrn == $mrnDb && $mrnTypeId == $mrnTypeIdDb ) {
+                            //ok
+                            //exit("no conflict <br>");
+                        } else {
+                            //echo "there is a conflict <br>";
+                            //conflict => render the orderinfo in the amend view 'order_amend'
+                            //exit('un-canceling order. id='.$entity->getOid());
+                            $conflict = true;
                         }
                     }
-
                 }
 
-                if( $conflict ) {
+            }
 
-                    $res = array();
-                    $res['result'] = 'conflict';
-                    $res['oid'] = $entity->getOid();
+            if( $conflict ) {
 
-                    return $res;
+                //exit('conflict un-canceling order. id='.$entity->getOid());
 
-                } else {
-                     //exit("un-cancel no conflict! <br>");
-                    //if no conflict: change status without creating new order
-                    //record new history for modifying Superseded Order
-                    $entity->setStatus($status_entity);
-                    $message = $this->processObjects( $entity, $status_entity, 'valid' );
-                    $history->setCurrentid($entity->getOid());
-                    $history->setCurrentstatus($entity->getStatus());
+                $res = array();
+                $res['result'] = 'conflict';
+                $res['oid'] = $entity->getOid();
 
-                    $em->persist($entity);
-                    $em->persist($history);
-                    $em->flush();
-                    $em->clear();
-
-                }
+                return $res;
 
             } else {
-                //exit('regular xit');
-                //throw new \Exception( 'Status '.$status.' can not be processed' );
+                 //exit("un-cancel no conflict! <br>");
+                //if no conflict: change status without creating new order
+                //record new history for modifying Superseded Order
                 $entity->setStatus($status_entity);
-
-                //record history
+                $message = $this->processObjects( $entity, $status_entity, 'valid' );
                 $history->setCurrentid($entity->getOid());
                 $history->setCurrentstatus($entity->getStatus());
 
@@ -207,13 +201,26 @@ class OrderUtil {
 
             }
 
-            //$message = 'Status of Order '.$id.' has been changed to "'.$status.'"'.$message;
-            $message = 'Status of Order '.$id.' succesfully changed to "'.$status.'"';
-
         } else {
-            //$message = 'Status: "'.$status.'" is not found';
-            throw new \Exception( 'Status '.$status.' can not be processed' );
+
+            //exit('regular xit');
+
+            //throw new \Exception( 'Status '.$status.' can not be processed' );
+            $entity->setStatus($status_entity);
+
+            //record history
+            $history->setCurrentid($entity->getOid());
+            $history->setCurrentstatus($entity->getStatus());
+
+            $em->persist($entity);
+            $em->persist($history);
+            $em->flush();
+            $em->clear();
+
         }
+
+        //$message = 'Status of Order '.$id.' has been changed to "'.$status.'"'.$message;
+        $message = 'Status of Order '.$id.' succesfully changed to "'.$status.'"';
 
         $res = array();
         $res['result'] = 'ok';

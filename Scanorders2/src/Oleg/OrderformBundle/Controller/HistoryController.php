@@ -342,7 +342,8 @@ class HistoryController extends Controller
 
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
-        if( $viewcount > 0 && $orderinfo->getProvider()->first()->getId() != $user->getId()) {
+        //if( $viewcount > 0 && $orderinfo->getProvider()->first()->getId() != $user->getId()) {
+        if( 1 ) {
             //add a new record in history
             $history = new History();
             $history->setEventtype('Progress & Comments Viewed');
@@ -356,8 +357,8 @@ class HistoryController extends Controller
             //$history->setNote($text_value);
             //$history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
-            $history->setViewed($user);
-            $history->setVieweddate( new \DateTime() );
+            //$history->setViewed($user);
+            //$history->setVieweddate( new \DateTime() );
 
             $em->persist($history);
             $em->flush();
