@@ -98,18 +98,25 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'textarea form-control form-control-modif'),
         ));
 
-        $attr = array('class' => 'combobox combobox-width ');
-        $builder->add('similaruser', 'entity', array(
-            'class' => 'OlegOrderformBundle:User',
-            'label'=>'Access permissions similar to:',
+//        $attr = array('class' => 'combobox combobox-width ');
+//        $builder->add('similaruser', 'entity', array(
+//            'class' => 'OlegOrderformBundle:User',
+//            'label'=>'Access permissions similar to:',
+//            'required' => false,
+//            //'multiple' => true,
+//            'attr' => $attr,
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('u')
+//                    ->where('u.username <> :username')
+//                    ->setParameter('username', 'system');
+//            },
+//        ));
+
+        //$refLabel = "For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below.\r\nAccess permissions similar to (user name):";
+        $builder->add( 'similaruser', 'text', array(
+            'label' => "Access permissions similar to (user name):",
             'required' => false,
-            //'multiple' => true,
-            'attr' => $attr,
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->where('u.username <> :username')
-                    ->setParameter('username', 'system');
-            },
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
         $builder->add('creationdate');

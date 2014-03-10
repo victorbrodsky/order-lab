@@ -83,15 +83,24 @@
             <p style="padding-top:3px;">
             <div class="row">
                 <div class="col-xs-6" align="right">
-
+                    <label>
+                        For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below.
+                    </label>
                 </div>
                 <div class="col-xs-6" align="left">
-                    For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    {{ form_label(form.referencename) }}
+                </div>
+                <div class="col-xs-6" align="left">
+                    {{ form_widget(form.referencename) }}
                 </div>
             </div>
             </p>
+            {#{{ myform.field(form.referencename) }}#}
 
-            {{ myform.field(form.referencename) }}
             {{ myform.field(form.referenceemail) }}
             {{ myform.field(form.referencephone) }}
 

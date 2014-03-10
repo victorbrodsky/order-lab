@@ -68,8 +68,7 @@ class UserRequest
     protected $request;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="similaruser_id", referencedColumnName="id")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $similaruser;
 
