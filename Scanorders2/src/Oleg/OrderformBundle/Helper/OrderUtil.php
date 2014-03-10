@@ -341,10 +341,10 @@ class OrderUtil {
         //$dql->select('COUNT(history) as historycount');
         $dql->select('history');
         //$dql->groupBy('history');
-        $dql->innerJoin("history.provider", "provider");
+        //$dql->innerJoin("history.provider", "history-provider");
         $dql->innerJoin("history.orderinfo", "orderinfo");
-        $dql->innerJoin("orderinfo.provider", "orderinfo_provider");
-        $dql->leftJoin("orderinfo.proxyuser", "orderinfo_proxyuser");
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
 //        $role = "ROLE_PROCESSOR";
 //        $role2 = "ROLE_ADMIN";
@@ -358,7 +358,7 @@ class OrderUtil {
 //        } else {
 //            //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
 //            $criteriastr = $criteriastr . " AND ( history.roles LIKE :role OR history.roles LIKE :role2 )";
-//            $criteriastr = $criteriastr . " AND ( orderinfo_provider = :provider OR orderinfo_proxyuser = :provider )";
+//            $criteriastr = $criteriastr . " AND ( provider = :provider OR proxyuser = :provider )";
 //        }
 
         $criteriastr = $this->getNewCommentsCriteriaStr($security_context);
@@ -396,7 +396,7 @@ class OrderUtil {
         } else {
             //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
             $criteriastr = $criteriastr . " AND ( history.roles LIKE '%".$role."%' OR history.roles LIKE '%".$role2."%' )";
-            $criteriastr = $criteriastr . " AND ( orderinfo_provider = ".$user->getId()." OR orderinfo_proxyuser = ".$user->getId()." )";
+            $criteriastr = $criteriastr . " AND ( provider = ".$user->getId()." OR proxyuser = ".$user->getId()." )";
         }
 
         return $criteriastr;
