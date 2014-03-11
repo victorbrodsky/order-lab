@@ -642,7 +642,6 @@ function initSingleDatepicker( datepickerElement ) {
     });
 }
 
-
 function printF(element,text) {
     var str = "id="+element.attr("id") + ", class=" + element.attr("class")
     if( text ) {
@@ -650,7 +649,5 @@ function printF(element,text) {
     }
     console.log(str);
 }
-
-
 
 

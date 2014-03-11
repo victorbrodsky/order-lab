@@ -20,32 +20,29 @@
 <body>
 
 <div class="container">
-
-    <br><br><br>
-
-    <p>
-        <h3 class="text-info text-center">{{ text }}</h3>
-    </p>
-
-    <br><br><br>
-
     <div class="text-center">
-        <a href="javascript:history.back()">Back</a>
-    </div>
 
-    <br><br><br>
+        <h2 class="alert alert-info well-lg safary-fix" align="center">Scan Order Submission</h2>
 
-    <div class="text-center">
-        <div class="footer">
-            {% block footer %}
-                &copy; Copyright {{ "now"|date('Y') }} by
-                <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
-                at
-                <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
-            {% endblock %}
-        </div>
-    </div>
+        <br>
 
+        <br><br><br>
+
+        <p>
+            <h3 class="text-info text-center">{{ text }}</h3>
+        </p>
+
+        <br><br><br>
+
+        <br>
+        <p>
+        <a href="{{ path('login') }}">Return to Log In page</a>
+        </p>
+
+
+        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+
+    </div> <!-- /text-center -->
 </div> <!-- /container -->
 
 

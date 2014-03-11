@@ -6,7 +6,8 @@
 
 {% block content %}
 
-    {% if is_granted('ROLE_PROCESSOR') and security == 'true' %}
+
+    {% if is_granted('ROLE_PROCESSOR') %}
 
         <p>
         {% if accountreqs is defined and accountreqs | length > 0 %}
@@ -83,8 +84,9 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody data-link="row" class="rowlink">
-        {#<tbody>#}
+
+        <tbody class="rowlink" data-link="row">
+
         {#{% for entity in entities %}#}
         {% for entitycomplex in pagination  %}
 
@@ -183,7 +185,7 @@
                     
             {% if routename == 'adminindex' %}    
                                    
-                <td>                  
+                <td>
                     <a href="{{ path('multy_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a>
                 </td>
                 {% if entity.scandeadline != '' %}
@@ -197,8 +199,7 @@
                 <td>{{ entity.returnSlide }}</td>
                 <td>{{ entity.type }}</td>
                     
-            {% endif %}        
-                    
+            {% endif %}
                 <td class="rowlink-skip">
                     {% include 'OlegOrderformBundle::Default/action.html.twig' %}
                 </td>
@@ -206,6 +207,7 @@
         {% endfor %}
         </tbody>
     </table>
+
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}

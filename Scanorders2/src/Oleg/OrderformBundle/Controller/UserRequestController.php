@@ -108,8 +108,8 @@ class UserRequestController extends Controller
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
-            'security' => 'false'
+            'form'   => $form->createView()
+            //'security' => 'false'
         );
     }
 
@@ -318,7 +318,7 @@ class UserRequestController extends Controller
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($user->getAppliedforaccessdate());
 
-            $text = 'You have applied for access on ' . $dateStr . '. Your application has not been approved yet. Please contact the administrator if you have any questions.';
+            $text = "You have requested access on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing scanorder@med.cornell.edu if you have any questions.";
 
             $this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
@@ -387,7 +387,7 @@ class UserRequestController extends Controller
             $emailStr = "\r\nConfirmation email was sent to ".$email;
         }
 
-        $text = 'Your access request was successfully submitted!'.$emailStr;
+        $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
 
 
 //        $this->get('session')->getFlashBag()->add(

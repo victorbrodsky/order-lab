@@ -18,6 +18,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+
     <title>Request an Aperio eSlide Manager Account</title>
 
     {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
@@ -32,7 +33,7 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
 
-    <div class="container">
+    <div class="container text-center">
 
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
         <input type="hidden" id="formcicle" value="accountreq" />
@@ -109,31 +110,21 @@
             {#{{ form_rest(form) }}#}
             {{ form_widget(form._token) }}
 
-            <div class="text-center">
-                <br>
-                <p>
-                    <button class="btn btn-info" type="submit">Submit account request</button>
-                </p>
 
-                <br>
-                <p>
-                    <a href="{{ path('login') }}">Return to Login Page</a>
-                </p>
-            <div>
+
+            <br>
+            <p>
+                <button class="btn btn-info" type="submit">Submit account request</button>
+            </p>
+
+            <br>
+            <p>
+                <a href="{{ path('login') }}">Return to Log In page</a>
+            </p>
 
         </form>
 
-
-        <div class="text-center">
-            <div class="footer">
-                {% block footer %}
-                    &copy; Copyright {{ "now"|date('Y') }} by
-                    <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
-                    at
-                    <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
-                {% endblock %}
-            </div>
-        </div>
+        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
 
     </div> <!-- /container -->
 

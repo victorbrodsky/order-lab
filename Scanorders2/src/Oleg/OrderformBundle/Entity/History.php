@@ -33,11 +33,6 @@ class History
      */
     private $currentid;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $newid;
-
     /**
      * @var \DateTime
      *
@@ -57,12 +52,6 @@ class History
      * @ORM\JoinColumn(name="currentstatus_id", referencedColumnName="id", nullable=true)
      */
     private $currentstatus;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Status", cascade={"persist"})
-//     * @ORM\JoinColumn(name="newstatus_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $newstatus;
 
     /**
      * @var array
@@ -155,22 +144,6 @@ class History
         return $this->changedate;
     }
 
-//    /**
-//     * @param mixed $newstatus
-//     */
-//    public function setNewstatus($newstatus)
-//    {
-//        $this->newstatus = $newstatus;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getNewstatus()
-//    {
-//        return $this->newstatus;
-//    }
-
     /**
      * @param mixed $note
      */
@@ -234,22 +207,6 @@ class History
     {
         return $this->currentid;
     }
-
-//    /**
-//     * @param mixed $newid
-//     */
-//    public function setNewid($newid)
-//    {
-//        $this->newid = $newid;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getNewid()
-//    {
-//        return $this->newid;
-//    }
 
     /**
      * @param mixed $viewed

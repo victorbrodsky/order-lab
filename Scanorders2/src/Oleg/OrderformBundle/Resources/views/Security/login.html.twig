@@ -22,22 +22,13 @@
 
     <body>
 
-        <div class="container">
+        <div class="container text-center">
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
             {% include 'OlegOrderformBundle::Security/login_content.html.twig' %}
 
-            <div class="text-center">
-                <div class="footer">
-                    {% block footer %}
-                        &copy; Copyright {{ "now"|date('Y') }} by
-                        <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
-                        at
-                        <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
-                    {% endblock %}
-                </div>
-             </div>
+            {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
 
         </div> <!-- /container -->
 

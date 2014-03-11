@@ -27,11 +27,11 @@
         {#<link rel="stylesheet" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
 
-    {#'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'#}
     {#'bundles/olegorderform/form/css/form.css'#}
     {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
 
     {#jasny is used for clickable rows#}
+
     {% stylesheets
         'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
         'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
@@ -71,10 +71,8 @@
         <div class="header">
 
             {% block header %}
-                {% if security == 'true' %}
-                    {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
-                    {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
-                {% endif %}
+                {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+                {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
             {% endblock %}
 
         </div>
@@ -101,16 +99,8 @@
 
         </div>
 
-        {#<div style="height: 100px;">&nbsp;</div>#}
-
-        <div class="footer">
-            {% block footer %}
-                &copy; Copyright {{ "now"|date('Y') }} by
-                <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
-                at
-                <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
-            {% endblock %}
-        </div>
+        <!-- footer -->
+        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
 
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
@@ -140,6 +130,7 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
 
     </div>
 

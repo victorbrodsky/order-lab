@@ -220,7 +220,7 @@ class OrderUtil {
         }
 
         //$message = 'Status of Order '.$id.' has been changed to "'.$status.'"'.$message;
-        $message = 'Status of Order '.$id.' succesfully changed to "'.$status.'"';
+        $message = 'Status of Order '.$id.' succesfully changed to "'.$entity->getStatus()->getName().'"';
 
         $res = array();
         $res['result'] = 'ok';
