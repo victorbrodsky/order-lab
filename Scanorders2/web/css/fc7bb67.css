@@ -145,22 +145,22 @@
     width: 100%;
 }
 
-.activetr {
-    background-color: rgb(217, 237, 247);
-}
+/*.activetr {*/
+    /*background-color: rgb(217, 237, 247);*/
+/*}*/
 
-.canceltr {
-    background-color: rgb(242, 222, 222);
-}
+/*.canceltr {*/
+    /*background-color: rgb(242, 222, 222);*/
+/*}*/
 
-.completedtr {
-    background-color: rgb(223, 240, 216);
-}
+/*.completedtr {*/
+    /*background-color: rgb(223, 240, 216);*/
+/*}*/
 
-.uncompletedtr {
-    /*background-color: rgb(252, 248, 227);*/
-    background-color: white;
-}
+/*.uncompletedtr {*/
+    /*//background-color: rgb(252, 248, 227);*/
+    /*background-color: white;*/
+/*}*/
 
 /*.panel*/
 .panel-multi-form {

@@ -7534,81 +7534,24 @@ When using this extension make sure you specify the correct url to get the masks
  * To change this template use File | Settings | File Templates.
  */
 
-var _max_tab_height = 0;
 
-$(document).ready(function() {
-//    $('a, button').click(function() {
-//        $(this).toggleClass('active');
-//    });
-
-//    $('.has-spinner').click(function() {
-//        console.log('button pressed');
-//        $(this).toggleClass('active');
-//    });
-
-    // Bind normal buttons
-    Ladda.bind( '.btntest', { timeout: 2000 } );
-
-});
-
-
-//inputField - input field element which is tested for value is being set
-function waitWhenReady( fieldsArr, count, limit ) {
-
-    var inputId = fieldsArr[count];
-
-    var inputField = $(inputId).find('.keyfield').not("*[id^='s2id_']");
-
-    if( inputField.hasClass('combobox')  ) {
-        var testValue = inputField.select2('data').text;
-    } else {
-        var testValue = inputField.val();
-    }
-
-    var checkButton = $(inputId).find('#check_btn');
-    //var isCheckBtn = checkButton.find("i").hasClass('checkbtn');
-
-    if( limit == 0 ) {
-        //printF(checkButton,"click button:");
-        //console.log("check single form: count="+count);
-        //checkButton.trigger("click");   //click only once
-        var checkres = checkForm( checkButton );
-    }
-
-    //console.log("error length="+$('.maskerror-added').length);
-    if( $('.maskerror-added').length > 0 || !checkres ) {
-        //fieldsArr = null;
-        return false;
-    }
-
-    return true;
-}
-
-function finalStepCheck() {
-    $('#part-single').css( "width", "20%" );
-    $('#block-single').css( "width", "20%" );
-    $('#maincinglebtn').show();
-    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
-}
-
-//var _lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
-
+//click check button and verify for errors
 function clickSingleBtn( btn ) {
 
     return new Q.promise(function(resolve, reject) {
 
-        printF(btn,"######## Button for click single button func: ");
+        //printF(btn,"######## Button for click single button func: ");
 
         checkForm( btn, 'none' ).
         then(
             function(response) {
-                console.log("Success!", response);
+                //console.log("Success!", response);
                 if( $('.maskerror-added').length > 0 ) {
                     console.log("Validation error");
                     //reject(Error("Validation error"));
                     return false;
                 } else {
-                    console.log("Chaining with parent OK: "+response);
+                    //console.log("Chaining with parent OK: "+response);
                     //resolve("Chaining with parent OK: "+response);
                     return true;
                 }
@@ -7634,17 +7577,6 @@ function clickSingleBtn( btn ) {
 //Check form single
 function checkFormSingle( elem ) {
 
-//    var promise = new Q.promise(function(resolve, reject) {
-//        resolve(1);
-//    });
-//    promise.then(function(val) {
-//        console.log(val); // 1
-//        return val + 2;
-//    }).then(function(val) {
-//            console.log(val); // 3
-//    });
-//    //return false;
-
     var lbtn = Ladda.create(elem);
 
     var promiseValidateMask = function() {
@@ -7653,7 +7585,7 @@ function checkFormSingle( elem ) {
                 console.log("errors > 0 => return");
                 reject('mask errors');
             } else {
-                console.log("mask ok");
+                //console.log("mask ok");
                 resolve('mask ok');
             }
         });
@@ -7662,42 +7594,40 @@ function checkFormSingle( elem ) {
     var promiseNoMainSingleBtn = function(response) {
         return new Q.promise(function(resolve, reject) {
             if( $('#maincinglebtn').is(":visible") ) {
-                console.log("maincinglebtn is visible => return");
+                //console.log("maincinglebtn is visible => return");
                 reject('maincinglebtn is visible => return');
             } else {
-                console.log("start ajax");
+                //console.log("start ajax");
                 lbtn.start();
                 resolve('maincinglebtn is ok');
             }
         });
     }
 
-    //$('.singleform-optional-button').append('<img class="spinner-image" src="http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif"/></div>');
-    //var ajaxOK = callWaitStack();
-
     promiseValidateMask().
     then(promiseNoMainSingleBtn).
     then(
         function(response) {
-            console.log("validation promises success!", response);
+            //console.log("validation promises success!", response);
             return clickSingleBtn( $('.checkbtn.accessionbtn') );
         }
     ).
     then(
         function(response) {
-            console.log("Accession success!", response);
+            //console.log("Accession success!", response);
             return clickSingleBtn( $('.checkbtn.partbtn') );
         }
     ).
     then(
         function(response) {
-            console.log("Part success!", response);
+            //console.log("Part success!", response);
             return clickSingleBtn( $('.checkbtn.blockbtn') );
         }
     ).
     then(
         function(response) {
-            console.log("Block success!", response);
+            finalStepCheck();
+            //console.log("Block success!", response);
             if( $('.maskerror-added').length > 0 ) {
                 return false;
             } else {
@@ -7710,11 +7640,10 @@ function checkFormSingle( elem ) {
 
             if( response ) {
 
-                console.log("All Success!", response);
+                //console.log("All Success!", response);
 
                 if( $('.maskerror-added').length == 0 ) {
-                    collapseElementFix($('#optional_param'));
-                    finalStepCheck();
+                    //ok
                 } else {
                     //return false;
                 }
@@ -7722,29 +7651,22 @@ function checkFormSingle( elem ) {
                 initOptionalParam();
 
             } else {
-                console.log("Response is false: ", response);
+                //console.log("Response is false: ", response);
             }
 
         }
     ).
     then(
         function(response) {
-            console.log("All chaining with parent OK:", response);
-            //return true;
-            console.log("stop ajax");
+            //console.log("All check single form chaining with parent OK:", response);
             lbtn.stop();
         },
         function(error) {
-            console.error("All chaining with parent Error", error);
-            //return false;
-            console.log("stop ajax");
+            console.error("Single form chaining chaining with parent Error", error);
             lbtn.stop();
         }
     );
 
-    //console.log("ready!!!");
-
-    //return false;
 }
 
 
@@ -7757,66 +7679,64 @@ function removeFormSingle( elem ) {
 
     btn.button('loading');
 
-    checkForm( $('.blockbtn'), 'none' ).
-    then(
-        checkForm( $('.partbtn'), 'none' )
-    ).
-    then(
-        checkForm( $('.accessionbtn'), 'none' )
-    ).
+    //working!
+    executeClick( new btnObject( $('.blockbtn') ) ).
     then(
         function(response) {
-            if( $('.patientmrn').hasClass('removebtn') ) {
-                console.log("no patient delete");
-                checkForm( $('.patientmrn'), 'none' );
-            }
-            return "patient processing ok";
+            //console.log(" Block Success!", response);
+            var partBtnObj = new btnObject( $('.partbtn') );
+            return executeClick( partBtnObj );
         }
     ).
     then(
         function(response) {
-            console.log("All delete chaining with parent OK:", response);
-            //return true;
-            console.log("delete stop ajax");
-
-            $('#part-single').css( "width", "25%" );
-            $('#block-single').css( "width", "25%" );
-            $('#maincinglebtn').hide();
-            collapseElementFix($('#optional_param'));   //close optional info
-
-            btn.button('reset');
+            //console.log("Part Success!", response);
+            var accBtnObj = new btnObject( $('.accessionbtn') );
+            return executeClick( accBtnObj );
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("Acc Success!", response);
+            finalStepDelete();  //acc succ, so show delete button
+            if( $('.patientmrnbtn').hasClass('removebtn') ) {
+                var patientBtnObj = new btnObject( $('.patientmrnbtn') );
+                return executeClick( patientBtnObj );
+            }
+            return "patient was empty";
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("All delete chaining with parent OK:", response);
         },
         function(error) {
-            console.error("All delete chaining with parent Error", error);
-            //return false;
-            console.log("delete stop ajax");
+            console.error("Single form delete chaining with parent Error", error);
+        }
+    ).done(
+        function(response) {
+            //console.log("Done ", response);
             btn.button('reset');
         }
     );
 
-//    $("#remove_single_btn").button('loading');
-//    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
-//
-//    $('.blockbtn').trigger("click");
-//
-//    $('.partbtn').trigger("click");
-//
-//    $('.accessionbtn').trigger("click");
-//
-//    if( $('.patientmrn').hasClass('removebtn') ) {
-//        $('.patientmrn').trigger("click");
-//    }
+    return;
 
-//    $('#part-single').css( "width", "25%" );
-//    $('#block-single').css( "width", "25%" );
-//    $('#maincinglebtn').hide();
-//    collapseElementFix($('#optional_param'));   //close optional info
-//
-//    console.log("end of remove");
-//    $("#remove_single_btn").button('reset');
-//
-//    btn.button('reset');
+}
 
+function finalStepCheck() {
+    $('#part-single').css( "width", "20%" );
+    $('#block-single').css( "width", "20%" );
+    $('#maincinglebtn').show();
+    collapseElementFix($('#optional_param'));
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
+}
+
+function finalStepDelete() {
+    $('#part-single').css( "width", "25%" );
+    $('#block-single').css( "width", "25%" );
+    $('#maincinglebtn').hide();
+    collapseElementFix($('#optional_param'));   //close optional info
 }
 
 function checkSingleFormOnNext( elem ) {
@@ -8436,7 +8356,7 @@ function customCombobox() {
 
     //console.log("cicle="+cicle);
 
-    if( cicle && cicle != 'edit_user' && urlBase ) {
+    if( cicle && urlBase && cicle != 'edit_user' && cicle != 'accountreq' ) {
         getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
@@ -8451,7 +8371,7 @@ function customCombobox() {
         slideType(new Array("0","0","0","0","0","0"));
     }
 
-    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq')  ) {
+    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
     }
 }
@@ -8504,7 +8424,8 @@ function getComboboxStain(urlCommon, ids) {
         //console.log("stain 0");
         $.ajax({
             url: url,
-            async: asyncflag
+            async: asyncflag,
+            timeout: _ajaxTimeout
         }).success(function(data) {
             stain = data;
             populateSelectCombobox( ".ajax-combobox-stain", stain, null );
@@ -8544,6 +8465,7 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
     if( stain.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
                 stain = data;
@@ -8572,6 +8494,7 @@ function getComboboxScanregion(urlCommon,ids) {
     if( scanregion.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             scanregion = data;
@@ -8602,6 +8525,7 @@ function getComboboxOrgan(urlCommon,ids) {
     if( organ.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             organ = data;
@@ -8628,6 +8552,7 @@ function getComboboxProcedure(urlCommon,ids) {
     if( procedure.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             procedure = data;
@@ -8653,6 +8578,7 @@ function getComboboxAccessionType(urlCommon,ids) {
     if( accessiontype.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
                 accessiontype = data;
@@ -8688,6 +8614,7 @@ function getComboboxPartname(urlCommon,ids) {
     if( partname.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             partname = data;
@@ -8714,6 +8641,7 @@ function getComboboxBlockname(urlCommon,ids) {
     if( blockname.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             blockname = data;
@@ -8743,6 +8671,7 @@ function getComboboxDelivery(urlCommon,ids) {
     if( delivery.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             delivery = data;
@@ -8775,6 +8704,7 @@ function getComboboxReturn(urlCommon,ids) {
     if( returnslide.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             returnslide = data;
@@ -8801,12 +8731,16 @@ function getComboboxPathService(urlCommon,ids) {
     var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
-    if( cicle == "new" || cicle == "create" || cicle == "accountreq" ) {
-        url = url + "?opt=default";
+    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" ) {
+        var optStr = user_id;
+        if( !optStr || typeof optStr === 'undefined' ) {
+            optStr = "default";
+        }
+        url = url + "?opt=" + optStr;
     }
 
-    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid);
-    if( cicle == 'accountreq' ) {
+    console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
+    if( cicle == "accountreq" || cicle == "edit_user" ) {
         var multiple = true;
     } else {
         var multiple = false;
@@ -8815,37 +8749,21 @@ function getComboboxPathService(urlCommon,ids) {
     if( pathservice.length == 0 ) {
         $.ajax({
             url: url,
+            timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
             pathservice = data;
-            populateSelectCombobox( targetid, pathservice, "Pathology Service", multiple );
+            populateSelectCombobox( targetid, pathservice, "Departmental Division(s) / Service(s)", multiple );
         });
     } else {
-        populateSelectCombobox( targetid, pathservice, "Pathology Service", multiple );
+        populateSelectCombobox( targetid, pathservice, "Departmental Division(s) / Service(s)", multiple );
     }
 
-//    //******************* user pathology service *************************//
-//    //var targetid = ".ajax-combobox-pathservice";    //"#oleg_orderformbundle_user_pathologyServices";
-//    populateSelectCombobox( targetid, pathservice, "Pathology Service" );
-//
-//    //console.log("userpathservice.length="+userpathservice.length);
-//    if( userpathservice.length == 0 && !userpathserviceflag ) {
-//        $.ajax({
-//            url: urlCommon+"userpathservice",
-//            type: 'POST',
-//            data: {username: user_name},
-//            dataType: 'json',
-//            async: asyncflag,
-//            success: function(data) {
-//                userpathserviceflag = true;
-//                userpathservice = data;
-//            }
-//        });
-//    }
-//
-//    if( cicle == "new" ) {
-//        $(targetid).select2('data', userpathservice);
-//    }
+//    $(targetid).select2("container").find("ul.select2-choices").sortable({
+//        containment: 'parent',
+//        start: function() { $(targetid).select2("onSortStart"); },
+//        update: function() { $(targetid).select2("onSortEnd"); }
+//    });
 
 }
 
@@ -8975,18 +8893,32 @@ function trimWithCheck(val) {
 function invertButton(btn) {
     //console.log("invert Button: glyphicon class="+btn.find("i").attr("class"));
     if( btn.hasClass('checkbtn') ) {
-        console.log("check=>remove");
+        //console.log("check=>remove");
         btn.find("i").removeClass('glyphicon-check').addClass('glyphicon-remove');
         btn.removeClass('checkbtn').addClass('removebtn');
     } else {
-        console.log("remove=>check");
+        //console.log("remove=>check");
         btn.find("i").removeClass('glyphicon-remove').addClass('glyphicon-check');
         btn.removeClass('removebtn').addClass('checkbtn');
     }
-    console.log("finish invert Button: glyphicon class="+btn.attr("class"));
+    //console.log("finish invert Button: glyphicon class="+btn.attr("class"));
+}
+
+//button 'loading' and reset causes to change the class to the original button
+function fixCheckRemoveButton(btn) {
+    //printF(btn," fix button: ");
+    if( btn.hasClass('checkbtn') ) {
+        //console.log("fix check");
+        btn.find("i").removeClass('glyphicon-remove').addClass('glyphicon-check');
+    }
+    if( btn.hasClass('removebtn') ) {
+        //console.log("fix remove");
+        btn.find("i").removeClass('glyphicon-check').addClass('glyphicon-remove');
+    }
 }
 
 function createErrorWell(inputElement,name) {
+    var errorStr = "";
     if( name == "patient" ) {
         errorStr = 'This is not a previously auto-generated MRN. Please correct the MRN or select "Auto-generated MRN" for a new one.';
     } else
@@ -9006,21 +8938,31 @@ function createErrorWell(inputElement,name) {
     return errorHtml;
 }
 
-function deleteSuccess(btnElement,single) {
+function deleteSuccess(btnObj,single) {
+    var btnElement = btnObj.btn;
+    //console.log("delete success: "+btnObj);
     //printF(btnElement,"Delete on Success:")
-    cleanFieldsInElementBlock( btnElement, "all", single );
+    if( !btnElement ) {
+        return false;
+    }
+    cleanFieldsInElementBlock( btnElement, "all", single ); //single = true
     disableInElementBlock(btnElement, true, null, "notkey", null);
     invertButton(btnElement);
-    setDefaultMask(btnElement);
+    setDefaultMask(btnObj);
 }
 
-function deleteError(btnElement,single) {
+function deleteError(btnObj,single) {
+
+    fixCheckRemoveButton(btnObj.btn); //fix button, because btn.button('reset') revert back glyphicon to check button
+
     if( !single ) {
         //printF(btnElement,"btnElement:");
         //check if all children buttons are not checked == has class removebtn
         var errors = 0;
+        var btnElement = btnObj.btn;
         var checkBtns = btnElement.closest('.panel').find('#check_btn');
         //console.log('checkBtns.length='+checkBtns.length);
+
         checkBtns.each( function() {
             //printF($(this),'check btn=');
             //printF(btnElement,'btnElement=');
@@ -9031,22 +8973,21 @@ function deleteError(btnElement,single) {
             }
         });
 
-        console.log('errors='+errors);
+        //console.log('errors='+errors);
         if( errors == 0 ) {
             deleteSuccess(btnElement,single);
             return;
         }
 
-        invertButton(btnElement); //invert back to remove button, because btn.button('reset') revret back to checl button
-
         var childStr = "Child";
-        if( name == "accession" ) {
+        if( btnObj.name == "accession" ) {
             childStr = "Part";
         }
-        if( name == "partname" ) {
+        if( btnObj.name == "part" ) {
             childStr = "Block";
         }
         alert("Can not delete this element. Make sure if " + childStr + " is deleted.");
+
     }
 }
 
@@ -9079,7 +9020,7 @@ function checkParent(element,keyValue,name,fieldName,extra) {
             var sublingsKeyValue = $(this).find('.keyfield ').val();
         }
 
-        console.log("checkParent sublingsKeyValue=" + sublingsKeyValue + ", keyValue="+keyValue + ", keytype="+keytype+", extra="+extra);
+        //console.log("checkParent sublingsKeyValue=" + sublingsKeyValue + ", keyValue="+keyValue + ", keytype="+keytype+", extra="+extra);
 
         if( $(this).find('#check_btn').hasClass('removebtn') && trimWithCheck(sublingsKeyValue) == trimWithCheck(keyValue) ) {
             alert("This keyfield is already in use and it is checked");
@@ -9143,16 +9084,16 @@ function setPatient( btn, keyvalue, extraid, single ) {
         checkForm( parentBtnObj.btn ).
             then(
             function(response) {
-                console.log("Success!", response);
+                //console.log("Success!", response);
                 return setAndClickPatient();
             }
         ).
             then(
             function(response) {
-                console.log("Chaining with parent OK:", response);
+                //console.log("Chaining with parent OK:", response);
             },
             function(error) {
-                console.error("Failed!", error);
+                console.error("Set Patient by Accession Failed!", error);
             }
         );
 
@@ -9174,11 +9115,15 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
+function getAjaxTimeoutMsg() {
+    alert("Could not communicate with server: no answer after 15 seconds.");
+    return false;
+}
 
 /////////////////////// validtion related functions /////////////////////////
 function validateForm() {
 
-    console.log("validateForm enter");
+    //console.log("validateForm enter");
     //return false;
 
     var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
@@ -9372,6 +9317,7 @@ function checkMrnAccessionConflict() {
                 data: {key: accValue, extra: acctypeValue},
                 contentType: 'application/json',
                 dataType: 'json',
+                timeout: _ajaxTimeout,
                 async: false,
                 success: function (data) {
                     //console.debug("get accession ajax ok");
@@ -9460,8 +9406,11 @@ function checkMrnAccessionConflict() {
                         console.debug("validation: accession object not found");
                     }
                 },
-                error: function () {
+                error: function ( x, t, m ) {
                     console.debug("validation: get object ajax error accession");
+                    if( t === "timeout" ) {
+                        getAjaxTimeoutMsg();
+                    }
                     return false;
                 }
             });
@@ -9517,15 +9466,15 @@ function checkExistingKey(name) {
         }
         if( name == 'patient' ) {
             //var elements = $('.patientmrn').find('.keyfield');
-            var elements = $('.btn.btn-default.patientmrn');
+            var elements = $('.btn.btn-default.patientmrnbtn');
         }
     } else {
         if( name == 'accession' ) {
             //var elements = $('.accessionaccession').find('.keyfield');
-            var elements = $('.btn.btn-default.accessionaccession');
+            var elements = $('.btn.btn-default.accessionaccessionbtn');
         }
         if( name == 'patient' ) {
-            var elements = $('.btn.btn-default.patientmrn');
+            var elements = $('.btn.btn-default.patientmrnbtn');
         }
     }
 
@@ -9577,6 +9526,7 @@ function checkExistingKey(name) {
                 data: {key: elValue, extra: eltypeValue},
                 contentType: 'application/json',
                 dataType: 'json',
+                timeout: _ajaxTimeout,
                 async: false,
                 success: function (data) {
                     //console.debug("get element ajax ok");
@@ -9586,8 +9536,11 @@ function checkExistingKey(name) {
                         return false;
                     }
                 },
-                error: function () {
+                error: function ( x, t, m ) {
                     console.debug("validation: get object ajax error "+name);
+                    if( t === "timeout" ) {
+                        getAjaxTimeoutMsg();
+                    }
                     return false;
                 }
             });
@@ -9622,6 +9575,9 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
     }
     if( element.hasClass('blockbtn') ) {
         parentname = "block";
+    }
+    if( element.hasClass('patientmrnbtn') ) {
+        parentname = "patient";
     }
 
     var parent = element.parent().parent().parent().parent().parent().parent();
@@ -9680,13 +9636,18 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
             if( flagKey == "notkey" ) {
                 //check if the field is not key
+                //printF(elements.eq(i),"check " + field+" if key: ");
                 if( isKey(elements.eq(i), field) && flagKey == "notkey" ) {
+                    //console.log("key!");
                     if( disabled ) {    //inverse disable flagKey for key field
+                        //console.log("disable field=(" + field + ")");
                         disableElement(parentname,elements.eq(i),false);
                     } else {
+                        //console.log("enable field=(" + field + ")");
                         disableElement(parentname,elements.eq(i),true);
                     }
                 } else {
+                    //console.log("not key!");
                     disableElement(parentname,elements.eq(i),disabled);
                 }
             }
@@ -9737,13 +9698,17 @@ function disableElement(parentname,element, flag) {
     }
 
     if( tagName == "SELECT" || tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
-        //console.debug("select disable classs="+classs+", id="+element.attr('id')+", flag="+flag);
+        //console.log("select disable classs="+classs+", id="+element.attr('id')+", flag="+flag);
         if( flag ) {    //disable
+            //console.log("disable select2");
             element.select2("readonly", true);
         } else {    //enable
+            //console.log("enable select2");
             element.select2("readonly", false);
             element.attr("readonly", false);
             element.removeAttr( "readonly" );
+            //element.removeAttr( "disabled" );
+
         }
         return;
     }
@@ -10138,7 +10103,7 @@ function setArrayField(element, dataArr, parent) {
 }
 
 //set key type field
-//element - is key type element (combobox)
+//element - is key type element (combobox): id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_keytype
 function setKeyGroup( element, data ) {
     //console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
 
@@ -10151,34 +10116,40 @@ function setKeyGroup( element, data ) {
     //printF(holder,"Holder of key group:");
 
     //var keytypeEl = holder.find('select.combobox');
-    var keytypeEl = holder.find('.combobox');
+    var keytypeEl = holder.find('.combobox').first();
+    //var keytypeEl = element;
+    //var keytypeEl = new typeByKeyInput(element).typeelement;
+    //var typeObj = new typeByKeyInput(element);
+    //this.type = typeObj.type;
+    //this.typename = typeObj.typename;
+    //var keytypeEl = typeObj.typeelement;
+
     //printF(keytypeEl,"Set Key Group: keytype Element:");
 
     //do not change type only if current type is "existing.." and returned keytypename is "auto-generated"
     var currentKeytypeText = keytypeEl.select2("data").text;
+    var currentKeytypeId = keytypeEl.select2("data").id;
+    var currentKeytypeVal = keytypeEl.select2("val");
 
     var tosetKeytypeText = data['keytypename'];
+
+    //console.log('Keytype: tosetKeytypeText='+tosetKeytypeText +', currentKeytypeText='+currentKeytypeText+", currentKeytypeId="+currentKeytypeId+", currentKeytypeVal="+currentKeytypeVal);
+
     if( tosetKeytypeText && tosetKeytypeText.indexOf("Auto-generated") != -1 && currentKeytypeText.indexOf("Existing Auto-generated") != -1 ) {
         //don't change type
-        //console.log('tosetKeytypeText='+tosetKeytypeText);
+        //console.log('dont change keytype: tosetKeytypeText='+tosetKeytypeText);
     } else {
+        //console.log('change keytype: tosetKeytypeText='+tosetKeytypeText);
         keytypeEl.select2('val', data['keytype']);
     }
 
+    //element.select2( 'data', { text: data['keytypename'] } );
+
     if( element.hasClass('mrntype-combobox') ) {
         setMrntypeMask(element,true);
-        if( orderformtype == "single" ) {
-            mrnKeyGlobal = data['text'];
-            mrnKeytypeGlobal = data['keytype'];
-        }
     }
     if( element.hasClass('accessiontype-combobox') ) {
         setAccessiontypeMask(element,true);
-        if( orderformtype == "single" ) {
-            asseccionKeyGlobal = data['text'];
-            asseccionKeytypeGlobal = data['keytype'];
-            //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
-        }
     }
     //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 
@@ -10379,13 +10350,9 @@ function changeIdtoIndex( element, field, index ) {
 //all: if set to "all" => clean all fields, including key field
 function cleanFieldsInElementBlock( element, all, single ) {
 
-    var parent = element.parent().parent().parent().parent().parent().parent();
+    var parent = getButtonElementParent( element );
 
-    //if( !parent.attr('id') ) {
-    if( single ) {
-        var parent = element.parent().parent().parent().parent().parent().parent().parent();
-        //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", all="+all);
-    }
+    //console.log("clean single=" + single);
 
     //console.log("clean parent.id=" + parent.attr('id'));
     //printF(parent,"clean => parent");
@@ -10399,6 +10366,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
         var tagName = elements.eq(i).prop('tagName');
         var classs = elements.eq(i).attr('class');
 
+        //console.log("\n\nClean Element id="+id+", classs="+classs+", type="+type+", tagName="+tagName);
+
         //don't process slide fields
         if( id && id.indexOf("_slide_") != -1 ) {
             continue;
@@ -10409,10 +10378,35 @@ function cleanFieldsInElementBlock( element, all, single ) {
         }
         //don't process patient fields if the form was submitted by single form: click on accession,part,block delete button
         if( single && id && id.indexOf("_procedure_") == -1 ) {
-            continue;
+            //console.log("don't process patient fields if the form was submitted by single form");
+            //continue;
         }
 
         //console.log("clean id="+id+", type="+type+", tagName="+tagName);
+
+        //don't clean key fields belonging to other block button
+        if( elements.eq(i).hasClass('keyfield') || elements.eq(i).hasClass('accessiontype-combobox') || elements.eq(i).hasClass('mrntype-combobox') ) {
+            var btnObj = new btnObject( element );
+
+            //check type
+            if( btnObj.typeelement && btnObj.typeelement.attr('id').replace("s2id_","") == elements.eq(i).attr('id') ) {
+                //console.log( "type length="+btnObj.typeelement.length );
+                //printF(btnObj.typeelement," Clean type: ");
+                //btnObj.typeelement.select2("val", 1 );
+                var dataArr = new Array();
+                dataArr['text'] = "";
+                dataArr['keytype'] = 1;
+                setKeyGroup( btnObj.typeelement, dataArr );
+            }
+
+            //check field
+            //console.log("btn field id="+btnObj.element.attr('id'));
+            //console.log("element field id="+elements.eq(i).attr('id'));
+            if( btnObj.element.attr('id') != elements.eq(i).attr('id') ) {
+                //console.log("don't clean this field!");
+                continue;
+            }
+        }
 
         if( type == "file" ) {
 
@@ -10420,6 +10414,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
             elements.eq(i).show();
 
         } else if( type == "text" || !type ) {
+
+            //console.log("clean as text");
             var clean = false;
             var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
@@ -10440,15 +10436,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
                         //console.log("clean as radio");
                         processGroup( elements.eq(i), "", "ignoreDisable" );
                     } else if( classs.indexOf("select2") != -1 ) {
-                        //console.log("clean as select, field="+field);
-                        if( field == "mrn" || field == "accession" ) { //special case keytype: preset to the first default value
-                            //console.log("preset default keytype to 1, id="+elements.eq(i).attr('id')+", class="+elements.eq(i).attr('class'));
-                            //elements.eq(i).select2('data', {id: '1', text: 'New York Hospital MRN'});
-                            elements.eq(i).select2("val", "1" );
-                        } else {
-                            elements.eq(i).select2('data', null);
-                        }
-
+                        //console.log("clean as regular select (not keyfield types), field="+field);
+                        elements.eq(i).select2('data', null);
                     } else {
                         //console.log("clean as regular");
                         elements.eq(i).val(null);
@@ -10459,6 +10448,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
                     cleanArrayField( elements.eq(i), field, single );
                 }
             }
+
         }
 
     }
@@ -10481,6 +10471,8 @@ var orderformtype = $("#orderformtype").val();
 
 var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
+
+var _ajaxTimeout = 15000;  //15000 => 15 sec
 
 //var _autogenAcc = 8;
 //var _autogenMrn = 13;
@@ -10547,7 +10539,7 @@ function addKeyListener() {
 function btnObject( btn, parent ) {
 
     this.btn = btn;
-    this.element = null;
+    this.element = null;    //input element
     this.key = "";
     this.type = null;
     this.typename = null;
@@ -10559,7 +10551,7 @@ function btnObject( btn, parent ) {
     var gocontinue = true;
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
-        console.log('button is null => exit button object');
+        //console.log('button is null => exit button object');
         //return null;
         gocontinue = false;
     }
@@ -10581,16 +10573,17 @@ function btnObject( btn, parent ) {
         if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
             if( inputEl.select2("val") ) {
                 //console.log('select2 data OK');
-                this.key = inputEl.select2('data').text;
+                this.key = trimWithCheck( inputEl.select2('data').text );
             }
         } else {
-            this.key = inputEl.val();
+            this.key = trimWithCheck( inputEl.val() );
         }
 
         //get type
         var typeObj = new typeByKeyInput(inputEl);
         this.type = typeObj.type;
         this.typename = typeObj.typename;
+        this.typeelement = typeObj.typeelement;
 
         //get name
         var idsArr = inputEl.attr('id').split("_");
@@ -10598,13 +10591,8 @@ function btnObject( btn, parent ) {
         this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
 
         //get parent
-//        console.log("parent="+parent);
-//        if( parent == 'none' ) {
-//            //don't get parent at all. Need it for manual operations.
-//            console.log("don't get parent at all. Need it for manual operations.");
-//        } else
         if( this.name == 'part' || this.name == 'block' || parent == 'full' ) {
-            console.log("get parent");
+            //console.log("get parent");
             this.parentbtn = getParentBtn( btn, this.name );
         }
 
@@ -10615,28 +10603,41 @@ function btnObject( btn, parent ) {
 
     }
 
-    console.log(this);
+    //console.log(this);
     //console.log('finished btn object: this.name='+this.name+', this.key='+this.key+', this.type='+this.type);
 }
 
 
-//elem is a keytype (combobox)
+//keyEl is a input key field
+//make sure to return the select2 fiels with s2id_... which is the first combobox. The second combobox is hidden input field.
 function typeByKeyInput(keyEl) {
 
     this.type = null;
     this.typename = null;
+    this.typeelement = null;
 
-    if( orderformtype == "single") {
-        this.type = $('.accessiontype-combobox').select2('val');
-        this.typename = $('.accessiontype-combobox').select2('data').text;
+    if( orderformtype == "single" ) {
+        if( keyEl.hasClass('accession-mask') ) {
+            this.type = $('.accessiontype-combobox').first().select2('val');
+            this.typename = $('.accessiontype-combobox').first().select2('data').text;
+            this.typeelement = $('.accessiontype-combobox').first();
+        }
+        if( keyEl.hasClass('patientmrn-mask') ) {
+            this.type = $('.mrntype-combobox').first().select2('val');
+            this.typename = $('.mrntype-combobox').first().select2('data').text;
+            this.typeelement = $('.mrntype-combobox').first();
+        }
     } else {
-        var typeEl = keyEl.prev();
+        //var typeEl = keyEl.prev();
+        var typeEl = keyEl.parent().find('.combobox').first();
         if( typeEl.hasClass('combobox') ) {    //type exists
             this.type = typeEl.select2('val');
             this.typename = typeEl.select2('data').text;
+            this.typeelement = typeEl;
         }
     }
 
+    //console.log(this);
 }
 
 
@@ -10644,16 +10645,16 @@ function typeByKeyInput(keyEl) {
 function getParentElByBtn(btn) {
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
-        console.log('WARNING: button is not defined');
+        //console.log('WARNING: button is not defined');
         return null;
     }
 
-    printF(btn,"get Parent By Btn: ");
+    //printF(btn,"get Parent By Btn: ");
 
     var parent = btn.closest('.row');
 
     if( orderformtype == "single") {
-        if( btn.hasClass('patientmrn') ) {
+        if( btn.hasClass('patientmrnbtn') ) {
             var parent = $('#patient_0');
         }
         if( btn.hasClass('accessionbtn') ) {
@@ -10677,7 +10678,7 @@ function getParentBtn( btn, name ) {
     
     if( orderformtype == "single" ) {
         if( name == 'accession' ) {
-            parentBtn = $('.patientmrn');
+            parentBtn = $('.patientmrnbtn');
         }
         if( name == 'part' ) {
             parentBtn = $('.accessionbtn');
@@ -10693,7 +10694,7 @@ function getParentBtn( btn, name ) {
         parentBtn = parentEl2.find('#check_btn');     
     }
 
-    console.log("parentBtn.length="+parentBtn.length);
+    //console.log("parentBtn.length="+parentBtn.length);
 
     if( parentBtn.length == 0 ) {
         parentBtn = null;
@@ -10718,11 +10719,11 @@ function checkForm( btnel, parent ) {
         var parentBtnObj = null;
 
         var btnObj = new btnObject(btn);
-        console.log('check form: name='+btnObj.name+', input='+btnObj.key+', type='+btnObj.type);
+        //console.log('check form: name='+btnObj.name+', input='+btnObj.key+', type='+btnObj.type);
 
         //if delete button?
         if( btnObj && btnObj.remove ) {
-            console.log('execute click this');
+            //console.log('execute click this');
             executeClick( btnObj );
             resolve("Delete => no children");
             return;
@@ -10737,20 +10738,30 @@ function checkForm( btnel, parent ) {
             hasParent = false;
         }
 
+        //never click parent if current button is remove button
+        if( btnObj.remove ) {
+            hasParent = false;
+        }
+
+        //never click parent if parent value is not empty
+        if( parentBtnObj && parentBtnObj.key && parentBtnObj.key != '' ) {
+            hasParent = false;
+        }
+
         if( hasParent ) {
-            console.log('execute click parent then this');
+            //console.log('execute click parent then this');
             //alert('execute click parent then this, name='+btnObj.name);
 
             checkForm( parentBtnObj.btn ).
             then(
                 function(response) {
-                    console.log("Success!", response);
+                    //console.log("Success!", response);
                     return executeClick( btnObj );
                 }
             ).
             then(
                 function(response) {
-                    console.log("Chaining with parent OK:", response);
+                    //console.log("Chaining with parent OK:", response);
                     resolve("Chaining with parent OK: "+response);
                 },
                 function(error) {
@@ -10761,105 +10772,20 @@ function checkForm( btnel, parent ) {
 
 
         } else {
-            console.log('execute click this');
+            //console.log('execute click this');
             //alert('execute click this, name='+btnObj.name);
             executeClick( btnObj ).
             then(function(response) {
-                    console.log("Check click this OK:", response);
+                    //console.log("Check click this OK:", response);
                     resolve("Check click this OK: "+response);
             },function(error) {
-                    console.error("Failed!", error);
+                    //console.error("Failed!", error);
                     reject(Error("Failed to execute click with no parent, error="+error));
                 }
             );
         }
 
     });
-}
-
-//this function is strait forward chaining by button name
-function checkForm_ChainByName( btnel ) {
-    
-    var btn = $(btnel);         
-    var btnObj = new btnObject(btn);      
-    var parentBtnObj = null;
-    var grandparentBtnObj = null;
-      
-    console.log('input='+btnObj.key+', type='+btnObj.type);        
-    
-    //if delete button?
-    if( btnObj && btnObj.remove ) {
-        console.log('execute click this');
-        executeClick( btnObj );
-        return;
-    }
-    
-    //patient 
-    if( btnObj.name == 'patient' ) {
-        console.log('execute click this');
-        executeClick( btnObj );
-        return;
-    }
-    
-    //accession 
-    if( btnObj.name == 'accession' ) {
-        console.log('execute click this');
-        executeClick( btnObj );
-        return;
-    }
-    
-    //part
-    if( btnObj.name == 'part' ) {
-        console.log('execute click parent then this');
-        
-        parentBtnObj = new btnObject(btnObj.parentbtn);
-        
-        //working!
-        executeClick( parentBtnObj ).
-        then( 
-            function(response) {
-                console.log("Success!", response);
-                return executeClick( btnObj );
-            } 
-        ).
-        then(
-            function(response) {
-                console.log("Yey JSON!", response);
-            }
-        ); 
-        return;
-    }
-    
-    //block
-    if( btnObj.name == 'block' ) {
-        console.log('execute click grandparent then parent then this');
-        
-        parentBtnObj = new btnObject(btnObj.parentbtn);
-        grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
-        
-        //working!
-        executeClick( grandparentBtnObj ).
-        then( 
-            function(response) {
-                console.log("Success!", response);
-                return executeClick( parentBtnObj );
-            } 
-        ).
-        then( 
-            function(response) {
-                console.log("Success!", response);
-                return executeClick( btnObj );
-            } 
-        ).            
-        then(
-            function(response) {
-                console.log("Yey JSON!", response);
-            }
-        );
-        return;    
-    }     
-         
-    return; 
 }
 /////////////// end of button click //////////////////////
 
@@ -10889,33 +10815,39 @@ function executeClick( btnObjInit ) {
             var grandparentType = null;
             var single = false; //temp
 
-            console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
+            //console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
 
             if( btnObj && btnObj.key == '' && !btnObj.remove ) {
-                console.log('Case 1: key not exists => generate');
+                //console.log('Case 1: key not exists => generate');
                 casetype = 'generate';
             } else if( btnObj && btnObj.key != '' && !btnObj.remove ) {
-                console.log('Case 2: key exists => check');
+                //console.log('Case 2: key exists => check');
                 casetype = 'check';
             } else if( btnObj && btnObj.remove ) {
-                console.log('Case 3: key exists and button delete => delete');
+                //console.log('Case 3: key exists and button delete => delete');
                 casetype = 'delete';
             } else {
-                console.log('Logical error: invalid key');
+                //console.log('Logical error: invalid key');
             }
 
-            console.log('executeClick: casetype='+casetype);
+            //console.log('executeClick: casetype='+casetype);
 
             urlcasename = btnObj.name+'/'+casetype;
 
             if( casetype == 'delete' ) {
+
+                if( !key || key == "" ) {
+                    reject(Error("Delete with no key"));
+                    return;
+                }
+
                 ajaxType = 'DELETE';
 
                 var extraStr = "";
                 if( type ) {
                     extraStr = "?extra="+type;
                 }
-
+                key = trimWithCheck(key);
                 urlcasename = urlcasename + '/' + key + extraStr;
             }
 
@@ -10926,24 +10858,12 @@ function executeClick( btnObjInit ) {
                 parentType = parentBtnObj.type;
             }
 
-//        if( parentBtnObj && parentType && parentKey == '' ) {
-//            console.log('parent key is empty');
-//            reject(Error("parent key is empty"));
-//            //return;
-//        }
-
             //get grand parent
             var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
             if( grandparentBtnObj ) {
                 grandparentKey = grandparentBtnObj.key;
                 grandparentType = grandparentBtnObj.type;
             }
-
-//        if( grandparentBtnObj && grandparentType && grandparentKey == '' ) {
-//            console.log('grandparent key is empty');
-//            reject(Error("grandparent key is empty"));
-//            //return;
-//        }
 
             //trim values
             key = trimWithCheck(key);
@@ -10959,45 +10879,56 @@ function executeClick( btnObjInit ) {
             }
 
             btn.button('loading');
+            //var lbtn = Ladda.create(btn[0]);
+            //lbtn.start();
+
 
             $.ajax({
                 url: urlCheck+urlcasename,
                 type: ajaxType,
                 contentType: 'application/json',
                 dataType: 'json',
+                timeout: _ajaxTimeout,
                 async: true,    //use synchronous call
                 data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
                 success: function (data) {
 
                     btn.button('reset');
+                    //lbtn.stop();
 
-                    console.debug("ajax casetype="+casetype);
+                    //console.debug("ajax casetype="+casetype);
 
+                    //////////////// generate ////////////////
                     if( casetype == 'generate' ) {
                         if( data ) {
-                            console.debug("ajax key value data is found");
+                            //console.debug("ajax generated data is found");
                             invertButton(btn);
                             setElementBlock(btn, data, null, "key");
                             disableInElementBlock(btn, false, null, "notkey", null);
                             resolve("Object was generated successfully");
                         } else {
-                            console.debug("Object was not generated");
+                            //console.debug("Object was not generated");
                             reject(Error("Object was not generated"));
                         }
-                    } //generate
+                    }
+                    //////////////// end of generate ////////////////
 
+                    //////////////// delete ////////////////
                     if( casetype == 'delete' ) {
-                        if( data != '-1' || single ) {
-                            console.debug("Delete Success");
-                            deleteSuccess(btn,single);
+                        if( data >= 0 ) {
+                            console.debug("Delete Success, data="+data);
+                            deleteSuccess(btnObj,single);
+                            resolve("Object was deleted, data="+data);
                         } else {
-                            console.debug("Delete ok with Error");
-                            deleteError(btn,single);
-                            invertButton(btn);
+                            console.debug("Delete with data Error: data="+data);
+                            deleteError(btnObj,single);
+                            //invertButton(btn);
+                            reject(Error("Delete ok with Error"));
                         }
-                        resolve("Object was deleted, data="+data);
-                    } //delete
+                    }
+                    //////////////// end of delete ////////////////
 
+                    //////////////// check ////////////////
                     if( casetype == 'check' ) {
                         if( data == -2 ) {
 
@@ -11006,7 +10937,7 @@ function executeClick( btnObjInit ) {
                             reject(Error("Existing Auto-generated object does not exist in DB"));
 
                         } else
-                        if( data.id ) {
+                        if( data.id && data.id != '' ) {    //test this condition for external user
 
                             var gonext = 1;
 
@@ -11039,29 +10970,34 @@ function executeClick( btnObjInit ) {
                             resolve("ajax key value data is found");
 
                         } else {
-                            console.debug("not found");
+                            //console.debug("not found");
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
                             resolve("data is null");
                         }
 
                     } //check
+                    //////////////// end of check ////////////////
 
                 },
-                error: function () {
+                error: function ( x, t, m ) {
                     btn.button('reset');
+
+                    if( t === "timeout" ) {
+                        getAjaxTimeoutMsg();
+                    }
 
                     if( casetype == 'check' ) {
                         cleanFieldsInElementBlock( btn, null, single );
                         disableInElementBlock(btn, false, "all", null, null);
-                        invertButton(element);
+                        invertButton(btn);
                     }
 
                     if( casetype == 'delete' ) {
-                        deleteError(btn,single);
+                        deleteError(btnObj,single);
                     }
 
-                    console.debug(btnObj.name+": ajax error for casetype="+casetype);
+                    //console.debug(btnObj.name+": ajax error for casetype="+casetype);
                     reject(Error(btnObj.name+": ajax error for casetype="+casetype));
                 }
             }); //ajax
@@ -11189,25 +11125,19 @@ function fieldInputMask() {
 }
 
 //element is check button
-function setDefaultMask( element ) {
+function setDefaultMask( btnObj ) {
 
-    //printF(element,"Set default mask1:");
-    var maskField = getKeyGroupParent(element).find("*[class$='-mask']");
-    //printF(maskField,"Set default mask2:");
+    clearErrorField(btnObj.btn);
 
-    clearErrorField(element);
+    if( btnObj.name == "patient" ) {
+        //console.log("Set default mask for MRN");
+        btnObj.typeelement.inputmask( getMrnDefaultMask() );
+    }
 
-    maskField.each(function() {
-        if( $(this).hasClass('patientmrn-mask') ) {
-            //console.log("Set default mask for MRN");
-            $(this).inputmask( getMrnDefaultMask() );
-        }
-
-        if( $(this).hasClass('accession-mask') ) {
-            //console.log("Set default mask for Accession");
-            $(this).inputmask( { "mask": getAccessionDefaultMask() } );
-        }
-    });  
+    if( btnObj.name == "accession" ) {
+        //console.log("Set default mask for Accession");
+        btnObj.typeelement.inputmask( { "mask": getAccessionDefaultMask() } );
+    }
 
 }
 
@@ -11231,6 +11161,7 @@ function setMrntypeMask( elem, clean ) {
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     var value = elem.select2("val");
+    //console.log("value=" + value);
     var text = elem.select2("data").text;
     //console.log("text=" + text + ", value=" + value);
 
@@ -11314,7 +11245,11 @@ function accessionTypeListener() {
             
             if( accTypeText == 'Auto-generated Accession Number' ) {
                 //console.log("click on order info");
-                checkFormSingle($('#optional_button'));
+                //checkFormSingle($('#optional_button'));
+                if( !$('#orderinfo_param').is(':visible') ) {
+                    $('#next_button').trigger("click");
+                }
+                $('#optional_button').trigger("click");
             }
         }
 
@@ -11329,12 +11264,13 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    //console.log("accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    //printF(accField,"Set Accession Mask:")
+    printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
+    //console.log("value=" + value);
     var text = elem.select2("data").text;
     //console.log("text=" + text + ", value=" + value);
 
@@ -11652,6 +11588,23 @@ function getButtonParent(elem) {
         }
         if( elem.hasClass('blockbtn') ) {
             var parent = $('#block-single');
+        }
+    }
+
+    return parent;
+}
+
+
+//get a block holder by button; this element should contain all form input fields belonging to this button
+function getButtonElementParent( btn ) {
+
+    var parent = btn.closest('.form-element-holder');
+
+    if( orderformtype == "single") {
+        if( btn.hasClass('patientmrnbtn') ) {
+            var parent = $('#patient_0');
+        } else {
+            var parent = $('.singleorderinfo');
         }
     }
 
@@ -12302,7 +12255,6 @@ function initSingleDatepicker( datepickerElement ) {
     });
 }
 
-
 function printF(element,text) {
     var str = "id="+element.attr("id") + ", class=" + element.attr("class")
     if( text ) {
@@ -12310,8 +12262,6 @@ function printF(element,text) {
     }
     console.log(str);
 }
-
-
 
 
 
@@ -12431,6 +12381,9 @@ $(document).ready(function() {
 //        $('.order-filter-btn').trigger("click");
 //    });
 
+    //confirm
+    confirmAction();
+
 });
 
 function submitNewComment(id) {
@@ -12454,6 +12407,7 @@ function submitNewComment(id) {
         url: urlCommentSubmit,
         type: 'POST',
         data: {id: id, selectednote: selectednote, text: text},
+        timeout: _ajaxTimeout,
         success: function (data) {
             //console.log("OK submit a new comment");
             comment_modal.modal('hide');
@@ -12462,7 +12416,12 @@ function submitNewComment(id) {
                 window.parent.location.reload();
             }
         },
-        error: function () {
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
             //console.log("Error submit a new comment");
             var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
             $('#modal_error_'+id).html(errormsg);
@@ -12480,6 +12439,38 @@ function cleanModal() {
     //console.log("close: clean modal");
     //$(this).closest('.modal').find('.modal_error_div').html('');
 }
+
+
+//confirm modal: modified from http://www.petefreitag.com/item/809.cfm
+function confirmAction() {
+    $('a[data-confirm]').click(function(ev) {
+        var href = $(this).attr('href');
+        if (!$('#dataConfirmModal').length) {
+            var modalHtml =
+                //'<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">' +
+                '<div id="dataConfirmModal" class="modal fade">' +
+                    '<div class="modal-dialog">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3 id="dataConfirmLabel">Please Confirm</h3>' +
+                            '</div>' +
+                            '<div class="modal-body text-center"></div>' +
+                            '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
+        }
+        $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+        $('#dataConfirmOK').attr('href', href);
+        $('#dataConfirmModal').modal({show:true});
+        return false;
+    });
+}
+
+
 /*
  * jQuery Idle Timeout 1.2
  * Copyright (c) 2011 Eric Hynds
@@ -12838,11 +12829,15 @@ function idleTimeout() {
         //contentType: 'application/json',
         //dataType: 'json',
         async: false,
+        timeout: _ajaxTimeout,
         success: function (data) {
             //console.debug("data="+data);
             _idleAfter = data;
         },
-        error: function () {
+        error: function ( x, t, m ) {
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
             console.debug("error data="+data);
             _idleAfter = 0;
         }
