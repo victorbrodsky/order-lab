@@ -30,12 +30,13 @@
     {#'bundles/olegorderform/form/css/form.css'#}
     {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
 
+    {#'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
+
     {#jasny is used for clickable rows#}
 
     {% stylesheets
         'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
         'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
-        'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
         'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
         'bundles/olegorderform/ladda/ladda-themeless.css' filter='cssrewrite'
         'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
@@ -49,6 +50,8 @@
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
+
+    {% block additionalcss %}{% endblock %}
 
     <title>
         {% block title %}
@@ -102,6 +105,9 @@
         <!-- footer -->
         {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
 
+        {#'@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
+        {#'@OlegOrderformBundle/Resources/public/form/js/handsontable.js'#}
+
         {% javascripts
             '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
             '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
@@ -124,13 +130,12 @@
             '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
             '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
             '@OlegOrderformBundle/Resources/public/jasny/js/rowlink.js'
-            '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
-            '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
             '@OlegOrderformBundle/Resources/public/q-1/q.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
+        {% block additionaljs %}{% endblock %}
 
     </div>
 

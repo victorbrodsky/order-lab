@@ -6294,7 +6294,7 @@ function getComboboxPathService(urlCommon,ids) {
     var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
-    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" ) {
+    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" ) {
         var optStr = user_id;
         if( !optStr || typeof optStr === 'undefined' ) {
             optStr = "default";
@@ -6302,7 +6302,7 @@ function getComboboxPathService(urlCommon,ids) {
         url = url + "?opt=" + optStr;
     }
 
-    console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
+    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
     if( cicle == "accountreq" || cicle == "edit_user" ) {
         var multiple = true;
     } else {
@@ -6458,6 +6458,14 @@ function fieldInputMask() {
         }
     });
 
+    $.extend($.inputmask.defaults.definitions, {
+        "n": {
+            "validator": "[0-9( )+,#ex//t-]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
     $.extend($.inputmask.defaults, {
         "onincomplete": function(result){
             makeErrorField($(this),false);
@@ -6497,7 +6505,10 @@ function fieldInputMask() {
 
     $(".datepicker").inputmask( "mm/dd/yyyy" );
 
-    $('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+    //$('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+    $('.phone-mask').inputmask("mask", {
+        "mask": "[n]", "repeat": 50, "greedy": false
+    });
 
 //    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
@@ -6649,7 +6660,7 @@ function setAccessiontypeMask(elem,clean) {
     //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    printF(accField,"Set Accession Mask:")
+    //printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
     //console.log("value=" + value);
@@ -6720,7 +6731,7 @@ function noMaskError( element ) {
      if( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ||
          element.hasClass('datepicker') ||
          element.hasClass('patientage-mask') ||
-         element.hasClass('phone-mask') ||
+         //element.hasClass('phone-mask') ||
          element.hasClass('email-mask')
      ) {  //regular mask + non zero mask
 
@@ -8650,7 +8661,7 @@ function checkMrnAccessionConflict() {
         var acctypeField = getKeyGroupParent(accInput).find('.accessiontype-combobox').not("*[id^='s2id_']").first();
 
         var acctypeValue = acctypeField.select2("val");
-        //var acctypeText = acctypeField.select2("data").text;
+        var acctypeText = acctypeField.select2("data").text;
 
         if( orderformtype == "single") {
             var mrnHolder = $('#optional_param').find(".patientmrn");
@@ -8731,17 +8742,17 @@ function checkMrnAccessionConflict() {
 
                             var nl = "\n";    //"&#13;&#10;";
 
-                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+","+acctypeValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
-                                +mrnValue+", "+mrntypeText+" as you have entered.";
-                            var message = message_short + " Please correct ether the MRN or the Accession Number above.";
+                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
+                                +mrnValue+" ["+mrntypeText+"] as you have entered.";
+                            var message = message_short + " Please correct either the MRN or the Accession Number above.";
 
 
                             var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
-                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
+                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+" ["+mrntypeText+"] belong to the same patient";
                             dataquality_message1.push(dataquality_message_1);
 
                             var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
-                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient "+mrnstring+" (as stated by "+orderinfo+")";
+                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" ["+mrntypeText+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
                             dataquality_message2.push(dataquality_message_2);
 
                             var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";

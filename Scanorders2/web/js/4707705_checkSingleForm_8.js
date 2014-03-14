@@ -6,276 +6,209 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var _max_tab_height = 0;
 
-$(document).ready(function() {
-//    $('a, button').click(function() {
-//        $(this).toggleClass('active');
-//    });
+//click check button and verify for errors
+function clickSingleBtn( btn ) {
 
-//    $('.has-spinner').click(function() {
-//        console.log('button pressed');
-//        $(this).toggleClass('active');
-//    });
+    return new Q.promise(function(resolve, reject) {
 
-    // Bind normal buttons
-    Ladda.bind( '.btntest', { timeout: 2000 } );
+        //printF(btn,"######## Button for click single button func: ");
 
-});
+        checkForm( btn, 'none' ).
+        then(
+            function(response) {
+                //console.log("Success!", response);
+                if( $('.maskerror-added').length > 0 ) {
+                    console.log("Validation error");
+                    //reject(Error("Validation error"));
+                    return false;
+                } else {
+                    //console.log("Chaining with parent OK: "+response);
+                    //resolve("Chaining with parent OK: "+response);
+                    return true;
+                }
+            }
+        ).
+        then(
+            function(response) {
+                if( response ) {
+                    resolve("Chaining with parent OK: "+response);
+                } else {
+                    reject(Error("Validation error"));
+                }
+            },
+            function(error) {
+                console.error("Single check failed!", error);
+                reject(Error("Single check failed, error="+error));
+            }
+        );
 
-function checkButtonPromise( fieldsArr, count, limit ) {
-
-    var ajaxOK, promise;
-
-    promise = new Promise();
-
-    ajaxOK = waitWhenReady(fieldsArr, count, limit);
-
-    if( ajaxOK ) {
-        promise.resolve(ajaxOK);
-    } else {
-        promise.reject(ajaxOK);
-    }
-
-    return promise;
-}
-
-//inputField - input field element which is tested for value is being set
-function waitWhenReady( fieldsArr, count, limit ) {
-
-    var inputId = fieldsArr[count];
-
-    var inputField = $(inputId).find('.keyfield').not("*[id^='s2id_']");
-
-    if( inputField.hasClass('combobox')  ) {
-        var testValue = inputField.select2('data').text;
-    } else {
-        var testValue = inputField.val();
-    }
-
-    var checkButton = $(inputId).find('#check_btn');
-    //var isCheckBtn = checkButton.find("i").hasClass('checkbtn');
-
-    if( limit == 0 ) {
-        //printF(checkButton,"click button:");
-        //console.log("check single form: count="+count);
-        //checkButton.trigger("click");   //click only once
-        var checkres = checkForm( checkButton, true );
-    }
-
-    //console.log("error length="+$('.maskerror-added').length);
-    if( $('.maskerror-added').length > 0 || !checkres ) {
-        //fieldsArr = null;
-        return false;
-    }
-
-    return true;
-}
-
-function finalStepCheck() {
-    $('#part-single').css( "width", "20%" );
-    $('#block-single').css( "width", "20%" );
-    $('#maincinglebtn').show();
-    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
-}
-
-//var _lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
-
-function addAsync(a, b) {
-    console.log("addAsync");
-    var deferred = Q.defer();
-    deferred.reject(Error("Network Error"));
-    // Wait 2 seconds and then add a + b
-    setTimeout(function() {
-        console.log("deferred.resolve");
-        deferred.resolve(a + b);
-    }, 2000);
-    console.log("deferred.promise");
-    return deferred.promise;
+    });
 }
 
 //Check form single
 function checkFormSingle( elem ) {
 
-//    (function () {
-//        "use strict";
-//
-//        var deferredAnimate = Q.async(function* (element) {
-//            for (var i = 0; i < 100; ++i) {
-//                element.style.marginLeft = i + "px";
-//                yield Q.delay(20);
-//            }
-//        });
-//
-//        Q.spawn(function* () {
-//            yield deferredAnimate(document.getElementById("box"));
-//            alert("Done!");
-//        });
-//    }());
-//    return false;
+    var lbtn = Ladda.create(elem);
 
-    Q.all([
-            addAsync(1, 1),
-            addAsync(2, 2),
-            addAsync(3, 3)
-        ]).then(
-            function(result1, result2, result3) {
-                console.log(result1, result2, result3);
-            },
-            function(error) {
-                console.log("error="+error);
+    var promiseValidateMask = function() {
+        return new Q.promise(function(resolve, reject) {
+            if( validateMaskFields() > 0 ) {
+                console.log("errors > 0 => return");
+                reject('mask errors');
+            } else {
+                //console.log("mask ok");
+                resolve('mask ok');
             }
-        );
-
-//    addAsync(3, 4).then(
-//        function(result) {
-//            console.log(result);
-//        },
-//        function(error) {
-//            console.log("error="+error);
-//        }
-//    );
-
-    console.log("chaining");
-    var promise = Q.promise(function(resolve, reject) {
-        resolve(1);
-    });
-
-    promise.then(function(val) {
-        console.log(val); // 1
-        return val + 2;
-    }).then(function(val) {
-            console.log(val); // 3
         });
-
-    console.log("finished");
-    return false;
-
-    if( validateMaskFields() > 0 ) {
-        //console.log("errors > 0 => return");
-        return false;
-    }      
-
-    if( $('#maincinglebtn').is(":visible") ) {
-        //console.log("maincinglebtn is visible => return");
-        return false;
     }
 
-//    console.log("cancheck="+cancheck);
-//    if( !cancheck ) {         
-//        return;
-//    }
-
-    //$('#optional_param').collapse('toggle');    //open. Need to open to populate patient (if existed) linked to accession
-
-    console.log("start ajax");
-    //var lbtn = Ladda.create( document.querySelector( '.singleform-optional-button' ) );
-    //_lbtn.start();
-    //Ladda.bind(elem);
-
-    //Ladda.bind( '.singleform-optional-button', { timeout: 2000 } );
-    //return false;
-    //btn.button('loading');
-    //$("elem").toggleClass('active');
-    var _lbtn = Ladda.create(elem);
-    _lbtn.start();
-
-    //$('.singleform-optional-button').append('<img class="spinner-image" src="http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif"/></div>');
-
-    //alert('pause');
-
-    //window.setTimeout( callWaitStack, 300 );
-    //console.log('before');
-    //console.log('after');
-
-    var ajaxOK = callWaitStack();
-
-
-    console.log("stop ajax");
-//    //btn.button('reset');
-    _lbtn.stop();
-
-    if( !ajaxOK ) {
-        return false;
+    var promiseNoMainSingleBtn = function(response) {
+        return new Q.promise(function(resolve, reject) {
+            if( $('#maincinglebtn').is(":visible") ) {
+                //console.log("maincinglebtn is visible => return");
+                reject('maincinglebtn is visible => return');
+            } else {
+                //console.log("start ajax");
+                lbtn.start();
+                resolve('maincinglebtn is ok');
+            }
+        });
     }
 
-    if( $('.maskerror-added').length == 0 ) {
-        collapseElementFix($('#optional_param'));
-        finalStepCheck();
-    } else {
-        return false;
-    }
+    promiseValidateMask().
+    then(promiseNoMainSingleBtn).
+    then(
+        function(response) {
+            //console.log("validation promises success!", response);
+            return clickSingleBtn( $('.checkbtn.accessionbtn') );
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("Accession success!", response);
+            return clickSingleBtn( $('.checkbtn.partbtn') );
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("Part success!", response);
+            return clickSingleBtn( $('.checkbtn.blockbtn') );
+        }
+    ).
+    then(
+        function(response) {
+            finalStepCheck();
+            //console.log("Block success!", response);
+            if( $('.maskerror-added').length > 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    ).
+    then(
+        function(response) {
 
-    initOptionalParam();
+            if( response ) {
 
-    //console.log("ready!!!");
+                //console.log("All Success!", response);
 
-    return true;
-}
+                if( $('.maskerror-added').length == 0 ) {
+                    //ok
+                } else {
+                    //return false;
+                }
 
+                initOptionalParam();
 
-function callWaitStack() {
-    var fieldsArr = new Array();
-    fieldsArr[0] = '#accession-single';
-    fieldsArr[1] = '#part-single';
-    fieldsArr[2] = '#block-single';
+            } else {
+                //console.log("Response is false: ", response);
+            }
 
-    var ajaxOK = true;
-
-    Q.spread([
-        waitWhenReady( fieldsArr, 0, 0 ),
-        waitWhenReady( fieldsArr, 1, 0 ),
-        waitWhenReady( fieldsArr, 2, 0 )
-    ],
-        function( acc, part, block ){
-            if( !acc ) ajaxOK = false;
-            if( !part ) ajaxOK = false;
-            if( !block ) ajaxOK = false;
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("All check single form chaining with parent OK:", response);
+            lbtn.stop();
+        },
+        function(error) {
+            console.error("Single form chaining chaining with parent Error", error);
+            lbtn.stop();
         }
     );
 
-//    if( !waitWhenReady( fieldsArr, 0, 0 ) ) {
-//        ajaxOK = false;
-//    }
-
-//    if( !waitWhenReady( fieldsArr, 1, 0 ) ) {
-//        ajaxOK = false;
-//    }
-//
-//    if( !waitWhenReady( fieldsArr, 2, 0 ) ) {
-//        ajaxOK = false;
-//    }
-
-    return ajaxOK;
 }
 
 
 //Remove form single
 function removeFormSingle( elem ) {
 
-    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);    
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 
-    $("#remove_single_btn").button('loading');
-    console.log("start remove: trigger blockbtn: class="+$('.blockbtn').attr("class"));
+    var btn = $(elem);
 
-    $('.blockbtn').trigger("click");
+    btn.button('loading');
 
-    $('.partbtn').trigger("click");
+    //working!
+    executeClick( new btnObject( $('.blockbtn') ) ).
+    then(
+        function(response) {
+            //console.log(" Block Success!", response);
+            var partBtnObj = new btnObject( $('.partbtn') );
+            return executeClick( partBtnObj );
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("Part Success!", response);
+            var accBtnObj = new btnObject( $('.accessionbtn') );
+            return executeClick( accBtnObj );
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("Acc Success!", response);
+            finalStepDelete();  //acc succ, so show delete button
+            if( $('.patientmrnbtn').hasClass('removebtn') ) {
+                var patientBtnObj = new btnObject( $('.patientmrnbtn') );
+                return executeClick( patientBtnObj );
+            }
+            return "patient was empty";
+        }
+    ).
+    then(
+        function(response) {
+            //console.log("All delete chaining with parent OK:", response);
+        },
+        function(error) {
+            console.error("Single form delete chaining with parent Error", error);
+        }
+    ).done(
+        function(response) {
+            //console.log("Done ", response);
+            btn.button('reset');
+        }
+    );
 
-    $('.accessionbtn').trigger("click");
-    
-    if( $('.patientmrn').find('i').hasClass('removebtn') ) {
-        $('.patientmrn').trigger("click");
-    }  
+    return;
 
+}
+
+function finalStepCheck() {
+    $('#part-single').css( "width", "20%" );
+    $('#block-single').css( "width", "20%" );
+    $('#maincinglebtn').show();
+    collapseElementFix($('#optional_param'));
+    //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
+}
+
+function finalStepDelete() {
     $('#part-single').css( "width", "25%" );
     $('#block-single').css( "width", "25%" );
     $('#maincinglebtn').hide();
     collapseElementFix($('#optional_param'));   //close optional info
-
-    console.log("end of remove");
-    $("#remove_single_btn").button('reset');
-
 }
 
 function checkSingleFormOnNext( elem ) {

@@ -42,7 +42,7 @@
 
                 <td><a href="{{ path('showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.appliedforaccessdate|date('Y-m-d H:i') }}</td>
-                <td>{{ entity.appliedforaccess }}</td>
+                <td>{{ entity.appliedforaccess|capitalize }}</td>
                 <td>
                     {% for pathologyServices in entity.pathologyServices %}
                         "{{ pathologyServices }}"
@@ -79,11 +79,11 @@
 
                             {% if entity.appliedforaccess != 'declined' %}
                                 <li><a data-confirm="Are you sure you want to decline?"
-                                       href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'declined', 'role': 'declined' }) }}">Decline</a>
+                                       href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'declined', 'role': '#' }) }}">Decline</a>
                                 </li>
                             {% endif %}
 
-                            {% if entity.appliedforaccess == 'declined' %}
+                            {% if entity.appliedforaccess == 'declined' or entity.appliedforaccess == 'active' %}
                                 {% set href = "href=\"{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}\"" %}
                                 <li>
                                     <a href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}" data-confirm="Are you sure you want to approve as External Submitter?">Approve as External Submitter</a>
@@ -93,17 +93,12 @@
                                 </li>
                             {% endif %}                                                                
 
-                            {#{% if entity.appliedforaccess != 'active' %}#}
-                                {#<li><a onclick="return confirm('Are you sure?');" #}
-                                       {#href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'active', 'role': '' }) }}">Active</a>#}
-                                {#</li>                  #}
-                            {#{% endif %}#}
+                            {% if entity.appliedforaccess != 'active' %}
+                                <li><a data-confirm="Are you sure you want to Revert status to Active?"
+                                       href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'active', 'role': '#' }) }}">Revert status to Active</a>
+                                </li>
+                            {% endif %}
 
-                            {#{% if entity.appliedforaccess != 'approved' %}#}
-                                {#<li><a onclick="return confirm('Are you sure?');" #}
-                                       {#href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved' }) }}">Accept</a>#}
-                                {#</li>                  #}
-                            {#{% endif %}#}
 
                         </ul>
 

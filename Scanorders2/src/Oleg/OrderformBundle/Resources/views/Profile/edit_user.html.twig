@@ -46,7 +46,7 @@
                 <div class="col-xs-6" align="right">
                     {{ form_label(form.locked) }}
                 </div>
-                <div class="col-xs-6" align="left" style="width: auto;">
+                <div class="col-xs-6" align="left" style="width: 50px;">
                     {{ form_widget(form.locked) }}
                 </div>
             </div>
@@ -67,7 +67,7 @@
         <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
-                <button class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}">Cancel</button>
+                <a class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}" type='button'>Cancel</a>
             </div>
         </p>
     {% endif %}

@@ -109,7 +109,7 @@ function confirmAction() {
         if (!$('#dataConfirmModal').length) {
             var modalHtml =
                 //'<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">' +
-                '<div id="dataConfirmModal" class="modal fade">' +
+                '<div id="dataConfirmModal" class="modal fade data-confirm-modal">' +
                     '<div class="modal-dialog">' +
                         '<div class="modal-content">' +
                             '<div class="modal-header text-center">' +
@@ -117,7 +117,7 @@ function confirmAction() {
                                 '<h3 id="dataConfirmLabel">Please Confirm</h3>' +
                             '</div>' +
                             '<div class="modal-body text-center"></div>' +
-                            '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div>' +
+                            '<div class="modal-footer"><button class="btn btn-primary data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary data-confirm-ok" id="dataConfirmOK">OK</a></div>' +
                         '</div>' +
                     '</div>' +
                 '</div>';
@@ -129,5 +129,14 @@ function confirmAction() {
         $('#dataConfirmModal').modal({show:true});
         return false;
     });
+
+    //TODO: to hide modal, make button onclick function firts close modal, then redirect to href
+    $('.data-confirm-ok').click(function() {
+        console.log('ok clicked!');
+        //$('.data-confirm-cancel').trigger('click');
+        //$('.data-confirm-modal').modal({show:false});
+        $('.data-confirm-modal').modal('hide');
+    });
+
 }
 

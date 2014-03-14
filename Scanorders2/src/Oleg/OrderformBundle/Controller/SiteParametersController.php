@@ -52,9 +52,9 @@ class SiteParametersController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            echo "par not valid!";
-            exit();
+        if( $form->isValid() ) {
+            //echo "par not valid!";
+            //exit();
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();

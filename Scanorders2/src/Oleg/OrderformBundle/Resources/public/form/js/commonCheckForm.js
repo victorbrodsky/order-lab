@@ -446,7 +446,7 @@ function checkMrnAccessionConflict() {
         var acctypeField = getKeyGroupParent(accInput).find('.accessiontype-combobox').not("*[id^='s2id_']").first();
 
         var acctypeValue = acctypeField.select2("val");
-        //var acctypeText = acctypeField.select2("data").text;
+        var acctypeText = acctypeField.select2("data").text;
 
         if( orderformtype == "single") {
             var mrnHolder = $('#optional_param').find(".patientmrn");
@@ -527,17 +527,17 @@ function checkMrnAccessionConflict() {
 
                             var nl = "\n";    //"&#13;&#10;";
 
-                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+","+acctypeValue+" belongs to Patient with "+mrnstring+", not Patient with MRN "
-                                +mrnValue+", "+mrntypeText+" as you have entered.";
-                            var message = message_short + " Please correct ether the MRN or the Accession Number above.";
+                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
+                                +mrnValue+" ["+mrntypeText+"] as you have entered.";
+                            var message = message_short + " Please correct either the MRN or the Accession Number above.";
 
 
                             var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
-                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+", "+mrntypeText+" belong to the same patient";
+                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+" ["+mrntypeText+"] belong to the same patient";
                             dataquality_message1.push(dataquality_message_1);
 
                             var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
-                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+", "+mrntypeText+" and not patient "+mrnstring+" (as stated by "+orderinfo+")";
+                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" ["+mrntypeText+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
                             dataquality_message2.push(dataquality_message_2);
 
                             var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";

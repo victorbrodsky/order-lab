@@ -77,7 +77,7 @@
         {% endif %}
 
         {% if type == 'amend' and (Submitted or Amended) %}
-            <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel amendment process</a>
+            <a class="btn btn-danger" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel amendment process</a>
         {% endif %}
 
         {% if type == 'amend' and Canceled %}

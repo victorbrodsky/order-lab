@@ -756,7 +756,8 @@ class AdminController extends Controller
             "ROLE_EXTERNAL_SUBMITTER" => "External Submitter",
             "ROLE_EXTERNAL_ORDERING_PROVIDER" => "External Ordering Provider",
 
-            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter"
+            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter",
+            "ROLE_BANNED" => "Banned User"
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

@@ -13,6 +13,14 @@ use Oleg\OrderformBundle\Form\UserType;
 use Oleg\OrderformBundle\Helper\UserUtil;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use Oleg\OrderformBundle\Entity\User;
+
+
+use FOS\UserBundle\FOSUserEvents;
+use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\Event\GetResponseUserEvent;
+use FOS\UserBundle\Event\UserEvent;
+
 
 /**
  * StainList controller.
@@ -58,7 +66,7 @@ class UserController extends Controller
         $dql->orderBy("user.id","ASC");
         //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
 
-        $limit = 30;
+        $limit = 1000;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -74,6 +82,79 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/new_user", name="new_user")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Profile:register.html.twig")
+     */
+    public function newUserAction()
+    {
+        //return $this->showUserAction(0);
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = new User();
+
+        //Roles
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
+        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
+
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'cicle' => 'edit_user',
+        );
+    }
+
+
+    /**
+     * @Route("/create_user", name="create_user")
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:Profile:register.html.twig")
+     */
+    public function createUserAction( Request $request )
+    {
+        //return $this->showUserAction(0);
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = new User();
+
+        //Roles
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $rolesArr = array();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+
+        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('listusers'));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'cicle' => 'edit_user',
+        );
+    }
+
+
+
+    //("/new_user/{id}", name="new_user")
+    /**
      * @Route("/show_user/{id}", name="showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
@@ -81,8 +162,16 @@ class UserController extends Controller
     public function showUserAction($id)
     {
 
+        //echo "id=".$id."<br>";
+
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+
+        if( $id == 0 || $id == '' || $id == '' ) {
+            $entity = new User();
+        } else {
+            $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+        }
+
         //$ps = new PathService();
         //$entity->addPathologyServices($ps);
 
@@ -189,6 +278,62 @@ class UserController extends Controller
 //            'delete_form' => $deleteForm->createView(),
         );
     }
+
+
+    /**
+     * @Route("/new_user1", name="new_user1")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     */
+    public function registerAction(Request $request)
+    {
+        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
+        $formFactory = $this->container->get('fos_user.registration.form.factory');
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->container->get('fos_user.user_manager');
+        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+        $dispatcher = $this->container->get('event_dispatcher');
+
+        $user = $userManager->createUser();
+        $user->setEnabled(true);
+
+        $event = new GetResponseUserEvent($user, $request);
+        $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
+
+        if (null !== $event->getResponse()) {
+            return $event->getResponse();
+        }
+
+        $form = $formFactory->createForm();
+        $form->setData($user);
+
+        if ('POST' === $request->getMethod()) {
+            $form->bind($request);
+
+            if ($form->isValid()) {
+                $event = new FormEvent($form, $request);
+                $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+
+                $userManager->updateUser($user);
+
+                if (null === $response = $event->getResponse()) {
+                    $url = $this->container->get('router')->generate('fos_user_registration_confirmed');
+                    $response = new RedirectResponse($url);
+                }
+
+                $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+
+                return $response;
+            }
+        }
+
+        return $this->container->get('templating')->renderResponse('OlegOrderformBundle:Profile:register.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+
+
 
     /**
      * @Route("/genusers", name="generate_users")

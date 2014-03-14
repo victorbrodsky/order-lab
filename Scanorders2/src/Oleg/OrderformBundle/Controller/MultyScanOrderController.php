@@ -625,8 +625,7 @@ class MultyScanOrderController extends Controller {
 
         //History
         $history = null;
-        //$backhistory = null;
-        //$forwardhistory = null;
+        $forwardhistory = null;
 
         if( $routeName == "multy_show") {
 

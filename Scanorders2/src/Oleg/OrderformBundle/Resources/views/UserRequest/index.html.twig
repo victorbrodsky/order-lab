@@ -37,7 +37,7 @@
                 <tr class="order-urgent-status" >
             {% elseif entity.status == 'declined' %}
                 <tr class="order-neutral-status" >
-            {% elseif entity.status == 'accepted' %}
+            {% elseif entity.status == 'approved' %}
                 <tr>
             {% elseif entity.status == 'uncompleted' %}
                 <tr class="order-someattention-status" >
@@ -47,7 +47,7 @@
                 {#<td><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
                 <td>{{ entity.id }}</td>
                 <td>{{ entity.creationdate|date('m/d/Y H:i') }}</td>
-                <td>{{ entity.status }}</td>
+                <td>{{ entity.status|capitalize }}</td>
                 <td>{{ entity.cwid }}</td>
                 <td>{{ entity.hascwid }}</td>
                 <td>{{ entity.name }}</td>
@@ -97,9 +97,9 @@
                                 </li>                  
                             {% endif %}
 
-                            {% if entity.status != 'accepted' %}
-                                <li><a data-confirm="Are you sure you want to Accept"
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'accepted' }) }}">Accept</a>
+                            {% if entity.status != 'approved' %}
+                                <li><a data-confirm="Are you sure you want to Approve"
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'approved' }) }}">Approve</a>
                                 </li>                  
                             {% endif %}
                          

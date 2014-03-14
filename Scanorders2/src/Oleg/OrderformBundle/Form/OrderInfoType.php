@@ -73,7 +73,7 @@ class OrderInfoType extends AbstractType
 
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');
         $builder->add('pathologyService', 'custom_selector', array(
-            'label' => 'Pathology Service:',
+            'label' => 'Service:',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'pathologyService'

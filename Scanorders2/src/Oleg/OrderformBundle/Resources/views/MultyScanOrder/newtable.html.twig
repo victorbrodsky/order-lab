@@ -2,6 +2,25 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+        '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+        '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+
 {% block content %}
 
     <h3 class="text-info">Multi-Slide Table</h3>
@@ -39,8 +58,10 @@
 
         <!-- handsontable -->
         <p>
-            <div id="multi-dataTable"></div>
+            <div id="multi-dataTable" class="text-center" align="middle" style="overflow: scroll"></div>
         </p>
+
+
 
         <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
 
@@ -48,4 +69,3 @@
     {############ END FORM ##############}
 
 {% endblock %}
-  

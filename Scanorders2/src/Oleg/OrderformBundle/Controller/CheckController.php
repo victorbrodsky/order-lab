@@ -290,7 +290,7 @@ class CheckController extends Controller {
                 $parentKey = $patient->obtainValidKeyfield();
                 $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
                 $dateStr = $transformer->transform($parentKey->getCreationdate());
-                $mrnstring = 'MRN '.$parentKey.', '.$parentKey->getKeytype().' (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
+                $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'], (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
                 $extraid = $parentKey->getKeytype()->getId()."";
                 $mrnkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extraid);
                 if( $mrnkeytype == "Auto-generated MRN" ) {

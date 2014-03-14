@@ -26,7 +26,7 @@ security:
 
         chain_provider:
             chain:
-                providers: [fos_userbundle, fr3d_ldapbundle, aperioauth]
+                providers: [fos_userbundle, fr3d_ldapbundle]
         fos_userbundle:
             id: fos_user.user_provider.username
         aperioauth:
@@ -47,18 +47,18 @@ security:
 
             simple-form:
                  always_use_default_target_path: false
-#                 provider: fos_userbundle
-#                 provider: aperioauth
-#                 provider: fr3d_ldapbundle
-                 provider: chain_provider
+#                 #provider: fos_userbundle
+#                 #provider: aperioauth
+#                 #provider: fr3d_ldapbundle
                  authenticator: aperio_authenticator
+                 provider: chain_provider
                  use_referer: true
 
             fr3d_ldap:  ~
 
             form_login:
                  always_use_default_target_path: false
-#                 provider: chain_provider
+#                 #provider: chain_provider
                  use_referer: true
                  success_handler: authentication_handler
                  failure_handler: authentication_handler

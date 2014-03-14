@@ -87,6 +87,10 @@
     </table>
 
 
+    <div class="navigation">
+        {{ knp_pagination_render(entities) }}
+    </div>
+
     <br>
     <h3 class="text-info">User Management</h3>
 
@@ -94,9 +98,13 @@
         <a href="{{ path('generate_users') }}">Generate Users from Excel</a>
     </p>
 
-    <a href="{{ path('fos_user_registration_register') }}">
-        Create a new entry
-    </a>
+    {#<a href="{{ path('fos_user_registration_register') }}">#}
+        {#Create a new entry#}
+    {#</a>#}
+
+    {#<a href="{{ path('new_user') }}">#}
+        {#Create a new user#}
+    {#</a>#}
 
     <br>
 

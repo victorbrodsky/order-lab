@@ -18,11 +18,15 @@ function idleTimeout() {
         //contentType: 'application/json',
         //dataType: 'json',
         async: false,
+        timeout: _ajaxTimeout,
         success: function (data) {
             //console.debug("data="+data);
             _idleAfter = data;
         },
-        error: function () {
+        error: function ( x, t, m ) {
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
             console.debug("error data="+data);
             _idleAfter = 0;
         }

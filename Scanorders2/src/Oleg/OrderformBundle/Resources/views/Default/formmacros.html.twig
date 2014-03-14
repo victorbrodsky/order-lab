@@ -215,14 +215,14 @@
 {% macro history_info(histories, forwardhistory, form) %}
     <div class="well well-sm">
         <p>
-            This Order has been {{ form.vars.value.status.name|lower }} ({{ histories|last.provider }})
+            This order has been {{ form.vars.value.status.name|lower }} ({{ histories|last.provider }})
             on {{ histories|last.changedate|date('Y-m-d') }} at {{ histories|last.changedate|date('h:i a') }}
         </p>
 
         {% for history in histories %}
             {% if history.orderinfo.id != history.currentid and history.changedate > histories|last.changedate %}
                 <p>
-                    This Order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
+                    This order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
                     <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
                     on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.
                 </p>
@@ -258,7 +258,7 @@
             cid:{{ history.currentid }} id:{{ history.orderinfo.id }}
             {% if history.orderinfo.id < history.currentid %}
                 <p>
-                    This Order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
+                    This order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
                     <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
                     on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.
                 </p>
@@ -294,7 +294,7 @@
 {% macro backhistory_info(histories, status, oid) %}
     <div class="well well-sm">
         <p>
-        This Order has been {{ status|lower }} on
+        This order has been {{ status|lower }} on
         {{ histories|last.changedate|date('Y-m-d @H:i') }}
         by
         {{ histories|last.provider }} {#(ROLES: {{ histories|last.roles|join(', ') }}).#}

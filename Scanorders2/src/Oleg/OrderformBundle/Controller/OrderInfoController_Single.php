@@ -78,7 +78,7 @@ class OrderInfoController extends Controller {
             echo "slide barcode = ".$slide->getBarcode()."<br>";
         }
         
-        exit();
+        //exit();
 //        return new Response(
 //            'Created product id: '.$product->getId().' and category id: '.$category->getId()
 //        );

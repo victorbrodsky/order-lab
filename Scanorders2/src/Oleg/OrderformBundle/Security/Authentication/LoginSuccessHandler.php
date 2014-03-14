@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
 use Oleg\OrderformBundle\Security\Authentication\AperioAuthenticator;
 use Oleg\OrderformBundle\Helper\UserUtil;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
@@ -44,9 +45,14 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
         //echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
         //exit();
 
-        if( $this->security->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
-            //redirect to "Welcome to the Scan Order system! Would you like to receive access to this site?"
+        if( $this->security->isGranted('ROLE_BANNED') ) {
+            $options = array('event'=>'Banned User Login Attempt');
+            $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
+            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
+        }
+
+        if( $this->security->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
             $options = array('event'=>'Unapproved User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 

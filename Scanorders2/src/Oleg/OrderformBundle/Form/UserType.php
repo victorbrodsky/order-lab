@@ -49,9 +49,10 @@ class UserType extends AbstractType
         }
 
         $builder->add('username', null, array(
+            'required' => true,
             'label' => 'User Name:',
             'read_only' => $read_only,
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif', 'required'=>'required')
         ));
         $builder->add('firstName', null, array(
             'label' => 'First Name:',
@@ -113,6 +114,7 @@ class UserType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif')
 //            ));
             $builder->add('locked', null, array(
+                'required' => false,
                 'label' => 'Prevent user from logging in (lock):',
                 'attr' => array('class'=>'form-control form-control-modif')
             ));
@@ -120,6 +122,14 @@ class UserType extends AbstractType
 //                'label' => 'Expired',
 //                'attr' => array('class'=>'form-control form-control-modif')
 //            ));
+        }
+
+        if( $this->cicle == 'create' ) {
+            $builder->add('password', null, array(
+                'required' => true,
+                'label' => 'Password:',
+                'attr' => array('class'=>'form-control form-control-modif', 'required'=>'required')
+            ));
         }
 
     }

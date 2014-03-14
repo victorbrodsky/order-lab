@@ -49,7 +49,6 @@ class UserRequestType extends AbstractType
         
         $builder->add( 'phone', 'text', array(
                 'label'=>'Phone Number:',
-                'max_length'=>'20',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif phone-mask'),
         ));

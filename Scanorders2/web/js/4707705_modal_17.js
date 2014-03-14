@@ -42,6 +42,9 @@ $(document).ready(function() {
 //        $('.order-filter-btn').trigger("click");
 //    });
 
+    //confirm
+    confirmAction();
+
 });
 
 function submitNewComment(id) {
@@ -65,6 +68,7 @@ function submitNewComment(id) {
         url: urlCommentSubmit,
         type: 'POST',
         data: {id: id, selectednote: selectednote, text: text},
+        timeout: _ajaxTimeout,
         success: function (data) {
             //console.log("OK submit a new comment");
             comment_modal.modal('hide');
@@ -73,7 +77,12 @@ function submitNewComment(id) {
                 window.parent.location.reload();
             }
         },
-        error: function () {
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
             //console.log("Error submit a new comment");
             var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
             $('#modal_error_'+id).html(errormsg);
@@ -91,3 +100,34 @@ function cleanModal() {
     //console.log("close: clean modal");
     //$(this).closest('.modal').find('.modal_error_div').html('');
 }
+
+
+//confirm modal: modified from http://www.petefreitag.com/item/809.cfm
+function confirmAction() {
+    $('a[data-confirm]').click(function(ev) {
+        var href = $(this).attr('href');
+        if (!$('#dataConfirmModal').length) {
+            var modalHtml =
+                //'<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">' +
+                '<div id="dataConfirmModal" class="modal fade">' +
+                    '<div class="modal-dialog">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3 id="dataConfirmLabel">Please Confirm</h3>' +
+                            '</div>' +
+                            '<div class="modal-body text-center"></div>' +
+                            '<div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
+        }
+        $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+        $('#dataConfirmOK').attr('href', href);
+        $('#dataConfirmModal').modal({show:true});
+        return false;
+    });
+}
+

@@ -259,25 +259,25 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //record history
         $history = new History();
-
-        if( $originalStatus == 'Amended' ) {
-            $history->setEventtype('Amended Order Submission');
-        } else {
-            $history->setEventtype('Initial Order Submission');
-        }
-
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());
         $history->setProvider($entity->getProvider()->first());
         $history->setRoles($entity->getProvider()->first()->getRoles());
         $history->setCurrentstatus($entity->getStatus());
-        if( $entity->getStatus() == 'Not Submitted' ) {
+
+        if( $originalStatus == 'Amended' ) {
+            $history->setEventtype('Amended Order Submission');
+            $history->setNote('Previous order content saved as a Superseded ###'.$originalId.'###');
+        } elseif( $entity->getStatus() == 'Not Submitted' ) {
             $systemUser = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
             $history->setEventtype('Auto-Saved Draft');
+        } else {
+            $history->setEventtype('Initial Order Submission');
         }
+
         $em->persist($history);
         $em->flush();
 

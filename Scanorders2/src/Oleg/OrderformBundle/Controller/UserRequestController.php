@@ -300,7 +300,9 @@ class UserRequestController extends Controller
     public function accessRequestCreateAction($id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') AND
+            false === $this->get('security.context')->isGranted('ROLE_BANNED')
+        ) {
             return $this->redirect( $this->generateUrl('logout') );
         }
 
@@ -326,9 +328,11 @@ class UserRequestController extends Controller
             return $this->render('OlegOrderformBundle:UserRequest:request_confirmation.html.twig',array('text'=>$text));
         }
 
-        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "denied" ) {
+        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "declined" ) {
 
-            $text = 'Your application has been denied. Please contact the administrator if you have any questions.';
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+            $dateStr = $transformer->transform($user->getAppliedforaccessdate());
+            $text = 'You have requested access on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing scanorder@med.cornell.edu if you have any questions.';
 
             $this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
@@ -476,19 +480,33 @@ class UserRequestController extends Controller
         $entity->setAppliedforaccess($status);
 
         if( $status == "approved" && $role == "external" ) {
-            $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            //$entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            $entity->setRoles(array());
             $entity->addRole('ROLE_EXTERNAL_SUBMITTER');
             $entity->addRole('ROLE_EXTERNAL_ORDERING_PROVIDER');
-            $entity->setLocked(false);
-        } else
+            //$entity->setLocked(false);
+        }
+
         if( $status == "approved" && $role == "submitter" ) {
-            $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            //$entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            $entity->setRoles(array());
             $entity->addRole('ROLE_SUBMITTER');
             $entity->addRole('ROLE_ORDERING_PROVIDER');
-            $entity->setLocked(false);
-        } else {
-            $entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
-            $entity->setLocked(true);
+            //$entity->setLocked(false);
+        }
+
+        if( $status == "declined" ) {
+            //$roles[] = "ROLE_BANNED";
+            //$entity->setRoles($roles);
+            $entity->setRoles(array());
+            $entity->addRole('ROLE_BANNED');
+        }
+
+        if( $status == "active" ) {
+            //$roles[] = "ROLE_UNAPPROVED_SUBMITTER";
+            //$entity->setRoles($roles);
+            $entity->setRoles(array());
+            $entity->addRole('ROLE_UNAPPROVED_SUBMITTER');
         }
 
         $em->persist($entity);
