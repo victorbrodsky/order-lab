@@ -101,6 +101,7 @@ class UserUtil {
             //add Roles
             //"ROLE_USER" => "Submitter" is added by default
             $user->addRole('ROLE_ORDERING_PROVIDER');
+            $user->addRole('ROLE_SUBMITTER');
 
             //ROLES: Submitter - ROLE_USER, Processor - ROLE_ADMIN
 

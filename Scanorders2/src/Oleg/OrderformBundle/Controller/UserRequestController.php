@@ -85,7 +85,7 @@ class UserRequestController extends Controller
                 'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
 
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('login') );
         }
 
         return array(

@@ -440,7 +440,7 @@ function getComboboxPathService(urlCommon,ids) {
     var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
-    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" ) {
+    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" ) {
         var optStr = user_id;
         if( !optStr || typeof optStr === 'undefined' ) {
             optStr = "default";
@@ -448,7 +448,7 @@ function getComboboxPathService(urlCommon,ids) {
         url = url + "?opt=" + optStr;
     }
 
-    console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
+    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
     if( cicle == "accountreq" || cicle == "edit_user" ) {
         var multiple = true;
     } else {

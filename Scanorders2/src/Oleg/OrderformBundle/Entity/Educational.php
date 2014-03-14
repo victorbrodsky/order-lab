@@ -22,17 +22,18 @@ class Educational
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $goal;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
     protected $course;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $lesson;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
+     */
+    protected $director;
 
 //    public function __clone() {
 //        if ($this->id) {
@@ -48,29 +49,6 @@ class Educational
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set goal
-     *
-     * @param string $goal
-     * @return Educational
-     */
-    public function setGoal($goal)
-    {
-        $this->goal = $goal;
-    
-        return $this;
-    }
-
-    /**
-     * Get goal
-     *
-     * @return string 
-     */
-    public function getGoal()
-    {
-        return $this->goal;
     }
 
     /**
@@ -119,9 +97,26 @@ class Educational
         return $this->lesson;
     }
 
+    /**
+     * @param mixed $director
+     */
+    public function setDirector($director)
+    {
+        $this->director = $director;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDirector()
+    {
+        return $this->director;
+    }
+
+
     public function __toString(){
 
-        return "Principal: id=".$this->id.", goal=".$this->goal.", course=".$this->course.", lesson".$this->lesson."<br>";
+        return "Principal: id=".$this->id.", course=".$this->course.", lesson".$this->lesson."<br>";
     }
 
 }

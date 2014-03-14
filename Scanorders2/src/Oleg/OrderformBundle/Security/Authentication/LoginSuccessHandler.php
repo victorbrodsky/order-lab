@@ -65,7 +65,7 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
             $options['event'] = "Successful Login";
 
         }
-        elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') ) {
+        elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') || $this->security->isGranted('ROLE_ORDERING_PROVIDER') ) {
 
             $referer_url = $request->headers->get('referer');
             $last = basename(parse_url($referer_url, PHP_URL_PATH));
@@ -88,7 +88,7 @@ class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationF
             //exit();
             $response = new RedirectResponse( $this->router->generate('logout') );
 
-            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/external submitter";
+            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/external/ordering provider submitter";
             
         }
 

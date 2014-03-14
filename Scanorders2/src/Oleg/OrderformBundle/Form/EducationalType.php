@@ -10,16 +10,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EducationalType extends AbstractType
 {
+
+    protected $entity;
+    protected $params;
+
+    public function __construct( $params=null, $entity=null )
+    {
+        if( $params ) $this->params = $params;
+        if( $entity ) $this->entity = $entity;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {     
-//        $helper = new FormHelper();
-        
-        $builder->add( 'goal', 'text', array(
-                'label'=>'Goal:',
-                'required'=> false,
-                'attr' => array('class'=>'form-control form-control-modif'),
-        ));
-        
+    {
+
         $builder->add( 'course', 'text', array(
             'label'=>'Course Title:',
             'max_length'=>'500',
@@ -32,6 +35,13 @@ class EducationalType extends AbstractType
             'max_length'=>'500',
             'required'=>false,
             'attr' => array('class'=>'form-control form-control-modif'),
+        ));
+
+        $builder->add( 'director', null, array(
+            'label'=>'Course Director:',
+            //'max_length'=>'500',
+            'required'=> false,
+            'attr' => array('class' => 'combobox combobox-width'),
         ));
 
     }

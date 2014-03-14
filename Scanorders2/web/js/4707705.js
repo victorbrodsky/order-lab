@@ -12480,9 +12480,10 @@ function confirmAction() {
         return false;
     });
 
+    //TODO: to hide modal, make button onclick function firts close modal, then redirect to href
     $('.data-confirm-ok').click(function() {
         console.log('ok clicked!');
-        $('.data-confirm-cancel').trigger('click');
+        //$('.data-confirm-cancel').trigger('click');
         //$('.data-confirm-modal').modal({show:false});
         $('.data-confirm-modal').modal('hide');
     });
@@ -27382,25 +27383,34 @@ Dragdealer.prototype =
 
 $(document).ready(function() {
 
-    var fields = new Array();
-    for( var i=0; i<500; i++ ) {
-        var row = [i,10, 11, 12, 13];
-        fields.push(row);
-    }
-
     var data = [
-        ["", "Accession Type", "Accession Number", "Part Name", "Block Name"],
-        //fields,
-        ["2008", 10, 11, 12, 13],
-        ["2009", 20, 11, 14, 13],
-        ["2010", 30, 15, 12, 13]
+        [   "ID", "Accession Type", "Accession Number", "Part Name", "Block Name", "Stain", "Magnification", "Diagnosis", "Reason for Scan/Note",
+            "MRN Type", "MRN", "Name", "Sex","DOB", "Age", "Clinical History",
+            "Procedure Type",
+            "Source Organ", "Gross Description", "Differential Diagnoses", "Type of Disease",
+            "Title", "Slide Type", "Microscopic Description", "Results of Special Stains", "Relevant Scanned Images",
+            "Region to scan"
+        ]
+//        ["2008", 10, 11, 12, 13],
+//        ["2009", 20, 11, 14, 13],
+//        ["2010", 30, 15, 12, 13]
     ];
 
-//    $("#multi-dataTable").handsontable({
-//        data: data,
-//        startRows: 6,
-//        startCols: 8
-//    });
+    for( var i=1; i<501; i++ ) {
+        var row = new Array();
+        row = [i,'', '', '', ''];
+        data.push(row);
+    }
+
+    $("#multi-dataTable").handsontable({
+        data: data,
+        minSpareRows: 1,
+        colHeaders: true,
+        contextMenu: true,
+        manualColumnMove: true,
+        manualColumnResize: true,
+        stretchH: 'all'
+    });
 
 });
 // vim:ts=4:sts=4:sw=4:

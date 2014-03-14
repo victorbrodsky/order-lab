@@ -11,9 +11,9 @@ $(document).ready(function() {
 
     var data = [
         [   "ID", "Accession Type", "Accession Number", "Part Name", "Block Name", "Stain", "Magnification", "Diagnosis", "Reason for Scan/Note",
-            "MRN Type", "Mrn", "Name", "Sex","DOB", "Age", "Clinical History",
+            "MRN Type", "MRN", "Name", "Sex","DOB", "Age", "Clinical History",
             "Procedure Type",
-            "Source Organ", "Relevant Paper or Abstract", "Gross Description", "Differential Diagnoses", "Type of Disease",
+            "Source Organ", "Gross Description", "Differential Diagnoses", "Type of Disease",
             "Title", "Slide Type", "Microscopic Description", "Results of Special Stains", "Relevant Scanned Images",
             "Region to scan"
         ]

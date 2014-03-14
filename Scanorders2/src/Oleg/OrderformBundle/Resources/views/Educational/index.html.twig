@@ -6,10 +6,10 @@
     <table class="records_list">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Goal</th>
-                <th>Course</th>
-                <th>Lesson</th>
+                <th>Id</th>             
+                <th>Course Title</th>
+                <th>Lesson Title</th>
+				<th>Course Director</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -17,9 +17,9 @@
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('educational_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.goal }}</td>
                 <td>{{ entity.course }}</td>
                 <td>{{ entity.lesson }}</td>
+				<td>{{ entity.director }}</td>
                 <td>
                 <ul>
                     <li>

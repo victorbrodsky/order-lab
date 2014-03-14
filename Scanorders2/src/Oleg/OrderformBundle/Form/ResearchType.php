@@ -10,6 +10,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResearchType extends AbstractType
 {
+
+    protected $entity;
+    protected $params;
+
+    public function __construct( $params=null, $entity=null )
+    {
+        if( $params ) $this->params = $params;
+        if( $entity ) $this->entity = $entity;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {     
 //        $helper = new FormHelper();
@@ -28,12 +38,13 @@ class ResearchType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
-        $builder->add( 'principal', 'text', array(
+        $builder->add( 'principal', null, array(
             'label'=>'Principal Investigator:',
-            'max_length'=>'500',
+            //'max_length'=>'500',
             'required'=> false,
-            'attr' => array('class'=>'form-control form-control-modif'),
+            'attr' => array('class' => 'combobox combobox-width'),
         ));
+        //$builder->add('principal');
 
     }
 

@@ -324,6 +324,15 @@ class MultyScanOrderController extends Controller {
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //get ordering provider from most recent order
+        $em = $this->getDoctrine()->getManager();
+        //$orderWithOrderingProvider = $em->getRepository('OlegOrderformBundle:History')->findByProvider($user);
+//        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+//        $dql =  $repository->createQueryBuilder("orderinfo");
+//        $dql->select('orderinfo');
+//        $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
+//        $dql->orderBy("accreq.creationdate","DESC");
+
         //echo "MultyScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 

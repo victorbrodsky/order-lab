@@ -29,8 +29,13 @@ class Research
      */
     protected $settitle;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $principal;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
      */
     protected $principal;
 
@@ -74,27 +79,21 @@ class Research
     }
 
     /**
-     * Set principal
-     *
-     * @param string $principal
-     * @return Research
+     * @param mixed $principal
      */
     public function setPrincipal($principal)
     {
         $this->principal = $principal;
-    
-        return $this;
     }
 
     /**
-     * Get principal
-     *
-     * @return string 
+     * @return mixed
      */
     public function getPrincipal()
     {
         return $this->principal;
     }
+
 
     /**
      * @param mixed $settitle
@@ -111,6 +110,8 @@ class Research
     {
         return $this->settitle;
     }
+
+
 
 
     public function __toString(){

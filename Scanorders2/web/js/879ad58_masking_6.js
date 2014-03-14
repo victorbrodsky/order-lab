@@ -66,6 +66,14 @@ function fieldInputMask() {
         }
     });
 
+    $.extend($.inputmask.defaults.definitions, {
+        "n": {
+            "validator": "[0-9( )+,#ex//t-]",
+            "cardinality": 1,
+            'prevalidator': null
+        }
+    });
+
     $.extend($.inputmask.defaults, {
         "onincomplete": function(result){
             makeErrorField($(this),false);
@@ -105,7 +113,10 @@ function fieldInputMask() {
 
     $(".datepicker").inputmask( "mm/dd/yyyy" );
 
-    $('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+    //$('.phone-mask').inputmask("mask", {"mask": "+9 (999) 999-9999"});
+    $('.phone-mask').inputmask("mask", {
+        "mask": "[n]", "repeat": 50, "greedy": false
+    });
 
 //    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
@@ -257,7 +268,7 @@ function setAccessiontypeMask(elem,clean) {
     //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
-    printF(accField,"Set Accession Mask:")
+    //printF(accField,"Set Accession Mask:")
 
     var value = elem.select2("val");
     //console.log("value=" + value);
@@ -328,7 +339,7 @@ function noMaskError( element ) {
      if( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ||
          element.hasClass('datepicker') ||
          element.hasClass('patientage-mask') ||
-         element.hasClass('phone-mask') ||
+         //element.hasClass('phone-mask') ||
          element.hasClass('email-mask')
      ) {  //regular mask + non zero mask
 
