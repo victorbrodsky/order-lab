@@ -44,16 +44,15 @@ class SessionIdleHandler
     {
 
         if (HttpKernelInterface::MASTER_REQUEST != $event->getRequestType()) {
-
             return;
         }
 
-        if ($this->maxIdleTime > 0) {
+        if( $this->maxIdleTime > 0 ) {
 
             $this->session->start();
             $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
 
-            $msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
+            //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
             //echo $msg;
             //exit();
 

@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
+
+//TODO: optimise by removing foreach loops
+
 /**
  * OrderInfo controller.
  *
@@ -469,6 +472,45 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
+
+
+
+    /**
+     * @Route("/optionaluser", name="get-optionaluser")
+     * @Method("GET")
+     */
+    public function getOptionalUserAction() {
+
+        $whereServicesList = "";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:User', 'e')
+            //->select("e.id as id, e.username as text")
+            ->select("e")
+            ->where("e.locked=0 AND (e.roles LIKE :role1 OR e.roles LIKE :role2)")
+            ->orderBy("e.id","ASC")
+            ->setParameter('role1', '%"' . 'ROLE_COURSE_DIRECTOR' . '"%')
+            ->setParameter('role2', '%"' . 'ROLE_PRINCIPAL_INVESTIGATOR' . '"%');
+
+        $users = $query->getQuery()->getResult();
+
+        $output = array();
+        foreach( $users as $user ) {
+            $element = array('id'=>$user->getId()."", 'text'=>$user."");
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
 
 }

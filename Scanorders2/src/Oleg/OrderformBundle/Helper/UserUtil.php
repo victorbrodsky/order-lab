@@ -162,12 +162,14 @@ class UserUtil {
     }
 
     public function generateUserPathServices( $user ) {
-        $services = $user->getPathologyServices();
         $choicesServ = array( "My Orders"=>"My Orders", "Orders I Personally Placed"=>"Orders I Personally Placed", "Proxy Orders Placed For Me"=>"Proxy Orders Placed For Me");
-        foreach( $services as $service ) {
-            $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
+        if( is_object($user) && $user instanceof User ) {
+            $services = $user->getPathologyServices();
+            foreach( $services as $service ) {
+                $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
+            }
         }
-        //print_r($choicesServ);
+
         return $choicesServ;
     }
 

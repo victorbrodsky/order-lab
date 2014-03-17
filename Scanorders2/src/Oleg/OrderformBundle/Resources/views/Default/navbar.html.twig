@@ -33,27 +33,14 @@
                     <li id="nav-bar-res" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
                     <li id="nav-bar-table" class="divider-vertical order"><a href="{{ path('table_create') }}">Multi-Slide Table</a></li>
 
-    {% if 1 == 1 %}
                     <li id="nav-bar-index" class="divider-vertical index">
                         {% if comments is defined and comments > 0 %}
-                            <a id="incoming-orders-menu-title" href="{{ path('index') }}">My Orders</a><!--
-                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('index',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                            <a id="incoming-orders-menu-title" href="{{ path('my-scan-orders') }}">My Orders</a><!--
+                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
                         {% else %}
-                            <a href="{{ path('index') }}" >My Orders</a>
+                            <a href="{{ path('my-scan-orders') }}" >My Orders</a>
                         {% endif %}
                     </li>
-    {% endif %}
-    {% if 1 == 0 %}
-                    <li id="nav-bar-index" class="divider-vertical index" style="display: inline-block !important; !important; padding-right: 2px; margin-right: 0px !important;">
-                        {#style="padding-right: 2px !important; margin-right: 0px !important;"#}
-                        <a href="{{ path('index') }}" >My Orders</a>
-                    </li>
-                    <li id="nav-bar-index-badge" class="divider-vertical index" style="display: inline-block !important; padding-left: 0px !important; margin-left: 0px !important;">
-                        {% if comments is defined and comments > 0 %}
-                            <a href="{{ path('index',{'filter_search_box[filter]': 'With New Comments'}) }}" title="New Comments" data-toggle="tooltip" data-placement="bottom" style="padding-left: 0px !important; margin-left: 0px !important;"><span class="badge">{{ comments }}</span></a>
-                        {% endif %}
-                    </li>
-    {% endif %}
 
                 </ul>
 
@@ -67,7 +54,7 @@
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path('adminindex') }}">Incoming Orders</a></li>
+                            <li><a href="{{ path('incoming-scan-orders') }}">Incoming Orders</a></li>
                             <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
                             <li><a href="{{ path('listusers') }}">Users</a></li>

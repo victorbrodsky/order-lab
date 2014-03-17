@@ -7,10 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Oleg\OrderformBundle\Entity\OrderInfo;
-use Oleg\OrderformBundle\Form\OrderInfoType;
-
+//use Oleg\OrderformBundle\Entity\OrderInfo;
+//use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Helper\OrderUtil;
@@ -27,12 +27,16 @@ class ScanOrderController extends Controller {
     /**
      * Lists all OrderInfo entities.
      *
-     * @Route("/index", name="index")
-     * @Route("/admin/index", name="adminindex")
+     * @Route("/my-scan-orders", name="my-scan-orders")
+     * @Route("/incoming-scan-orders", name="incoming-scan-orders")
      * @Method("GET")
      * @Template()
      */
     public function indexAction( Request $request ) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('logout') );
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -41,8 +45,12 @@ class ScanOrderController extends Controller {
 
         //by user
         $user = $this->get('security.context')->getToken()->getUser();
+        //echo "user=".$user;
+        if( !is_object($user) ) {
+            return $this->redirect( $this->generateUrl('logout') );
+        }
 
-        if( $routeName == "adminindex" ) {
+        if( $routeName == "incoming-scan-orders" ) {
             $services = $this->getServiceFilter();
         } else {
             $services = null;
@@ -83,7 +91,6 @@ class ScanOrderController extends Controller {
         $showprovider = 'false';
 
         //***************** Service filter ***************************//
-        //if( $routeName == "adminindex" ) {
         if( is_numeric($service)  ) {
 
             $userService = $user->getPathologyServices();
@@ -200,66 +207,62 @@ class ScanOrderController extends Controller {
         }
         //***************** END of Search filetr ***************************//
 
+        //***************** User filter ***************************//
+        if( $routeName == "my-scan-orders" ) {
 
-        if( $routeName == "index" ) {
-            //***************** User filter ***************************//
             //TODO: test leftJoin. innerJoin does not show orders without proxyuser link
             $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
-            //show only my order if i'm not an admin and Pathology Services are not choosen
-            if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') && $service == 0 ) {
+
+            //show only my order and the orders where I'm a proxy
+            //Orders I Personally Placed and Proxy Orders Placed For Me: $service == "My Orders"
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+            $criteriastr .= "( provider.id=".$user->getId();
+
+            //***************** Proxy User Orders *************************//
+            $criteriastr .= " OR proxyuser.id=".$user->getId();
+            //***************** END of Proxy User Orders *************************//
+
+            $criteriastr .= " )";
+
+//            //Orders I Personally Placed and Proxy Orders Placed For Me
+//            if( $service == "My Orders" ) {
+//
+//                echo "My Orders<br>";
+//                if( $criteriastr != "" ) {
+//                    $criteriastr .= " AND ";
+//                }
+//                $criteriastr .= "( provider.id=".$user->getId();
+//
+//                //***************** Proxy User Orders *************************//
+//                $criteriastr .= " OR proxyuser.id=".$user->getId();
+//                //***************** END of Proxy User Orders *************************//
+//
+//                $criteriastr .= " )";
+//            }
+
+            if( $service == "Orders I Personally Placed" ) {
+                //echo "Orders I Personally Placed <br>";
                 if( $criteriastr != "" ) {
                     $criteriastr .= " AND ";
                 }
-                $criteriastr .= "( provider.id=".$user->getId();
-
-                //***************** Proxy User Orders *************************//
-                $criteriastr .= " OR proxyuser.id=".$user->getId();
-                //***************** END of Proxy User Orders *************************//
-
-                $criteriastr .= " )";
-            }
-
-            if( $service == "My Orders" ) {
-                //show only my order if i'm not an admin and Pathology Services are not choosen
-                //Orders I Personally Placed and Proxy Orders Placed For Me
-                if( $service == 0 &&
-                    false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')
-
-                ) {
-                    if( $criteriastr != "" ) {
-                        $criteriastr .= " AND ";
-                    }
-                    $criteriastr .= "( provider.id=".$user->getId();
-
-                    //***************** Proxy User Orders *************************//
-                    $criteriastr .= " OR proxyuser.id=".$user->getId();
-                    //***************** END of Proxy User Orders *************************//
-
-                    $criteriastr .= " )";
-                }
-            }
-            if( $service == "Orders I Personally Placed" ) {
-                if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') && $service == 0 ) {
-                    if( $criteriastr != "" ) {
-                        $criteriastr .= " AND ";
-                    }
-                    $criteriastr .= "provider.id=".$user->getId();
-                }
+                $criteriastr .= "provider.id=".$user->getId();
             }
             if( $service == "Proxy Orders Placed For Me" ) {
-                if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') && $service == 0 ) {
-                    if( $criteriastr != "" ) {
-                        $criteriastr .= " AND ";
-                    }
-                    //***************** Proxy User Orders *************************//
-                    $criteriastr .= "proxyuser.id=".$user->getId();
-                    //***************** END of Proxy User Orders *************************//
+                //echo "Proxy Orders Placed For Me <br>";
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
                 }
+                //***************** Proxy User Orders *************************//
+                $criteriastr .= "proxyuser.id=".$user->getId();
+                //***************** END of Proxy User Orders *************************//
             }
-            //***************** END of User filetr ***************************//
+
         }
-        
-        if( $routeName == "adminindex" ) {
+        //***************** END of User filetr ***************************//
+
+        if( $routeName == "incoming-scan-orders" ) {
             //echo "admin index filter <br>";
             //***************** Service filter ***************************//
             
@@ -276,7 +279,7 @@ class ScanOrderController extends Controller {
         $params = $this->get('request_stack')->getCurrentRequest()->query->all();
         $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
         
-        if( $routeName == "index" ) {          
+        if( $routeName == "my-scan-orders" ) {
             if( $params == null || count($params) == 0 ) {
                 $dql->orderBy("orderinfo.orderdate","DESC");
             }
@@ -285,7 +288,7 @@ class ScanOrderController extends Controller {
             }
         }
                
-        if( $routeName == "adminindex" ) {
+        if( $routeName == "incoming-scan-orders" ) {
             if( $sort == '' ) {
                 $dql->orderBy("orderinfo.priority","DESC");
                 $dql->addOrderBy("orderinfo.scandeadline","ASC");
@@ -379,7 +382,7 @@ class ScanOrderController extends Controller {
      * @Method("GET")
      * @Template()
      */
-    public function statusAction($id, $status) {
+    public function statusAction(Request $request, $id, $status) {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
@@ -401,7 +404,11 @@ class ScanOrderController extends Controller {
 
         $this->get('session')->getFlashBag()->add('status-changed',$res['message']);
 
-        return $this->redirect($this->generateUrl('index'));
+
+        $referer_url = $request->headers->get('referer');
+        //$referer_url = 'my-scan-orders';
+        //return $this->redirect($this->generateUrl($previouspath));
+        return new RedirectResponse($referer_url);
     }
 
     /**

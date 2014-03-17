@@ -52,7 +52,7 @@
         <thead>
             <tr>
                 
-                {% if routename == 'index' %}
+                {% if routename == 'my-scan-orders' %}
                 
                     <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
@@ -69,7 +69,7 @@
                 {% endif %}
                        
                        
-                {% if routename == 'adminindex' %}
+                {% if routename == 'incoming-scan-orders' %}
                        
                     <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.scandeadline') }}</th>
@@ -99,7 +99,7 @@
                 {% set statAndNotFilled = true  %}
             {% endif %}
 
-            {% if routename == 'index' %}   <!-- index -->
+            {% if routename == 'my-scan-orders' %}   <!-- my-scan-orders -->
 
                 {% if entity.status.name == 'Submitted' or entity.status.name == 'Amended'
                         or entity.status.name == 'On Hold: Slides Received'
@@ -127,7 +127,7 @@
 
                 {% endif %}
 
-            {% else %}  <!-- adminindex -->
+            {% else %}  <!-- incoming-scan-orders -->
 
                 {% if entity.status.name == 'Submitted' %}
 
@@ -160,7 +160,7 @@
 
             <tr class="{{ trclassname }}" >
 
-            {% if routename == 'index' %}
+            {% if routename == 'my-scan-orders' %}
                     
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>{{ entity.status }}</td>
@@ -183,7 +183,7 @@
                     
             {% endif %}
                     
-            {% if routename == 'adminindex' %}    
+            {% if routename == 'incoming-scan-orders' %}
                                    
                 <td>
                     <a href="{{ path('multy_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a>

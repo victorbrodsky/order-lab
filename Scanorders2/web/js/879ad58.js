@@ -5885,6 +5885,7 @@ var delivery = new Array();
 var returnslide = new Array();
 var pathservice = new Array();
 var userpathservice = new Array();
+var optionaluser = new Array();
 var userpathserviceflag = false;
 
 var asyncflag = true;
@@ -5931,6 +5932,7 @@ function customCombobox() {
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+        getOptionalUser(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
     }
 
@@ -6330,6 +6332,32 @@ function getComboboxPathService(urlCommon,ids) {
 
 }
 
+//#############  optional users  ##############//
+function getOptionalUser(urlCommon,ids) {
+
+    var targetid = ".ajax-combobox-optionaluser";
+    var url = urlCommon+"optionaluser";
+
+//    if( cicle == "new" || cicle == "create" || cicle == "amend" ) {
+//        var optStr = "default";
+//        url = url + "?opt=" + optStr;
+//    }
+
+    if( optionaluser.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+                optionaluser = data;
+                populateSelectCombobox( targetid, optionaluser, "Choose an option" );
+            });
+    } else {
+        populateSelectCombobox( targetid, optionaluser, "Choose and option" );
+    }
+
+}
+
 
 function initComboboxJs(ids) {
 
@@ -6346,6 +6374,7 @@ function initComboboxJs(ids) {
         getComboboxProcedure(urlCommon,ids);
         getComboboxOrgan(urlCommon,ids);
         getComboboxPathService(urlCommon,ids);
+        getOptionalUser(urlCommon,ids);
         slideType(ids);
     }
 }
@@ -7023,7 +7052,7 @@ var orderformtype = $("#orderformtype").val();
 var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
 
-var _ajaxTimeout = 15000;  //15000 => 15 sec
+var _ajaxTimeout = 20000;  //15000 => 15 sec
 
 //var _autogenAcc = 8;
 //var _autogenMrn = 13;

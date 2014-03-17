@@ -43,7 +43,7 @@ class UserController extends Controller
                 'notice',
                 'You do not have permission to visit this page'
             );
-            return $this->redirect($this->generateUrl('index'));
+            return $this->redirect($this->generateUrl('my-scan-orders'));
         }
 
         //$userManager = $this->container->get('fos_user.user_manager');
@@ -348,7 +348,7 @@ class UserController extends Controller
                 'notice',
                 'You do not have permission to visit this page'
             );
-            return $this->redirect($this->generateUrl('index'));
+            return $this->redirect($this->generateUrl('my-scan-orders'));
         }
 
         $userutil = new UserUtil();

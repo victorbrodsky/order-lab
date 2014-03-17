@@ -22,6 +22,7 @@ use Oleg\OrderformBundle\Form\DataTransformer\PathServiceTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\UserPathServicesTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
 
 class CustomSelectorType extends AbstractType {
 
@@ -86,6 +87,9 @@ class CustomSelectorType extends AbstractType {
                 break; 
             case "blockname":
                 $transformer = new StringTransformer($this->om, $username);
+                break;
+            case "optionalUser":
+                $transformer = new UserTransformer($this->om, $username);
                 break;
             default:
                 $transformer = new StringTransformer($this->om, $username);

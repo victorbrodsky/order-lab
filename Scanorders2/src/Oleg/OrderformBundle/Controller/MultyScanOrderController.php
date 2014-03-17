@@ -324,14 +324,32 @@ class MultyScanOrderController extends Controller {
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        //get ordering provider from most recent order
+        //***************** get ordering provider from most recent order ***************************//
+        $lastProxy = null;
         $em = $this->getDoctrine()->getManager();
         //$orderWithOrderingProvider = $em->getRepository('OlegOrderformBundle:History')->findByProvider($user);
-//        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-//        $dql =  $repository->createQueryBuilder("orderinfo");
-//        $dql->select('orderinfo');
-//        $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
-//        $dql->orderBy("accreq.creationdate","DESC");
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+        $dql =  $repository->createQueryBuilder("orderinfo");
+        $dql->select('orderinfo');
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+        $dql->where("provider=:user AND proxyuser IS NOT NULL");
+        $dql->orderBy("orderinfo.orderdate","DESC");
+        $query = $em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
+        $lastOrderWithProxies = $query->getResult();
+        //echo "count=".count($lastOrderWithProxies)."<br>";
+
+        if( count($lastOrderWithProxies) > 0 ) {
+            if( count($lastOrderWithProxies) > 1 ) {
+                throw new \Exception( 'More than one orderinfo found count='.count($lastOrderWithProxies).' objects' );
+            }
+            $lastOrderWithProxy = $lastOrderWithProxies[0];
+            $lastProxy = $lastOrderWithProxy->getProxyuser()->first();
+        } else {
+            $lastProxy = null;
+        }
+        //echo "lastProxy=".$lastProxy."<br>";
+        //***************** end of get ordering provider from most recent order ***************************//
 
         //echo "MultyScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
@@ -368,10 +386,14 @@ class MultyScanOrderController extends Controller {
             //echo " add edu ";
             $type = "Educational Multi-Slide Scan Order";
             $edu = new Educational();
+            if( $lastProxy )
+                $edu->setDirector($lastProxy);
             $entity->setEducational($edu);
         } elseif( $routeName == "res_new") {
             $type = "Research Multi-Slide Scan Order";
             $res = new Research();
+            if( $lastProxy )
+                $res->setPrincipal($lastProxy);
             $entity->setResearch($res);
         } elseif( $routeName == "single_new") {
             $type = "One Slide Scan Order";
@@ -382,6 +404,9 @@ class MultyScanOrderController extends Controller {
         } else {
             $type = "One Slide Scan Order";
         }
+
+        if( $lastProxy )
+            $entity->setProxyuser($lastProxy);
 
         //$slide2 = new Slide();
         //$block->addSlide($slide2);
