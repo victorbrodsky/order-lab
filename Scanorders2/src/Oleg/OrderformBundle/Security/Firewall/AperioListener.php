@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterfac
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-//use Oleg\OrderformBundle\Security\Authentication\AperioToken;
 
 
 class AperioListener implements ListenerInterface  {
@@ -39,10 +38,10 @@ class AperioListener implements ListenerInterface  {
 
         //use default handle
         return;
+
         //exit("using handle Aperio Listener");
 
         $request = $event->getRequest();
-
         $username = $request->get('_username');
         $password = $request->get('_password');
         //echo "username=".$username.", password=".$password."<br>";
@@ -50,10 +49,6 @@ class AperioListener implements ListenerInterface  {
         if( !$username || $username == "" ) {
             return;
         }
-
-//        $unauthenticatedToken = new AperioToken();
-//        $unauthenticatedToken->setUsername($username);
-//        $unauthenticatedToken->setCredentials($password);
 
         $unauthenticatedToken = new UsernamePasswordToken(
             $username,

@@ -18,12 +18,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-            //LDAPs
-//            new IMAG\LdapBundle\IMAGLdapBundle(),
-//            new Daps\LdapBundle\DapsLdapBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new FR3D\LdapBundle\FR3DLdapBundle(),
-//            new Ztec\Security\ActiveDirectoryBundle\ZtecSecurityActiveDirectoryBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -74,6 +74,8 @@ class AdminController extends Controller
     public function generateAllAction()
     {
 
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
         $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
         $count_formtype = $this->generateFormType();
@@ -90,7 +92,7 @@ class AdminController extends Controller
         $count_siteParameters = $this->generateSiteParameters();
         $count_comments = $this->generateProcessorComments();
         $userutil = new UserUtil();
-        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
+        $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
 
         $this->get('session')->getFlashBag()->add(

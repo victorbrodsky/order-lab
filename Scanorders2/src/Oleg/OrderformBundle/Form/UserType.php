@@ -14,9 +14,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-//use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
-//use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
-use Doctrine\ORM\EntityRepository;
+
+use Oleg\OrderformBundle\Helper\TimeZoneUtil;
 
 class UserType extends AbstractType
 {
@@ -85,6 +84,18 @@ class UserType extends AbstractType
         $builder->add('office', null, array(
             'label' => 'Office Location:',
             'attr' => array('class'=>'form-control form-control-modif')
+        ));
+
+
+        //timezone
+        $tzUtil = new TimeZoneUtil();
+
+        $builder->add( 'timezone', 'choice', array(
+            'label' => 'Time Zone:',
+            'choices' => $tzUtil->tz_list(),
+            'required' => true,
+            'preferred_choices' => array('America/New_York'),
+            'attr' => array('class' => 'combobox combobox-width')
         ));
 
 

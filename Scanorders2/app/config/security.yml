@@ -43,8 +43,8 @@ security:
 
     firewalls:
 
-
-        aperio_ldap_firewall:    #this firewall name is indicated as $providerKey in AperioProvider
+        #this firewall name must be the same as in the bundle's service.yml
+        aperio_ldap_firewall:
 
             pattern: ^/
 

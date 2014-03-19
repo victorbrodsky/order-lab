@@ -9,29 +9,39 @@
 
 $(document).ready(function() {
 
-    var data = [
-        [   "ID", "Accession Type", "Accession Number", "Part Name", "Block Name", "Stain", "Magnification", "Diagnosis", "Reason for Scan/Note",
-            "MRN Type", "MRN", "Name", "Sex","DOB", "Age", "Clinical History",
-            "Procedure Type",
-            "Source Organ", "Gross Description", "Differential Diagnoses", "Type of Disease",
-            "Title", "Slide Type", "Microscopic Description", "Results of Special Stains", "Relevant Scanned Images",
-            "Region to scan"
-        ]
-//        ["2008", 10, 11, 12, 13],
-//        ["2009", 20, 11, 14, 13],
-//        ["2010", 30, 15, 12, 13]
+    var colHeader = [
+            "ID", "Accession Type", "Accession Number", "Part Name", "Block Name", "Stain", "Magnification", "Diagnosis", "Reason for Scan/Note",   //9
+            "MRN Type", "MRN", "Name", "Sex", "DOB", "Age", "Clinical History",  //7
+            "Procedure Type",   //1
+            "Source Organ", "Gross Description", "Differential Diagnoses", "Type of Disease",   //4
+            "Title", "Slide Type", "Microscopic Description", "Results of Special Stains", "Relevant Scanned Images",   //5
+            "Region to scan"    //1
     ];
+    //total: 27
 
-    for( var i=1; i<501; i++ ) {
-        var row = new Array();
-        row = [i,'', '', '', ''];
+
+    var data = new Array();
+
+    var rows = 51;//501;
+
+    console.log( "header length="+colHeader.length );
+
+    var rowElements = new Array();
+    for(var i = 0; i < colHeader.length-1; i++) {
+        rowElements.push(' ');
+    }
+
+    for( var i=1; i<rows; i++ ) {
+        var index = new Array();
+        index = [i];
+        var row = index.concat(rowElements);
         data.push(row);
     }
 
     $("#multi-dataTable").handsontable({
         data: data,
+        colHeaders: colHeader,
         minSpareRows: 1,
-        colHeaders: true,
         contextMenu: true,
         manualColumnMove: true,
         manualColumnResize: true,

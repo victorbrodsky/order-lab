@@ -105,6 +105,11 @@ class User extends BaseUser
      */
     protected $appliedforaccessdate;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $timezone;
+
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
@@ -361,6 +366,23 @@ class User extends BaseUser
     {
         return $this->primaryPathologyService;
     }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
 
 }
 

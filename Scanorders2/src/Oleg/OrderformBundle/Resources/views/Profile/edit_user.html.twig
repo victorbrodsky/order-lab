@@ -57,8 +57,10 @@
         {% endif %}
     {% endif %}
 
+    {{ formmacros.field(form.timezone) }}
+
     <br>
-    {{ form_rest(form) }}
+    {#{{ form_rest(form) }}#}
     {#{{ form_widget(form._token) }}#}
 
     {#{{ form(form) }}#}

@@ -11,18 +11,31 @@ namespace Oleg\OrderformBundle\Security\Authentication;
 
 use FR3D\LdapBundle\Ldap\LdapManager as BaseLdapManager;
 use FR3D\LdapBundle\Model\LdapUserInterface;
+use FR3D\LdapBundle\Driver\LdapDriverInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class LdapManager extends BaseLdapManager
 {
+
+    private $timezone;
+
+    public function __construct( LdapDriverInterface $driver, $userManager, array $params, $timezone = null ) {
+
+        parent::__construct($driver,$userManager,$params);
+
+        $this->timezone = $timezone;
+    }
+
     protected function hydrate(UserInterface $user, array $entry)
     {
 
-        exit("using ldap! <br>");
+        //exit("using ldap! <br>");
 
         parent::hydrate($user, $entry);
 
         $user->setCreatedby('ldap');
+        $user->setCreatedby('ldap');
+        $user->setTimezone($this->timezone);
 
         $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
 

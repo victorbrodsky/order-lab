@@ -16,7 +16,7 @@ use Oleg\OrderformBundle\Entity\Logger;
 
 class UserUtil {
 
-    public function generateUsersExcel($em) {
+    public function generateUsersExcel( $em, $default_time_zone = null ) {
         $inputFileName = __DIR__ . '/../Helper/users.xlsx';
 
         try {
@@ -41,6 +41,7 @@ class UserUtil {
         $user->setPassword("");
         $user->setCreatedby('system');
         $user->addRole('ROLE_PROCESSOR');
+        $user->setTimezone($default_time_zone);
         $user->setEnabled(true);
         $user->setLocked(true); //system is locked, so no one can logged in with this account
         $user->setExpired(false);
@@ -97,6 +98,7 @@ class UserUtil {
             $user->setOffice($office);
             $user->setPassword("");
             $user->setCreatedby('excel');
+            $user->setTimezone($default_time_zone);
 
             //add Roles
             //"ROLE_USER" => "Submitter" is added by default

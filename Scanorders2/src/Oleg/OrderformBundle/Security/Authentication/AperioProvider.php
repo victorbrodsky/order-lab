@@ -5,35 +5,32 @@ namespace Oleg\OrderformBundle\Security\Authentication;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
-use Oleg\OrderformBundle\Security\Authentication\AperioToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
-//class AperioProvider extends UserAuthenticationProvider {
+
 class AperioProvider implements AuthenticationProviderInterface {
 
     private $userProvider;
     private $serviceContainer;
     private $providerKey;
+    private $timezone;
 
-    public function __construct( UserProviderInterface $userProvider, $serviceContainer, $providerKey = null )
+    public function __construct( UserProviderInterface $userProvider, $serviceContainer, $providerKey = null, $timezone )
     {
         $this->userProvider = $userProvider;
         $this->serviceContainer = $serviceContainer;
         $this->providerKey = $providerKey;
+        $this->timezone = $timezone;
     }
 
     public function authenticate( TokenInterface $token )
     {
         //exit("using Aperio Authentication Provider!!!");
 
-        $aperioUtil = new AperioUtil();
+        $aperioUtil = new AperioUtil( $this->timezone );
 
         $user = $aperioUtil->aperioAuthenticateToken( $token, $this->serviceContainer );
 
@@ -52,17 +49,7 @@ class AperioProvider implements AuthenticationProviderInterface {
 
     public function supports(TokenInterface $token)
     {
-        //return $token instanceof UsernamePasswordToken;
         return $token instanceof UsernamePasswordToken && $token->getProviderKey() === $this->providerKey;
     }
 
-//    protected function retrieveUser($username, UsernamePasswordToken $token) {
-//        //exit("Aperio Authentication: retrieveUser");
-//        return null;
-//    }
-//
-//    protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token) {
-//        //exit("Aperio Authentication: checkAuthentication");
-//        //return false;
-//    }
 }

@@ -16,10 +16,15 @@ class AperioUtil {
 
     private $ldap = true;
     private $test = false;
+    private $timezone;
+
+    public function __construct( $timezone = null ) {
+        $this->timezone = $timezone;
+    }
 
     public function aperioAuthenticateToken( TokenInterface $token, $serviceContainer ) {
 
-        //echo "AperioAuthenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
+        //echo "Aperio Authenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
         //exit("using Aperio Authenticator: authenticate Token");
 
         $AuthResult = $this->AperioAuth( $token->getUsername(), $token->getCredentials() );
@@ -44,6 +49,7 @@ class AperioUtil {
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
+                $user->setTimezone($this->timezone);
 
                 //set Roles: aperio users can submit order by default.
                 if( $this->test ) {
@@ -77,9 +83,6 @@ class AperioUtil {
             //$roles = ADB_GetCurrentUserRoles();
             $aperioRoles = ADB_GetUserRoles($userid); //ADB_GetUserRoles
             //$roles = GetUserRoles($userid); //ADB_GetUserRoles
-            echo "roles:";
-            print_r($aperioRoles);
-            echo "end of roles<br><br>";
 
             //TODO: get exact role names as in 'c.med.cornell.edu' server
             $addOrderingProviderRole = false;
@@ -135,14 +138,14 @@ class AperioUtil {
             $AuthResult = $client->Authenticate($loginName,$password);
 
             //check if auth is ok: define ('LOGON_FAILED', '-7004');           // UserName is incorrect
-            echo "ReturnCode=".$AuthResult['ReturnCode']."<br>";
+            //echo "ReturnCode=".$AuthResult['ReturnCode']."<br>";
             if( $AuthResult['ReturnCode'] == '-7004' || !isset($AuthResult['UserId']) ) {
-                echo "LOGON_FAILED!!! <br>";
+                //echo "LOGON_FAILED!!! <br>";
                 return $AuthResult;
             }
 
         } else {
-            echo "Aperio Auth Changeit back !!!";
+            //echo "Aperio Auth Changeit back !!!";
             $AuthResult = array(
                 'UserId' => 11,
                 'ReturnCode' => 0,
@@ -151,8 +154,8 @@ class AperioUtil {
             //$loginName = 'oli2002';
         }
 
-        echo "<br>AuthResult:<br>";
-        print_r($AuthResult);
+        //echo "<br>AuthResult:<br>";
+        //print_r($AuthResult);
         //exit('AperioAuth');
 
         return $AuthResult;
