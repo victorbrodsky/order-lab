@@ -2,49 +2,25 @@
 /**
  * Created by JetBrains PhpStorm.
  * User: oli2002
- * Date: 1/22/14
- * Time: 8:33 AM
+ * Date: 3/18/14
+ * Time: 7:21 PM
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Security\Authentication;
+namespace Oleg\OrderformBundle\Security\Util;
 
-use Symfony\Component\Security\Core\Authentication\SimpleFormAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\UserBundle\Security\UserProvider as FosUserProvider;
-use Oleg\OrderformBundle\Entity\User;
 
-class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthenticatorInterface
-{
-    private $encoderFactory;
-    private $serviceContainer;
+class AperioUtil {
+
     private $ldap = true;
     private $test = false;
 
-    public function __construct(EncoderFactoryInterface $encoderFactory, $serviceContainer)
-    {
-        //exit("Aperio Authenticator constructor <br>");
-        $this->encoderFactory = $encoderFactory;
-        $this->serviceContainer = $serviceContainer;
-    }
+    public function aperioAuthenticateToken( TokenInterface $token, $serviceContainer ) {
 
-    public function createToken(Request $request, $username, $password, $providerKey)
-    {
-        echo "create Token_TODEL <br>";
-        //exit("AperioAuthenticator");
-        return new UsernamePasswordToken($username, $password, $providerKey);
-    }
-
-    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
-    {
         echo "AperioAuthenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
-        exit("using Aperio Authenticator: authenticate Token");
+        //exit("using Aperio Authenticator: authenticate Token");
 
         $AuthResult = $this->AperioAuth( $token->getUsername(), $token->getCredentials() );
 
@@ -55,7 +31,7 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
             echo "<br>Aperio got UserId!<br>";
 
 //            $user = $userProvider->findUser($token->getUsername());
-            $userManager = $this->serviceContainer->get('fos_user.user_manager');
+            $userManager = $serviceContainer->get('fos_user.user_manager');
             $user = $userManager->findUserByUsername($token->getUsername());
 
             if( !$user ) {
@@ -74,7 +50,6 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
                     $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
                 } else {
                     $user->addRole('ROLE_SUBMITTER');           //Submitter
-                    $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
                 }
 
                 //TDODD: Remove: for testing at home;
@@ -94,7 +69,45 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 
             } //if user
 
-            return new UsernamePasswordToken($user, 'bar', $providerKey, $user->getRoles());
+
+            //get roles: Faculty, Residents, or Fellows
+            $_SESSION ['AuthToken'] = $AuthResult['Token'];
+            $userid = $AuthResult['UserId'];
+            //$roles = $client->GetUserRoleRecordsById($userid); //ADB_GetUserRoles
+            //$roles = ADB_GetCurrentUserRoles();
+            $aperioRoles = ADB_GetUserRoles($userid); //ADB_GetUserRoles
+            //$roles = GetUserRoles($userid); //ADB_GetUserRoles
+            echo "roles:";
+            print_r($aperioRoles);
+            echo "end of roles<br><br>";
+
+            //TODO: get exact role names as in 'c.med.cornell.edu' server
+            $addOrderingProviderRole = false;
+            foreach( $aperioRoles as $role ) {
+                echo "Role: Id = ".$role->Id.", Description=".$role->Description.", Name=".$role->Name."<br>";
+                if( $role->Name == "Faculty" ) {
+                    $user->addRole("ROLE_PATHOLOGY_FACULTY");
+                    $addOrderingProviderRole = true;
+                }
+                if( $role->Name == "Fellows" ) {
+                    $user->addRole("ROLE_PATHOLOGY_FELLOW");
+                    $addOrderingProviderRole = true;
+                }
+                if( $role->Name == "Residents" ) {
+                    $user->addRole("ROLE_PATHOLOGY_RESIDENT");
+                    $addOrderingProviderRole = true;
+                }
+            }
+
+            if( $addOrderingProviderRole ) {
+                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+                $user->addRole('ROLE_COURSE_DIRECTOR');
+                $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
+            }
+
+            //exit('AperioAuth');
+
+            return $user;
 
         } else {
             throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
@@ -103,15 +116,8 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
         throw new AuthenticationException('Aperio: Invalid username or password');
     }
 
-    public function supportsToken(TokenInterface $token, $providerKey)
-    {
-        //echo "supports Token_TODEL <br>";
-        //exit("AperioAuthenticator");
-        return $token instanceof UsernamePasswordToken && $token->getProviderKey() === $providerKey;
-    }
 
-
-    private function AperioAuth( $loginName, $password ) {
+    public function AperioAuth( $loginName, $password ) {
 
         //echo "Aperio Auth Changeit back !!!";
         //exit();
@@ -135,21 +141,6 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
                 return $AuthResult;
             }
 
-            //get roles
-            $_SESSION ['AuthToken'] = $AuthResult['Token'];
-            $userid = $AuthResult['UserId'];
-            //$roles = $client->GetUserRoleRecordsById($userid); //ADB_GetUserRoles
-            //$roles = ADB_GetCurrentUserRoles();
-            $roles = ADB_GetUserRoles($userid); //ADB_GetUserRoles
-            //$roles = GetUserRoles($userid); //ADB_GetUserRoles
-            echo "roles:";
-            print_r($roles);
-            echo "end of roles<br><br>";
-
-            foreach( $roles as $role ) {
-                echo "Role: Id = ".$role->Id.", Description=".$role->Description.", Name=".$role->Name."<br>";
-            }
-
         } else {
             echo "Aperio Auth Changeit back !!!";
             $AuthResult = array(
@@ -162,8 +153,9 @@ class AperioAuthenticator extends FosUserProvider implements SimpleFormAuthentic
 
         echo "<br>AuthResult:<br>";
         print_r($AuthResult);
-        //exit();
+        //exit('AperioAuth');
 
         return $AuthResult;
     }
+
 }

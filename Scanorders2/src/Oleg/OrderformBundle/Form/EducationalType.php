@@ -43,12 +43,12 @@ class EducationalType extends AbstractType
 //            'required'=> false,
 //            'attr' => array('class' => 'combobox combobox-width'),
 //        ));
-        $attr = array('class' => 'ajax-combobox-optionaluser', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
         $builder->add('director', 'custom_selector', array(
             'label' => 'Course Director:',
             'attr' => $attr,
             'required'=>false,
-            'classtype' => 'optionalUser'
+            'classtype' => 'optionalUserEducational'
         ));
 
     }

@@ -21,14 +21,18 @@ class UserTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
+    private $serviceContainer;
+    private $classtype;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(ObjectManager $em=null, $user=null, $serviceContainer, $classtype )
     {
         $this->em = $em;
         $this->user = $user;
+        $this->serviceContainer = $serviceContainer;
+        $this->classtype = $classtype;
     }
 
     /**
@@ -44,33 +48,24 @@ class UserTransformer implements DataTransformerInterface
             return "";
         }
 
-        //echo "data transformer stain=".$stain."<br>";
+        //echo "data transformer user=".$user."<br>";
 
         if( is_int($user) ) {
-            $stain = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneById($user);
-            //echo "findOneById stain=".$stain."<br>";
-        }
-        
-        if( null === $user ) {
-            return "";
+            $user = $this->em->getRepository('OlegOrderformBundle:User')->findOneById($user);
+            //echo "findOneById user=".$user."<br>";
         }
 
         return $user->getId();
     }
 
     /**
-     * Transforms a string (number) to an object (i.e. stain).
-     *
-     * @param  string $number
-     *
-     * @return Stain|null
-     *
-     * @throws TransformationFailedException if object (stain) is not found.
+     * Transforms a string (number) to an object.
+     * @throws TransformationFailedException if object (user) is not found.
      */
     public function reverseTransform($text)
     {
 
-        echo "data transformer text=".$text."<br>";
+        //echo "data transformer text=".$text."<br>";
         //exit();
 
         if( !$text ) {
@@ -83,7 +78,7 @@ class UserTransformer implements DataTransformerInterface
 
             if( null === $entity ) {
 
-                return $this->createNewStain($text); //create a new record in db
+                return $this->createNewUser($text); //create a new record in db
 
             } else {
 
@@ -93,37 +88,49 @@ class UserTransformer implements DataTransformerInterface
 
         } else {    //text => most probably it is new name
 
-            return $this->recordAsString($text); //create a new record in db
+            return $this->createNewUser($text); //create a new record in db
 
         }
 
     }
 
-    public function recordAsString( $name ) {
+    public function createNewUser( $name ) {
+
+        $name = trim($name);
 
         //record name as a string to separate field. Later on, admin will create and link this new user to the object
-//        $entity = $this->em->getRepository('OlegOrderformBundle:User')->findOneByName($name);
-//        if( null === $entity ) {
-//
-//            $stain = new StainList();
-//            $stain->setName($name);
-//            $stain->setCreatedate(new \DateTime());
-//            $stain->setType('user-added');
-//            $stain->setCreator($this->user);
-//
-//            //get max orderinlist
-//            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:StainList c');
-//            $nextorder = $query->getSingleResult()['maxorderinlist']+10;
-//            $stain->setOrderinlist($nextorder);
-//
-//            $this->em->persist($stain);
-//            $this->em->flush($stain);
-//
-//            return $stain;
-//        } else {
-//
-//            return $entity;
-//        }
+        $entity = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername($name);
+        if( null === $entity ) {
+
+            $userManager = $this->serviceContainer->get('fos_user.user_manager');
+            $user = $userManager->createUser();
+
+            $clearName = preg_replace('/\s+/', '', $name);
+
+            $user->setUsername($clearName);
+            $user->setDisplayName($name);
+            $user->setEmail('');
+            $user->setEnabled(true);
+            $user->setLocked(false);
+            $user->setCreatedby('user-added');
+            $user->setPlainPassword($clearName);
+
+            //set Roles: aperio users can submit order by default.
+            $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
+
+            if( $this->classtype == 'optionalUserEducational' ) {
+                $user->addRole('ROLE_COURSE_DIRECTOR');
+            }
+
+            if( $this->classtype == 'optionalUserResearch' ) {
+                $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
+            }
+
+            return $user;
+        } else {
+
+            return $entity;
+        }
 
     }
 

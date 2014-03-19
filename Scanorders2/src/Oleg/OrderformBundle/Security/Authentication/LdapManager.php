@@ -17,9 +17,14 @@ class LdapManager extends BaseLdapManager
 {
     protected function hydrate(UserInterface $user, array $entry)
     {
-        parent::hydrate($user, $entry);
 
-        //exit("using Ldap Manager");
+//        echo "pass=".$user->getPassword()."<br>";
+//        print_r($user);
+//        echo "<br><br>";
+//        print_r($entry);
+//        exit("ldap! <br>");
+
+        parent::hydrate($user, $entry);
 
         $user->setCreatedby('ldap');
 

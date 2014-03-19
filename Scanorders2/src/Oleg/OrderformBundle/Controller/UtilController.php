@@ -476,7 +476,8 @@ class UtilController extends Controller {
 
 
     /**
-     * @Route("/optionaluser", name="get-optionaluser")
+     * @Route("/optionalusereducational", name="get-optionalusereducational")
+     * @Route("/optionaluserresearch", name="get-optionaluserresearch")
      * @Method("GET")
      */
     public function getOptionalUserAction() {
@@ -488,14 +489,23 @@ class UtilController extends Controller {
         $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
+        $routeName = $request->get('_route');
+
+        $where = "";
+        if( $routeName == "get-optionalusereducational" ) {
+            $role = "ROLE_COURSE_DIRECTOR";
+        }
+        if( $routeName == "get-optionaluserresearch" ) {
+            $role = "ROLE_PRINCIPAL_INVESTIGATOR";
+        }
+
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:User', 'e')
             //->select("e.id as id, e.username as text")
             ->select("e")
-            ->where("e.locked=0 AND (e.roles LIKE :role1 OR e.roles LIKE :role2)")
+            ->where("e.roles LIKE :role")
             ->orderBy("e.id","ASC")
-            ->setParameter('role1', '%"' . 'ROLE_COURSE_DIRECTOR' . '"%')
-            ->setParameter('role2', '%"' . 'ROLE_PRINCIPAL_INVESTIGATOR' . '"%');
+            ->setParameter('role', '%"' . $role . '"%');
 
         $users = $query->getQuery()->getResult();
 

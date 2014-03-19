@@ -8322,7 +8322,8 @@ var delivery = new Array();
 var returnslide = new Array();
 var pathservice = new Array();
 var userpathservice = new Array();
-var optionaluser = new Array();
+var optionaluserEducational = new Array();
+var optionaluserResearch = new Array();
 var userpathserviceflag = false;
 
 var asyncflag = true;
@@ -8369,7 +8370,8 @@ function customCombobox() {
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
-        getOptionalUser(urlCommon,new Array("0","0","0","0","0","0"));
+        getOptionalUserEducational(urlCommon,new Array("0","0","0","0","0","0"));
+        getOptionalUserResearch(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
     }
 
@@ -8770,30 +8772,56 @@ function getComboboxPathService(urlCommon,ids) {
 }
 
 //#############  optional users  ##############//
-function getOptionalUser(urlCommon,ids) {
+function getOptionalUserEducational(urlCommon,ids) {
 
-    var targetid = ".ajax-combobox-optionaluser";
-    var url = urlCommon+"optionaluser";
+    var targetid = ".ajax-combobox-optionaluser-educational";
+    var url = urlCommon+"optionalusereducational";
 
 //    if( cicle == "new" || cicle == "create" || cicle == "amend" ) {
 //        var optStr = "default";
 //        url = url + "?opt=" + optStr;
 //    }
 
-    if( optionaluser.length == 0 ) {
+    if( optionaluserEducational.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-                optionaluser = data;
-                populateSelectCombobox( targetid, optionaluser, "Choose an option" );
+                optionaluserEducational = data;
+                populateSelectCombobox( targetid, optionaluserEducational, "Choose an option" );
             });
     } else {
-        populateSelectCombobox( targetid, optionaluser, "Choose and option" );
+        populateSelectCombobox( targetid, optionaluserEducational, "Choose and option" );
     }
 
 }
+
+function getOptionalUserResearch(urlCommon,ids) {
+
+    var targetid = ".ajax-combobox-optionaluser-research";
+    var url = urlCommon+"optionaluserresearch";
+
+//    if( cicle == "new" || cicle == "create" || cicle == "amend" ) {
+//        var optStr = "default";
+//        url = url + "?opt=" + optStr;
+//    }
+
+    if( optionaluserResearch.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+                optionaluserResearch = data;
+                populateSelectCombobox( targetid, optionaluserResearch, "Choose an option" );
+            });
+    } else {
+        populateSelectCombobox( targetid, optionaluserResearch, "Choose and option" );
+    }
+
+}
+//############# end of optional users  ##############//
 
 
 function initComboboxJs(ids) {
@@ -8811,7 +8839,8 @@ function initComboboxJs(ids) {
         getComboboxProcedure(urlCommon,ids);
         getComboboxOrgan(urlCommon,ids);
         getComboboxPathService(urlCommon,ids);
-        getOptionalUser(urlCommon,ids);
+        getOptionalUserEducational(urlCommon,ids);
+        getOptionalUserResearch(urlCommon,ids);
         slideType(ids);
     }
 }

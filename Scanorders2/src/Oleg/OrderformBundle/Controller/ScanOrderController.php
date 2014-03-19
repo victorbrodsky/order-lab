@@ -34,14 +34,14 @@ class ScanOrderController extends Controller {
      */
     public function indexAction( Request $request ) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName."<br>";
+
+        if( $routeName == "incoming-scan-orders" && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('my-scan-orders') );
+        }
 
         //by user
         $user = $this->get('security.context')->getToken()->getUser();
@@ -209,38 +209,25 @@ class ScanOrderController extends Controller {
 
         //***************** User filter ***************************//
         if( $routeName == "my-scan-orders" ) {
+            //echo $routeName.": service=".$service."<br>";
+            //select only orders where this user is author or proxy user, except "Where I am Course Director" and "Where I am Principal Investigator" cases.
+            if( $service != "Where I am Course Director" && $service != "Where I am Principal Investigator" ) {
 
-            //TODO: test leftJoin. innerJoin does not show orders without proxyuser link
-            $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+                $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
-            //show only my order and the orders where I'm a proxy
-            //Orders I Personally Placed and Proxy Orders Placed For Me: $service == "My Orders"
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
+                //show only my order and the orders where I'm a proxy
+                //Orders I Personally Placed and Proxy Orders Placed For Me: $service == "My Orders"
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                $criteriastr .= "( provider.id=".$user->getId();
+
+                //***************** Proxy User Orders *************************//
+                $criteriastr .= " OR proxyuser.id=".$user->getId();
+                //***************** END of Proxy User Orders *************************//
+
+                $criteriastr .= " )";
             }
-            $criteriastr .= "( provider.id=".$user->getId();
-
-            //***************** Proxy User Orders *************************//
-            $criteriastr .= " OR proxyuser.id=".$user->getId();
-            //***************** END of Proxy User Orders *************************//
-
-            $criteriastr .= " )";
-
-//            //Orders I Personally Placed and Proxy Orders Placed For Me
-//            if( $service == "My Orders" ) {
-//
-//                echo "My Orders<br>";
-//                if( $criteriastr != "" ) {
-//                    $criteriastr .= " AND ";
-//                }
-//                $criteriastr .= "( provider.id=".$user->getId();
-//
-//                //***************** Proxy User Orders *************************//
-//                $criteriastr .= " OR proxyuser.id=".$user->getId();
-//                //***************** END of Proxy User Orders *************************//
-//
-//                $criteriastr .= " )";
-//            }
 
             if( $service == "Orders I Personally Placed" ) {
                 //echo "Orders I Personally Placed <br>";
@@ -257,6 +244,21 @@ class ScanOrderController extends Controller {
                 //***************** Proxy User Orders *************************//
                 $criteriastr .= "proxyuser.id=".$user->getId();
                 //***************** END of Proxy User Orders *************************//
+            }
+            if( $service == "Where I am Course Director" ) {
+                $dql->innerJoin("orderinfo.educational", "educational");
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                $criteriastr .= "educational.director=".$user->getId();
+            }
+            if( $service == "Where I am Principal Investigator" ) {
+                //echo "Where I am Principal Investigator <br>";
+                $dql->innerJoin("orderinfo.research", "research");
+                if( $criteriastr != "" ) {
+                    $criteriastr .= " AND ";
+                }
+                $criteriastr .= "research.principal=".$user->getId();
             }
 
         }

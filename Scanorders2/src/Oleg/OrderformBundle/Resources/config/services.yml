@@ -81,7 +81,7 @@ services:
     #Custom selector fields
     order_form.type.stain_selector:
         class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@security.context"]
+        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
         tags:
             - { name: form.type, alias: custom_selector }
 
@@ -108,3 +108,10 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
 
+    aperio.security.authentication.provider:
+        class: Oleg\OrderformBundle\Security\Authentication\AperioProvider
+        arguments: ["", @service_container]
+
+    aperio.security.authentication.listener:
+        class: Oleg\OrderformBundle\Security\Firewall\AperioListener
+        arguments: ["@security.context", "@security.authentication.manager"]

@@ -113,7 +113,6 @@ class Educational
         return $this->director;
     }
 
-
     public function __toString(){
 
         return "Principal: id=".$this->id.", course=".$this->course.", lesson".$this->lesson."<br>";

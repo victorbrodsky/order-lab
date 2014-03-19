@@ -32,15 +32,17 @@ class CustomSelectorType extends AbstractType {
      */
     private $om;
     private $sc;
+    private $serviceContainer;
 
      /**
      * @param ObjectManager $om
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, SecurityContext $sc)
+    public function __construct(ObjectManager $om, SecurityContext $sc, $serviceContainer = null)
     {
         $this->om = $om;
         $this->sc = $sc;
+        $this->serviceContainer = $serviceContainer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -88,8 +90,9 @@ class CustomSelectorType extends AbstractType {
             case "blockname":
                 $transformer = new StringTransformer($this->om, $username);
                 break;
-            case "optionalUser":
-                $transformer = new UserTransformer($this->om, $username);
+            case "optionalUserEducational":
+            case "optionalUserResearch":
+                $transformer = new UserTransformer($this->om, $username, $this->serviceContainer, $classtype);
                 break;
             default:
                 $transformer = new StringTransformer($this->om, $username);
