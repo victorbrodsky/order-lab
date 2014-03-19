@@ -15,59 +15,71 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+//use Oleg\OrderformBundle\Security\Authentication\AperioToken;
 
-use Oleg\OrderformBundle\Security\Authentication\AperioToken;
-use Oleg\OrderformBundle\Security\Authentication\AperioProvider;
 
-class AperioListener implements ListenerInterface {
+class AperioListener implements ListenerInterface  {
 
     protected $securityContext;
     protected $authenticationManager;
+    protected $providerKey;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $providerKey = null)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
-        //print_r($authenticationManager);
+        $this->providerKey = $providerKey;
     }
 
     public function handle(GetResponseEvent $event)
     {
 
-        //TODO: it is not used
+        //use default handle
         return;
         //exit("using handle Aperio Listener");
 
         $request = $event->getRequest();
 
-        //$username = $request->get('_username');
-        //$password = $request->get('_password');
+        $username = $request->get('_username');
+        $password = $request->get('_password');
         //echo "username=".$username.", password=".$password."<br>";
 
-        $token = new AperioToken();
-        //$token->setUsername($username);
-        //$token->setCredentials($password);
+        if( !$username || $username == "" ) {
+            return;
+        }
 
-        //$user = $this->userProvider->loadUserByUsername($token->username);
-        //$token->setUser($user);
+//        $unauthenticatedToken = new AperioToken();
+//        $unauthenticatedToken->setUsername($username);
+//        $unauthenticatedToken->setCredentials($password);
+
+        $unauthenticatedToken = new UsernamePasswordToken(
+            $username,
+            $password,
+            $this->providerKey
+        );
 
         try {
-            $authToken = $this->authenticationManager->authenticate($token);
+
+            $authToken = $this->authenticationManager->authenticate($unauthenticatedToken);
+
             $this->securityContext->setToken($authToken);
+
             return;
 
         } catch (AuthenticationException $failed) {
 
             //exit('aperio auth error');
-            // ... you might log something here
 
             // To deny the authentication clear the token. This will redirect to the login page.
             // Make sure to only clear your token, not those of other authentication listeners.
-             $token = $this->securityContext->getToken();
-             if( $token instanceof AperioToken ) {  //&& $this->providerKey === $token->getProviderKey()) {
-                 $this->securityContext->setToken(null);
-             }
-             return;
+            $unauthenticatedToken = $this->securityContext->getToken();
+            if( $unauthenticatedToken instanceof AperioToken ) {//&& $this->providerKey === $unauthenticatedToken->getProviderKey()) {
+                $this->securityContext->setToken(null);
+            }
+            return;
         }
 
         // By default deny authorization
@@ -75,5 +87,6 @@ class AperioListener implements ListenerInterface {
         $response->setStatusCode(Response::HTTP_FORBIDDEN);
         $event->setResponse($response);
     }
+
 
 }

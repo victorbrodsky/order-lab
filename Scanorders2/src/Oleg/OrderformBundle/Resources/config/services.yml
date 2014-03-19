@@ -108,10 +108,15 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
 
+    #aperio authentication
     aperio.security.authentication.provider:
         class: Oleg\OrderformBundle\Security\Authentication\AperioProvider
-        arguments: ["", @service_container]
+        arguments: ["", @service_container,"aperio_ldap_firewall"]
 
     aperio.security.authentication.listener:
         class: Oleg\OrderformBundle\Security\Firewall\AperioListener
-        arguments: ["@security.context", "@security.authentication.manager"]
+        arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
+
+#    aperio.security.authentication.listener:
+#        class: Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener
+#        arguments: ["@security.context", "@security.authentication.manager"]

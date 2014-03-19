@@ -15,18 +15,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
-class AperioProvider extends UserAuthenticationProvider {
-//class AperioProvider implements AuthenticationProviderInterface {
+//class AperioProvider extends UserAuthenticationProvider {
+class AperioProvider implements AuthenticationProviderInterface {
 
     private $userProvider;
-    //private $encoderFactory;
     private $serviceContainer;
+    private $providerKey;
 
-    public function __construct( UserProviderInterface $userProvider, $serviceContainer )
+    public function __construct( UserProviderInterface $userProvider, $serviceContainer, $providerKey = null )
     {
         $this->userProvider = $userProvider;
-        //$this->encoderFactory     = $encoderFactory;
         $this->serviceContainer = $serviceContainer;
+        $this->providerKey = $providerKey;
     }
 
     public function authenticate( TokenInterface $token )
@@ -37,23 +37,13 @@ class AperioProvider extends UserAuthenticationProvider {
 
         $user = $aperioUtil->aperioAuthenticateToken( $token, $this->serviceContainer );
 
+        //echo "token username=".$token->getUsername()."<br>";
         //exit("Aperio Authentication");
 
         if( $user ) {
 
             //echo("user exists!");
-
-            //TODO: get the firewall name: $this->container->getParameter('fos_user.firewall_name');
-            $providerKey = "aperio_ldap_firewall";
-            return new UsernamePasswordToken($user, null, $providerKey, $user->getRoles());
-
-            $authenticatedToken = new AperioToken($user->getRoles());
-            $authenticatedToken->setUser($user);
-            $authenticatedToken->setAuthenticated(true);
-
-            return $authenticatedToken;
-
-            //return $user;
+            return new UsernamePasswordToken($user, null, $this->providerKey, $user->getRoles());
         }
 
         //exit("Aperio Authentication failed!!!");
@@ -62,16 +52,17 @@ class AperioProvider extends UserAuthenticationProvider {
 
     public function supports(TokenInterface $token)
     {
-        return $token instanceof UsernamePasswordToken;
+        //return $token instanceof UsernamePasswordToken;
+        return $token instanceof UsernamePasswordToken && $token->getProviderKey() === $this->providerKey;
     }
 
-    protected function retrieveUser($username, UsernamePasswordToken $token) {
-        //exit("Aperio Authentication: retrieveUser");
-        return null;
-    }
-
-    protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token) {
-        //exit("Aperio Authentication: checkAuthentication");
-        //return false;
-    }
+//    protected function retrieveUser($username, UsernamePasswordToken $token) {
+//        //exit("Aperio Authentication: retrieveUser");
+//        return null;
+//    }
+//
+//    protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token) {
+//        //exit("Aperio Authentication: checkAuthentication");
+//        //return false;
+//    }
 }

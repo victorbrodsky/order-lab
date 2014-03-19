@@ -22,6 +22,7 @@ class AperioFactory implements SecurityFactoryInterface
         $listener = $container->setDefinition($listenerId, new DefinitionDecorator('aperio.security.authentication.listener'));
 
         return array($providerId, $listenerId, $defaultEntryPoint);
+
     }
 
     public function getPosition()

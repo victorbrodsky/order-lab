@@ -22,7 +22,8 @@ use Oleg\OrderformBundle\Security\Authentication\AperioAuthenticator;
 use Oleg\OrderformBundle\Helper\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-class LoginSuccessHandler extends AperioAuthenticator implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
+
+class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
     private $router;
     private $security;

@@ -22,7 +22,6 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 
-
     providers:
 
         chain_provider:
@@ -32,22 +31,9 @@ security:
         fos_userbundle:
             id: fos_user.user_provider.username
 
-#        aperioauth:
-#            id: aperio_authenticator
-
-#        aperio_provider:
-#            id: aperio.security.authentication.provider
-
-        chain_provider:
-            chain:
-                providers: [fos_userbundle, fr3d_ldapbundle]
-
         fr3d_ldapbundle:
             id: fr3d_ldap.security.user.provider
 
-#        chain_provider:
-#            chain:
-#                providers: [fos_userbundle, fr3d_ldapbundle]
 
     #        in_memory:
     #            memory:
@@ -62,32 +48,15 @@ security:
 
             pattern: ^/
 
-#            simple-form:
-#                 always_use_default_target_path: false
-##                 provider: fos_userbundle
-##                 provider: aperioauth
-##                 provider: fr3d_ldapbundle
-#                 authenticator: aperio_authenticator
-##                 provider: chain_provider
-#                 use_referer: true
-##                 check_path:    login_check
-##                 login_path:    login
-##                 success_handler: authentication_handler
-##                 failure_handler: authentication_handler
+            aperio: true
+
+            fr3d_ldap:  ~
 
             form_login:
-#                 provider: fos_userbundle
-#                 provider: aperioauth
-#                 provider: fr3d_ldapbundle
-#                 provider: chain_provider
                  always_use_default_target_path: false
                  use_referer: true
                  success_handler: authentication_handler
                  failure_handler: authentication_handler
-
-            aperio: true
-
-            fr3d_ldap:  ~
 
             logout:
                 path:   /logout

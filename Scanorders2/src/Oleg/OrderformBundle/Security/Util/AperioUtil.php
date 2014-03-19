@@ -19,7 +19,7 @@ class AperioUtil {
 
     public function aperioAuthenticateToken( TokenInterface $token, $serviceContainer ) {
 
-        echo "AperioAuthenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
+        //echo "AperioAuthenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
         //exit("using Aperio Authenticator: authenticate Token");
 
         $AuthResult = $this->AperioAuth( $token->getUsername(), $token->getCredentials() );
@@ -28,7 +28,7 @@ class AperioUtil {
         //exit();
 
         if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
-            echo "<br>Aperio got UserId!<br>";
+            //echo "<br>Aperio got UserId!<br>";
 
 //            $user = $userProvider->findUser($token->getUsername());
             $userManager = $serviceContainer->get('fos_user.user_manager');
@@ -84,7 +84,7 @@ class AperioUtil {
             //TODO: get exact role names as in 'c.med.cornell.edu' server
             $addOrderingProviderRole = false;
             foreach( $aperioRoles as $role ) {
-                echo "Role: Id = ".$role->Id.", Description=".$role->Description.", Name=".$role->Name."<br>";
+                //echo "Role: Id = ".$role->Id.", Description=".$role->Description.", Name=".$role->Name."<br>";
                 if( $role->Name == "Faculty" ) {
                     $user->addRole("ROLE_PATHOLOGY_FACULTY");
                     $addOrderingProviderRole = true;
