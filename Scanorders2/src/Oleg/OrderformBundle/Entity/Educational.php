@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
  * @ORM\Table(name="educational")
  */
 class Educational
@@ -34,6 +34,11 @@ class Educational
      * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
      */
     protected $director;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $directorstr;
 
 //    public function __clone() {
 //        if ($this->id) {
@@ -111,6 +116,22 @@ class Educational
     public function getDirector()
     {
         return $this->director;
+    }
+
+    /**
+     * @param mixed $directorstr
+     */
+    public function setDirectorstr($directorstr)
+    {
+        $this->directorstr = $directorstr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDirectorstr()
+    {
+        return $this->directorstr;
     }
 
     public function __toString(){

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ResearchRepository")
  * @ORM\Table(name="research")
  */
 class Research
@@ -29,15 +29,16 @@ class Research
      */
     protected $settitle;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $principal;
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
      */
     protected $principal;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $principalstr;
 
 //    public function __clone() {
 //        if ($this->id) {
@@ -94,6 +95,21 @@ class Research
         return $this->principal;
     }
 
+    /**
+     * @param mixed $principalstr
+     */
+    public function setPrincipalstr($principalstr)
+    {
+        $this->principalstr = $principalstr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrincipalstr()
+    {
+        return $this->principalstr;
+    }
 
     /**
      * @param mixed $settitle

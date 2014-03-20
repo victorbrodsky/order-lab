@@ -92,7 +92,8 @@ class CustomSelectorType extends AbstractType {
                 break;
             case "optionalUserEducational":
             case "optionalUserResearch":
-                $transformer = new UserTransformer($this->om, $username, $this->serviceContainer, $classtype);
+                $transformer = new StringTransformer($this->om, $username);
+                //$transformer = new UserTransformer($this->om, $username, $this->serviceContainer, $classtype);
                 break;
             default:
                 $transformer = new StringTransformer($this->om, $username);

@@ -79,34 +79,17 @@ class AperioUtil {
             //get roles: Faculty, Residents, or Fellows
             $_SESSION ['AuthToken'] = $AuthResult['Token'];
             $userid = $AuthResult['UserId'];
-            //$roles = $client->GetUserRoleRecordsById($userid); //ADB_GetUserRoles
-            //$roles = ADB_GetCurrentUserRoles();
-            $aperioRoles = ADB_GetUserRoles($userid); //ADB_GetUserRoles
-            //$roles = GetUserRoles($userid); //ADB_GetUserRoles
 
-            //TODO: get exact role names as in 'c.med.cornell.edu' server
-            $addOrderingProviderRole = false;
-            foreach( $aperioRoles as $role ) {
-                //echo "Role: Id = ".$role->Id.", Description=".$role->Description.", Name=".$role->Name."<br>";
-                if( $role->Name == "Faculty" ) {
-                    $user->addRole("ROLE_PATHOLOGY_FACULTY");
-                    $addOrderingProviderRole = true;
-                }
-                if( $role->Name == "Fellows" ) {
-                    $user->addRole("ROLE_PATHOLOGY_FELLOW");
-                    $addOrderingProviderRole = true;
-                }
-                if( $role->Name == "Residents" ) {
-                    $user->addRole("ROLE_PATHOLOGY_RESIDENT");
-                    $addOrderingProviderRole = true;
-                }
-            }
+            //$userid = $this->getUserIdByUserName($token->getUsername());
 
-            if( $addOrderingProviderRole ) {
-                $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
-                $user->addRole('ROLE_COURSE_DIRECTOR');
-                $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
-            }
+            //echo "aperio userid=".$userid."<br>";
+
+            $aperioRoles = $this->getUserGroupMembership($userid);
+
+            //print_r($aperioRoles);
+            //exit('aperio util');
+
+            $user = $this->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
 
             //exit('AperioAuth');
 
@@ -159,6 +142,97 @@ class AperioUtil {
         //exit('AperioAuth');
 
         return $AuthResult;
+    }
+
+    public function getUserGroupMembership($userid) {
+        if( $userid ) {
+            return ADB_GetUserGroupMembership($userid);
+        }
+        return null;
+    }
+
+    //set user roles based on the user roles from aperio:
+    public function setUserPathologyRolesByAperioRoles( $user, $aperioRoles ) {
+
+        if( !$aperioRoles && count($aperioRoles) == 0 ) {
+            return $user;
+        }
+
+        $addOrderingProviderRole = false;
+
+        foreach( $aperioRoles as $role ) {
+
+            //echo "Role: Id = ".$role['Id'].", Description=".$role['Description'].", Name=".$role['Name']."<br>";
+            if( $role['Name'] == "Faculty" ) {
+                $user->addRole("ROLE_PATHOLOGY_FACULTY");
+                $addOrderingProviderRole = true;
+            }
+            if( $role['Name'] == "Fellows" ) {
+                //echo "\n ".$user.": ######### add Fellow role ########### \n";
+                $user->addRole("ROLE_PATHOLOGY_FELLOW");
+                $addOrderingProviderRole = true;
+            }
+            if( $role['Name'] == "Residents" ) {
+                $user->addRole("ROLE_PATHOLOGY_RESIDENT");
+                $addOrderingProviderRole = true;
+            }
+
+        } //foreach
+
+        if( $addOrderingProviderRole ) {
+            $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+            $user->addRole('ROLE_COURSE_DIRECTOR');
+            $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
+        }
+
+        return $user;
+    }
+
+    public function getUserIdByUserName( $UserName ) {
+
+//        ADB_GetFilteredRecordList(
+//            $TableName='Slide',
+//            $RecordsPerPage=0,
+//            $PageIndex=0,
+//            $SelectColumns=array(),
+//            $FilterColumns=array(),
+//            $FilterOperators=array(),
+//            $FilterValues=array(),
+//            $FilterTables=array(),
+//            $SortByField='',
+//            $SortOrder='Descending',
+//            &$TotalCount = NULL,
+//            $Distinct = false);
+
+        $UserId = null;
+
+        include_once '\Skeleton.php';
+        include_once '\DatabaseRoutines.php';
+
+        //echo "user name=".$UserName."<br>";
+
+        $Users = ADB_GetFilteredRecordList(
+            'Users',                        //$TableName
+            0,                              //$RecordsPerPage
+            0,                              //$PageIndex
+            array('Id'),                    //$SelectColumns
+            array('LoginName'),             //$FilterColumns
+            array('='),                     //$FilterOperators
+            array($UserName),               //$FilterValues
+            array('Users')                  //$FilterTables
+        );
+
+        //echo "res count=".count($Users)."<br>";
+        //print_r($Users);
+
+        if( count($Users) == 1 ) {
+            $User = $Users[0];
+            $UserId = $User['Id'];
+        }
+
+        //echo "UserId=".$UserId."<br>";
+
+        return $UserId;
     }
 
 }

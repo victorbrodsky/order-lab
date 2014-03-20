@@ -123,6 +123,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $this->addOrderinfoToThisAndAllParents( $slide, $entity );
         }
 
+        //********** take care of educational and research director and principal investigator ***********//
+        if( $entity->getEducational() ) {
+            $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity->getEducational() );
+        }
+
+        if( $entity->getResearch() ) {
+            $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity->getResearch() );
+        }
+        //********** end of educational and research processing ***********//
 
         //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
         //foreach( $entity->getPatient() as $patient ) {

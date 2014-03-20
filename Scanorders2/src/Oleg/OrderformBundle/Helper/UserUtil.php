@@ -13,6 +13,7 @@ use Oleg\OrderformBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\OrderformBundle\Entity\PathServiceList;
 use Oleg\OrderformBundle\Entity\Logger;
+use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 class UserUtil {
 
@@ -57,7 +58,7 @@ class UserUtil {
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        //for each user
+        //for each user in excel
         for ($row = 2; $row <= $highestRow; $row++){
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -102,22 +103,35 @@ class UserUtil {
 
             //add Roles
             //"ROLE_USER" => "Submitter" is added by default
-            $user->addRole('ROLE_ORDERING_PROVIDER');
+            //$user->addRole('ROLE_ORDERING_PROVIDER');
             $user->addRole('ROLE_SUBMITTER');
 
-            //ROLES: Submitter - ROLE_USER, Processor - ROLE_ADMIN
+            //************** get Aperio group roles and ROLE_ORDERING_PROVIDER for this user **************//
+            $aperioUtil = new AperioUtil();
+
+            $userid = $aperioUtil->getUserIdByUserName($username);
+
+            $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
+
+            $user = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+
+            //echo "username=(".$username.")\n";
+            //echo "userid=(".$userid.")\n";
+            //if( $username == 'oli2002' ) {
+                //print_r($aperioRoles);
+                //exit('aperio util');
+            //}
+            //************** end of  Aperio group roles **************//
+
 
             if( $username == "oli2002" || $username == "vib9020" ) {
                 $user->addRole('ROLE_ADMIN');
             }
 
-//            if( $username == "svc_aperio_spectrum" ) {
-//                $user->addRole('ROLE_ADMIN');
-//            }
-
-//            $pathlogyServiceEntities = new ArrayCollection();
             foreach( $pathlogyServices as $pathlogyService ) {
+
                 $pathlogyService = trim($pathlogyService);
+
                 if( $pathlogyService != "" ) {
                     //echo " (".$pathlogyService.") ";
                     $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
@@ -134,14 +148,9 @@ class UserUtil {
                         $em->flush();
                     }
                     $user->addPathologyServices($pathlogyServiceEntity);
-//                    if( !$user->getDefaultPathService() ) {
-//                        $user->setDefaultPathService($pathlogyServiceEntity->getId());  //set the first pathology service as default one
-//                    }
-                }
-            }
-//            if( count($pathlogyServiceEntities) > 0 ) {
-//                $user->setPathologyServices($pathlogyServiceEntities);
-//            }
+                } //if
+
+            } //foreach
 
             $user->setEnabled(true);
             $user->setLocked(false);

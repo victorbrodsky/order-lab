@@ -37,15 +37,9 @@ class ResearchType extends AbstractType
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
-        
-//        $builder->add( 'principal', null, array(
-//            'label'=>'Principal Investigator:',
-//            //'max_length'=>'500',
-//            'required'=> false,
-//            'attr' => array('class' => 'combobox combobox-width'),
-//        ));
+
         $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
-        $builder->add('principal', 'custom_selector', array(
+        $builder->add('principalstr', 'custom_selector', array(
             'label' => 'Principal Investigator:',
             'attr' => $attr,
             'required'=>false,

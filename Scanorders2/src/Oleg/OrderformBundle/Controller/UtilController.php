@@ -482,12 +482,10 @@ class UtilController extends Controller {
      */
     public function getOptionalUserAction() {
 
-        $whereServicesList = "";
-
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
-        $opt = trim( $request->get('opt') );
+        $opt = trim( $request->get('opt') ); //current user id
 
         $routeName = $request->get('_route');
 
@@ -515,12 +513,63 @@ class UtilController extends Controller {
             $output[] = $element;
         }
 
+        //attach this user course directors and principal investigators string from educationa and research entities
+        if( !$opt || $opt == "" ) {
+            $opt = $this->get('security.context')->getToken()->getUser()->getId();
+        }
+
+        //$orderinfos = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findByProvider($opt);
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:OrderInfo', 'orderinfo')
+            ->innerJoin("orderinfo.provider", "provider")
+            ->select("orderinfo")
+            ->where("provider.id=:userid")
+            ->setParameter("userid",$opt);
+
+        $orderinfos = $query->getQuery()->getResult();
+
+        //echo "order count=".count($orderinfos)."<br>";
+
+        foreach( $orderinfos as $orderinfo ) {
+
+            if( $orderinfo->getEducational() ) {
+                $dirstr = $orderinfo->getEducational()->getDirectorstr();
+                if( $dirstr && $dirstr != "" ) {
+                    $element = array('id'=>$dirstr, 'text'=>$dirstr);
+                    if( !$this->in_complex_array($dirstr, $output) ) {
+                        $output[] = $element;
+                    }
+                }
+            }
+
+
+            if( $orderinfo->getResearch() ) {
+                $princstr = $orderinfo->getResearch()->getPrincipalstr();
+                if( $princstr && $princstr != "" ) {
+                    $element = array('id'=>$princstr, 'text'=>$princstr);
+                    if( !$this->in_complex_array($princstr, $output) ) {
+                        $output[] = $element;
+                    }
+                }
+            }
+
+        }
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
         return $response;
     }
 
-
+    //search if $needle exists in array $products
+    public function in_complex_array($needle,$products) {
+        foreach( $products as $product ) {
+            if ( $product['id'] === $needle ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -22,7 +22,7 @@ $(document).ready(function() {
 
     var data = new Array();
 
-    var rows = 501;
+    var rows = 51;//501;
 
     console.log( "header length="+colHeader.length );
 
