@@ -22,7 +22,7 @@ class UserRequestController extends Controller
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/account-requests", name="accountrequest")
+     * @Route("/order/account-requests", name="accountrequest")
      * @Method("GET")
      * @Template()
      */
@@ -97,7 +97,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="accountrequest_new")
+     * @Route("/order/account-requests/new", name="accountrequest_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
      */
@@ -116,7 +116,7 @@ class UserRequestController extends Controller
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
+     * @Route("/order/account-requests/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -145,7 +145,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/account-requests/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
+     * @Route("/order/account-requests/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -176,7 +176,7 @@ class UserRequestController extends Controller
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
+     * @Route("/order/account-requests/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegOrderformBundle:UserRequest:edit.html.twig")
      */
@@ -213,7 +213,7 @@ class UserRequestController extends Controller
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
+     * @Route("/order/account-requests/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -258,7 +258,7 @@ class UserRequestController extends Controller
     
     
     /**
-     * @Route("/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
+     * @Route("/order/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
      */
@@ -410,7 +410,7 @@ class UserRequestController extends Controller
     /**
      * Lists all Access Request.
      *
-     * @Route("/access-requests", name="accessrequest_list")
+     * @Route("/order/access-requests", name="accessrequest_list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:access_request_list.html.twig")
      */

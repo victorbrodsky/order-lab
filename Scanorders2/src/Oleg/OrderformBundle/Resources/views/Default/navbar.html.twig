@@ -27,13 +27,24 @@
 
                 <ul class="nav navbar-nav">
 
-                    <li id="nav-bar-single" class="hidden-xs divider-vertical new"><a href="{{ path('single_new') }}">One Slide</a></li>
-                    <li id="nav-bar-clinical" class="divider-vertical orderinfo"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>
-                    <li id="nav-bar-edu" class="divider-vertical accession"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
-                    <li id="nav-bar-res" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
-                    <li id="nav-bar-table" class="divider-vertical order"><a href="{{ path('table_create') }}">Multi-Slide Table</a></li>
+                    <li id="nav-bar-placescanorder" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Place Scan Order<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li id="nav-bar-single" class="hidden-xs divider-vertical"><a href="{{ path('single_new') }}">One Slide</a></li>
+                            <li id="nav-bar-clinical" class="divider-vertical"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>
+                            <li id="nav-bar-edu" class="divider-vertical"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
+                            <li id="nav-bar-res" class="divider-vertical"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
+                            <li id="nav-bar-table" class="divider-vertical"><a href="{{ path('table_create') }}">Multi-Slide Table</a></li>
+                        </ul>
+                    </li>
 
-                    <li id="nav-bar-index" class="divider-vertical index">
+                    {#<li id="nav-bar-single" class="hidden-xs divider-vertical"><a href="{{ path('single_new') }}">One Slide</a></li>#}
+                    {#<li id="nav-bar-clinical" class="divider-vertical"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>#}
+                    {#<li id="nav-bar-edu" class="divider-vertical"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>#}
+                    {#<li id="nav-bar-res" class="divider-vertical"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>#}
+                    {#<li id="nav-bar-table" class="divider-vertical"><a href="{{ path('table_create') }}">Multi-Slide Table</a></li>#}
+
+                    <li id="nav-bar-myscanorders" class="divider-vertical">
                         {% if comments is defined and comments > 0 %}
                             <a id="incoming-orders-menu-title" href="{{ path('my-scan-orders') }}">My Orders</a><!--
                             --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>

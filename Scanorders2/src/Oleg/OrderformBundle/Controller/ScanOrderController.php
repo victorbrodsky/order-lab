@@ -27,12 +27,28 @@ class ScanOrderController extends Controller {
     /**
      * Lists all OrderInfo entities.
      *
+     * @Route("/", name="scan-order-home")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Default:home.html.twig")
+     */
+    public function indexAction( Request $request ) {
+
+        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+            return $this->redirect( $this->generateUrl('logout') );
+        }
+
+        return array();
+    }
+
+    /**
+     * Lists all OrderInfo entities.
+     *
      * @Route("/my-scan-orders", name="my-scan-orders")
      * @Route("/incoming-scan-orders", name="incoming-scan-orders")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:ScanOrder:index.html.twig")
      */
-    public function indexAction( Request $request ) {
+    public function orderListAction( Request $request ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -341,7 +357,7 @@ class ScanOrderController extends Controller {
     /**
      * Deletes a OrderInfo entity.
      *
-     * @Route("/{id}", name="scanorder_delete")
+     * @Route("/scan-order/{id}/delete", name="scanorder_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -380,7 +396,7 @@ class ScanOrderController extends Controller {
     /**
      * Change status of orderinfo
      *
-     * @Route("/{id}/{status}/status", name="scanorder_status")
+     * @Route("/scan-order/{id}/status/{status}/", name="scanorder_status")
      * @Method("GET")
      * @Template()
      */
@@ -397,6 +413,11 @@ class ScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $orderUtil = new OrderUtil($em);
+
+        //make uppercase: cancel, sumbit, un-cancel (Un-Cancel)
+        //$status = str_replace("-"," ",$status);
+        $status = ucwords($status);
+        //$status = str_replace(" ","-",$status);
 
         $res = $orderUtil->changeStatus($id, $status, $user);
 

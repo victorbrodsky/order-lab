@@ -24,27 +24,13 @@ class SecurityController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function loginAction()
-    {
-
-        //$user = $this->get('security.context')->getToken()->getUser();
-        //echo "Login page. User=".$user."<br>";
-        //exit();
-
-        //display_width and height are null because html page is rendered after php code.
-        //To get width and height we can use ajax call to php.
-//        $request = $this->container->get('request');
-//        $options = array();
-//        $em = $this->getDoctrine()->getManager();
-//        $userUtil = new UserUtil();
-//        $options['event'] = "Login Page Visit";
-//        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+    public function loginAction( Request $request ) {
 
         $request = $this->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
 
         // get the login error if there is one
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+        if( $request->attributes->has(SecurityContext::AUTHENTICATION_ERROR) ) {
             $error = $request->attributes->get(
                 SecurityContext::AUTHENTICATION_ERROR
             );
@@ -112,7 +98,7 @@ class SecurityController extends Controller
      */
     public function idlelogoutAction( Request $request, $flag = null )
     {
-        echo "logout Action! <br>";
+        //echo "logout Action! <br>";
         //exit();
 
         $userUtil = new UserUtil();
@@ -192,7 +178,7 @@ class SecurityController extends Controller
 //     */
 //    public function logoutAction()
 //    {
-//        echo "logout Action! <br>";
+//        //echo "logout Action! <br>";
 //        //exit();
 //
 //        $this->get('security.context')->setToken(null);

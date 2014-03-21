@@ -47,6 +47,63 @@ class SessionIdleHandler
             return;
         }
 
+        //*************** set url for redirection ***************//
+        //http://www.fractalizer.ru/frpost_658/symfony2-how-redirect-user-to-a-previous-page-correctly/
+        $dontSetRedirect = 0;
+
+        /** @var \Symfony\Component\HttpFoundation\Request $request  */
+        $request = $event->getRequest();
+        /** @var \Symfony\Component\HttpFoundation\Session $session  */
+        $session = $request->getSession();
+
+        $routeParams = $this->router->match($request->getPathInfo());
+        //print_r($routeParams);
+
+        $fullUrl = $_SERVER['REQUEST_URI'];
+
+        $routeName = $routeParams['_route'];
+        //echo "<br> kernel routeName=".$routeName."<br>";
+
+        if( $routeName[0] == '_' ) {
+            $dontSetRedirect++;
+            //echo "<br> kernel routeName=".$routeName."<br>";
+            //echo "routeName[0]= ".$routeName[0];
+            //exit();
+        }
+        //unset($routeParams['_route']);
+
+        $routeData = array('name' => $routeName, 'params' => $routeParams);
+
+        //Skipping duplicates, logins and logout
+        $thisRoute = $session->get('this_route', array());
+
+        $pos = strpos( $routeName, "scan-order" );
+        if( $pos === false ) {
+            //$dontSetRedirect++;
+        }
+
+        if( $thisRoute == $routeData['name'] ||
+            $routeName == 'login' ||
+            $routeName == 'setloginvisit' ||
+            $routeName == 'logout' ||
+            $routeName == 'getmaxidletime' ||
+            $routeName == '_wdt'
+        ) {
+            $dontSetRedirect++;
+        }
+
+        if( $dontSetRedirect == 0 ) {
+            //$session->set('last_route', $thisRoute);
+            $session->set('last_route', $routeName);
+            $session->set('this_route', $routeData);
+            $session->set('full_url', $fullUrl);
+            //echo "set session rout=".$routeName."<br>";
+        }
+        //echo "<br> kernel routeName=".$routeName."<br>";
+        //print_r($session);
+        //exit();
+        //*************** end of set url for redirection ***************//
+
         if( $this->maxIdleTime > 0 ) {
 
             $this->session->start();

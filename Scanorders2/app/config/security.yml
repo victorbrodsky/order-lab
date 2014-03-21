@@ -61,6 +61,7 @@ security:
             logout:
                 path:   /logout
                 target: /login
+
             anonymous:  true
 
           

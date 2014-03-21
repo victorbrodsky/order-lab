@@ -37,6 +37,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
 
+        $response = null;
+
         $user = $token->getUser();
         $options = array();
         $em = $this->em;
@@ -67,17 +69,39 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
         elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') || $this->security->isGranted('ROLE_ORDERING_PROVIDER') ) {
 
-            $referer_url = $request->headers->get('referer');
-            $last = basename(parse_url($referer_url, PHP_URL_PATH));
-            //echo "user role ok! referer_url=".$referer_url.", last=".$last."<br>";
-            //exit();
-            if( $last == 'login' ) {
-                //exit("gen single_new");
-                $response = new RedirectResponse($this->router->generate('single_new'));
+            //$referer_url = $request->headers->get('referer');
+            //$last = basename(parse_url($referer_url, PHP_URL_PATH));
+
+            //$last_route = $request->getSession()->get('last_route', array('name' => 'scan-order-home'));
+            $lastRoute = $request->getSession()->get('last_route');
+            //echo "last_route=".$lastRoute."<br>";
+            //print_r($request->getSession());
+            //print_r($lastRoute);
+            //echo "\n count=".count($lastRoute)."\n";
+            //$full_url = $request->getSession()->get('full_url');
+
+            //if( $lastRoute && count($lastRoute) > 0 && array_key_exists('name', $lastRoute) ) {
+            if( $lastRoute && $lastRoute != '' ) {
+                $referer_url = $this->router->generate( $lastRoute );
+                //$referer_url = $full_url;
             } else {
-                //exit("use ref url=".$referer_url);
-                $response = new RedirectResponse($referer_url);
+                //print_r($lastRoute);
+                //exit('last root array is empty, count'.count($lastRoute));
+                $referer_url = $this->router->generate('scan-order-home');
             }
+
+            //echo "<br>success: referer_url=".$referer_url."<br>";
+            //exit();
+
+//            if( $referer_url == 'login' ) {
+//                //exit("gen single_new");
+//                $response = new RedirectResponse($this->router->generate('scan-order-home'));
+//            } else {
+                //exit("use ref url=".$referer_url);
+//                $response = new RedirectResponse($referer_url);
+//            }
+
+            $response = new RedirectResponse($referer_url);
 
             $options['event'] = "Successful Login";
 

@@ -37,14 +37,14 @@
             {% if not Canceled and not Superseded and not Filled %}
                 <li><a data-confirm="Are you sure you want to change status to Cancel?"
                        class="action-cancel-status"
-                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Cancel' }) }}">Cancel</a>
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'cancel' }) }}">Cancel</a>
                 </li>                  
             {% endif %}
 
             {#or is_granted('ROLE_ADMIN')#}
             {% if not Canceled and not Superseded and not Submitted and not Amended and not Filled and not OnHold %}
                 <li><a data-confirm="Are you sure you want to change status to Submit?"
-                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Submit' }) }}">Submit</a>
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'submit' }) }}">Submit</a>
                 </li>
             {% endif %}
 

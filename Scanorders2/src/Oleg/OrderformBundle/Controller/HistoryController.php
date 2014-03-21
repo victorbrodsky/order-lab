@@ -14,8 +14,6 @@ use Oleg\OrderformBundle\Helper\OrderUtil;
 
 /**
  * History controller.
- *
- * @Route("/history")
  */
 class HistoryController extends Controller
 {
@@ -23,7 +21,7 @@ class HistoryController extends Controller
     /**
      * Lists all History entities.
      *
-     * @Route("/", name="history")
+     * @Route("/scan-order/progress-and-comments/", name="history")
      * @Method("GET")
      * @Template()
      */
@@ -56,7 +54,7 @@ class HistoryController extends Controller
     /**
      * Creates a new History entity.
      *
-     * @Route("/", name="history_create")
+     * @Route("/scan-order/progress-and-comments/new", name="history_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:History:new.html.twig")
      */
@@ -102,7 +100,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to create a new History entity.
      *
-     * @Route("/new", name="history_new")
+     * @Route("/scan-order/progress-and-comments/new", name="history_new")
      * @Method("GET")
      * @Template()
      */
@@ -120,7 +118,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity.
      *
-     * @Route("/{id}", name="history_show")
+     * @Route("/scan-order/progress-and-comments/{id}", name="history_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -145,7 +143,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to edit an existing History entity.
      *
-     * @Route("/{id}/edit", name="history_edit")
+     * @Route("/scan-order/progress-and-comments/{id}/edit", name="history_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
@@ -190,7 +188,7 @@ class HistoryController extends Controller
     /**
      * Edits an existing History entity.
      *
-     * @Route("/{id}", name="history_update")
+     * @Route("/scan-order/progress-and-comments/{id}", name="history_update", requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegOrderformBundle:History:edit.html.twig")
      */
@@ -223,7 +221,7 @@ class HistoryController extends Controller
     /**
      * Deletes a History entity.
      *
-     * @Route("/{id}", name="history_delete")
+     * @Route("/scan-order/progress-and-comments/{id}", name="history_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -270,7 +268,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity for OrderInfo.
      *
-     * @Route("/order/{id}", name="history_orderinfo_show")
+     * @Route("/scan-order/{id}/progress-and-comments", name="history_orderinfo_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */
@@ -393,7 +391,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity for OrderInfo.
      *
-     * @Route("/order/create/", name="history_orderinfo_new")
+     * @Route("/scan-order/progress-and-comments/create", name="history_orderinfo_new")
      * @Method("POST")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */
@@ -444,7 +442,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity for OrderInfo.
      *
-     * @Route("/order/notviewedcomments/", name="history_not_viewed_comments")
+     * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments")
      * @Method("GET")
      * @Template("OlegOrderformBundle:History:index.html.twig")
      */

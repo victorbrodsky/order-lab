@@ -8111,30 +8111,27 @@ function setNavBar() {
 
     var full = window.location.pathname;
 
-    var id = 'single';
+    var id = 'placescanorder';
 
-    if( full.indexOf("/index") !== -1 || full.indexOf("/multi/") !== -1 ) {
-        id = 'index';
-    }
+//    if( full.indexOf("multi/clinical") !== -1 ) {
+//        id = 'placescanorder';
+//    }
+//
+//    if ( full.indexOf("multi/educational") !== -1 ) {
+//        id = 'placescanorder';
+//    }
+//
+//    if( full.indexOf("multi/research") !== -1 ) {
+//        id = 'placescanorder';
+//    }
+//
+//    if( full.indexOf("multi/table") !== -1 ) {
+//        id = 'placescanorder';
+//    }
 
-    if( full.indexOf("multi/clinical") !== -1 ) {
-        id = 'clinical';
-    }
 
-    if ( full.indexOf("multi/educational") !== -1 ) {
-        id = 'edu';
-    }
-
-    if( full.indexOf("multi/research") !== -1 ) {
-        id = 'res';
-    }
-
-    if( full.indexOf("multi/table") !== -1 ) {
-        id = 'table';
-    }
-
-    if( full.indexOf("/history/") !== -1 ) {
-        id = "history";
+    if( full.indexOf("my-scan-orders") !== -1 ) {
+        id = 'myscanorders';
     }
 
     if( full.indexOf("/user/listusers") !== -1 ) {

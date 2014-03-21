@@ -13,7 +13,7 @@ use Oleg\OrderformBundle\Form\SiteParametersType;
 /**
  * SiteParameters controller.
  *
- * @Route("/siteparameters")
+ * @Route("/settings")
  */
 class SiteParametersController extends Controller
 {

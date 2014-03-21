@@ -47,16 +47,14 @@ use Oleg\OrderformBundle\Helper\UserUtil;
 //use Oleg\OrderformBundle\Entity\DataQuality;
 
 //ScanOrder joins OrderInfo + Scan
-//@Route("/multi")
 /**
  * OrderInfo controller.
  */
 class MultyScanOrderController extends Controller {
 
-    //requirements={"id" = "\d+"}
     /**
      * Edit: If the form exists, use this function
-     * @Route("/multi/edit/{id}", name="exist_edit")
+     * @Route("/multi/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -83,7 +81,7 @@ class MultyScanOrderController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/", name="singleorder_create")
+     * @Route("/scan-order/one-slide/new", name="singleorder_create")
      * @Route("/multi/research/new", name="res_create")
      * @Route("/multi/educational/new", name="edu_create")
      * @Route("/multi/clinical/new", name="clinical_create")
@@ -302,7 +300,7 @@ class MultyScanOrderController extends Controller {
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
      *
-     * @Route("/", name="single_new")
+     * @Route("/scan-order/one-slide/new", name="single_new")
      * @Route("/multi/research/new", name="res_new")
      * @Route("/multi/educational/new", name="edu_new")
      * @Route("/multi/clinical/new", name="clinical_new")
@@ -436,9 +434,9 @@ class MultyScanOrderController extends Controller {
 
     /**
      * Displays a form to view, update, amend an OrderInfo + Scan entities.
-     * @Route("/edit/{id}", name="multy_edit")
-     * @Route("/amend/{id}", name="order_amend")
-     * @Route("/show/{id}", name="multy_show")
+     * @Route("/scan-order/{id}/edit", name="multy_edit", requirements={"id" = "\d+"})
+     * @Route("/scan-order/{id}/amend", name="order_amend", requirements={"id" = "\d+"})
+     * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -709,7 +707,7 @@ class MultyScanOrderController extends Controller {
 
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
-     * @Route("/download/{id}", name="download_file")
+     * @Route("/scan-order/download/{id}", name="download_file", requirements={"id" = "\d+"})
      * @Method("GET")
      */
     public function downloadAction($id) {
@@ -726,7 +724,7 @@ class MultyScanOrderController extends Controller {
     }
 
     /**
-     * @Route("/multi/table/new", name="table_create")
+     * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
      * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
      */
     public function multiTableCreationAction()

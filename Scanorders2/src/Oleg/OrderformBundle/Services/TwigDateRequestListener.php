@@ -30,9 +30,12 @@ class TwigDateRequestListener {
     public function onKernelRequest(GetResponseEvent $event) {
         //$this->twig->getExtension('core')->setDateFormat('Y-m-d', '%d days');
 
+        $user = null;
         $timezone = $this->defaultTimeZone;
 
-        $user = $this->sc->getToken()->getUser();
+        if( $this->sc->getToken() ) {
+            $user = $this->sc->getToken()->getUser();
+        }
 
         if( $user && is_object($user) && $user->getTimezone() ) {
             $timezone = $user->getTimezone();

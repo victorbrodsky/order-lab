@@ -363,7 +363,12 @@ class OrderUtil {
 
         $criteriastr = $this->getNewCommentsCriteriaStr($security_context);
 
+        if( $criteriastr == null ) {
+            return null;
+        }
+
         $dql->where($criteriastr);
+
         //$dql->addGroupBy('history.changedate');
         $dql->addOrderBy("history.changedate","DESC");
         //$query = $dql->getQuery()->setParameter('role', '%"'.$role.'"%')->setParameter('role2', '%"'.$role2.'"%');
@@ -389,6 +394,10 @@ class OrderUtil {
         $role = "ROLE_PROCESSOR";
         $role2 = "ROLE_ADMIN";
         $user = $security_context->getToken()->getUser();
+
+        if( !is_object($user) ) {
+            return null;
+        }
 
         if( $security_context->isGranted('ROLE_PROCESSOR') ) {
             //processor can see all histories created by user without processor role

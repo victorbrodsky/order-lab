@@ -39,7 +39,7 @@ class AdminController extends Controller
     /**
      * Admin Page
      *
-     * @Route("/", name="admin_index")
+     * @Route("/lists/", name="admin_index")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:index.html.twig")
      */

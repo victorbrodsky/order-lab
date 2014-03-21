@@ -13,7 +13,7 @@ use Oleg\OrderformBundle\Form\LoggerType;
 /**
  * Logger controller.
  *
- * @Route("/logger")
+ * @Route("/event-log")
  */
 class LoggerController extends Controller
 {
