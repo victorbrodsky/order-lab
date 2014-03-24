@@ -29,7 +29,7 @@ class HistoryController extends Controller
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -281,7 +281,7 @@ class HistoryController extends Controller
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_ORDERING_PROVIDER')
         )
         {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

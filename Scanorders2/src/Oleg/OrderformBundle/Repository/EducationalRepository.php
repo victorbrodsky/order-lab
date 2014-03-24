@@ -24,7 +24,7 @@ class EducationalRepository extends EntityRepository {
         } else {
 
             //get cwid
-            $strArr = explode("-",$str);
+            $strArr = explode(" ",$str);
 
             if( count($strArr) > 0 ) {
                 $cwid = $strArr[0];

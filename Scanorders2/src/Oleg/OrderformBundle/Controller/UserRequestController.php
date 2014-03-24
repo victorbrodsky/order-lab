@@ -12,7 +12,7 @@ use Oleg\OrderformBundle\Form\UserRequestType;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-//@Route("/userrequest")
+
 /**
  * UserRequest controller.
  */
@@ -22,14 +22,14 @@ class UserRequestController extends Controller
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/order/account-requests", name="accountrequest")
+     * @Route("/account-requests", name="accountrequest")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -97,7 +97,7 @@ class UserRequestController extends Controller
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/order/account-requests/new", name="accountrequest_new")
+     * @Route("/account-requests/new", name="accountrequest_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
      */
@@ -116,14 +116,14 @@ class UserRequestController extends Controller
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/order/account-requests/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function showAction($id)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -145,14 +145,14 @@ class UserRequestController extends Controller
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/order/account-requests/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -176,12 +176,17 @@ class UserRequestController extends Controller
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/order/account-requests/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
      * @Template("OlegOrderformBundle:UserRequest:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
@@ -213,14 +218,14 @@ class UserRequestController extends Controller
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/order/account-requests/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $form = $this->createDeleteForm($id);
@@ -258,7 +263,7 @@ class UserRequestController extends Controller
     
     
     /**
-     * @Route("/order/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
      */
@@ -266,7 +271,7 @@ class UserRequestController extends Controller
     {
         
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -300,10 +305,10 @@ class UserRequestController extends Controller
     public function accessRequestCreateAction($id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') AND
+        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_BANNED')
         ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -312,7 +317,6 @@ class UserRequestController extends Controller
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User.');
-            //return $this->redirect( $this->generateUrl('logout') );
         }
 
         if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "active" ) {
@@ -358,7 +362,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -410,14 +414,14 @@ class UserRequestController extends Controller
     /**
      * Lists all Access Request.
      *
-     * @Route("/order/access-requests", name="accessrequest_list")
+     * @Route("/access-requests", name="accessrequest_list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:UserRequest:access_request_list.html.twig")
      */
     public function accessRequestIndexAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -466,7 +470,7 @@ class UserRequestController extends Controller
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();

@@ -48,7 +48,7 @@ class OrderInfoType extends AbstractType
         ));
 
         //add children
-        if( $this->params['type'] != 'Multi-Slide Table' ) {
+        if( $this->params['type'] != 'Table-View Scan Order' ) {
             $builder->add('patient', 'collection', array(
                 'type' => new PatientType($this->params,$this->entity),    //$this->type),
                 'required' => false,
@@ -63,11 +63,11 @@ class OrderInfoType extends AbstractType
 
         //echo "<br>type=".$this->type."<br>";
 
-        if( $this->params['type'] == 'Educational Multi-Slide Scan Order' || $this->params['type'] == 'Multi-Slide Table' || $this->params['type'] == 'One Slide Scan Order' ) {
+        if( $this->params['type'] == 'Educational Multi-Slide Scan Order' || $this->params['type'] == 'Table-View Scan Order' || $this->params['type'] == 'One Slide Scan Order' ) {
             $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>'Educational:') );
         }
 
-        if( $this->params['type'] == 'Research Multi-Slide Scan Order' || $this->params['type'] == 'Multi-Slide Table' || $this->params['type'] == 'One Slide Scan Order' ) {
+        if( $this->params['type'] == 'Research Multi-Slide Scan Order' || $this->params['type'] == 'Table-View Scan Order' || $this->params['type'] == 'One Slide Scan Order' ) {
             $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
         }
 

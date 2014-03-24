@@ -160,6 +160,19 @@ class SecurityController extends Controller
         return $response;
     }
 
+
+    /**
+     * @Route("/scan-order/nopermission", name="scan-order-nopermission")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Security:nopermission.html.twig")
+     */
+    public function actionNoPermission( Request $request )
+    {
+        return array(
+            //'returnpage' => '',
+        );
+    }
+
    
 //    /**
 //     * @Route("/login_check", name="login_check")

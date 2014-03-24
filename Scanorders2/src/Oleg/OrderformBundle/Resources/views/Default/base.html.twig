@@ -71,9 +71,9 @@
              
 <body>
 
-    <div class="container text-center col-xs-12">
+    <div class="container col-xs-12">
 
-        <div class="header">
+        <div class="header text-center col-xs-12">
 
             {% block header %}
                 {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
@@ -82,10 +82,10 @@
 
         </div>
 
-        {% include 'OlegOrderformBundle::Security/idle_timeout.html.twig' %}
 
+        <div class="text-center col-xs-12">
 
-        <div class="order-content">
+            {% include 'OlegOrderformBundle::Security/idle_timeout.html.twig' %}
 
             {% for flashMessage in app.session.flashbag.get('notice') %}
                 <div class="flash-notice">
@@ -100,12 +100,18 @@
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-            {% block content %}{% endblock %}
-
         </div>
 
-        <!-- footer -->
-        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+        <div>
+            {% block contentleft %}{% endblock %}
+        </div>
+
+        <div class="order-content text-center col-xs-12">
+            {% block content %}{% endblock %}
+
+            <!-- footer -->
+            {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+        </div>
 
         {#'@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
         {#'@OlegOrderformBundle/Resources/public/form/js/handsontable.js'#}

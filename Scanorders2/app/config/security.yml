@@ -64,16 +64,33 @@ security:
 
             anonymous:  true
 
+            access_denied_url: /scan-order/nopermission
+
           
     access_control:
      - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/admin/, role: ROLE_ADMIN }
-     - { path: ^/logger/, role: ROLE_ADMIN }
-     - { path: ^/siteparameters/, role: ROLE_ADMIN }
+     - { path: ^/access-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+     - { path: ^/admin/genall, role: ROLE_ADMIN }
+     - { path: ^/users/generate, role: ROLE_ADMIN }
+
+     - { path: ^/admin/, role: ROLE_PROCESSOR }
+     - { path: ^/incoming-scan-orders, role: ROLE_PROCESSOR }
+     - { path: ^/settings/, role: ROLE_PROCESSOR }
+     - { path: ^/incoming-scan-orders, role: ROLE_PROCESSOR }
+     - { path: ^/access-requests, role: ROLE_PROCESSOR }
+     - { path: ^/account-requests, role: ROLE_PROCESSOR }
+     - { path: ^/listusers, role: ROLE_PROCESSOR }
+     - { path: ^/event-log, role: ROLE_PROCESSOR }
+     - { path: ^/users/new, role: ROLE_PROCESSOR }
+
      - { path: ^/util/pathservice, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/util/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
-     - { path: ^/user/, role: ROLE_USER }
+     - { path: ^/users/, role: ROLE_USER }
      - { path: ^/check/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
-     - { path: ^/index, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
+
+     - { path: ^/scan-order/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
+     - { path: ^/my-scan-orders/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
 
 

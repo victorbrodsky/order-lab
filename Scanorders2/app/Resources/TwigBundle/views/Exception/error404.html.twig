@@ -1,0 +1,32 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+    {#<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />#}
+    {#<title>An Error Occurred: {{ status_text }}</title>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Oops! An Error Occurred </h1>#}
+{#<h2>The server returned a "{{ status_code }} {{ status_text }}".</h2>#}
+{#</body>#}
+{#</html>#}
+
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="hero-unit center">
+                {#<h1>Page Not Found <small><font face="Tahoma" color="red">Error 404</font></small></h1>#}
+                <h1>The server returned a "{{ status_code }} <font face="Tahoma" color="red">{{ status_text }}</font></small>".</h1>
+                <br />
+                <p>The page you requested could not be found, either contact your webmaster or try again. Use your browsers <b>Back</b> button to navigate to the page you have prevously come from</p>
+                <p><b>Or you could just press this neat little button:</b></p>
+                <a href="#" class="btn btn-large btn-info"><i class="icon-home icon-white"></i> Take Me Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

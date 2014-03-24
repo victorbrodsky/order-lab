@@ -18,13 +18,13 @@ function cleanValidationAlert() {
 
 function initAllElements() {
 
-    if( cicle == "new" ) {
+    if( cicle == "new" || cicle == "amend" ) {
         var check_btns = $("[id=check_btn]");
         //console.log("check_btns.length="+check_btns.length);
         for (var i = 0; i < check_btns.length; i++) {
             var idArr = check_btns.eq(i).attr("id").split("_");
             if( idArr[2] != "slide" && check_btns.eq(i).attr('flag') != "done" ) {
-                check_btns.eq(i).attr('flag', 'done');
+                check_btns.eq(i).attr('flag', 'done');  //done required to see if the fields belonging to this button was already disabled when adding a new elements on multi forms
                 disableInElementBlock(check_btns.eq(i), true, null, "notkey", null);
             }
         }
@@ -1273,7 +1273,7 @@ function setArrayField(element, dataArr, parent) {
 
 }
 
-//set key type field
+//set key type field. Used by set and clean functions
 //element - is key type element (combobox): id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_keytype
 function setKeyGroup( element, data ) {
     //console.log("########### set key group: element id="+element.attr("id") + ", class="+element.attr("class")+", keytype="+data['keytype']+", text="+data['text']);
@@ -1316,11 +1316,12 @@ function setKeyGroup( element, data ) {
 
     //element.select2( 'data', { text: data['keytypename'] } );
 
+    //TODO: what to do when amend with check boxes
     if( element.hasClass('mrntype-combobox') ) {
-        setMrntypeMask(element,true);
+        setMrntypeMask(element,false); //true
     }
     if( element.hasClass('accessiontype-combobox') ) {
-        setAccessiontypeMask(element,true);
+        setAccessiontypeMask(element,false); //true
     }
     //console.log("Set Key Group: asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal+", mrnKeyGlobal="+mrnKeyGlobal+", mrnKeytypeGlobal="+mrnKeytypeGlobal);
 

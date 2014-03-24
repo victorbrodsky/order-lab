@@ -34,7 +34,7 @@ class ScanOrderController extends Controller {
     public function indexAction( Request $request ) {
 
         if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         return array();
@@ -63,7 +63,7 @@ class ScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         //echo "user=".$user;
         if( !is_object($user) ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         if( $routeName == "incoming-scan-orders" ) {
@@ -225,56 +225,76 @@ class ScanOrderController extends Controller {
 
         //***************** User filter ***************************//
         if( $routeName == "my-scan-orders" ) {
+
+            $crituser = "";
+
             //echo $routeName.": service=".$service."<br>";
             //select only orders where this user is author or proxy user, except "Where I am Course Director" and "Where I am Principal Investigator" cases.
-            if( $service != "Where I am Course Director" && $service != "Where I am Principal Investigator" ) {
+            if(
+                $service != "Where I am Course Director" &&
+                $service != "Where I am Principal Investigator"
+            ) {
 
                 $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
                 //show only my order and the orders where I'm a proxy
                 //Orders I Personally Placed and Proxy Orders Placed For Me: $service == "My Orders"
-                if( $criteriastr != "" ) {
-                    $criteriastr .= " AND ";
-                }
-                $criteriastr .= "( provider.id=".$user->getId();
+
+                $crituser .= "( provider.id=".$user->getId();
 
                 //***************** Proxy User Orders *************************//
-                $criteriastr .= " OR proxyuser.id=".$user->getId();
+                $crituser .= " OR proxyuser.id=".$user->getId();
                 //***************** END of Proxy User Orders *************************//
 
-                $criteriastr .= " )";
+                $crituser .= " )";
+            }
+
+            //show all orders for service(s) for ROLE_SERVICE_CHIEF
+            if( $this->get('security.context')->isGranted('ROLE_SERVICE_CHIEF') ) {
+                //$crituser = "";
+            }
+
+            //show all for ROLE_DIVISION_CHIEF
+            if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
+                $crituser = "";
             }
 
             if( $service == "Orders I Personally Placed" ) {
                 //echo "Orders I Personally Placed <br>";
-                if( $criteriastr != "" ) {
-                    $criteriastr .= " AND ";
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
                 }
-                $criteriastr .= "provider.id=".$user->getId();
+                $crituser .= "provider.id=".$user->getId();
             }
             if( $service == "Proxy Orders Placed For Me" ) {
                 //echo "Proxy Orders Placed For Me <br>";
-                if( $criteriastr != "" ) {
-                    $criteriastr .= " AND ";
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
                 }
                 //***************** Proxy User Orders *************************//
-                $criteriastr .= "proxyuser.id=".$user->getId();
+                $crituser .= "proxyuser.id=".$user->getId();
                 //***************** END of Proxy User Orders *************************//
             }
             if( $service == "Where I am Course Director" ) {
                 $dql->innerJoin("orderinfo.educational", "educational");
-                if( $criteriastr != "" ) {
-                    $criteriastr .= " AND ";
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
                 }
-                $criteriastr .= "educational.director=".$user->getId();
+                $crituser .= "educational.director=".$user->getId();
             }
             if( $service == "Where I am Principal Investigator" ) {
                 //echo "Where I am Principal Investigator <br>";
                 $dql->innerJoin("orderinfo.research", "research");
-                if( $criteriastr != "" ) {
-                    $criteriastr .= " AND ";
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
                 }
-                $criteriastr .= "research.principal=".$user->getId();
+                $crituser .= "research.principal=".$user->getId();
+            }
+
+            if( $criteriastr != "" && $crituser != "" ) {
+                $criteriastr = $criteriastr." AND ".$crituser;
+            } else {
+                $criteriastr .= $crituser;
             }
 
         }
@@ -287,7 +307,7 @@ class ScanOrderController extends Controller {
             //***************** End of Service filter ***************************//
         }
 
-        //echo "<br>criteriastr=".$criteriastr."<br>";
+        echo "<br>criteriastr=".$criteriastr."<br>";
         
         if( $criteriastr != "" ) {
             //TODO: use ->setParameter(1, $caravan);
@@ -364,7 +384,7 @@ class ScanOrderController extends Controller {
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $form = $this->createDeleteForm($id);
@@ -405,7 +425,7 @@ class ScanOrderController extends Controller {
         if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
         ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();

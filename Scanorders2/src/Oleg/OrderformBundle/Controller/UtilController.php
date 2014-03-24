@@ -509,7 +509,7 @@ class UtilController extends Controller {
 
         $output = array();
         foreach( $users as $user ) {
-            $element = array('id'=>$user->getId()."", 'text'=>$user."");
+            $element = array('id'=>$user."", 'text'=>$user."");
             $output[] = $element;
         }
 

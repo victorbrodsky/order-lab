@@ -61,7 +61,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
         }
 
-        if( $this->security->isGranted('ROLE_PROCESSOR') ) {
+        if( $user->hasRole('ROLE_PROCESSOR') ) {
 
             $response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
             $options['event'] = "Successful Login";
@@ -69,37 +69,29 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
         elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') || $this->security->isGranted('ROLE_ORDERING_PROVIDER') ) {
 
-            //$referer_url = $request->headers->get('referer');
+            //$referer_url1 = $request->headers->get('referer');
+            //echo("referer_url1=".$referer_url1."<br>");
             //$last = basename(parse_url($referer_url, PHP_URL_PATH));
 
-            //$last_route = $request->getSession()->get('last_route', array('name' => 'scan-order-home'));
-            $lastRoute = $request->getSession()->get('last_route');
-            //echo "last_route=".$lastRoute."<br>";
-            //print_r($request->getSession());
-            //print_r($lastRoute);
-            //echo "\n count=".count($lastRoute)."\n";
-            //$full_url = $request->getSession()->get('full_url');
+            $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
+            $lastRoute = $request->getSession()->get($indexLastRoute);
+            //echo("lastRoute=".$lastRoute."<br>");
 
-            //if( $lastRoute && count($lastRoute) > 0 && array_key_exists('name', $lastRoute) ) {
-            if( $lastRoute && $lastRoute != '' ) {
-                $referer_url = $this->router->generate( $lastRoute );
-                //$referer_url = $full_url;
+            $loginpos = strpos($lastRoute, '/login');
+            $nopermpos = strpos($lastRoute, '/nopermission');
+
+            //echo "nopermpos=".$nopermpos."<br>";
+            //echo "loginpos=".$loginpos."<br>";
+
+            if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false ) {
+                //$referer_url = $this->router->generate( $lastRoute );
+                $referer_url = $lastRoute;
             } else {
-                //print_r($lastRoute);
-                //exit('last root array is empty, count'.count($lastRoute));
                 $referer_url = $this->router->generate('scan-order-home');
             }
 
-            //echo "<br>success: referer_url=".$referer_url."<br>";
-            //exit();
-
-//            if( $referer_url == 'login' ) {
-//                //exit("gen single_new");
-//                $response = new RedirectResponse($this->router->generate('scan-order-home'));
-//            } else {
-                //exit("use ref url=".$referer_url);
-//                $response = new RedirectResponse($referer_url);
-//            }
+            //echo("referer_url=".$referer_url);
+            //exit('not processor');
 
             $response = new RedirectResponse($referer_url);
 
@@ -115,6 +107,14 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/external/ordering provider submitter";
             
         }
+
+//        $lastRouteArr = $request->getSession()->get('last_route_arr');
+//        echo "<br>lastRouteArr:<br>";
+//        print_r($lastRouteArr);
+//        $request->getSession()->set('last_route_arr', array());
+//        echo "Session:<br>";
+//        print_r($request->getSession());
+//        exit("<br>");
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 

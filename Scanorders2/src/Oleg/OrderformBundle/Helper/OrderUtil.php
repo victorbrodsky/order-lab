@@ -363,7 +363,7 @@ class OrderUtil {
 
         $criteriastr = $this->getNewCommentsCriteriaStr($security_context);
 
-        if( $criteriastr == null ) {
+        if( $criteriastr == "" ) {
             return null;
         }
 
@@ -385,19 +385,24 @@ class OrderUtil {
 
     public function getNewCommentsCriteriaStr($security_context, $flag = 'new_comments') {
 
+        if( !$security_context->getToken() ) {
+            return "";
+        }
+
         $criteriastr = "history.eventtype='Comment Added' ";
 
         if( $flag != 'all_comments' ) {
             $criteriastr = $criteriastr . "AND history.viewed is NULL ";
         }
 
-        $role = "ROLE_PROCESSOR";
-        $role2 = "ROLE_ADMIN";
         $user = $security_context->getToken()->getUser();
 
         if( !is_object($user) ) {
-            return null;
+            return "";
         }
+
+        $role = "ROLE_PROCESSOR";
+        $role2 = "ROLE_ADMIN";
 
         if( $security_context->isGranted('ROLE_PROCESSOR') ) {
             //processor can see all histories created by user without processor role

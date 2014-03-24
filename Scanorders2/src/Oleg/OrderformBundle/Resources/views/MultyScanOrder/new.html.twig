@@ -21,13 +21,13 @@
 {% endif %}
 
 {% block title %}
-    {{ form.vars.value.type  }} Scan Order
+    {{ formtype }}
 {% endblock %}
 
 {% block content %}
 
     <h3 class="text-info">
-        {{ form.vars.value.type  }} Scan Order
+        {{ formtype }}
         {% if form.vars.value.oid != "" %}
             {{ form.vars.value.oid }}
             ({{ form.vars.value.status }})

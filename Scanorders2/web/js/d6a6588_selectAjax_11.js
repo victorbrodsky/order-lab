@@ -486,10 +486,8 @@ function getOptionalUserEducational(urlCommon,ids) {
     var targetid = ".ajax-combobox-optionaluser-educational";
     var url = urlCommon+"optionalusereducational";
 
-//    if( cicle == "new" || cicle == "create" || cicle == "amend" ) {
-//        var optStr = "default";
-//        url = url + "?opt=" + optStr;
-//    }
+    var optStr = user_id;
+    url = url + "?opt=" + optStr;
 
     if( optionaluserEducational.length == 0 ) {
         $.ajax({
@@ -511,10 +509,8 @@ function getOptionalUserResearch(urlCommon,ids) {
     var targetid = ".ajax-combobox-optionaluser-research";
     var url = urlCommon+"optionaluserresearch";
 
-//    if( cicle == "new" || cicle == "create" || cicle == "amend" ) {
-//        var optStr = "default";
-//        url = url + "?opt=" + optStr;
-//    }
+    var optStr = user_id;
+    url = url + "?opt=" + optStr;
 
     if( optionaluserResearch.length == 0 ) {
         $.ajax({

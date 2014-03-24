@@ -15,8 +15,6 @@ $(document).ready(function() {
 
     initAdd();
 
-    initAllElements(); //init disable all fields
-
     customCombobox();
 
     //add diseaseType radio listener for new form
@@ -68,5 +66,7 @@ $(document).ready(function() {
 
     //tooltip
     $(".element-with-tooltip").tooltip();
+
+    initAllElements(); //init disable all fields
 
 });

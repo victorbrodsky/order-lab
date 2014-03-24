@@ -14,7 +14,7 @@ use Oleg\OrderformBundle\Helper\UserUtil;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Oleg\OrderformBundle\Entity\User;
-
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
@@ -26,7 +26,7 @@ class UserController extends Controller
 {
 
     /**
-     * @Route("/order/listusers", name="listusers")
+     * @Route("/listusers", name="listusers")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
@@ -34,11 +34,7 @@ class UserController extends Controller
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You do not have permission to visit this page'
-            );
-            return $this->redirect($this->generateUrl('my-scan-orders'));
+            return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
         //$userManager = $this->container->get('fos_user.user_manager');
@@ -77,7 +73,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/order/users/new", name="new_user")
+     * @Route("/users/new", name="new_user")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:register.html.twig")
      */
@@ -109,7 +105,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/order/users/new", name="create_user")
+     * @Route("/users/new", name="create_user")
      * @Method("POST")
      * @Template("OlegOrderformBundle:Profile:register.html.twig")
      */
@@ -149,16 +145,21 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/order/users/{id}", name="showuser", requirements={"id" = "\d+"})
+     * @Route("/users/{id}", name="showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */
     public function showUserAction($id)
     {
 
-        //echo "id=".$id."<br>";
-
         $em = $this->getDoctrine()->getManager();
+
+        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+        //echo "id=".$id."<br>";
 
         if( $id == 0 || $id == '' || $id == '' ) {
             $entity = new User();
@@ -166,6 +167,9 @@ class UserController extends Controller
             $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
         }
 
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
         //$ps = new PathService();
         //$entity->addPathologyServices($ps);
 
@@ -194,7 +198,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/order/edit-user-profile/{id}", name="user_edit", requirements={"id" = "\d+"})
+     * @Route("/edit-user-profile/{id}", name="user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */
@@ -202,6 +206,13 @@ class UserController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
+
+        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
 
         //Roles
@@ -228,13 +239,19 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/order/users/{id}", name="user_update")
+     * @Route("/users/{id}", name="user_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
 
         $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
 
@@ -330,7 +347,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/order/users/generate", name="generate_users")
+     * @Route("/users/generate", name="generate_users")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
@@ -342,7 +359,7 @@ class UserController extends Controller
                 'notice',
                 'You do not have permission to visit this page'
             );
-            return $this->redirect($this->generateUrl('my-scan-orders'));
+            return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
         $userutil = new UserUtil();

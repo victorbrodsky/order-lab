@@ -493,41 +493,62 @@ function setNavBar() {
 
     var full = window.location.pathname;
 
-    var id = 'single';
+    var id = 'scanorderhome';
 
-    if( full.indexOf("/index") !== -1 || full.indexOf("/multi/") !== -1 ) {
-        id = 'index';
+    if( full.indexOf("scan-order/multi-slide-clinical") !== -1 ) {
+        id = 'placescanorder';
     }
 
-    if( full.indexOf("multi/clinical") !== -1 ) {
-        id = 'clinical';
+    if ( full.indexOf("scan-order/multi-slide-educational") !== -1 ) {
+        id = 'placescanorder';
     }
 
-    if ( full.indexOf("multi/educational") !== -1 ) {
-        id = 'edu';
+    if ( full.indexOf("scan-order/multi-slide-research") !== -1 ) {
+        id = 'placescanorder';
     }
 
-    if( full.indexOf("multi/research") !== -1 ) {
-        id = 'res';
+    if( full.indexOf("scan-order/one-slide") !== -1 ) {
+        id = 'placescanorder';
     }
 
-    if( full.indexOf("multi/table") !== -1 ) {
-        id = 'table';
+    if( full.indexOf("scan-order/multi-slide-table-view") !== -1 ) {
+        id = 'placescanorder';
     }
 
-    if( full.indexOf("/history/") !== -1 ) {
-        id = "history";
+    if( full.indexOf("my-scan-orders") !== -1 ) {
+        id = 'myscanorders';
     }
 
+    //Admin
     if( full.indexOf("/user/listusers") !== -1 ) {
         id = 'admin';
     }
-    
     if( full.indexOf("/admin/") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/incoming-scan-orders") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/access-requests") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/account-requests") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/listusers") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/users/") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/event-log") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/settings") !== -1 ) {
+        id = 'admin';
+    }
     
-    if( full.indexOf("/user/") !== -1 ) {
+    if( full.indexOf("/users/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
         } else {

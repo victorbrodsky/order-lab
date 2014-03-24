@@ -50,7 +50,7 @@ $(document).ready(function() {
 function submitNewComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/history/order/create/";
+    var urlCommentSubmit = "http://"+urlBase+"/scan-order/progress-and-comments/create";
 
     var text = $('#addComment_'+id).find('.textarea').val();
 

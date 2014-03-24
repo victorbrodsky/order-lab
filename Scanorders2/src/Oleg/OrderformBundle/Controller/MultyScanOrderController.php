@@ -43,8 +43,8 @@ use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
-//use Oleg\OrderformBundle\Entity\DataQuality;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -54,7 +54,7 @@ class MultyScanOrderController extends Controller {
 
     /**
      * Edit: If the form exists, use this function
-     * @Route("/multi/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
+     * @Route("/scan-order/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -64,7 +64,12 @@ class MultyScanOrderController extends Controller {
         if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
         ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
+        if( !$secUtil->isCurrentUserAllow($id) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -82,9 +87,9 @@ class MultyScanOrderController extends Controller {
      * Creates a new OrderInfo entity.
      *
      * @Route("/scan-order/one-slide/new", name="singleorder_create")
-     * @Route("/multi/research/new", name="res_create")
-     * @Route("/multi/educational/new", name="edu_create")
-     * @Route("/multi/clinical/new", name="clinical_create")
+     * @Route("/scan-order/multi-slide-research/new", name="res_create")
+     * @Route("/scan-order/multi-slide-educational/new", name="edu_create")
+     * @Route("/scan-order/multi-slide-clinical/new", name="clinical_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -97,7 +102,7 @@ class MultyScanOrderController extends Controller {
         if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
         ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -301,9 +306,9 @@ class MultyScanOrderController extends Controller {
      * Displays a form to create a new OrderInfo + Scan entities.
      *
      * @Route("/scan-order/one-slide/new", name="single_new")
-     * @Route("/multi/research/new", name="res_new")
-     * @Route("/multi/educational/new", name="edu_new")
-     * @Route("/multi/clinical/new", name="clinical_new")
+     * @Route("/scan-order/multi-slide-research/new", name="res_new")
+     * @Route("/scan-order/multi-slide-educational/new", name="edu_new")
+     * @Route("/scan-order/multi-slide-clinical/new", name="clinical_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -314,17 +319,16 @@ class MultyScanOrderController extends Controller {
         if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
         ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
 
         //***************** get ordering provider from most recent order ***************************//
         $lastProxy = null;
-        $em = $this->getDoctrine()->getManager();
         //$orderWithOrderingProvider = $em->getRepository('OlegOrderformBundle:History')->findByProvider($user);
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
@@ -425,7 +429,8 @@ class MultyScanOrderController extends Controller {
             //echo "newsingle: <br>";
             return $this->render('OlegOrderformBundle:MultyScanOrder:newsingle.html.twig', array(
                 'form' => $form->createView(),
-                'cycle' => 'new'
+                'cycle' => 'new',
+                'formtype' => $type
             ));
         }
 
@@ -440,7 +445,7 @@ class MultyScanOrderController extends Controller {
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
-    public function showMultyAction( $id, $type = "show" )
+    public function showMultyAction( Request $request, $id, $type = "show" )
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
@@ -448,10 +453,15 @@ class MultyScanOrderController extends Controller {
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER') &&
             false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_ORDERING_PROVIDER')
         ) {
-            return $this->redirect( $this->generateUrl('logout') );
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
+        if( !$secUtil->isCurrentUserAllow($id) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -751,14 +761,15 @@ class MultyScanOrderController extends Controller {
 
         $service = $user->getPathologyServices();
 
-        $type = "Multi-Slide Table";
+        $type = "Table-View Scan Order";
 
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         return $this->render('OlegOrderformBundle:MultyScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
-            'cycle' => 'new'
+            'cycle' => 'new',
+            'formtype' => $type
         ));
     }
 

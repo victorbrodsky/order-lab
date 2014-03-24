@@ -743,6 +743,9 @@ class AdminController extends Controller
             "ROLE_ADMIN" => "Administrator",
             "ROLE_PROCESSOR" => "Processor",
 
+            "ROLE_DIVISION_CHIEF" => "Division Chief",
+            "ROLE_SERVICE_CHIEF" => "Service Chief",
+
             "ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST" => "Data Quality Assurance Specialist",
 
             //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.

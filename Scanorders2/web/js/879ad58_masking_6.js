@@ -178,9 +178,10 @@ function setMrntypeMask( elem, clean ) {
     {
         case "Auto-generated MRN":
             mrnField.inputmask( getMrnAutoGenMask() );
-            var parent = elem.closest('.patientmrn');
-            if( parent.find('#check_btn').hasClass('checkbtn') ) {
-                parent.find('#check_btn').trigger("click");
+            var checkbtn = elem.closest('.patientmrn').find('#check_btn');
+            var inputValue = getButtonParent(elem).find('.keyfield').val();
+            if( checkbtn.hasClass('checkbtn') && inputValue == '' ) {   //don't press check if input value is set
+                checkbtn.trigger("click");
             }
             //console.log('Auto-generated MRN !!!');
             break;
@@ -285,12 +286,14 @@ function setAccessiontypeMask(elem,clean) {
     {
         case "Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );
-            var btn = elem.closest('.accessionaccession').find('#check_btn');
-            if( btn.hasClass('checkbtn') ) {
-                btn.trigger("click");
+            var checkbtn = elem.closest('.accessionaccession').find('#check_btn');
+            var inputValue = getButtonParent(elem).find('.keyfield').val();
+            //console.log("in value="+inputValue);
+            if( checkbtn.hasClass('checkbtn') && inputValue == '' ) {
+                checkbtn.trigger("click");
             }
             //console.log('Auto-generated Accession !!!');
-            //printF(btn,"btn to click:");
+            //printF(checkbtn,"checkbtn to click:");
             break;
         case "Existing Auto-generated Accession Number":
             accField.inputmask( getAccessionAutoGenMask() );

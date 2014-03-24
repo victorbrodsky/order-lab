@@ -110,6 +110,7 @@ class User extends BaseUser
      */
     protected $timezone;
 
+
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
