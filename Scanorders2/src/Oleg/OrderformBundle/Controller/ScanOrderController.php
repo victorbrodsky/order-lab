@@ -78,12 +78,8 @@ class ScanOrderController extends Controller {
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
-        //$dql->addSelect('orderinfo');
-        //$dql->addSelect('COUNT(slides) as slidecount');
-        //$dql->addGroupBy('orderinfo');
         $dql->select('orderinfo, COUNT(slides) as slidecount');
         $dql->groupBy('orderinfo');
-        $dql->addGroupBy('orderinfo');
         $dql->addGroupBy('status.name');
         $dql->addGroupBy('formtype.name');
         $dql->addGroupBy('provider.username');
@@ -98,40 +94,13 @@ class ScanOrderController extends Controller {
         $service = $form->get('service')->getData();
 
         //service
-        //echo "<br>filter=".$filter;
+        //echo "<br>service=".$service."<br>";
         //exit();
 
         $criteriastr = "";
 
         //***************** Pathology Service filetr ***************************//
         $showprovider = 'false';
-
-        //***************** Service filter ***************************//
-        if( is_numeric($service)  ) {
-
-            $userService = $user->getPathologyServices();
-
-            if( !$userService ) {
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    'You are not assign to any pathology service; All orders are shown.'
-                );
-            }
-
-            $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->find($service);
-
-            if( $userService && $userService != ''  ) {
-                if( $criteriastr != "" ) {
-                    $criteriastr .= " AND ";
-                }
-                $criteriastr .= " orderinfo.pathologyService=".$pathService->getId();
-            }
-            $showprovider = 'true';
-        } else {
-            //this implemented below in "User filter"
-        }
-        //***************** END of Pathology Service filetr ***************************//
-
 
         //***************** Status filetr ***************************//
         $dql->innerJoin("orderinfo.status", "status");
@@ -249,12 +218,15 @@ class ScanOrderController extends Controller {
                 $crituser .= " )";
             }
 
-            //show all orders for service(s) for ROLE_SERVICE_CHIEF
-            if( $this->get('security.context')->isGranted('ROLE_SERVICE_CHIEF') ) {
-                //$crituser = "";
+            //***************** Service filter: show all orders with chosen pathology service matched with current user's service *****************//
+            $allservices = $this->allServiceFilter( $service, $routeName, $user, $crituser );
+            if( $allservices != "" ) {
+                $showprovider = 'true';
+                $crituser .= $allservices;
             }
+            //***************** EOF Service filter: show all orders with chosen pathology service matched with current user's service *****************//
 
-            //show all for ROLE_DIVISION_CHIEF
+            //show all for ROLE_DIVISION_CHIEF: remove all user's restriction
             if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
                 $crituser = "";
             }
@@ -307,7 +279,7 @@ class ScanOrderController extends Controller {
             //***************** End of Service filter ***************************//
         }
 
-        echo "<br>criteriastr=".$criteriastr."<br>";
+        //echo "<br>criteriastr=".$criteriastr."<br>";
         
         if( $criteriastr != "" ) {
             //TODO: use ->setParameter(1, $caravan);
@@ -556,6 +528,66 @@ class ScanOrderController extends Controller {
         }
 
         return $filterType;
+    }
+
+    //Pathology Service filetr
+    public function allServiceFilter( $service, $routeName, $user, $criterions ) {
+
+        $criteriastr = "";
+        $em = $this->getDoctrine()->getManager();
+
+        if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
+            return $criteriastr;
+        }
+
+        //for "My Orders" get all user services and chief services
+        if( $routeName == "my-scan-orders" ) {
+
+            $services = array();
+            $userServices = $user->getPathologyServices();
+
+            if( $this->get('security.context')->isGranted('ROLE_SERVICE_CHIEF') ) {
+                $chiefServices = $user->getChiefservices();
+                if( $userServices && count($userServices)>0 ) {
+                    $services = array_merge($userServices, $chiefServices);
+                } else {
+                    $services = $chiefServices;
+                }
+            }
+
+            foreach( $services as $service ) {
+                if( $service && $service != "" ) {
+                    if( $criteriastr != "" ) {
+                        $criteriastr .= " OR ";
+                    }
+                    $criteriastr .= " orderinfo.pathologyService=".$service->getId();
+                }
+            }//foreach
+
+        }
+
+        //for "Incoming Orders" select only chosen service
+        if( $routeName == "incoming-scan-orders" ) {
+
+            if( is_numeric($service)  ) {
+
+                $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->find($service);
+
+                if( !$pathService ) {
+                    throw new \Exception( 'Unable to find Service '.$service );
+                }
+
+                $criteriastr = " orderinfo.pathologyService=".$pathService->getId();
+
+            }
+
+        }
+
+        if( $criterions != "" ) {
+            $criteriastr = " OR (" . $criteriastr . ") ";
+        }
+
+        return $criteriastr;
     }
 
 }

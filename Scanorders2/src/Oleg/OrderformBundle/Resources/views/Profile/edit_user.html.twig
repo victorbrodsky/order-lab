@@ -25,7 +25,10 @@
 
     {% if is_granted('ROLE_ADMIN') %}
         {{ formmacros.field(form.roles) }}
+
     {% endif %}
+
+    {{ formmacros.field(form.chiefservices) }}
 
     {{ formmacros.field(form.displayName) }}
     {{ formmacros.field(form.firstName) }}

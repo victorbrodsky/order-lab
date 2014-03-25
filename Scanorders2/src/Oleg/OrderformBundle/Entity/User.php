@@ -110,10 +110,24 @@ class User extends BaseUser
      */
     protected $timezone;
 
+//    /**
+//     * @var array
+//     * @ORM\Column(type="array", nullable=true)
+//     */
+//    private $chiefservices;
+    /**
+     * @ORM\ManyToMany(targetEntity="PathServiceList")
+     * @ORM\JoinTable(name="fos_user_chiefservice",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="pathservice_id", referencedColumnName="id")}
+     * )
+     */
+    protected $chiefservices;
 
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
+        $this->chiefservices = new ArrayCollection();   //array();
         parent::__construct();
     }
 
@@ -384,6 +398,36 @@ class User extends BaseUser
         return $this->timezone;
     }
 
+    //chief services
+    /**
+     * @param mixed $chiefservices
+     */
+    public function setChiefservices($chiefservices)
+    {
+        $this->chiefservices = $chiefservices;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChiefservices()
+    {
+        return $this->chiefservices;
+    }
+
+    public function addChiefservices(\Oleg\OrderformBundle\Entity\PathServiceList $chiefservices)
+    {
+        if( !$this->chiefservices->contains($chiefservices) ) {
+            $this->chiefservices[] = $chiefservices;
+        }
+
+        return $this;
+    }
+
+    public function removeChiefservices(\Oleg\OrderformBundle\Entity\PathServiceList $chiefservices)
+    {
+        $this->chiefservices->removeElement($chiefservices);
+    }
 
 }
 

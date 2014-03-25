@@ -40,14 +40,7 @@ class UserController extends Controller
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
 
-        $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+        $rolesArr = $this->getUserRoles();
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
         $dql =  $repository->createQueryBuilder("user");
@@ -58,6 +51,7 @@ class UserController extends Controller
         //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
 
         $limit = 1000;
+        $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -85,13 +79,7 @@ class UserController extends Controller
         $entity = new User();
 
         //Roles
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+        $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
 
@@ -117,13 +105,7 @@ class UserController extends Controller
         $entity = new User();
 
         //Roles
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+        $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
 
@@ -174,13 +156,7 @@ class UserController extends Controller
         //$entity->addPathologyServices($ps);
 
         //Roles
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+        $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array('disabled' => true));
 
@@ -216,13 +192,7 @@ class UserController extends Controller
         $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
 
         //Roles
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+        $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
@@ -260,13 +230,7 @@ class UserController extends Controller
         }
 
         //Roles
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        }
+        $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
@@ -369,7 +333,29 @@ class UserController extends Controller
         return $this->redirect($this->generateUrl('listusers'));
     }
 
+    public function getUserRoles() {
+        $rolesArr = array();
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+            foreach( $roles as $role ) {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
+        }
+        return $rolesArr;
+    }
 
+//    public function getUserChiefServices() {
+//        $servArr = array();
+//        $em = $this->getDoctrine()->getManager();
+//        $services = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+//        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//            foreach( $services as $service ) {
+//                $servArr[$service->getName()] = $service->getAlias();
+//            }
+//        }
+//        return $servArr;
+//    }
 
 
 }
