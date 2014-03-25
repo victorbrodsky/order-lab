@@ -9,101 +9,26 @@
     <h3 class="text-info"> Data Review</h3>
 
 
-    {#{% for educational in educationals %}#}
-        {#<a href="{{ path('educational_edit', { 'id': educational.id }) }}">Educational #{{ educational.id }}</a>#}
-    {#{% endfor %}#}
-
-    {#<p>#}
-        {#{{ educationals|length }} Educational Objects for Review#}
-    {#</p>#}
-
-    {#<p>#}
-        {#{{ researches|length }} Research Objects for Review#}
-    {#</p>#}
-
-
     <p>
-    <div  class="tabbable">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#research">Research: {{ researches|length }}</a></li>
-            <li class=""><a data-toggle="tab" href="#educational">Educational: {{ educationals|length }}</a></li>
-        </ul>
-        <div class="tab-content">
-            <div id="research" class="tab-pane active">
-                <p>
-                    {% include 'OlegOrderformBundle::Research/index.html.twig' %}
-                </p>
-            </div>
-            <div id="educational" class="tab-pane">
-                <p>
-                    {% include 'OlegOrderformBundle::Educational/index.html.twig' %}
-                </p>
+        <div  class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#research">Research: {{ researches|length }}</a></li>
+                <li class=""><a data-toggle="tab" href="#educational">Educational: {{ educationals|length }}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="research" class="tab-pane active">
+                    <p>
+                        {% include 'OlegOrderformBundle::Research/index.html.twig' %}
+                    </p>
+                </div>
+                <div id="educational" class="tab-pane">
+                    <p>
+                        {% include 'OlegOrderformBundle::Educational/index.html.twig' %}
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
     </p>
-
-
-
-    {#<table class="records_list table table-hover table-condensed text-left">#}
-        {#<thead>#}
-        {#<tr>#}
-            {#<th>Id</th>#}
-            {#<th>Course</th>#}
-            {#<th>Lesson</th>#}
-            {#<th>Director</th>#}
-            {#<th>Director as eneterd by user</th>#}
-            {#<th>Order</th>#}
-            {#<th>Actions</th>#}
-        {#</tr>#}
-        {#</thead>#}
-        {#<tbody data-link="row" class="rowlink">#}
-        {#{% for educational in educationals %}#}
-
-            {#<tr>#}
-                {#<td><a href="{{ path('educational_edit', { 'id': educational.id }) }}">{{ educational.id }}</a></td>#}
-
-                {#<td>{{ educational.course }}</td>#}
-
-                {#<td>{{ educational.lesson }}</td>#}
-
-                {#<td>{{ educational.directorstr }}</td>#}
-
-                {#<td>{{ educational.director }}</td>#}
-
-                {#<td>#}
-                    {#&#123;&#35;{{ educational.orderinfo.id }}&#35;&#125;#}
-                {#</td>#}
-
-
-                {#<td class="rowlink-skip">#}
-
-                    {#<div class="btn-group">#}
-                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-                            {#Action <span class="caret"></span>#}
-                        {#</button>#}
-                        {#<ul class="dropdown-menu dropdown-menu-right">#}
-
-                            {#<li><a data-confirm="Are you sure you want to Decline"#}
-                                   {#href="{{ path('educational_edit', { 'id': educational.id }) }}">Review</a>#}
-                            {#</li>#}
-
-                            {#&#123;&#35;<li><a data-confirm="Are you sure you want to Revert Status to Active"&#35;&#125;#}
-                                   {#&#123;&#35;href="{{ path('accountrequest_status', { 'id': educational.orderinfo.id, 'status': 'active' }) }}">View Order</a>&#35;&#125;#}
-                            {#&#123;&#35;</li>&#35;&#125;#}
-
-                        {#</ul>#}
-                    {#</div>#}
-
-
-
-
-                {#</td>#}
-
-            {#</tr>#}
-        {#{% endfor %}#}
-        {#</tbody>#}
-    {#</table>#}
 
 
 {% endblock %}

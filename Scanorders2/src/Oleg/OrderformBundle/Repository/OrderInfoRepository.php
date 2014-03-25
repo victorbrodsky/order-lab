@@ -233,7 +233,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         //clean empty blocks
-        //TODO: do it in part repository
         $blocks = $entity->getBlock();
         foreach( $blocks as $block ) {
             if( count($block->getSlide()) == 0 ) {
@@ -266,7 +265,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $em->flush();
         }
 
-        //record history
+        //*********** record history ***********//
         $history = new History();
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
@@ -289,6 +288,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         $em->persist($history);
         $em->flush();
+        //*********** EOF record history ***********//
 
         $em->clear();
 

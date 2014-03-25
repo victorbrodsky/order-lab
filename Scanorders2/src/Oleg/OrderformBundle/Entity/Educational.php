@@ -40,6 +40,11 @@ class Educational
      */
     protected $directorstr;
 
+    /**
+     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="educational")
+     */
+    protected $orderinfo;
+
 //    public function __clone() {
 //        if ($this->id) {
 //            $this->setId(null);
@@ -134,9 +139,27 @@ class Educational
         return $this->directorstr;
     }
 
+    /**
+     * @param mixed $orderinfo
+     */
+    public function setOrderinfo($orderinfo)
+    {
+        $this->orderinfo = $orderinfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
+
+
     public function __toString(){
 
         return "Principal: id=".$this->id.", course=".$this->course.", lesson".$this->lesson."<br>";
     }
+
 
 }

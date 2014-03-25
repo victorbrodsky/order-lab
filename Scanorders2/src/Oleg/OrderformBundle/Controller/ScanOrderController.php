@@ -71,7 +71,7 @@ class ScanOrderController extends Controller {
         } else {
             $services = null;
         }
-        
+
         //create filters
         $form = $this->createForm(new FilterType( $this->getFilter(), $user, $services ), null);
         $form->bind($request);
@@ -79,6 +79,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
         $dql->select('orderinfo, COUNT(slides) as slidecount');
+
         $dql->groupBy('orderinfo');
         $dql->addGroupBy('status.name');
         $dql->addGroupBy('formtype.name');
@@ -87,7 +88,8 @@ class ScanOrderController extends Controller {
         $dql->innerJoin("orderinfo.slide", "slides");
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->innerJoin("orderinfo.type", "formtype");
-        $dql->innerJoin("orderinfo.history", "history");
+
+        $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
 
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
@@ -238,7 +240,7 @@ class ScanOrderController extends Controller {
                 $crituser .= "provider.id=".$user->getId();
             }
             if( $service == "Proxy Orders Placed For Me" ) {
-                echo "Proxy Orders Placed For Me <br>";
+                //echo "Proxy Orders Placed For Me <br>";
                 $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
@@ -305,8 +307,6 @@ class ScanOrderController extends Controller {
                 $dql->addOrderBy("orderinfo.orderdate","DESC");
             }
         }
-
-        //$dql->orderBy("status.name","DESC");
         
         //echo "dql=".$dql;
         
@@ -332,7 +332,9 @@ class ScanOrderController extends Controller {
         }
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
-        
+
+        //echo "<br>page count=".count($pagination)."<br>";
+
         return array(
             'form' => $form->createView(),
             'showprovider' => $showprovider,

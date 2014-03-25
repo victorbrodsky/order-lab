@@ -16,10 +16,8 @@ use Oleg\OrderformBundle\Form\ResearchType;
 /**
  * Educational and Research controller.
  */
-class EducationalResearchController extends Controller
-{
+class EducationalResearchController extends Controller {
 
-    //@Template("OlegOrderformBundle:Educational:edit.html.twig")
     /**
      * Finds and displays a entity.
      *
@@ -68,7 +66,6 @@ class EducationalResearchController extends Controller
      * @Route("/educational/{id}/edit", name="educational_edit")
      * @Route("/research/{id}/edit", name="research_edit")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Educational:edit.html.twig")
      */
     public function editAction($id)
     {
@@ -111,7 +108,6 @@ class EducationalResearchController extends Controller
      * @Route("/educational/{id}", name="educational_update")
      * @Route("/research/{id}", name="research_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Educational:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -143,70 +139,15 @@ class EducationalResearchController extends Controller
             //exit("form is not valid ???");
         }
 
-//        return array(
-//            'entity'      => $entity,
-//            'edit_form'   => $editForm->createView(),
-//            //'delete_form' => $deleteForm->createView(),
-//        );
         return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             //'cicle' => 'show'
         ));
 
-
     }
-//    /**
-//     * Deletes a entity.
-//     *
-//     * @Route("/educational/{id}", name="educational_delete")
-//     * @Route("/research/{id}", name="research_delete")
-//     * @Method("DELETE")
-//     */
-//    public function deleteAction(Request $request, $id)
-//    {
-//        $request = $this->container->get('request');
-//        $routeName = $request->get('_route');
-//        $pieces = explode("_", $routeName);
-//        $type = $pieces[0];
-//
-//        $form = $this->createDeleteForm($id);
-//        $form->bind($request);
-//
-//        if ($form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
-//
-//            if (!$entity) {
-//                throw $this->createNotFoundException('Unable to find '.$type.' entity.');
-//            }
-//
-//            $em->remove($entity);
-//            $em->flush();
-//        }
-//
-//        return $this->redirect($this->generateUrl('scan-order-data-review'));
-//    }
-
-//    /**
-//     * Creates a form to delete an entity by id.
-//     *
-//     * @param mixed $id The entity id
-//     *
-//     * @return \Symfony\Component\Form\Form The form
-//     */
-//    private function createDeleteForm($id)
-//    {
-//        return $this->createFormBuilder(array('id' => $id))
-//            ->add('id', 'hidden')
-//            ->getForm()
-//        ;
-//    }
 
     private function createEditForm($entity, $cicle = null) {
-
-        //$class = new \ReflectionClass($entity);
-        //$className = $class->getShortName();
 
         $params = array('type'=>'SingleObject');
         $disable = false;

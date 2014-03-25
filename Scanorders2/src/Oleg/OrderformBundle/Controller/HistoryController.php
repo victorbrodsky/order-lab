@@ -285,6 +285,7 @@ class HistoryController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
 
@@ -298,8 +299,6 @@ class HistoryController extends Controller
             }
 
             $provider = $entity->getProvider();
-
-            $user = $this->get('security.context')->getToken()->getUser();
 
             $viewed = false;
 
@@ -332,7 +331,7 @@ class HistoryController extends Controller
 
                 $viewcount++;
             }
-        }
+        }//foreach
 
 //        if( !$entities || count($entities) == 0 ) {
 //            throw $this->createNotFoundException('Unable to find History entity.');

@@ -21,7 +21,7 @@ class PartNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->params['cicle'] != 'show' && $this->params['type'] == 'One Slide Scan Order' && $this->params['cicle'] != 'amend' ) {
+        if( $this->params['cicle'] != 'show' && $this->params['type'] == 'One Slide Scan Order' && $this->params['cicle'] != 'amend' && $this->params['cicle'] != 'edit' ) {
             $label = false;
         } else {
             $label = 'Part Name';

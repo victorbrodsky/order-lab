@@ -6,12 +6,12 @@
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Course</th>
             <th>Lesson</th>
             <th>Director</th>
             <th>Director as eneterd by user</th>
-            <th>Order</th>
+            <th>Order ID</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -30,7 +30,7 @@
                 <td>{{ educational.director }}</td>
 
                 <td>
-                    {#{{ educational.orderinfo.id }}#}
+                    {{ educational.orderinfo.id }}
                 </td>
 
 
@@ -42,13 +42,13 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            <li><a data-confirm="Are you sure you want to Decline"
+                            <li><a
                                    href="{{ path('educational_edit', { 'id': educational.id }) }}">Review</a>
                             </li>
 
-                            {#<li><a data-confirm="Are you sure you want to Revert Status to Active"#}
-                                   {#href="{{ path('accountrequest_status', { 'id': educational.orderinfo.id, 'status': 'active' }) }}">View Order</a>#}
-                            {#</li>#}
+                            <li><a
+                                   href="{{ path('multy_show', { 'id': educational.orderinfo.id }) }}">View Order Content</a>
+                            </li>
 
                         </ul>
                     </div>

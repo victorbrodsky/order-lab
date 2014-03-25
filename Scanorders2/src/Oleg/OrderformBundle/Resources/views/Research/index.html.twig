@@ -6,12 +6,12 @@
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Course</th>
             <th>Lesson</th>
             <th>Principal</th>
             <th>Principal as eneterd by user</th>
-            <th>Order</th>
+            <th>Order ID</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -30,7 +30,7 @@
                 <td>{{ research.principal }}</td>
 
                 <td>
-                    {#{{ research.orderinfo.id }}#}
+                    {{ research.orderinfo.id }}
                 </td>
 
 
@@ -42,13 +42,13 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            <li><a data-confirm="Are you sure you want to Decline"
-                                   href="{{ path('research_edit', { 'id': research.id }) }}">Review</a>
+                            <li><a
+                               href="{{ path('research_edit', { 'id': research.id }) }}">Review</a>
                             </li>
 
-                            {#<li><a data-confirm="Are you sure you want to Revert Status to Active"#}
-                                   {#href="{{ path('accountrequest_status', { 'id': research.orderinfo.id, 'status': 'active' }) }}">View Order</a>#}
-                            {#</li>#}
+                            <li><a
+                                href="{{ path('multy_show', { 'id': research.orderinfo.id }) }}">View Order Content</a>
+                            </li>
 
                         </ul>
                     </div>

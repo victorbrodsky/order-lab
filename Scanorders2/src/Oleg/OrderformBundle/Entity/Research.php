@@ -40,6 +40,11 @@ class Research
      */
     protected $principalstr;
 
+    /**
+     * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="research")
+     */
+    protected $orderinfo;
+
 //    public function __clone() {
 //        if ($this->id) {
 //            $this->setId(null);
@@ -127,6 +132,21 @@ class Research
         return $this->settitle;
     }
 
+    /**
+     * @param mixed $orderinfo
+     */
+    public function setOrderinfo($orderinfo)
+    {
+        $this->orderinfo = $orderinfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
 
 
 
