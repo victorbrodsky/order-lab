@@ -435,7 +435,7 @@ function getComboboxReturn(urlCommon,ids) {
 
 }
 
-//#############  pathology service  ##############//
+//#############  pathology service for user and orderinfo  ##############//
 function getComboboxPathService(urlCommon,ids) {
 
     //******************* order pathology service *************************//
@@ -444,7 +444,7 @@ function getComboboxPathService(urlCommon,ids) {
     var targetid = ".ajax-combobox-pathservice";
     var url = urlCommon+"pathservice";
 
-    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" ) {
+    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" || cicle == "show" ) {
         var optStr = user_id;
         if( !optStr || typeof optStr === 'undefined' ) {
             optStr = "default";

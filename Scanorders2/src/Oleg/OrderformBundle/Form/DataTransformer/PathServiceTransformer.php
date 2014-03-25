@@ -44,7 +44,8 @@ class PathServiceTransformer implements DataTransformerInterface
      */
     public function transform($entity)
     {
-        if (null === $entity) {
+        //echo "data transformer entity=".$entity."<br>";
+        if( null === $entity ) {
             return "";
         }
         return $entity->getId();

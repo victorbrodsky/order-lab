@@ -56,27 +56,53 @@ class SecurityUtil {
 
         if( $this->sc->isGranted('ROLE_PROCESSOR') || $this->sc->isGranted('ROLE_DIVISION_CHIEF') ) {
 
-            $allow = true;
+            return true;
 
-        } else {
-            
-            $user = $this->sc->getToken()->getUser();
+        }
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->find($oid);
+        $user = $this->sc->getToken()->getUser();
 
-            if( $entity ) {
+        $entity = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->find($oid);
 
-                //echo "provider:".$entity->getProvider()->first()->getId()." ?= ".$user->getId()."<br>";
+        //check if this order has service of this user
+        if( $this->sc->isGranted('ROLE_SERVICE_CHIEF') ) {
 
-                if( $entity->getProvider()->first() && $entity->getProvider()->first()->getId() === $user->getId() ) {
-                    $allow = true;
-                }
+            $services = array();
+            $userServices = $user->getPathologyServices();
+            $orderpathservice = $entity->getPathologyService();
 
-                if( $entity->getProxyuser()->first()&& $entity->getProxyuser()->first()->getId() === $user->getId() ) {
-                    //echo "proxy:".$entity->getProxyuser()->first()->getId()." ?= ".$user->getId()."<br>";
-                    $allow = true;
-                }
+            if( $orderpathservice ) {
 
+                if( $this->sc->isGranted('ROLE_SERVICE_CHIEF') ) {
+                    $chiefServices = $user->getChiefservices();
+                    if( $userServices && count($userServices)>0 ) {
+                        $services = array_merge($userServices, $chiefServices);
+                    } else {
+                        $services = $chiefServices;
+                    }
+                }//if
+
+                foreach( $services as $service ) {
+                    if( $orderpathservice->getId() == $service->getId() ) {
+                        return true;
+                    }
+                }//foreach
+
+            }//if $orderpathservice
+
+        }//if ROLE_SERVICE_CHIEF
+
+        if( $entity ) {
+
+            //echo "provider:".$entity->getProvider()->first()->getId()." ?= ".$user->getId()."<br>";
+
+            if( $entity->getProvider()->first() && $entity->getProvider()->first()->getId() === $user->getId() ) {
+                $allow = true;
+            }
+
+            if( $entity->getProxyuser()->first()&& $entity->getProxyuser()->first()->getId() === $user->getId() ) {
+                //echo "proxy:".$entity->getProxyuser()->first()->getId()." ?= ".$user->getId()."<br>";
+                $allow = true;
             }
 
         }

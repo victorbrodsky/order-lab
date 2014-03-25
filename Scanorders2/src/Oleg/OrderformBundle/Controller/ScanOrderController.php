@@ -199,11 +199,9 @@ class ScanOrderController extends Controller {
 
             //echo $routeName.": service=".$service."<br>";
             //select only orders where this user is author or proxy user, except "Where I am Course Director" and "Where I am Principal Investigator" cases.
-            if(
-                $service != "Where I am Course Director" &&
-                $service != "Where I am Principal Investigator"
-            ) {
+            if( $service == "" || $service == "My Orders" ) {
 
+                //echo "add provider and proxy <br>";
                 $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
                 //show only my order and the orders where I'm a proxy
@@ -216,15 +214,16 @@ class ScanOrderController extends Controller {
                 //***************** END of Proxy User Orders *************************//
 
                 $crituser .= " )";
-            }
 
-            //***************** Service filter: show all orders with chosen pathology service matched with current user's service *****************//
-            $allservices = $this->allServiceFilter( $service, $routeName, $user, $crituser );
-            if( $allservices != "" ) {
-                $showprovider = 'true';
-                $crituser .= $allservices;
+
+                //***************** Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
+                $allservices = $this->allServiceFilter( $service, $routeName, $user, $crituser );
+                if( $allservices != "" ) {
+                    $showprovider = 'true';
+                    $crituser .= $allservices;
+                }
+                //***************** EOF: Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
             }
-            //***************** EOF Service filter: show all orders with chosen pathology service matched with current user's service *****************//
 
             //show all for ROLE_DIVISION_CHIEF: remove all user's restriction
             if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
@@ -239,7 +238,8 @@ class ScanOrderController extends Controller {
                 $crituser .= "provider.id=".$user->getId();
             }
             if( $service == "Proxy Orders Placed For Me" ) {
-                //echo "Proxy Orders Placed For Me <br>";
+                echo "Proxy Orders Placed For Me <br>";
+                $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
@@ -306,7 +306,7 @@ class ScanOrderController extends Controller {
             }
         }
 
-//        $dql->orderBy("status.name","DESC");
+        //$dql->orderBy("status.name","DESC");
         
         //echo "dql=".$dql;
         
@@ -584,7 +584,11 @@ class ScanOrderController extends Controller {
         }
 
         if( $criterions != "" ) {
-            $criteriastr = " OR (" . $criteriastr . ") ";
+            if( $criteriastr != "" ) {
+                $criteriastr = " OR (" . $criteriastr . ") ";
+            }
+        } else {
+            $criteriastr = " (" . $criteriastr . ") ";
         }
 
         return $criteriastr;
