@@ -5,8 +5,8 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
-//use Oleg\OrderformBundle\Helper\FormHelper;
 
 class ResearchType extends AbstractType
 {
@@ -38,13 +38,37 @@ class ResearchType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
+        if( $this->params['type'] == 'SingleObject' ) {
+            $attr = array('class'=>'form-control form-control-modif');
+        } else {
+            $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
+        }
+
         $builder->add('principalstr', 'custom_selector', array(
             'label' => 'Principal Investigator:',
             'attr' => $attr,
             'required'=>false,
             'classtype' => 'optionalUserResearch'
         ));
+
+
+        if( $this->params['type'] == 'SingleObject' ) {
+
+            $attr = array('class' => 'combobox combobox-width');
+            $builder->add('principal', 'entity', array(
+                'class' => 'OlegOrderformBundle:User',
+                'label'=>'Principal:',
+                'required' => false,
+                //'read_only' => true,    //not working => disable by twig
+                //'multiple' => true,
+                'attr' => $attr,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.locked=:locked')
+                        ->setParameter('locked', '0');
+                },
+            ));
+        }
 
     }
 

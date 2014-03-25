@@ -67,6 +67,7 @@ class MultyScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
         if( !$secUtil->isCurrentUserAllow($id) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );

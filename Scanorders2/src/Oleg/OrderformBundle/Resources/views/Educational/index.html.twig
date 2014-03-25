@@ -1,45 +1,61 @@
-{% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Educational list</h1>
 
-    <table class="records_list">
+    <h3 class="text-info">Educational Objects</h3>
+
+
+    <table class="records_list table table-hover table-condensed text-left">
         <thead>
-            <tr>
-                <th>Id</th>             
-                <th>Course Title</th>
-                <th>Lesson Title</th>
-				<th>Course Director</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Course</th>
+            <th>Lesson</th>
+            <th>Director</th>
+            <th>Director as eneterd by user</th>
+            <th>Order</th>
+            <th>Actions</th>
+        </tr>
         </thead>
-        <tbody>
-        {% for entity in entities %}
+        <tbody data-link="row" class="rowlink">
+        {% for educational in educationals %}
+
             <tr>
-                <td><a href="{{ path('educational_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.course }}</td>
-                <td>{{ entity.lesson }}</td>
-				<td>{{ entity.director }}</td>
+                <td><a href="{{ path('educational_edit', { 'id': educational.id }) }}">{{ educational.id }}</a></td>
+
+                <td>{{ educational.course }}</td>
+
+                <td>{{ educational.lesson }}</td>
+
+                <td>{{ educational.directorstr }}</td>
+
+                <td>{{ educational.director }}</td>
+
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('educational_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('educational_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                    {#{{ educational.orderinfo.id }}#}
                 </td>
+
+
+                <td class="rowlink-skip">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li><a data-confirm="Are you sure you want to Decline"
+                                   href="{{ path('educational_edit', { 'id': educational.id }) }}">Review</a>
+                            </li>
+
+                            {#<li><a data-confirm="Are you sure you want to Revert Status to Active"#}
+                                   {#href="{{ path('accountrequest_status', { 'id': educational.orderinfo.id, 'status': 'active' }) }}">View Order</a>#}
+                            {#</li>#}
+
+                        </ul>
+                    </div>
+
+                </td>
+
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('educational_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}

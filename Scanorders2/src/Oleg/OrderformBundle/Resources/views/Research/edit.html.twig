@@ -1,0 +1,39 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Research Data Review
+{% endblock %}
+
+{% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+
+    <h3 class="text-info">Research</h3>
+
+    {{ form_start(edit_form) }}
+
+        {{ myform.field(edit_form.principal) }}
+        {{ myform.field(edit_form.project) }}
+        {{ myform.field(edit_form.settitle) }}
+        {{ myform.field(edit_form.principalstr) }}
+
+        {{ form(edit_form) }}
+        {{ form_rest(edit_form) }}
+
+    {{ form_end(edit_form) }}
+
+
+    {% if cicle is defined %}
+        <p>
+            <a class="btn btn-primary" href="{{ path('research_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <p>
+            <a href="{{ path('scan-order-data-review') }}">Back to Data Review</a>
+        </p>
+    </div>
+
+
+{% endblock %}
