@@ -117,6 +117,13 @@
                     </li>
                 {% endif %}
 
+                {% if entity.educational or entity.research %}
+                    <li class="divider"></li>
+                    <li><a
+                        href="{{ path('scan-order-data-review-full', { 'id': entity.id }) }}">Review Educational/Research</a>
+                    </li>
+                {% endif %}
+
            {% endif %} {#admin#}
 
         </ul>

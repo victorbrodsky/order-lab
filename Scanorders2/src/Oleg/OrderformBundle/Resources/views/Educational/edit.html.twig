@@ -12,10 +12,13 @@
 
     {{ form_start(edit_form) }}
 
-        {{ myform.field(edit_form.director) }}
+        {#Order ID: {{ entity.orderinfo.id }}#}
+        {#Submitter: {{ entity.provider }}#}
+
         {{ myform.field(edit_form.course) }}
         {{ myform.field(edit_form.lesson) }}
         {{ myform.field(edit_form.directorstr) }}
+        {{ myform.field(edit_form.director) }}
 
         {{ form(edit_form) }}
         {{ form_rest(edit_form) }}

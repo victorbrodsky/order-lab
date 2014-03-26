@@ -12,6 +12,8 @@
 
     {{ form_start(edit_form) }}
 
+        {#Order ID: {{ entity.orderinfo.id }}#}
+
         {{ myform.field(edit_form.principal) }}
         {{ myform.field(edit_form.project) }}
         {{ myform.field(edit_form.settitle) }}
