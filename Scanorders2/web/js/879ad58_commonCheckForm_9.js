@@ -18,7 +18,8 @@ function cleanValidationAlert() {
 
 function initAllElements() {
 
-    if( cicle == "new" || cicle == "amend" ) {
+//    if( cicle == "new" || cicle == "amend" ) {
+    if( cicle == "new" ) {
         var check_btns = $("[id=check_btn]");
         //console.log("check_btns.length="+check_btns.length);
         for (var i = 0; i < check_btns.length; i++) {

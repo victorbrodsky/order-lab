@@ -162,7 +162,7 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/scan-order/nopermission", name="scan-order-nopermission")
+     * @Route("/scan-order/no-permission", name="scan-order-nopermission")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Security:nopermission.html.twig")
      */

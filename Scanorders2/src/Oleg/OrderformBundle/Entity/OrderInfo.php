@@ -133,6 +133,7 @@ class OrderInfo
     /**
      * @ORM\OneToOne(
      *      targetEntity="Educational",
+     *      inversedBy="orderinfo",
      *      cascade={"persist"},
      *      orphanRemoval=true
      * )
@@ -148,6 +149,7 @@ class OrderInfo
     /**
      * @ORM\OneToOne(
      *      targetEntity="Research",
+     *      inversedBy="orderinfo",
      *      cascade={"persist"},
      *      orphanRemoval=true
      * )

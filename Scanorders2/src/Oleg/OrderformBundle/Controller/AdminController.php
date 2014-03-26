@@ -839,8 +839,8 @@ class AdminController extends Controller
         }
 
         $types = array(
-            "I'll give slides to Noah - ST1015E (212) 746-2993",
-            "I have given slides to Noah already",
+            "I'll give slides to Melody - ST1015E (212) 746-2993",
+            "I have given slides to Melody already",
             "I will drop the slides off at F540 (212) 746-6406",
             "I have handed the slides to Liza already",
             "I will write S on the slide & submit as a consult",

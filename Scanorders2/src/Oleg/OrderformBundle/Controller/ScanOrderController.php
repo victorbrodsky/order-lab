@@ -73,7 +73,7 @@ class ScanOrderController extends Controller {
         }
 
         //create filters
-        $form = $this->createForm(new FilterType( $this->getFilter(), $user, $services ), null);
+        $form = $this->createForm(new FilterType( $this->getFilter($routeName), $user, $services ), null);
         $form->bind($request);
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
@@ -163,6 +163,14 @@ class ScanOrderController extends Controller {
                     break;
                 case "Stat & Filled":
                     $criteriastr .= " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
+                    break;
+                case "No Course Director Link":
+                    $dql->innerJoin("orderinfo.educational", "educational");
+                    $criteriastr .= " educational.director IS NULL";
+                    break;
+                case "No Principal Investigator Link":
+                    $dql->innerJoin("orderinfo.research", "research");
+                    $criteriastr .= " research.principal IS NULL";
                     break;
                 default:
                     ;
@@ -276,8 +284,9 @@ class ScanOrderController extends Controller {
 
         if( $routeName == "incoming-scan-orders" ) {
             //echo "admin index filter <br>";
-            //***************** Service filter ***************************//
-            
+            //***************** Data Review filter ***************************//
+//            "No Course Director Link" => "No Course Director Link",
+//            "No Principal Investigator Link" => "No Principal Investigator Link"
             //***************** End of Service filter ***************************//
         }
 
@@ -458,10 +467,11 @@ class ScanOrderController extends Controller {
             ));
     }
 
-    public function getFilter() {
+    public function getFilter($routeName) {
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+//        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( $routeName == "incoming-scan-orders" ) {
             $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
         } else {
             $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Status');
@@ -500,6 +510,18 @@ class ScanOrderController extends Controller {
         foreach( $statuses as $status ) {
             //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
             $filterType[$status->getId()] = $status->getName();
+        }
+
+        //add Data Review
+        if( $routeName == "incoming-scan-orders" ) {
+            $dataReviews = array(
+                "No Course Director Link" => "No Course Director Link",
+                "No Principal Investigator Link" => "No Principal Investigator Link"
+            );
+
+            foreach( $dataReviews as $key => $value ) {
+                $filterType[$key] = $value;
+            }
         }
 
         return $filterType;

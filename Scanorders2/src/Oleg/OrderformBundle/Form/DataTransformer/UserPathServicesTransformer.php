@@ -20,7 +20,7 @@ class UserPathServicesTransformer extends PathServiceTransformer
 
     public function transform( $entities )
     {
-        //echo $entities->first()->getName();
+        //echo $entities->first()->getName()."<br>";
         //echo "count=".count($entities)."<br>";
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
@@ -36,12 +36,15 @@ class UserPathServicesTransformer extends PathServiceTransformer
         if( count($entities) > 1 ) {
             $idArr = [];
             foreach( $entities as $entity ) {
-                if( $entity->getId()."" == $this->user->getPrimaryPathologyService()."" ) {
-                    array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
-                } else {
-                    $idArr[] = $entity->getId();
+                if( $entity ) {
+                    if( $entity->getId()."" == $this->user->getPrimaryPathologyService()."" ) {
+                        array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
+                    } else {
+                        $idArr[] = $entity->getId();
+                    }
                 }
             }
+            
             //return array with primaryPathologyService as the first element
             return implode(",", $idArr);
         }

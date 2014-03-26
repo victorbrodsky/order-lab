@@ -725,23 +725,23 @@ Translational Research"
         return $arr;
     }
     
-    public function getSlideDelivery() {        
-        $arr1 = array( 
-            'I will drop ...'=>'I will drop ...', "I'll give slides to .."=>"I'll give slides to .." );
-       
-        $arr = array(
-            "I'll give slides to Noah - ST1015E (212) 746-2993",
-            "I have given slides to Noah already",
-            "I will drop the slides off at F540 (212) 746-6406",
-            "I have handed the slides to Liza already",
-            "I will write S on the slide & submit as a consult",
-            "I will write S4 on the slide & submit as a consult",
-            "I will email slidescan@med.cornell.edu about it",
-            "Please e-mail me to set the time & pick up slides",
-        );
-        
-        return $arr;
-    }
+//    public function getSlideDelivery() {
+//        $arr1 = array(
+//            'I will drop ...'=>'I will drop ...', "I'll give slides to .."=>"I'll give slides to .." );
+//
+//        $arr = array(
+//            "I'll give slides to Noah - ST1015E (212) 746-2993",
+//            "I have given slides to Noah already",
+//            "I will drop the slides off at F540 (212) 746-6406",
+//            "I have handed the slides to Liza already",
+//            "I will write S on the slide & submit as a consult",
+//            "I will write S4 on the slide & submit as a consult",
+//            "I will email slidescan@med.cornell.edu about it",
+//            "Please e-mail me to set the time & pick up slides",
+//        );
+//
+//        return $arr;
+//    }
     
     public function getReturnSlide() {        
         $arr = array( 'Filing Room', "Me" );

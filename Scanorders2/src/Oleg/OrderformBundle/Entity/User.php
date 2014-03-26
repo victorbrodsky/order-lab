@@ -160,20 +160,28 @@ class User extends BaseUser
 
         $resArr = new ArrayCollection();
         foreach( $this->pathologyServices as $service ) {
-            if( $service->getId()."" == $this->getPrimaryPathologyService()."" ) {
+            //echo "service=".$service."<br>";
+            if( $service->getId()."" == $this->getPrimaryPathologyService()."" ) {  //this service is a primary path service => put as the first element
                 //$resArr->removeElement($service);
                 //$resArr->first();
-                if( count($this->pathologyServices) > 1 ) {
-                    $firstEl = $resArr->get(0);
-                    $resArr->set(0,$service);
+                //$firstEl = $resArr->get(0);
+                $firstEl = $resArr->first();
+                if( count($this->pathologyServices) > 1 && $firstEl ) {
+                    //echo "firstEl=".$firstEl."<br>";
+                    $resArr->set(0,$service); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
                     $resArr->add($firstEl);
                 } else {
                     $resArr->add($service);
                 }
-            } else {
+            } else {    //this service is not a primary path service
                 $resArr->add($service);
             }
         }
+
+//        foreach( $resArr as $res ) {
+//            echo $res."|";
+//        }
+//        echo "<br>count=".count($resArr)."<br>";
 
         return $resArr;
     }
@@ -405,6 +413,12 @@ class User extends BaseUser
     public function setChiefservices($chiefservices)
     {
         $this->chiefservices = $chiefservices;
+
+        //add service chiefs to services
+        foreach( $chiefservices as $service ) {
+            $this->addPathologyServices($service);
+        }
+
     }
 
     /**
@@ -415,11 +429,14 @@ class User extends BaseUser
         return $this->chiefservices;
     }
 
-    public function addChiefservices(\Oleg\OrderformBundle\Entity\PathServiceList $chiefservices)
+    public function addChiefservices(\Oleg\OrderformBundle\Entity\PathServiceList $chiefservice)
     {
-        if( !$this->chiefservices->contains($chiefservices) ) {
-            $this->chiefservices[] = $chiefservices;
+        if( !$this->chiefservices->contains($chiefservice) ) {
+            $this->chiefservices[] = $chiefservice;
         }
+
+        //add service chiefs to services
+        $this->addPathologyServices($chiefservice);
 
         return $this;
     }
