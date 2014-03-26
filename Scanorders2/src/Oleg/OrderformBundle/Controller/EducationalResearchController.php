@@ -134,8 +134,9 @@ class EducationalResearchController extends Controller {
             $em->persist($entity);
             $em->flush();
 
+            $orderid = $entity->getOrderinfo()->getId();
             //return $this->redirect($this->generateUrl($type.'_show', array('id' => $id)));
-            return $this->redirect($this->generateUrl('incoming-scan-orders'));
+            return $this->redirect($this->generateUrl('scan-order-data-review-full', array('id' => $orderid)));
         } else {
             //exit("form is not valid ???");
         }
