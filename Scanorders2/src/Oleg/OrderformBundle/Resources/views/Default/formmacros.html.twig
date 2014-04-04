@@ -1,5 +1,22 @@
 {#macro for form label input inline#}
 
+{% macro simplefield( label, value, type, disabled ) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            <strong>{{ label }}</strong>
+        </div>
+        <div class="col-xs-6" align="left">
+            {% if type is defined and type == "input" %}
+                <input class="form-control form-control-modif" type="text" value="{{ value }}" {{ disabled }}>
+            {% else %}
+                {{ value }}
+            {% endif %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
 {% macro field( field, attr ) %}
     {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
@@ -12,6 +29,8 @@
             {% if attr == "disabled" %}
                 {#value of disabled field will be ignored, but readonly does not work#}
                 {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% elseif attr == "readonly" %}
+                {{ form_widget(field,{ 'readonly':'readonly' }) }}
             {% else %}
                 {{ form_widget(field) }}
             {% endif %}

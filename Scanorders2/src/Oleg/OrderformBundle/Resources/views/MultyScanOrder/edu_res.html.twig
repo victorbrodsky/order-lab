@@ -1,0 +1,45 @@
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{#<div class="panel panel-default">#}
+    {#<div class="panel-heading"><h3 class="panel-title">Education</h3></div>#}
+    {#<div class="panel-body">#}
+        {#{{ formmacros.field(form.educational.course) }}#}
+        {#{{ formmacros.field(form.educational.lesson) }}#}
+        {#{{ formmacros.field(form.educational.directorstr) }}#}
+    {#</div>#}
+{#</div>#}
+
+{#<div class="panel panel-default">#}
+    {#<div class="panel-heading"><h3 class="panel-title">Research</h3></div>#}
+    {#<div class="panel-body">#}
+        {#{{ formmacros.field(form.research.project) }}#}
+        {#{{ formmacros.field(form.research.settitle) }}#}
+        {#{{ formmacros.field(form.research.principalstr) }}#}
+    {#</div>#}
+{#</div>#}
+
+
+<p>
+<div  class="tabbable">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#research">Research</a></li>
+        <li class=""><a data-toggle="tab" href="#educational">Educational</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="research" class="tab-pane active">
+            <p>
+                {{ formmacros.field(form.research.project) }}
+                {{ formmacros.field(form.research.settitle) }}
+                {{ formmacros.field(form.research.principalstr) }}
+            </p>
+        </div>
+        <div id="educational" class="tab-pane">
+            <p>
+                {{ formmacros.field(form.educational.course) }}
+                {{ formmacros.field(form.educational.lesson) }}
+                {{ formmacros.field(form.educational.directorstr) }}
+            </p>
+        </div>
+    </div>
+</div>
+</p>

@@ -12,28 +12,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class DataReviewController extends Controller {
       
-    /**
-     * @Route("/scan-order/data-review-old", name="scan-order-data-review")
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:DataReview:index.html.twig")
-     */
-    public function getDataReviewOldAction() {
-        
-        $em = $this->getDoctrine()->getManager();
-
-        $educationals = $em->getRepository('OlegOrderformBundle:Educational')->findByDirector(null);
-
-        $researches = $em->getRepository('OlegOrderformBundle:Research')->findByPrincipal(null);
-
-        //echo "count edu=".count($educationals)."<br>";
-
-        return array(
-            'educationals' => $educationals,
-            'researches' => $researches
-        );
-
-    }
-
 
     /**
      * @Route("/scan-order/data-review/{id}", name="scan-order-data-review-full", requirements={"id" = "\d+"})
@@ -44,7 +22,7 @@ class DataReviewController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findByOid($id);
+        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
         //$educational = $em->getRepository('OlegOrderformBundle:Educational')->findByOrderinfo($orderinfo);
         //$research = $em->getRepository('OlegOrderformBundle:Research')->findByOrderinfo($orderinfo);

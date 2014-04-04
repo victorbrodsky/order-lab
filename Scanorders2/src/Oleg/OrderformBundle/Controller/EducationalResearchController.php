@@ -12,6 +12,7 @@ use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Form\EducationalType;
 use Oleg\OrderformBundle\Entity\Research;
 use Oleg\OrderformBundle\Form\ResearchType;
+use Oleg\OrderformBundle\Entity\History;
 
 /**
  * Educational and Research controller.
@@ -134,9 +135,41 @@ class EducationalResearchController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            $orderid = $entity->getOrderinfo()->getId();
+            $orderoid = $entity->getOrderinfo()->getOid();
+
+            if( $routeName == "educational_update" ) {
+                $msg = "Values saved for Order ".$orderoid.": Course Director = ".$entity->getDirector();
+                $url = $this->generateUrl( 'educational_edit', array('id' => $id) );
+                $reviewLink = '<br> <a href="'.$url.'">Back to Educational Data Review</a>';
+            }
+            if( $routeName == "research_update" ) {
+                $msg = "Values saved for Order ".$orderoid.": Principal Investigator = ".$entity->getPrincipal();
+                $url = $this->generateUrl( 'research_edit', array('id' => $id) );
+                $reviewLink = '<br> <a href="'.$url.'">Back to Research Data Review</a>';
+            }
+
+            $this->get('session')->getFlashBag()->add(
+                'status-changed',
+                $msg
+            );
+
+            //add event log to History
+            $user = $this->get('security.context')->getToken()->getUser();
+            $history = new History();
+            $history->setEventtype('Data Reviewed');
+            $history->setOrderinfo($entity->getOrderinfo());
+            $history->setProvider($user);
+            $history->setCurrentid($entity->getOrderinfo()->getOid());
+            $history->setCurrentstatus($entity->getOrderinfo()->getStatus());
+            $history->setChangedate( new \DateTime() );
+            $history->setNote($msg.$reviewLink);
+            $history->setRoles($user->getRoles());
+            $em->persist($history);
+            $em->flush();
+
+
             //return $this->redirect($this->generateUrl($type.'_show', array('id' => $id)));
-            return $this->redirect($this->generateUrl('scan-order-data-review-full', array('id' => $orderid)));
+            return $this->redirect($this->generateUrl('scan-order-data-review-full', array('id' => $orderoid)));
         } else {
             //exit("form is not valid ???");
         }

@@ -73,15 +73,9 @@
                     {% endfor %}
                 </td>
                 <td>
-                    {#Superseded ###4####}
-                    {#<a href="{{ path('history_orderinfo_show', { 'id': orderid }) }}">Link text</a>#}
-                    {% set notearr = entity.note|split('###') %}
-                    {{ notearr[0] }}
-                    {% if notearr[1] is defined %}
-                        <a href="{{ path('multy_show', { 'id': notearr[1] }) }}">order {{ notearr[1] }}</a>
-                    {% endif %}
 
-                    {#{{ entity.note }}#}
+                    {{ entity.note|raw }}
+
                     {#<div class="textarea_widget">#}
                         {#<textarea readonly class="textarea form-control">{{ entity.note }}</textarea>#}
                     {#</div>#}

@@ -148,7 +148,14 @@ class Research
         return $this->orderinfo;
     }
 
-
+    public function isEmpty()
+    {
+        if( $this->project || $this->settitle || $this->principalstr ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public function __toString(){
 

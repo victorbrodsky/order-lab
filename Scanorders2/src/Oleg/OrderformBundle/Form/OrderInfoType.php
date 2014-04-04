@@ -63,13 +63,9 @@ class OrderInfoType extends AbstractType
 
         //echo "<br>type=".$this->type."<br>";
 
-        if( $this->params['type'] == 'Educational Multi-Slide Scan Order' || $this->params['type'] == 'Table-View Scan Order' || $this->params['type'] == 'One Slide Scan Order' ) {
-            $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>'Educational:') );
-        }
+        $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>'Educational:') );
 
-        if( $this->params['type'] == 'Research Multi-Slide Scan Order' || $this->params['type'] == 'Table-View Scan Order' || $this->params['type'] == 'One Slide Scan Order' ) {
-            $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
-        }
+        $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
 
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');
         $builder->add('pathologyService', 'custom_selector', array(

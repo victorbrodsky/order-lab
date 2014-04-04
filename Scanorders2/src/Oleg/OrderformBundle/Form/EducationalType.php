@@ -24,11 +24,24 @@ class EducationalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $addlabel = "";
+        $readonly = false;
+
+        if( $this->params['type'] == 'SingleObject' ) {
+            //this is used by data review when a single onject is shown
+            $attr = array('class'=>'form-control form-control-modif');
+            $addlabel = " (as entered by user)";
+            $readonly = true;
+        } else {
+            $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
+        }
+
         $builder->add( 'course', 'text', array(
             'label'=>'Course Title:',
             'max_length'=>'500',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
+            'read_only' => $readonly
         ));
 
         $builder->add( 'lesson', 'text', array(
@@ -36,19 +49,15 @@ class EducationalType extends AbstractType
             'max_length'=>'500',
             'required'=>false,
             'attr' => array('class'=>'form-control form-control-modif'),
+            'read_only' => $readonly
         ));
-
-        if( $this->params['type'] == 'SingleObject' ) {
-            $attr = array('class'=>'form-control form-control-modif');
-        } else {
-            $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
-        }
 
         $builder->add('directorstr', 'custom_selector', array(
             'label' => 'Course Director:',
             'attr' => $attr,
             'required'=>false,
-            'classtype' => 'optionalUserEducational'
+            'classtype' => 'optionalUserEducational',
+            'read_only' => $readonly
         ));
 
         if( $this->params['type'] == 'SingleObject' ) {
@@ -56,7 +65,7 @@ class EducationalType extends AbstractType
             $attr = array('class' => 'combobox combobox-width');
             $builder->add('director', 'entity', array(
                 'class' => 'OlegOrderformBundle:User',
-                'label'=>'Director:',
+                'label'=>'Course Director'.$addlabel.':',
                 'required' => false,
                 //'read_only' => true,    //not working => disable by twig
                 //'multiple' => true,

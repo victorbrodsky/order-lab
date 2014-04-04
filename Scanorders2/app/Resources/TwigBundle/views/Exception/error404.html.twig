@@ -1,6 +1,14 @@
 
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
+{% block maincss %}{% endblock %}
+{% block header %}{% endblock %}
+{% block mainjs %}{% endblock %}
+
+{% block title %}
+    Scan Order - {{ status_code }} {{ status_text }}
+{% endblock %}
+
 {% block content %}
 
 <div class="container">

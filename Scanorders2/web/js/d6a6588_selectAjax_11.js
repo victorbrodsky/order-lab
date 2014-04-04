@@ -89,7 +89,7 @@ function customCombobox() {
     }
 }
 
-function populateSelectCombobox( targetid, data, placeholder, multiple ) {
+function populateSelectCombobox( target, data, placeholder, multiple ) {
 
     if( placeholder ) {
         var allowClear = true;
@@ -103,7 +103,7 @@ function populateSelectCombobox( targetid, data, placeholder, multiple ) {
         var multiple = false;
     }
 
-    $(targetid).select2({
+    $(target).select2({
         placeholder: placeholder,
         allowClear: allowClear,
         width: combobox_width,
@@ -154,7 +154,8 @@ function getComboboxStain(urlCommon, ids) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"stain_0_field";
-        $(targetid).select2('val', '1');
+        //$(targetid).select2('val', '1');
+        setToFirstElement( targetid, stain );
     }
 
 }
@@ -190,7 +191,8 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
 
     //console.log("special stain preset="+preset);
     if( targetid != "" ) {
-        $(targetid).select2('val', '1');
+        //$(targetid).select2('val', '1');
+        setToFirstElement( targetid, stain );
     }
 }
 
@@ -221,7 +223,8 @@ function getComboboxScanregion(urlCommon,ids) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"scan_0_scanregion";
-        $(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
+        //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
+        setToFirstElement( targetid, scanregion );
     }
 }
 
@@ -307,7 +310,8 @@ function getComboboxAccessionType(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
-        $(targetid).select2('val', 1);
+        //$(targetid).select2('val', 1);
+        setToFirstElement( targetid, accessiontype );
     }
 }
 
@@ -374,7 +378,7 @@ function getComboboxDelivery(urlCommon,ids) {
     //var uid = "";   //'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_";
     var url = urlCommon+"delivery";
-//    var targetid = id+"slideDelivery";
+    var target = ".ajax-combobox-delivery";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -390,13 +394,13 @@ function getComboboxDelivery(urlCommon,ids) {
             delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", delivery, null );
             if( cicle == "new"  ) {
-                $(".ajax-combobox-delivery").select2('data', {id: "I'll give slides to Noah - ST1015E (212) 746-2993", text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
+                setToFirstElement( target, delivery );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", delivery, null );
         if( cicle == "new"  ) {
-            $(".ajax-combobox-delivery").select2('data', {id: "I'll give slides to Noah - ST1015E (212) 746-2993", text: "I'll give slides to Noah - ST1015E (212) 746-2993"});
+            setToFirstElement( target, delivery );
         }
     }
 
@@ -423,13 +427,15 @@ function getComboboxReturn(urlCommon,ids) {
             returnslide = data;
             populateSelectCombobox( ".ajax-combobox-return", returnslide, null );
             if( cicle == "new"  ) {
-                $(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+                //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+                setToFirstElement( ".ajax-combobox-return", returnslide );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-return", returnslide, null );
         if( cicle == "new"  ) {
-            $(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+            //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+            setToFirstElement( ".ajax-combobox-return", returnslide );
         }
     }
 
@@ -588,4 +594,15 @@ function slideType(ids) {
         }
         
     });   
+}
+
+function setToFirstElement( target, dataarr ) {
+    if( dataarr == undefined || dataarr.length == 0 ) {
+        return;
+    }
+    var firstObj = dataarr[0];
+    var firstId = firstObj.id;
+    //console.log("first="+firstId);
+    $(target).select2('val', firstId);
+    //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
 }

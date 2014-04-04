@@ -657,9 +657,8 @@ class AdminController extends Controller
 
         $types = array(
             'One Slide Scan Order',
-            'Clinical Multi-Slide Scan Order',
-            'Educational Multi-Slide Scan Order',
-            'Research Multi-Slide Scan Order'
+            'Multi-Slide Scan Order',
+            'Table-View Scan Order'
         );
 
         $count = 1;

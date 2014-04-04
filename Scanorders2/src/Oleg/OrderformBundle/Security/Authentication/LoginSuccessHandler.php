@@ -75,10 +75,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
             $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
             $lastRoute = $request->getSession()->get($indexLastRoute);
-            //echo("lastRoute=".$lastRoute."<br>");
+            //exit("lastRoute=".$lastRoute."<br>");
 
             $loginpos = strpos($lastRoute, '/login');
-            $nopermpos = strpos($lastRoute, '/nopermission');
+            $nopermpos = strpos($lastRoute, '/no-permission');
 
             //echo "nopermpos=".$nopermpos."<br>";
             //echo "loginpos=".$loginpos."<br>";
@@ -91,7 +91,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             }
 
             //echo("referer_url=".$referer_url);
-            //exit('not processor');
+            //exit('<br>not processor');
 
             $response = new RedirectResponse($referer_url);
 

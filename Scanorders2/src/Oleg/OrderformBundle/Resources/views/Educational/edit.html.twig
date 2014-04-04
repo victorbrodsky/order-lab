@@ -12,8 +12,7 @@
 
     {{ form_start(edit_form) }}
 
-        {#Order ID: {{ entity.orderinfo.id }}#}
-        {#Submitter: {{ entity.provider }}#}
+        {% include 'OlegOrderformBundle::DataReview/orderinfo.html.twig' %}
 
         {{ myform.field(edit_form.course) }}
         {{ myform.field(edit_form.lesson) }}
@@ -45,7 +44,7 @@
 
     <div style="margin-top: 20px;">
         <p>
-            <a href="{{ path('scan-order-data-review-full',{id:entity.orderinfo.id}) }}">Back to Data Review</a>
+            <a href="{{ path('scan-order-data-review-full',{id:entity.orderinfo.oid}) }}">Back to Data Review</a>
         </p>
     </div>
 

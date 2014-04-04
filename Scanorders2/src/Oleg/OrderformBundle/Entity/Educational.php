@@ -155,6 +155,15 @@ class Educational
         return $this->orderinfo;
     }
 
+    public function isEmpty()
+    {
+        if( $this->lesson || $this->course || $this->directorstr ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     public function __toString(){
 

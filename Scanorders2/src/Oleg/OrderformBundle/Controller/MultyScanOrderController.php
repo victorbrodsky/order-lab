@@ -33,9 +33,9 @@ use Oleg\OrderformBundle\Entity\Stain;
 //use Oleg\OrderformBundle\Entity\PartPaper;
 
 use Oleg\OrderformBundle\Entity\Educational;
-use Oleg\OrderformBundle\Form\EducationalType;
+//use Oleg\OrderformBundle\Form\EducationalType;
 use Oleg\OrderformBundle\Entity\Research;
-use Oleg\OrderformBundle\Form\ResearchType;
+//use Oleg\OrderformBundle\Form\ResearchType;
 
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
@@ -88,9 +88,7 @@ class MultyScanOrderController extends Controller {
      * Creates a new OrderInfo entity.
      *
      * @Route("/scan-order/one-slide/new", name="singleorder_create")
-     * @Route("/scan-order/multi-slide-research/new", name="res_create")
-     * @Route("/scan-order/multi-slide-educational/new", name="edu_create")
-     * @Route("/scan-order/multi-slide-clinical/new", name="clinical_create")
+     * @Route("/scan-order/multi-slide/new", name="multi_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -143,12 +141,8 @@ class MultyScanOrderController extends Controller {
 
         if( $routeName == "singleorder_create" ) {
             $type = "One Slide Scan Order";
-        } elseif( $routeName == "clinical_create") {
-            $type = "Clinical Multi-Slide Scan Order";
-        } elseif( $routeName == "edu_create") {
-            $type = "Educational Multi-Slide Scan Order";
-        } elseif( $routeName == "res_create") {
-            $type = "Research Multi-Slide Scan Order";
+        } elseif( $routeName == "multi_create") {
+            $type = "Multi-Slide Scan Order";
         } else {
             $type = "One Slide Scan Order";
         }
@@ -243,7 +237,7 @@ class MultyScanOrderController extends Controller {
             //$entity->setCicle($cicle);
 
             /////////////////// process and save form //////////////////////////////
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type );
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type, $this->get('router') );
 
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
@@ -307,9 +301,7 @@ class MultyScanOrderController extends Controller {
      * Displays a form to create a new OrderInfo + Scan entities.
      *
      * @Route("/scan-order/one-slide/new", name="single_new")
-     * @Route("/scan-order/multi-slide-research/new", name="res_new")
-     * @Route("/scan-order/multi-slide-educational/new", name="edu_new")
-     * @Route("/scan-order/multi-slide-clinical/new", name="clinical_new")
+     * @Route("/scan-order/multi-slide/new", name="multi_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
      */
@@ -379,31 +371,20 @@ class MultyScanOrderController extends Controller {
         $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
         $block->addSlide($slide);
 
+        $edu = new Educational();
+        $entity->setEducational($edu);
+
+        $res = new Research();
+        $entity->setResearch($res);
+
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
         //echo "newMultyAction: routeName=".$routeName."<br>";
 
-        if( $routeName == "clinical_new") {
-            $type = "Clinical Multi-Slide Scan Order";
-        } elseif( $routeName == "edu_new") {
-            //echo " add edu ";
-            $type = "Educational Multi-Slide Scan Order";
-            $edu = new Educational();
-            if( $lastProxy )
-                $edu->setDirector($lastProxy);
-            $entity->setEducational($edu);
-        } elseif( $routeName == "res_new") {
-            $type = "Research Multi-Slide Scan Order";
-            $res = new Research();
-            if( $lastProxy )
-                $res->setPrincipal($lastProxy);
-            $entity->setResearch($res);
+        if( $routeName == "multi_new") {
+            $type = "Multi-Slide Scan Order";
         } elseif( $routeName == "single_new") {
             $type = "One Slide Scan Order";
-            $edu = new Educational();
-            $entity->setEducational($edu);
-            $res = new Research();
-            $entity->setResearch($res);
         } else {
             $type = "One Slide Scan Order";
         }
@@ -751,12 +732,9 @@ class MultyScanOrderController extends Controller {
         $patient = new Patient(true,'invalid',$user,$source);
         $entity->addPatient($patient);
 
-
-        $type = "Educational Multi-Slide Scan Order";
         $edu = new Educational();
         $entity->setEducational($edu);
 
-        $type = "Research Multi-Slide Scan Order";
         $res = new Research();
         $entity->setResearch($res);
 

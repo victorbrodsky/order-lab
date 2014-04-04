@@ -1,6 +1,6 @@
 
 
-    <h3 class="text-info">Educational Objects</h3>
+    <h3 class="text-info">Educational</h3>
 
 
     <table class="records_list table table-hover table-condensed text-left">
@@ -9,9 +9,9 @@
             <th>ID</th>
             <th>Course</th>
             <th>Lesson</th>
-            <th>Director</th>
-            <th>Director as eneterd by user</th>
-            <th>Order ID</th>
+            <th>Course Director</th>
+            <th>Course Director (as eneterd by user)</th>
+            {#<th>Order ID</th>#}
             <th>Actions</th>
         </tr>
         </thead>
@@ -29,9 +29,9 @@
 
                 <td>{{ educational.directorstr }}</td>
 
-                <td>
-                    {{ educational.orderinfo.id }}
-                </td>
+                {#<td>#}
+                    {#{{ educational.orderinfo.id }}#}
+                {#</td>#}
 
 
                 <td class="rowlink-skip">
@@ -47,7 +47,7 @@
                             </li>
 
                             <li><a
-                                   href="{{ path('multy_show', { 'id': educational.orderinfo.id }) }}">View Order Content</a>
+                                   href="{{ path('multy_show', { 'id': educational.orderinfo.oid }) }}">View Order Content</a>
                             </li>
 
                         </ul>

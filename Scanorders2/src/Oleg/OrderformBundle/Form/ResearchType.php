@@ -21,14 +21,27 @@ class ResearchType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {     
-//        $helper = new FormHelper();
+    {
+
+        $addlabel = "";
+        $readonly = false;
+
+        if( $this->params['type'] == 'SingleObject' ) {
+            //this is used by data review, when a single onject is shown
+            $attr = array('class'=>'form-control form-control-modif');
+            $addlabel = " (as entered by user)";
+            $readonly = true;
+        } else {
+            //this is used by orderinfo form, when the scan order form is shown ($this->params['type']="Multi-Slide Scan Order")
+            $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
+        }
         
         $builder->add( 'project', 'text', array(
-                'label'=>'Research Project Title:',
-                'max_length'=>'500',
-                'required'=> false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+            'label'=>'Research Project Title:',
+            'max_length'=>'500',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif'),
+            'read_only' => $readonly
         ));
 
         $builder->add( 'settitle', 'text', array(
@@ -36,19 +49,15 @@ class ResearchType extends AbstractType
             'max_length'=>'500',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
+            'read_only' => $readonly
         ));
 
-        if( $this->params['type'] == 'SingleObject' ) {
-            $attr = array('class'=>'form-control form-control-modif');
-        } else {
-            $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
-        }
-
         $builder->add('principalstr', 'custom_selector', array(
-            'label' => 'Principal Investigator:',
+            'label' => 'Principal Investigator'.$addlabel.':',
             'attr' => $attr,
             'required'=>false,
-            'classtype' => 'optionalUserResearch'
+            'classtype' => 'optionalUserResearch',
+            'read_only' => $readonly
         ));
 
 
@@ -57,7 +66,7 @@ class ResearchType extends AbstractType
             $attr = array('class' => 'combobox combobox-width');
             $builder->add('principal', 'entity', array(
                 'class' => 'OlegOrderformBundle:User',
-                'label'=>'Principal:',
+                'label'=>'Principal Investigator:',
                 'required' => false,
                 //'read_only' => true,    //not working => disable by twig
                 //'multiple' => true,

@@ -15,7 +15,7 @@ use Oleg\OrderformBundle\Entity\History;
 class OrderInfoRepository extends ArrayFieldAbstractRepository {
     
     //process orderinfo and all entities
-    public function processOrderInfoEntity( $entity, $type=null ) {
+    public function processOrderInfoEntity( $entity, $type=null, $router = null ) {
 
         //echo "orderinfo: ".$entity."<br>";
 //        echo "patients count=".count($entity->getPatient())."<br>";
@@ -52,12 +52,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //$entity->setStatus($status);
 
         if( $type ) {
-
             $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
-
-//            echo "formtype=".$formtype."<br>";
-//            exit();
-
             $entity->setType($formtype);
         }
         
@@ -66,10 +61,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         //return $entity;
-        return $this->setOrderInfoResult( $entity );
+        return $this->setOrderInfoResult( $entity, $router );
     }
     
-    public function setOrderInfoResult( $entity ) {
+    public function setOrderInfoResult( $entity, $router ) {
 
         $em = $this->_em;
 
@@ -124,12 +119,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         //********** take care of educational and research director and principal investigator ***********//
-        if( $entity->getEducational() ) {
+        if( $entity->getEducational() && !$entity->getEducational()->isEmpty() ) {
             $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity->getEducational() );
+        } else {
+            $entity->setEducational(NULL);
         }
 
-        if( $entity->getResearch() ) {
+        if( $entity->getResearch() && !$entity->getResearch()->isEmpty() ) {
             $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity->getResearch() );
+        } else {
+            $entity->setResearch(NULL);
         }
         //********** end of educational and research processing ***********//
 
@@ -276,7 +275,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         if( $originalStatus == 'Amended' ) {
             $history->setEventtype('Amended Order Submission');
-            $history->setNote('Previous order content saved as a Superseded ###'.$originalId.'###');
+            //get url link
+            $supersedeId = $entity->getId();
+            $url = $router->generate( 'multy_show', array('id' => $supersedeId) );
+            $link = '<a href="'.$url.'">order '.$supersedeId.'</a>';
+            //set note with this url link
+            $history->setNote('Previous order content saved as a Superseded '.$link);
         } elseif( $entity->getStatus() == 'Not Submitted' ) {
             $systemUser = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
             $history->setProvider( $systemUser );
