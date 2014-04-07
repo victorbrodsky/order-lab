@@ -38,8 +38,6 @@ $(document).ready(function() {
         data.push(row);
     }
 
-    //$('#multi-dataTable').doubleScroll();
-
     $("#multi-dataTable").handsontable({
         data: data,
         colHeaders: colHeader,
@@ -48,48 +46,19 @@ $(document).ready(function() {
         manualColumnMove: true,
         manualColumnResize: true,
         stretchH: 'all'
-//        afterLoadData: function () {
-//            console.log('double scroll');
-//            var tabHeight = $('#multi-dataTable').height();
-//            console.log("height before="+$('#multi-dataTable').height());
-//            $('#multi-dataTable').doubleScroll();
-//            $('#multi-dataTable').height(tabHeight*10);
-//            console.log("height after="+$('#multi-dataTable').height());
-//        }
     });
 
-    //$('.double-scroll').doubleScroll();
 
     //var Dragdealer = require('dragdealer').Dragdealer;
     //new Dragdealer('top-scrollbar-handsontable');
 
-    var tableSliderEl = $('#multi-dataTable').find('.dragdealer');
-    console.log(tableSliderEl);
-    console.log('slider width='+tableSliderEl.width());
-//
-//    var topSlider = $('#top-scrollbar-handsontable');
+    //var tableSliderEl = $('.dragdealer').first();
+    //console.log('slider width='+tableSliderEl.width());
+
+    //var topSlider = $('#top-scrollbar-handsontable');
     //topSlider.width(tableSliderEl.width());
     //topSlider.append(tableSliderEl);
 
-    var tabWidth = $('#multi-dataTable').width();
-    console.log('tabWidth width='+tabWidth);
-
-//    $(".div1").width(tabWidth);
-//    $(".div2").width(tabWidth);
-//
-//    tabWidth = tabWidth-tabWidth/1.2;
-//
-//    $(".wrapper1").width(tabWidth);
-//    $(".wrapper2").width(tabWidth);
-//
-//    $(".wrapper1").scroll(function(){
-//        $(".wrapper2")
-//            .scrollLeft($(".wrapper1").scrollLeft());
-//    });
-//    $(".wrapper2").scroll(function(){
-//        $(".wrapper1")
-//            .scrollLeft($(".wrapper2").scrollLeft());
-//    });
-
+    $('#multi-dataTable').doubleScroll();
 
 });

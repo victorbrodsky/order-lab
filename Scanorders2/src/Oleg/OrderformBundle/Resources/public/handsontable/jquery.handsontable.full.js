@@ -11317,7 +11317,85 @@ WalkontableScrollbar.prototype.init = function () {
 
   this.slider.appendChild(this.handle);
   this.container = this.instance.wtTable.holder;
+
   this.container.appendChild(this.slider);
+
+    //document.getElementById("horizontal-scrollbar-table").appendChild(this.slider);
+
+////////////// TODO: append horizontal scrollbar before table ///////////////////
+//    console.log("container class="+$(this.container).attr("class"));
+//    console.log("scroll class="+$(this.slider).attr("class"));
+//    console.log("handle class="+$(this.handle).attr("class"));
+//    console.log($(this.slider));
+//    console.log($(this.handle));
+
+  if( 0 && this.type == 'horizontal' ) {
+
+      console.log("container class="+$(this.container).attr("class"));
+      console.log("scroll class="+$(this.slider).attr("class"));
+      console.log("handle class="+$(this.handle).attr("class"));
+      console.log($(this.slider));
+      console.log($(this.handle));
+
+      var topSlider = document.getElementById('top-scrollbar-handsontable');
+
+      this.slidertop = document.createElement('DIV');
+      this.slidertopStyle = this.slider.style;
+      this.slidertopStyle.position = 'absolute';
+      this.slidertopStyle.top = '0';
+      this.slidertopStyle.left = '0';
+      this.slidertopStyle.display = 'none';
+      this.slidertop.className = 'dragdealer ' + this.type;
+
+      this.handletop = document.createElement('DIV');
+      //this.handletopStyle = this.handletop.style;
+      this.handletop.className = 'handle';
+      this.slidertop.appendChild(this.handletop);
+
+      this.containertop = document.getElementById('top-scrollbar-handsontable');
+
+      //this.containertop.appendChild(this.slidertop);
+
+      //new Dragdealer('top-scrollbar-handsontable');
+
+        //$('#top-scrollbar-handsontable').append(this.slider);
+
+
+//      this.dragdealertop = new Dragdealer(this.slidertop, {
+//          vertical: (this.type === 'vertical'),
+//          horizontal: (this.type === 'horizontal'),
+//          slide: false,
+//          speed: 100,
+//          animationCallback: function (x, y) {
+//              if (firstRun) {
+//                  firstRun = false;
+//                  return;
+//              }
+//              that.skipRefresh = true;
+//              dragDelta = that.type === 'vertical' ? y : x;
+//              if (that.dragTimeout === null) {
+//                  that.dragTimeout = setInterval(dragRender, 100);
+//                  dragRender();
+//              }
+//          },
+//          callback: function (x, y) {
+//              that.skipRefresh = false;
+//              clearInterval(that.dragTimeout);
+//              that.dragTimeout = null;
+//              dragDelta = that.type === 'vertical' ? y : x;
+//              that.onScroll(dragDelta);
+//          }
+//      });
+
+//      new Dragdealer(topSlider, {
+//          animationCallback: function(x, y) {
+//              $('#just-a-slider .value').text(Math.round(x * 100));
+//          }
+//      });
+
+  }
+///////////////////////////////////////////////////////////////////////////////
+
 
   var firstRun = true;
   this.dragTimeout = null;

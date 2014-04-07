@@ -1,0 +1,27 @@
+
+.wrapper1, .wrapper2 {
+    //width: 500px;
+    border: none 0px RED;
+    overflow-x: scroll;
+    overflow-y:hidden;
+}
+
+.wrapper1 {
+    height: 20px;
+}
+.wrapper2 {
+    height: 200px;
+}
+
+.div1 {
+    //width:1000px;
+    height: 20px;
+}
+
+.div2 {
+    //width:1000px;
+    //height: 200px;
+    /*background-color: #88FF88;*/
+    overflow: auto;
+}
+

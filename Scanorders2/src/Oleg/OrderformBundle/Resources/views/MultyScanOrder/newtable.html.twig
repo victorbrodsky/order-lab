@@ -8,16 +8,20 @@
 
 {% block additionalcss %}
     {% stylesheets
-        'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {% block additionaljs %}
+
+    {#'@OlegOrderformBundle/Resources/public/doubleScroll/jquery.doubleScroll.js'#}
+
     {% javascripts
-        '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
-        '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
+    '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -66,7 +70,26 @@
         <!-- handsontable -->
         <br>
         <p>
+
+            {#<div id="top-scrollbar-handsontable" class="dragdealer" style="overflow-x: scroll; overflow-y:hidden; width: 100px;">#}
+                {#<div class="handle red-bar">drag me</div>#}
+                {#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv#}
+            {#</div>#}
+
             <div id="multi-dataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+
+
+        {#<div class="wrapper1">#}
+            {#<div class="div1">#}
+            {#</div>#}
+        {#</div>#}
+        {#<div class="wrapper2">#}
+            {#<div id="multi-dataTable" class="div2 text-center" align="middle">#}
+                {#&#123;&#35;aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd&#35;&#125;#}
+            {#</div>#}
+        {#</div>#}
+
+
         </p>
         <br>
 
