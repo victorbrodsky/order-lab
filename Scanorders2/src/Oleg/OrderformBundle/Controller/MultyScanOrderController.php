@@ -653,18 +653,15 @@ class MultyScanOrderController extends Controller {
 
         if( $routeName == "multy_show") {
 
-            $history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'ASC') );
+            $history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
 
-            //$forwardhistory = $em->getRepository('OlegOrderformBundle:History')->findByOrderinfo( $entity, array('changedate' => 'ASC') ); //superseded history
-
-            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-
-            $dql = $repository->createQueryBuilder("h");
-            $dql->innerJoin("h.orderinfo", "orderinfo");
-            $dql->where('orderinfo.oid=:id');
-            $dql->orderBy('h.changedate','ASC');
-            $dql->setParameter('id',$entity->getId());
-            $forwardhistory = $dql->getQuery()->getResult();
+//            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+//            $dql = $repository->createQueryBuilder("h");
+//            $dql->innerJoin("h.orderinfo", "orderinfo");
+//            $dql->where('orderinfo.oid != :id AND (h.currentid = :id OR orderinfo.oid = :id)');
+//            $dql->orderBy('h.changedate','ASC');
+//            $dql->setParameter('id',$entity->getId());
+//            $forwardhistory = $dql->getQuery()->getResult();
 
 //            echo "oid=".$entity->getOid().", history count = ".count($history)."<br>";
 //            foreach( $history as $hist ) {

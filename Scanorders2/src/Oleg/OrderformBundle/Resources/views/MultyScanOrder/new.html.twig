@@ -86,13 +86,7 @@
     {#history#}
     {% if history is defined and history %}
         {{ formmacros.history_info(history,forwardhistory,form) }}
-        {#{{ formmacros.forwardhistory_info(forwardhistory,form) }}#}
     {% endif %}
-
-    {#{% if forwardhistory is defined and forwardhistory %}#}
-        {#{{ formmacros.forwardhistory_info(forwardhistory,allhistory,form.vars.value.status,form.vars.value.oid) }}#}
-    {#{% endif %}#}
-
 
     {#<input type="hidden" id="formtype" value="multi" />#}
     <input type="hidden" id="orderformtype" value="multi" />
