@@ -14,7 +14,7 @@ class DataReviewController extends Controller {
       
 
     /**
-     * @Route("/scan-order/data-review/{id}", name="scan-order-data-review-full", requirements={"id" = "\d+"})
+     * @Route("/scan-order/{id}/data-review", name="scan-order-data-review-full", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegOrderformBundle:DataReview:index-order.html.twig")
      */

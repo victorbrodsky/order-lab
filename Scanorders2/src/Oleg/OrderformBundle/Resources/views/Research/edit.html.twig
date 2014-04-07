@@ -1,10 +1,10 @@
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{#{% extends "OlegOrderformBundle::Default/base.html.twig" %}#}
 
-{% block title %}
-    Research Data Review
-{% endblock %}
+{#{% block title %}#}
+    {#Research Data Review#}
+{#{% endblock %}#}
 
-{% block content %}
+{#{% block content %}#}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
 
@@ -25,17 +25,17 @@
     {{ form_end(edit_form) }}
 
 
-    {% if cicle is defined %}
-        <p>
-            <a class="btn btn-primary" href="{{ path('research_edit',{'id':entity.id}) }}">Edit</a>
-        </p>
-    {% endif %}
+    {#{% if cicle is defined %}#}
+        {#<p>#}
+            {#<a class="btn btn-primary" href="{{ path('research_edit',{'id':entity.id}) }}">Edit</a>#}
+        {#</p>#}
+    {#{% endif %}#}
 
-    <div style="margin-top: 20px;">
-        <p>
-            <a href="{{ path('scan-order-data-review-full',{id:entity.orderinfo.oid}) }}">Back to Data Review</a>
-        </p>
-    </div>
+    {#<div style="margin-top: 20px;">#}
+        {#<p>#}
+            {#<a href="{{ path('scan-order-data-review-full',{id:entity.orderinfo.oid}) }}">Back to Data Review</a>#}
+        {#</p>#}
+    {#</div>#}
 
 
-{% endblock %}
+{#{% endblock %}#}

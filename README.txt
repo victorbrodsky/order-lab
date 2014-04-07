@@ -67,7 +67,7 @@ git checkout --track origin/iss51
 git remote update (note: this is the same as git fetch --all)
 git pull
 
-#To update whole tree (including remove of deleted files)
+#To update whole tree, even from the subdirectory (including remove of deleted files)
 git add -u :/
 git commit -m "message"
 git push -u origin master

@@ -1,10 +1,10 @@
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{#{% extends "OlegOrderformBundle::Default/base.html.twig" %}#}
 
-{% block title %}
-    Educational Data Review
-{% endblock %}
+{#{% block title %}#}
+    {#Educational Data Review#}
+{#{% endblock %}#}
 
-{% block content %}
+{#{% block content %}#}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
 
@@ -25,11 +25,11 @@
     {{ form_end(edit_form) }}
 
 
-    {% if cicle is defined %}
-        <p>
-            <a class="btn btn-primary" href="{{ path('educational_edit',{'id':entity.id}) }}">Edit</a>
-        </p>
-    {% endif %}
+    {#{% if cicle is defined %}#}
+        {#<p>#}
+            {#<a class="btn btn-primary" href="{{ path('educational_edit',{'id':entity.id}) }}">Edit</a>#}
+        {#</p>#}
+    {#{% endif %}#}
 
     {#<p>#}
         {#<a class="btn btn-primary" type='submit'>Update</a>#}
@@ -42,11 +42,11 @@
         {#&#123;&#35;<a class="btn btn-default" href="{{ path('educational_edit',{id:entity.id}) }}" type='button'>Cancel</a>&#35;&#125;#}
     {#</p>#}
 
-    <div style="margin-top: 20px;">
-        <p>
-            <a href="{{ path('scan-order-data-review-full',{id:entity.orderinfo.oid}) }}">Back to Data Review</a>
-        </p>
-    </div>
+    {#<div style="margin-top: 20px;">#}
+        {#<p>#}
+            {#<a href="{{ path('scan-order-data-review-full',{id:entity.orderinfo.oid}) }}">Back to Data Review</a>#}
+        {#</p>#}
+    {#</div>#}
 
 
-{% endblock %}
+{#{% endblock %}#}
