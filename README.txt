@@ -15,13 +15,14 @@ http://collage.med.cornell.edu/order/
 # Admin page (Requires admin role):
 http://collage.med.cornell.edu/order/admin
 
+#To include assets located in your bundles' Resources/public folder (target is by default "web"):
+php app/console assets:install
+
 # Note: For production mode execute the following command to clean cache and fix assetic links to js and css
 (read: Dumping Asset Files in the dev environment http://symfony.com/doc/current/cookbook/assetic/asset_management.html):
+php app/console cache:clear --env=prod --no-debug or (php app/console cache:clear --env=prod --no-debug --no-warmup)
 php app/console assetic:dump --env=prod --no-debug
-php app/console cache:clear --env=prod --no-debug
 
-#To include assets located in your bundles' Resources/public folder (target is by default "web") (for production add ../..):
-php app/console assets:install ../..
 
 # Since web folder is moved to root order/ and this is written in compser.json => run composer update
 composer.phar update
@@ -65,3 +66,8 @@ git checkout --track origin/iss51
 # Or:
 git remote update (note: this is the same as git fetch --all)
 git pull
+
+#To update whole tree (including remove of deleted files)
+git add -u :/
+git commit -m "message"
+git push -u origin master
