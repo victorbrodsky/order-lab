@@ -34,6 +34,7 @@
 
     {% stylesheets
     'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
+    'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -47,7 +48,6 @@
         'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
         'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
         'bundles/olegorderform/ladda/ladda-themeless.css' filter='cssrewrite'
-        'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
         'bundles/olegorderform/form/css/action.css' filter='cssrewrite'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -87,7 +87,7 @@
 
     <div class="container col-xs-12">
 
-        <div class="header text-center col-xs-12">
+        <div class="header col-xs-12">
 
             {% block header %}
                 {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}

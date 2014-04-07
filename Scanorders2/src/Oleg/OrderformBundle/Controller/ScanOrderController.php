@@ -37,10 +37,12 @@ class ScanOrderController extends Controller {
             false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
             false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+            return $this->redirect( $this->generateUrl('login') );
         }
 
-        return array();
+        $unprocessed = $this->getUnprocessedOrders();
+
+        return array('unprocessed'=>$unprocessed);
     }
 
     /**
@@ -211,14 +213,14 @@ class ScanOrderController extends Controller {
             $crituser = "";
 
             //echo $routeName.": service=".$service."<br>";
-            //select only orders where this user is author or proxy user, except "Where I am Course Director" and "Where I am Principal Investigator" cases.
+            //select only orders where this user is author or proxy user, except "Where I am the Course Director" and "Where I am the Principal Investigator" cases.
             if( $service == "" || $service == "My Orders" ) {
 
                 //echo "add provider and proxy <br>";
                 $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
                 //show only my order and the orders where I'm a proxy
-                //Orders I Personally Placed and Proxy Orders Placed For Me: $service == "My Orders"
+                //Orders I Personally Placed and Where I am the Ordering Provider: $service == "My Orders"
 
                 $crituser .= "( provider.id=".$user->getId();
 
@@ -250,8 +252,8 @@ class ScanOrderController extends Controller {
                 }
                 $crituser .= "provider.id=".$user->getId();
             }
-            if( $service == "Proxy Orders Placed For Me" ) {
-                //echo "Proxy Orders Placed For Me <br>";
+            if( $service == "Where I am the Ordering Provider" ) {
+                //echo "Where I am the Ordering Provider <br>";
                 $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
@@ -260,15 +262,15 @@ class ScanOrderController extends Controller {
                 $crituser .= "proxyuser.id=".$user->getId();
                 //***************** END of Proxy User Orders *************************//
             }
-            if( $service == "Where I am Course Director" ) {
+            if( $service == "Where I am the Course Director" ) {
                 $dql->innerJoin("orderinfo.educational", "educational");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
                 $crituser .= "educational.director=".$user->getId();
             }
-            if( $service == "Where I am Principal Investigator" ) {
-                //echo "Where I am Principal Investigator <br>";
+            if( $service == "Where I am the Principal Investigator" ) {
+                //echo "Where I am the Principal Investigator <br>";
                 $dql->innerJoin("orderinfo.research", "research");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
@@ -619,6 +621,29 @@ class ScanOrderController extends Controller {
         }
 
         return $criteriastr;
+    }
+
+
+    /**
+     * Finds and displays a unprocessed orders.
+     */
+    public function getUnprocessedOrders()
+    {
+        $unprocessed = 0;
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+        $dql =  $repository->createQueryBuilder("orderinfo");
+        $dql->innerJoin("orderinfo.status", "status");
+        $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'");
+        $query = $em->createQuery($dql);
+        $unprocessedOrders = $query->getResult();
+
+        if( $unprocessedOrders && count($unprocessedOrders) > 0 ) {
+            $unprocessed = count($unprocessedOrders);
+        }
+
+        return $unprocessed;
     }
 
 }

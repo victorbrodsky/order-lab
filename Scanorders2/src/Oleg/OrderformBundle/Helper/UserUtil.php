@@ -176,9 +176,9 @@ class UserUtil {
         $choicesServ = array(
             "My Orders"=>"My Orders",
             "Orders I Personally Placed"=>"Orders I Personally Placed",
-            "Proxy Orders Placed For Me"=>"Proxy Orders Placed For Me",
-            "Where I am Course Director"=>"Where I am Course Director",
-            "Where I am Principal Investigator"=>"Where I am Principal Investigator"
+            "Where I am the Ordering Provider"=>"Where I am the Ordering Provider",
+            "Where I am the Course Director"=>"Where I am the Course Director",
+            "Where I am the Principal Investigator"=>"Where I am the Principal Investigator"
         );
         if( is_object($user) && $user instanceof User ) {
             $services = $user->getPathologyServices();

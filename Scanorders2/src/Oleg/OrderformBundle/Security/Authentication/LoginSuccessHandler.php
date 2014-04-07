@@ -79,9 +79,11 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
             $loginpos = strpos($lastRoute, '/login');
             $nopermpos = strpos($lastRoute, '/no-permission');
+            //setloginvisit
 
-            //echo "nopermpos=".$nopermpos."<br>";
-            //echo "loginpos=".$loginpos."<br>";
+//            echo "nopermpos=".$nopermpos."<br>";
+//            echo "loginpos=".$loginpos."<br>";
+//            exit();
 
             if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false ) {
                 //$referer_url = $this->router->generate( $lastRoute );

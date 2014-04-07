@@ -6,14 +6,50 @@
 
 {% block contentleft %}
 
+    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
+
     <div style="margin-top: 150px;">
         <p>
             Welcome to the Scan Order System!
         </p>
 
         <p>
-            Please use the menu on the top to place a slide scan order of desired type or select <a href="{{ path('my-scan-orders') }}">"My Orders"</a> to review the status of the orders you have placed.
+
+            {#Please use the menu on the top to place a slide scan order of desired type or select <a href="{{ path('my-scan-orders') }}">"My Orders"</a> to review the status of the orders you have placed.#}
+
+            Please use the menu on the top to place a <a href="{{ path('single_new') }}">One-slide</a>, <a href="{{ path('multi_new') }}">Multi-slide</a>, or a <a href="{{ path('table_create') }}">Table-view</a> scan order or select <a href="{{ path('my-scan-orders') }}">My Orders</a> to review the status of the orders you have placed.
+
         </p>
+
+
+        <p>
+
+            {% if comments is defined and comments > 0 %}
+
+                <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comments</a> have been added to your orders.
+
+            {% endif %}
+
+        </p>
+
+
+        <p>
+
+            {% if is_granted('ROLE_PROCESSOR') %}
+
+                View <a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a> (there are
+
+                <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'All Not Filled'}) }}">{{ unprocessed }} unprocessed order(s)</a>
+
+                and
+
+                <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comment(s)</a>).
+
+            {% endif %}
+
+        </p>
+
+
     </div>
 
 {% endblock %}
