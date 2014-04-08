@@ -105,19 +105,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "dataquality: mrn text=".$entity->getDataquality()->first()->getMrntype()."<br>";
 //        }
 
-        foreach( $patients as $patient ) {
-            //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
-            $entity->removePatient($patient);
-            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
-            $entity->addPatient($patient);
-        }
-
-        //add slide's parnets recursevely to this orderinfo
-        $slides = $entity->getSlide();
-        foreach( $slides as $slide ) {
-            $this->addOrderinfoToThisAndAllParents( $slide, $entity );
-        }
-
         //********** take care of educational and research director and principal investigator ***********//
         if( $entity->getEducational() && !$entity->getEducational()->isEmpty() ) {
             $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity->getEducational() );
@@ -131,6 +118,19 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setResearch(NULL);
         }
         //********** end of educational and research processing ***********//
+
+        foreach( $patients as $patient ) {
+            //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
+            $entity->removePatient($patient);
+            $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
+            $entity->addPatient($patient);
+        }
+
+        //add slide's parents recursevely to this orderinfo
+        $slides = $entity->getSlide();
+        foreach( $slides as $slide ) {
+            $this->addOrderinfoToThisAndAllParents( $slide, $entity );
+        }
 
         //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
         //foreach( $entity->getPatient() as $patient ) {
@@ -172,29 +172,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         if( $originalStatus == 'Amended' ) {
 
             $originalId = $entity->getOid();
-            //echo "originalId=".$originalId."<br>";
-            
-//            $newOrderinfo = clone $entity;
-//            $newOrderinfo->setId(null);
-//            $newOrderinfo->setOid($originalId);
-//            $entity = $newOrderinfo;
+
+            //find existing order in db
+            $originalOrder = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($originalId);
+            $originalOrderdate = $originalOrder->getOrderdate();
 
             $entity->setId(null);
             $entity->setOid($originalId);
-            
-//            $orderUtil = new OrderUtil($em);
-//            $message = $orderUtil->changeStatus($originalId, 'Amend');
-            
-            //$entity->setId(null);
-                      
-//            echo "orig id=".$entity->getId().",:".$entity."<br>";
-//            echo "newOrderinfo id=".$entity->getId().",:".$entity."<br>";
-//
-//            echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-//            echo "<br>--------------------------<br>";
-//            $this->printTree( $entity->getPatient()->first() );
-//            echo "--------------------------<br>";
-            //exit('orderinfo repo exit');
 
         }
 
@@ -247,18 +231,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //exit('amended orderinfo repo exit');
             $newId = $entity->getId();
 
-            //echo "originalId=".$originalId.", newId=".$newId."<br>";
-
-//            $em->detach($entity);
-
             $orderUtil = new OrderUtil($em);
-            $message = $orderUtil->changeStatus($originalId, 'Supersede', $entity->getProvider()->first(), $newId);
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $entity->getProvider()->first(), $router, $newId);
 
-//            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneById($newId);
-//            if( !$entity ) {
-//                throw new \Exception( 'Unable to find OrderInfo entity by id'.$newId );
-//            }
-            $entity->setOid($originalId);   //swap oid
+            //swap oid
+            $entity->setOid($originalId);
+
+            //set orderdate from original order
+            $entity->setOrderdate($originalOrderdate);
 
             //$em->persist($entity);
             $em->flush();
@@ -288,6 +268,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $history->setEventtype('Auto-Saved Draft');
         } else {
             $history->setEventtype('Initial Order Submission');
+            $history->setChangedate($entity->getOrderdate());
         }
 
         $em->persist($history);

@@ -45,6 +45,11 @@ class Research
      */
     protected $orderinfo;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Slide", mappedBy="research")
+     */
+    protected $slide;
+
 //    public function __clone() {
 //        if ($this->id) {
 //            $this->setId(null);
@@ -147,6 +152,24 @@ class Research
     {
         return $this->orderinfo;
     }
+
+    /**
+     * @param mixed $slide
+     */
+    public function setSlide($slide)
+    {
+        $this->slide = $slide;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlide()
+    {
+        return $this->slide;
+    }
+
+
 
     public function isEmpty()
     {

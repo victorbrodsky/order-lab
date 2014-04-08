@@ -9,6 +9,10 @@
 
     {{ formmacros.field(form.list.name) }}
 
+    {% if form.synonyms is defined %}
+        {{ formmacros.field(form.synonyms) }}
+    {% endif %}
+
     {% if form.action is defined %}
         {{ formmacros.field(form.action) }}
     {% endif %}
@@ -58,6 +62,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Alias', 'ent.alias') }}</th>
             {% endif %}
 
+            {% if entities|first.synonyms is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
+            {% endif %}
+
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Order', 'ent.orderinlist') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
@@ -78,6 +86,10 @@
 
                 {% if entity.alias is defined %}
                     <td>{{ entity.alias }}</td>
+                {% endif %}
+
+                {% if entity.synonyms is defined %}
+                    <td>{{ entity.synonyms|first }}</td>
                 {% endif %}
 
                 <td>{{ entity.type }}</td>
@@ -111,6 +123,10 @@
     {{ form_start(edit_form) }}
 
     {{ formmacros.field(edit_form.list.name) }}
+
+    {% if edit_form.synonyms is defined %}
+        {{ formmacros.field(edit_form.synonyms) }}
+    {% endif %}
 
     {% if edit_form.action is defined %}
         {{ formmacros.field(edit_form.action) }}

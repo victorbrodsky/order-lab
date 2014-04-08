@@ -19,7 +19,7 @@
             <a class="navbar-brand visible-xs" href="{{ path('scan-order-home') }}">Home</a> <!-- this is for mobile devices - top menu -->
         </div>
 
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
 
             {% if is_granted('ROLE_SUBMITTER') or is_granted('ROLE_EXTERNAL_SUBMITTER') %}
 

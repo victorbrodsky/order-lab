@@ -427,7 +427,7 @@ class ScanOrderController extends Controller {
         $status = ucwords($status);
         //$status = str_replace(" ","-",$status);
 
-        $res = $orderUtil->changeStatus($id, $status, $user);
+        $res = $orderUtil->changeStatus($id, $status, $user, $this->get('router'));
 
         if( $res['result'] == 'conflict' ) {   //redirect to amend
             return $this->redirect( $this->generateUrl( 'order_amend', array('id' => $res['oid']) ) );

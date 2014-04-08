@@ -134,13 +134,11 @@ class OrderInfo
      * @ORM\OneToOne(
      *      targetEntity="Educational",
      *      inversedBy="orderinfo",
-     *      cascade={"persist"},
-     *      orphanRemoval=true
+     *      cascade={"persist"}
      * )
      * @ORM\JoinColumn(
      *      name="educational_id",
-     *      referencedColumnName="id",
-     *      onDelete="CASCADE"
+     *      referencedColumnName="id"
      * )
      */
     private $educational;
@@ -150,13 +148,11 @@ class OrderInfo
      * @ORM\OneToOne(
      *      targetEntity="Research",
      *      inversedBy="orderinfo",
-     *      cascade={"persist"},
-     *      orphanRemoval=true
+     *      cascade={"persist"}
      * )
      * @ORM\JoinColumn(
      *      name="research_id",
-     *      referencedColumnName="id",
-     *      onDelete="CASCADE"
+     *      referencedColumnName="id"
      * )
      */
     private $research;
@@ -305,8 +301,12 @@ class OrderInfo
     /**
     * @ORM\PrePersist
     */
-    public function setOrderdate() {
-        $this->orderdate = new \DateTime();
+    public function setOrderdate($date=null) {
+        if( $date ) {
+            $this->orderdate = $date;
+        } else {
+            $this->orderdate = new \DateTime();
+        }
     }
 
     /**

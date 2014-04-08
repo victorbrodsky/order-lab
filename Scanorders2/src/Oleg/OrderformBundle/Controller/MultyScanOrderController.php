@@ -653,7 +653,14 @@ class MultyScanOrderController extends Controller {
 
         if( $routeName == "multy_show") {
 
-            $history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
+            //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
+            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+            $dql = $repository->createQueryBuilder("h");
+            $dql->innerJoin("h.orderinfo", "orderinfo");
+            $dql->where("h.currentid = :oid AND (h.eventtype = 'Initial Order Submission' OR h.eventtype = 'Status Changed' OR h.eventtype = 'Amended Order Submission')");
+            $dql->orderBy('h.changedate','DESC');
+            $dql->setParameter('oid',$entity->getOid());
+            $history = $dql->getQuery()->getResult();
 
 //            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
 //            $dql = $repository->createQueryBuilder("h");

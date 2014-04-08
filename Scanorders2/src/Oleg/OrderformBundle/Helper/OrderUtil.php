@@ -25,7 +25,7 @@ class OrderUtil {
         $this->em = $em;
     }
 
-    public function changeStatus( $id, $status, $user, $swapId=null ) {
+    public function changeStatus( $id, $status, $user, $router=null, $swapId=null ) {
 
         $em = $this->em;
 
@@ -107,6 +107,13 @@ class OrderUtil {
             //record history
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
+
+            if( $router ) {
+                $url = $router->generate( 'multy_show', array('id' => $id) );
+                $link = '<a href="'.$url.'">order '.$id.'</a>';
+                $notemsg = 'This order is an old superseded version of '.$link;
+                $history->setNote($notemsg);
+            }
 
             $em->persist($entity);
             $em->persist($history);

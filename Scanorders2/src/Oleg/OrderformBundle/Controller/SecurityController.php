@@ -26,6 +26,12 @@ class SecurityController extends Controller
      */
     public function loginAction( Request $request ) {
 
+        if(
+            $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+
         $request = $this->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
 

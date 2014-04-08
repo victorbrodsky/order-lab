@@ -55,8 +55,14 @@ class ListController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:'.$type);
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
+        $dql->groupBy('ent');
+        $dql->addGroupBy('synonyms.name');
+        $dql->addGroupBy('creator.username');
+        $dql->leftJoin("ent.synonyms", "synonyms");
         $dql->innerJoin("ent.creator", "creator");
         //$dql->orderBy("ent.createdate","DESC");
+
+        //echo "dql=".$dql."<br>";
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -137,8 +143,13 @@ class ListController extends Controller
         $className = $class->getShortName();
 
         $options = array();
+
         if( method_exists($entity,'getOriginal') ) {
             $options['original'] = true;
+        }
+
+        if( method_exists($entity,'getSynonyms') ) {
+            $options['synonyms'] = true;
         }
 
         $newForm = new GenericListType($className, $options);
@@ -309,8 +320,13 @@ class ListController extends Controller
         $className = $class->getShortName();
 
         $options = array();
+
         if( method_exists($entity,'getOriginal') ) {
             $options['original'] = true;
+        }
+
+        if( method_exists($entity,'getSynonyms') ) {
+            $options['synonyms'] = true;
         }
 
         $newForm = new GenericListType($className, $options);

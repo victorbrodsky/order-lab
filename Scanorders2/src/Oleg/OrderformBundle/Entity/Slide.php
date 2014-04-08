@@ -61,7 +61,7 @@ class Slide extends OrderAbstract
     protected $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SlideType", inversedBy="slide", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="SlideType", cascade={"persist"})
      * @ORM\JoinColumn(name="slidetype_id", referencedColumnName="id", nullable=true)
      */
     protected $slidetype;
@@ -79,7 +79,33 @@ class Slide extends OrderAbstract
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="slide")
      **/
-    protected $orderinfo; 
+    protected $orderinfo;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Educational",
+     *      inversedBy="slide",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="educational_id",
+     *      referencedColumnName="id"
+     * )
+     */
+    private $educational;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Research",
+     *      inversedBy="slide",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="research_id",
+     *      referencedColumnName="id"
+     * )
+     */
+    private $research;
     
     public function __construct( $withfields=false, $status='valid', $provider=null, $source=null )
     {
@@ -376,6 +402,39 @@ class Slide extends OrderAbstract
     {
         return $this->title;
     }
+
+    /**
+     * @param mixed $educational
+     */
+    public function setEducational($educational)
+    {
+        $this->educational = $educational;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEducational()
+    {
+        return $this->educational;
+    }
+
+    /**
+     * @param mixed $research
+     */
+    public function setResearch($research)
+    {
+        $this->research = $research;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResearch()
+    {
+        return $this->research;
+    }
+
 
     public function getChildren() {
         return null;    //new ArrayCollection();

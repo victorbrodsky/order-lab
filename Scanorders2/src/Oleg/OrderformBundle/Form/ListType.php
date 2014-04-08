@@ -21,19 +21,32 @@ class ListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder
-            ->add('orderinlist',null,array('label'=>'Order:'))
-            ->add('name',null,array('label'=>'Name:'))
-            ->add('type',null,array('label'=>'Type:'))
-            ->add('creator',null,array('label'=>'Creator:'))
-        ;
+        $builder->add('orderinlist',null,array(
+            'label'=>'Order:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('name',null,array(
+            'label'=>'Name:',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('type',null,array(
+            'label'=>'Type:',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('creator',null,array(
+            'label'=>'Creator:',
+            'required'=>true,
+            'attr' => array('class'=>'combobox combobox-width')
+        ));
 
         $builder->add( 'createdate', 'date', array(
             'label'=>'Creation Date:',
             'widget' => 'single_text',
             'required'=>false,
+            'read_only'=>true,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
         if( $this->params['original'] ) {

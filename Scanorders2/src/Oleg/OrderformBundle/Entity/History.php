@@ -132,8 +132,12 @@ class History
     /**
      * @ORM\PrePersist
      */
-    public function setChangedate() {
-        $this->changedate = new \DateTime();
+    public function setChangedate($date=null) {
+        if( $date ) {
+            $this->changedate = $date;
+        } else {
+            $this->changedate = new \DateTime();
+        }
     }
 
     /**

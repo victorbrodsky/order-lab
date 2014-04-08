@@ -25,15 +25,32 @@ class GenericListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $classEntity = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+        $attr = array('class' => 'combobox combobox-width');
 
         if( $this->className == "Status" ) {
             $builder
-                ->add('action',null,array('label'=>'Action:'));
+                ->add('action',null,array(
+                    'label'=>'Action:',
+                    'attr' => array('class' => 'combobox combobox-width')
+                ));
         }
 
         if( $this->className == "Roles" ) {
             $builder
-                ->add('alias',null,array('label'=>'Alias:'));
+                ->add('alias',null,array(
+                    'label'=>'Alias:',
+                    'attr' => array('class' => 'combobox combobox-width')
+                ));
+        }
+
+        if( array_key_exists('synonyms', $this->params)) {
+            $builder
+                ->add('synonyms',null,array(
+                    'label'=>'Synonyms:',
+                    //'multiple' => false,
+                    'required' => false,
+                    'attr' => array('class' => 'combobox combobox-width')
+                ));
         }
 
         $builder->add('list', new ListType(), array(
