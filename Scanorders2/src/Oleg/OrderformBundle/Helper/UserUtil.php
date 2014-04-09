@@ -178,7 +178,8 @@ class UserUtil {
             "Orders I Personally Placed"=>"Orders I Personally Placed",
             "Where I am the Ordering Provider"=>"Where I am the Ordering Provider",
             "Where I am the Course Director"=>"Where I am the Course Director",
-            "Where I am the Principal Investigator"=>"Where I am the Principal Investigator"
+            "Where I am the Principal Investigator"=>"Where I am the Principal Investigator",
+            "Where I am the Amendment Author"=>"Where I am the Amendment Author"
         );
         if( is_object($user) && $user instanceof User ) {
             $services = $user->getPathologyServices();

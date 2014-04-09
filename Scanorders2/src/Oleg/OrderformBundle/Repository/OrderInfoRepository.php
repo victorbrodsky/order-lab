@@ -13,36 +13,17 @@ use Oleg\OrderformBundle\Entity\History;
  * repository methods below.
  */
 class OrderInfoRepository extends ArrayFieldAbstractRepository {
-    
+
+    protected $user;
+    protected $router;
+
     //process orderinfo and all entities
-    public function processOrderInfoEntity( $entity, $type=null, $router = null ) {
+    public function processOrderInfoEntity( $entity, $user, $type=null, $router = null ) {
 
-        //echo "orderinfo: ".$entity."<br>";
-//        echo "patients count=".count($entity->getPatient())."<br>";
-//        $this->printTree( $entity->getPatient()->first() );
-
-//        foreach( $entity->getPatient() as $patient ) {
-//            echo "patient id=".$patient->getId()."<br>";
-//            echo "patient mrn=".$patient->getMrn()->first()."<br>";
-//            echo "patient name=".$patient->getName()->first()."<br>";
-//            echo "patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
-//            echo "patient slide=".$patient->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock()->first()->getSlide()->first()."<br>";
-//              echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
-//              echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
-//
-//            echo "patient count age=".count($patient->getAge())."<br>";
-//            foreach( $patient->getAge() as $age ) {
-//                echo "age: id=".$age->getId().", field=".$age."<br>";
-//            }
-//            echo "patient count clinicalHistory=".count($patient->getClinicalHistory())."<br>";
-//            foreach( $patient->getClinicalHistory() as $ch ) {
-//                echo "ch: id=".$ch->getId().", field=".$ch."<br>";
-//            }
-//        }
-//        exit();
+        $this->user = $user;
+        $this->router = $router;
 
         $em = $this->_em;
-
 
         //one way to solve multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
@@ -60,18 +41,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setScandeadline(NULL);
         }
 
-        //return $entity;
-        return $this->setOrderInfoResult( $entity, $router );
+        return $this->setOrderInfoResult( $entity );
     }
     
-    public function setOrderInfoResult( $entity, $router ) {
+    public function setOrderInfoResult( $entity ) {
 
         $em = $this->_em;
 
         $patients = $entity->getPatient();
-        //echo $patients->first();
-
-//        echo "dataquality=".count($entity->getDataquality())."<br>";
 
         //process data quality
         foreach( $entity->getDataquality() as $dataquality) {
@@ -231,8 +208,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //exit('amended orderinfo repo exit');
             $newId = $entity->getId();
 
+            //clone orderinfo object by id
             $orderUtil = new OrderUtil($em);
-            $message = $orderUtil->changeStatus($originalId, 'Supersede', $entity->getProvider()->first(), $router, $newId);
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $this->user, $this->router, $newId);
+
+            //now entity is a cloned order object
+            //echo "rep: provider 3=".$entity->getProvider()->first()."<br>";
+            //$entity->setProvider($this->user);
 
             //swap oid
             $entity->setOid($originalId);
@@ -249,15 +231,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());
-        $history->setProvider($entity->getProvider()->first());
-        $history->setRoles($entity->getProvider()->first()->getRoles());
+        $history->setProvider($this->user);
+        $history->setRoles($this->user->getRoles());
         $history->setCurrentstatus($entity->getStatus());
 
         if( $originalStatus == 'Amended' ) {
             $history->setEventtype('Amended Order Submission');
             //get url link
             $supersedeId = $entity->getId();
-            $url = $router->generate( 'multy_show', array('id' => $supersedeId) );
+            $url = $this->router->generate( 'multy_show', array('id' => $supersedeId) );
             $link = '<a href="'.$url.'">order '.$supersedeId.'</a>';
             //set note with this url link
             $history->setNote('Previous order content saved as a Superseded '.$link);

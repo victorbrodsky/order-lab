@@ -107,11 +107,11 @@ class MultyScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $entity  = new OrderInfo();
-                      
-        //initialize all form's fields, even if they are empty
+
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity->setProvider($user);
+//        echo "provider1=".$entity->getProvider()->first()."<br>";
 
         $status = 'invalid';
         $source = 'scanorder';
@@ -133,7 +133,6 @@ class MultyScanOrderController extends Controller {
 
         $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
         $block->addSlide($slide);
-        
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -158,6 +157,7 @@ class MultyScanOrderController extends Controller {
         //$form->bind($request);
         $form->handleRequest($request);
 
+//        echo "provider2=".$entity->getProvider()->first()."<br>";
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_field
 //        $patient = $form["patient"][0]->getData();
 //        $mrn = $patient->getMrn()->first()->getField();
@@ -237,7 +237,7 @@ class MultyScanOrderController extends Controller {
             //$entity->setCicle($cicle);
 
             /////////////////// process and save form //////////////////////////////
-            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $type, $this->get('router') );
+            $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
 
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
@@ -248,7 +248,7 @@ class MultyScanOrderController extends Controller {
 
                 //email
                 //$email = $this->get('security.context')->getToken()->getAttribute('email');
-                $user = $this->get('security.context')->getToken()->getUser();
+                //$user = $this->get('security.context')->getToken()->getUser();
                 $email = $user->getEmail();
                 $emailUtil = new EmailUtil();
 
@@ -268,7 +268,6 @@ class MultyScanOrderController extends Controller {
                 }
 
                 $emailUtil->sendEmail( $email, $entity, $text, $conflictStr );
-
 
                 $conflicts = array();
                 foreach( $entity->getDataquality() as $dq ) {

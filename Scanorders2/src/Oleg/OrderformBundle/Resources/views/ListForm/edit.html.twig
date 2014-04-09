@@ -3,13 +3,27 @@
 {% import "OlegOrderformBundle::ListForm/listmacros.html.twig" as listmacros %}
 
 {% block title %}
-    {{ type|capitalize }} Edit
+    {{ displayName }}: ID {{ entity.id }} | Edit
 {% endblock %}
 
 {% block content %}
 
-    <h3 class="text-info">{{ type|capitalize }} Edit</h3>
+    {% if delete_form is not defined %}
+        {% set delete_form = false %}
+    {% endif %}
 
-    {{ listmacros.listEdit( edit_form, delete_form, type, 'edit' ) }}
+    <h3 class="text-info">{{ displayName }}: ID {{ entity.id }}</h3>
 
+    <br />
+
+    {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'edit' ) }}
+
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/form/js/listForm.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

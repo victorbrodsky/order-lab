@@ -3,12 +3,12 @@
 {% import "OlegOrderformBundle::ListForm/listmacros.html.twig" as listmacros %}
 
 {% block title %}
-    {{ type|capitalize }}
+    {{ displayName }}
 {% endblock %}
 
 {% block content %}
-    <h3 class="text-info">{{ type|capitalize }}</h3>
+    <h3 class="text-info">{{ displayName }}</h3>
 
-    {{ listmacros.listIndex( entities, type ) }}
+    {{ listmacros.listIndex( entities, pathbase ) }}
 
 {% endblock %}

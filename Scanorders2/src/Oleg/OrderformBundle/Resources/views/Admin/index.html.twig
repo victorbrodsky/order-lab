@@ -1,14 +1,18 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
+{% block title %}
+    List Manager
+{% endblock %}
+
 {% block content %}
 
-    <h3 class="text-info">Admin Manager</h3>
+    <h3 class="text-info">List Manager</h3>
 
 
 
     <h3 class="text-info">Stains</h3>
     <p>
-    <a href="{{ path('stainlist') }}">List Stains</a>
+    <a href="{{ path('stain-list') }}">List of Stains</a>
     </p>
     <p>
         <a href="{{ path('generate_stain') }}">Generate Stains</a>
@@ -18,7 +22,7 @@
 
     <h3 class="text-info">Organs</h3>
     <p>
-    <a href="{{ path('organlist') }}">List  Organs</a>
+    <a href="{{ path('organ-list') }}">List of Organs</a>
     </p>
     <p>
         <a href="{{ path('generate_organ') }}">Generate Organs</a>
@@ -29,7 +33,7 @@
 
     <h3 class="text-info">Procedures</h3>
     <p>
-        <a href="{{ path('procedurelist') }}">List  Procedures</a>
+        <a href="{{ path('procedure-list') }}">List of Procedures</a>
     </p>
     <p>
         <a href="{{ path('generate_procedure') }}">Generate Procedures</a>
@@ -40,7 +44,7 @@
 
     <h3 class="text-info">Pathology Services</h3>
     <p>
-        <a href="{{ path('pathservicelist') }}">List  Pathology Services</a>
+        <a href="{{ path('pathservice-list') }}">List of Pathology Services</a>
     </p>
     <p>
         <a href="{{ path('generate_pathservice') }}">Generate Pathology Services</a>
@@ -48,9 +52,9 @@
 
     <br>
 
-    <h3 class="text-info">SlideTypes</h3>
+    <h3 class="text-info">Slide Types</h3>
     <p>
-        <a href="{{ path('slidetype') }}">List Slide Types</a>
+        <a href="{{ path('slidetype-list') }}">List of Slide Types</a>
     </p>
     <p>
         <a href="{{ path('generate_slidetype') }}">Generate Slide Types</a>
@@ -58,9 +62,9 @@
 
     <br>
     
-    <h3 class="text-info">MrnTypes</h3>
+    <h3 class="text-info">Mrn Types</h3>
     <p>
-        <a href="{{ path('mrntype') }}">List Mrn Types</a>
+        <a href="{{ path('mrntype-list') }}">List of Mrn Types</a>
     </p>
     <p>
         <a href="{{ path('generate_mrntype') }}">Generate Mrn Types</a>
@@ -70,56 +74,56 @@
 
     <h3 class="text-info">Form Types</h3>
     <p>
-        <a href="{{ path('formtype') }}">List Form Types</a>
+        <a href="{{ path('formtype-list') }}">List of Form Types</a>
     </p>
 
     <br>
 
     <h3 class="text-info">Accession Types</h3>
     <p>
-        <a href="{{ path('accessiontype') }}">List Accession Types</a>
+        <a href="{{ path('accessiontype-list') }}">List of Accession Types</a>
     </p>
 
     <br>
 
     <h3 class="text-info">Return Slide To</h3>
     <p>
-        <a href="{{ path('returnslideto') }}">List of Return Slide To</a>
+        <a href="{{ path('returnslideto-list') }}">List of Return Slide To Options</a>
     </p>
 
     <br>
 
     <h3 class="text-info">Slide Delivery</h3>
     <p>
-        <a href="{{ path('slidedelivery') }}">List of Slide Delivery</a>
+        <a href="{{ path('slidedelivery-list') }}">List of Slide Delivery Options</a>
     </p>
 
     <br>
 
     <h3 class="text-info">Region To Scan</h3>
     <p>
-        <a href="{{ path('regiontoscan') }}">Region To Scan</a>
+        <a href="{{ path('regiontoscan-list') }}">List of Region To Scan Options</a>
     </p>
 
     <br>
 
     <h3 class="text-info">Processor Comments</h3>
     <p>
-        <a href="{{ path('processorcomments') }}">Processor Comments</a>
+        <a href="{{ path('processorcomment-list') }}">List of Processor Comments</a>
     </p>
 
     <hr>
 
     <h3 class="text-info">Statuses</h3>
     <p>
-        <a href="{{ path('status') }}">Statuses (will be attached to OrderInfo)</a>
+        <a href="{{ path('status-list') }}">List of Statuses (will be attached to OrderInfo)</a>
     </p>
 
     <hr>
 
     <h3 class="text-info">Roles</h3>
     <p>
-        <a href="{{ path('roles') }}">Roles</a>
+        <a href="{{ path('role-list') }}">List of Roles</a>
     </p>
 
     <hr>

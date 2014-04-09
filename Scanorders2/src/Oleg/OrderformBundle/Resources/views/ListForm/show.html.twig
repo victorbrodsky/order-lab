@@ -3,13 +3,15 @@
 {% import "OlegOrderformBundle::ListForm/listmacros.html.twig" as listmacros %}
 
 {% block title %}
-    {{ type|capitalize }} Show
+    {{ displayName }}: ID {{ entity.id }} | Show
 {% endblock %}
 
 {% block content %}
 
-    <h3 class="text-info">{{ type|capitalize }} Show</h3>
+    <h3 class="text-info">{{ displayName }}: ID {{ entity.id }}</h3>
 
-    {{ listmacros.listEdit( edit_form, delete_form, type, 'show' ) }}
+    <br />
+
+    {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'show' ) }}
 
 {% endblock %}

@@ -16,13 +16,13 @@ class OrganList extends ListAbstract
     /**
      * @ORM\OneToMany(targetEntity="OrganList", mappedBy="original")
      **/
-    private $synonyms;
+    protected $synonyms;
 
     /**
      * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
-    private $original;
+    protected $original;
 
     /**
      * @ORM\OneToMany(targetEntity="PartSourceOrgan", mappedBy="field")

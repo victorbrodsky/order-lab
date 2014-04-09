@@ -15,13 +15,13 @@ class PathServiceList extends ListAbstract
     /**
      * @ORM\OneToMany(targetEntity="PathServiceList", mappedBy="original")
      **/
-    private $synonyms;
+    protected $synonyms;
 
     /**
      * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
-    private $original;
+    protected $original;
 
     /**
      * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="pathologyService")

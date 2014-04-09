@@ -113,6 +113,8 @@ class OrderUtil {
                 $link = '<a href="'.$url.'">order '.$id.'</a>';
                 $notemsg = 'This order is an old superseded version of '.$link;
                 $history->setNote($notemsg);
+            } else {
+                throw new \Exception( 'Object does not have a valid router to create a link to an old superseded order.' );
             }
 
             $em->persist($entity);

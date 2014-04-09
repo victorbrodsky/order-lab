@@ -3,13 +3,24 @@
 {% import "OlegOrderformBundle::ListForm/listmacros.html.twig" as listmacros %}
 
 {% block title %}
-    {{ type|capitalize }} New
+    {{ displayName }} | New
 {% endblock %}
 
 {% block content %}
 
-    <h3 class="text-info">{{ type|capitalize }} New</h3>
+    <h3 class="text-info">{{ displayName }} New</h3>
 
-    {{ listmacros.listNew( form, type ) }}
+    <br />
 
+    {{ listmacros.listNew( form, pathbase ) }}
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/form/js/listForm.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

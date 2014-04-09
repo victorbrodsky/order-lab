@@ -30,14 +30,22 @@ class ListType extends AbstractType
             'label'=>'Name:',
             'attr' => array('class'=>'form-control')
         ));
-        $builder->add('type',null,array(
+        $builder->add('type','choice',array(
             'label'=>'Type:',
-            'attr' => array('class'=>'form-control')
+            'choices' => array(
+                "default"=>"default",
+                "user-added"=>"user-added",
+                "disabled"=>"disabled",
+                "draft"=>"draft"
+            ),
+            'required' => true,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width select2-list-type')
         ));
         $builder->add('creator',null,array(
             'label'=>'Creator:',
             'required'=>true,
-            'attr' => array('class'=>'combobox combobox-width')
+            'attr' => array('class'=>'combobox combobox-width select2-list-creator')
         ));
 
         $builder->add( 'createdate', 'date', array(

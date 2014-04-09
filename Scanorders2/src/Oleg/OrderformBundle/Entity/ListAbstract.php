@@ -11,6 +11,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\MappedSuperclass
@@ -44,13 +45,25 @@ abstract class ListAbstract
      */
     protected $creator;
 
-
     /**
      * @var \DateTime
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="createdate", type="datetime")
      * @Assert\NotBlank
      */
     protected $createdate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id")
+     */
+    protected $updatedby;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updatedon", type="datetime")
+     * @Assert\NotBlank
+     */
+    protected $updatedon;
 
     /**
      * Indicates the order in the list
@@ -183,5 +196,51 @@ abstract class ListAbstract
     {
         return $this->name."";
     }
+
+    /**
+     * @param mixed $updatedby
+     */
+    public function setUpdatedby($updatedby)
+    {
+        $this->updatedby = $updatedby;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedby()
+    {
+        return $this->updatedby;
+    }
+
+    /**
+     * @param \DateTime $updatedon
+     */
+    public function setUpdatedon($updatedon)
+    {
+        $this->updatedon = $updatedon;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedon()
+    {
+        return $this->updatedon;
+    }
+
+
+    //for entity with synonyms
+    public function setSynonyms(\Oleg\OrderformBundle\Entity\StainList $synonyms = null) {
+        $newsynonyms = new ArrayCollection();
+        if( $synonyms ) {
+            $newsynonyms->add($synonyms);
+            $this->synonyms = $newsynonyms;
+        } else {
+            $this->synonyms = $newsynonyms;
+        }
+        return $this;
+    }
+
 
 }

@@ -141,7 +141,6 @@ class OrderInfoType extends AbstractType
             'attr' => $attr,
         ));
 
-        //TODO: fix it:
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegOrderformBundle:User',
             'label'=>'Ordering Provider:',

@@ -349,6 +349,8 @@ class AdminController extends Controller
             $stainList->setCreatedate( new \DateTime() );
             $stainList->setName( trim($stain) );
             $stainList->setType('default');
+            $stainList->setUpdatedby($username);
+            $stainList->setUpdatedon(new \DateTime());
 
             $em->persist($stainList);
             $em->flush();
@@ -383,6 +385,8 @@ class AdminController extends Controller
             $list->setCreatedate( new \DateTime() );
             $list->setName( trim($organ) );
             $list->setType('default');
+            $list->setUpdatedby($username);
+            $list->setUpdatedon(new \DateTime());
 
             $em->persist($list);
             $em->flush();
@@ -418,6 +422,8 @@ class AdminController extends Controller
             $list->setCreatedate( new \DateTime() );
             $list->setName( trim($procedure) );
             $list->setType('default');
+            $list->setUpdatedby($username);
+            $list->setUpdatedon(new \DateTime());
 
             $em->persist($list);
             $em->flush();
@@ -502,6 +508,8 @@ class AdminController extends Controller
             $status->setCreator( $username );
             $status->setCreatedate( new \DateTime() );
             $status->setType('default');
+            $status->setUpdatedby($username);
+            $status->setUpdatedon(new \DateTime());
 
             $em->persist($status);
             $em->flush();
@@ -545,6 +553,8 @@ class AdminController extends Controller
                     $list->setCreatedate( new \DateTime() );
                     $list->setName( trim($pathlogyService) );
                     $list->setType('default');
+                    $list->setUpdatedby($username);
+                    $list->setUpdatedon(new \DateTime());
 
                     $em->persist($list);
                     $em->flush();
@@ -582,6 +592,8 @@ class AdminController extends Controller
             $slideType->setCreator( $username );
             $slideType->setCreatedate( new \DateTime() );
             $slideType->setName( trim($type) );
+            $slideType->setUpdatedby($username);
+            $slideType->setUpdatedon(new \DateTime());
 
             if( $type == "TMA" ) {
                 $slideType->setType('TMA');
@@ -635,6 +647,9 @@ class AdminController extends Controller
             $mrnType->setCreatedate( new \DateTime() );
             $mrnType->setName( trim($type) );
             $mrnType->setType('default');
+            $mrnType->setUpdatedby($username);
+            $mrnType->setUpdatedon(new \DateTime());
+
             $em->persist($mrnType);
             $em->flush();
 
@@ -669,6 +684,9 @@ class AdminController extends Controller
             $formType->setCreatedate( new \DateTime() );
             $formType->setName( trim($type) );
             $formType->setType('default');
+            $formType->setUpdatedby($username);
+            $formType->setUpdatedon(new \DateTime());
+
             $em->persist($formType);
             $em->flush();
             $count = $count + 10;
@@ -709,6 +727,8 @@ class AdminController extends Controller
             $accType->setCreator( $username );
             $accType->setCreatedate( new \DateTime() );
             $accType->setName( trim($type) );
+            $accType->setUpdatedby($username);
+            $accType->setUpdatedon(new \DateTime());
 
             if( $type == "TMA Slide" ) {
                 $accType->setType('TMA');
@@ -778,8 +798,9 @@ class AdminController extends Controller
             $entity->setCreatedate( new \DateTime() );
             $entity->setName( trim($role) );
             $entity->setAlias( trim($alias) );
-
             $entity->setType('default');
+            $entity->setUpdatedby($username);
+            $entity->setUpdatedon(new \DateTime());
 
             $em->persist($entity);
             $em->flush();
@@ -816,6 +837,9 @@ class AdminController extends Controller
             $listEntity->setCreatedate( new \DateTime() );
             $listEntity->setName( trim($type) );
             $listEntity->setType('default');
+            $listEntity->setUpdatedby($username);
+            $listEntity->setUpdatedon(new \DateTime());
+
             $em->persist($listEntity);
             $em->flush();
 
@@ -858,6 +882,9 @@ class AdminController extends Controller
             $listEntity->setCreatedate( new \DateTime() );
             $listEntity->setName( trim($type) );
             $listEntity->setType('default');
+            $listEntity->setUpdatedby($username);
+            $listEntity->setUpdatedon(new \DateTime());
+
             $em->persist($listEntity);
             $em->flush();
 
@@ -895,6 +922,9 @@ class AdminController extends Controller
             $listEntity->setCreatedate( new \DateTime() );
             $listEntity->setName( trim($type) );
             $listEntity->setType('default');
+            $listEntity->setUpdatedby($username);
+            $listEntity->setUpdatedon(new \DateTime());
+
             $em->persist($listEntity);
             $em->flush();
 
@@ -960,6 +990,9 @@ class AdminController extends Controller
             $listEntity->setCreatedate( new \DateTime() );
             $listEntity->setName( trim($type) );
             $listEntity->setType('default');
+            $listEntity->setUpdatedby($username);
+            $listEntity->setUpdatedon(new \DateTime());
+
             $em->persist($listEntity);
             $em->flush();
 

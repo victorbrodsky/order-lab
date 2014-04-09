@@ -16,13 +16,13 @@ class StainList extends ListAbstract
     /**
      * @ORM\OneToMany(targetEntity="StainList", mappedBy="original")
      **/
-    private $synonyms;
+    protected $synonyms;
 
     /**
      * @ORM\ManyToOne(targetEntity="StainList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
-    private $original;
+    protected $original;
 
     /**
      * @ORM\OneToMany(targetEntity="Stain", mappedBy="field")
@@ -75,6 +75,17 @@ class StainList extends ListAbstract
     {
         return $this->synonyms;
     }
+
+//    public function setSynonyms(\Oleg\OrderformBundle\Entity\StainList $synonyms = null) {
+//        $newsynonyms = new ArrayCollection();
+//        if( $synonyms ) {
+//            $newsynonyms->add($synonyms);
+//            $this->synonyms = $newsynonyms;
+//        } else {
+//            $this->synonyms = $newsynonyms;
+//        }
+//        return $this;
+//    }
 
     /**
      * Set original

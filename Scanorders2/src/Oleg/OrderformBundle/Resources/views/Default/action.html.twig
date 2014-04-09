@@ -48,7 +48,7 @@
                 </li>
             {% endif %}
 
-            {% if Submitted and not Superseded and not Canceled and not Filled %}
+            {% if Submitted or Amended and not Superseded and not Canceled and not Filled %}
                 <li><a data-confirm="Are you sure you want to change status to Amend?"
                        class="action-amend-status"
                        href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>

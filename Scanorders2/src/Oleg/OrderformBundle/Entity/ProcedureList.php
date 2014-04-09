@@ -15,13 +15,13 @@ class ProcedureList extends ListAbstract
     /**
      * @ORM\OneToMany(targetEntity="ProcedureList", mappedBy="original")
      **/
-    private $synonyms;
+    protected $synonyms;
 
     /**
      * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
-    private $original;
+    protected $original;
 
     /**
      * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="field")

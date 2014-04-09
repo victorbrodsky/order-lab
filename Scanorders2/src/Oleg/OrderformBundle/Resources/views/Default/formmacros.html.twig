@@ -243,8 +243,13 @@
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
             {% else %}
+                {% if 'by' in form.vars.value.status.name|lower %}
+                    {% set performed = 'performed ' %}
+                {% else %}
+                    {% set performed = '' %}
+                {% endif %}
                 <p>
-                    This order has been {{ form.vars.value.status.name|lower }} by {{ histories|first.provider }}
+                    This order has been {{ form.vars.value.status.name|lower }} {{performed}}by {{ histories|first.provider }}
                     on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
                 </p>
             {% endif %}

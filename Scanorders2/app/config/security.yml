@@ -75,6 +75,8 @@ security:
 
      - { path: ^/admin/genall, role: ROLE_ADMIN }
      - { path: ^/users/generate, role: ROLE_ADMIN }
+     - { path: ^/users/new, role: ROLE_ADMIN }
+     - { path: ^/users/index, role: ROLE_PROCESSOR }
 
      - { path: ^/admin/, role: ROLE_PROCESSOR }
      - { path: ^/incoming-scan-orders, role: ROLE_PROCESSOR }
@@ -82,9 +84,8 @@ security:
      - { path: ^/incoming-scan-orders, role: ROLE_PROCESSOR }
      - { path: ^/access-requests, role: ROLE_PROCESSOR }
      - { path: ^/account-requests, role: ROLE_PROCESSOR }
-     - { path: ^/listusers, role: ROLE_PROCESSOR }
      - { path: ^/event-log, role: ROLE_PROCESSOR }
-     - { path: ^/users/new, role: ROLE_PROCESSOR }
+     - { path: ^/edit-user-profile/, role: [ROLE_PROCESSOR] }
 
      - { path: ^/util/pathservice, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/util/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }

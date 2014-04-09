@@ -19,7 +19,7 @@ PROJECT_LOCAL_PATH=.
 ##### Functions #####
 function prep()
 {
-    echo "Preparing for Dev Deploy..."
+    echo "Preparing for Deploy..."
 
     #for production: git remote update, git pull
     #echo "*** Pull code from git repository ***"
@@ -32,11 +32,27 @@ function prep()
     echo "*** Install assets ***"
     php $PROJECT_LOCAL_PATH/app/console assets:install
 
+
+
+    echo "********* Prepare development/testing *********"
+
     echo "*** Clear cache ***"
     php $PROJECT_LOCAL_PATH/app/console cache:clear --no-warmup
 
     echo "*** Dump assets ***"
     php $PROJECT_LOCAL_PATH/app/console assetic:dump
+
+
+
+    echo "********* Prepare production *********"
+
+    echo "*** Clear cache ***"
+    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
+    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
+
+    echo "*** Dump assets for production***"
+    php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug
+
 }
 
 

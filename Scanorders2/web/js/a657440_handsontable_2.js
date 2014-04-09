@@ -74,22 +74,22 @@ $(document).ready(function() {
     var tabWidth = $('#multi-dataTable').width();
     console.log('tabWidth width='+tabWidth);
 
-    $(".div1").width(tabWidth);
-    $(".div2").width(tabWidth);
-
-    tabWidth = tabWidth-100;
-
-    $(".wrapper1").width(tabWidth);
-    $(".wrapper2").width(tabWidth);
-
-    $(".wrapper1").scroll(function(){
-        $(".wrapper2")
-            .scrollLeft($(".wrapper1").scrollLeft());
-    });
-    $(".wrapper2").scroll(function(){
-        $(".wrapper1")
-            .scrollLeft($(".wrapper2").scrollLeft());
-    });
+//    $(".div1").width(tabWidth);
+//    $(".div2").width(tabWidth);
+//
+//    tabWidth = tabWidth-tabWidth/1.2;
+//
+//    $(".wrapper1").width(tabWidth);
+//    $(".wrapper2").width(tabWidth);
+//
+//    $(".wrapper1").scroll(function(){
+//        $(".wrapper2")
+//            .scrollLeft($(".wrapper1").scrollLeft());
+//    });
+//    $(".wrapper2").scroll(function(){
+//        $(".wrapper1")
+//            .scrollLeft($(".wrapper2").scrollLeft());
+//    });
 
 
 });

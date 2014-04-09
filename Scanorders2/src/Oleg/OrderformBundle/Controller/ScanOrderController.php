@@ -277,6 +277,12 @@ class ScanOrderController extends Controller {
                 }
                 $crituser .= "research.principal=".$user->getId();
             }
+            if( $service == "Where I am the Amendment Author" ) {
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "history.provider=".$user->getId()." AND history.eventtype='Amended Order Submission'";
+            }
 
             if( $criteriastr != "" && $crituser != "" ) {
                 $criteriastr = $criteriastr." AND ".$crituser;

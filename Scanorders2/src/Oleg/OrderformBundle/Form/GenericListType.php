@@ -25,7 +25,6 @@ class GenericListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $classEntity = "Oleg\\OrderformBundle\\Entity\\".$this->className;
-        $attr = array('class' => 'combobox combobox-width');
 
         if( $this->className == "Status" ) {
             $builder
@@ -46,10 +45,10 @@ class GenericListType extends AbstractType
         if( array_key_exists('synonyms', $this->params)) {
             $builder
                 ->add('synonyms',null,array(
-                    'label'=>'Synonyms:',
-                    //'multiple' => false,
+                    'label'=>'Synonym:',
+                    'multiple' => false,
                     'required' => false,
-                    'attr' => array('class' => 'combobox combobox-width')
+                    'attr' => array('class' => 'combobox combobox-width select2-list-synonyms')
                 ));
         }
 
