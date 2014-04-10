@@ -17,6 +17,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Alias', 'ent.alias') }}</th>
             {% endif %}
 
+            {% if entities|first.original is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Original', 'original.name') }}</th>
+            {% endif %}
+
             {% if entities|first.synonyms is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
             {% endif %}
@@ -25,6 +29,8 @@
             <th>{{ knp_pagination_sortable(entities, 'Order', 'ent.orderinlist') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creator', 'creator.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Creation Date', 'ent.createdate') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Updated By', 'updatedby.username') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Updated On', 'ent.updatedon') }}</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -43,14 +49,27 @@
                     <td>{{ entity.alias }}</td>
                 {% endif %}
 
+                {% if entity.original is defined %}
+                    <td>{{ entity.original }}</td>
+                {% endif %}
+
                 {% if entity.synonyms is defined %}
-                    <td>{{ entity.synonyms|first }}</td>
+                    <td>
+                        {% for synonym in entity.synonyms %}
+                            <p>{{ synonym }}</p>
+                        {% endfor %}
+                    </td>
                 {% endif %}
 
                 <td>{{ entity.type }}</td>
                 <td>{{ entity.orderinlist }}</td>
+
                 <td>{{ entity.creator }}</td>
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+
+                <td>{{ entity.updatedby }}</td>
+                <td>{% if entity.updatedon %}{{ entity.updatedon|date('Y-m-d H:i:s') }}{% endif %}</td>
+
                 <td class="rowlink-skip">
                     <a class="btn btn-xs btn-default" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>
                 </td>
@@ -80,8 +99,12 @@
 
     {{ formmacros.field(form.list.name) }}
 
-    {% if form.synonyms is defined %}
-        {{ formmacros.field(form.synonyms) }}
+    {% if form.list.original is defined %}
+        {{ formmacros.field(form.list.original) }}
+    {% endif %}
+
+    {% if form.list.synonyms is defined %}
+        {{ formmacros.field(form.list.synonyms) }}
     {% endif %}
 
     {% if form.action is defined %}
@@ -99,6 +122,11 @@
     {{ formmacros.field(form.list.createdate) }}
 
     {{ formmacros.field(form.list.orderinlist) }}
+
+    {% if form.list.updatedby is defined %}
+        {{ formmacros.field(form.list.updatedby) }}
+        {{ formmacros.field(form.list.updatedon) }}
+    {% endif %}
 
     {{ form_widget(form.submit) }}
     <a class="btn btn-info" type="button" href="{{ path(pathbase~'-list') }}">Cancel</a>
@@ -125,8 +153,12 @@
 
     {{ formmacros.field(edit_form.list.name) }}
 
-    {% if edit_form.synonyms is defined %}
-        {{ formmacros.field(edit_form.synonyms) }}
+    {% if edit_form.list.original is defined %}
+        {{ formmacros.field(edit_form.list.original) }}
+    {% endif %}
+
+    {% if edit_form.list.synonyms is defined %}
+        {{ formmacros.field(edit_form.list.synonyms) }}
     {% endif %}
 
     {% if edit_form.action is defined %}
@@ -139,15 +171,17 @@
 
     {{ formmacros.field(edit_form.list.type) }}
 
-    {{ formmacros.field(edit_form.list.creator,"readonly") }}
+    {{ formmacros.field(edit_form.list.orderinlist) }}
+
+    {{ formmacros.field(edit_form.list.creator) }}
 
     {{ formmacros.field(edit_form.list.createdate) }}
 
-    {{ formmacros.field(edit_form.list.orderinlist) }}
+    {#{% if edit_form.list.updatedby is defined %}#}
+        {{ formmacros.field(edit_form.list.updatedby) }}
+        {{ formmacros.field(edit_form.list.updatedon) }}
+    {#{% endif %}#}
 
-    {% if edit_form.list.original is defined %}
-        {{ formmacros.field(edit_form.list.original) }}
-    {% endif %}
 
     {% if edit_form.submit is defined %}
         <br />

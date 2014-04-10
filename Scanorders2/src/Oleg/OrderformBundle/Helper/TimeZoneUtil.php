@@ -10,6 +10,8 @@
 namespace Oleg\OrderformBundle\Helper;
 
 
+//Note: Timezone for twig is set in Oleg\OrderformBundle\Services/TwigDateRequestListener
+
 class TimeZoneUtil {
 
     /**

@@ -10,12 +10,10 @@ class GenericListType extends AbstractType
 {
 
     protected $params;
-    protected $className;
 
-    public function __construct( $className, $params )
+    public function __construct( $params )
     {
         $this->params = $params;
-        $this->className = $className;
     }
 
         /**
@@ -24,9 +22,9 @@ class GenericListType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $classEntity = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+        $classEntity = "Oleg\\OrderformBundle\\Entity\\".$this->params['className'];
 
-        if( $this->className == "Status" ) {
+        if( $this->params['className'] == "Status" ) {
             $builder
                 ->add('action',null,array(
                     'label'=>'Action:',
@@ -34,7 +32,7 @@ class GenericListType extends AbstractType
                 ));
         }
 
-        if( $this->className == "Roles" ) {
+        if( $this->params['className'] == "Roles" ) {
             $builder
                 ->add('alias',null,array(
                     'label'=>'Alias:',
@@ -42,17 +40,7 @@ class GenericListType extends AbstractType
                 ));
         }
 
-        if( array_key_exists('synonyms', $this->params)) {
-            $builder
-                ->add('synonyms',null,array(
-                    'label'=>'Synonym:',
-                    'multiple' => false,
-                    'required' => false,
-                    'attr' => array('class' => 'combobox combobox-width select2-list-synonyms')
-                ));
-        }
-
-        $builder->add('list', new ListType(), array(
+        $builder->add('list', new ListType($this->params), array(
             'data_class' => $classEntity,
             'label' => false
         ));
@@ -64,7 +52,7 @@ class GenericListType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => "Oleg\\OrderformBundle\\Entity\\".$this->className
+            'data_class' => "Oleg\\OrderformBundle\\Entity\\".$this->params['className']
         ));
     }
 
@@ -73,6 +61,6 @@ class GenericListType extends AbstractType
      */
     public function getName()
     {
-        return 'oleg_orderformbundle_'.strtolower($this->className);
+        return 'oleg_orderformbundle_'.strtolower($this->params['className']);
     }
 }

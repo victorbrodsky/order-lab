@@ -324,6 +324,18 @@ class AdminController extends Controller
 
 //////////////////////////////////////////////////////////////////////////////
 
+    public function setDefaultList( $entity, $count, $user, $name=null ) {
+        $entity->setOrderinlist( $count );
+        $entity->setCreator( $user );
+        $entity->setCreatedate( new \DateTime() );
+        $entity->setType('default');
+        if( $name ) {
+            $entity->setName( trim($name) );
+        }
+        return $entity;
+    }
+
+
     //return -1 if failed
     //return number of generated records
     public function generateStains() {
@@ -344,13 +356,7 @@ class AdminController extends Controller
         $count = 1;
         foreach( $stains as $stain ) {
             $stainList = new StainList();
-            $stainList->setOrderinlist( $count );
-            $stainList->setCreator( $username );
-            $stainList->setCreatedate( new \DateTime() );
-            $stainList->setName( trim($stain) );
-            $stainList->setType('default');
-            $stainList->setUpdatedby($username);
-            $stainList->setUpdatedon(new \DateTime());
+            $this->setDefaultList($stainList,$count,$username,$stain);
 
             $em->persist($stainList);
             $em->flush();
@@ -380,13 +386,7 @@ class AdminController extends Controller
         foreach( $organs as $organ ) {
 
             $list = new OrganList();
-            $list->setOrderinlist( $count );
-            $list->setCreator( $username );
-            $list->setCreatedate( new \DateTime() );
-            $list->setName( trim($organ) );
-            $list->setType('default');
-            $list->setUpdatedby($username);
-            $list->setUpdatedon(new \DateTime());
+            $this->setDefaultList($list,$count,$username,$organ);
 
             $em->persist($list);
             $em->flush();
@@ -417,13 +417,7 @@ class AdminController extends Controller
         foreach( $procedures as $procedure ) {
 
             $list = new ProcedureList();
-            $list->setOrderinlist( $count );
-            $list->setCreator( $username );
-            $list->setCreatedate( new \DateTime() );
-            $list->setName( trim($procedure) );
-            $list->setType('default');
-            $list->setUpdatedby($username);
-            $list->setUpdatedon(new \DateTime());
+            $this->setDefaultList($list,$count,$username,$procedure);
 
             $em->persist($list);
             $em->flush();
@@ -458,6 +452,7 @@ class AdminController extends Controller
         foreach( $statuses as $statusStr ) {
 
             $status = new Status();
+            $this->setDefaultList($status,$count,$username,null);
 
             //Regular
             switch( $statusStr )
@@ -504,13 +499,6 @@ class AdminController extends Controller
                 $status->setAction($statusStr);
             }
 
-            $status->setOrderinlist( $count );
-            $status->setCreator( $username );
-            $status->setCreatedate( new \DateTime() );
-            $status->setType('default');
-            $status->setUpdatedby($username);
-            $status->setUpdatedon(new \DateTime());
-
             $em->persist($status);
             $em->flush();
 
@@ -548,13 +536,7 @@ class AdminController extends Controller
                 } else {
                     //echo " ".$pathlogyService.", ";
                     $list = new PathServiceList();
-                    $list->setOrderinlist( $count );
-                    $list->setCreator( $username );
-                    $list->setCreatedate( new \DateTime() );
-                    $list->setName( trim($pathlogyService) );
-                    $list->setType('default');
-                    $list->setUpdatedby($username);
-                    $list->setUpdatedon(new \DateTime());
+                    $this->setDefaultList($list,$count,$username,$pathlogyService);
 
                     $em->persist($list);
                     $em->flush();
@@ -588,17 +570,10 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $slideType = new SlideType();
-            $slideType->setOrderinlist( $count );
-            $slideType->setCreator( $username );
-            $slideType->setCreatedate( new \DateTime() );
-            $slideType->setName( trim($type) );
-            $slideType->setUpdatedby($username);
-            $slideType->setUpdatedon(new \DateTime());
+            $this->setDefaultList($slideType,$count,$username,$type);
 
             if( $type == "TMA" ) {
                 $slideType->setType('TMA');
-            } else {
-                $slideType->setType('default');
             }
 
             $em->persist($slideType);
@@ -642,13 +617,7 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $mrnType = new MrnType();
-            $mrnType->setOrderinlist( $count );
-            $mrnType->setCreator( $username );
-            $mrnType->setCreatedate( new \DateTime() );
-            $mrnType->setName( trim($type) );
-            $mrnType->setType('default');
-            $mrnType->setUpdatedby($username);
-            $mrnType->setUpdatedon(new \DateTime());
+            $this->setDefaultList($mrnType,$count,$username,$type);
 
             $em->persist($mrnType);
             $em->flush();
@@ -679,13 +648,7 @@ class AdminController extends Controller
         $count = 1;
         foreach( $types as $type ) {
             $formType = new FormType();
-            $formType->setOrderinlist( $count );
-            $formType->setCreator( $username );
-            $formType->setCreatedate( new \DateTime() );
-            $formType->setName( trim($type) );
-            $formType->setType('default');
-            $formType->setUpdatedby($username);
-            $formType->setUpdatedon(new \DateTime());
+            $this->setDefaultList($formType,$count,$username,$type);
 
             $em->persist($formType);
             $em->flush();
@@ -723,17 +686,10 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $accType = new AccessionType();
-            $accType->setOrderinlist( $count );
-            $accType->setCreator( $username );
-            $accType->setCreatedate( new \DateTime() );
-            $accType->setName( trim($type) );
-            $accType->setUpdatedby($username);
-            $accType->setUpdatedon(new \DateTime());
+            $this->setDefaultList($accType,$count,$username,$type);
 
             if( $type == "TMA Slide" ) {
                 $accType->setType('TMA');
-            } else {
-                $accType->setType('default');
             }
 
             $em->persist($accType);
@@ -793,14 +749,9 @@ class AdminController extends Controller
         foreach( $types as $role => $alias ) {
 
             $entity = new Roles();
-            $entity->setOrderinlist( $count );
-            $entity->setCreator( $username );
-            $entity->setCreatedate( new \DateTime() );
+            $this->setDefaultList($entity,$count,$username,null);
             $entity->setName( trim($role) );
             $entity->setAlias( trim($alias) );
-            $entity->setType('default');
-            $entity->setUpdatedby($username);
-            $entity->setUpdatedon(new \DateTime());
 
             $em->persist($entity);
             $em->flush();
@@ -832,13 +783,7 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new ReturnSlideTo();
-            $listEntity->setOrderinlist( $count );
-            $listEntity->setCreator( $username );
-            $listEntity->setCreatedate( new \DateTime() );
-            $listEntity->setName( trim($type) );
-            $listEntity->setType('default');
-            $listEntity->setUpdatedby($username);
-            $listEntity->setUpdatedon(new \DateTime());
+            $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
             $em->flush();
@@ -877,13 +822,7 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new SlideDelivery();
-            $listEntity->setOrderinlist( $count );
-            $listEntity->setCreator( $username );
-            $listEntity->setCreatedate( new \DateTime() );
-            $listEntity->setName( trim($type) );
-            $listEntity->setType('default');
-            $listEntity->setUpdatedby($username);
-            $listEntity->setUpdatedon(new \DateTime());
+            $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
             $em->flush();
@@ -917,13 +856,7 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new RegionToScan();
-            $listEntity->setOrderinlist( $count );
-            $listEntity->setCreator( $username );
-            $listEntity->setCreatedate( new \DateTime() );
-            $listEntity->setName( trim($type) );
-            $listEntity->setType('default');
-            $listEntity->setUpdatedby($username);
-            $listEntity->setUpdatedon(new \DateTime());
+            $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
             $em->flush();
@@ -985,13 +918,7 @@ class AdminController extends Controller
         foreach( $types as $type ) {
 
             $listEntity = new ProcessorComments();
-            $listEntity->setOrderinlist( $count );
-            $listEntity->setCreator( $username );
-            $listEntity->setCreatedate( new \DateTime() );
-            $listEntity->setName( trim($type) );
-            $listEntity->setType('default');
-            $listEntity->setUpdatedby($username);
-            $listEntity->setUpdatedon(new \DateTime());
+            $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);
             $em->flush();
@@ -1001,5 +928,6 @@ class AdminController extends Controller
 
         return $count;
     }
+
 
 }

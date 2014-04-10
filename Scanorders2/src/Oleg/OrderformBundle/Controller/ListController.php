@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\OrderformBundle\Form\GenericListType;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
@@ -58,9 +59,11 @@ class ListController extends Controller
         $dql->select('ent');
         $dql->groupBy('ent');
 
-        $dql->addGroupBy('creator.username');
-
         $dql->innerJoin("ent.creator", "creator");
+        $dql->leftJoin("ent.updatedby", "updatedby");
+
+        $dql->addGroupBy('creator.username');
+        $dql->addGroupBy('updatedby.username');
 
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$mapper['className'];
 
@@ -127,7 +130,11 @@ class ListController extends Controller
 
         $entity = new $entityClass();
 
-        $form = $this->createCreateForm($entity,$pathbase);
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $entity->setUpdatedby($user);
+//        $entity->setUpdatedon(new \DateTime());
+
+        $form = $this->createCreateForm($entity,$pathbase,'new');
         $form->handleRequest($request);
 
 //        $errorHelper = new ErrorHelper();
@@ -135,13 +142,15 @@ class ListController extends Controller
 //        echo "<br>form errors:<br>";
 //        print_r($errors);
 //        exit();
+//        var_dump($form->getErrorsAsString());
+//        echo "<br>";
+//        var_dump($form->getErrors());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $user = $this->get('security.context')->getToken()->getUser();
-            $entity->setUpdatedby($user);
-            $entity->setUpdatedon(new \DateTime());
+            //the date from the form does not contain time, so set createdate with date and time.
+            $entity->setCreatedate(new \DateTime());
 
             $em->persist($entity);
             $em->flush();
@@ -162,12 +171,14 @@ class ListController extends Controller
     * @param $entity The entity
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm($entity,$pathbase)
+    private function createCreateForm($entity,$pathbase,$cicle=null)
     {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
         $options = array();
+
+        $options['className'] = $className;
 
         if( method_exists($entity,'getOriginal') ) {
             $options['original'] = true;
@@ -177,7 +188,15 @@ class ListController extends Controller
             $options['synonyms'] = true;
         }
 
-        $newForm = new GenericListType($className, $options);
+        if( $cicle ) {
+            $options['cicle'] = $cicle;
+        }
+
+        //use $timezone = $user->getTimezone(); ?
+        $user = $this->get('security.context')->getToken()->getUser();
+        $options['user'] = $user;
+
+        $newForm = new GenericListType($options);
 
         $form = $this->createForm($newForm, $entity, array(
             'action' => $this->generateUrl($pathbase.'_create'),
@@ -229,12 +248,16 @@ class ListController extends Controller
         $entity->setType('user-added');
         $entity->setCreator($user);
 
-        $entity->setUpdatedby($user);
-        $entity->setUpdatedon(new \DateTime());
+        //$entity->setUpdatedby($user);
+        //$entity->setUpdatedon(new \DateTime());
 
-        //TODO: set the latest orderinlist value to max+10
+        //get max orderinlist + 10
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:'.$mapper['className'].' c');
+        $nextorder = $query->getSingleResult()['maxorderinlist']+10;
+        $entity->setOrderinlist($nextorder);
 
-        $form   = $this->createCreateForm($entity,$pathbase);
+        $form   = $this->createCreateForm($entity,$pathbase,'new');
 
         return array(
             'entity' => $entity,
@@ -278,7 +301,7 @@ class ListController extends Controller
         $mapper= $this->classListMapper($pathbase);
 
         $entity = $em->getRepository('OlegOrderformBundle:'.$mapper['className'])->find($id);
-        $form = $this->createEditForm($entity,$pathbase,true);
+        $form = $this->createEditForm($entity,$pathbase,'edit',true);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$mapper['className'].' entity.');
@@ -333,7 +356,7 @@ class ListController extends Controller
             throw $this->createNotFoundException('Unable to find '.$mapper['className'].' entity.');
         }
 
-        $editForm = $this->createEditForm($entity,$pathbase);
+        $editForm = $this->createEditForm($entity,$pathbase,'edit');
         $deleteForm = $this->createDeleteForm($id,$pathbase);
 
         return array(
@@ -350,13 +373,15 @@ class ListController extends Controller
     * @param $entity The entity
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm($entity,$pathbase,$disabled=false)
+    private function createEditForm($entity,$pathbase,$cicle,$disabled=false)
     {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
         $options = array();
+
+        $options['className'] = $className;
 
         if( method_exists($entity,'getOriginal') ) {
             $options['original'] = true;
@@ -366,7 +391,15 @@ class ListController extends Controller
             $options['synonyms'] = true;
         }
 
-        $newForm = new GenericListType($className, $options);
+        if( $cicle ) {
+            $options['cicle'] = $cicle;
+        }
+
+        //use $timezone = $user->getTimezone(); ?
+        $user = $this->get('security.context')->getToken()->getUser();
+        $options['user'] = $user;
+
+        $newForm = new GenericListType($options);
 
         $form = $this->createForm($newForm, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
@@ -414,15 +447,35 @@ class ListController extends Controller
 
         $entity = $em->getRepository('OlegOrderformBundle:'.$mapper['className'])->find($id);
 
+        //save array of synonyms
+        if( method_exists($entity,'getSynonyms') ) {
+            $beforeformSynonyms = clone $entity->getSynonyms();
+        }
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$mapper['className'].' entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id,$pathbase);
-        $editForm = $this->createEditForm($entity,$pathbase);
+        $editForm = $this->createEditForm($entity,$pathbase,'edit');
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
+//        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y h:m:s');
+//        $dateStr = $transformer->transform($entity->getCreatedate());
+//        echo "date=".$dateStr."<br>";
+//        echo "creator=".$entity->getCreator()."<br>";
+//
+//        $errorHelper = new ErrorHelper();
+//        $errors = $errorHelper->getErrorMessages($editForm);
+//        echo "<br>form errors:<br>";
+//        print_r($errors);
+//        echo "<br><br>";
+//        var_dump($editForm->getErrorsAsString());
+//        echo "<br>";
+//        var_dump($editForm->getErrors());
+//        //exit();
+
+        if( $editForm->isValid() ) {
 
             //make sure to keep creator and creation date from original entity, according to the requirements (Issue#250):
             //For "Creation Date", "Creator" these variables should not be modifiable via the form even if the user unlocks these fields in the browser.
@@ -433,6 +486,20 @@ class ListController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $entity->setUpdatedby($user);
             $entity->setUpdatedon(new \DateTime());
+
+            if( method_exists($entity,'getSynonyms') ) {
+                //take care of self-referencing: remove
+                if( count($beforeformSynonyms) > count($entity->getSynonyms()) ) {
+                    foreach( $beforeformSynonyms as $syn ) {
+                        $syn->setOriginal(NULL);
+                    }
+                }
+
+                //take care of self-referencing: add
+                foreach( $entity->getSynonyms() as $syn ) {
+                    $syn->setOriginal($entity);
+                }
+            }
 
             $em->flush();
 

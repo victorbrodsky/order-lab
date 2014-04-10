@@ -13,13 +13,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProcedureList extends ListAbstract
 {
     /**
-     * @ORM\OneToMany(targetEntity="ProcedureList", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="ProcedureList", mappedBy="original",cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="synonyms",cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
 
@@ -122,4 +122,6 @@ class ProcedureList extends ListAbstract
     {
         return $this->procedure;
     }
+
+
 }

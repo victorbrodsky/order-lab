@@ -42,6 +42,7 @@ abstract class ListAbstract
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
+     * @Assert\NotBlank
      */
     protected $creator;
 
@@ -54,14 +55,13 @@ abstract class ListAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
      */
     protected $updatedby;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="updatedon", type="datetime")
-     * @Assert\NotBlank
+     * @ORM\Column(name="updatedon", type="datetime", nullable=true)
      */
     protected $updatedon;
 
@@ -71,7 +71,6 @@ abstract class ListAbstract
      * @Assert\NotBlank
      */
     protected $orderinlist;
-
 
     /**
      * Get id
@@ -87,7 +86,7 @@ abstract class ListAbstract
      * Set name
      *
      * @param string $name
-     * @return OrganList
+     * @return List
      */
     public function setName($name)
     {
@@ -110,7 +109,7 @@ abstract class ListAbstract
      * Set type
      *
      * @param string $type
-     * @return OrganList
+     * @return List
      */
     public function setType($type)
     {
@@ -133,7 +132,7 @@ abstract class ListAbstract
      * Set createdate
      *
      * @param \DateTime $createdate
-     * @return OrganList
+     * @return List
      */
     public function setCreatedate($createdate)
     {
@@ -156,7 +155,7 @@ abstract class ListAbstract
      * Set creator
      *
      * @param string $creator
-     * @return OrganList
+     * @return List
      */
     public function setCreator($creator)
     {
@@ -197,12 +196,15 @@ abstract class ListAbstract
         return $this->name."";
     }
 
+    //@ORM\PrePersist
     /**
      * @param mixed $updatedby
      */
-    public function setUpdatedby($updatedby)
+    public function setUpdatedby($user)
     {
-        $this->updatedby = $updatedby;
+        if( $user ) {
+            $this->updatedby = $user;
+        }
     }
 
     /**
@@ -213,6 +215,7 @@ abstract class ListAbstract
         return $this->updatedby;
     }
 
+    //@ORM\PrePersist
     /**
      * @param \DateTime $updatedon
      */
@@ -231,16 +234,18 @@ abstract class ListAbstract
 
 
     //for entity with synonyms
-    public function setSynonyms(\Oleg\OrderformBundle\Entity\StainList $synonyms = null) {
-        $newsynonyms = new ArrayCollection();
-        if( $synonyms ) {
-            $newsynonyms->add($synonyms);
-            $this->synonyms = $newsynonyms;
-        } else {
-            $this->synonyms = $newsynonyms;
-        }
-        return $this;
-    }
+//    public function setSynonyms($synonyms = null) {
+//        echo "set synonym=".$synonyms."<br>";
+//        exit();
+//        $newsynonyms = new ArrayCollection();
+//        if( $synonyms ) {
+//            $newsynonyms->add($synonyms);
+//            $this->synonyms = $newsynonyms;
+//        } else {
+//            $this->synonyms = $newsynonyms;
+//        }
+//        return $this;
+//    }
 
 
 }

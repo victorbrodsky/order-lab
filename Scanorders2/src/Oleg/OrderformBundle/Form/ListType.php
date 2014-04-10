@@ -5,7 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
+use Doctrine\ORM\EntityRepository;
 
 
 class ListType extends AbstractType
@@ -30,6 +30,7 @@ class ListType extends AbstractType
             'label'=>'Name:',
             'attr' => array('class'=>'form-control')
         ));
+
         $builder->add('type','choice',array(
             'label'=>'Type:',
             'choices' => array(
@@ -42,6 +43,7 @@ class ListType extends AbstractType
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width select2-list-type')
         ));
+
         $builder->add('creator',null,array(
             'label'=>'Creator:',
             'required'=>true,
@@ -51,15 +53,79 @@ class ListType extends AbstractType
         $builder->add( 'createdate', 'date', array(
             'label'=>'Creation Date:',
             'widget' => 'single_text',
-            'required'=>false,
+            'required'=>true,
             'read_only'=>true,
-            'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
+            'format' => 'MM-dd-yyyy, H:m:s',
+            'view_timezone' => $this->params['user']->getTimezone(),
+            'attr' => array('class' => 'form-control'),
         ));
 
-        if( $this->params['original'] ) {
-            $builder->add('original', null, array('attr' => array('class' => 'combobox combobox-width')));
+        if( array_key_exists('cicle', $this->params) && $this->params['cicle'] != 'new' ) {
+
+            //echo "cicle=".$this->params['cicle']."<br>";
+
+            $builder->add('updatedby',null,array(
+                'label'=>'Updated by:',
+                'required'=>false,
+                'attr' => array('class'=>'combobox combobox-width select2-list-creator')
+            ));
+
+            $builder->add( 'updatedon', 'date', array(
+                'label'=>'Updated on:',
+                'widget' => 'single_text',
+                'required'=>true,
+                'read_only'=>true,
+                'format' => 'MM-dd-yyyy, H:m:s',
+                'view_timezone' => $this->params['user']->getTimezone(),
+                'attr' => array('class' => 'form-control'),
+            ));
+        } else {
+            //echo "no update <br>";
         }
+
+        if( array_key_exists('synonyms', $this->params)) {
+//            $builder->add('synonyms',null,array(
+//                'label'=>'Synonym:',
+//                //'multiple' => false,
+//                'required' => false,
+//                'attr' => array('class' => 'combobox combobox-width select2-list-synonyms')
+//            ));
+            $builder->add('synonyms', 'entity', array(
+                'class' => 'OlegOrderformBundle:'.$this->params['className'],
+                'label'=>'Synonym:',
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where('list.type != :type')
+                        ->setParameter('type', 'default');
+                },
+            ));
+        }
+
+
+        if( array_key_exists('original', $this->params)) {
+//            $builder->add('original',null,array(
+//                'label'=>'Original:',
+//                //'multiple' => false,
+//                'required' => false,
+//                'attr' => array('class' => 'combobox combobox-width select2-list-original')
+//            ));
+            $builder->add('original', 'entity', array(
+                'class' => 'OlegOrderformBundle:'.$this->params['className'],
+                'label'=>'Original:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width select2-list-original'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where('list.type = :type')
+                        ->setParameter('type', 'default');
+                },
+            ));
+        }
+
+
 
     }
 
