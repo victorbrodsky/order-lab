@@ -448,7 +448,7 @@ class ListController extends Controller
         $entity = $em->getRepository('OlegOrderformBundle:'.$mapper['className'])->find($id);
 
         //save array of synonyms
-        if( method_exists($entity,'getSynonyms') ) {
+        if( method_exists($entity,'getSynonyms') && $entity->getSynonyms() ) {
             $beforeformSynonyms = clone $entity->getSynonyms();
         }
 

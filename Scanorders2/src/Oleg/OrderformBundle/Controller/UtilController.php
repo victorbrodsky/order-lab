@@ -28,20 +28,31 @@ class UtilController extends Controller {
     public function getStainsAction() {
         
         $em = $this->getDoctrine()->getManager();
+        //$addwhere = "";
 
         $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
         //echo "opt=".$opt."<br>";
 
+//        if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ||
+//            $this->get('security.context')->isGranted('ROLE_SERVICE_CHIEF')
+//        ) {
+//            $addwhere = " OR list.type = 'user-added' ";
+//        }
+
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:StainList', 'stain')
-            ->select("stain.id as id, stain.name as text")
-            ->orderBy("stain.orderinlist","ASC"); //ASC DESC
+            ->from('OlegOrderformBundle:StainList', 'list')
+            ->select("list.id as id, list.name as text")
+            //->where("list.type = 'default' OR list.creator = ".$user." ".$addwhere)
+            ->orderBy("list.orderinlist","ASC"); //ASC DESC
 
         if( $opt ) {
-            $query->where('stain.type = :type')->setParameter('type', 'default');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
+
+        //echo "query=".$query." ";
 
         $output = $query->getQuery()->getResult();
 
@@ -73,13 +84,17 @@ class UtilController extends Controller {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:ProcedureList', 'e')
-            ->select("e.id as id, e.name as text")
-            ->orderBy("e.orderinlist","ASC");
+            ->from('OlegOrderformBundle:ProcedureList', 'list')
+            ->select("list.id as id, list.name as text")
+            //->where("list.creator = ".$user)
+            ->orderBy("list.orderinlist","ASC");
 
         if( $opt ) {
-            $query->where('e.type = :type')->setParameter('type', 'default');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
+
+        //echo "query=".$query." ";
 
         $output = $query->getQuery()->getResult();
 
@@ -110,12 +125,13 @@ class UtilController extends Controller {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrganList', 'e')
-            ->select("e.id as id, e.name as text")
-            ->orderBy("e.orderinlist","ASC");
+            ->from('OlegOrderformBundle:OrganList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
 
         if( $opt ) {
-            $query->where('e.type = :type')->setParameter('type', 'default');
+            $user = $this->get('security.context')->getToken()->getUser();
+            $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
 
         $output = $query->getQuery()->getResult();
@@ -140,21 +156,25 @@ class UtilController extends Controller {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:PathServiceList', 'e')
-            ->select("e.id as id, e.name as text")
-            ->orderBy("e.orderinlist","ASC");
+            ->from('OlegOrderformBundle:PathServiceList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         if( $opt == 'default' ) {
-            $query->where('e.type = :type')->setParameter('type', 'default');
+            //$query->where('list.type = :type ')->setParameter('type', 'default');
+            $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         } else {
             //find user's pathservices to include them in the list
             $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($opt);
             $getPathologyServices = $user->getPathologyServices();
 
             foreach( $getPathologyServices as $serviceId ) {
-                $whereServicesList = $whereServicesList . " OR e.id=".$serviceId->getId();
+                $whereServicesList = $whereServicesList . " OR list.id=".$serviceId->getId();
             }
-            $query->where('e.type = :type OR e.creator = :user_id ' . $whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
+            //$query->where('list.type = :type OR list.creator = :user_id ' . $whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
+            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user_id) ".$whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
         }
 
         $output = $query->getQuery()->getResult();
@@ -180,8 +200,18 @@ class UtilController extends Controller {
 
         $arr = array();
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findByType('default');
+
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:RegionToScan', 'list')
+//            //->select("list.id as id, list.name as text")
+//            ->select("list")
+//            ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
+//            ->orderBy("list.orderinlist","ASC");
+//        $entities = $query->getQuery()->getResult();
 
         foreach( $entities as $entity ) {
             $arr[] = $entity."";
@@ -203,6 +233,26 @@ class UtilController extends Controller {
             if( $orderinfo ) {
                 $slides = $orderinfo->getSlide();
                 foreach( $slides as $slide ) {
+                    $arr[] = $slide->getScan()->first()->getScanregion();
+                }
+            }
+        }
+
+        //add custom added values from all my orders
+        $user = $this->get('security.context')->getToken()->getUser();
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:OrderInfo', 'list')
+            //->select("list.id as id, list.name as text")
+            ->select("list")
+            ->innerJoin("list.provider","provider")
+            ->where("provider = :user")->setParameter('user',$user);
+            //->orderBy("list.orderinlist","ASC");
+        $myOrders = $query->getQuery()->getResult();
+        foreach( $myOrders as $myorder ) {
+            if( $myorder ) {
+                $slides = $myorder->getSlide();
+                foreach( $slides as $slide ) {
+                    //TODO: add if not exists
                     $arr[] = $slide->getScan()->first()->getScanregion();
                 }
             }
@@ -234,7 +284,7 @@ class UtilController extends Controller {
         $arr = array();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findAll();
+        $entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findByType('default');
 
         foreach( $entities as $entity ) {
             $arr[] = $entity."";
@@ -270,14 +320,36 @@ class UtilController extends Controller {
      * @Route("/return", name="get-returnslide")
      * @Method("GET")
      */
-    public function getReturnSlideAction() {
+    public function getReturnSlideAction(Request $request) {
 
         $arr = array();
+        $addwhere = "";
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findAll();
+        //$user = $this->get('security.context')->getToken()->getUser();
+
+        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findByType('default');
+
+//        $id = trim( $request->get('opt') );
+//        if( $id ) {
+//            $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+//            $listEl = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findOneByName($orderinfo->getReturnSlide());
+//            $addwhere = " OR list.id = ".$listEl->getId();
+//            //echo "addwhere=".$addwhere."<br>";
+//        }
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:ReturnSlideTo', 'list')
+//            //->select("list.id as id, list.name as text")
+//            ->where("list.type = :type AND list.creator = :user".$addwhere)
+//            ->select("list")
+//            ->orderBy("list.orderinlist","ASC")
+//            ->setParameters(array('type' => 'default', 'user' => $user));
+//        $entities = $query->getQuery()->getResult();
 
         foreach( $entities as $entity ) {
+            //echo $entity." ";
+            //var_dump($entity);
             $arr[] = $entity."";
         }
 
@@ -434,34 +506,26 @@ class UtilController extends Controller {
         $opt = trim( $request->get('opt') );
         $type = trim( $request->get('type') );
 
-//        $defSelect = "";
-//        if( $type == "multi" ) {
-//            $defSelect = "type.type = 'default'";
-//        }
-
         //echo "opt=".$opt."<br>";
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:AccessionType', 'type')
-            ->select("type.id as id, type.name as text")
-            ->orderBy("type.orderinlist","ASC");
-            //->where($defSelect);
+            ->from('OlegOrderformBundle:AccessionType', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
 
-//        if( $opt ) {
-//            $query->where('type.type = :type')->setParameter('type', 'default');
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
 
         if( $type == "single" ) {
             if( $opt ) {
-                $query->where('type.type = :type OR type.type = :typetma');    //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
-                $query->setParameters(array('type' => 'default', 'typetma' => 'TMA'));
+                $query->where("list.type = :type OR list.type = :typetma OR ( list.type = 'user-added' AND list.creator = :user)");    //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
+                $query->setParameters( array('type' => 'default', 'typetma' => 'TMA', 'user' => $user) );
             }
         } else {
             if( $opt ) {
-                $query->where('type.type = :type AND type.type != :typetma');   //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
-                $query->setParameters(array('type' => 'default', 'typetma' => 'TMA'));
+                $query->where("list.type = :type AND list.type != :typetma OR ( list.type = 'user-added' AND list.creator = :user)");   //->setParameter('type', 'default')->setParameter('typetma', 'TMA');
+                $query->setParameters( array('type' => 'default', 'typetma' => 'TMA', 'user' => $user) );
             } else {
-                $query->where('type.type != :type')->setParameter('type', 'TMA');
+                $query->where('list.type != :type')->setParameter('type', 'TMA');
             }
         }
 
@@ -498,11 +562,11 @@ class UtilController extends Controller {
         }
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:User', 'e')
-            //->select("e.id as id, e.username as text")
-            ->select("e")
-            ->where("e.roles LIKE :role")
-            ->orderBy("e.id","ASC")
+            ->from('OlegOrderformBundle:User', 'list')
+            //->select("list.id as id, list.username as text")
+            ->select("list")
+            ->where("list.roles LIKE :role")
+            ->orderBy("list.id","ASC")
             ->setParameter('role', '%"' . $role . '"%');
 
         $users = $query->getQuery()->getResult();

@@ -91,7 +91,7 @@ class OrderInfo
      * @ORM\Column(name="returnSlide", type="string", length=200, nullable=true)
      * @Assert\NotBlank
      */
-    private $returnSlide;
+    protected $returnSlide;
 
     /**
      * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})

@@ -55,7 +55,7 @@ class ListType extends AbstractType
             'widget' => 'single_text',
             'required'=>true,
             'read_only'=>true,
-            'format' => 'MM-dd-yyyy, H:m:s',
+            'format' => 'MM-dd-yyyy, H:mm:ss',
             'view_timezone' => $this->params['user']->getTimezone(),
             'attr' => array('class' => 'form-control'),
         ));
@@ -75,7 +75,7 @@ class ListType extends AbstractType
                 'widget' => 'single_text',
                 'required'=>true,
                 'read_only'=>true,
-                'format' => 'MM-dd-yyyy, H:m:s',
+                'format' => 'MM-dd-yyyy, H:mm:ss',
                 'view_timezone' => $this->params['user']->getTimezone(),
                 'attr' => array('class' => 'form-control'),
             ));
@@ -120,7 +120,7 @@ class ListType extends AbstractType
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where('list.type = :type')
-                        ->setParameter('type', 'default');
+                        ->setParameter( 'type','default' );
                 },
             ));
         }

@@ -26,7 +26,7 @@ class UserController extends Controller
 {
 
     /**
-     * @Route("/users/index", name="listusers")
+     * @Route("/user-directory", name="listusers")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */

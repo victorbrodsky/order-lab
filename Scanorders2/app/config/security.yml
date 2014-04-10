@@ -76,7 +76,7 @@ security:
      - { path: ^/admin/genall, role: ROLE_ADMIN }
      - { path: ^/users/generate, role: ROLE_ADMIN }
      - { path: ^/users/new, role: ROLE_ADMIN }
-     - { path: ^/users/index, role: ROLE_PROCESSOR }
+     - { path: ^/user-directory, role: ROLE_PROCESSOR }
 
      - { path: ^/admin/, role: ROLE_PROCESSOR }
      - { path: ^/incoming-scan-orders, role: ROLE_PROCESSOR }

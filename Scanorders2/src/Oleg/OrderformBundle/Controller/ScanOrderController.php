@@ -242,6 +242,7 @@ class ScanOrderController extends Controller {
 
             //show all for ROLE_DIVISION_CHIEF: remove all user's restriction
             if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
+                //echo "ROLE_DIVISION_CHIEF";
                 $crituser = "";
             }
 
