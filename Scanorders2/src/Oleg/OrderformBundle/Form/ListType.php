@@ -13,9 +13,27 @@ class ListType extends AbstractType
 
     protected $params;
 
+    protected $addwhere = "";
+
+    protected $types = array(
+                            "default"=>"default",
+                            "user-added"=>"user-added",
+                            "disabled"=>"disabled",
+                            "draft"=>"draft"
+                        );
+
     public function __construct( $params=null )
     {
         $this->params = $params;
+
+        if( array_key_exists('id', $this->params) ) {
+            $this->addwhere = " AND list.id != ".$this->params['id'];
+        }
+
+        if( $this->params['className'] == 'AccessionType' || $this->params['className'] == 'accessiontype' ) {
+            $this->types['TMA'] = 'TMA';
+        }
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -33,12 +51,7 @@ class ListType extends AbstractType
 
         $builder->add('type','choice',array(
             'label'=>'Type:',
-            'choices' => array(
-                "default"=>"default",
-                "user-added"=>"user-added",
-                "disabled"=>"disabled",
-                "draft"=>"draft"
-            ),
+            'choices' => $this->types,
             'required' => true,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width select2-list-type')
@@ -83,35 +96,25 @@ class ListType extends AbstractType
             //echo "no update <br>";
         }
 
-        if( array_key_exists('synonyms', $this->params)) {
-//            $builder->add('synonyms',null,array(
-//                'label'=>'Synonym:',
-//                //'multiple' => false,
-//                'required' => false,
-//                'attr' => array('class' => 'combobox combobox-width select2-list-synonyms')
-//            ));
+        if( array_key_exists('synonyms', $this->params) ) {
+
             $builder->add('synonyms', 'entity', array(
                 'class' => 'OlegOrderformBundle:'.$this->params['className'],
-                'label'=>'Synonym:',
+                'label'=>'Synonyms:',
                 'required' => false,
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->where('list.type != :type')
-                        ->setParameter('type', 'default');
+                        ->where( "list.type != :type" . $this->addwhere )
+                        ->setParameters( array( 'type'=>'default' ) );
                 },
             ));
         }
 
 
-        if( array_key_exists('original', $this->params)) {
-//            $builder->add('original',null,array(
-//                'label'=>'Original:',
-//                //'multiple' => false,
-//                'required' => false,
-//                'attr' => array('class' => 'combobox combobox-width select2-list-original')
-//            ));
+        if( array_key_exists('original', $this->params) ) {
+
             $builder->add('original', 'entity', array(
                 'class' => 'OlegOrderformBundle:'.$this->params['className'],
                 'label'=>'Original:',
@@ -119,7 +122,7 @@ class ListType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width select2-list-original'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->where('list.type = :type')
+                        ->where( "list.type = :type" . $this->addwhere )
                         ->setParameter( 'type','default' );
                 },
             ));

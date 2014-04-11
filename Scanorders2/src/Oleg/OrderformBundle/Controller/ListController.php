@@ -71,6 +71,8 @@ class ListController extends Controller
             //echo "synonyms exists! <br>";
             $dql->leftJoin("ent.synonyms", "synonyms");
             $dql->addGroupBy('synonyms.name');
+            $dql->leftJoin("ent.original", "original");
+            $dql->addGroupBy('original.name');
         } else {
             //echo "no synonyms! <br>";
         }
@@ -382,6 +384,8 @@ class ListController extends Controller
         $options = array();
 
         $options['className'] = $className;
+
+        $options['id'] = $entity->getId();
 
         if( method_exists($entity,'getOriginal') ) {
             $options['original'] = true;

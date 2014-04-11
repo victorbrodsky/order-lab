@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
+use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 
 /**
  * PatientRepository
@@ -30,9 +31,17 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $entity;
     }
 
-    public function getCorrectKeytypeId($keytypeid) {
+    public function getCorrectKeytypeId($keytypeid,$user=null) {
         $em = $this->_em;
-        $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($keytypeid);
+
+        if( is_numeric ( $keytypeid ) ) {
+            $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($keytypeid);
+        } else {
+            //create a new MrnType entity
+            $mrnTypeTransformer = new MrnTypeTransformer($em,$user);
+            $keytypeEntity = $mrnTypeTransformer->createNew($keytypeid);
+        }
+
         if( $keytypeEntity->getName()."" == "Existing Auto-generated MRN" ) {
             $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
         }

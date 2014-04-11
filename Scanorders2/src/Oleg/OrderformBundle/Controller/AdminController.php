@@ -107,7 +107,7 @@ class AdminController extends Controller
             'Statuses='.$count_status.', '.
             'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
-            'Mrn Types='.$count_mrntype.', '.
+            'MRN Types='.$count_mrntype.', '.
             'Return Slide To='.$count_returnslide.', '.
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.

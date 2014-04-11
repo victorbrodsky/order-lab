@@ -92,9 +92,7 @@ class CheckController extends Controller {
      */
     public function getPatientAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -103,7 +101,7 @@ class CheckController extends Controller {
         $originalKeytype = $keytype;
         
         $em = $this->getDoctrine()->getManager();
-        $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype);
+        $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype,$user);
 
         $extra = array();
         $extra["keytype"] = $keytype;
@@ -124,6 +122,10 @@ class CheckController extends Controller {
                 $entity = null;
             }
 
+        }
+
+        if( !is_numeric ( $originalKeytype ) ) {
+            $originalKeytype = $keytype;
         }
         
         $originalKeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($originalKeytype);
@@ -198,15 +200,13 @@ class CheckController extends Controller {
      */
     public function deleteMrnAction( Request $request ) {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
 
         $em = $this->getDoctrine()->getManager();
-        $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype);
+        $keytype = $em->getRepository('OlegOrderformBundle:Patient')->getCorrectKeytypeId($keytype,$user);
 
         $extra = array();
         $extra["keytype"] = $keytype;
@@ -229,9 +229,7 @@ class CheckController extends Controller {
      */
     public function getAccessionAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -241,9 +239,9 @@ class CheckController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        //echo "keytype=".$keytype." ";
-        $keytype = $em->getRepository('OlegOrderformBundle:Accession')->getCorrectKeytypeId($keytype);
-        //echo "keytype=".$keytype." ";
+        //echo "keytype1=".$keytype." ";
+        $keytype = $em->getRepository('OlegOrderformBundle:Accession')->getCorrectKeytypeId($keytype,$user);
+        //echo "keytype2=".$keytype.", key=".$key." => ";
 
         $extra = array();
         $extra["keytype"] = $keytype;
@@ -265,8 +263,12 @@ class CheckController extends Controller {
                 $entity = null;
                 $permission = true;
             }
-        }     
-        
+        }
+
+        if( !is_numeric ( $originalKeytype ) ) {
+            $originalKeytype = $keytype;
+        }
+
         $originalKeytype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($originalKeytype);
         if( $originalKeytype == "Existing Auto-generated Accession Number" && !$entity ) {
             $entity = null;               
@@ -377,23 +379,15 @@ class CheckController extends Controller {
      */
     public function deleteAccessionAction(Request $request) {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-//            return $this->render('OlegOrderformBundle:Security:login.html.twig');
-//        }
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
         //echo "key=".$key.",keytype=".$keytype." | ";
 
-//        $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneById($keytype);
-//        if( $typeEntity->getId() == $keytype ) {
-//            $typeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
-//            $keytype = $typeEntity->getId()."";
-//        }
-
         $em = $this->getDoctrine()->getManager();
 
-        $keytype = $em->getRepository('OlegOrderformBundle:Accession')->getCorrectKeytypeId($keytype);
+        $keytype = $em->getRepository('OlegOrderformBundle:Accession')->getCorrectKeytypeId($keytype,$user);
 
         $extra = array();
         $extra["keytype"] = $keytype;

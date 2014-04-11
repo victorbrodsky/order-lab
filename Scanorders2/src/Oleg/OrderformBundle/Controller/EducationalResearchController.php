@@ -19,47 +19,6 @@ use Oleg\OrderformBundle\Entity\History;
  */
 class EducationalResearchController extends Controller {
 
-//    /**
-//     * Finds and displays a entity.
-//     *
-//     * @Route("/educational/{id}", name="educational_show")
-//     * @Route("/research/{id}", name="research_show")
-//     * @Method("GET")
-//     */
-//    public function showAction($id)
-//    {
-//        $request = $this->container->get('request');
-//        $routeName = $request->get('_route');
-//        //echo "routeName=".$routeName; //mrntype
-//
-//        $pieces = explode("_", $routeName);
-//        $type = $pieces[0];
-//        //echo "type=".$type."<br>";
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
-//
-//        if (!$entity) {
-//            throw $this->createNotFoundException('Unable to find '.$type.' entity.');
-//        }
-//
-//        $editForm = $this->createEditForm($entity,'show');
-//        //$deleteForm = $this->createDeleteForm($id);
-//
-////        return array(
-////            'entity'      => $entity,
-////            'edit_form'   => $editForm->createView(),
-////            'cicle' => 'show'
-////            //'delete_form' => $deleteForm->createView(),
-////        );
-//
-//        return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
-//            'entity'      => $entity,
-//            'edit_form'   => $editForm->createView(),
-//            'cicle' => 'show'
-//        ));
-//    }
 
     /**
      * Displays a form to edit an existing entity.
@@ -106,8 +65,8 @@ class EducationalResearchController extends Controller {
     /**
      * Edits an existing entity.
      *
-     * @Route("/educational/{id}", name="educational_update")
-     * @Route("/research/{id}", name="research_update")
+     * @Route("/educational/{id}/edit", name="educational_update")
+     * @Route("/research/{id}/edit", name="research_update")
      * @Method("PUT")
      */
     public function updateAction(Request $request, $id)

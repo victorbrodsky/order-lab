@@ -42,7 +42,17 @@ class ScanOrderController extends Controller {
 
         $unprocessed = $this->getUnprocessedOrders();
 
-        return array('unprocessed'=>$unprocessed);
+        //check for active user requests
+        $accountreqs = $this->getActiveAccountReq();
+
+        //check for active access requests
+        $accessreqs = $this->getActiveAccessReq();
+
+        return array(
+            'unprocessed' => $unprocessed,
+            'accountreqs' => count($accountreqs),
+            'accessreqs' => count($accessreqs)
+        );
     }
 
     /**
@@ -305,7 +315,6 @@ class ScanOrderController extends Controller {
         //echo "<br>criteriastr=".$criteriastr."<br>";
         
         if( $criteriastr != "" ) {
-            //TODO: use ->setParameter(1, $caravan);
             $dql->where($criteriastr);
         }
 
@@ -341,16 +350,10 @@ class ScanOrderController extends Controller {
         );
 
         //check for active user requests
-        $accountreqs = array();
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            $accountreqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
-        }
+        $accountreqs = $this->getActiveAccountReq();
 
         //check for active access requests
-        $accessreqs = array();
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
-        }
+        $accessreqs = $this->getActiveAccessReq();
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
 
@@ -651,6 +654,26 @@ class ScanOrderController extends Controller {
         }
 
         return $unprocessed;
+    }
+
+    //check for active user requests
+    public function getActiveAccountReq() {
+        $em = $this->getDoctrine()->getManager();
+        $accountreqs = array();
+        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            $accountreqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
+        }
+        return $accountreqs;
+    }
+
+    //check for active access requests
+    public function getActiveAccessReq() {
+        $em = $this->getDoctrine()->getManager();
+        $accessreqs = array();
+        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
+        }
+        return $accessreqs;
     }
 
 }

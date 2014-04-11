@@ -22,6 +22,15 @@ class PatientMrnType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        if( $this->params['type'] == 'One Slide Scan Order') {
+            $attr['style'] = 'width:100%';
+            $mrnTypeLabel = "MRN Type:";
+            //$gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+        } else {
+            $mrnTypeLabel = false;
+            //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+        }
+
         $builder->add( 'field', 'text', array(
             'label'=>'MRN',
             'required'=>false,
@@ -30,18 +39,34 @@ class PatientMrnType extends AbstractType
             )
         ));
 
-        $attr = array('class' => 'combobox combobox-width mrntype-combobox');
-        $builder->add('keytype', 'entity', array(
-            'class' => 'OlegOrderformBundle:MrnType',
-            'label'=>false, //'MRN Type',
+//        $attr = array('class' => 'combobox combobox-width mrntype-combobox');
+//        $builder->add('keytype', 'entity', array(
+//            'class' => 'OlegOrderformBundle:MrnType',
+//            'label'=>false, //'MRN Type',
+//            'required' => true,
+//            'attr' => $attr,
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('s')
+//                    ->orderBy('s.id', 'ASC');
+//            },
+//        ));
+
+        //mrn types
+        $attr = array('class' => 'combobox combobox-width mrntype-combobox', 'type' => 'hidden');
+        $options = array(
+            'label' => $mrnTypeLabel,
             'required' => true,
             'attr' => $attr,
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('s')
-                    ->orderBy('s.id', 'ASC');
-            },
-        ));
+            'classtype' => 'mrntype',
+        );
 
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+            $options['data'] = 1; //new
+        }
+
+        $builder->add('keytype', 'custom_selector', $options);
+
+        //other fields from abstract
         $builder->add('mrnothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
             'label' => false

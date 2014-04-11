@@ -85,6 +85,13 @@ services:
         tags:
             - { name: form.type, alias: custom_selector }
 
+    #Custom selector fields with data
+    order_form.type.custom_data_selector:
+        class: Oleg\OrderformBundle\Form\CustomType\CustomDataSelectorType
+        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
+        tags:
+            - { name: form.type, alias: custom_data_selector }
+
     #Redirect admin to index
     authentication_handler:
         class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler

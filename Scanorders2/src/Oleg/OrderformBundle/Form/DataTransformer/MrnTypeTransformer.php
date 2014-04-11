@@ -12,9 +12,9 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\AccessionType;
+use Oleg\OrderformBundle\Entity\MrnType;
 
-class AccessionTypeTransformer implements DataTransformerInterface
+class MrnTypeTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
@@ -51,7 +51,7 @@ class AccessionTypeTransformer implements DataTransformerInterface
         //echo "data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
-            $type = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($type);
+            $type = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         }
         
@@ -84,7 +84,7 @@ class AccessionTypeTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneById($text);
+            $entity = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -107,21 +107,21 @@ class AccessionTypeTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
-        //echo "accession type name=".$name."<br>";
+        //echo "mrn type name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName($name);
         
         if( null === $entity ) {
 
-            $newEntity = new AccessionType();
+            $newEntity = new MrnType();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:AccessionType c');           
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:MrnType c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 

@@ -14,12 +14,24 @@ class AccessionType extends ListAbstract
 {
 
     /**
+     * @ORM\OneToMany(targetEntity="AccessionType", mappedBy="original", cascade={"persist"})
+     **/
+    protected $synonyms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AccessionType", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $original;
+
+    /**
      * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="keytype")
      */
     protected $accessionaccession;
 
 
     public function __construct() {
+        $this->synonyms = new ArrayCollection();
         $this->accessionaccession = new ArrayCollection();
     }
 
@@ -42,5 +54,38 @@ class AccessionType extends ListAbstract
     {
         return $this->accessionaccession;
     }
+
+    /**
+     * @param mixed $original
+     */
+    public function setOriginal($original)
+    {
+        $this->original = $original;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginal()
+    {
+        return $this->original;
+    }
+
+    /**
+     * @param mixed $synonyms
+     */
+    public function setSynonyms($synonyms)
+    {
+        $this->synonyms = $synonyms;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSynonyms()
+    {
+        return $this->synonyms;
+    }
+
 
 }

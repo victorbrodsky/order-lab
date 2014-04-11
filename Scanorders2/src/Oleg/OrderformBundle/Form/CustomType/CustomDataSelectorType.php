@@ -25,7 +25,7 @@ use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
 
-class CustomSelectorType extends AbstractType {
+class CustomDataSelectorType extends AbstractType {
 
     /**
      * @var ObjectManager
@@ -118,21 +118,18 @@ class CustomSelectorType extends AbstractType {
         $resolver->setRequired(array(
             'classtype',
         ));
-
-//        $resolver->setAllowedTypes(array(
-//            'classtype' => 'Doctrine\Common\Persistence\ObjectManager',
-//        ));
         
     }
 
     public function getParent()
-    {
-        return 'text';
+    {        //return 'text';
+
+        return 'choice';
     }
 
     public function getName()
     {
-        return 'custom_selector';
+        return 'custom_data_selector';
     }
 
 

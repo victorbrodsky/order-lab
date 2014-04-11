@@ -37,13 +37,26 @@
 
             {% if is_granted('ROLE_PROCESSOR') %}
 
-                View <a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a> (there are
+                View <a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a>. There are:
 
-                <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'All Not Filled'}) }}">{{ unprocessed }} unprocessed order(s)</a>
+            <ul>
+                <li>
+                    <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'All Not Filled'}) }}">{{ unprocessed }} unprocessed order(s)</a>
+                </li>
 
-                and
+                <li>
+                    <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comment(s)</a>
+                </li>
 
-                <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comment(s)</a>).
+                <li>
+                    <a href="{{ path('accountrequest') }}">{{ accountreqs }} unprocessed account request(s) from users without CWIDs</a>
+                </li>
+
+                <li>
+                    <a href="{{ path('accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s) from users with CWIDs</a>
+                </li>
+
+            </ul>
 
             {% endif %}
 

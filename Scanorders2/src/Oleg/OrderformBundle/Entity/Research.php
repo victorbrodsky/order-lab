@@ -20,14 +20,16 @@ class Research
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="research", cascade={"persist"})
+     * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
      */
-    protected $project;
+    protected $projectTitle;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="SetTitleList", inversedBy="research", cascade={"persist"})
+     * @ORM\JoinColumn(name="setTitle_id", referencedColumnName="id", nullable=true)
      */
-    protected $settitle;
+    protected $setTitle;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
@@ -67,29 +69,6 @@ class Research
     }
 
     /**
-     * Set project
-     *
-     * @param string $project
-     * @return Research
-     */
-    public function setProject($project)
-    {
-        $this->project = $project;
-    
-        return $this;
-    }
-
-    /**
-     * Get project
-     *
-     * @return string 
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
      * @param mixed $principal
      */
     public function setPrincipal($principal)
@@ -119,22 +98,6 @@ class Research
     public function getPrincipalstr()
     {
         return $this->principalstr;
-    }
-
-    /**
-     * @param mixed $settitle
-     */
-    public function setSettitle($settitle)
-    {
-        $this->settitle = $settitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSettitle()
-    {
-        return $this->settitle;
     }
 
     /**
@@ -169,6 +132,37 @@ class Research
         return $this->slide;
     }
 
+    /**
+     * @param mixed $projectTitle
+     */
+    public function setProjectTitle($projectTitle)
+    {
+        $this->projectTitle = $projectTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectTitle()
+    {
+        return $this->projectTitle;
+    }
+
+    /**
+     * @param mixed $setTitle
+     */
+    public function setSetTitle($setTitle)
+    {
+        $this->setTitle = $setTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetTitle()
+    {
+        return $this->setTitle;
+    }
 
 
     public function isEmpty()

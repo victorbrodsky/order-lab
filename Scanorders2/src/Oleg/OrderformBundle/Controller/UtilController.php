@@ -44,7 +44,11 @@ class UtilController extends Controller {
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:StainList', 'list')
             ->select("list.id as id, list.name as text")
+            //->select("list")
             //->where("list.type = 'default' OR list.creator = ".$user." ".$addwhere)
+            ->groupBy("list.id")
+            ->addGroupBy("list.orderinlist")
+            ->addGroupBy("list.name")
             ->orderBy("list.orderinlist","ASC"); //ASC DESC
 
         if( $opt ) {
@@ -163,8 +167,11 @@ class UtilController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         if( $opt == 'default' ) {
-            //$query->where('list.type = :type ')->setParameter('type', 'default');
-            $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+            if( $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+                $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+            } else {
+                $query->where('list.type = :type ')->setParameter('type', 'default');
+            }
         } else {
             //find user's pathservices to include them in the list
             $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($opt);
@@ -203,19 +210,39 @@ class UtilController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findByType('default');
+        //$entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findByType('default');
 
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegOrderformBundle:RegionToScan', 'list')
-//            //->select("list.id as id, list.name as text")
-//            ->select("list")
-//            ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
-//            ->orderBy("list.orderinlist","ASC");
-//        $entities = $query->getQuery()->getResult();
+        //////////////////////////////////// 1) get all default list ////////////////////////////////////
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:RegionToScan', 'list')
+            ->select("list.name")
+            ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
+            ->groupBy('list')
+            ->orderBy("list.orderinlist","ASC");
+        $entities = $query->getQuery()->getResult();
+        //////////////////////////////////// END OF 1 ///////////////////////////////////////////
 
+
+        //////////////// 2) create addwhere to does not select scanregion elements with the same name as in list names //////////////////////
+        $addwhere = "";
+        $count = 1;
+        $parametersArr = array();
         foreach( $entities as $entity ) {
-            $arr[] = $entity."";
+            $arr[] = $entity["name"];
+            $parametersArr['text'.$count] = $entity["name"];
+            $addwhere = $addwhere . "scan.scanregion != :text".$count;
+            if( count($entities) > $count ) {
+                $addwhere = $addwhere . " AND ";
+            }
+            $count++;
         }
+
+        if( $addwhere != "" ) {
+            $addwhere = " AND (" . $addwhere . ")";
+        }
+
+        //echo "addwhere=".$addwhere." \n ";
+        //////////////////////////////////// END OF 2 ///////////////////////////////////////////
 
 //        //add custom added values
 //        //TODO: add custom values, added by ordering provider
@@ -225,7 +252,7 @@ class UtilController extends Controller {
 //            $arr[] = $entity->getScanregion();
 //        }
 
-        //add custom added values by order id
+        //////////////// 3) add custom added values by order id (if id is set) //////////////////////
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
@@ -237,26 +264,32 @@ class UtilController extends Controller {
                 }
             }
         }
+        //////////////////////////////////// END OF 3 ///////////////////////////////////////////
 
-        //add custom added values from all my orders
-        $user = $this->get('security.context')->getToken()->getUser();
+
+        //////////////// 4) add custom added values from all my orders //////////////////////
+        $parametersArr['user'] = $user;
+
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:OrderInfo', 'list')
-            //->select("list.id as id, list.name as text")
-            ->select("list")
-            ->innerJoin("list.provider","provider")
-            ->where("provider = :user")->setParameter('user',$user);
-            //->orderBy("list.orderinlist","ASC");
+            ->select("scan.scanregion")
+            ->innerJoin("list.slide","slide")
+            ->innerJoin("slide.scan","scan")
+            ->innerJoin("scan.provider","provider")
+            ->groupBy('scan')
+            ->addGroupBy('scan.scanregion')
+            ->where( "provider = :user ".$addwhere )
+            ->setParameters( $parametersArr );
+
+        //echo "query=".$query." \n ";
+
         $myOrders = $query->getQuery()->getResult();
-        foreach( $myOrders as $myorder ) {
-            if( $myorder ) {
-                $slides = $myorder->getSlide();
-                foreach( $slides as $slide ) {
-                    //TODO: add if not exists
-                    $arr[] = $slide->getScan()->first()->getScanregion();
-                }
-            }
+
+        foreach( $myOrders as $scanreg ) {
+            //echo $scanreg['scanregion']." => ";
+            $arr[] = $scanreg['scanregion'];
         }
+        //////////////////////////////////// END OF 4 ///////////////////////////////////////////
         
         $output = array();
         
@@ -283,14 +316,44 @@ class UtilController extends Controller {
 
         $arr = array();
 
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findByType('default');
+        $user = $this->get('security.context')->getToken()->getUser();
 
+        $em = $this->getDoctrine()->getManager();
+        //$entities = $em->getRepository('OlegOrderformBundle:SlideDelivery')->findByType('default');
+
+        //////////////////////////////////// 1) get all default list ////////////////////////////////////
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:SlideDelivery', 'list')
+            ->select("list.name")
+            ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
+            ->groupBy('list')
+            ->orderBy("list.orderinlist","ASC");
+        $entities = $query->getQuery()->getResult();
+        //////////////////////////////////// END OF 1 ///////////////////////////////////////////
+
+
+        //////////////// 2) create addwhere to does not select scanregion elements with the same name as in list names //////////////////////
+        $addwhere = "";
+        $count = 1;
+        $parametersArr = array();
         foreach( $entities as $entity ) {
-            $arr[] = $entity."";
+            $arr[] = $entity["name"];
+            $parametersArr['text'.$count] = $entity["name"];
+            $addwhere = $addwhere . "list.slideDelivery != :text".$count;
+            if( count($entities) > $count ) {
+                $addwhere = $addwhere . " AND ";
+            }
+            $count++;
         }
 
-        //add custom added values by order id
+        if( $addwhere != "" ) {
+            $addwhere = " AND (" . $addwhere . ")";
+        }
+
+        //echo "addwhere=".$addwhere." \n ";
+        //////////////////////////////////// END OF 2 ///////////////////////////////////////////
+
+        //////////////// 3) add custom added values by order id (if id is set) //////////////////////
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
@@ -299,6 +362,28 @@ class UtilController extends Controller {
                 $arr[] = $orderinfo->getSlideDelivery();
             }
         }
+        //////////////////////////////////// END OF 3 ///////////////////////////////////////////
+
+        //////////////// 4) add custom added values from all my orders //////////////////////
+        $parametersArr['user'] = $user;
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:OrderInfo', 'list')
+            ->select("list.slideDelivery")
+            ->innerJoin("list.provider","provider")
+            ->groupBy('list.slideDelivery')
+            ->where( "provider = :user ".$addwhere )
+            ->setParameters( $parametersArr );
+
+        //echo "query=".$query." \n ";
+
+        $myOrders = $query->getQuery()->getResult();
+
+        foreach( $myOrders as $scanreg ) {
+            //echo $scanreg['scanregion']." => ";
+            $arr[] = $scanreg['slideDelivery'];
+        }
+        //////////////////////////////////// END OF 4 ///////////////////////////////////////////
 
         $output = array();
         
@@ -323,37 +408,44 @@ class UtilController extends Controller {
     public function getReturnSlideAction(Request $request) {
 
         $arr = array();
-        $addwhere = "";
 
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        $entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findByType('default');
+        //$entities = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findByType('default');
 
-//        $id = trim( $request->get('opt') );
-//        if( $id ) {
-//            $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
-//            $listEl = $em->getRepository('OlegOrderformBundle:ReturnSlideTo')->findOneByName($orderinfo->getReturnSlide());
-//            $addwhere = " OR list.id = ".$listEl->getId();
-//            //echo "addwhere=".$addwhere."<br>";
-//        }
-//
-//        $query = $em->createQueryBuilder()
-//            ->from('OlegOrderformBundle:ReturnSlideTo', 'list')
-//            //->select("list.id as id, list.name as text")
-//            ->where("list.type = :type AND list.creator = :user".$addwhere)
-//            ->select("list")
-//            ->orderBy("list.orderinlist","ASC")
-//            ->setParameters(array('type' => 'default', 'user' => $user));
-//        $entities = $query->getQuery()->getResult();
+        //////////////////////////////////// 1) get all default list ////////////////////////////////////
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:ReturnSlideTo', 'list')
+            ->select("list.name")
+            ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
+            ->groupBy('list')
+            ->orderBy("list.orderinlist","ASC");
+        $entities = $query->getQuery()->getResult();
+        //////////////////////////////////// END OF 1 ///////////////////////////////////////////
 
+        //////////////// 2) create addwhere to does not select scanregion elements with the same name as in list names //////////////////////
+        $addwhere = "";
+        $count = 1;
+        $parametersArr = array();
         foreach( $entities as $entity ) {
-            //echo $entity." ";
-            //var_dump($entity);
-            $arr[] = $entity."";
+            $arr[] = $entity["name"];
+            $parametersArr['text'.$count] = $entity["name"];
+            $addwhere = $addwhere . "list.returnSlide != :text".$count;
+            if( count($entities) > $count ) {
+                $addwhere = $addwhere . " AND ";
+            }
+            $count++;
         }
 
-        //add custom added values by order id
+        if( $addwhere != "" ) {
+            $addwhere = " AND (" . $addwhere . ")";
+        }
+
+        //echo "addwhere=".$addwhere." \n ";
+        //////////////////////////////////// END OF 2 ///////////////////////////////////////////
+
+        //////////////// 3) add custom added values by order id (if id is set) //////////////////////
         $request = $this->get('request');
         $id = trim( $request->get('opt') );
         if( $id ) {
@@ -362,6 +454,28 @@ class UtilController extends Controller {
                 $arr[] = $orderinfo->getReturnSlide();
             }
         }
+        //////////////////////////////////// END OF 3 ///////////////////////////////////////////
+
+        //////////////// 4) add custom added values from all my orders //////////////////////
+        $parametersArr['user'] = $user;
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:OrderInfo', 'list')
+            ->select("list.returnSlide")
+            ->innerJoin("list.provider","provider")
+            ->groupBy('list.returnSlide')
+            ->where( "provider = :user ".$addwhere )
+            ->setParameters( $parametersArr );
+
+        //echo "query=".$query." \n ";
+
+        $myOrders = $query->getQuery()->getResult();
+
+        foreach( $myOrders as $scanreg ) {
+            //echo $scanreg['scanregion']." => ";
+            $arr[] = $scanreg['returnSlide'];
+        }
+        //////////////////////////////////// END OF 4 ///////////////////////////////////////////
 
         $output = array();
         
@@ -529,6 +643,44 @@ class UtilController extends Controller {
             }
         }
 
+        //echo "query=".$query."<br>";
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/mrntype", name="get-mrntype")
+     * @Method("GET")
+     */
+    public function getMrnTypeAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+        $type = trim( $request->get('type') );
+
+        //echo "opt=".$opt."<br>";
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:MrnType', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( $opt ) {
+            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
+            $query->setParameters( array('type' => 'default', 'user' => $user) );
+        }
+
+        //echo "query=".$query."<br>";
+
         $output = $query->getQuery()->getResult();
 
         $response = new Response();
@@ -625,6 +777,44 @@ class UtilController extends Controller {
         $response->setContent(json_encode($output));
         return $response;
     }
+
+    /**
+     * @Route("/projecttitle", name="get-projecttitle")
+     * @Method("GET")
+     */
+    public function getProjectTitleAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+        $type = trim( $request->get('type') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( $opt ) {
+            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
+            $query->setParameters( array('type' => 'default', 'user' => $user) );
+        }
+
+        //echo "query=".$query."<br>";
+
+        $output = $query->getQuery()->getResult();
+        $output = array();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+
 
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products) {

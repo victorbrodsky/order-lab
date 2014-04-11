@@ -5874,6 +5874,7 @@ var proxyuser_id = $("#proxyuser_id").val();
 //console.log("urlCommon="+urlCommon);
 var orderinfoid = $(".orderinfo-id").val();
 
+var _mrntype = new Array();
 var accessiontype = new Array();
 var partname = new Array();
 var blockname = new Array();
@@ -5887,6 +5888,8 @@ var pathservice = new Array();
 var userpathservice = new Array();
 var optionaluserEducational = new Array();
 var optionaluserResearch = new Array();
+var _projectTitle = new Array();
+
 var userpathserviceflag = false;
 
 var asyncflag = true;
@@ -5922,6 +5925,7 @@ function customCombobox() {
     //console.log("cicle="+cicle);
 
     if( cicle && urlBase && cicle != 'edit_user' && cicle != 'accountreq' ) {
+        getComboboxMrnType(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
@@ -5936,6 +5940,7 @@ function customCombobox() {
         getOptionalUserEducational(urlCommon,new Array("0","0","0","0","0","0"));
         getOptionalUserResearch(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
+        getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
@@ -6169,6 +6174,41 @@ function getComboboxAccessionType(urlCommon,ids) {
     }
 }
 
+//#############  Mrn Type  ##############//
+function getComboboxMrnType(urlCommon,ids) {
+
+    var url = urlCommon+"mrntype";
+
+    //console.log("orderformtype="+orderformtype);
+
+    if( cicle == "new" || cicle == "create" ) {
+        url = url + "?opt=default&type="+orderformtype;
+    }
+
+    if( _mrntype.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+                _mrntype = data;
+                populateSelectCombobox( ".mrntype-combobox", _mrntype, null );
+                setAccessionMask();
+            });
+    } else {
+        populateSelectCombobox( ".mrntype-combobox", _mrntype, null );
+    }
+
+    if( cicle == "new"  ) {
+        //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_keytype
+        var uid = 'patient_'+ids[0];
+        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+        var targetid = id+"mrn_0_mrntype";
+        //console.log("targetid="+targetid);
+        setToFirstElement( targetid, _mrntype );
+    }
+}
+
 //#############  partname types  ##############//
 function getComboboxPartname(urlCommon,ids) {
 
@@ -6224,7 +6264,32 @@ function getComboboxBlockname(urlCommon,ids) {
 
 }
 
+//#############  project title  ##############//
+function getProjectTitle(urlCommon,ids) {
 
+    var url = urlCommon+"projecttitle";
+
+//    if( cicle == "new" || cicle == "create" ) {
+//        url = url + "?opt=default";
+//    }
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "?opt="+orderinfoid;
+    }
+
+    if( _projectTitle.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+                blockname = data;
+                populateSelectCombobox( ".ajax-combobox-blockname", blockname, "Block Name" );
+            });
+    } else {
+        populateSelectCombobox( ".ajax-combobox-blockname", blockname, "Block Name" );
+    }
+
+}
 
 
 //#############  slide delivery  ##############//
@@ -6395,6 +6460,7 @@ function initComboboxJs(ids) {
 
         cicle = 'new';
 
+        getComboboxMrnType(urlCommon,ids);
         getComboboxAccessionType(urlCommon,ids);
         getComboboxPartname(urlCommon,ids);
         getComboboxBlockname(urlCommon,ids);
@@ -6407,6 +6473,7 @@ function initComboboxJs(ids) {
         getOptionalUserEducational(urlCommon,ids);
         getOptionalUserResearch(urlCommon,ids);
         slideType(ids);
+        getProjectTitle(urlCommon,ids);
     }
 }
 
