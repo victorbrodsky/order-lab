@@ -9,8 +9,9 @@
     <div class="tab-content">
         <div id="research" class="tab-pane active">
             <p>
-                {{ formmacros.field(form.research.projectTitle) }}
-                {{ formmacros.field(form.research.setTitle) }}
+                {{ formmacros.field(form.research.projectTitle.name) }}
+                {#{{ formmacros.field(form.research.setTitle) }}#}
+                {{ formmacros.field(form.research.projectTitle.setTitles) }}
                 {{ formmacros.field(form.research.principalstr) }}
             </p>
         </div>

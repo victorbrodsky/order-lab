@@ -24,34 +24,40 @@ class SetTitleList extends ListAbstract
      **/
     protected $original;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="Research", mappedBy="setTitle")
+//     */
+//    protected $research;
+
     /**
-     * @ORM\OneToMany(targetEntity="Research", mappedBy="setTitle")
+     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="setTitles", cascade={"persist"})
+     * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
      */
-    protected $research;
+    protected $projectTitle;
 
 
     public function __construct() {
-        $this->research = new ArrayCollection();
+        //$this->research = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
     }
 
-    public function addResearch(\Oleg\OrderformBundle\Entity\Research $research)
-    {
-        if( !$this->research->contains($research) ) {
-            $this->research->add($research);
-        }
-        return $this;
-    }
-
-    public function removeResearch(\Oleg\OrderformBundle\Entity\Research $research)
-    {
-        $this->research->removeElement($research);
-    }
-
-    public function getResearch()
-    {
-        return $this->research;
-    }
+//    public function addResearch(\Oleg\OrderformBundle\Entity\Research $research)
+//    {
+//        if( !$this->research->contains($research) ) {
+//            $this->research->add($research);
+//        }
+//        return $this;
+//    }
+//
+//    public function removeResearch(\Oleg\OrderformBundle\Entity\Research $research)
+//    {
+//        $this->research->removeElement($research);
+//    }
+//
+//    public function getResearch()
+//    {
+//        return $this->research;
+//    }
 
     /**
      * Add synonyms
@@ -100,6 +106,22 @@ class SetTitleList extends ListAbstract
     public function getOriginal()
     {
         return $this->original;
+    }
+
+    /**
+     * @param mixed $projectTitle
+     */
+    public function setProjectTitle($projectTitle)
+    {
+        $this->projectTitle = $projectTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectTitle()
+    {
+        return $this->projectTitle;
     }
 
 

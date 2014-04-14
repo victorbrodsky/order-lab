@@ -20,16 +20,16 @@ class Research
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="research", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="research")
      * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $projectTitle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SetTitleList", inversedBy="research", cascade={"persist"})
-     * @ORM\JoinColumn(name="setTitle_id", referencedColumnName="id", nullable=true)
-     */
-    protected $setTitle;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="SetTitleList", inversedBy="research", cascade={"persist"})
+//     * @ORM\JoinColumn(name="setTitle_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $setTitle;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
@@ -148,26 +148,26 @@ class Research
         return $this->projectTitle;
     }
 
-    /**
-     * @param mixed $setTitle
-     */
-    public function setSetTitle($setTitle)
-    {
-        $this->setTitle = $setTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSetTitle()
-    {
-        return $this->setTitle;
-    }
+//    /**
+//     * @param mixed $setTitle
+//     */
+//    public function setSetTitle($setTitle)
+//    {
+//        $this->setTitle = $setTitle;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSetTitle()
+//    {
+//        return $this->setTitle;
+//    }
 
 
     public function isEmpty()
     {
-        if( $this->project || $this->settitle || $this->principalstr ) {
+        if( $this->projectTitle || $this->principalstr ) {
             return false;
         } else {
             return true;
@@ -176,7 +176,7 @@ class Research
 
     public function __toString(){
 
-        return "Research: id=".$this->id.", project=".$this->project.", principal=".$this->principal."<br>";
+        return "Research: id=".$this->id.", project=".$this->projectTitle.", project type=".$this->getProjectTitle()->getType().", principal=".$this->principal.", countSetTitles=".count($this->projectTitle->getSetTitles())."<br>";
     }
 
 }

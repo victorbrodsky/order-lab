@@ -805,7 +805,7 @@ class UtilController extends Controller {
         //echo "query=".$query."<br>";
 
         $output = $query->getQuery()->getResult();
-        $output = array();
+        //$output = array();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -813,6 +813,47 @@ class UtilController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/settitle", name="get-settitle")
+     * @Method("GET")
+     */
+    public function getSetTitleAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') ); //projectTitle id
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:SetTitleList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( $opt ) {
+            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
+            $query->setParameters( array('type' => 'default', 'user' => $user) );
+        }
+
+        //echo "query=".$query."<br>";
+
+        //$output = $query->getQuery()->getResult();
+
+
+        $output = array();
+
+        $projectTitle = $em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneById($opt);
+        foreach( $projectTitle->getSetTitles() as $settitle ) {
+            $element = array('id'=>$settitle->getId(), 'text'=>$settitle->getName()."");
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
 
 

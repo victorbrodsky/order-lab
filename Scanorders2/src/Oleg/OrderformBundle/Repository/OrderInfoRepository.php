@@ -90,7 +90,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         if( $entity->getResearch() && !$entity->getResearch()->isEmpty() ) {
-            $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity->getResearch() );
+            echo "0 not empty <br>";
+            $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity );
         } else {
             $entity->setResearch(NULL);
         }
@@ -124,7 +125,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "--------------------------<br>";
         //}
 
-        //echo $entity;
+        echo $entity;
+        $research = $entity->getResearch();
+        echo "<br>Res count=".count($research)."<br>";
+        $projectTitle = $research->getProjectTitle();
+        echo "projectTitle=".$projectTitle."<br>";
+        echo "projectTitle Id=".$projectTitle->getId()."<br>";
+        echo "projectTitle Type=".$projectTitle->getType()."<br>";
+        echo "count(setTitle)=".count($projectTitle->getSetTitles())."<br>";
+        echo "setTitle1=".$projectTitle->getSetTitles()->first()."<br>";
 //        echo "<br>Accession count=".count($patient->getProcedure()->first()->getAccession())."<br>";
 //        $acc = $patient->getProcedure()->first()->getAccession()->first();
 //        echo "number=".$acc->obtainValidKeyField()."<br>";

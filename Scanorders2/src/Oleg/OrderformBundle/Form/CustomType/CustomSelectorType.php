@@ -23,6 +23,8 @@ use Oleg\OrderformBundle\Form\DataTransformer\UserPathServicesTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\ProjectTitleTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\SetTitleTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -95,7 +97,11 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new StringTransformer($this->om, $username);
                 break;
             case "projectTitle":
-            case "setTitle":
+                $transformer = new ProjectTitleTransformer($this->om, $username);
+                break;
+            case "setTitles":
+                $transformer = new SetTitleTransformer($this->om, $username);
+                break;
             case "optionalUserEducational":
             case "optionalUserResearch":
                 $transformer = new StringTransformer($this->om, $username);

@@ -20,6 +20,8 @@ function initAdd() {
 
     fieldInputMask();
 
+    setResearch();
+
 }
 
 //confirm delete
@@ -662,6 +664,16 @@ function initSingleDatepicker( datepickerElement ) {
         todayHighlight: true
     });
 }
+
+function setResearch() {
+    //get value of project title field on change
+    $('.combobox-research-projectTitle').on("change", function(e) {
+        getSetTitle();
+    });
+
+}
+
+
 
 function printF(element,text) {
     var str = "id="+element.attr("id") + ", class=" + element.attr("class")

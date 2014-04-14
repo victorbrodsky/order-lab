@@ -57,6 +57,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         }
 
         if( $orderinfo->getResearch() && !$orderinfo->getResearch()->isEmpty() ) {
+            //echo "not empty <br>";
             $slide->setResearch($orderinfo->getResearch());
         } else {
             $slide->setResearch(NULL);

@@ -35,6 +35,7 @@ var userpathservice = new Array();
 var optionaluserEducational = new Array();
 var optionaluserResearch = new Array();
 var _projectTitle = new Array();
+var _setTitle = new Array();
 
 var userpathserviceflag = false;
 
@@ -64,6 +65,10 @@ function regularCombobox() {
         $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
     }
 
+    //research
+    populateSelectCombobox( ".combobox-research-setTitle", _setTitle, "Research Set Title", false );
+    $(".combobox-research-setTitle").select2("readonly", true);
+
 }
 
 function customCombobox() {
@@ -87,6 +92,7 @@ function customCombobox() {
         getOptionalUserResearch(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
         getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
+        //getSetTitle(urlCommon,new Array("0","0","0","0","0","0"));
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
@@ -429,11 +435,43 @@ function getProjectTitle(urlCommon,ids) {
             async: asyncflag
         }).success(function(data) {
                 _projectTitle = data;
-                populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, null );
+                populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, "Research Project Title", false );
             });
     } else {
-        populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, null );
+        populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, "Research Project Title", false );
     }
+
+}
+
+//#############  set title  ##############//
+function getSetTitle() {
+
+    //get ProjectTitle value
+    var projectTitleVal = $(".combobox-research-projectTitle").select2('val');
+    console.log("projectTitleVal="+projectTitleVal);
+
+    var url = urlCommon+"settitle";
+
+    url = url + "?opt="+projectTitleVal;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: asyncflag
+    }).success(function(data) {
+            if( data ) {
+                //console.log("id="+data[0].id+", text="+data[0].text);
+                populateSelectCombobox( ".combobox-research-setTitle", data);
+                $(".combobox-research-setTitle").select2("readonly", false);
+                //$(".combobox-research-setTitle").select2('data', {id: data[0].id, text: data[0].text});
+                setToFirstElement( ".combobox-research-setTitle", data );
+            } else {
+                //$(".combobox-research-setTitle").select2("readonly", true);
+                //$(".combobox-research-setTitle").select2('val', null);
+                //populateSelectCombobox( ".combobox-research-setTitle", data, "Research Set Title");
+            }
+
+    });
 
 }
 
@@ -620,6 +658,7 @@ function initComboboxJs(ids) {
         getOptionalUserResearch(urlCommon,ids);
         slideType(ids);
         getProjectTitle(urlCommon,ids);
+        //getSetTitle(urlCommon,ids);
     }
 }
 

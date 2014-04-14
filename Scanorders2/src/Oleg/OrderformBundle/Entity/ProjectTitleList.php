@@ -29,9 +29,16 @@ class ProjectTitleList extends ListAbstract
      */
     protected $research;
 
+    //list of set title belongs to this project title.
+    /**
+     * @ORM\OneToMany(targetEntity="SetTitleList", mappedBy="projectTitle", cascade={"persist"})
+     */
+    protected $setTitles;
+
 
     public function __construct() {
         $this->research = new ArrayCollection();
+        $this->setTitles = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
     }
 
@@ -101,6 +108,41 @@ class ProjectTitleList extends ListAbstract
     {
         return $this->original;
     }
+
+
+    public function addSetTitles(\Oleg\OrderformBundle\Entity\SetTitleList $setTitle)
+    {
+        if( !$this->setTitles->contains($setTitle) ) {
+            $this->setTitles->add($setTitle);
+            //$setTitle->setProjectTitle($this);
+        }
+        return $this;
+    }
+
+    public function removeSetTitles(\Oleg\OrderformBundle\Entity\SetTitleList $setTitle)
+    {
+        $this->setTitles->removeElement($setTitle);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetTitles()
+    {
+        return $this->setTitles;
+    }
+
+    public function setSetTitles( $settitle )
+    {
+        if( $settitle ) {
+            $this->addSetTitles($settitle);
+            //$settitle->setProjectTitle($this);
+        } else {
+            $this->addSetTitles = new ArrayCollection();
+        }
+        return $this;
+    }
+
 
 
 }
