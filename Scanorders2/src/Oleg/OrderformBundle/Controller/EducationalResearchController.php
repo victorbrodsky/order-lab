@@ -49,12 +49,6 @@ class EducationalResearchController extends Controller {
         $editForm = $this->createEditForm($entity);
         //$deleteForm = $this->createDeleteForm($id);
 
-//        return array(
-//            'entity'      => $entity,
-//            'edit_form'   => $editForm->createView(),
-//            //'delete_form' => $deleteForm->createView(),
-//        );
-
         return $this->render('OlegOrderformBundle:'.$type.':edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),

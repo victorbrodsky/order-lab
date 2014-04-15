@@ -84,19 +84,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //********** take care of educational and research director and principal investigator ***********//
         $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity );
-//        if( $entity->getEducational() && !$entity->getEducational()->isEmpty() ) {
-//            $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity );
-//        } else {
-//            $entity->setEducational(NULL);
-//        }
-
         $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity );
-//        if( $entity->getResearch() && !$entity->getResearch()->isEmpty() ) {
-//            //echo "0 not empty <br>";
-//            $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity );
-//        } else {
-//            $entity->setResearch(NULL);
-//        }
         //********** end of educational and research processing ***********//
 
         foreach( $patients as $patient ) {

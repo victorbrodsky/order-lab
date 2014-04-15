@@ -128,12 +128,31 @@
 
     <hr>
 
-
-    <h3 class="text-info">Project Titles</h3>
+    <h3 class="text-info">Research Project Titles</h3>
     <p>
-        <a href="{{ path('researchprojecttitles-list') }}">List of Project Titles</a>
+        <a href="{{ path('researchprojecttitles-list') }}">List of Research Project Titles</a>
     </p>
 
+    <br>
+
+    <h3 class="text-info">Research Set Titles</h3>
+    <p>
+        <a href="{{ path('researchsettitles-list') }}">List of Research Set Titles</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Educational Lesson Titles</h3>
+    <p>
+        <a href="{{ path('educationalcoursetitles-list') }}">List of Educational Lesson Titles</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Educational Set Titles</h3>
+    <p>
+        <a href="{{ path('educationallessontitles-list') }}">List of Educational Set Titles</a>
+    </p>
 
     {% if environment is not defined %}
         {% set environment = 'dev' %}

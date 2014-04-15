@@ -787,24 +787,22 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
-//        $opt = trim( $request->get('opt') );
+        $opt = trim( $request->get('opt') );
 //        $type = trim( $request->get('type') );
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:ProjectTitleList', 'list')
             ->select("list.id as id, list.name as text")
-            ->where("list.type = 'default'")
+            //->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        if( $opt ) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
+            $query->setParameters( array('type' => 'default', 'user' => $user) );
+        }
 
-//        if( $opt ) {
-//            $user = $this->get('security.context')->getToken()->getUser();
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-//            $query->setParameters( array('type' => 'default', 'user' => $user) );
-//        }
-
-        //echo "query=".$query."<br>";
+        //echo "query=".$query."<br \>";
 
         $output = $query->getQuery()->getResult();
         //$output = array();
@@ -837,23 +835,8 @@ class UtilController extends Controller {
                 'type' => 'default'
             ));
 
-
-
-//        if( $opt ) {
-//            $user = $this->get('security.context')->getToken()->getUser();
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-//            $query->setParameters( array('type' => 'default', 'user' => $user) );
-//        }
-
         //echo "query=".$query."<br>";
         $output = $query->getQuery()->getResult();
-
-//        $output = array();
-//        $projectTitle = $em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneById($opt);
-//        foreach( $projectTitle->getSetTitles() as $settitle ) {
-//            $element = array('id'=>$settitle->getId(), 'text'=>$settitle->getName()."");
-//            $output[] = $element;
-//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -871,7 +854,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
-        //$opt = trim( $request->get('opt') );
+        $opt = trim( $request->get('opt') );
         //$type = trim( $request->get('type') );
 
         $query = $em->createQueryBuilder()
@@ -880,11 +863,11 @@ class UtilController extends Controller {
             ->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
 
-//        if( $opt ) {
-//            $user = $this->get('security.context')->getToken()->getUser();
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-//            $query->setParameters( array('type' => 'default', 'user' => $user) );
-//        }
+        if( $opt ) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
+            $query->setParameters( array('type' => 'default', 'user' => $user) );
+        }
 
         //echo "query=".$query."<br>";
 
@@ -919,23 +902,9 @@ class UtilController extends Controller {
                 'type' => 'default'
             ));
 
-//        if( $opt ) {
-//            $user = $this->get('security.context')->getToken()->getUser();
-//            $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
-//            $query->setParameters( array('type' => 'default', 'user' => $user) );
-//        }
-
         //echo "query=".$query."<br>";
 
         $output = $query->getQuery()->getResult();
-
-
-//        $output = array();
-//        $courseTitle = $em->getRepository('OlegOrderformBundle:CourseTitleList')->findOneById($opt);
-//        foreach( $courseTitle->getLessonTitles() as $lessontitle ) {
-//            $element = array('id'=>$lessontitle->getId(), 'text'=>$lessontitle->getName()."");
-//            $output[] = $element;
-//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

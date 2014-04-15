@@ -24,9 +24,6 @@ class DataReviewController extends Controller {
 
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
-        //$educational = $em->getRepository('OlegOrderformBundle:Educational')->findByOrderinfo($orderinfo);
-        //$research = $em->getRepository('OlegOrderformBundle:Research')->findByOrderinfo($orderinfo);
-
         $queryE = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:Educational', 'e')
             ->select("e")

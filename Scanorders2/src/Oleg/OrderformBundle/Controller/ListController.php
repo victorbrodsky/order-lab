@@ -38,6 +38,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
      * @Route("/research-project-titles/", name="researchprojecttitles-list")
+     * @Route("/research-set-titles/", name="researchsettitles-list")
+     * @Route("/educational-course-titles/", name="educationalcoursetitles-list")
+     * @Route("/educational-lesson-titles/", name="educationallessontitles-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -115,6 +118,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
      * @Route("/research-project-titles/", name="researchprojecttitles_create")
+     * @Route("/research-set-titles/", name="researchsettitles_create")
+     * @Route("/educational-course-titles/", name="educationalcoursetitles_create")
+     * @Route("/educational-lesson-titles/", name="educationallessontitles_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -230,6 +236,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
      * @Route("/research-project-titles/new", name="researchprojecttitles_new")
+     * @Route("/research-set-titles/new", name="researchsettitles_new")
+     * @Route("/educational-course-titles/new", name="educationalcoursetitles_new")
+     * @Route("/educational-lesson-titles/new", name="educationallessontitles_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -290,6 +299,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
      * @Route("/research-project-titles/{id}", name="researchprojecttitles_show")
+     * @Route("/research-set-titles/{id}", name="researchsettitles_show")
+     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_show")
+     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -342,6 +354,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
      * @Route("/research-project-titles/{id}/edit", name="researchprojecttitles_edit")
+     * @Route("/research-set-titles/{id}/edit", name="researchsettitles_edit")
+     * @Route("/educational-course-titles/{id}/edit", name="educationalcoursetitles_edit")
+     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -440,6 +455,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
      * @Route("/research-project-titles/{id}", name="researchprojecttitles_update")
+     * @Route("/research-set-titles/{id}", name="researchsettitles_update")
+     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_update")
+     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -590,6 +608,18 @@ class ListController extends Controller
             $className = "projecttitlelist";
             $displayName = "Project Titles";
             break;
+        case "researchsettitles":
+            $className = "settitlelist";
+            $displayName = "Set Titles";
+            break;
+        case "educationalcoursetitles":
+            $className = "CourseTitleList";
+            $displayName = "Course Titles";
+            break;
+        case "educationallessontitles":
+            $className = "LessonTitleList";
+            $displayName = "Lesson Titles";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -623,6 +653,9 @@ class ListController extends Controller
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")
      * @Route("/research-project-titles/{id}", name="researchprojecttitles_delete")
+     * @Route("/research-set-titles/{id}", name="researchsettitles_delete")
+     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_delete")
+     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
