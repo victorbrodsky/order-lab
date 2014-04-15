@@ -29,7 +29,7 @@ class ProjectTitleList extends ListAbstract
      */
     protected $research;
 
-    //list of set title belongs to this project title.
+    //list of set titles belongs to this project title.
     /**
      * @ORM\OneToMany(targetEntity="SetTitleList", mappedBy="projectTitle", cascade={"persist"})
      */
@@ -138,7 +138,7 @@ class ProjectTitleList extends ListAbstract
             $this->addSetTitles($settitle);
             //$settitle->setProjectTitle($this);
         } else {
-            $this->addSetTitles = new ArrayCollection();
+            $this->setTitles = new ArrayCollection();
         }
         return $this;
     }

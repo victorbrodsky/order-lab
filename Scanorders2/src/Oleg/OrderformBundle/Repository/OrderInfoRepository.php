@@ -83,18 +83,20 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
         //********** take care of educational and research director and principal investigator ***********//
-        if( $entity->getEducational() && !$entity->getEducational()->isEmpty() ) {
-            $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity->getEducational() );
-        } else {
-            $entity->setEducational(NULL);
-        }
+        $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity );
+//        if( $entity->getEducational() && !$entity->getEducational()->isEmpty() ) {
+//            $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity );
+//        } else {
+//            $entity->setEducational(NULL);
+//        }
 
-        if( $entity->getResearch() && !$entity->getResearch()->isEmpty() ) {
-            echo "0 not empty <br>";
-            $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity );
-        } else {
-            $entity->setResearch(NULL);
-        }
+        $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity );
+//        if( $entity->getResearch() && !$entity->getResearch()->isEmpty() ) {
+//            //echo "0 not empty <br>";
+//            $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity );
+//        } else {
+//            $entity->setResearch(NULL);
+//        }
         //********** end of educational and research processing ***********//
 
         foreach( $patients as $patient ) {
@@ -125,15 +127,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "--------------------------<br>";
         //}
 
-        echo $entity;
-        $research = $entity->getResearch();
-        echo "<br>Res count=".count($research)."<br>";
-        $projectTitle = $research->getProjectTitle();
-        echo "projectTitle=".$projectTitle."<br>";
-        echo "projectTitle Id=".$projectTitle->getId()."<br>";
-        echo "projectTitle Type=".$projectTitle->getType()."<br>";
-        echo "count(setTitle)=".count($projectTitle->getSetTitles())."<br>";
-        echo "setTitle1=".$projectTitle->getSetTitles()->first()."<br>";
+//        echo $entity;
+//        $research = $entity->getResearch();
+//        echo "<br>Res count=".count($research)."<br>";
+//        $projectTitle = $research->getProjectTitle();
+//        echo "projectTitle=".$projectTitle."<br>";
+//        echo "projectTitle Id=".$projectTitle->getId()."<br>";
+//        echo "projectTitle Type=".$projectTitle->getType()."<br>";
+//        echo "count(setTitle)=".count($projectTitle->getSetTitles())."<br>";
+//        echo "setTitle1=".$projectTitle->getSetTitles()->first()."<br>";
 //        echo "<br>Accession count=".count($patient->getProcedure()->first()->getAccession())."<br>";
 //        $acc = $patient->getProcedure()->first()->getAccession()->first();
 //        echo "number=".$acc->obtainValidKeyField()."<br>";

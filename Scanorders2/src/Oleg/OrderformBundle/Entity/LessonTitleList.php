@@ -8,41 +8,40 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="SetTitleList")
+ * @ORM\Table(name="LessonTitleList")
  */
-class SetTitleList extends ListAbstract
+class LessonTitleList extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="SetTitleList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="LessonTitleList", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SetTitleList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="LessonTitleList", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="setTitles", cascade={"persist"})
-     * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CourseTitleList", inversedBy="lessonTitles", cascade={"persist"})
+     * @ORM\JoinColumn(name="courseTitle_id", referencedColumnName="id", nullable=true)
      */
-    protected $projectTitle;
+    protected $courseTitle;
 
 
     public function __construct() {
-        //$this->research = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
     }
 
     /**
      * Add synonyms
      *
-     * @param \Oleg\OrderformBundle\Entity\SetTitleList $synonyms
-     * @return SetTitleList
+     * @param \Oleg\OrderformBundle\Entity\LessonTitleList $synonyms
+     * @return LessonTitleList
      */
-    public function addSynonym(\Oleg\OrderformBundle\Entity\SetTitleList $synonyms)
+    public function addSynonym(\Oleg\OrderformBundle\Entity\LessonTitleList $synonyms)
     {
         $this->synonyms->add($synonyms);
 
@@ -52,9 +51,9 @@ class SetTitleList extends ListAbstract
     /**
      * Remove synonyms
      *
-     * @param \Oleg\OrderformBundle\Entity\SetTitleList $synonyms
+     * @param \Oleg\OrderformBundle\Entity\LessonTitleList $synonyms
      */
-    public function removeSynonym(\Oleg\OrderformBundle\Entity\SetTitleList $synonyms)
+    public function removeSynonym(\Oleg\OrderformBundle\Entity\LessonTitleList $synonyms)
     {
         $this->synonyms->removeElement($synonyms);
     }
@@ -86,19 +85,19 @@ class SetTitleList extends ListAbstract
     }
 
     /**
-     * @param mixed $projectTitle
+     * @param mixed $courseTitle
      */
-    public function setProjectTitle($projectTitle)
+    public function setCourseTitle($courseTitle)
     {
-        $this->projectTitle = $projectTitle;
+        $this->courseTitle = $courseTitle;
     }
 
     /**
      * @return mixed
      */
-    public function getProjectTitle()
+    public function getCourseTitle()
     {
-        return $this->projectTitle;
+        return $this->courseTitle;
     }
 
 

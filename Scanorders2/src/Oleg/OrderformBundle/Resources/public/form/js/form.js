@@ -22,6 +22,8 @@ function initAdd() {
 
     setResearch();
 
+    setEducational();
+
 }
 
 //confirm delete
@@ -668,11 +670,38 @@ function initSingleDatepicker( datepickerElement ) {
 function setResearch() {
     //get value of project title field on change
     $('.combobox-research-projectTitle').on("change", function(e) {
+        //console.log('listener: project Title changed');
         getSetTitle();
     });
-
 }
 
+function setEducational() {
+    //get value of project title field on change
+    $('.combobox-research-courseTitle').on("change", function(e) {
+        //console.log('listener: course Title changed');
+        getLessonTitle();
+    });
+}
+
+function inArrayCheck( arr, needle ) {
+    //console.log('len='+arr.length+", needle: "+needle+"?="+parseInt(needle));
+
+    if( needle == '' ) {
+        return -1;
+    }
+
+    if( needle == parseInt(needle) ) {
+        return needle;
+    }
+
+    for( var i = 0; i < arr.length; i++ ) {
+        //console.log(arr[i]['text']+'?='+needle);
+        if( arr[i]['text'] === needle ) {
+            return arr[i]['id'];
+        }
+    }
+    return -1;
+}
 
 
 function printF(element,text) {

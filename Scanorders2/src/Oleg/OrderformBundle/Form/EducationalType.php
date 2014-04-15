@@ -36,20 +36,25 @@ class EducationalType extends AbstractType
             $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
         }
 
-        $builder->add( 'course', 'text', array(
-            'label'=>'Course Title:',
-            'max_length'=>'500',
-            'required'=> false,
-            'attr' => array('class'=>'form-control form-control-modif'),
-            'read_only' => $readonly
-        ));
-
-        $builder->add( 'lesson', 'text', array(
-            'label' => 'Lesson Title:',
-            'max_length'=>'500',
-            'required'=>false,
-            'attr' => array('class'=>'form-control form-control-modif'),
-            'read_only' => $readonly
+//        $builder->add( 'course', 'text', array(
+//            'label'=>'Course Title:',
+//            'max_length'=>'500',
+//            'required'=> false,
+//            'attr' => array('class'=>'form-control form-control-modif'),
+//            'read_only' => $readonly
+//        ));
+//
+//        $builder->add( 'lesson', 'text', array(
+//            'label' => 'Lesson Title:',
+//            'max_length'=>'500',
+//            'required'=>false,
+//            'attr' => array('class'=>'form-control form-control-modif'),
+//            'read_only' => $readonly
+//        ));
+        $builder->add('courseTitle', new CourseTitleListType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\CourseTitleList',
+            'label' => false,
+            'required' => false,
         ));
 
         $builder->add('directorstr', 'custom_selector', array(

@@ -20,14 +20,10 @@ class Educational
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CourseTitleList", inversedBy="educational")
+     * @ORM\JoinColumn(name="courseTitle_id", referencedColumnName="id", nullable=true)
      */
-    protected $course;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $lesson;
+    protected $courseTitle;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
@@ -64,52 +60,6 @@ class Educational
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set course
-     *
-     * @param string $course
-     * @return Educational
-     */
-    public function setCourse($course)
-    {
-        $this->course = $course;
-    
-        return $this;
-    }
-
-    /**
-     * Get course
-     *
-     * @return string 
-     */
-    public function getCourse()
-    {
-        return $this->course;
-    }
-
-    /**
-     * Set lesson
-     *
-     * @param string $lesson
-     * @return Educational
-     */
-    public function setLesson($lesson)
-    {
-        $this->lesson = $lesson;
-    
-        return $this;
-    }
-
-    /**
-     * Get lesson
-     *
-     * @return string 
-     */
-    public function getLesson()
-    {
-        return $this->lesson;
     }
 
     /**
@@ -176,10 +126,28 @@ class Educational
         return $this->slide;
     }
 
+    /**
+     * @param mixed $courseTitle
+     */
+    public function setCourseTitle($courseTitle)
+    {
+        $this->courseTitle = $courseTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCourseTitle()
+    {
+        return $this->courseTitle;
+    }
+
+
+
 
     public function isEmpty()
     {
-        if( $this->lesson || $this->course || $this->directorstr ) {
+        if( $this->courseTitle || $this->directorstr != '' ) {
             return false;
         } else {
             return true;
@@ -189,7 +157,8 @@ class Educational
 
     public function __toString(){
 
-        return "Principal: id=".$this->id.", course=".$this->course.", lesson".$this->lesson."<br>";
+        //return "Educational: id=".$this->id.", course=".$this->courseTitle.", course type=".$this->getCourseTitle()->getType().", director=".$this->director.", countLessonTitles=".count($this->courseTitle->getLessonTitles())."<br>";
+        return "Educational: id=".$this->id.", course=".$this->courseTitle.", director=".$this->director."<br>";
     }
 
 

@@ -36,6 +36,8 @@ var optionaluserEducational = new Array();
 var optionaluserResearch = new Array();
 var _projectTitle = new Array();
 var _setTitle = new Array();
+var _courseTitle = new Array();
+var _lessonTitle = new Array();
 
 var userpathserviceflag = false;
 
@@ -67,7 +69,11 @@ function regularCombobox() {
 
     //research
     populateSelectCombobox( ".combobox-research-setTitle", _setTitle, "Research Set Title", false );
-    $(".combobox-research-setTitle").select2("readonly", true);
+    //$(".combobox-research-setTitle").select2("readonly", true);
+
+    //educational
+    populateSelectCombobox( ".combobox-research-lessonTitle", _lessonTitle, "Lesson Title", false );
+    //$(".combobox-research-lessonTitle").select2("readonly", true);
 
 }
 
@@ -92,7 +98,7 @@ function customCombobox() {
         getOptionalUserResearch(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
         getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
-        //getSetTitle(urlCommon,new Array("0","0","0","0","0","0"));
+        getCourseTitle(urlCommon,new Array("0","0","0","0","0","0"));
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
@@ -436,6 +442,14 @@ function getProjectTitle(urlCommon,ids) {
         }).success(function(data) {
                 _projectTitle = data;
                 populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, "Research Project Title", false );
+
+                //get id if set
+                var projectTitleVal = $(".combobox-research-projectTitle").select2('val');
+                //console.log("finished: projectTitleVal="+projectTitleVal);
+                if( projectTitleVal != "" ) {
+                    getSetTitle();
+                }
+
             });
     } else {
         populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, "Research Project Title", false );
@@ -448,11 +462,23 @@ function getSetTitle() {
 
     //get ProjectTitle value
     var projectTitleVal = $(".combobox-research-projectTitle").select2('val');
-    console.log("projectTitleVal="+projectTitleVal);
+    //console.log("setTitle: projectTitleVal="+projectTitleVal);
+    //console.log(_projectTitle);
+    //var projectTitleData = $(".combobox-research-projectTitle").select2('data');
+    //console.log("id="+projectTitleData.id+", text="+projectTitleData.text);
+
+    var idInArr = inArrayCheck( _projectTitle, projectTitleVal );
+    //console.log('idInArr='+idInArr);
+
+    if( idInArr == -1 ) {
+        //console.log('not in array');
+        populateSelectCombobox( ".combobox-research-setTitle", _setTitle, "Research Set Title", false );
+        return;
+    }
 
     var url = urlCommon+"settitle";
 
-    url = url + "?opt="+projectTitleVal;
+    url = url + "?opt="+idInArr;
 
     $.ajax({
         url: url,
@@ -465,13 +491,80 @@ function getSetTitle() {
                 $(".combobox-research-setTitle").select2("readonly", false);
                 //$(".combobox-research-setTitle").select2('data', {id: data[0].id, text: data[0].text});
                 setToFirstElement( ".combobox-research-setTitle", data );
-            } else {
-                //$(".combobox-research-setTitle").select2("readonly", true);
-                //$(".combobox-research-setTitle").select2('val', null);
-                //populateSelectCombobox( ".combobox-research-setTitle", data, "Research Set Title");
+            }
+    });
+
+}
+
+
+//#############  course title  ##############//
+function getCourseTitle(urlCommon,ids) {
+
+    var url = urlCommon+"coursetitle";
+
+//    if( cicle == "new" || cicle == "create" ) {
+//        url = url + "?opt=default";
+//    }
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "?opt="+orderinfoid;
+    }
+
+    if( _courseTitle.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+                _courseTitle = data;
+                populateSelectCombobox( ".combobox-research-courseTitle", _courseTitle, "Course Title", false );
+
+                //get id if set
+                var courseTitleVal = $(".combobox-research-courseTitle").select2('val');
+                //console.log("finished: courseTitleVal="+courseTitleVal);
+                if( courseTitleVal != "" ) {
+                    getLessonTitle();
+                }
+
+            });
+    } else {
+        populateSelectCombobox( ".combobox-research-courseTitle", _courseTitle, "Course Title", false );
+    }
+
+}
+
+//#############  lesson title  ##############//
+function getLessonTitle() {
+
+    //get CourseTitle value
+    var courseTitleVal = $(".combobox-research-courseTitle").select2('val');
+    //console.log("lessonTitle: courseTitleVal="+courseTitleVal);
+
+    var idInArr = inArrayCheck( _courseTitle, courseTitleVal );
+    //console.log('idInArr='+idInArr);
+
+    if( idInArr == -1 ) {
+        //console.log('not in array');
+        populateSelectCombobox( ".combobox-research-lessonTitle", _lessonTitle, "Lesson Title", false );
+        return;
+    }
+
+    var url = urlCommon+"lessontitle";
+
+    url = url + "?opt="+idInArr;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: asyncflag
+    }).success(function(data) {
+            if( data ) {
+                //console.log("id="+data[0].id+", text="+data[0].text);
+                populateSelectCombobox( ".combobox-research-lessonTitle", data);
+                $(".combobox-research-lessonTitle").select2("readonly", false);
+                setToFirstElement( ".combobox-research-lessonTitle", data );
             }
 
-    });
+        });
 
 }
 
@@ -658,7 +751,7 @@ function initComboboxJs(ids) {
         getOptionalUserResearch(urlCommon,ids);
         slideType(ids);
         getProjectTitle(urlCommon,ids);
-        //getSetTitle(urlCommon,ids);
+        getCourseTitle(urlCommon,ids);
     }
 }
 

@@ -37,6 +37,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/", name="slidedelivery-list")
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
+     * @Route("/research-project-titles/", name="researchprojecttitles-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -113,6 +114,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/", name="slidedelivery_create")
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
+     * @Route("/research-project-titles/", name="researchprojecttitles_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -227,6 +229,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/new", name="slidedelivery_new")
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
+     * @Route("/research-project-titles/new", name="researchprojecttitles_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -286,6 +289,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_show")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
+     * @Route("/research-project-titles/{id}", name="researchprojecttitles_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -337,6 +341,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/{id}/edit", name="slidedelivery_edit")
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
+     * @Route("/research-project-titles/{id}/edit", name="researchprojecttitles_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -434,6 +439,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_update")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
+     * @Route("/research-project-titles/{id}", name="researchprojecttitles_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -580,6 +586,10 @@ class ListController extends Controller
             $className = "processorcomments";
             $displayName = "Processor Comments";
             break;
+        case "researchprojecttitles":
+            $className = "projecttitlelist";
+            $displayName = "Project Titles";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -612,6 +622,7 @@ class ListController extends Controller
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_delete")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")
+     * @Route("/research-project-titles/{id}", name="researchprojecttitles_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

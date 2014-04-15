@@ -25,12 +25,6 @@ class Research
      */
     protected $projectTitle;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="SetTitleList", inversedBy="research", cascade={"persist"})
-//     * @ORM\JoinColumn(name="setTitle_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $setTitle;
-
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
@@ -148,23 +142,6 @@ class Research
         return $this->projectTitle;
     }
 
-//    /**
-//     * @param mixed $setTitle
-//     */
-//    public function setSetTitle($setTitle)
-//    {
-//        $this->setTitle = $setTitle;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getSetTitle()
-//    {
-//        return $this->setTitle;
-//    }
-
-
     public function isEmpty()
     {
         if( $this->projectTitle || $this->principalstr ) {
@@ -175,8 +152,8 @@ class Research
     }
 
     public function __toString(){
-
-        return "Research: id=".$this->id.", project=".$this->projectTitle.", project type=".$this->getProjectTitle()->getType().", principal=".$this->principal.", countSetTitles=".count($this->projectTitle->getSetTitles())."<br>";
+        //return "Research: id=".$this->id.", project=".$this->projectTitle.", project type=".$this->getProjectTitle()->getType().", principal=".$this->principal.", countSetTitles=".count($this->projectTitle->getSetTitles())."<br>";
+        return "Research: id=".$this->id.", project=".$this->projectTitle."<br>";
     }
 
 }

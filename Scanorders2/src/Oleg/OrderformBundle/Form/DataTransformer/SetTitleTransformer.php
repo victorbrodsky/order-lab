@@ -12,7 +12,6 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\SetTitleList;
 
 class SetTitleTransformer implements DataTransformerInterface
 {
@@ -21,14 +20,16 @@ class SetTitleTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
+    private $className;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->className = $className;
     }
 
     public function getThisEm() {
@@ -50,18 +51,21 @@ class SetTitleTransformer implements DataTransformerInterface
 
         $type = $type->first();
 
-        echo "setTitles: data transformer type=".$type."<br>";
+        //echo "setTitles: data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
-            $type = $this->em->getRepository('OlegOrderformBundle:SetTitleList')->findOneById($type);
+            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         } else {
-            $type = $this->em->getRepository('OlegOrderformBundle:SetTitleList')->findOneByName($type);
+           // echo "not int <br>";
+            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($type);
         }
         
         if (null === $type) {
             return "";
         }
+
+        //echo "setTitles: data transformer id=".$type->getId()."<br>";
 
         return $type->getId();
 
@@ -72,9 +76,9 @@ class SetTitleTransformer implements DataTransformerInterface
      *
      * @param  string $number
      *
-     * @return SetTitleList|null
+     * @return $this->className|null
      *
-     * @throws TransformationFailedException if object (SetTitleList) is not found.
+     * @throws TransformationFailedException if object ($this->className) is not found.
      */
     public function reverseTransform($text)
     {
@@ -88,7 +92,7 @@ class SetTitleTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:SetTitleList')->findOneById($text);
+            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -111,21 +115,21 @@ class SetTitleTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
-        //echo "mrn type name=".$name."<br>";
+        //echo "new: name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:SetTitleList')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($name);
         
         if( null === $entity ) {
-
-            $newEntity = new SetTitleList();
+            $entityClass = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+            $newEntity = new $entityClass();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('default');
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:SetTitleList c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:'.$this->className.' c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 

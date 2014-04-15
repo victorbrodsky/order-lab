@@ -12,7 +12,6 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\ProjectTitleList;
 
 class ProjectTitleTransformer implements DataTransformerInterface
 {
@@ -21,14 +20,16 @@ class ProjectTitleTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
+    private $className;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className=null)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->className = $className;
     }
 
     public function getThisEm() {
@@ -48,15 +49,15 @@ class ProjectTitleTransformer implements DataTransformerInterface
             return "";
         }
 
-        echo "data transformer type=".$type."<br>";
+        //echo "ProjectTitle: data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
             //echo "int <br>";
-            $type = $this->em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneById($type);
+            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         } else {
             //echo "not int <br>";
-            $type = $this->em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneByName($type);
+            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($type);
             //echo "name=".$type->getName().", id=".$type->getId()."<br>";
             //echo "count=".count($types)."<br>";
             //$type = $types->first();
@@ -75,9 +76,9 @@ class ProjectTitleTransformer implements DataTransformerInterface
      *
      * @param  string $number
      *
-     * @return ProjectTitleList|null
+     * @return $entityClass|null
      *
-     * @throws TransformationFailedException if object (ProjectTitleList) is not found.
+     * @throws TransformationFailedException if object ($entityClass) is not found.
      */
     public function reverseTransform($text)
     {
@@ -91,7 +92,7 @@ class ProjectTitleTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneById($text);
+            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -114,22 +115,24 @@ class ProjectTitleTransformer implements DataTransformerInterface
 
     public function createNew($name) {
 
-        echo "new ProjectTitleList name=".$name."<br>";
+        //echo "new $entityClass name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($name);
         
         if( null === $entity ) {
 
-            echo "null <br>";
-            $newEntity = new ProjectTitleList();
+            //echo "null <br>";
+            $entityClass = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+
+            $newEntity = new $entityClass();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('default');
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:ProjectTitleList c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:'.$this->className.' c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 
@@ -138,7 +141,7 @@ class ProjectTitleTransformer implements DataTransformerInterface
 
             return $newEntity;
         } else {
-            echo "not null <br>";
+            //echo "not null <br>";
             return $entity;
         }
 

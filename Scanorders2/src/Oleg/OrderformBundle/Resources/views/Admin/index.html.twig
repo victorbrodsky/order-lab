@@ -129,9 +129,18 @@
     <hr>
 
 
+    <h3 class="text-info">Project Titles</h3>
+    <p>
+        <a href="{{ path('researchprojecttitles-list') }}">List of Project Titles</a>
+    </p>
+
+
     {% if environment is not defined %}
         {% set environment = 'dev' %}
     {% endif %}
+
+    <hr>
+    <br />
 
     <!--show this only for dev. Don't show for live-->
     {% if is_granted('ROLE_ADMIN') and environment == 'dev' %}
