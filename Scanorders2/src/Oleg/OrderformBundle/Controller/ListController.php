@@ -356,7 +356,7 @@ class ListController extends Controller
      * @Route("/research-project-titles/{id}/edit", name="researchprojecttitles_edit")
      * @Route("/research-set-titles/{id}/edit", name="researchsettitles_edit")
      * @Route("/educational-course-titles/{id}/edit", name="educationalcoursetitles_edit")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_edit")
+     * @Route("/educational-lesson-titles/{id}/edit", name="educationallessontitles_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */

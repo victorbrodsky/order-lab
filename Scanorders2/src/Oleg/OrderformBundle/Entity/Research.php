@@ -26,17 +26,6 @@ class Research
     protected $projectTitle;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
-     */
-    protected $principal;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $principalstr;
-
-    /**
      * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="research")
      */
     protected $orderinfo;
@@ -60,38 +49,6 @@ class Research
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $principal
-     */
-    public function setPrincipal($principal)
-    {
-        $this->principal = $principal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrincipal()
-    {
-        return $this->principal;
-    }
-
-    /**
-     * @param mixed $principalstr
-     */
-    public function setPrincipalstr($principalstr)
-    {
-        $this->principalstr = $principalstr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrincipalstr()
-    {
-        return $this->principalstr;
     }
 
     /**
@@ -144,10 +101,11 @@ class Research
 
     public function isEmpty()
     {
-        if( $this->projectTitle || $this->principalstr ) {
-            return false;
-        } else {
+        //return $this->getProjectTitle()->isEmtpy();
+        if( $this->getProjectTitle()->getName() == '' ) {
             return true;
+        } else {
+            return false;
         }
     }
 

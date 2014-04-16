@@ -125,32 +125,6 @@
 
     {% include 'OlegOrderformBundle::MultyScanOrder/edu_res.html.twig' %}
 
-    {#{% if formtype == 'Educational Multi-Slide Scan Order' or formtype == 'One Slide Scan Order' %}#}
-        {#<div class="panel panel-patient panel-multi-form">#}
-            {#<div class="panel-heading">#}
-                {#<h4 class="panel-title">Educational Topic</h4>#}
-            {#</div>#}
-            {#<div class="panel-body">               #}
-                {#{{ formmacros.field(form.educational.course) }}#}
-                {#{{ formmacros.field(form.educational.lesson) }}#}
-				{#{{ formmacros.field(form.educational.directorstr) }}#}
-            {#</div>#}
-        {#</div>#}
-    {#{% endif %}#}
-
-    {#{% if formtype == 'Research Multi-Slide Scan Order' or formtype == 'One Slide Scan Order' %}#}
-        {#<div class="panel panel-patient panel-multi-form">#}
-            {#<div class="panel-heading">#}
-                {#<h4 class="panel-title">Research Project Info</h4>#}
-            {#</div>#}
-            {#<div class="panel-body">#}
-                {#{{ formmacros.field(form.research.project) }}#}
-                {#{{ formmacros.field(form.research.settitle) }}#}
-                {#{{ formmacros.field(form.research.principalstr) }}#}
-            {#</div>#}
-        {#</div>#}
-    {#{% endif %}#}
-
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
         {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"","prototype") %}

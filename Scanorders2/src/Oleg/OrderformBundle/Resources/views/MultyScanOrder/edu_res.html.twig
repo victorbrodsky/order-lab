@@ -11,7 +11,10 @@
             <p>
                 {{ formmacros.field(form.research.projectTitle.name) }}
                 {{ formmacros.field(form.research.projectTitle.setTitles) }}
-                {{ formmacros.field(form.research.principalstr) }}
+                {{ formmacros.field(form.research.projectTitle.principals.name) }}
+                {#{% for principal in form.research.projectTitle.principals %}#}
+                    {#{{ formmacros.field(principal) }}#}
+                {#{% endfor %}#}
             </p>
         </div>
         <div id="educational" class="tab-pane">

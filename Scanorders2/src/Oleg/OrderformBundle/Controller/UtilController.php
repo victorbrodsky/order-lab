@@ -692,93 +692,6 @@ class UtilController extends Controller {
 
 
     /**
-     * @Route("/optionalusereducational", name="get-optionalusereducational")
-     * @Route("/optionaluserresearch", name="get-optionaluserresearch")
-     * @Method("GET")
-     */
-    public function getOptionalUserAction() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
-        $opt = trim( $request->get('opt') ); //current user id
-
-        $routeName = $request->get('_route');
-
-        $where = "";
-        if( $routeName == "get-optionalusereducational" ) {
-            $role = "ROLE_COURSE_DIRECTOR";
-        }
-        if( $routeName == "get-optionaluserresearch" ) {
-            $role = "ROLE_PRINCIPAL_INVESTIGATOR";
-        }
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:User', 'list')
-            //->select("list.id as id, list.username as text")
-            ->select("list")
-            ->where("list.roles LIKE :role")
-            ->orderBy("list.id","ASC")
-            ->setParameter('role', '%"' . $role . '"%');
-
-        $users = $query->getQuery()->getResult();
-
-        $output = array();
-        foreach( $users as $user ) {
-            $element = array('id'=>$user."", 'text'=>$user."");
-            $output[] = $element;
-        }
-
-        //attach this user course directors and principal investigators string from educationa and research entities
-        if( !$opt || $opt == "" ) {
-            $opt = $this->get('security.context')->getToken()->getUser()->getId();
-        }
-
-        //$orderinfos = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findByProvider($opt);
-
-        $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:OrderInfo', 'orderinfo')
-            ->innerJoin("orderinfo.provider", "provider")
-            ->select("orderinfo")
-            ->where("provider.id=:userid")
-            ->setParameter("userid",$opt);
-
-        $orderinfos = $query->getQuery()->getResult();
-
-        //echo "order count=".count($orderinfos)."<br>";
-
-        foreach( $orderinfos as $orderinfo ) {
-
-            if( $orderinfo->getEducational() ) {
-                $dirstr = $orderinfo->getEducational()->getDirectorstr();
-                if( $dirstr && $dirstr != "" ) {
-                    $element = array('id'=>$dirstr, 'text'=>$dirstr);
-                    if( !$this->in_complex_array($dirstr, $output) ) {
-                        $output[] = $element;
-                    }
-                }
-            }
-
-
-            if( $orderinfo->getResearch() ) {
-                $princstr = $orderinfo->getResearch()->getPrincipalstr();
-                if( $princstr && $princstr != "" ) {
-                    $element = array('id'=>$princstr, 'text'=>$princstr);
-                    if( !$this->in_complex_array($princstr, $output) ) {
-                        $output[] = $element;
-                    }
-                }
-            }
-
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    /**
      * @Route("/projecttitle", name="get-projecttitle")
      * @Method("GET")
      */
@@ -796,11 +709,11 @@ class UtilController extends Controller {
             //->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
 
-        if( $opt ) {
+//        if( $opt ) {
             $user = $this->get('security.context')->getToken()->getUser();
             $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
             $query->setParameters( array('type' => 'default', 'user' => $user) );
-        }
+//        }
 
         //echo "query=".$query."<br \>";
 
@@ -863,11 +776,11 @@ class UtilController extends Controller {
             ->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
 
-        if( $opt ) {
+//        if( $opt ) {
             $user = $this->get('security.context')->getToken()->getUser();
             $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
             $query->setParameters( array('type' => 'default', 'user' => $user) );
-        }
+//        }
 
         //echo "query=".$query."<br>";
 
@@ -912,6 +825,145 @@ class UtilController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/optionalusereducational", name="get-optionalusereducational")
+     * @Route("/optionaluserresearch", name="get-optionaluserresearch")
+     * @Method("GET")
+     */
+    public function getOptionalUserAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') ); //parent id: courseTitle id
+
+        //1) add PIList with parent ids = $opt
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:PIList', 'list')
+            ->select("list.id as id, list.name as text")
+            ->leftJoin("list.projects","parents")
+            ->where("parents.id = :pid AND list.type = :type")
+            ->orderBy("list.orderinlist","ASC")
+            ->setParameters( array(
+                'pid' => $opt,
+                'type' => 'default'
+            ));
+
+        $output = $query->getQuery()->getResult();
+
+        //2) add users with ROLE_COURSE_DIRECTOR and ROLE_PRINCIPAL_INVESTIGATOR
+        $routeName = $request->get('_route');
+
+        $where = "";
+        if( $routeName == "get-optionalusereducational" ) {
+            $role = "ROLE_COURSE_DIRECTOR";
+        }
+        if( $routeName == "get-optionaluserresearch" ) {
+            $role = "ROLE_PRINCIPAL_INVESTIGATOR";
+        }
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:User', 'list')
+            //->select("list.id as id, list.username as text")
+            ->select("list")
+            ->where("list.roles LIKE :role")
+            ->orderBy("list.id","ASC")
+            ->setParameter('role', '%"' . $role . '"%');
+
+        $users = $query->getQuery()->getResult();
+
+        foreach( $users as $user ) {
+            $element = array('id'=>$user."", 'text'=>$user."");
+            $output[] = $element;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+
+        //////////////////////////////////////////////
+
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $request = $this->get('request');
+//        $opt = trim( $request->get('opt') ); //project id
+//
+//        $routeName = $request->get('_route');
+//
+//        $where = "";
+//        if( $routeName == "get-optionalusereducational" ) {
+//            $role = "ROLE_COURSE_DIRECTOR";
+//        }
+//        if( $routeName == "get-optionaluserresearch" ) {
+//            $role = "ROLE_PRINCIPAL_INVESTIGATOR";
+//        }
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:User', 'list')
+//            //->select("list.id as id, list.username as text")
+//            ->select("list")
+//            ->where("list.roles LIKE :role")
+//            ->orderBy("list.id","ASC")
+//            ->setParameter('role', '%"' . $role . '"%');
+//
+//        $users = $query->getQuery()->getResult();
+//
+//        $output = array();
+//        foreach( $users as $user ) {
+//            $element = array('id'=>$user."", 'text'=>$user."");
+//            $output[] = $element;
+//        }
+//
+//        //attach this user course directors and principal investigators string from educationa and research entities
+////        if( !$opt || $opt == "" ) {
+////            $opt = $this->get('security.context')->getToken()->getUser()->getId();
+////        }
+//
+//        //$orderinfos = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findByProvider($opt);
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('OlegOrderformBundle:OrderInfo', 'orderinfo')
+//            ->innerJoin("orderinfo.provider", "provider")
+//            ->select("orderinfo")
+//            ->where("provider.id=:userid")
+//            ->setParameter("userid",$opt);
+//
+//        $orderinfos = $query->getQuery()->getResult();
+//
+//        //echo "order count=".count($orderinfos)."<br>";
+//
+//        foreach( $orderinfos as $orderinfo ) {
+//
+//            if( $orderinfo->getEducational() ) {
+//                $dirstr = $orderinfo->getEducational()->getDirectorstr();
+//                if( $dirstr && $dirstr != "" ) {
+//                    $element = array('id'=>$dirstr, 'text'=>$dirstr);
+//                    if( !$this->in_complex_array($dirstr, $output) ) {
+//                        $output[] = $element;
+//                    }
+//                }
+//            }
+//
+//
+//            if( $orderinfo->getResearch() ) {
+//                $princstr = $orderinfo->getResearch()->getPrincipalstr();
+//                if( $princstr && $princstr != "" ) {
+//                    $element = array('id'=>$princstr, 'text'=>$princstr);
+//                    if( !$this->in_complex_array($princstr, $output) ) {
+//                        $output[] = $element;
+//                    }
+//                }
+//            }
+//
+//        }
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+
+    }
 
 
     //search if $needle exists in array $products

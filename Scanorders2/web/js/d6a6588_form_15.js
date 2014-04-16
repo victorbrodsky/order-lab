@@ -672,6 +672,7 @@ function setResearch() {
     $('.combobox-research-projectTitle').on("change", function(e) {
         //console.log('listener: project Title changed');
         getSetTitle();
+        getOptionalUserResearch();
     });
 }
 

@@ -25,8 +25,8 @@ class ProjectTitleListType extends AbstractType
 
     public function __construct( $params=null, $entity=null )
     {
-        if( $params ) $this->params = $params;
-        if( $entity ) $this->entity = $entity;
+        $this->params = $params;
+        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -59,6 +59,11 @@ class ProjectTitleListType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-research-setTitle', 'type' => 'hidden'),
             //'read_only' => $readonly,
             'classtype' => 'setTitles'
+        ));
+
+        $builder->add('principals', new PrincipalType($this->params, null), array(
+            'data_class' => null,   //'Oleg\OrderformBundle\Entity\PIList',
+            'label' => false
         ));
 
     }

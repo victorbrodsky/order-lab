@@ -57,15 +57,16 @@ class SetTitleTransformer implements DataTransformerInterface
             $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         } else {
-           // echo "not int <br>";
-            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($type);
+            //echo "not int <br>";
+            $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($type."");
         }
         
         if (null === $type) {
+            //echo "not found<br>";
             return "";
         }
 
-        //echo "setTitles: data transformer id=".$type->getId()."<br>";
+        echo "setTitles: data transformer id=".$type->getId()."<br>";
 
         return $type->getId();
 
@@ -83,7 +84,7 @@ class SetTitleTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        //echo "data transformer text=".$text."<br>";
+        echo "data transformer text=".$text."<br>";
         //exit();
 
         if (!$text) {

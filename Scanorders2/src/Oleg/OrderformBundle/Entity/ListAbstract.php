@@ -232,6 +232,13 @@ abstract class ListAbstract
         return $this->updatedon;
     }
 
+    public function isEmpty() {
+        if( $this->name == '' ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //for entity with synonyms
 //    public function setSynonyms($synonyms = null) {

@@ -53,8 +53,8 @@ class ResearchRepository extends EntityRepository {
                 //$count++;
             }
 
-            $entity->setProjectTitle( $foundProjectTitle );
 //            echo "2 research obj=".$entity;
+            $this->processPrincipals( $originalProjectTitle, $foundProjectTitle ); //source, dest
 
             //$origSetTitles = $entity->getProjectTitle()->getSetTitles();
 //            echo "count SetTitles=".count($origSetTitles)."<br>";
@@ -63,11 +63,28 @@ class ResearchRepository extends EntityRepository {
 //                $settitle->setProjectTitle($foundProjectTitle);
 //            }
 
+            //process PI
+//            $principals = $originalProjectTitle->getPrincipals();
+//            foreach( $principals as $principal ) {
+//                $foundUser = $this->processUser($principal);
+//                if( $foundUser ) {
+//                    $foundProjectTitle->addSetTitles($settitle);
+//                    $settitle->setProjectTitle($foundProjectTitle);
+//                }
+//
+//                //$count++;
+//            }
+
+            $entity->setProjectTitle( $foundProjectTitle );
+
             $orderinfo->setResearch($entity);
 
+            //exit();
             return $orderinfo;
 
         } else {
+
+            exit("OHHH");
 
             $str = $entity->getPrincipalstr();
 
@@ -94,7 +111,7 @@ class ResearchRepository extends EntityRepository {
 
             if( $user ) {
                 //echo "user=".$user."<br>";
-                $entity->setPrincipal($user);
+                //$entity->setPrincipal($user);
                 $orderinfo->setResearch($entity);
             }
 
@@ -102,6 +119,42 @@ class ResearchRepository extends EntityRepository {
 
         //exit('educ rep');
         return $orderinfo;
+    }
+
+    public function processPrincipals( $source, $dest ) {
+
+
+        $principals = $source->getPrincipals();
+
+        foreach( $principals as $principal ) {
+            $principalstr = $principal->getName();
+            echo "principalstr=".$principalstr."<br>";
+
+            $foundPrincipal = $this->_em->getRepository('OlegOrderformBundle:PIList')->findOneByName($principalstr);
+
+            if( $foundPrincipal ) {
+                $dest->addPrincipals($foundPrincipal);
+            }
+
+//            //get cwid
+//            $strArr = explode(" ",$principalstr);
+//
+//            if( count($strArr) > 0 ) {
+//                $cwid = $strArr[0];
+//            }
+//
+//            if( $cwid ) {
+//                //echo "cwid=".$cwid."<br>";
+//                $user = $this->_em->getRepository('OlegOrderformBundle:User')->findOneByUsername($cwid);
+//            }
+
+            //if( $user ) {
+                //echo "user=".$user."<br>";
+                //$originalProjectTitle->setPrincipals($user);
+            //}
+
+        }
+
     }
 
 

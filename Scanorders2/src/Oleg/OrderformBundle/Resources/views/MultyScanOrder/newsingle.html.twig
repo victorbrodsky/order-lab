@@ -178,8 +178,10 @@
         <button id="next_button" type="button" class="btn btn-success" onclick="checkSingleFormOnNext(this)" data-toggle="collapse">Next</button>
 
 
-
         <div id="orderinfo_param" class="collapse">
+
+            {% include 'OlegOrderformBundle::MultyScanOrder/edu_res.html.twig' %}
+
             {{ formmacros.orderinfo_panel(form,"Order Info") }}
 
             <div class="row">
@@ -308,23 +310,26 @@
                                     </div>
                                 </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">Education</h3></div>
-                                    <div class="panel-body">                                      
-                                        {{ formmacros.field(form.educational.course) }}
-                                        {{ formmacros.field(form.educational.lesson) }}
-										{{ formmacros.field(form.educational.directorstr) }}
-                                    </div>
-                                </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">Research</h3></div>
-                                    <div class="panel-body">
-                                        {{ formmacros.field(form.research.project) }}
-                                        {{ formmacros.field(form.research.settitle) }}
-                                        {{ formmacros.field(form.research.principalstr) }}
-                                    </div>
-                                </div>
+                                {#{% include 'OlegOrderformBundle::MultyScanOrder/edu_res.html.twig' %}#}
+
+                                {#<div class="panel panel-default">#}
+                                    {#<div class="panel-heading"><h3 class="panel-title">Education</h3></div>#}
+                                    {#<div class="panel-body">#}
+                                        {#{{ formmacros.field(form.educational.courseTitle.name) }}#}
+                                        {#{{ formmacros.field(form.educational.courseTitle.lessonTitles) }}#}
+										{#{{ formmacros.field(form.educational.directorstr) }}#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                                {#<div class="panel panel-default">#}
+                                    {#<div class="panel-heading"><h3 class="panel-title">Research</h3></div>#}
+                                    {#<div class="panel-body">#}
+                                        {#{{ formmacros.field(form.research.projectTitle.name) }}#}
+                                        {#{{ formmacros.field(form.research.projectTitle.setTitles) }}#}
+                                        {#{{ formmacros.field(form.research.principalstr) }}#}
+                                    {#</div>#}
+                                {#</div>#}
 
                                 <!-- end of optional elements -->
 
