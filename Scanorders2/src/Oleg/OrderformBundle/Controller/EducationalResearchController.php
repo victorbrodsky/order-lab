@@ -72,18 +72,30 @@ class EducationalResearchController extends Controller {
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
 
-        $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        if( $type == 'research' ) {
+            $className = 'PIList';
+        }
+
+        if( $type == 'educational' ) {
+            $className = 'DirectorList';
+        }
+
+        //$entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $entityHolder = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
+        $editForm = $this->createEditForm($entityHolder);
 
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             //exit("form is valid!");
+
+            echo "name=".$entity->getName().", user=".$entity->getPrincipal()."<br>";
 
             $em->persist($entity);
             $em->flush();
@@ -145,12 +157,12 @@ class EducationalResearchController extends Controller {
         }
 
         if( $entity instanceof Educational ) {
-            $typeform = new EducationalType($params);
+            $typeform = new EducationalType($params,$entity);
             $type = "educational";
         }
 
         if( $entity instanceof Research ) {
-            $typeform = new ResearchType($params);
+            $typeform = new ResearchType($params,$entity);
             $type = "research";
         }
 

@@ -32,19 +32,6 @@ class ProjectTitleListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $addlabel = "";
-//        $readonly = false;
-//
-//        if( $this->params['type'] == 'SingleObject' ) {
-//            //this is used by data review, when a single onject is shown
-//            $attr = array('class'=>'form-control form-control-modif');
-//            $addlabel = " (as entered by user)";
-//            $readonly = true;
-//        } else {
-//            //this is used by orderinfo form, when the scan order form is shown ($this->params['type']="Multi-Slide Scan Order")
-//            $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
-//        }
-
         $builder->add( 'name', 'custom_selector', array(
             'label' => 'Research Project Title:',
             'required' => false,
@@ -61,10 +48,105 @@ class ProjectTitleListType extends AbstractType
             'classtype' => 'setTitles'
         ));
 
-        $builder->add('principals', new PrincipalType($this->params, null), array(
-            'data_class' => null,   //'Oleg\OrderformBundle\Entity\PIList',
-            'label' => false
-        ));
+
+        ///////////////////// PI //////////////////////////////////
+
+        $addlabel = "";
+        $readonly = false;
+
+        //echo "type=".$this->params['type']."<br>";
+
+//        if( $this->params['type'] == 'SingleObject' ) {
+//            //this is used by data review, when a single onject is shown
+//            $attr = array('class'=>'form-control form-control-modif');
+//            $addlabel = " (as entered by user)";
+//            $readonly = true;
+//        } else {
+//            //this is used by orderinfo form, when the scan order form is shown ($this->params['type']="Multi-Slide Scan Order")
+//            $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
+//        }
+
+        //show a user object linked to the research. Show it only for data review.
+        if( $this->params['type'] == 'SingleObject' ) {
+
+//            $attr = array('class' => 'combobox combobox-width');
+//            $builder->add('pis', 'entity', array(
+//                'class' => 'OlegOrderformBundle:PIList',
+//                'label'=>'Principal Investigator:',
+//                'required' => false,
+//                //'read_only' => true,    //not working => disable by twig
+//                'multiple' => true,
+//                'attr' => array('class'=>'form-control form-control-modif'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.projects","parents")
+//                        ->where("parents.id = :id")
+//                        ->setParameter('id', $this->entity->getId());
+//                },
+//            ));
+
+//            $attr = array('class' => 'combobox combobox-width');
+//            $builder->add('pis', 'entity', array(
+//                'class' => 'OlegOrderformBundle:User',
+//                'label'=>'Principal Investigator:',
+//                'required' => false,
+//                //'read_only' => true,    //not working => disable by twig
+//                //'multiple' => true,
+//                'attr' => $attr,
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('u')
+//                        ->where('u.locked=:locked')
+//                        ->setParameter('locked', '0');
+//                },
+//            ));
+
+            $builder->add('primaryPrincipal', 'entity', array(
+                'class' => 'OlegOrderformBundle:PIList',
+                'label'=>'Primary Principal Investigator:',
+                'required' => true,
+                //'read_only' => true,    //not working => disable by twig
+                //'multiple' => true,
+                //'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.projects","parents")
+                        ->where("parents.id = :id")
+                        ->setParameter('id', $this->entity->getId());
+                },
+            ));
+
+//            $builder->add('pis', new PrincipalType($this->params, $this->entity), array(
+//                'data_class' => 'Oleg\OrderformBundle\Entity\PIList',
+//                'label' => false
+//            ));
+            $builder->add('pis', 'collection', array(
+                'type' => new PrincipalType($this->params,$this->entity),
+                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'label' => " ",
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__patient__',
+            ));
+
+
+        } else {
+
+            $addlabel = " (as entered by user)";
+            $builder->add('pis', 'custom_selector', array(
+                'label' => 'Principal Investigator'.$addlabel.':',
+                'attr' => array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden'),
+                'required'=>false,
+                'classtype' => 'optionalUserResearch'
+            ));
+
+        }
+
+        ///////////////////////////// EOF PI ///////////////////////////////
+
+
 
     }
 

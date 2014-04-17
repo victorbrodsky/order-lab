@@ -102,10 +102,10 @@ class Research
     public function isEmpty()
     {
         //return $this->getProjectTitle()->isEmtpy();
-        if( $this->getProjectTitle()->getName() == '' ) {
-            return true;
-        } else {
+        if( $this->getProjectTitle() && $this->getProjectTitle()->getName() != '' ) {
             return false;
+        } else {
+            return true;
         }
     }
 

@@ -7,12 +7,12 @@
 
     {% include 'OlegOrderformBundle::DataReview/orderinfo.html.twig' %}
 
-    {#{{ myform.field(edit_form.courseTitle.name) }}#}
-    {#{{ myform.field(edit_form.courseTitle.lessonTitles) }}#}
+    {{ myform.field(edit_form.courseTitle.name) }}
+    {{ myform.field(edit_form.courseTitle.lessonTitles) }}
     {% do edit_form.courseTitle.setRendered %}
 
-    {{ myform.field(edit_form.directorstr) }}
-    {{ myform.field(edit_form.director) }}
+    {#{{ myform.field(edit_form.directorstr) }}#}
+    {#{{ myform.field(edit_form.director) }}#}
 
     {#{{ form_widget(edit_form._token) }}#}
 

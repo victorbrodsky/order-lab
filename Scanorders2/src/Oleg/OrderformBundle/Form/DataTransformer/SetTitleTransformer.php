@@ -37,6 +37,8 @@ class SetTitleTransformer implements DataTransformerInterface
     }
 
     /**
+     * Use for 'Show'
+     *
      * Transforms an object to a string.
      *
      * @param  Issue|null $issue
@@ -51,7 +53,7 @@ class SetTitleTransformer implements DataTransformerInterface
 
         $type = $type->first();
 
-        //echo "setTitles: data transformer type=".$type."<br>";
+        //echo $this->className.":data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
             $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($type);
@@ -66,13 +68,15 @@ class SetTitleTransformer implements DataTransformerInterface
             return "";
         }
 
-        echo "setTitles: data transformer id=".$type->getId()."<br>";
+        //echo "setTitles: data transformer id=".$type->getId()."<br>";
 
         return $type->getId();
 
     }
 
     /**
+     * Use for 'Submit'
+     *
      * Transforms a string (number) to an object (i.e. stain).
      *
      * @param  string $number
@@ -84,7 +88,7 @@ class SetTitleTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        echo "data transformer text=".$text."<br>";
+        //echo "data reverse transformer text=".$text."<br>";
         //exit();
 
         if (!$text) {

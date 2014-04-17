@@ -181,11 +181,15 @@ class ScanOrderController extends Controller {
                     break;
                 case "No Course Director Link":
                     $dql->innerJoin("orderinfo.educational", "educational");
-                    $criteriastr .= " educational.director IS NULL AND status.name != 'Superseded'";
+                    $dql->innerJoin("educational.courseTitle", "courseTitle");
+                    $dql->innerJoin("courseTitle.directors", "directors");
+                    $criteriastr .= " directors.director IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
                     $dql->innerJoin("orderinfo.research", "research");
-                    $criteriastr .= " research.principal IS NULL AND status.name != 'Superseded'";
+                    $dql->innerJoin("research.projectTitle", "projectTitle");
+                    $dql->innerJoin("projectTitle.pis", "principals");
+                    $criteriastr .= " principals.principal IS NULL AND status.name != 'Superseded'";
                     break;
                 default:
                     ;

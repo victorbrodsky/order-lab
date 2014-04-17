@@ -35,11 +35,23 @@ class CourseTitleList extends ListAbstract
      */
     protected $lessonTitles;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="DirectorList", inversedBy="courses", cascade={"persist"})
+     * @ORM\JoinTable(name="courses_directors")
+     **/
+    protected $directors;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $primaryDirector;
+
 
     public function __construct() {
         $this->educational = new ArrayCollection();
         $this->lessonTitles = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
+        $this->directors = new ArrayCollection();
     }
 
     public function addEducational(\Oleg\OrderformBundle\Entity\Educational $educational)
@@ -141,6 +153,94 @@ class CourseTitleList extends ListAbstract
         return $this;
     }
 
+    /**
+     * @param mixed $primaryDirector
+     */
+    public function setPrimaryDirector($primaryDirector)
+    {
+        $this->primaryDirector = $primaryDirector;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getPrimaryDirector()
+    {
+        return $this->primaryDirector;
+    }
+
+
+    /**
+     * Add directors
+     *
+     * @param \Oleg\OrderformBundle\Entity\DirectorList $directors
+     * @return CourseTitleList
+     */
+    public function addDirectors(\Oleg\OrderformBundle\Entity\DirectorList $director)
+    {
+        if( !$this->directors->contains($director) ) {
+            $this->directors->add($director);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove directors
+     *
+     * @param \Oleg\OrderformBundle\Entity\DirectorList $directors
+     */
+    public function removeDirectors(\Oleg\OrderformBundle\Entity\DirectorList $director)
+    {
+        $this->directors->removeElement($director);
+    }
+
+    /**
+     * Get directors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDirectors() {
+
+        $resArr = new ArrayCollection();
+        foreach( $this->directors as $director ) {
+
+            if( $director->getId()."" == $this->getPrimaryDirector()."" ) {  //this director is a primary one => put as the first element
+
+                $firstEl = $resArr->first();
+                if( count($this->directors) > 1 && $firstEl ) {
+
+                    $resArr->set(0,$director); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
+                    $resArr->add($firstEl);
+                } else {
+                    $resArr->add($director);
+                }
+            } else {    //this director is not a primary one
+                $resArr->add($director);
+            }
+        }
+
+//        foreach( $resArr as $res ) {
+//            echo "pi name=".$res.", id=".$res->getId()."<br>";
+//        }
+//        echo "<br>Course: directors count=".count($resArr)."<br>";
+
+        return $resArr;
+    }
+
+
+    public function setDirectors( $directors )
+    {
+        //set primary Director
+        if( $directors->first() ) {
+            $this->primaryDirector = $directors->first()->getId();
+        } else {
+            $this->primaryDirector = NULL;
+        }
+
+        $this->directors = $directors;
+
+        return $this;
+    }
 
 }

@@ -51,37 +51,37 @@ class EducationalType extends AbstractType
 //            'attr' => array('class'=>'form-control form-control-modif'),
 //            'read_only' => $readonly
 //        ));
-        $builder->add('courseTitle', new CourseTitleListType(), array(
+        $builder->add('courseTitle', new CourseTitleListType($this->params, $this->entity), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\CourseTitleList',
             'label' => false,
             'required' => false,
         ));
 
-        $builder->add('directorstr', 'custom_selector', array(
-            'label' => 'Course Director:',
-            'attr' => $attr,
-            'required'=>false,
-            'classtype' => 'optionalUserEducational',
-            'read_only' => $readonly
-        ));
-
-        if( $this->params['type'] == 'SingleObject' ) {
-
-            $attr = array('class' => 'combobox combobox-width');
-            $builder->add('director', 'entity', array(
-                'class' => 'OlegOrderformBundle:User',
-                'label'=>'Course Director'.$addlabel.':',
-                'required' => false,
-                //'read_only' => true,    //not working => disable by twig
-                //'multiple' => true,
-                'attr' => $attr,
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->where('u.locked=:locked')
-                        ->setParameter('locked', '0');
-                },
-            ));
-        }
+//        $builder->add('directorstr', 'custom_selector', array(
+//            'label' => 'Course Director:',
+//            'attr' => $attr,
+//            'required'=>false,
+//            'classtype' => 'optionalUserEducational',
+//            'read_only' => $readonly
+//        ));
+//
+//        if( $this->params['type'] == 'SingleObject' ) {
+//
+//            $attr = array('class' => 'combobox combobox-width');
+//            $builder->add('director', 'entity', array(
+//                'class' => 'OlegOrderformBundle:User',
+//                'label'=>'Course Director'.$addlabel.':',
+//                'required' => false,
+//                //'read_only' => true,    //not working => disable by twig
+//                //'multiple' => true,
+//                'attr' => $attr,
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('u')
+//                        ->where('u.locked=:locked')
+//                        ->setParameter('locked', '0');
+//                },
+//            ));
+//        }
 
     }
 

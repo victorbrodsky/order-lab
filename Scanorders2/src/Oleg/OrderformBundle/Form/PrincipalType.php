@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by JetBrains PhpStorm.
+ * User: oli2002
+ * Date: 4/14/14
+ * Time: 1:09 PM
+ * To change this template use File | Settings | File Templates.
+ */
 
 namespace Oleg\OrderformBundle\Form;
 
@@ -10,65 +17,45 @@ use Doctrine\ORM\EntityRepository;
 class PrincipalType extends AbstractType
 {
 
-    protected $params;
     protected $entity;
+    protected $params;
 
-    public function __construct( $params=null, $entity = null )
+    public function __construct( $params=null, $entity=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
+        $this->entity = $entity; //current project entity
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $addlabel = "";
-        $readonly = false;
-
-        //echo "type=".$this->params['type']."<br>";
-
-        if( $this->params['type'] == 'SingleObject' ) {
-            //this is used by data review, when a single onject is shown
-            $attr = array('class'=>'form-control form-control-modif');
-            $addlabel = " (as entered by user)";
-            $readonly = true;
-        } else {
-            //this is used by orderinfo form, when the scan order form is shown ($this->params['type']="Multi-Slide Scan Order")
-            $attr = array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden');
-        }
-
-        $builder->add('name', 'custom_selector', array(
-            'label' => 'Principal Investigator'.$addlabel.':',
-            'attr' => $attr,
-            'required'=>false,
-            'classtype' => 'optionalUserResearch',
-            'read_only' => $readonly
+        $builder->add( 'name', 'text', array(
+            'label' => 'Principal Investigator (as entered by user):',
+            'required' => true,
+            'read_only' => true,
+            'attr'=>array('class'=>'form-control form-control-modif'),
         ));
 
-        //show a user object linked to the research. Show it only for data review.
-        if( $this->params['type'] == 'SingleObject' ) {
-            $attr = array('class' => 'combobox combobox-width');
-            $builder->add('principal', 'entity', array(
-                'class' => 'OlegOrderformBundle:User',
-                'label'=>'Principal Investigator:',
-                'required' => false,
-                //'read_only' => true,    //not working => disable by twig
-                'multiple' => true,
-                'attr' => $attr,
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->where('u.locked=:locked')
-                        ->setParameter('locked', '0');
-                },
-            ));
-        }
+        $builder->add('principal', 'entity', array(
+        'class' => 'OlegOrderformBundle:User',
+        'label'=>'Principal Investigator:',
+        'required' => false,
+        //'read_only' => true,    //not working => disable by twig
+        //'multiple' => true,
+        'attr' => array('class' => 'combobox combobox-width'),
+        'query_builder' => function(EntityRepository $er) {
+            return $er->createQueryBuilder('u')
+                ->where('u.locked=:locked')
+                ->setParameter('locked', '0');
+        },
+    ));
 
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PIList',
+            'data_class' => 'Oleg\OrderformBundle\Entity\PIList'
         ));
     }
 

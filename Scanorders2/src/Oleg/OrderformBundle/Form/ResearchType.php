@@ -43,7 +43,7 @@ class ResearchType extends AbstractType
 //            'type' => new AccessionAccessionType($this->params, null),
 //            'required' => false,
 //        ));
-        $builder->add('projectTitle', new ProjectTitleListType($this->params, null), array(
+        $builder->add('projectTitle', new ProjectTitleListType($this->params, $this->entity), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProjectTitleList',
             'label' => false,
             'required' => false,

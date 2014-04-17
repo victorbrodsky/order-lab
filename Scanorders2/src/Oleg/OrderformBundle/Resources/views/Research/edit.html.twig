@@ -10,10 +10,38 @@
 
     {#{{ myform.field(edit_form.projectTitle.name) }}#}
     {#{{ myform.field(edit_form.projectTitle.setTitles) }}#}
-    {% do edit_form.projectTitle.setRendered %}
 
-    {{ myform.field(edit_form.principalstr) }}
-    {{ myform.field(edit_form.principal) }}
+    {{ myform.simplefield( "Research Project Title:", entity.projectTitle.name, "input", "disabled" ) }}
+
+    {% for title in entity.projectTitle.setTitles %}
+        {{ myform.simplefield( "Research Project Title:", title, "input", "disabled" ) }}
+    {% endfor %}
+
+    {#{{ myform.simplefield( "Research Set Title:", entity.projectTitle.setTitles, "input", "disabled" ) }}#}
+
+    {#{{ myform.field(edit_form.projectTitle.principalstr) }}#}
+    {#{{ myform.field(edit_form.projectTitle.principal) }}#}
+
+    <hr>
+        {{ myform.field(edit_form.projectTitle.primaryPrincipal) }}
+    <hr>
+
+    {#{% for principal in entity.projectTitle.pis %}#}
+        {#&#123;&#35;{{ myform.simplefield( "Principal Investigator (as entered by user):", principal.name, "input", "disabled" ) }}&#35;&#125;#}
+        {#{{ myform.field(edit_form.projectTitle.pis.name) }}#}
+        {#{{ myform.field(edit_form.projectTitle.pis.principal) }}#}
+        {#<hr>#}
+    {#{% endfor %}#}
+
+    {% for principal in edit_form.projectTitle.pis %}
+        {{ myform.field(principal.name) }}
+        {{ myform.field(principal.principal) }}
+        <hr>
+    {% endfor %}
+
+    <hr>
+
+    {% do edit_form.projectTitle.setRendered %}
 
     {{ form(edit_form) }}
     {{ form_rest(edit_form) }}

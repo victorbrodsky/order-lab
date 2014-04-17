@@ -25,16 +25,16 @@ class Educational
      */
     protected $courseTitle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
-     */
-    protected $director;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $directorstr;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+//     * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
+//     */
+//    protected $director;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $directorstr;
 
     /**
      * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="educational")
@@ -62,37 +62,37 @@ class Educational
         return $this->id;
     }
 
-    /**
-     * @param mixed $director
-     */
-    public function setDirector($director)
-    {
-        $this->director = $director;
-    }
+//    /**
+//     * @param mixed $director
+//     */
+//    public function setDirector($director)
+//    {
+//        $this->director = $director;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDirector()
+//    {
+//        return $this->director;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getDirector()
-    {
-        return $this->director;
-    }
-
-    /**
-     * @param mixed $directorstr
-     */
-    public function setDirectorstr($directorstr)
-    {
-        $this->directorstr = $directorstr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDirectorstr()
-    {
-        return $this->directorstr;
-    }
+//    /**
+//     * @param mixed $directorstr
+//     */
+//    public function setDirectorstr($directorstr)
+//    {
+//        $this->directorstr = $directorstr;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getDirectorstr()
+//    {
+//        return $this->directorstr;
+//    }
 
     /**
      * @param mixed $orderinfo
@@ -142,12 +142,9 @@ class Educational
         return $this->courseTitle;
     }
 
-
-
-
     public function isEmpty()
     {
-        if( $this->courseTitle || $this->directorstr != '' ) {
+        if( $this->getCourseTitle() && $this->getCourseTitle()->getName() != '' ) {
             return false;
         } else {
             return true;
@@ -158,7 +155,7 @@ class Educational
     public function __toString(){
 
         //return "Educational: id=".$this->id.", course=".$this->courseTitle.", course type=".$this->getCourseTitle()->getType().", director=".$this->director.", countLessonTitles=".count($this->courseTitle->getLessonTitles())."<br>";
-        return "Educational: id=".$this->id.", course=".$this->courseTitle.", director=".$this->director."<br>";
+        return "Educational: id=".$this->id.", course=".$this->courseTitle."<br>";
     }
 
 

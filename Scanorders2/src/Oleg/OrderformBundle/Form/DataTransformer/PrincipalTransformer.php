@@ -12,7 +12,6 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\PIList;
 
 //used by user type
 class PrincipalTransformer implements DataTransformerInterface
@@ -23,25 +22,37 @@ class PrincipalTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
+    private $className;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct( ObjectManager $em=null, $user=null, $className=null )
     {
         $this->em = $em;
         $this->user = $user;
+        $this->className = $className;
     }
 
+    /**
+     * Use for 'Show'
+     *
+     * Transforms an object to a string.
+     *
+     * @param  Issue|null $issue
+     * @return string
+     */
     public function transform( $entities )
     {
         //echo $entities->first()->getName()."<br>";
-        echo "entities=".$entities."<br>";
-        echo "count=".count($entities)."<br>";
+        //echo "transform: entities=".$entities."<br>";
+        //echo $this->className.": transform: count=".count($entities)."<br>";
+        //var_dump($entities);
 
         $array = new \Doctrine\Common\Collections\ArrayCollection();
 
         if( !$entities || null === $entities->toArray() ) {
+            //echo $this->className.": return empty array";
             return $array;
         }
 
@@ -53,29 +64,51 @@ class PrincipalTransformer implements DataTransformerInterface
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    if( $entity->getId()."" == $this->getPrimaryPrincipal()."" ) {
-                        array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
-                    } else {
-                        $idArr[] = $entity->getId();
-                    }
+
+                    $idArr[] = $entity->getId();
+
+//                    $primaryProjects = $entity->getPrimaryProjects();
+//
+//                    if( $entity->getId()."" == $entity->getPrimaryPrincipal()->getId()."" ) {
+//                        array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
+//                    } else {
+//                        $idArr[] = $entity->getId();
+//                    }
+
                 }
             }
             
             //return array with primaryPrincipal as the first element
+            //echo "idArr:<br>";
+            //var_dump($idArr);
+            //echo "return:".implode(",", $idArr)."<br>";
+            
             return implode(",", $idArr);
         }
 
         return $entities->first()->getId();
     }
 
-
+    /**
+     * Use for 'Submit'
+     *
+     * Transforms a string (number) to an object (i.e. stain).
+     *
+     * @param  string $number
+     *
+     * @return $this->className|null
+     *
+     * @throws TransformationFailedException if object ($this->className) is not found.
+     */
     public function reverseTransform($text)
     {
 
         var_dump($text);
-        echo "<br>principal transformer: count=".count($text)."<br>";
+        echo "<br>transformer: count=".count($text)."<br>";
         echo "data transformer text=".$text."<br>";
-        //exit();
+        if( $this->className == 'PIList') {
+            //exit();
+        }
 
         if( !$text ) {
             $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
@@ -88,7 +121,7 @@ class PrincipalTransformer implements DataTransformerInterface
         //$newListArr = $this->addSingleService( $newListArr, $text );
         //return $newListArr;
 
-        //TODO: this implies that entered text does not have comma!
+        //TODO: this assumes that entered text does not have comma!
         if( strpos($text,',') !== false ) {
 
             //echo "text array<br>";
@@ -98,6 +131,8 @@ class PrincipalTransformer implements DataTransformerInterface
                 //echo "principal text=".$principal."<br>";
                 $newListArr = $this->addSingleService( $newListArr, $principal );
             }
+
+            //echo "reverseTransform: return count:".count($newListArr)."<br>";
             return $newListArr;
 
         } else {
@@ -115,7 +150,7 @@ class PrincipalTransformer implements DataTransformerInterface
 
             //echo "principal=".$service." => numeric => most probably it is id<br>";
 
-            $entity = $this->getThisEm()->getRepository('OlegOrderformBundle:PIList')->findOneById($service);
+            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($service);
 
             if( null === $entity ) {
 
@@ -154,21 +189,23 @@ class PrincipalTransformer implements DataTransformerInterface
         //echo "create: name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:PIList')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($name);
 
         if( null === $entity ) {
 
-            $principal = $this->getUserByUserstr( $name );
+            $user = $this->getUserByUserstr( $name );
 
-            $newEntity = new PIList();
+            $entityClass = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+
+            $newEntity = new $entityClass();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
-            $newEntity->setPrincipal($principal);
+            $newEntity->setUserObjectLink($user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:PIList c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:'.$this->className.' c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;
             $newEntity->setOrderinlist($nextorder);
 
@@ -179,10 +216,10 @@ class PrincipalTransformer implements DataTransformerInterface
         } else {
 
             //update if the user object is not set, maybe we have it now
-            if( !$entity->getPrincipal() ) {
-                $principal = $this->getUserByUserstr( $name );
-                if( $principal ) {
-                    $entity->setPrincipal($principal);
+            if( !$entity->getUserObjectLink() ) {
+                $user = $this->getUserByUserstr( $name );
+                if( $user ) {
+                    $entity->setUserObjectLink($user);
                     $this->em->persist($entity);
                     $this->em->flush($entity);
                 }

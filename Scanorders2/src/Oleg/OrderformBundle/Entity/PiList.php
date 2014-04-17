@@ -31,7 +31,7 @@ class PIList extends ListAbstract
     protected $principal;
 
     /**
-     * @ORM\ManyToMany(targetEntity="ProjectTitleList", mappedBy="principals")
+     * @ORM\ManyToMany(targetEntity="ProjectTitleList", mappedBy="pis", cascade={"persist"})
      **/
     private $projects;
 
@@ -115,6 +115,13 @@ class PIList extends ListAbstract
     public function getPrincipal()
     {
         return $this->principal;
+    }
+
+    public function setUserObjectLink($user) {
+        $this->setPrincipal($user);
+    }
+    public function getUserObjectLink() {
+        return $this->getPrincipal();
     }
 
     /**

@@ -8365,8 +8365,10 @@ function regularCombobox() {
     $(".ajax-combobox-optionaluser-research").select2("readonly", true);
 
     //educational
-    populateSelectCombobox( ".combobox-research-lessonTitle", null, "Choose and Option", false );
-    //$(".combobox-research-lessonTitle").select2("readonly", true);
+    populateSelectCombobox( ".combobox-educational-lessonTitle", null, "Choose and Option", false );
+    $(".combobox-educational-lessonTitle").select2("readonly", true);
+    populateSelectCombobox( ".ajax-combobox-optionaluser-educational", null, "Choose and Option", true );
+    $(".ajax-combobox-optionaluser-educational").select2("readonly", true);
 
 }
 
@@ -8387,8 +8389,7 @@ function customCombobox() {
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
-        getOptionalUserEducational(urlCommon,new Array("0","0","0","0","0","0"));
-        //getOptionalUserResearch(urlCommon,new Array("0","0","0","0","0","0"));
+        //getOptionalUserEducational(urlCommon,new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
         getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
         getCourseTitle(urlCommon,new Array("0","0","0","0","0","0"));
@@ -8837,9 +8838,6 @@ function getProjectTitle(urlCommon,ids) {
 
     var url = urlCommon+"projecttitle";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
@@ -8872,14 +8870,13 @@ function getProjectTitle(urlCommon,ids) {
 function getSetTitle() {
 
     var targetid = ".combobox-research-setTitle";
+    var url = urlCommon+"settitle";
 
     //get ProjectTitle value and process children fields (readonly: true or false)
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
     if( idInArr < 0 ) {
         return;
     }
-
-    var url = urlCommon+"settitle";
 
     url = url + "?opt="+idInArr;
 
@@ -8897,35 +8894,6 @@ function getSetTitle() {
     });
 
 }
-
-function getOptionalUserResearch() {
-
-    var targetid = ".ajax-combobox-optionaluser-research";
-    var url = urlCommon+"optionaluserresearch";
-
-    var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
-    if( idInArr < 0 ) {
-        //return;
-    }
-
-    //var optStr = user_id;
-    url = url + "?opt=" + idInArr;
-
-    if( _optionaluserResearch.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-                _optionaluserResearch = data;
-                populateSelectCombobox( targetid, _optionaluserResearch, "Choose an option", true );
-            });
-    }
-//    else {
-//        populateSelectCombobox( targetid, _optionaluserResearch, "Choose an option" );
-//    }
-
-}
 //#############  EOF Research Project  ##############//
 
 
@@ -8934,9 +8902,6 @@ function getCourseTitle(urlCommon,ids) {
 
     var url = urlCommon+"coursetitle";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
@@ -8948,18 +8913,18 @@ function getCourseTitle(urlCommon,ids) {
             async: asyncflag
         }).success(function(data) {
                 _courseTitle = data;
-                populateSelectCombobox( ".combobox-research-courseTitle", _courseTitle, "Course Title", false );
+                populateSelectCombobox( ".combobox-educational-courseTitle", _courseTitle, "Course Title", false );
 
                 //get id if set
-                var courseTitleVal = $(".combobox-research-courseTitle").select2('val');
-                //console.log("finished: courseTitleVal="+courseTitleVal);
+                var courseTitleVal = $(".combobox-educational-courseTitle").select2('val');
                 if( courseTitleVal != "" ) {
                     getLessonTitle();
+                    getOptionalUserEducational();
                 }
 
             });
     } else {
-        populateSelectCombobox( ".combobox-research-courseTitle", _courseTitle, "Course Title", false );
+        populateSelectCombobox( ".combobox-educational-courseTitle", _courseTitle, "Course Title", false );
     }
 
 }
@@ -8967,20 +8932,14 @@ function getCourseTitle(urlCommon,ids) {
 //#############  lesson title  ##############//
 function getLessonTitle() {
 
-    //get CourseTitle value
-    var courseTitleVal = $(".combobox-research-courseTitle").select2('val');
-    //console.log("lessonTitle: courseTitleVal="+courseTitleVal);
+    var targetid = ".combobox-educational-lessonTitle";
+    var url = urlCommon+"lessontitle";
 
-    var idInArr = inArrayCheck( _courseTitle, courseTitleVal );
-    //console.log('idInArr='+idInArr);
-
-    if( idInArr == -1 ) {
-        //console.log('not in array');
-        populateSelectCombobox( ".combobox-research-lessonTitle", _lessonTitle, "Lesson Title", false );
+    //get CourseTitle value and process children fields (readonly: true or false)
+    var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, false );
+    if( idInArr < 0 ) {
         return;
     }
-
-    var url = urlCommon+"lessontitle";
 
     url = url + "?opt="+idInArr;
 
@@ -8990,36 +8949,86 @@ function getLessonTitle() {
         async: asyncflag
     }).success(function(data) {
             if( data ) {
-                //console.log("id="+data[0].id+", text="+data[0].text);
-                populateSelectCombobox( ".combobox-research-lessonTitle", data);
-                $(".combobox-research-lessonTitle").select2("readonly", false);
-                setToFirstElement( ".combobox-research-lessonTitle", data );
+                populateSelectCombobox( targetid, data, "Choose an option");
             }
-
-        });
+    });
 
 }
+//#############  EOF Educational Course  ##############//
 
-function getOptionalUserEducational(urlCommon,ids) {
+//#############  Research Educational Utils  ##############//
+function getOptionalUserResearch() {
 
-    var targetid = ".ajax-combobox-optionaluser-educational";
-    var url = urlCommon+"optionalusereducational";
+    var targetid = ".ajax-combobox-optionaluser-research";
+    var url = urlCommon+"optionaluserresearch";
 
-    var optStr = user_id;
-    url = url + "?opt=" + optStr;
+    var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
 
-    if( optionaluserEducational.length == 0 ) {
+    url = url + "?opt=" + idInArr;
+
+    if( idInArr < 0 ) {
+
+        //new project entered: get default users
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-                optionaluserEducational = data;
-                populateSelectCombobox( targetid, optionaluserEducational, "Choose an option" );
+                if( data ) {
+                    populateSelectCombobox( targetid, data, "Choose an option", true );
+                }
             });
-    } else {
-        populateSelectCombobox( targetid, optionaluserEducational, "Choose an option" );
+
+        return;
     }
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: asyncflag
+    }).success(function(data) {
+            if( data ) {
+                populateSelectCombobox( targetid, data, "Choose an option", true );
+            }
+    });
+
+
+}
+
+function getOptionalUserEducational() {
+
+    var targetid = ".ajax-combobox-optionaluser-educational";
+    var url = urlCommon+"optionalusereducational";
+
+    var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, true );
+
+    url = url + "?opt=" + idInArr;
+
+    if( idInArr < 0 ) {
+
+        //new course entered: get default users
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+                if( data ) {
+                    populateSelectCombobox( targetid, data, "Choose an option", true );
+                }
+            });
+
+        return;
+    }
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: asyncflag
+    }).success(function(data) {
+            if( data ) {
+                populateSelectCombobox( targetid, data, "Choose an option", true );
+            }
+    });
 
 }
 
@@ -9052,7 +9061,7 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 
     return idInArr;
 }
-//#############  EOF Educational Course  ##############//
+//#############  EOF Research Educational Utils  ##############//
 
 
 
@@ -9073,8 +9082,7 @@ function initComboboxJs(ids) {
         getComboboxProcedure(urlCommon,ids);
         getComboboxOrgan(urlCommon,ids);
         getComboboxPathService(urlCommon,ids);
-        getOptionalUserEducational(urlCommon,ids);
-        //getOptionalUserResearch(urlCommon,ids);
+        //getOptionalUserEducational(urlCommon,ids);
         slideType(ids);
         getProjectTitle(urlCommon,ids);
         getCourseTitle(urlCommon,ids);
@@ -12612,9 +12620,10 @@ function setResearch() {
 
 function setEducational() {
     //get value of project title field on change
-    $('.combobox-research-courseTitle').on("change", function(e) {
+    $('.combobox-educational-courseTitle').on("change", function(e) {
         //console.log('listener: course Title changed');
         getLessonTitle();
+        getOptionalUserEducational();
     });
 }
 
