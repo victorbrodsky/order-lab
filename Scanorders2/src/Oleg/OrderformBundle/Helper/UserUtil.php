@@ -42,7 +42,7 @@ class UserUtil {
         $user->setPassword("");
         $user->setCreatedby('system');
         $user->addRole('ROLE_PROCESSOR');
-        $user->setTimezone($default_time_zone);
+        $user->getPreferences()->setTimezone($default_time_zone);
         $user->setEnabled(true);
         $user->setLocked(true); //system is locked, so no one can logged in with this account
         $user->setExpired(false);
@@ -99,7 +99,7 @@ class UserUtil {
             $user->setOffice($office);
             $user->setPassword("");
             $user->setCreatedby('excel');
-            $user->setTimezone($default_time_zone);
+            $user->getPreferences()->setTimezone($default_time_zone);
 
             //add Roles
             //"ROLE_USER" => "Submitter" is added by default

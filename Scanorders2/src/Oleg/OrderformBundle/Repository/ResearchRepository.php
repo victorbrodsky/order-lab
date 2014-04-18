@@ -20,43 +20,43 @@ class ResearchRepository extends EntityRepository {
         $user = null;
         $em = $this->_em;
 
-        $projectTitleName = $entity->getProjectTitle()->getName();
-        $foundProjectTitle = $em->getRepository('OlegOrderformBundle:ProjectTitleList')->findOneByName($projectTitleName);
+        $researchName = $entity->getName();
+        $foundResearch = $em->getRepository('OlegOrderformBundle:Research')->findOneByName($researchName);
 
-        if( $foundProjectTitle ) {
+        if( $foundResearch ) {
 
-            $originalProjectTitle = $entity->getProjectTitle();
-            $originalSetTitles = $originalProjectTitle->getSetTitles();
+            $originalSetTitles = $entity->getSetTitles();
 
             foreach( $originalSetTitles as $settitle ) {
-                $foundProjectTitle->addSetTitles($settitle);
-                $settitle->setProjectTitle($foundProjectTitle);
+                $foundResearch->addSetTitles($settitle);
+                $settitle->setResearch($foundResearch);
             }
 
-            $this->processPrincipals( $originalProjectTitle, $foundProjectTitle ); //source, dest
+            $this->processPrincipals( $entity, $foundResearch ); //source, dest
 
             //set primary principal
-            $foundProjectTitle->setPrimaryPrincipal( $originalProjectTitle->getPrimaryPrincipal() );
+            $foundResearch->setPrimaryPrincipal( $entity->getPrimaryPrincipal() );
 
-            $entity->setProjectTitle( $foundProjectTitle );
+            //$entity->setProjectTitle( $foundResearch );
 
-            $orderinfo->setResearch($entity);
+            $orderinfo->setResearch($foundResearch);
 
 
             return $orderinfo;
 
         } else {
-            throw new \Exception( 'Research Project was not found with name '.$projectTitleName );
+            throw new \Exception( 'Research was not found with name '.$researchName );
         }
 
         //exit('educ rep');
         return $orderinfo;
     }
 
+    //inputs: source research, destination research
     public function processPrincipals( $source, $dest ) {
 
 
-        $principals = $source->getPis();
+        $principals = $source->getPrincipals();
 
         foreach( $principals as $principal ) {
             $principalstr = $principal->getName();
@@ -65,8 +65,8 @@ class ResearchRepository extends EntityRepository {
             $foundPrincipal = $this->_em->getRepository('OlegOrderformBundle:PIList')->findOneByName($principalstr);
 
             if( $foundPrincipal ) {
-                $dest->addPis($foundPrincipal);
-                $foundPrincipal->addProject($dest);
+                $dest->addPrincipals($foundPrincipal);
+                $foundPrincipal->addResearches($dest);
             }
 
         }

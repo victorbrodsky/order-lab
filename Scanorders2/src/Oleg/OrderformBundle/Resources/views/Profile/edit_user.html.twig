@@ -15,6 +15,8 @@
     <input type="hidden" id="formcicle" value="edit_user" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
+    <h3 class="text-info">User Info</h3>
+
     {#{{ form_widget(form) }}#}
     {{ form_errors(form) }}
 
@@ -44,23 +46,29 @@
             {#{{ formmacros.field(form.locked) }}#}
             {#{{ form_widget(form.locked) }}#}
             {#{% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}#}
-            <p>
-            <div class="row">
-                <div class="col-xs-6" align="right">
-                    {{ form_label(form.locked) }}
-                </div>
-                <div class="col-xs-6" align="left" style="width: 50px;">
-                    {{ form_widget(form.locked) }}
-                </div>
-            </div>
-            </p>
+            {#<p>#}
+            {#<div class="row">#}
+                {#<div class="col-xs-6" align="right">#}
+                    {#{{ form_label(form.locked) }}#}
+                {#</div>#}
+                {#<div class="col-xs-6" align="left" style="width: 50px;">#}
+                    {#{{ form_widget(form.locked) }}#}
+                {#</div>#}
+            {#</div>#}
+            {#</p>#}
+            {{ formmacros.checkbox(form.locked) }}
 
         {% else %}
             {% do form.locked.setRendered %}
         {% endif %}
     {% endif %}
 
-    {{ formmacros.field(form.timezone) }}
+    <hr>
+    <h3 class="text-info">User Preferences</h3>
+    {{ formmacros.field(form.preferences.timezone) }}
+    {#{{ formmacros.field(form.preferences.tooltip) }}#}
+    {{ formmacros.checkbox(form.preferences.tooltip) }}
+    <hr>
 
     <br>
     {#{{ form_rest(form) }}#}

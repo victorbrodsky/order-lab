@@ -105,10 +105,15 @@ class User extends BaseUser
      */
     protected $appliedforaccessdate;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $timezone;
+
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist"})
      */
-    protected $timezone;
+    protected $preferences;
 
 //    /**
 //     * @var array
@@ -127,7 +132,8 @@ class User extends BaseUser
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
-        $this->chiefservices = new ArrayCollection();   //array();
+        $this->chiefservices = new ArrayCollection();
+        $this->setPreferences(new UserPreferences());
         parent::__construct();
     }
 
@@ -390,21 +396,21 @@ class User extends BaseUser
         return $this->primaryPathologyService;
     }
 
-    /**
-     * @param mixed $timezone
-     */
-    public function setTimezone($timezone)
-    {
-        $this->timezone = $timezone;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTimezone()
-    {
-        return $this->timezone;
-    }
+//    /**
+//     * @param mixed $timezone
+//     */
+//    public function setTimezone($timezone)
+//    {
+//        $this->timezone = $timezone;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getTimezone()
+//    {
+//        return $this->timezone;
+//    }
 
     //chief services
     /**
@@ -445,6 +451,23 @@ class User extends BaseUser
     {
         $this->chiefservices->removeElement($chiefservices);
     }
+
+    /**
+     * @param mixed $preferences
+     */
+    public function setPreferences($preferences)
+    {
+        $this->preferences = $preferences;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreferences()
+    {
+        return $this->preferences;
+    }
+
 
 }
 

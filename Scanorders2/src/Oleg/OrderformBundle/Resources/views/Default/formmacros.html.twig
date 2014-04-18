@@ -1,5 +1,18 @@
 {#macro for form label input inline#}
 
+{% macro checkbox( value ) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            {{ form_label(value) }}
+        </div>
+        <div class="col-xs-6" align="left" style="width: 50px;">
+            {{ form_widget(value) }}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+
 {% macro simplefield( label, value, type, disabled ) %}
     <p>
     <div class="row">

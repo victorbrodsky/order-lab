@@ -12729,6 +12729,8 @@ $(document).ready(function() {
 
     initAllElements(); //init disable all fields
 
+    initTooltips();
+
 });
 /**
  * Created with JetBrains PhpStorm.
@@ -12836,29 +12838,49 @@ function cleanModal() {
 
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function confirmAction() {
+
     $('a[data-confirm]').click(function(ev) {
+
         var href = $(this).attr('href');
-        if (!$('#dataConfirmModal').length) {
+        if( !$('#dataConfirmModal').length ) {
             var modalHtml =
-                //'<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">' +
                 '<div id="dataConfirmModal" class="modal fade data-confirm-modal">' +
                     '<div class="modal-dialog">' +
                         '<div class="modal-content">' +
                             '<div class="modal-header text-center">' +
                                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                                '<h3 id="dataConfirmLabel">Please Confirm</h3>' +
+                                '<h3 id="dataConfirmLabel">Confirmation</h3>' +
                             '</div>' +
                             '<div class="modal-body text-center"></div>' +
-                            '<div class="modal-footer"><button class="btn btn-primary data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary data-confirm-ok" id="dataConfirmOK">OK</a></div>' +
+                            '<div class="modal-footer">' +
+                                '<button class="btn btn-primary data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                                '<a class="btn btn-primary data-confirm-ok" id="dataConfirmOK">OK</a>' +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
                 '</div>';
 
             $('body').append(modalHtml);
         }
-        $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+
+        $('#dataConfirmModal').find('.modal-body').text( $(this).attr('data-confirm') );
         $('#dataConfirmOK').attr('href', href);
+
+        ////////// assign correct confirmation text and button's text //////////
+        var okText = $(this).attr('data-ok');
+        var cancelText = $(this).attr('data-cancel');
+        if( typeof okText === 'undefined' ){
+            okText = 'OK';
+        }
+        if( typeof cancelText === 'undefined' ){
+            cancelText = 'Cancel';
+        }
+        $('#dataConfirmModal').find('.data-confirm-cancel').text( cancelText );
+        $('#dataConfirmModal').find('.data-confirm-ok').text( okText );
+        ////////// EOF of assigning text //////////
+
         $('#dataConfirmModal').modal({show:true});
+
         return false;
     });
 
@@ -12870,6 +12892,11 @@ function confirmAction() {
         $('.data-confirm-modal').modal('hide');
     });
 
+}
+
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 

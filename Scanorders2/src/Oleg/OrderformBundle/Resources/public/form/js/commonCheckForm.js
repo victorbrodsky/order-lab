@@ -842,6 +842,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
     }
 }
 
+//disable or enable element
 function disableElement(parentname,element, flag) {
 
     var type = element.attr('type');
@@ -862,6 +863,8 @@ function disableElement(parentname,element, flag) {
     } else {
         return;
     }
+
+    attachTooltip(element,flag,fieldParentName);
 
     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) { //only for radio group
         //console.debug("radio disable classs="+classs+", id="+element.attr('id'));

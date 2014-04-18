@@ -25,21 +25,22 @@ class PIList extends ListAbstract
     protected $original;
 
     /**
+     * User object
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
      */
     protected $principal;
 
     /**
-     * @ORM\ManyToMany(targetEntity="ProjectTitleList", mappedBy="pis", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Research", mappedBy="principals", cascade={"persist"})
      **/
-    private $projects;
+    private $researches;
 
     //use name as $principalstr
 
 
     public function __construct() {
-        $this->projects = new ArrayCollection();
+        $this->researches = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
     }
 
@@ -125,38 +126,38 @@ class PIList extends ListAbstract
     }
 
     /**
-     * Add projects
+     * Add researches
      *
-     * @param \Oleg\OrderformBundle\Entity\ProjectTitleList $projects
+     * @param \Oleg\OrderformBundle\Entity\Research $research
      * @return PIList
      */
-    public function addProject(\Oleg\OrderformBundle\Entity\ProjectTitleList $projects)
+    public function addResearches(\Oleg\OrderformBundle\Entity\Research $research)
     {
-        if( !$this->projects->contains($projects) ) {
-            $this->projects->add($projects);
+        if( !$this->researches->contains($research) ) {
+            $this->researches->add($research);
         }
     
         return $this;
     }
 
     /**
-     * Remove projects
+     * Remove researches
      *
-     * @param \Oleg\OrderformBundle\Entity\ProjectTitleList $projects
+     * @param \Oleg\OrderformBundle\Entity\Research $research
      */
-    public function removeProject(\Oleg\OrderformBundle\Entity\ProjectTitleList $projects)
+    public function removeResearches(\Oleg\OrderformBundle\Entity\Research $research)
     {
-        $this->projects->removeElement($projects);
+        $this->researches->removeElement($research);
     }
 
     /**
-     * Get projects
+     * Get researches
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getProjects()
+    public function getResearches()
     {
-        return $this->projects;
+        return $this->researches;
     }
 
 }

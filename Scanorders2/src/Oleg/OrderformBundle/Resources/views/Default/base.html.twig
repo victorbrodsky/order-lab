@@ -113,6 +113,7 @@
             {% endfor %}
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+            <input type="hidden" id="user-preferences-tooltip" value="{{ app.security.getToken().getUser().getPreferences().getTooltip() }}" />
 
         </div>
 
@@ -151,6 +152,7 @@
                 '@OlegOrderformBundle/Resources/public/form/js/form.js'
                 '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
                 '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+                '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
                 '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
                 '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
                 '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'

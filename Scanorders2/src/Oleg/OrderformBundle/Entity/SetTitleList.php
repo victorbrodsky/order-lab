@@ -25,14 +25,13 @@ class SetTitleList extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="setTitles", cascade={"persist"})
-     * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Research", inversedBy="setTitles", cascade={"persist"})
+     * @ORM\JoinColumn(name="research_id", referencedColumnName="id", nullable=true)
      */
-    protected $projectTitle;
+    protected $research;
 
 
     public function __construct() {
-        //$this->research = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
     }
 
@@ -86,20 +85,22 @@ class SetTitleList extends ListAbstract
     }
 
     /**
-     * @param mixed $projectTitle
+     * @param mixed $research
      */
-    public function setProjectTitle($projectTitle)
+    public function setResearch($research)
     {
-        $this->projectTitle = $projectTitle;
+        $this->research = $research;
     }
 
     /**
      * @return mixed
      */
-    public function getProjectTitle()
+    public function getResearch()
     {
-        return $this->projectTitle;
+        return $this->research;
     }
+
+
 
 
 }

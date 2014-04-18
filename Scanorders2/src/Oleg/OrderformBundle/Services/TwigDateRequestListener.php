@@ -37,8 +37,8 @@ class TwigDateRequestListener {
             $user = $this->sc->getToken()->getUser();
         }
 
-        if( $user && is_object($user) && $user->getTimezone() ) {
-            $timezone = $user->getTimezone();
+        if( $user && is_object($user) && $user->getPreferences()->getTimezone() ) {
+            $timezone = $user->getPreferences()->getTimezone();
         }
 
         $this->twig->getExtension('core')->setTimezone($timezone);

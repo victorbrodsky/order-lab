@@ -143,17 +143,22 @@ class OrderInfo
      */
     private $educational;
 
-    //     nullable=true
+//    //     nullable=true
+//    /**
+//     * @ORM\OneToOne(
+//     *      targetEntity="Research",
+//     *      inversedBy="orderinfo",
+//     *      cascade={"persist"}
+//     * )
+//     * @ORM\JoinColumn(
+//     *      name="research_id",
+//     *      referencedColumnName="id"
+//     * )
+//     */
+//    private $research;
     /**
-     * @ORM\OneToOne(
-     *      targetEntity="Research",
-     *      inversedBy="orderinfo",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="research_id",
-     *      referencedColumnName="id"
-     * )
+     * @ORM\ManyToOne(targetEntity="Research", inversedBy="orderinfos", cascade={"persist"})
+     * @ORM\JoinColumn(name="research_id", referencedColumnName="id")
      */
     private $research;
        

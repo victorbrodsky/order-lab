@@ -69,7 +69,7 @@ class ListType extends AbstractType
             'required'=>true,
             'read_only'=>true,
             'format' => 'MM-dd-yyyy, H:mm:ss',
-            'view_timezone' => $this->params['user']->getTimezone(),
+            'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
             'attr' => array('class' => 'form-control'),
         ));
 
@@ -89,7 +89,7 @@ class ListType extends AbstractType
                 'required'=>true,
                 'read_only'=>true,
                 'format' => 'MM-dd-yyyy, H:mm:ss',
-                'view_timezone' => $this->params['user']->getTimezone(),
+                'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
                 'attr' => array('class' => 'form-control'),
             ));
         } else {

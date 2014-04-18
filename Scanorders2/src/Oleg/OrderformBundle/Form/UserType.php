@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Oleg\OrderformBundle\Helper\TimeZoneUtil;
+
 
 class UserType extends AbstractType
 {
@@ -88,14 +88,19 @@ class UserType extends AbstractType
 
 
         //timezone
-        $tzUtil = new TimeZoneUtil();
+//        $tzUtil = new TimeZoneUtil();
+//        $builder->add( 'timezone', 'choice', array(
+//            'label' => 'Time Zone:',
+//            'choices' => $tzUtil->tz_list(),
+//            'required' => true,
+//            'preferred_choices' => array('America/New_York'),
+//            'attr' => array('class' => 'combobox combobox-width')
+//        ));
 
-        $builder->add( 'timezone', 'choice', array(
-            'label' => 'Time Zone:',
-            'choices' => $tzUtil->tz_list(),
-            'required' => true,
-            'preferred_choices' => array('America/New_York'),
-            'attr' => array('class' => 'combobox combobox-width')
+        $builder->add('preferences', new UserPreferencesType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\UserPreferences',
+            'label' => false,
+            'required' => false,
         ));
 
 

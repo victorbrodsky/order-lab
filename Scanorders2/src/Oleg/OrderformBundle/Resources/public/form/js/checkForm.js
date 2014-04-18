@@ -10,7 +10,8 @@ var urlCheck = "http://"+urlBase+"/check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");
 var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
-var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+//var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
 
 var orderformtype = $("#orderformtype").val();
 
@@ -115,7 +116,8 @@ function btnObject( btn, parent ) {
     if( gocontinue ) {
 
         this.element = inputEl;
-        if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
+        //if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
+        if( inputEl.hasClass("ajax-combobox") ) {
             if( inputEl.select2("val") ) {
                 //console.log('select2 data OK');
                 this.key = trimWithCheck( inputEl.select2('data').text );

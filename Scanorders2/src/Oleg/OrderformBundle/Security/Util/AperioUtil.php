@@ -49,7 +49,7 @@ class AperioUtil {
                 $user->setEmail($AuthResult['E_Mail']);
                 $user->setEnabled(1);
                 $user->setCreatedby('aperio');
-                $user->setTimezone($this->timezone);
+                $user->getPreferences()->setTimezone($this->timezone);
 
                 //set Roles: aperio users can submit order by default.
                 if( $this->test ) {

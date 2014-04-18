@@ -136,7 +136,7 @@ class ProjectTitleListType extends AbstractType
 
             $addlabel = " (as entered by user)";
             $builder->add('pis', 'custom_selector', array(
-                'label' => 'Principal Investigator'.$addlabel.':',
+                'label' => 'Principal Investigator:',
                 'attr' => array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden'),
                 'required'=>false,
                 'classtype' => 'optionalUserResearch'

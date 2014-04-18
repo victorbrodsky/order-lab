@@ -187,8 +187,7 @@ class ScanOrderController extends Controller {
                     break;
                 case "No Principal Investigator Link":
                     $dql->innerJoin("orderinfo.research", "research");
-                    $dql->innerJoin("research.projectTitle", "projectTitle");
-                    $dql->innerJoin("projectTitle.pis", "principals");
+                    $dql->innerJoin("research.principals", "principals");
                     $criteriastr .= " principals.principal IS NULL AND status.name != 'Superseded'";
                     break;
                 default:

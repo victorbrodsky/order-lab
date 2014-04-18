@@ -25,7 +25,7 @@ class AccessionAccessionType extends AbstractType
         //accession number
         $attr = array(
             'class'=>'form-control form-control-modif keyfield accession-mask',
-            'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
+            //'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
         );
 
         if( $this->params['type'] == 'One Slide Scan Order') {

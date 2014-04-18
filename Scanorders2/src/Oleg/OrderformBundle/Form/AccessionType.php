@@ -23,7 +23,7 @@ class AccessionType extends AbstractType
 
         $attr = array(  
             'class'=>'form-control form-control-modif keyfield accession-mask', 
-            'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999', 
+            //'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
             //'data-inputmask'=>"'mask': 'A[A]99-d[99999]'"
        );
 

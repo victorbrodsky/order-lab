@@ -95,7 +95,7 @@ class EducationalResearchController extends Controller {
         if ($editForm->isValid()) {
             //exit("form is valid!");
 
-            echo "name=".$entity->getName().", user=".$entity->getPrincipal()."<br>";
+            echo "name=(".$entity->getName()."), user=(".$entity->getPrincipal().")<br>";
 
             $em->persist($entity);
             $em->flush();

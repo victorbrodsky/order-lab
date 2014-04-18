@@ -13,7 +13,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ProjectTitleTransformer implements DataTransformerInterface
+class ResearchTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager

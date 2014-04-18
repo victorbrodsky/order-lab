@@ -678,9 +678,10 @@ function setResearch() {
 
 function setEducational() {
     //get value of project title field on change
-    $('.combobox-research-courseTitle').on("change", function(e) {
+    $('.combobox-educational-courseTitle').on("change", function(e) {
         //console.log('listener: course Title changed');
         getLessonTitle();
+        getOptionalUserEducational();
     });
 }
 

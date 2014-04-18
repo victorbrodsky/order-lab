@@ -35,7 +35,7 @@
 
             {###############  USER ACTIONS #################}
             {% if not Canceled and not Superseded and not Filled %}
-                <li><a data-confirm="Are you sure you want to change status to Cancel?"
+                <li><a data-confirm="Are you sure you want to cancel order {{ entity.oid }}?" data-ok="Cancel the order" data-cancel="Do not cancel"
                        class="action-cancel-status"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'cancel' }) }}">Cancel</a>
                 </li>                  
@@ -49,7 +49,7 @@
             {% endif %}
 
             {% if Submitted or Amended and not Superseded and not Canceled and not Filled %}
-                <li><a data-confirm="Are you sure you want to change status to Amend?"
+                <li><a data-confirm="Are you sure you want to amend order {{ entity.oid }}?" data-ok="Amend the order" data-cancel="Do not amend"
                        class="action-amend-status"
                        href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
                 </li>
@@ -57,7 +57,7 @@
 
 
             {% if Canceled %}
-                <li><a  data-confirm="Are you sure you want to change status to Un-Cancel?"
+                <li><a  data-confirm="Are you sure you want to un-cancel order {{ entity.oid }}?" data-ok="Un-cancel the order" data-cancel="Do not un-cancel"
                         href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Un-Cancel' }) }}">Un-Cancel</a>
                 </li>
             {% endif %}

@@ -704,7 +704,7 @@ class UtilController extends Controller {
 //        $type = trim( $request->get('type') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
+            ->from('OlegOrderformBundle:Research', 'list')
             ->select("list.id as id, list.name as text")
             //->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
@@ -740,7 +740,7 @@ class UtilController extends Controller {
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:SetTitleList', 'list')
             ->select("list.id as id, list.name as text")
-            ->leftJoin("list.projectTitle","parent")
+            ->leftJoin("list.research","parent")
             ->where("parent.id = :pid AND list.type = :type")
             ->orderBy("list.orderinlist","ASC")
             ->setParameters( array(
@@ -846,7 +846,7 @@ class UtilController extends Controller {
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_PRINCIPAL_INVESTIGATOR";
             $className = 'PIList';
-            $pname = 'projects';
+            $pname = 'researches';
         }
 
         if(0) {
@@ -891,7 +891,9 @@ class UtilController extends Controller {
 
         foreach( $users as $user ) {
             $element = array('id'=>$user."", 'text'=>$user."");
-            $output[] = $element;
+            if( !$this->in_complex_array($user."",$output) ) {
+                $output[] = $element;
+            }
         }
 
         $response = new Response();
@@ -903,9 +905,9 @@ class UtilController extends Controller {
 
 
     //search if $needle exists in array $products
-    public function in_complex_array($needle,$products) {
+    public function in_complex_array($needle,$products,$indexstr='text') {
         foreach( $products as $product ) {
-            if ( $product['id'] === $needle ) {
+            if ( $product[$indexstr] === $needle ) {
                 return true;
             }
         }

@@ -41,7 +41,7 @@ class PartDiseaseTypeType extends AbstractType
             'attr' => array('class' => 'horizontal_type'),
         ));
 
-        $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden');
 
         $builder->add('primaryOrgan', 'custom_selector', array(
             'label' => 'Primary Site of Origin:',

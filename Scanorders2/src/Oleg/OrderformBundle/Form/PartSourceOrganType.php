@@ -22,7 +22,7 @@ class PartSourceOrganType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array('class' => 'ajax-combobox-organ', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden');
 
         $builder->add('field', 'custom_selector', array(
             'label' => 'Source Organ',
