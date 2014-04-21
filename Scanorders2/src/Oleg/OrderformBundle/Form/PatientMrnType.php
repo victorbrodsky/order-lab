@@ -50,7 +50,7 @@ class PatientMrnType extends AbstractType
 //        ));
 
         //mrn types
-        $attr = array('class' => 'combobox combobox-width mrntype-combobox', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox combobox combobox-width mrntype-combobox', 'type' => 'hidden'); //combobox
         $options = array(
             'label' => $mrnTypeLabel,
             'required' => true,

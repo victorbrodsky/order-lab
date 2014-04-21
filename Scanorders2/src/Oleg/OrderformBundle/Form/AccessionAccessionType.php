@@ -44,7 +44,7 @@ class AccessionAccessionType extends AbstractType
         ));
 
         //accession type
-        $attr = array('class' => 'combobox combobox-width accessiontype-combobox', 'type' => 'hidden');
+        $attr = array('class' => 'ajax-combobox combobox combobox-width accessiontype-combobox', 'type' => 'hidden'); //combobox
         $options = array(
             'label' => $accTypeLabel,
             'required' => true,

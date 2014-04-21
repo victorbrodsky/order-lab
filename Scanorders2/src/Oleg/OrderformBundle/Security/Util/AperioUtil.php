@@ -89,7 +89,7 @@ class AperioUtil {
             //print_r($aperioRoles);
             //exit('aperio util');
 
-            $user = $this->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+            $stats = $this->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
 
             //exit('AperioAuth');
 
@@ -154,25 +154,37 @@ class AperioUtil {
     //set user roles based on the user roles from aperio:
     public function setUserPathologyRolesByAperioRoles( $user, $aperioRoles ) {
 
+        $addedRoles = array();
+
         if( !$aperioRoles && count($aperioRoles) == 0 ) {
-            return $user;
+            return $addedRoles;
         }
 
         $addOrderingProviderRole = false;
+
+        $addedFaculty = false;
+        $addedFellow = false;
+        $addedResident = false;
+
+        $addedOrdering = false;
+        $addedDirector = false;
+        $addedPrincipal = false;
 
         foreach( $aperioRoles as $role ) {
 
             //echo "Role: Id = ".$role['Id'].", Description=".$role['Description'].", Name=".$role['Name']."<br>";
             if( $role['Name'] == "Faculty" ) {
+                $addedFaculty = !$user->hasRole("ROLE_PATHOLOGY_FACULTY");
                 $user->addRole("ROLE_PATHOLOGY_FACULTY");
                 $addOrderingProviderRole = true;
             }
             if( $role['Name'] == "Fellows" ) {
-                //echo "\n ".$user.": ######### add Fellow role ########### \n";
+                $addedFellow = !$user->hasRole("ROLE_PATHOLOGY_FELLOW");
                 $user->addRole("ROLE_PATHOLOGY_FELLOW");
                 $addOrderingProviderRole = true;
             }
             if( $role['Name'] == "Residents" ) {
+                $addedResident = !$user->hasRole("ROLE_PATHOLOGY_RESIDENT");
                 $user->addRole("ROLE_PATHOLOGY_RESIDENT");
                 $addOrderingProviderRole = true;
             }
@@ -180,12 +192,37 @@ class AperioUtil {
         } //foreach
 
         if( $addOrderingProviderRole ) {
+            $addedOrdering = !$user->hasRole("ROLE_ORDERING_PROVIDER");
             $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+
+            $addedDirector = !$user->hasRole("ROLE_COURSE_DIRECTOR");
             $user->addRole('ROLE_COURSE_DIRECTOR');
+
+            $addedPrincipal = !$user->hasRole("ROLE_PRINCIPAL_INVESTIGATOR");
             $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
         }
 
-        return $user;
+        if( $addedFaculty )
+            $addedRoles[] = 'Faculty';
+
+        if( $addedFellow )
+            $addedRoles[] = 'Fellow';
+
+        if( $addedResident )
+            $addedRoles[] = 'Resident';
+
+        ///////////////
+
+        if( $addedOrdering )
+            $addedRoles[] = 'Ordering Provider';
+
+        if( $addedDirector )
+            $addedRoles[] = 'Course Director';
+
+        if( $addedPrincipal )
+            $addedRoles[] = 'Principal Investigator';
+
+        return $addedRoles;
     }
 
     public function getUserIdByUserName( $UserName ) {
@@ -222,8 +259,9 @@ class AperioUtil {
             array('Users')                  //$FilterTables
         );
 
-        //echo "res count=".count($Users)."<br>";
-        //print_r($Users);
+//        //echo "res count=".count($Users).":";
+//        var_dump($Users);
+//        //echo "<br>";
 
         if( count($Users) == 1 ) {
             $User = $Users[0];

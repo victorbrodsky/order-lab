@@ -113,7 +113,7 @@ class UserUtil {
 
             $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
 
-            $user = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+            $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
 
             //echo "username=(".$username.")\n";
             //echo "userid=(".$userid.")\n";
