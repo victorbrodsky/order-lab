@@ -701,11 +701,10 @@ class UtilController extends Controller {
 
         $request = $this->get('request');
         $opt = trim( $request->get('opt') );
-//        $type = trim( $request->get('type') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Research', 'list')
-            ->select("list.id as id, list.name as text")
+            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
+            ->select("list.name as id, list.name as text")
             //->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
 
@@ -735,16 +734,17 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
-        $opt = trim( $request->get('opt') ); //projectTitle id
+        $opt = trim( $request->get('opt') ); //projectTitle name
+        //echo 'opt='.$opt.' => ';
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:SetTitleList', 'list')
-            ->select("list.id as id, list.name as text")
-            ->leftJoin("list.research","parent")
-            ->where("parent.id = :pid AND list.type = :type")
+            ->select("list.name as id, list.name as text")
+            ->leftJoin("list.projectTitle","parent")
+            ->where("parent.name = :pname AND list.type = :type")
             ->orderBy("list.orderinlist","ASC")
             ->setParameters( array(
-                'pid' => $opt,
+                'pname' => $opt,
                 'type' => 'default'
             ));
 
@@ -835,7 +835,7 @@ class UtilController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $request = $this->get('request');
-        $opt = trim( $request->get('opt') ); //parent id: courseTitle id
+        $opt = trim( $request->get('opt') ); //parent name: courseTitle name
         $routeName = $request->get('_route');
 
         if( $routeName == "get-optionalusereducational" ) {
@@ -846,7 +846,7 @@ class UtilController extends Controller {
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_PRINCIPAL_INVESTIGATOR";
             $className = 'PIList';
-            $pname = 'researches';
+            $pname = 'projectTitles';
         }
 
         if(0) {
@@ -859,17 +859,15 @@ class UtilController extends Controller {
             }
         }
 
-        //1) add PIList with parent ids = $opt
+        //1) add PIList with parent name = $opt
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:'.$className, 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.".$pname,"parents")
-            //->leftJoin("list.projects","parents",'WITH','parents.id = :pid')
-            ->where("parents.id = :pid AND (list.type = :type OR list.type = :type2)")
-            //->where("parents = :pid")
+            ->where("parents.name = :pname AND (list.type = :type OR list.type = :type2)")
             ->orderBy("list.orderinlist","ASC")
             ->setParameters( array(
-                'pid' => $opt,
+                'pname' => $opt,
                 'type' => 'default',
                 'type2' => 'user-added'
             ));

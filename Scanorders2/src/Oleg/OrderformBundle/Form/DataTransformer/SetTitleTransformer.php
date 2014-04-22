@@ -51,7 +51,7 @@ class SetTitleTransformer implements DataTransformerInterface
             return "";
         }
 
-        $type = $type->first();
+        //$type = $type->first();
 
         echo $this->className.":data transformer type=".$type."<br>";
 
@@ -63,7 +63,7 @@ class SetTitleTransformer implements DataTransformerInterface
             $type = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($type."");
         }
         
-        if (null === $type) {
+        if( null === $type ) {
             //echo "not found<br>";
             return "";
         }

@@ -98,10 +98,12 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new StringTransformer($this->om, $username);
                 break;
             case "projectTitle":
-                $transformer = new ResearchTransformer($this->om, $username, 'Research');
+                $transformer = new StringTransformer($this->om, $username);
+                //$transformer = new ResearchTransformer($this->om, $username, 'ProjectTitleList');
                 break;
             case "setTitles":
-                $transformer = new SetTitleTransformer($this->om, $username, 'SetTitleList');
+                $transformer = new StringTransformer($this->om, $username);
+                //$transformer = new SetTitleTransformer($this->om, $username, 'SetTitleList');
                 break;
             case "courseTitle":
                 $transformer = new ResearchTransformer($this->om, $username, 'CourseTitleList');

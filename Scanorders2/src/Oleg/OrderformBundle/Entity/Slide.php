@@ -94,23 +94,23 @@ class Slide extends OrderAbstract
      */
     private $educational;
 
-//    /**
-//     * @ORM\OneToOne(
-//     *      targetEntity="Research",
-//     *      inversedBy="slide",
-//     *      cascade={"persist"}
-//     * )
-//     * @ORM\JoinColumn(
-//     *      name="research_id",
-//     *      referencedColumnName="id"
-//     * )
-//     */
-//    private $research;
     /**
-     * @ORM\ManyToOne(targetEntity="Research", inversedBy="slides", cascade={"persist"})
-     * @ORM\JoinColumn(name="research_id", referencedColumnName="id")
+     * @ORM\OneToOne(
+     *      targetEntity="Research",
+     *      inversedBy="slide",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(
+     *      name="research_id",
+     *      referencedColumnName="id"
+     * )
      */
     private $research;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Research", inversedBy="slides", cascade={"persist"})
+//     * @ORM\JoinColumn(name="research_id", referencedColumnName="id")
+//     */
+//    private $research;
     
     public function __construct( $withfields=false, $status='valid', $provider=null, $source=null )
     {

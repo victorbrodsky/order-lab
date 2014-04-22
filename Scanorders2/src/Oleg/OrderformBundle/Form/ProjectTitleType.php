@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ResearchType extends AbstractType
+class ProjectTitleType extends AbstractType
 {
 
     protected $entity;
@@ -31,7 +31,7 @@ class ResearchType extends AbstractType
 //            'required' => false,
 //        ));
 
-        $builder->add( 'projectTitleStr', 'custom_selector', array(
+        $builder->add( 'name', 'custom_selector', array(
             'label' => 'Research Project Title:',
             'required' => false,
             //'read_only' => $readonly,
@@ -39,7 +39,7 @@ class ResearchType extends AbstractType
             'classtype' => 'projectTitle'
         ));
 
-        $builder->add( 'setTitleStr', 'custom_selector', array(
+        $builder->add( 'setTitles', 'custom_selector', array(
             'label' => 'Research Set Title:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width combobox-research-setTitle', 'type' => 'hidden'),
@@ -79,22 +79,12 @@ class ResearchType extends AbstractType
         } else {
 
             //$addlabel = " (as entered by user)";
-            $builder->add('principalWrappers', 'custom_selector', array(
-                'label' => 'Principal Investigator(s):',
+            $builder->add('principals', 'custom_selector', array(
+                'label' => 'Principal Investigator:',
                 'attr' => array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden'),
                 'required'=>false,
                 'classtype' => 'optionalUserResearch'
             ));
-//            $builder->add('principalWrappers', 'collection', array(
-//                'type' => new PrincipalType($this->params,$this->entity),
-//                'required' => false,
-////                'allow_add' => true,
-////                'allow_delete' => true,
-////                'label' => " ",
-////                'by_reference' => false,
-////                'prototype' => true,
-////                'prototype_name' => '__patient__',
-//            ));
 
         }
 

@@ -31,17 +31,17 @@ class PIList extends ListAbstract
      */
     protected $principal;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Research", mappedBy="principals", cascade={"persist"})
-     **/
-    private $researches;
-
     //use name as $principalstr
+
+    /**
+     * @ORM\ManyToMany(targetEntity="ProjectTitleList", mappedBy="principals", cascade={"persist"})
+     **/
+    private $projectTitles;
 
 
     public function __construct() {
-        $this->researches = new ArrayCollection();
         $this->synonyms = new ArrayCollection();
+        $this->projectTitles = new ArrayCollection();
     }
 
     /**
@@ -126,17 +126,17 @@ class PIList extends ListAbstract
     }
 
     /**
-     * Add researches
+     * Add projectTitles
      *
      * @param \Oleg\OrderformBundle\Entity\Research $research
      * @return PIList
      */
-    public function addResearches(\Oleg\OrderformBundle\Entity\Research $research)
+    public function addProjectTitle(\Oleg\OrderformBundle\Entity\ProjectTitleList $research)
     {
-        if( !$this->researches->contains($research) ) {
-            $this->researches->add($research);
+        if( !$this->projectTitles->contains($research) ) {
+            $this->projectTitles->add($research);
         }
-    
+
         return $this;
     }
 
@@ -145,19 +145,19 @@ class PIList extends ListAbstract
      *
      * @param \Oleg\OrderformBundle\Entity\Research $research
      */
-    public function removeResearches(\Oleg\OrderformBundle\Entity\Research $research)
+    public function removeProjectTitle(\Oleg\OrderformBundle\Entity\ProjectTitleList $research)
     {
-        $this->researches->removeElement($research);
+        $this->projectTitles->removeElement($research);
     }
 
     /**
      * Get researches
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function getResearches()
+    public function getProjectTitles()
     {
-        return $this->researches;
+        return $this->projectTitles;
     }
 
 }

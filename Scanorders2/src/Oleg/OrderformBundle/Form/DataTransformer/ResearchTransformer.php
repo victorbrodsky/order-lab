@@ -13,6 +13,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
+//ProjectTitleList and CourseTitleList transformer
 class ResearchTransformer implements DataTransformerInterface
 {
     /**
