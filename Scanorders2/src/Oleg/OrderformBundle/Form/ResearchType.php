@@ -25,58 +25,31 @@ class ResearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-//        $builder->add('projectTitle', new ProjectTitleListType($this->params, $this->entity), array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\ProjectTitleList',
-//            'label' => false,
-//            'required' => false,
-//        ));
-
-        $builder->add( 'projectTitleStr', 'custom_selector', array(
-            'label' => 'Research Project Title:',
-            'required' => false,
-            //'read_only' => $readonly,
-            'attr' => array('class' => 'combobox combobox-width combobox-research-projectTitle', 'type' => 'hidden'),
-            'classtype' => 'projectTitle'
-        ));
-
-        $builder->add( 'setTitleStr', 'custom_selector', array(
-            'label' => 'Research Set Title:',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width combobox-research-setTitle', 'type' => 'hidden'),
-            //'read_only' => $readonly,
-            'classtype' => 'setTitles'
-        ));
 
         if( $this->params['type'] == 'SingleObject' ) {
 
-            $builder->add('primaryPrincipal', 'entity', array(
-                'class' => 'OlegOrderformBundle:PIList',
-                'label'=>'Primary Principal Investigator:',
-                'required' => true,
-                //'read_only' => true,    //not working => disable by twig
-                //'multiple' => true,
-                //'attr' => array('class'=>'form-control form-control-modif'),
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.researches","researches")
-                        ->where("researches.id = :id")
-                        ->setParameter('id', $this->entity->getId());
-                },
-            ));
-
-            $builder->add('principals', 'collection', array(
-                'type' => new PrincipalType($this->params,$this->entity),
-                'required' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'label' => " ",
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__patient__',
+            //data review: we need only edit primary pi and link principals to the existing User objects => all of this is inside of "ProjectTitleList" entity
+            $builder->add( 'projectTitle', new ProjectTitleListType($this->params,$this->entity), array(
+                'label'=>false
             ));
 
         } else {
+
+            $builder->add( 'projectTitleStr', 'custom_selector', array(
+                'label' => 'Research Project Title:',
+                'required' => false,
+                //'read_only' => $readonly,
+                'attr' => array('class' => 'combobox combobox-width combobox-research-projectTitle', 'type' => 'hidden'),
+                'classtype' => 'projectTitle'
+            ));
+
+            $builder->add( 'setTitleStr', 'custom_selector', array(
+                'label' => 'Research Set Title:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width combobox-research-setTitle', 'type' => 'hidden'),
+                //'read_only' => $readonly,
+                'classtype' => 'setTitles'
+            ));
 
             //$addlabel = " (as entered by user)";
             $builder->add('principalWrappers', 'custom_selector', array(
@@ -85,16 +58,6 @@ class ResearchType extends AbstractType
                 'required'=>false,
                 'classtype' => 'optionalUserResearch'
             ));
-//            $builder->add('principalWrappers', 'collection', array(
-//                'type' => new PrincipalType($this->params,$this->entity),
-//                'required' => false,
-////                'allow_add' => true,
-////                'allow_delete' => true,
-////                'label' => " ",
-////                'by_reference' => false,
-////                'prototype' => true,
-////                'prototype_name' => '__patient__',
-//            ));
 
         }
 

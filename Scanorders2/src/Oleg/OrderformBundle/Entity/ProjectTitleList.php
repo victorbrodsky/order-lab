@@ -239,6 +239,7 @@ class ProjectTitleList extends ListAbstract
         $resArr = new ArrayCollection();
         foreach( $this->principals as $principal ) {
 
+            //echo $principal->getId() . "?=" . $this->getPrimaryPrincipal()."<br>";
             if( $principal->getId()."" == $this->getPrimaryPrincipal()."" ) {  //this principal is a primary one => put as the first element
 
                 $firstEl = $resArr->first();

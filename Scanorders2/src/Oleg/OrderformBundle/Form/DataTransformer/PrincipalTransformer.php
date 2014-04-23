@@ -60,20 +60,14 @@ class PrincipalTransformer implements DataTransformerInterface
             return null;
         }
 
-        if( count($entities) > 1 ) {
+        if( count($entities) > 0 ) {
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
 
-                    $idArr[] = $entity->getId();
-
-//                    $primaryProjects = $entity->getPrimaryProjects();
-//
-//                    if( $entity->getId()."" == $entity->getPrimaryPrincipal()->getId()."" ) {
-//                        array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
-//                    } else {
-//                        $idArr[] = $entity->getId();
-//                    }
+                    //echo $entity."";
+                    //$idArr[] = $entity->getId();
+                    $idArr[] = $entity->getPrincipalStr();
 
                 }
             }
@@ -103,12 +97,12 @@ class PrincipalTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        var_dump($text);
-        echo "<br>transformer: count=".count($text)."<br>";
-        echo "data transformer text=".$text."<br>";
-        if( $this->className == 'PIList') {
-            //exit();
-        }
+//        var_dump($text);
+//        echo "<br>transformer: count=".count($text)."<br>";
+//        echo "data transformer text=".$text."<br>";
+//        if( $this->className == 'PIList') {
+//            //exit();
+//        }
 
         if( !$text ) {
             $newListArr = new \Doctrine\Common\Collections\ArrayCollection();

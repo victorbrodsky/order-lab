@@ -862,7 +862,7 @@ class UtilController extends Controller {
         //1) add PIList with parent name = $opt
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:'.$className, 'list')
-            ->select("list.id as id, list.name as text")
+            ->select("list.name as id, list.name as text")
             ->leftJoin("list.".$pname,"parents")
             ->where("parents.name = :pname AND (list.type = :type OR list.type = :type2)")
             ->orderBy("list.orderinlist","ASC")

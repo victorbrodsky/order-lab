@@ -8,23 +8,25 @@
 
     {% include 'OlegOrderformBundle::DataReview/orderinfo.html.twig' %}
 
-    {{ myform.simplefield( "Research Project Title:", entity.projectTitle.name, "input", "disabled" ) }}
 
-    {% for title in entity.projectTitle.setTitles %}
-        {{ myform.simplefield( "Research Project Title:", title, "input", "disabled" ) }}
-    {% endfor %}
+    {{ myform.simplefield( "Research Project Title:", entity.projectTitleStr, "input", "disabled" ) }}
+
+    {{ myform.simplefield( "Research Set Title:", entity.setTitleStr, "input", "disabled" ) }}
+
+
+    {#The goal of this page: user can change primary PI and link PI to a User#}
 
     <hr>
         {{ myform.field(edit_form.projectTitle.primaryPrincipal) }}
     <hr>
 
-    {% for principal in edit_form.principals %}
+    {% for principal in edit_form.projectTitle.principals %}
         {{ myform.field(principal.name) }}
         {{ myform.field(principal.principal) }}
         <hr>
     {% endfor %}
 
-    <hr>
+    <br/>
 
     {% do edit_form.projectTitle.setRendered %}
 

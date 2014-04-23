@@ -81,7 +81,7 @@ class EducationalResearchController extends Controller {
         }
 
         //$entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
-        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->find($id);
+        $entity = $em->getRepository('OlegOrderformBundle:'.$type)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
@@ -95,7 +95,7 @@ class EducationalResearchController extends Controller {
         if ($editForm->isValid()) {
             //exit("form is valid!");
 
-            echo "name=(".$entity->getName()."), user=(".$entity->getPrincipal().")<br>";
+            //echo "name=(".$entity->getName()."), user=(".$entity->getPrincipal().")<br>";
 
             $em->persist($entity);
             $em->flush();
@@ -108,7 +108,12 @@ class EducationalResearchController extends Controller {
                 $reviewLink = '<br> <a href="'.$url.'">Back to Educational Data Review</a>';
             }
             if( $routeName == "research_update" ) {
-                $msg = "Values saved for Order ".$orderoid.": Principal Investigator = ".$entity->getPrincipal();
+                $principals = $entity->getProjectTitle()->getPrincipals();
+                $principalsArr = array();
+                foreach( $principals as $principal ) {
+                    $principalsArr[] = $principal->getName();
+                }
+                $msg = "Values saved for Order ".$orderoid.": Principal Investigator(s) = ".implode(",", $principalsArr)." Primary Principal Investigator = ".$principalsArr[0];
                 $url = $this->generateUrl( 'research_edit', array('id' => $id) );
                 $reviewLink = '<br> <a href="'.$url.'">Back to Research Data Review</a>';
             }
