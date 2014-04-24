@@ -103,9 +103,14 @@ class EducationalResearchController extends Controller {
             $orderoid = $entity->getOrderinfo()->getOid();
 
             if( $routeName == "educational_update" ) {
-                $msg = "Values saved for Order ".$orderoid.": Course Director = ".$entity->getDirector();
+                $directors = $entity->getCourseTitle()->getDirectors();
+                $directorsArr = array();
+                foreach( $directors as $director ) {
+                    $directorsArr[] = $director->getName();
+                }
+                $msg = "Values saved for Order ".$orderoid.": Course Director(s) = ".implode(",", $directorsArr)."; Primary Course Director = ".$directorsArr[0];
                 $url = $this->generateUrl( 'educational_edit', array('id' => $id) );
-                $reviewLink = '<br> <a href="'.$url.'">Back to Educational Data Review</a>';
+                $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
             if( $routeName == "research_update" ) {
                 $principals = $entity->getProjectTitle()->getPrincipals();
@@ -113,9 +118,9 @@ class EducationalResearchController extends Controller {
                 foreach( $principals as $principal ) {
                     $principalsArr[] = $principal->getName();
                 }
-                $msg = "Values saved for Order ".$orderoid.": Principal Investigator(s) = ".implode(",", $principalsArr)." Primary Principal Investigator = ".$principalsArr[0];
-                $url = $this->generateUrl( 'research_edit', array('id' => $id) );
-                $reviewLink = '<br> <a href="'.$url.'">Back to Research Data Review</a>';
+                $msg = "Values saved for Order ".$orderoid.": Principal Investigator(s) = ".implode(",", $principalsArr)."; Primary Principal Investigator = ".$principalsArr[0];
+                $url = $this->generateUrl( 'scan-order-data-review-full', array('id' => $orderoid) );
+                $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
 
             $this->get('session')->getFlashBag()->add(

@@ -65,9 +65,19 @@ class PrincipalTransformer implements DataTransformerInterface
             foreach( $entities as $entity ) {
                 if( $entity ) {
 
-                    //echo $entity."";
-                    //$idArr[] = $entity->getId();
-                    $idArr[] = $entity->getPrincipalStr();
+                    //echo $entity;
+
+                    //entity is PrincipalWrapper class => order will show the same order as entered by a user
+                    if( $this->className == 'PIList' ) {
+                        $idArr[] = $entity->getPrincipalStr();
+                    }
+
+                    if( $this->className == 'DirectorList' ) {
+                        $idArr[] = $entity->getDirectorStr();
+                    }
+
+                    //entity is PIList class => we can shows Primary PI as the first principal
+                    //$idArr[] = $entity->getName();
 
                 }
             }

@@ -83,7 +83,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
         //********** take care of educational and research director and principal investigator ***********//
-        $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity );
+        $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity, $this->user );
         $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity, $this->user );
         //********** end of educational and research processing ***********//
 

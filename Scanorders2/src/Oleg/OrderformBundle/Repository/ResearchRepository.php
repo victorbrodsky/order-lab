@@ -2,7 +2,7 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\EntityRepository;
 
 
 class ResearchRepository extends ListAbstractRepository {
@@ -21,7 +21,7 @@ class ResearchRepository extends ListAbstractRepository {
         $research->setProjectTitle($projectTitle);
         //echo "projectTitle name=".$projectTitle->getName()."<br>";
 
-        echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
+        //echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
 
         //process Set Title
         $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), 'SetTitleList', $user, 'projectTitle', $projectTitle->getId() );
@@ -67,6 +67,7 @@ class ResearchRepository extends ListAbstractRepository {
             if( $principalWrappers->first() ) {
                 if( !$foundprojectTitle->getPrimaryPrincipal() ) {
                     $foundprojectTitle->setPrimaryPrincipal( $principalWrappers->first()->getPrincipal()->getId() );
+                    $research->setPrimarySet( $principalWrappers->first()->getPrincipal()->getName() );
                 }
             } else {
                 $foundprojectTitle->setPrimaryPrincipal( NULL );

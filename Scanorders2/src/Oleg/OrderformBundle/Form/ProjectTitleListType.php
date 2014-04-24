@@ -43,31 +43,17 @@ class ProjectTitleListType extends AbstractType
             $principalArr[$principal->getId()] = $principal->getName();
         }
 
+        $comment = '';
+        if( $this->entity->getPrimarySet() ) {
+            $comment = ' for this order';
+        }
+
         $builder->add('primaryPrincipal', 'choice', array(
             'required' => true,
-            'label'=>'Primary Principal Investigator:',
+            'label'=>'11Primary Principal Investigator (as entered by user'.$comment.'):',
             'attr' => array('class' => 'combobox combobox-width'),
             'choices' => $principalArr,
         ));
-
-//            $builder->add('primaryPrincipal', 'entity', array(
-//                'class' => 'OlegOrderformBundle:PIList',
-//                'label'=>'Primary Principal Investigator(s):',
-//                'required' => true,
-//                'preferred_choices' => array($this->entity->getProjectTitle()->getPrincipal),
-//                //'read_only' => true,    //not working => disable by twig
-//                //'multiple' => true,
-//                //'attr' => array('class'=>'form-control form-control-modif'),
-//                'attr' => array('class' => 'combobox combobox-width'),
-//                'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        //->select("list.name as id, list.name as text");
-//                        ->leftJoin("list.projectTitles","parents")
-//                        ->where("parents.id = :id")
-//                        ->setParameter('id', $this->entity->getProjectTitle()->getId());
-//                },
-//            ));
-
 
         $builder->add('principals', 'collection', array(
             'type' => new PrincipalType($this->params,$this->entity),

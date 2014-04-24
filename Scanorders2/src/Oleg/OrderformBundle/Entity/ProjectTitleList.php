@@ -29,15 +29,6 @@ class ProjectTitleList extends ListAbstract
      * @ORM\OneToMany(targetEntity="Research", mappedBy="projectTitle")
      */
     protected $research;
-//    /**
-//     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="research")
-//     */
-//    protected $orderinfos;
-//
-//    /**
-//     * @ORM\OneToMany(targetEntity="Slide", mappedBy="research")
-//     */
-//    protected $slides;
 
     //list of set titles belongs to this project title.
     /**
@@ -81,42 +72,6 @@ class ProjectTitleList extends ListAbstract
     {
         return $this->research;
     }
-
-//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        if( !$this->orderinfos->contains($orderinfo) ) {
-//            $this->orderinfos->add($orderinfo);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-//    {
-//        $this->orderinfos->removeElement($orderinfo);
-//    }
-//
-//    public function getOrderinfos()
-//    {
-//        return $this->orderinfos;
-//    }
-//
-//    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        if( !$this->slides->contains($slide) ) {
-//            $this->slides->add($slide);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
-//    {
-//        $this->slides->removeElement($slide);
-//    }
-//
-//    public function getSlides()
-//    {
-//        return $this->slides;
-//    }
 
     /**
      * Add synonyms
@@ -170,9 +125,9 @@ class ProjectTitleList extends ListAbstract
     }
 
 
-    public function addSetTitle(\Oleg\OrderformBundle\Entity\SetTitleList $setTitle)
+    public function addSetTitle(\Oleg\OrderformBundle\Entity\SetTitleList $setTitle = null)
     {
-        if( !$this->setTitles->contains($setTitle) ) {
+        if( $setTitle && !$this->setTitles->contains($setTitle) ) {
             $this->setTitles->add($setTitle);
             $setTitle->setProjectTitle($this);
         }

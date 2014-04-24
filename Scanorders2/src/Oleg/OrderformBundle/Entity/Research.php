@@ -52,7 +52,7 @@ class Research
     protected $projectTitleStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="research")
+     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="research", cascade={"persist"})
      * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $projectTitle;
@@ -68,6 +68,12 @@ class Research
      * @ORM\JoinColumn(name="setTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $setTitle;
+
+    /**
+     * primarySet - name of the primary PI. Indicates if the primaryPrincipal was set by this order
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $primarySet;
 
 
     public function __construct() {
@@ -143,7 +149,16 @@ class Research
      */
     public function getPrincipalWrappers()
     {
+        //entity is PrincipalWrapper class => order will show the same order as entered by a user
         return $this->principalWrappers;
+
+        //entity is PIList class => we can shows Primary PI as the first principal
+//        if( $this->getProjectTitle() ) {
+//            return $this->getProjectTitle()->getPrincipals(); //to keep order according to Primary PI
+//        } else {
+//            return $this->principalWrappers;
+//        }
+
     }
 
     /**
@@ -224,6 +239,21 @@ class Research
         return $this->setTitleStr."";
     }
 
+    /**
+     * @param mixed $primarySet
+     */
+    public function setPrimarySet($primarySet)
+    {
+        $this->primarySet = $primarySet;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimarySet()
+    {
+        return $this->primarySet;
+    }
 
 
 

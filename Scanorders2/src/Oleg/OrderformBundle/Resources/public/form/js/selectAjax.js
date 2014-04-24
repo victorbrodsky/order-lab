@@ -589,6 +589,10 @@ function getSetTitle() {
 
     url = url + "?opt="+idInArr;
 
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "&orderoid="+orderinfoid;
+    }
+
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
@@ -651,6 +655,10 @@ function getLessonTitle() {
     }
 
     url = url + "?opt="+idInArr;
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "&orderoid="+orderinfoid;
+    }
 
     $.ajax({
         url: url,

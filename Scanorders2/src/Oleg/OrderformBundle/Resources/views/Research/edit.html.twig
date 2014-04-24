@@ -4,6 +4,7 @@
 
 <h3 class="text-info">Research</h3>
 
+
 {{ form_start(edit_form) }}
 
     {% include 'OlegOrderformBundle::DataReview/orderinfo.html.twig' %}
@@ -13,17 +14,35 @@
 
     {{ myform.simplefield( "Research Set Title:", entity.setTitleStr, "input", "disabled" ) }}
 
+    <br>
 
     {#The goal of this page: user can change primary PI and link PI to a User#}
+    <h4 class="text-info">Associated Research Project ID {{ entity.id }}: {{ entity.projectTitleStr }}</h4>
 
+    {{ myform.field(edit_form.projectTitle.primaryPrincipal) }}
     <hr>
-        {{ myform.field(edit_form.projectTitle.primaryPrincipal) }}
-    <hr>
+
+    {#get array of PI for this project#}
+    {% set nameArr = [] %}
+    {% for pwraper in entity.principalWrappers  %}
+        {% if pwraper.research.id == entity.id %}
+            {% set nameArr = nameArr|merge([pwraper.principalStr]) %}
+        {% endif %}
+    {% endfor %}
 
     {% for principal in edit_form.projectTitle.principals %}
-        {{ myform.field(principal.name) }}
+
+        {% if principal.vars.value.name in nameArr %}
+            {% set label = 'Principal Investigator (as entered by user for this order):' %}
+        {% else %}
+            {% set label = null %}
+        {% endif %}
+
+        {{ myform.field(principal.name,label) }}
+
         {{ myform.field(principal.principal) }}
         <hr>
+
     {% endfor %}
 
     <br/>

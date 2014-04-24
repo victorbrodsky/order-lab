@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class PrincipalType extends AbstractType
+class DirectorType extends AbstractType
 {
 
     protected $entity;
@@ -23,22 +23,22 @@ class PrincipalType extends AbstractType
     public function __construct( $params=null, $entity=null )
     {
         $this->params = $params;
-        $this->entity = $entity; //current project entity
+        $this->entity = $entity; //current course entity
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add( 'name', 'text', array(
-            'label' => 'Principal Investigator (as entered by user):',
+            'label' => 'Course Director (as entered by user):',
             'required' => true,
             'read_only' => true,
             'attr'=>array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add('principal', 'entity', array(
+        $builder->add('director', 'entity', array(
         'class' => 'OlegOrderformBundle:User',
-        'label'=>'Principal Investigator:',
+        'label'=>'Course Director:',
         'required' => false,
         //'read_only' => true,    //not working => disable by twig
         //'multiple' => true,
@@ -48,7 +48,7 @@ class PrincipalType extends AbstractType
                 ->where('u.locked=:locked AND u.roles LIKE :role')
                 ->setParameters( array(
                     'locked' => '0',
-                    'role' => '%"' . 'ROLE_PRINCIPAL_INVESTIGATOR' . '"%',
+                    'role' => '%"' . 'ROLE_COURSE_DIRECTOR' . '"%',
                 ));
         },
     ));
@@ -58,12 +58,12 @@ class PrincipalType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\PIList'
+            'data_class' => 'Oleg\OrderformBundle\Entity\DirectorList'
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_principaltype';
+        return 'oleg_orderformbundle_directortype';
     }
 }

@@ -17,6 +17,10 @@ class ListAbstractRepository extends EntityRepository {
     //output: new list entity (i.e. ProjectTitleList or SetTitleList)
     public function convertStrToObject( $name, $className, $user, $parentFieldName = null, $parentId=null ) {
 
+        if( !$name || $name == '' ) {
+            return NULL;
+        }
+
         $criterions = array( 'name' => $name );
 
         //echo "use parentId=".$parentId.", fieldname=".$parentFieldName."<br>";

@@ -32,69 +32,97 @@ class CourseTitleListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'name', 'custom_selector', array(
-            'label' => 'Course Title:',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width combobox-educational-courseTitle', 'type' => 'hidden'),
-            'classtype' => 'courseTitle'
-        ));
+        $directors = $this->entity->getCourseTitle()->getDirectors();
 
-        $builder->add( 'lessonTitles', 'custom_selector', array(
-            'label' => 'Lesson Title:',
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width combobox-educational-lessonTitle', 'type' => 'hidden'),
-            'classtype' => 'lessonTitles'
-        ));
-
-        ///////////////////// Director //////////////////////////////////
-
-        $addlabel = "";
-        $readonly = false;
-
-        //echo "type=".$this->params['type']."<br>";
-
-        if( $this->params['type'] == 'SingleObject' ) {
-            //this is used by data review, when a single onject is shown
-            $attr = array('class'=>'form-control form-control-modif');
-            $addlabel = " (as entered by user)";
-            $readonly = true;
-
-            //show a user object linked to the educational. Show it only for data review.
-            if( $this->params['type'] == 'SingleObject' ) {
-                $attr = array('class' => 'combobox combobox-width');
-                $builder->add('directors', 'entity', array(
-                    'class' => 'OlegOrderformBundle:DirectorList',
-                    'label'=>'Course Director:',
-                    'required' => false,
-                    'multiple' => true,
-                    'attr' => $attr,
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.courses","parents")
-                            ->where("parents.id = :id")
-                            ->setParameter('id', $this->entity->getId());
-                    },
-                ));
-            }
-
-        } else {
-
-            //this is used by orderinfo form, when the scan order form is shown ($this->params['type']="Multi-Slide Scan Order")
-            $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
-            $builder->add('directors', 'custom_selector', array(
-                'label' => 'Course Director:',
-                'attr' => $attr,
-                'required'=>false,
-                'classtype' => 'optionalUserEducational'
-            ));
-
+        //create array of choices: 'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
+        $directorArr = array();
+        foreach( $directors as $director ) {
+            //echo $director."<br>";
+            $directorArr[$director->getId()] = $director->getName();
         }
 
+        $comment = '';
+        if( $this->entity->getPrimarySet() ) {
+            $comment = ' for this order';
+        }
+
+        $builder->add('primaryDirector', 'choice', array(
+            'required' => true,
+            'label'=>'Primary Course Director (as entered by user'.$comment.'):',
+            'attr' => array('class' => 'combobox combobox-width'),
+            'choices' => $directorArr,
+        ));
+
+        $builder->add('directors', 'collection', array(
+            'type' => new DirectorType($this->params,$this->entity),
+            'required' => false,
+        ));
 
 
 
-
-        ///////////////////////////// EOF Director ///////////////////////////////
+//        $builder->add( 'name', 'custom_selector', array(
+//            'label' => 'Course Title:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width combobox-educational-courseTitle', 'type' => 'hidden'),
+//            'classtype' => 'courseTitle'
+//        ));
+//
+//        $builder->add( 'lessonTitles', 'custom_selector', array(
+//            'label' => 'Lesson Title:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width combobox-educational-lessonTitle', 'type' => 'hidden'),
+//            'classtype' => 'lessonTitles'
+//        ));
+//
+//        ///////////////////// Director //////////////////////////////////
+//
+//        $addlabel = "";
+//        $readonly = false;
+//
+//        //echo "type=".$this->params['type']."<br>";
+//
+//        if( $this->params['type'] == 'SingleObject' ) {
+//            //this is used by data review, when a single onject is shown
+//            $attr = array('class'=>'form-control form-control-modif');
+//            $addlabel = " (as entered by user)";
+//            $readonly = true;
+//
+//            //show a user object linked to the educational. Show it only for data review.
+//            if( $this->params['type'] == 'SingleObject' ) {
+//                $attr = array('class' => 'combobox combobox-width');
+//                $builder->add('directors', 'entity', array(
+//                    'class' => 'OlegOrderformBundle:DirectorList',
+//                    'label'=>'Course Director:',
+//                    'required' => false,
+//                    'multiple' => true,
+//                    'attr' => $attr,
+//                    'query_builder' => function(EntityRepository $er) {
+//                        return $er->createQueryBuilder('list')
+//                            ->leftJoin("list.courses","parents")
+//                            ->where("parents.id = :id")
+//                            ->setParameter('id', $this->entity->getId());
+//                    },
+//                ));
+//            }
+//
+//        } else {
+//
+//            //this is used by orderinfo form, when the scan order form is shown ($this->params['type']="Multi-Slide Scan Order")
+//            $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
+//            $builder->add('directors', 'custom_selector', array(
+//                'label' => 'Course Director:',
+//                'attr' => $attr,
+//                'required'=>false,
+//                'classtype' => 'optionalUserEducational'
+//            ));
+//
+//        }
+//
+//
+//
+//
+//
+//        ///////////////////////////// EOF Director ///////////////////////////////
 
     }
 

@@ -123,7 +123,6 @@ class OrderInfo
 
     /////////////////    OBJECTS    //////////////////////
 
-    //cascade={"persist"}   
     /**
      * @ORM\ManyToMany(targetEntity="Patient", inversedBy="orderinfo" )
      * @ORM\JoinTable(name="patient_orderinfo")
@@ -143,7 +142,6 @@ class OrderInfo
      */
     private $educational;
 
-//    //     nullable=true
     /**
      * @ORM\OneToOne(
      *      targetEntity="Research",
@@ -156,11 +154,6 @@ class OrderInfo
      * )
      */
     private $research;
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Research", inversedBy="orderinfos", cascade={"persist"})
-//     * @ORM\JoinColumn(name="research_id", referencedColumnName="id")
-//     */
-//    private $research;
        
     /**
      * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="orderinfo")

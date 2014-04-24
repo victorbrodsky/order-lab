@@ -30,13 +30,14 @@
     </p>
 {% endmacro %}
 
-{% macro field( field, attr ) %}
+{#attr is not used, because readonly it is not working#}
+{% macro field( field, label, attr ) %}
     {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
     <div class="row">
         {{ form_errors(field) }}
         <div class="col-xs-6" align="right">
-            {{ form_label(field) }}
+            {{ form_label(field,label) }}
         </div>
         <div class="col-xs-6" align="left">
             {% if attr == "disabled" %}
@@ -52,7 +53,6 @@
     </div>
     </p>
 {% endmacro %}
-
 
 {% macro fieldDateLabel( field, attr ) %}
     <p>

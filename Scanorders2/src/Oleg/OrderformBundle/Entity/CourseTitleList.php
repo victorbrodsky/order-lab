@@ -122,17 +122,18 @@ class CourseTitleList extends ListAbstract
     }
 
 
-    public function addLessonTitles(\Oleg\OrderformBundle\Entity\LessonTitleList $lessonTitles)
+    public function addLessonTitle(\Oleg\OrderformBundle\Entity\LessonTitleList $lessonTitle = null)
     {
-        if( !$this->lessonTitles->contains($lessonTitles) ) {
-            $this->lessonTitles->add($lessonTitles);
+        if( $lessonTitle && !$this->lessonTitles->contains($lessonTitle) ) {
+            $this->lessonTitles->add($lessonTitle);
+            $lessonTitle->setCourseTitle($this);
         }
         return $this;
     }
 
-    public function removeLessonTitles(\Oleg\OrderformBundle\Entity\LessonTitleList $lessonTitles)
+    public function removeLessonTitle(\Oleg\OrderformBundle\Entity\LessonTitleList $lessonTitle)
     {
-        $this->lessonTitles->removeElement($lessonTitles);
+        $this->lessonTitles->removeElement($lessonTitle);
     }
 
     /**
@@ -176,7 +177,7 @@ class CourseTitleList extends ListAbstract
      * @param \Oleg\OrderformBundle\Entity\DirectorList $directors
      * @return CourseTitleList
      */
-    public function addDirectors(\Oleg\OrderformBundle\Entity\DirectorList $director)
+    public function addDirector(\Oleg\OrderformBundle\Entity\DirectorList $director)
     {
         if( !$this->directors->contains($director) ) {
             $this->directors->add($director);
@@ -190,7 +191,7 @@ class CourseTitleList extends ListAbstract
      *
      * @param \Oleg\OrderformBundle\Entity\DirectorList $directors
      */
-    public function removeDirectors(\Oleg\OrderformBundle\Entity\DirectorList $director)
+    public function removeDirector(\Oleg\OrderformBundle\Entity\DirectorList $director)
     {
         $this->directors->removeElement($director);
     }
@@ -219,11 +220,6 @@ class CourseTitleList extends ListAbstract
                 $resArr->add($director);
             }
         }
-
-//        foreach( $resArr as $res ) {
-//            echo "pi name=".$res.", id=".$res->getId()."<br>";
-//        }
-//        echo "<br>Course: directors count=".count($resArr)."<br>";
 
         return $resArr;
     }

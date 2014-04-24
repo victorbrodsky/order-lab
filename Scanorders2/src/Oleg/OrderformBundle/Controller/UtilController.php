@@ -717,7 +717,16 @@ class UtilController extends Controller {
         //echo "query=".$query."<br \>";
 
         $output = $query->getQuery()->getResult();
-        //$output = array();
+
+        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
+        if( $opt ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
+            $strEneterd = $orderinfo->getResearch()->getProjectTitleStr();
+            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+            if( !$this->in_complex_array($element,$output) ) {
+                $output[] = $element;
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -735,6 +744,7 @@ class UtilController extends Controller {
 
         $request = $this->get('request');
         $opt = trim( $request->get('opt') ); //projectTitle name
+        $orderoid = trim( $request->get('orderoid') );
         //echo 'opt='.$opt.' => ';
 
         $query = $em->createQueryBuilder()
@@ -750,6 +760,16 @@ class UtilController extends Controller {
 
         //echo "query=".$query."<br>";
         $output = $query->getQuery()->getResult();
+
+        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
+        if( $orderoid ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderoid);
+            $strEneterd = $orderinfo->getResearch()->getSetTitleStr();
+            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+            if( !$this->in_complex_array($element,$output) ) {
+                $output[] = $element;
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -772,7 +792,7 @@ class UtilController extends Controller {
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:CourseTitleList', 'list')
-            ->select("list.id as id, list.name as text")
+            ->select("list.name as id, list.name as text")
             ->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
 
@@ -786,6 +806,16 @@ class UtilController extends Controller {
 
         $output = $query->getQuery()->getResult();
         //$output = array();
+
+        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
+        if( $opt ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
+            $strEneterd = $orderinfo->getEducational()->getCourseTitleStr();
+            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+            if( !$this->in_complex_array($element,$output) ) {
+                $output[] = $element;
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -803,21 +833,33 @@ class UtilController extends Controller {
 
         $request = $this->get('request');
         $opt = trim( $request->get('opt') ); //parent id: courseTitle id
+        $orderoid = trim( $request->get('orderoid') );
+        //echo 'opt='.$opt.' => ';
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:LessonTitleList', 'list')
-            ->select("list.id as id, list.name as text")
+            ->select("list.name as id, list.name as text")
             ->leftJoin("list.courseTitle","parent")
-            ->where("parent.id = :pid AND list.type = :type")
+            ->where("parent.name = :pname AND list.type = :type")
             ->orderBy("list.orderinlist","ASC")
             ->setParameters( array(
-                'pid' => $opt,
+                'pname' => $opt,
                 'type' => 'default'
             ));
 
         //echo "query=".$query."<br>";
 
         $output = $query->getQuery()->getResult();
+
+        //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
+        if( $orderoid ) {
+            $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderoid);
+            $strEneterd = $orderinfo->getEducational()->getLessonTitleStr();
+            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+            if( !$this->in_complex_array($element,$output) ) {
+                $output[] = $element;
+            }
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

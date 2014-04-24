@@ -24,64 +24,41 @@ class EducationalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $addlabel = "";
-        $readonly = false;
 
         if( $this->params['type'] == 'SingleObject' ) {
-            //this is used by data review when a single onject is shown
-            $attr = array('class'=>'form-control form-control-modif');
-            $addlabel = " (as entered by user)";
-            $readonly = true;
+
+            //data review: we need only edit primary pi and link principals to the existing User objects => all of this is inside of "CourseTitleList" entity
+            $builder->add( 'courseTitle', new CourseTitleListType($this->params,$this->entity), array(
+                'label'=>false
+            ));
+
         } else {
-            $attr = array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden');
+
+            $builder->add( 'courseTitleStr', 'custom_selector', array(
+                'label' => 'Course Title:',
+                'required' => false,
+                //'read_only' => $readonly,
+                'attr' => array('class' => 'combobox combobox-width combobox-educational-courseTitle', 'type' => 'hidden'),
+                'classtype' => 'projectTitle'
+            ));
+
+            $builder->add( 'lessonTitleStr', 'custom_selector', array(
+                'label' => 'Lesson Title:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width combobox-educational-lessonTitle', 'type' => 'hidden'),
+                //'read_only' => $readonly,
+                'classtype' => 'setTitles'
+            ));
+
+            //$addlabel = " (as entered by user)";
+            $builder->add('directorWrappers', 'custom_selector', array(
+                'label' => 'Course Director(s):',
+                'attr' => array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden'),
+                'required'=>false,
+                'classtype' => 'optionalUserEducational'
+            ));
+
         }
-
-//        $builder->add( 'course', 'text', array(
-//            'label'=>'Course Title:',
-//            'max_length'=>'500',
-//            'required'=> false,
-//            'attr' => array('class'=>'form-control form-control-modif'),
-//            'read_only' => $readonly
-//        ));
-//
-//        $builder->add( 'lesson', 'text', array(
-//            'label' => 'Lesson Title:',
-//            'max_length'=>'500',
-//            'required'=>false,
-//            'attr' => array('class'=>'form-control form-control-modif'),
-//            'read_only' => $readonly
-//        ));
-        $builder->add('courseTitle', new CourseTitleListType($this->params, $this->entity), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\CourseTitleList',
-            'label' => false,
-            'required' => false,
-        ));
-
-//        $builder->add('directorstr', 'custom_selector', array(
-//            'label' => 'Course Director:',
-//            'attr' => $attr,
-//            'required'=>false,
-//            'classtype' => 'optionalUserEducational',
-//            'read_only' => $readonly
-//        ));
-//
-//        if( $this->params['type'] == 'SingleObject' ) {
-//
-//            $attr = array('class' => 'combobox combobox-width');
-//            $builder->add('director', 'entity', array(
-//                'class' => 'OlegOrderformBundle:User',
-//                'label'=>'Course Director'.$addlabel.':',
-//                'required' => false,
-//                //'read_only' => true,    //not working => disable by twig
-//                //'multiple' => true,
-//                'attr' => $attr,
-//                'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('u')
-//                        ->where('u.locked=:locked')
-//                        ->setParameter('locked', '0');
-//                },
-//            ));
-//        }
 
     }
 

@@ -41,6 +41,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/", name="researchsettitles-list")
      * @Route("/educational-course-titles/", name="educationalcoursetitles-list")
      * @Route("/educational-lesson-titles/", name="educationallessontitles-list")
+     * @Route("/principal-investigators/", name="principalinvestigators-list")
+     * @Route("/course-directors/", name="coursedirectors-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -121,6 +123,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/", name="researchsettitles_create")
      * @Route("/educational-course-titles/", name="educationalcoursetitles_create")
      * @Route("/educational-lesson-titles/", name="educationallessontitles_create")
+     * @Route("/principal-investigators/", name="principalinvestigators_create")
+     * @Route("/course-directors/", name="coursedirectors_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -239,6 +243,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/new", name="researchsettitles_new")
      * @Route("/educational-course-titles/new", name="educationalcoursetitles_new")
      * @Route("/educational-lesson-titles/new", name="educationallessontitles_new")
+     * @Route("/principal-investigators/new", name="principalinvestigators_new")
+     * @Route("/course-directors/new", name="coursedirectors_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -302,6 +308,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/{id}", name="researchsettitles_show")
      * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_show")
      * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_show")
+     * @Route("/principal-investigators/{id}", name="principalinvestigators_show")
+     * @Route("/course-directors/{id}", name="coursedirectors_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -357,6 +365,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/{id}/edit", name="researchsettitles_edit")
      * @Route("/educational-course-titles/{id}/edit", name="educationalcoursetitles_edit")
      * @Route("/educational-lesson-titles/{id}/edit", name="educationallessontitles_edit")
+     * @Route("/principal-investigators/{id}/edit", name="principalinvestigators_edit")
+     * @Route("/course-directors/{id}/edit", name="coursedirectors_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -458,6 +468,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/{id}", name="researchsettitles_update")
      * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_update")
      * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_update")
+     * @Route("/principal-investigators/{id}", name="principalinvestigators_update")
+     * @Route("/course-directors/{id}", name="coursedirectors_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -620,6 +632,14 @@ class ListController extends Controller
             $className = "LessonTitleList";
             $displayName = "Lesson Titles";
             break;
+        case "principalinvestigators":
+            $className = "PIList";
+            $displayName = "Principal Investigators";
+            break;
+        case "coursedirectors":
+            $className = "DirectorList";
+            $displayName = "Course Directors";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -656,6 +676,8 @@ class ListController extends Controller
      * @Route("/research-set-titles/{id}", name="researchsettitles_delete")
      * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_delete")
      * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_delete")
+     * @Route("/principal-investigators/{id}", name="principalinvestigators_delete")
+     * @Route("/course-directors/{id}", name="coursedirectors_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
