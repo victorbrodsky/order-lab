@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
@@ -670,9 +671,12 @@ class MultyScanOrderController extends Controller {
 //            $dql->setParameter('id',$entity->getId());
 //            $forwardhistory = $dql->getQuery()->getResult();
 
-//            echo "oid=".$entity->getOid().", history count = ".count($history)."<br>";
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y h:m:s');
+            $dateStr = $transformer->transform($entity->getOrderdate());
+
+//            echo "oid=".$entity->getOid().", created=".$dateStr.", history count = ".count($history)."<br>";
 //            foreach( $history as $hist ) {
-//                echo "oid=".$hist->getOrderinfo()->getOid().", id=".$hist->getOrderinfo()->getId().", curid=".$hist->getCurrentid().", event=".$hist->getEventtype()."<br>";
+//                echo "oid=".$hist->getOrderinfo()->getOid().", id=".$hist->getOrderinfo()->getId().", curid=".$hist->getCurrentid().", curstatus=".$hist->getCurrentStatus().", event=".$hist->getEventtype()."<br>";
 //            }
 //
 //            echo "forwardhistory count = ".count($forwardhistory)."<br>";
@@ -719,41 +723,5 @@ class MultyScanOrderController extends Controller {
 
     }
 
-    /**
-     * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
-     */
-    public function multiTableCreationAction()
-    {
-
-        $entity = new OrderInfo();
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $source = 'scanorder';
-
-        $entity->setProvider($user);
-
-        $patient = new Patient(true,'invalid',$user,$source);
-        $entity->addPatient($patient);
-
-        $edu = new Educational();
-        $entity->setEducational($edu);
-
-        $res = new Research();
-        $entity->setResearch($res);
-
-        $service = $user->getPathologyServices();
-
-        $type = "Table-View Scan Order";
-
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
-        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
-
-        return $this->render('OlegOrderformBundle:MultyScanOrder:newtable.html.twig', array(
-            'form' => $form->createView(),
-            'cycle' => 'new',
-            'formtype' => $type
-        ));
-    }
 
 }

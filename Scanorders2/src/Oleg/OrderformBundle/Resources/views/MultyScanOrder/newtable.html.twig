@@ -13,6 +13,9 @@
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+
+    <link rel="stylesheet" media="screen" href="http://handsontable.com/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
+
 {% endblock %}
 
 {% block additionaljs %}
@@ -25,6 +28,9 @@
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    <script src="http://handsontable.com/lib/jquery-ui/js/jquery-ui.custom.min.js"></script>
+
 {% endblock %}
 
 
@@ -65,13 +71,21 @@
         {#</div>#}
 
 
+
+
         </p>
         <br>
+
+        <p>
+            <button onclick="getDataForm()">Validate Data</button>
+        </p>
 
 
         <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
 
     </form>
     {############ END FORM ##############}
+
+
 
 {% endblock %}

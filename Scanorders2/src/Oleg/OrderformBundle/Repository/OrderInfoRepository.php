@@ -242,11 +242,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $link = '<a href="'.$url.'">order '.$supersedeId.'</a>';
             //set note with this url link
             $history->setNote('Previous order content saved as a Superseded '.$link);
-        } elseif( $entity->getStatus() == 'Not Submitted' ) {
-            $systemUser = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+        } elseif( $originalStatus == 'Not Submitted' ) {
+            $systemUser = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
-            $history->setEventtype('Auto-Saved Draft');
+            $history->setEventtype('Auto-saved at the time of auto-logout');
         } else {
             $history->setEventtype('Initial Order Submission');
             $history->setChangedate($entity->getOrderdate());

@@ -690,6 +690,33 @@ class UtilController extends Controller {
     }
 
 
+    /**
+     * @Route("/slidetype", name="get-slidetype")
+     * @Method("GET")
+     */
+    public function getSlideTypesAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:SlideType', 'list')
+            ->select("list.name as text")
+            ->where("list.type='default'")
+            ->orderBy("list.orderinlist","ASC");
+
+        //echo "query=".$query."<br>";
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
 
     /**
      * @Route("/projecttitle", name="get-projecttitle")
@@ -721,10 +748,12 @@ class UtilController extends Controller {
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $opt ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
-            $strEneterd = $orderinfo->getResearch()->getProjectTitleStr();
-            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-            if( !$this->in_complex_array($element,$output) ) {
-                $output[] = $element;
+            if( $orderinfo->getResearch() ) {
+                $strEneterd = $orderinfo->getResearch()->getProjectTitleStr();
+                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+                if( !$this->in_complex_array($element,$output) ) {
+                    $output[] = $element;
+                }
             }
         }
 
@@ -764,10 +793,12 @@ class UtilController extends Controller {
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $orderoid ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderoid);
-            $strEneterd = $orderinfo->getResearch()->getSetTitleStr();
-            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-            if( !$this->in_complex_array($element,$output) ) {
-                $output[] = $element;
+            if( $orderinfo->getResearch() ) {
+                $strEneterd = $orderinfo->getResearch()->getSetTitleStr();
+                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+                if( !$this->in_complex_array($element,$output) ) {
+                    $output[] = $element;
+                }
             }
         }
 
@@ -810,10 +841,12 @@ class UtilController extends Controller {
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $opt ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($opt);
-            $strEneterd = $orderinfo->getEducational()->getCourseTitleStr();
-            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-            if( !$this->in_complex_array($element,$output) ) {
-                $output[] = $element;
+            if( $strEneterd = $orderinfo->getEducational() ) {
+                $strEneterd = $orderinfo->getEducational()->getCourseTitleStr();
+                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+                if( !$this->in_complex_array($element,$output) ) {
+                    $output[] = $element;
+                }
             }
         }
 
@@ -854,10 +887,12 @@ class UtilController extends Controller {
         //add old name. The name might be changed by admin, so check and add if not existed, the original name eneterd by a user when order was created
         if( $orderoid ) {
             $orderinfo = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($orderoid);
-            $strEneterd = $orderinfo->getEducational()->getLessonTitleStr();
-            $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
-            if( !$this->in_complex_array($element,$output) ) {
-                $output[] = $element;
+            if( $orderinfo->getEducational() ) {
+                $strEneterd = $orderinfo->getEducational()->getLessonTitleStr();
+                $element = array('id'=>$strEneterd, 'text'=>$strEneterd);
+                if( !$this->in_complex_array($element,$output) ) {
+                    $output[] = $element;
+                }
             }
         }
 

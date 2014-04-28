@@ -293,8 +293,18 @@ class HistoryController extends Controller
 
         foreach( $entities as $entity ) {
 
+            if( $entity->getEventtype() != 'Comment Added' ) {
+                continue;
+            }
+
             if( $entity->getViewed() ) {
-                //echo "viewed! ";
+                continue;
+            }
+
+            //echo $entity->getId().", eventtype=".$entity->getEventtype().", note=".$entity->getNote().": ".$entity->getProvider()->getId()."?=".$user->getId()."<br>";
+
+            //don't mark with view comments placed by the current user
+            if( $entity->getProvider()->getId() == $user->getId() ) {
                 continue;
             }
 
@@ -303,10 +313,33 @@ class HistoryController extends Controller
             $viewed = false;
 
             if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+
+                //don't mark with view comments placed by PROCESSOR to User and viewed by another PROCESSOR (order->provider does not have role PROCESSOR)
+//                $orderprovider = $entity->getOrderinfo()->getProvider()->first();
+//                echo $orderprovider."<br>";
+//                if( $orderprovider->hasRole('ROLE_ADMIN') || $orderprovider->hasRole('ROLE_PROCESSOR') ) {
+//                    //
+//                } else {
+//                    echo "not viewed! ";
+//                    continue;
+//                }
+
+//                //don't mark with view if: current Admin is not author of the comment
+//                if( $entity->getProvider()->getId() != $user->getId() ) {
+//                    echo "not viewed! ";
+//                    continue;
+//                }
+
+                //echo " #######viewed! ";
+
+
                 //processor can see only histories created by user without processor role
-                if( !$entity->hasProviderRole('ROLE_PROCESSOR') ) {
-                    $viewed = true;
-                }
+//                if( !$entity->hasProviderRole('ROLE_PROCESSOR') ) {
+//                    $viewed = true;
+//                }
+
+                $viewed = true;
+
             } else {
                 //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
                 if( $entity->hasProviderRole('ROLE_PROCESSOR') || $entity->hasProviderRole('ROLE_ADMIN') ) {
@@ -324,6 +357,9 @@ class HistoryController extends Controller
             }
 
             if( $viewed ) {
+                //echo 'set as viewed! <br>';
+                //exit();
+
                 $entity->setViewed($user);
                 $entity->setVieweddate( new \DateTime() );
                 $em->persist($entity);
@@ -465,7 +501,32 @@ class HistoryController extends Controller
         return $response;
     }
 
+    /**
+     * Finds and displays a History entity for OrderInfo.
+     *
+     * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:History:index.html.twig")
+     */
+    public function notViewedAdminCommentsAction()
+    {
+        $comments = 0;
 
+        $em = $this->getDoctrine()->getManager();
+        $orderUtil = new OrderUtil($em);
+        $histories = $orderUtil->getNotViewedComments($this->get('security.context'),'admin');
+
+        if( $histories ) {
+            $comments = count($histories);
+        } else {
+            //echo "no res found <br>";
+        }
+
+        $response = new Response();
+        $response->setContent($comments);
+
+        return $response;
+    }
 
 
 

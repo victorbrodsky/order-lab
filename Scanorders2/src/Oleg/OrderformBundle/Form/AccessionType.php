@@ -21,18 +21,18 @@ class AccessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $attr = array(  
-            'class'=>'form-control form-control-modif keyfield accession-mask', 
-            //'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
-            //'data-inputmask'=>"'mask': 'A[A]99-d[99999]'"
-       );
+//        $attr = array(
+//            'class'=>'form-control form-control-modif keyfield accession-mask',
+//            //'title' => 'Example: S12-123456 or SS12-123456. Valid Accession#: A00-1 through ZZ99-999999',
+//            //'data-inputmask'=>"'mask': 'A[A]99-d[99999]'"
+//       );
 
-        if( $this->params['type'] == 'One Slide Scan Order') {
-            $attr['style'] = 'width:100%';
-            $gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
-        } else {
-            $gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
-        }
+//        if( $this->params['type'] == 'One Slide Scan Order') {
+//            $attr['style'] = 'width:100%';
+//            $gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+//        } else {
+//            $gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
+//        }
 
 //        $builder->add('accession', 'collection', array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),

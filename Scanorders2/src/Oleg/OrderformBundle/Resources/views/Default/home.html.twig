@@ -26,7 +26,7 @@
 
             {% if comments is defined and comments > 0 %}
 
-                <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comments</a> have been added to your orders.
+                <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comment(s)</a> added to your order(s).
 
             {% endif %}
 
@@ -37,26 +37,28 @@
 
             {% if is_granted('ROLE_PROCESSOR') %}
 
+                {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
+
                 View <a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a>. There are:
 
-            <ul>
-                <li>
-                    <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'All Not Filled'}) }}">{{ unprocessed }} unprocessed order(s)</a>
-                </li>
+                <ul>
+                    <li>
+                        <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'All Not Filled'}) }}">{{ unprocessed }} unprocessed order(s)</a>
+                    </li>
 
-                <li>
-                    <a href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ comments }} new comment(s)</a>
-                </li>
+                    <li>
+                        <a href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}">{{ admincomments }} new comment(s)</a>
+                    </li>
 
-                <li>
-                    <a href="{{ path('accountrequest') }}">{{ accountreqs }} unprocessed account request(s) from users without CWIDs</a>
-                </li>
+                    <li>
+                        <a href="{{ path('accountrequest') }}">{{ accountreqs }} unprocessed account request(s) from users without CWIDs</a>
+                    </li>
 
-                <li>
-                    <a href="{{ path('accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s) from users with CWIDs</a>
-                </li>
+                    <li>
+                        <a href="{{ path('accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s) from users with CWIDs</a>
+                    </li>
 
-            </ul>
+                </ul>
 
             {% endif %}
 

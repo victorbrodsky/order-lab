@@ -343,7 +343,8 @@ class OrderUtil {
     }
 
 
-    public function getNotViewedComments($security_context)
+    //$flag = 'admin'-show only comments from users to admin or null-show only comments to the orders belonging to admin
+    public function getNotViewedComments($security_context, $flag=null)
     {
         $repository = $this->em->getRepository('OlegOrderformBundle:History');
         $dql =  $repository->createQueryBuilder('history');
@@ -355,22 +356,7 @@ class OrderUtil {
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
-//        $role = "ROLE_PROCESSOR";
-//        $role2 = "ROLE_ADMIN";
-//        $user = $security_context->getToken()->getUser();
-//
-//        $criteriastr = "history.viewed is NULL AND history.eventtype='Comment Added' ";
-//
-//        if( $security_context->isGranted('ROLE_PROCESSOR') ) {
-//            //processor can see all histories created by user without processor role
-//            $criteriastr = $criteriastr . " AND history.roles NOT LIKE :role AND history.roles NOT LIKE :role2";
-//        } else {
-//            //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
-//            $criteriastr = $criteriastr . " AND ( history.roles LIKE :role OR history.roles LIKE :role2 )";
-//            $criteriastr = $criteriastr . " AND ( provider = :provider OR proxyuser = :provider )";
-//        }
-
-        $criteriastr = $this->getNewCommentsCriteriaStr($security_context);
+        $criteriastr = $this->getCommentsCriteriaStr($security_context, null, $flag);
 
         if( $criteriastr == "" ) {
             return null;
@@ -380,19 +366,24 @@ class OrderUtil {
 
         //$dql->addGroupBy('history.changedate');
         $dql->addOrderBy("history.changedate","DESC");
-        //$query = $dql->getQuery()->setParameter('role', '%"'.$role.'"%')->setParameter('role2', '%"'.$role2.'"%');
+
+        //echo "<br>".$flag.": dql=".$dql."<br>";
+
         $query = $dql->getQuery();
 
-//        if( false === $security_context->isGranted('ROLE_PROCESSOR') ) {
-//            $query->setParameter('provider', $user);
-//        }
-
         $entities = $query->getResult();
+
+        //echo "=> count=".count($entities)."<br>";
+//        foreach( $entities as $ent ) {
+//            echo $ent->getId().", provider=".$ent->getProvider()."<br>";
+//        }
 
         return $entities;
     }
 
-    public function getNewCommentsCriteriaStr($security_context, $flag = 'new_comments') {
+    //$commentFlag = 'admin'-show only comments from users to admin;
+    //$commentFlag = null-show only comments to the orders belonging to admin
+    public function getCommentsCriteriaStr($security_context, $flag = 'new_comments', $commentFlag = null) {
 
         if( !$security_context->getToken() ) {
             return "";
@@ -402,6 +393,8 @@ class OrderUtil {
 
         if( $flag != 'all_comments' ) {
             $criteriastr = $criteriastr . "AND history.viewed is NULL ";
+        } else {
+            return $criteriastr;
         }
 
         $user = $security_context->getToken()->getUser();
@@ -413,14 +406,23 @@ class OrderUtil {
         $role = "ROLE_PROCESSOR";
         $role2 = "ROLE_ADMIN";
 
-        if( $security_context->isGranted('ROLE_PROCESSOR') ) {
-            //processor can see all histories created by user without processor role
+//        if( $security_context->isGranted('ROLE_PROCESSOR') ) {
+        if( $commentFlag && $commentFlag == 'admin' ) {
+            //echo "comments to admin only!, userid=".$user->getId()." =>";
+            //processor can see all histories created by user without processor role, but not for orders belonging to this processor
             $criteriastr = $criteriastr . " AND history.roles NOT LIKE '%".$role."%' AND history.roles NOT LIKE '%".$role2."%'";
+
+            //comments to admin only: can be addressed by another admin (so any user role) and for orders created by not current user (all new comments for the orders not created by current admin)
+            $criteriastr = $criteriastr . " AND history.provider != " . $user->getId() . " AND provider != " . $user->getId();
         } else {
+            //echo "comments about my orders only, placed by not me! =>";
             //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
-            $criteriastr = $criteriastr . " AND ( history.roles LIKE '%".$role."%' OR history.roles LIKE '%".$role2."%' )";
-            $criteriastr = $criteriastr . " AND ( provider = ".$user->getId()." OR proxyuser = ".$user->getId()." )";
+            //$criteriastr = $criteriastr . " AND ( history.roles LIKE '%".$role."%' OR history.roles LIKE '%".$role2."%' )";
+            //submitters can only see the comments about thier order created by another user
+            $criteriastr = $criteriastr . " AND ( (provider = ".$user->getId()." OR proxyuser = ".$user->getId().") AND history.provider != ".$user->getId()." )";
         }
+
+        //echo "criteriastr=".$criteriastr."<br>";
 
         return $criteriastr;
     }

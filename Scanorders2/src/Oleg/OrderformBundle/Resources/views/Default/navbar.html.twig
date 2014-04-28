@@ -4,7 +4,6 @@
 
     {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
 
-
 <nav class="navbar navbar-default" role="navigation">
 
     <div class="container-fluid">
@@ -54,17 +53,29 @@
 
                 {% if is_granted('ROLE_PROCESSOR') %}
 
+                    {#admincomments - comments addressed to this processor only#}
+                    {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
+
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a></li>
+                        <ul class="dropdown-menu" style="width:215px">
+                            <li id="nav-bar-myscanorders">
+                                {% if admincomments is defined and admincomments > 0 %}
+                                    <a id="incoming-orders-menu-title" href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a><!--
+                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('incoming-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ admincomments }}</span></a>
+                                {% else %}
+                                    <a href="{{ path('incoming-scan-orders') }}" >Incoming Scan Orders</a>
+                                {% endif %}
+                            </li>
+
                             <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
-                            <li><a href="{{ path('listusers') }}">Users</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
+                                <li class="divider"></li>
+                                <li><a href="{{ path('listusers') }}">Users</a></li>
                                 <li><a href="{{ path('admin_index') }}">List Manager</a></li>
                                 <li><a href="{{ path('logger') }}">Event Log</a></li>
-                                <li><a href="{{ path('siteparameters') }}">Site Parameters</a></li>
+                                <li><a href="{{ path('siteparameters') }}">Site Settings</a></li>
                             {% endif %}
 
                         </ul>

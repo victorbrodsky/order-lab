@@ -83,8 +83,10 @@ class ScanOrderController extends Controller {
 
         if( $routeName == "incoming-scan-orders" ) {
             $services = $this->getServiceFilter();
+            $commentFlag = 'admin';
         } else {
             $services = null;
+            $commentFlag = null;
         }
 
         //create filters
@@ -105,6 +107,7 @@ class ScanOrderController extends Controller {
         $dql->innerJoin("orderinfo.type", "formtype");
 
         $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
@@ -141,12 +144,12 @@ class ScanOrderController extends Controller {
 
                 case "With New Comments":
                     $orderUtil = new OrderUtil($em);
-                    $newCommentsCriteriaStr = "( " . $orderUtil->getNewCommentsCriteriaStr($this->get('security.context')) . " ) ";
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($this->get('security.context'),'new_comments',$commentFlag) . " ) ";
                     $criteriastr .= $newCommentsCriteriaStr;
                     break;
                 case "With Comments":
                     $orderUtil = new OrderUtil($em);
-                    $newCommentsCriteriaStr = "( " . $orderUtil->getNewCommentsCriteriaStr($this->get('security.context'),'all_comments') . " ) ";
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($this->get('security.context'),'all_comments',null,$commentFlag) . " ) ";
                     $criteriastr .= $newCommentsCriteriaStr;
                     break;
                 case "All Filled":
@@ -230,9 +233,6 @@ class ScanOrderController extends Controller {
             //select only orders where this user is author or proxy user, except "Where I am the Course Director" and "Where I am the Principal Investigator" cases.
             if( $service == "" || $service == "My Orders" ) {
 
-                //echo "add provider and proxy <br>";
-                $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
-
                 //show only my order and the orders where I'm a proxy
                 //Orders I Personally Placed and Where I am the Ordering Provider: $service == "My Orders"
 
@@ -269,7 +269,6 @@ class ScanOrderController extends Controller {
             }
             if( $service == "Where I am the Ordering Provider" ) {
                 //echo "Where I am the Ordering Provider <br>";
-                $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }

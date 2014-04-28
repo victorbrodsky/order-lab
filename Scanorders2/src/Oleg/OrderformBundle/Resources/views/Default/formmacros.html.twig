@@ -245,6 +245,9 @@
 
 {#history info#}
 {% macro history_info(histories, forwardhistory, form) %}
+
+    {% set formstatus = form.vars.value.status.name|lower %}
+
     <div class="well well-sm">
 
         {% if histories|first.orderinfo.status != "Superseded" %}
@@ -252,38 +255,44 @@
                 <p>
                     This order has been originally submitted
                     by {{ histories|first.orderinfo.provider|first }} on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
-                    and most recently {{ form.vars.value.status.name|lower }} by {{ histories|first.provider }}
+                    and most recently {{ formstatus }} by {{ histories|first.provider }}
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
             {% else %}
-                {% if 'by' in form.vars.value.status.name|lower %}
+                {% if 'by' in formstatus %}
                     {% set performed = 'performed ' %}
                 {% else %}
                     {% set performed = '' %}
                 {% endif %}
                 <p>
-                    This order has been {{ form.vars.value.status.name|lower }} {{performed}}by {{ histories|first.provider }}
+                    This order has been {{ formstatus }} {{performed}}by {{ histories|first.provider }}
                     on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
                 </p>
             {% endif %}
         {% endif %}
 
         {% for history in histories %}
+
+            {% set historytatus = history.currentstatus|lower %}
+
             {% if history.orderinfo.id != history.currentid %}
                 {% if history.currentid > history.orderinfo.id %}
                     <p class="text-danger">
-                        This order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by
+                        This order is the older archived version of and has been {{ formstatus }} by
                         <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a> via amendment
                         on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by {{ history.provider }}.
                     </p>
                 {% else %}
-                    <p>
-                        Older, superseded version of this order:
-                        <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
-                        {{ form.vars.value.status.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by {{ history.provider }}
-                    </p>
+                    {% if historytatus != 'canceled by submitter' and historytatus != 'submitted' %}
+                        <p>
+                            Older, superseded version of this order:
+                            <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
+                            {{ history.currentstatus.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by {{ history.provider }}
+                        </p>
+                    {% endif %}
                 {% endif %}
             {% endif %}
+
         {% endfor %}
 
         {#currently, below code is not used. use it if we want to get the latest order#}

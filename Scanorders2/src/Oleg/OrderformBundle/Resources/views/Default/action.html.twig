@@ -10,13 +10,19 @@
           Action <span class="caret"></span>
         </button>
 
+        {#set status. used to show action buttons#}
         {% set statusname = entity.status.name %}
-        {% set Submitted = "Submitted" in statusname %}
         {% set Filled = "Filled" in statusname %}
         {% set Amended = "Amended" in statusname %}
         {% set Canceled = "Canceled" in statusname %}
         {% set OnHold = "On Hold" in statusname %}
         {% set Superseded = "Superseded" in statusname %}
+
+        {% if "Submitted" == statusname %}
+            {% set Submitted = 1 %}
+        {% else %}
+            {% set Submitted = 0 %}
+        {% endif %}
 
         {#style="left: -230%;"#}
         <ul class="dropdown-menu dropdown-menu-right">

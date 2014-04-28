@@ -32,7 +32,7 @@ class AperioUtil {
         //print_r($AuthResult);
         //exit();
 
-        if( isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
+        if( $AuthResult && isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
             //echo "<br>Aperio got UserId!<br>";
 
 //            $user = $userProvider->findUser($token->getUsername());
@@ -116,8 +116,31 @@ class AperioUtil {
             //include_once '\Roles.php';
             //include_once '\cFilter.php';
             //$DataServerURL = "http://127.0.0.1:86";
-            $DataServerURL = GetDataServerURL();
-            $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
+
+            if( !function_exists('GetDataServerURL') ) {
+                return null;
+            }
+
+            try {
+
+                set_error_handler(array($this, 'errorToException'));
+
+                $DataServerURL = GetDataServerURL();
+
+                //echo "DataServerURL=".$DataServerURL."<br>";  //$DataServerURL = "http://127.0.0.1:86";
+
+                $client = new \Aperio_Aperio($DataServerURL);//,"","","","");
+
+                //$this->errorTest();
+
+            } catch (MongoCursorException $e) {
+
+                throw new \Exception( 'Can not connect to Aperio Data Server. Please try again later' );
+
+            }
+
+            //$DataServerURL = GetDataServerURL();
+            //$client = new \Aperio_Aperio($DataServerURL);//,"","","","");
             $AuthResult = $client->Authenticate($loginName,$password);
 
             //check if auth is ok: define ('LOGON_FAILED', '-7004');           // UserName is incorrect
@@ -143,6 +166,8 @@ class AperioUtil {
 
         return $AuthResult;
     }
+
+
 
     public function getUserGroupMembership($userid) {
         if( $userid ) {
@@ -271,6 +296,17 @@ class AperioUtil {
         //echo "UserId=".$UserId."<br>";
 
         return $UserId;
+    }
+
+    public function errorToException($code, $message, $file = null, $line = 0) {
+        if( error_reporting() == 0 ) {
+            return true;
+        }
+        throw new \Exception("Error exception: code=".$code." ,message=".$message.", file=".$file.", line=".$line);
+    }
+
+    public function errorTest() {
+        trigger_error ("DataServer timed-out after 10 seconds when trying to load this page.  Please wait a moment and try again by pressing the refresh button.", E_USER_ERROR);
     }
 
 }

@@ -26,15 +26,19 @@
         {% endif %}
     </h3>
 
+    {#set status. used to show action buttons#}
     {% if type != 'new' %}
         {% set statusname = form.vars.value.status.name %}
-        {% set Submitted = "Submitted" in statusname %}
         {% set Filled = "Filled" in statusname %}
         {% set Amended = "Amended" in statusname %}
         {% set Canceled = "Canceled" in statusname %}
         {% set OnHold = "On Hold" in statusname %}
         {% set Superseded = "Superseded" in statusname %}
-        {#form.vars.value.status.type.name != "Filled"#}
+        {% if "Submitted" == statusname %}
+            {% set Submitted = 1 %}
+        {% else %}
+            {% set Submitted = 0 %}
+        {% endif %}
     {% endif %}
 
     {% if type != 'new' %}
