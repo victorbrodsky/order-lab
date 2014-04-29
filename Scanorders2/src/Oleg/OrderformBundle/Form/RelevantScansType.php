@@ -17,7 +17,7 @@ class RelevantScansType extends AbstractType
     {
 
         $builder->add('field', 'text', array(
-            'label' => 'Relevant Scanned Images:',
+            'label' => 'Link(s) to related image(s):',
             'required' => false,
             //'attr' => array('class' => 'combobox combobox-width')
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'height: 34px;')

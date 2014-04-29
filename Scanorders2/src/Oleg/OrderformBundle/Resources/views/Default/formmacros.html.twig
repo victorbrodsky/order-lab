@@ -632,6 +632,7 @@
 
 
 {% macro dataQualityWidget( field, cycle ) %}
+    {% import _self as formmacros %}
     {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
 
     {% if cycle == "new" or cycle == "amend" %}
@@ -649,7 +650,11 @@
         {% if cycle == "show" %}
             {{ form_label(field.description) }}
         {% endif %}
-        {{ form_widget(field.description) }}
+        {#{{ form_widget(field.description) }}#}
+        <p>
+            {{ field.vars.value.description }}
+        </p>
+
 
         {% if cycle == "show" %}
             <br>

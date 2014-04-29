@@ -14438,6 +14438,8 @@ Dragdealer.prototype =
 
 var _htableid = "#multi-dataTable";
 
+var _sotable = null;    //scan order table
+
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
 var _stains_simple = new Array();
@@ -14448,8 +14450,64 @@ var _slidetypes_simple = new Array();
 
 var _slidetypes = new Array();
 
+var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
+
+//total 30
+var _columnData_scanorder = [
+
+    //header: 1
+    { header:'ID', columns:{} },
+
+    //accession: 2
+    { header:'Accession Type', columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false} },
+    { header:'Accession Number', columns:{} },
+
+    //part: 1
+    { header:'Part Name', columns:{} },
+
+    //block: 1
+    { header:'Block Name', columns:{} },
+
+    //slide: 4
+    { header:'Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false} },
+    { header:'Magnification', columns:{type:'autocomplete', source:['20X','40X'], strict:false} },
+    { header:'Diagnosis', columns:{} },
+    { header:'Reason for Scan/Note', columns:{} },
+
+    //patient: 7
+    { header:'MRN Type', columns:{type:'autocomplete', source:_mrntypes_simple, strict:false} },
+    { header:'MRN', columns:{} },
+    { header:'Name', columns:{} },
+    { header:'Sex', columns:{type:'autocomplete', source:['Female','Male','Unspecified'], strict:false} },
+    { header:'DOB', columns:{type:'date', dateFormat: 'mm/dd/yy'} },
+    { header:'Age', columns:{} },
+    { header:'Clinical History', columns:{} },
+
+    //procedure: 1
+    { header:'Procedure Type', columns:{type:'autocomplete', source:_procedures_simple, strict:false} },
+
+    //part: 6
+    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+    { header:'Gross Description', columns:{} },
+    { header:'Differential Diagnoses', columns:{} },
+    { header:'Type of Disease', columns:{type:'autocomplete', source:['Neoplastic','Non-Neoplastic','None','Unspecified'], strict:false} },
+    { header:'Origin', columns:{type:'autocomplete', source:['Primary','Metastatic','Unspecified'], strict:false} },
+    { header:'Primary Site of Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+
+    //slide: 7
+    { header:'Title', columns:{} },
+    { header:'Slide Type', columns:{type:'autocomplete', source:_slidetypes_simple, strict:false} },
+    { header:'Microscopic Description', columns:{} },
+    { header:'Special Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false} },
+    { header:'Results of Special Stains', columns:{} },
+    { header:'Link(s) to related image(s)', columns:{} },
+    { header:'Region to scan', columns:{type:'autocomplete', source:_scanregions_simple, strict:false} }
+
+];
 
 $(document).ready(function() {
+
+    //Handsontable.renderers.registerRenderer('redRenderer', redRenderer); //maps function to lookup string
 
     getSlideTypes();
 
@@ -14480,7 +14538,7 @@ function ajaxFinishedCondition() {
         }
 
         for(var i = 0; i < _mrntype.length-1; i++) {
-            console.log('mrntype='+ _mrntype[i].text);
+            //console.log('mrntype='+ _mrntype[i].text);
             _mrntypes_simple.push( _mrntype[i].text );
         }
 
@@ -14500,6 +14558,10 @@ function ajaxFinishedCondition() {
             _slidetypes_simple.push( _slidetypes[i].text );
         }
 
+        for(var i = 0; i < _organ.length-1; i++) {
+            _organs_simple.push( _organ[i].text );
+        }
+
         return true;
 
     } else {
@@ -14511,92 +14573,13 @@ function ajaxFinishedCondition() {
 
 function handsonTableInit() {
 
-//    var colHeader1 = [
-//            "ID",
-//            "Accession Type", "Accession Number",
-//            "Part Name", "Block Name",
-//            "Stain", "Magnification", "Diagnosis", "Reason for Scan/Note",   //9
-//            "MRN Type", "MRN", "Name", "Sex", "DOB", "Age", "Clinical History",  //7
-//            "Procedure Type",   //1
-//            "Source Organ", "Gross Description", "Differential Diagnoses", "Type of Disease",   //4
-//            "Title", "Slide Type", "Microscopic Description", "Results of Special Stains", "Relevant Scanned Images",   //5
-//            "Region to scan"    //1
-//    ];
-    //total: 27
-
-    //total 29
-    var columnData = [
-
-        //header: 1
-        { header:'ID', columns:{} },
-
-        //accession: 2
-        { header:'Accession Type', columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false} },
-        { header:'Accession Number', columns:{} },
-
-        //part: 1
-        { header:'Part Name', columns:{} },
-
-        //block: 1
-        { header:'Block Name', columns:{} },
-
-        //slide: 4
-        { header:'Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false} },
-        { header:'Magnification', columns:{type:'autocomplete', source:['20X','40X'], strict:false} },
-        { header:'Diagnosis', columns:{} },
-        { header:'Reason for Scan/Note', columns:{} },
-
-        //patient: 7
-        { header:'MRN Type', columns:{type:'autocomplete', source:_mrntypes_simple, strict:false} },
-        { header:'MRN', columns:{} },
-        { header:'Name', columns:{} },
-        { header:'Sex', columns:{type:'autocomplete', source:['Female','Male','Unspecified'], strict:false} },
-        { header:'DOB', columns:{type:'date', dateFormat: 'mm/dd/yy'} },
-        { header:'Age', columns:{} },
-        { header:'Clinical History', columns:{} },
-
-        //procedure: 1
-        { header:'Procedure Type', columns:{type:'autocomplete', source:_procedures_simple, strict:false} },
-
-        //part: 6
-        { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
-        { header:'Gross Description', columns:{} },
-        { header:'Differential Diagnoses', columns:{} },
-        { header:'Type of Disease', columns:{type:'autocomplete', source:['Neoplastic','Non-Neoplastic','None','Unspecified'], strict:false} },
-        { header:'Origin', columns:{type:'autocomplete', source:['Primary','Metastatic','Unspecified'], strict:false} },
-        { header:'Primary Site of Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
-
-        //slide: 6
-        { header:'Title', columns:{} },
-        { header:'Slide Type', columns:{type:'autocomplete', source:_slidetypes_simple, strict:false} },
-        { header:'Microscopic Description', columns:{} },
-        { header:'Results of Special Stains', columns:{type:'autocomplete', source:_stains_simple, strict:false} },
-        { header:'Relevant Scanned Images', columns:{} },
-        { header:'Region to scan', columns:{type:'autocomplete', source:_scanregions_simple, strict:false} }
-
-    ];
-
     var data = new Array();
 
-    var rows = 5;//51;//501;
-
-    //console.log( "header length="+colHeader.length );
-
-//    var rowElements = new Array();
-//    for(var i = 0; i < colHeader.length-1; i++) {
-//        rowElements.push(' ');
-//    }
-//
-//    for( var i=1; i<rows; i++ ) {
-//        var index = new Array();
-//        index = [i];
-//        var row = index.concat(rowElements);
-//        data.push(row);
-//    }
+    var rows = 11;//51;//501;
 
     var rowElements = new Array();
-    console.log( "header length="+columnData.length );
-    for(var i = 0; i < columnData.length-1; i++) {
+    //console.log( "header length="+_columnData_scanorder.length );
+    for(var i = 0; i < _columnData_scanorder.length-1; i++) {
         rowElements.push(null);
     }
 
@@ -14612,9 +14595,9 @@ function handsonTableInit() {
 
     }
 
-    for( var i=0; i<columnData.length-1; i++ ) {
-        colHeader.push( columnData[i]['header'] );
-        columnsType.push( columnData[i]['columns'] );
+    for( var i=0; i<_columnData_scanorder.length-1; i++ ) {
+        colHeader.push( _columnData_scanorder[i]['header'] );
+        columnsType.push( _columnData_scanorder[i]['columns'] );
     }
 
     //$('#multi-dataTable').doubleScroll();
@@ -14622,6 +14605,9 @@ function handsonTableInit() {
     //console.log(data);
     //console.log(colHeader);
     //console.log(columnsType);
+
+//    Handsontable.renderers.registerRenderer('negativeValueRenderer', negativeValueRenderer); //maps function to lookup string
+
 
     $(_htableid).handsontable({
         data: data,
@@ -14631,69 +14617,324 @@ function handsonTableInit() {
         manualColumnMove: true,
         manualColumnResize: true,
         stretchH: 'all',
-        columns: columnsType
+        columns: columnsType,
+        cells: function (row, col, prop) {
+            //var cellProperties = {};
+            if( !validateCell(row,col,null,null) ) {
+                this.renderer = redRenderer;
+            } else {
+                this.renderer = null;
+            }
+           //return this;
+        },
+        beforeChange: function (changes, source) {
+            for( var i = changes.length - 1; i >= 0; i-- ) {
+//                //console.log(changes[i]);
+
+                var row = changes[i][0];
+                var col = changes[i][1];
+                var value = changes[i][3];
+
+                getAutoGenKeys( row, col, value );
+
+                //set Id
+//                var totalrows = this.countRows();
+//                console.log('totalrows='+totalrows);
+//                console.log('row='+row+', col='+col+', value='+value);
+//                if( col == 0 && totalrows == (row+1) ) {
+//                    console.log('row='+row+', col='+col+', value='+value);
+//                    var curId = _sotable.getDataAtCell(row,0);
+//                    if( curId == '' || curId == null ) {
+//                        var lastId = _sotable.getDataAtCell(row-1,0);
+//                        _sotable.setDataAtCell(row,0,lastId+1);
+//                    }
+//                }
+
+            }
+        }
     });
 
-    $(_htableid+' table').addClass('table table-striped table-hover');
+    //set bs table
+    $(_htableid+' table').addClass('table-striped table-hover');
 
-    //$('.double-scroll').doubleScroll();
-
-    //var Dragdealer = require('dragdealer').Dragdealer;
-    //new Dragdealer('top-scrollbar-handsontable');
-
-    //var tableSliderEl = $('#multi-dataTable').find('.dragdealer');
-    //console.log(tableSliderEl);
-    //console.log('slider width='+tableSliderEl.width());
-//
-//    var topSlider = $('#top-scrollbar-handsontable');
-    //topSlider.width(tableSliderEl.width());
-    //topSlider.append(tableSliderEl);
-
-    //var tabWidth = $('#multi-dataTable').width();
-    //console.log('tabWidth width='+tabWidth);
-
-//    $(".div1").width(tabWidth);
-//    $(".div2").width(tabWidth);
-//
-//    tabWidth = tabWidth-tabWidth/1.2;
-//
-//    $(".wrapper1").width(tabWidth);
-//    $(".wrapper2").width(tabWidth);
-//
-//    $(".wrapper1").scroll(function(){
-//        $(".wrapper2")
-//            .scrollLeft($(".wrapper1").scrollLeft());
-//    });
-//    $(".wrapper2").scroll(function(){
-//        $(".wrapper1")
-//            .scrollLeft($(".wrapper2").scrollLeft());
-//    });
+    //set scan order table object as global reference
+    _sotable = $(_htableid).handsontable('getInstance');
 
 }
 
 
-function getDataForm() {
+function getAutoGenKeys( row, col, value ) {
+
+    var columnHeader = _columnData_scanorder[col].header;
+
+    switch( columnHeader )
+    {
+        case 'MRN Type':
+            if( value && value == 'Auto-generated MRN' ) {
+                $.ajax({
+                    url: urlCheck+"patient/generate",
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success( function(data) {
+                    if( data ) {
+                        var autogenValue = data.mrn[0].text;
+                        //console.log('autogenValue='+autogenValue);
+                        _sotable.setDataAtCell(row,col+1,autogenValue);
+                    }
+                }).error( function ( x, t, m ) {
+                   console.log('ERROR auto generate MRN');
+                });
+            }
+            break;
+        case 'Accession Type':
+            if( value && value == 'Auto-generated Accession Number' ) {
+                //console.log('Accession Type: value null !!!!!!!!!!!!!');
+                $.ajax({
+                    url: urlCheck+"accession/generate",
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success( function(data) {
+                    if( data ) {
+                        var autogenValue = data.accession[0].text;
+                        //console.log('autogenValue='+autogenValue);
+                        _sotable.setDataAtCell(row,col+1,autogenValue);
+                    }
+                }).error( function ( x, t, m ) {
+                    console.log('ERROR auto generate Accession Number');
+                });
+            }
+            break;
+        default:
+            //
+    }
+}
+
+function processDataForm( action ) {
 
     var handsontable = $(_htableid).data('handsontable');
 
     var hdata = handsontable.getData();
 
     console.log('data len='+hdata.length);
-
     console.log( 'column'+'0'+',row'+'1'+':'+ hdata[0][1] );
     console.log( 'column'+'1'+',row'+'2'+':'+ hdata[1][2] );
 
+    //for each row
     for( var i=0; i<hdata.length-1; i++ ) {
-        console.log( 'column'+(i+1)+':' + hdata[i] );
-    }
+
+        //console.log( 'row'+(i+1)+':' + hdata[i] );
+        if( hdata[i] !== undefined && hdata[i] !== null && hdata[i] != '' ) {
+
+            //for each column
+            for( var ii=0; ii<hdata[i].length-1; ii++ ) {
+
+                //console.log( 'column'+(ii+1)+':' + hdata[i][ii] );
+                //validateCell( i, ii, hdata[i][ii], true );
+
+                if( action == 'clean' ) {
+                    cleanHTableCell(i,ii);
+                }
+
+            } //for column
+
+        }
+
+    } //for row
 
     //console.log( 'hdata=' + handsontable );
 
-    var checkcell = $(_htableid).handsontable("getCell", 1, 2);
-    checkcell.style.color = "red";
-    checkcell.style.backgroundColor = '#F2DEDE';
+    //var checkcell = $(_htableid).handsontable("getCell", 1, 2);
+    //checkcell.style.color = "red";
+    //checkcell.style.backgroundColor = '#F2DEDE';
+
+
 
 }
+
+function cleanHTableCell( row, col ) {
+
+    var value = _sotable.getDataAtCell(row,col);
+
+    if( value === undefined || value === null || value == '' ) {
+        return;
+    }
+
+    if( col == 0 ) {
+        return;
+    }
+
+    if( _sotable && _sotable.countRows() == (row+1) ) {
+        return;
+    }
+
+    //console.log('row='+row+', col='+col+', value='+value);
+
+    var columnHeader = _columnData_scanorder[col].header;
+
+    switch( columnHeader )
+    {
+        case 'MRN':
+            //console.log('MRN => value='+value);
+            if( value ) {
+                //console.log('delete value='+value);
+                $.ajax({
+                    url: urlCheck+"patient/delete/"+value+"?extra=13",
+                    type: 'DELETE',
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success( function(data) {
+                    if( data >= 0 ) {
+                        //console.debug("Delete Success, data="+data);
+                    } else {
+                        console.debug("Delete with data Error: data="+data);
+                    }
+                }).error( function ( x, t, m ) {
+                    console.log('ERROR delete MRN');
+                });
+            }
+            break;
+        case 'Accession Number':
+            //console.log('Accession => value='+value);
+            if( value ) {
+                $.ajax({
+                    url: urlCheck+"accession/delete/"+value+"?extra=8",
+                    type: 'DELETE',
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success( function(data) {
+                    if( data >= 0 ) {
+                        //console.debug("Delete Success, data="+data);
+                    } else {
+                        console.debug("Delete with data Error: data="+data);
+                    }
+                }).error( function ( x, t, m ) {
+                    console.log('ERROR delete Accession Number');
+                });
+            }
+            break;
+        default:
+            //
+    }
+
+    _sotable.setDataAtCell(row,col,null);
+}
+
+function validateCell( row, column, value, mark ) {
+
+    if( _sotable == null ) {
+        _sotable = $(_htableid).handsontable('getInstance');
+    }
+
+    //console.log( 'validate: '+_sotable.countRows()+':'+row+','+column+' value=' + value );
+
+    var valid = true;
+
+    if( _sotable.countRows() == (row+1) ) {
+        //console.log( _sotable.countRows()+' => dont validate row=' + row );
+        return valid;
+    }
+
+    var columnHeader = _columnData_scanorder[column].header;
+
+    if( value === undefined || value === null ) {
+        value = $(_htableid).handsontable('getData')[row][column];
+    }
+
+    switch( columnHeader )
+    {
+        case 'MRN':
+            if( !value || value == '' || value == null ) {
+                //console.log('Accession Number: value null !!!!!!!!!!!!!');
+                valid = false;
+            }
+            break;
+        case 'Accession Number':
+            if( !value || value == '' || value == null ) {
+                //console.log('Accession Number: value null !!!!!!!!!!!!!');
+                valid = false;
+            }
+            break;
+        case 'Part Name':
+            if( !value || value == '' || value == null ) {
+                //console.log('Part Name: value null !!!!!!!!!!!!!');
+                valid = false;
+            }
+            break;
+        case 'Block Name':
+            if( !value || value == '' || value == null ) {
+                //console.log('Block Name: value null !!!!!!!!!!!!!');
+                valid = false;
+            }
+            break;
+        default:
+
+    }
+
+    if( mark ) {
+        var checkcell = _sotable.getCell(row,column);
+
+        if( checkcell && !valid ) {
+            checkcell.style.backgroundColor = '#F2DEDE';
+        }
+    }
+
+    return valid;
+}
+
+//testing
+function negativeValueRenderer(instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( parseInt(value, 10) < 0 ) { //if row contains negative number
+        td.className = 'negative'; //add class "negative"
+    }
+
+    if (!value || value === '') {
+        td.style.background = '#F2DEDE';
+    }
+    else {
+        if (value === 'Nissan') {
+            td.style.fontStyle = 'italic';
+        }
+        td.style.background = '';
+    }
+}
+
+//renderers
+var redRendererForKey = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+    if( !validateCell(row, col, value, null)  ) {
+        $(td).css({
+            background: '#F2DEDE'
+        });
+    } else {
+        $(td).css({
+            background: null
+        });
+    }
+
+};
+var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).css({
+        background: '#F2DEDE'
+    });
+};
+var redRendererIfEmpty = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !value || value == '' || value == null ) {
+        $(td).css({
+            background: '#F2DEDE'
+        });
+    } else {
+        $(td).css({
+            background: null
+        });
+    }
+};
+
+
+
 
 
 function getSlideTypes() {

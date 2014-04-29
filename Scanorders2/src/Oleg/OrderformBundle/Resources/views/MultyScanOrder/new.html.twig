@@ -407,9 +407,9 @@
 
     <div id="validationerror" style="padding-top: 2%">
         {% for dataquality in form.dataquality %}
-            <div class="validationerror-added alert alert-danger">
+            {#<div class="validationerror-added alert alert-danger">#}
                 {{ formmacros.dataQualityWidget(dataquality,type) }}
-            </div>
+            {#</div>#}
         {% endfor %}
     </div>
 

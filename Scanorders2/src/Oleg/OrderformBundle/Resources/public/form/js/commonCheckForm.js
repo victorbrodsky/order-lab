@@ -537,7 +537,7 @@ function checkMrnAccessionConflict() {
 
                             var nl = "\n";    //"&#13;&#10;";
 
-                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
+                            var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
                                 +mrnValue+" ["+mrntypeText+"] as you have entered.";
                             var message = message_short + " Please correct either the MRN or the Accession Number above.";
 

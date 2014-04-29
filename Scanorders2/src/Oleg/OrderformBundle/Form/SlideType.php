@@ -66,7 +66,7 @@ class SlideType extends AbstractType
         ));
 
         //relevantScans
-        $gen_attr = array('label'=>'Relevant Scanned Images','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type
+        $gen_attr = array('label'=>'Link(s) to related image(s)','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type
         $builder->add('relevantScans', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
