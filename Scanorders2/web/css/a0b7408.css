@@ -515,3 +515,15 @@ ul.context-menu-list li {
     overflow: auto;
 }
 
+.handsontable .currentRowScanorder {
+    background-color: #E7E8EF;
+}
+
+.handsontable .currentColScanorder {
+    background-color: #F9F9FB;
+}
+
+.handsontable .ht-validation-error {
+    background-color: #F2DEDE;
+}
+

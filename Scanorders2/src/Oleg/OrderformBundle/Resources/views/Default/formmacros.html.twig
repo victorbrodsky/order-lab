@@ -651,9 +651,11 @@
             {{ form_label(field.description) }}
         {% endif %}
         {#{{ form_widget(field.description) }}#}
-        <p>
-            {{ field.vars.value.description }}
-        </p>
+        {% if field.vars.value.description is defined %}
+            <p>
+                {{ field.vars.value.description }}
+            </p>
+        {% endif %}
 
 
         {% if cycle == "show" %}

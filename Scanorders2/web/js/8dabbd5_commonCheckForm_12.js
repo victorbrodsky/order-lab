@@ -89,7 +89,7 @@ function fixCheckRemoveButton(btn) {
     }
 }
 
-function createErrorWell(inputElement,name) {
+function createErrorWell(inputElement,name,errtext) {
     var errorStr = "";
     if( name == "patient" ) {
         errorStr = 'This is not a previously auto-generated MRN. Please correct the MRN or select "Auto-generated MRN" for a new one.';
@@ -98,6 +98,10 @@ function createErrorWell(inputElement,name) {
         errorStr = 'This is not a previously auto-generated accession number. Please correct the accession number or select "Auto-generated Accession Number" for a new one.';
     } else {
         errorStr = 'This is not a previously auto-generated number. Please correct this number or empty this field and click the check box to generate a new one.';
+    }
+
+    if( errtext ) {
+        errorStr = errtext;
     }
 
     var errorHtml =
@@ -321,6 +325,11 @@ function validateForm() {
         //existingErrors++;
     }
 
+    //check "Specify Another Specimen ID / Patient ID Issuer" is not set
+    checkSpecifyAnotherIssuer("accession");
+    checkSpecifyAnotherIssuer("patient");
+
+
     if( $('.maskerror-added').length > 0 ) {
         if( saveClick == 'true' ) {
             //console.log( " mrn existing error => logout without saving");
@@ -528,7 +537,7 @@ function checkMrnAccessionConflict() {
 
                             var nl = "\n";    //"&#13;&#10;";
 
-                            var message_short = "MRN-ACCESSION CONFLICT :"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
+                            var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
                                 +mrnValue+" ["+mrntypeText+"] as you have entered.";
                             var message = message_short + " Please correct either the MRN or the Accession Number above.";
 
@@ -723,6 +732,49 @@ function checkExistingKey(name) {
     //return false;
     return true;
 }
+
+function checkSpecifyAnotherIssuer( name ) {
+
+
+    if( name == 'accession' ) {
+        var elements = $('input.accessiontype-combobox');
+        var errtext = "Please type in the name of the Specimen ID Issuer above";
+    }
+    if( name == 'patient' ) {
+        var elements = $('input.mrntype-combobox');
+        var errtext = "Please type in the name of the Patient ID Issuer above";
+    }
+
+
+    var len = elements.length;
+    //console.log("len="+len);
+    if( len == 0 ) {
+        return false;
+    }
+
+    //for all accession or mrn buttons
+    elements.each(function() {
+
+        //var elInput = $(this);
+
+        var keytypeText = $(this).select2('data').text;
+        //console.log('keytypeText='+keytypeText);
+
+        if( keytypeText == 'Specify Another Specimen ID Issuer' || keytypeText == 'Specify Another Patient ID Issuer' ) {
+
+            //console.log('error: Specify Another is set!');
+            var errorHtml = createErrorWell( $(this), name, errtext );
+            $('#validationerror').append(errorHtml);
+
+        }
+
+    });
+
+
+    //return true;
+    return false;
+}
+
 ////////////////////// end of validtion related functions //////////////////////
 
 
@@ -842,6 +894,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
     }
 }
 
+//disable or enable element
 function disableElement(parentname,element, flag) {
 
     var type = element.attr('type');
@@ -862,6 +915,8 @@ function disableElement(parentname,element, flag) {
     } else {
         return;
     }
+
+    attachTooltip(element,flag,fieldParentName);
 
     if( tagName == "DIV" && classs.indexOf("select2") == -1 ) { //only for radio group
         //console.debug("radio disable classs="+classs+", id="+element.attr('id'));

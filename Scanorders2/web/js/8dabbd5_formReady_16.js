@@ -69,6 +69,4 @@ $(document).ready(function() {
 
     initAllElements(); //init disable all fields
 
-    initTooltips();
-
 });

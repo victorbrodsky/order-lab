@@ -147,6 +147,8 @@ function mrnTypeListener() {
     $('.mrntype-combobox').on("change", function(e) {
         //console.log("mrn type change listener!!!");
         setMrntypeMask($(this),true);
+
+        setTypeTooltip($(this));
     });
 }
 
@@ -254,6 +256,8 @@ function accessionTypeListener() {
                 $('#optional_button').trigger("click");
             }
         }
+
+        setTypeTooltip($(this));
 
     });
 }

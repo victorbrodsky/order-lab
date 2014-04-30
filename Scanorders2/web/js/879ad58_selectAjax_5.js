@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var asyncflag = true;
 var combobox_width = '100%'; //'element'
 //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 //var urlCommon = "http://collage.med.cornell.edu/order/util/";
@@ -21,27 +22,26 @@ var proxyuser_id = $("#proxyuser_id").val();
 var orderinfoid = $(".orderinfo-id").val();
 
 var _mrntype = new Array();
-var accessiontype = new Array();
-var partname = new Array();
-var blockname = new Array();
-var stain = new Array();
-var scanregion = new Array();
-var procedure = new Array();
-var organ = new Array();
-var delivery = new Array();
-var returnslide = new Array();
-var pathservice = new Array();
-var userpathservice = new Array();
-var optionaluserEducational = new Array();
-var _optionaluserResearch = new Array();
+var _accessiontype = new Array();
+var _partname = new Array();
+var _blockname = new Array();
+var _stain = new Array();
+var _scanregion = new Array();
+var _procedure = new Array();
+var _organ = new Array();
+var _delivery = new Array();
+var _returnslide = new Array();
+var _pathservice = new Array();
+//var _userpathservice = new Array();
+//var _optionaluserEducational = new Array();
+//var _optionaluserResearch = new Array();
 var _projectTitle = new Array();
-var _setTitle = new Array();
+//var _setTitle = new Array();
 var _courseTitle = new Array();
-var _lessonTitle = new Array();
+//var _lessonTitle = new Array();
 
-var userpathserviceflag = false;
+//var userpathserviceflag = false;
 
-var asyncflag = true;
 
 function regularCombobox() {
     //resolve
@@ -156,22 +156,22 @@ function getComboboxStain(urlCommon, ids) {
         url = url + "?opt=default";
     }
 
-    //console.log("stain.length="+stain.length);
-    if( stain.length == 0 ) {
+    //console.log("_stain.length="+_stain.length);
+    if( _stain.length == 0 ) {
         //console.log("stain 0");
         $.ajax({
             url: url,
             async: asyncflag,
             timeout: _ajaxTimeout
         }).success(function(data) {
-            stain = data;
-            populateSelectCombobox( ".ajax-combobox-stain", stain, null );
-            populateSelectCombobox( ".ajax-combobox-staintype", stain, null );
+                _stain = data;
+            populateSelectCombobox( ".ajax-combobox-stain", _stain, null );
+            populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
         });
     } else {
         //console.log("stain exists");
-        populateSelectCombobox( ".ajax-combobox-stain", stain, null );
-        populateSelectCombobox( ".ajax-combobox-staintype", stain, null );
+        populateSelectCombobox( ".ajax-combobox-stain", _stain, null );
+        populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
     }
 
     if( cicle == "new"  ) {
@@ -179,7 +179,7 @@ function getComboboxStain(urlCommon, ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"stain_0_field";
         //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, stain );
+        setToFirstElement( targetid, _stain );
     }
 
 }
@@ -200,23 +200,23 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
         //console.log("targetid="+targetid);
     }
 
-    if( stain.length == 0 ) {
+    if( _stain.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-                stain = data;
-                populateSelectCombobox( ".ajax-combobox-staintype", stain, null );
+                _stain = data;
+                populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
             });
     } else {
-        populateSelectCombobox( targetid, stain, null );
+        populateSelectCombobox( targetid, _stain, null );
     }
 
     //console.log("special stain preset="+preset);
     if( targetid != "" ) {
         //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, stain );
+        setToFirstElement( targetid, _stain );
     }
 }
 
@@ -230,17 +230,17 @@ function getComboboxScanregion(urlCommon,ids) {
         url = url + "?opt="+orderinfoid;
     }
 
-    if( scanregion.length == 0 ) {
+    if( _scanregion.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            scanregion = data;
-            populateSelectCombobox( ".ajax-combobox-scanregion", scanregion, null );
+            _scanregion = data;
+            populateSelectCombobox( ".ajax-combobox-scanregion", _scanregion, null );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-scanregion", scanregion, null );
+        populateSelectCombobox( ".ajax-combobox-scanregion", _scanregion, null );
     }
 
     if( cicle == "new"  ) {
@@ -248,7 +248,7 @@ function getComboboxScanregion(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"scan_0_scanregion";
         //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
-        setToFirstElement( targetid, scanregion );
+        setToFirstElement( targetid, _scanregion );
     }
 }
 
@@ -262,17 +262,17 @@ function getComboboxOrgan(urlCommon,ids) {
         url = url + "?opt=default";
     }
 
-    if( organ.length == 0 ) {
+    if( _organ.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            organ = data;
-            populateSelectCombobox( ".ajax-combobox-organ", organ, "Source Organ" );
+                _organ = data;
+            populateSelectCombobox( ".ajax-combobox-organ", _organ, "Source Organ" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-organ", organ, "Source Organ" );
+        populateSelectCombobox( ".ajax-combobox-organ", _organ, "Source Organ" );
     }
 
 }
@@ -289,17 +289,17 @@ function getComboboxProcedure(urlCommon,ids) {
         url = url + "?opt=default";
     }
 
-    if( procedure.length == 0 ) {
+    if( _procedure.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            procedure = data;
-            populateSelectCombobox( ".ajax-combobox-procedure", procedure, "Procedure Type" );
+            _procedure = data;
+            populateSelectCombobox( ".ajax-combobox-procedure", _procedure, "Procedure Type" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-procedure", procedure, "Procedure Type" );
+        populateSelectCombobox( ".ajax-combobox-procedure", _procedure, "Procedure Type" );
     }
 
 }
@@ -315,18 +315,18 @@ function getComboboxAccessionType(urlCommon,ids) {
         url = url + "?opt=default&type="+orderformtype;
     }
 
-    if( accessiontype.length == 0 ) {
+    if( _accessiontype.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-                accessiontype = data;
-                populateSelectCombobox( ".accessiontype-combobox", accessiontype, null );
+                _accessiontype = data;
+                populateSelectCombobox( ".accessiontype-combobox", _accessiontype, null );
                 setAccessionMask();
             });
     } else {
-        populateSelectCombobox( ".accessiontype-combobox", accessiontype, null );
+        populateSelectCombobox( ".accessiontype-combobox", _accessiontype, null );
     }
 
     if( cicle == "new"  ) {
@@ -335,7 +335,7 @@ function getComboboxAccessionType(urlCommon,ids) {
         var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
-        setToFirstElement( targetid, accessiontype );
+        setToFirstElement( targetid, _accessiontype );
     }
 }
 
@@ -387,17 +387,17 @@ function getComboboxPartname(urlCommon,ids) {
         url = url + "?opt="+orderinfoid;
     }
 
-    if( partname.length == 0 ) {
+    if( _partname.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            partname = data;
-            populateSelectCombobox( ".ajax-combobox-partname", partname, "Part Name" );
+            _partname = data;
+            populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-partname", partname, "Part Name" );
+        populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
     }
 
 }
@@ -414,17 +414,17 @@ function getComboboxBlockname(urlCommon,ids) {
         url = url + "?opt="+orderinfoid;
     }
 
-    if( blockname.length == 0 ) {
+    if( _blockname.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            blockname = data;
-            populateSelectCombobox( ".ajax-combobox-blockname", blockname, "Block Name" );
+                _blockname = data;
+            populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-blockname", blockname, "Block Name" );
+        populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
     }
 
 }
@@ -441,22 +441,22 @@ function getComboboxDelivery(urlCommon,ids) {
     }
 
     //console.log("scanregion.length="+organ.length);
-    if( delivery.length == 0 ) {
+    if( _delivery.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            delivery = data;
-            populateSelectCombobox( ".ajax-combobox-delivery", delivery, null );
+                _delivery = data;
+            populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
             if( cicle == "new"  ) {
-                setToFirstElement( target, delivery );
+                setToFirstElement( target, _delivery );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-delivery", delivery, null );
+        populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
         if( cicle == "new"  ) {
-            setToFirstElement( target, delivery );
+            setToFirstElement( target, _delivery );
         }
     }
 
@@ -474,24 +474,24 @@ function getComboboxReturn(urlCommon,ids) {
     }
 
     //console.log("scanregion.length="+organ.length);
-    if( returnslide.length == 0 ) {
+    if( _returnslide.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            returnslide = data;
-            populateSelectCombobox( ".ajax-combobox-return", returnslide, null );
+                _returnslide = data;
+            populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
             if( cicle == "new"  ) {
                 //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-                setToFirstElement( ".ajax-combobox-return", returnslide );
+                setToFirstElement( ".ajax-combobox-return", _returnslide );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-return", returnslide, null );
+        populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
         if( cicle == "new"  ) {
             //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-            setToFirstElement( ".ajax-combobox-return", returnslide );
+            setToFirstElement( ".ajax-combobox-return", _returnslide );
         }
     }
 
@@ -521,17 +521,17 @@ function getComboboxPathService(urlCommon,ids) {
         var multiple = false;
     }
 
-    if( pathservice.length == 0 ) {
+    if( _pathservice.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-            pathservice = data;
-            populateSelectCombobox( targetid, pathservice, "Departmental Division(s) / Service(s)", multiple );
+                _pathservice = data;
+            populateSelectCombobox( targetid, _pathservice, "Departmental Division(s) / Service(s)", multiple );
         });
     } else {
-        populateSelectCombobox( targetid, pathservice, "Departmental Division(s) / Service(s)", multiple );
+        populateSelectCombobox( targetid, _pathservice, "Departmental Division(s) / Service(s)", multiple );
     }
 
 //    $(targetid).select2("container").find("ul.select2-choices").sortable({
@@ -588,6 +588,10 @@ function getSetTitle() {
     }
 
     url = url + "?opt="+idInArr;
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "&orderoid="+orderinfoid;
+    }
 
     $.ajax({
         url: url,
@@ -651,6 +655,10 @@ function getLessonTitle() {
     }
 
     url = url + "?opt="+idInArr;
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "&orderoid="+orderinfoid;
+    }
 
     $.ajax({
         url: url,

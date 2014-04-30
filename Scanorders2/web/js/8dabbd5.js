@@ -13112,7 +13112,7 @@ function setTypeTooltip( keytypeElement ) {
         }
 
         if( keytypeElement.hasClass('accessiontype-combobox') ) {
-            var keytypeTitle = "Please enter the new Speciment ID issuer's name";
+            var keytypeTitle = "Please enter the new Specimen ID issuer's name";
         }
 
         keytypeElement.tooltip({

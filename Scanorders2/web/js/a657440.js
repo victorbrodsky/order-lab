@@ -14442,6 +14442,8 @@ var _sotable = null;    //scan order table
 
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
+var _partname_simple = new Array();
+var _blockname_simple = new Array();
 var _stains_simple = new Array();
 var _procedures_simple = new Array();
 var _organs_simple = new Array();
@@ -14452,56 +14454,59 @@ var _slidetypes = new Array();
 
 var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
-//total 30
+//total 31
 var _columnData_scanorder = [
 
     //header: 1
-    { header:'ID', columns:{} },
+    //{ header:'ID', columns:{} },
 
     //accession: 2
-    { header:'Accession Type', columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false} },
-    { header:'Accession Number', columns:{} },
+    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false} },
+    { header:'Accession Number', columns:{validator: accession_validator_fn} },
 
     //part: 1
-    { header:'Part Name', columns:{} },
+    { header:'Part Name', columns:{type:'autocomplete', source:_partname_simple, strict:false} },
 
     //block: 1
-    { header:'Block Name', columns:{} },
+    { header:'Block Name', columns:{type:'autocomplete', source:_blockname_simple, strict:false} },
 
     //slide: 4
-    { header:'Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false} },
-    { header:'Magnification', columns:{type:'autocomplete', source:['20X','40X'], strict:false} },
+    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, colWidths:'120px'} },
+    { header:'Scan Magnificaiton', default:0, columns:{type:'autocomplete', source:['20X','40X'], strict:false} },
     { header:'Diagnosis', columns:{} },
     { header:'Reason for Scan/Note', columns:{} },
 
     //patient: 7
-    { header:'MRN Type', columns:{type:'autocomplete', source:_mrntypes_simple, strict:false} },
-    { header:'MRN', columns:{} },
-    { header:'Name', columns:{} },
-    { header:'Sex', columns:{type:'autocomplete', source:['Female','Male','Unspecified'], strict:false} },
-    { header:'DOB', columns:{type:'date', dateFormat: 'mm/dd/yy'} },
-    { header:'Age', columns:{} },
+    { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false} },
+    { header:'MRN', columns:{colWidths:'100px'} },
+    { header:'Patient Name', columns:{} },
+    { header:'Patient Sex', columns:{type:'autocomplete', source:['Female','Male','Unspecified'], strict:false} },
+    { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy'} },
+    { header:'Patient Age', columns:{} },
     { header:'Clinical History', columns:{} },
 
     //procedure: 1
     { header:'Procedure Type', columns:{type:'autocomplete', source:_procedures_simple, strict:false} },
 
     //part: 6
-    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, colWidths:'100px'} },
     { header:'Gross Description', columns:{} },
     { header:'Differential Diagnoses', columns:{} },
     { header:'Type of Disease', columns:{type:'autocomplete', source:['Neoplastic','Non-Neoplastic','None','Unspecified'], strict:false} },
-    { header:'Origin', columns:{type:'autocomplete', source:['Primary','Metastatic','Unspecified'], strict:false} },
-    { header:'Primary Site of Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+    { header:'Origin', columns:{type:'autocomplete', source:['Primary','Metastatic','Unspecified'], strict:false, colWidths:'100px'} },
+    { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+
+    //block: 1
+    { header:'Block Section Source', columns:{} },
 
     //slide: 7
-    { header:'Title', columns:{} },
-    { header:'Slide Type', columns:{type:'autocomplete', source:_slidetypes_simple, strict:false} },
+    { header:'Slide Title', columns:{} },
+    { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false} },
     { header:'Microscopic Description', columns:{} },
-    { header:'Special Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false} },
+    { header:'Special Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, colWidths:'120px'} },
     { header:'Results of Special Stains', columns:{} },
     { header:'Link(s) to related image(s)', columns:{} },
-    { header:'Region to scan', columns:{type:'autocomplete', source:_scanregions_simple, strict:false} }
+    { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false} }
 
 ];
 
@@ -14533,32 +14538,42 @@ function ajaxFinishedCondition() {
             _slidetypes.length > 0
     ) {
 
-        for(var i = 0; i < _accessiontype.length-1; i++) {
+        for(var i = 0; i < _accessiontype.length; i++) {
             _accessiontypes_simple.push( _accessiontype[i].text );
         }
 
-        for(var i = 0; i < _mrntype.length-1; i++) {
+        for(var i = 0; i < _mrntype.length; i++) {
             //console.log('mrntype='+ _mrntype[i].text);
             _mrntypes_simple.push( _mrntype[i].text );
         }
 
-        for(var i = 0; i < _stain.length-1; i++) {
+        for(var i = 0; i < _partname.length; i++) {
+            //console.log('mrntype='+ _mrntype[i].text);
+            _partname_simple.push( _partname[i].text );
+        }
+
+        for(var i = 0; i < _blockname.length; i++) {
+            //console.log('mrntype='+ _mrntype[i].text);
+            _blockname_simple.push( _blockname[i].text );
+        }
+
+        for(var i = 0; i < _stain.length; i++) {
             _stains_simple.push( _stain[i].text );
         }
 
-        for(var i = 0; i < _procedure.length-1; i++) {
+        for(var i = 0; i < _procedure.length; i++) {
             _procedures_simple.push( _procedure[i].text );
         }
 
-        for(var i = 0; i < _scanregion.length-1; i++) {
+        for(var i = 0; i < _scanregion.length; i++) {
             _scanregions_simple.push( _scanregion[i].text );
         }
 
-        for(var i = 0; i < _slidetypes.length-1; i++) {
+        for(var i = 0; i < _slidetypes.length; i++) {
             _slidetypes_simple.push( _slidetypes[i].text );
         }
 
-        for(var i = 0; i < _organ.length-1; i++) {
+        for(var i = 0; i < _organ.length; i++) {
             _organs_simple.push( _organ[i].text );
         }
 
@@ -14574,31 +14589,37 @@ function ajaxFinishedCondition() {
 function handsonTableInit() {
 
     var data = new Array();
-
-    var rows = 11;//51;//501;
-
-    var rowElements = new Array();
-    //console.log( "header length="+_columnData_scanorder.length );
-    for(var i = 0; i < _columnData_scanorder.length-1; i++) {
-        rowElements.push(null);
-    }
-
     var columnsType = new Array();
     var colHeader = new Array();
+    var rows = 11;//51;//501;
 
-    for( var i=1; i<rows; i++ ) {
+    // make init data
+    for( var i=1; i<rows; i++ ) {   //foreach row
 
-        var index = new Array();
-        index = [i];
-        var row = index.concat(rowElements);
-        data.push(row);
+        var rowElement = new Array();
+        //rowElement[0] = i;
+        for( var ii=0; ii<_columnData_scanorder.length-1; ii++ ) {  //foreach column
 
-    }
+            if( 'default' in _columnData_scanorder[ii] ) {
+                var index = _columnData_scanorder[ii]['default'];
+                rowElement[ii] = _columnData_scanorder[ii]['columns']['source'][index];
+            } else {
+                rowElement[ii] = null;
+            }
 
-    for( var i=0; i<_columnData_scanorder.length-1; i++ ) {
+        }//foreach column
+
+        //console.log(rowElement);
+        data.push(rowElement);
+
+    }//foreach row
+
+    // make header and columns
+    for( var i=0; i<_columnData_scanorder.length; i++ ) {
         colHeader.push( _columnData_scanorder[i]['header'] );
         columnsType.push( _columnData_scanorder[i]['columns'] );
     }
+
 
     //$('#multi-dataTable').doubleScroll();
 
@@ -14613,35 +14634,67 @@ function handsonTableInit() {
         data: data,
         colHeaders: colHeader,
         minSpareRows: 1,
-        contextMenu: true,
+        contextMenu: ['row_above', 'row_below', 'remove_row'],
         manualColumnMove: true,
         manualColumnResize: true,
+        autoWrapRow: true,
+        currentRowClassName: 'currentRowScanorder',
+        currentColClassName: 'currentColScanorder',
         stretchH: 'all',
         columns: columnsType,
         cells: function (row, col, prop) {
+
             //var cellProperties = {};
+            if( col < 0 ){
+                return;
+            }
+
+            //////////// set renderer ////////////
+            var columnHeader = _columnData_scanorder[col].header;
             if( !validateCell(row,col,null,null) ) {
-                this.renderer = redRenderer;
+                if( columnHeader == 'Part Name' || columnHeader == 'Block Name'  ) {
+                    this.renderer = redRendererAutocomplete;
+                } else {
+                    this.renderer = redRenderer;
+                }
             } else {
                 this.renderer = null;
             }
+            //////////// EOF set renderer ////////////
+
            //return this;
         },
         beforeChange: function (changes, source) {
-            for( var i = changes.length - 1; i >= 0; i-- ) {
+            for( var i=0; i<changes.length; i++ ) {
 //                //console.log(changes[i]);
 
                 var row = changes[i][0];
                 var col = changes[i][1];
+                var oldvalue = changes[i][2];
                 var value = changes[i][3];
 
-                getAutoGenKeys( row, col, value );
-
-                //set Id
+                processKeyTypes( row, col, value, oldvalue );
+            }
+        }
+//        afterChange: function (changes, source) {
+//
+//            if( !changes ) {
+//                return;
+//            }
+//
+//            for( var i=0; i<changes.length; i++ ) {
+////                //console.log(changes[i]);
+//
+//                var row = changes[i][0];
+//                var col = changes[i][1];
+//                var oldvalue = changes[i][2];
+//                var value = changes[i][3];
+//
+//                //generate Id for a new row
 //                var totalrows = this.countRows();
 //                console.log('totalrows='+totalrows);
 //                console.log('row='+row+', col='+col+', value='+value);
-//                if( col == 0 && totalrows == (row+1) ) {
+//                if( totalrows == (row+2) ) {
 //                    console.log('row='+row+', col='+col+', value='+value);
 //                    var curId = _sotable.getDataAtCell(row,0);
 //                    if( curId == '' || curId == null ) {
@@ -14649,21 +14702,31 @@ function handsonTableInit() {
 //                        _sotable.setDataAtCell(row,0,lastId+1);
 //                    }
 //                }
-
-            }
-        }
+//            }//for
+//
+//        }//afterChange
     });
 
     //set bs table
-    $(_htableid+' table').addClass('table-striped table-hover');
+    //$(_htableid+' table').addClass('table-striped table-hover');
+    $(_htableid+' table').addClass('table-hover');
 
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
 }
 
+var accession_validator_fn = function (value, callback) {
+    var res = value.match(/^[0]+$/);
+    if( res ) {
+        callback(true);
+    }
+    else {
+        callback(false);
+    }
+};
 
-function getAutoGenKeys( row, col, value ) {
+function processKeyTypes( row, col, value, oldvalue ) {
 
     var columnHeader = _columnData_scanorder[col].header;
 
@@ -14679,11 +14742,15 @@ function getAutoGenKeys( row, col, value ) {
                     if( data ) {
                         var autogenValue = data.mrn[0].text;
                         //console.log('autogenValue='+autogenValue);
-                        _sotable.setDataAtCell(row,col+1,autogenValue);
+                        setDataCell(row,col+1,autogenValue);
+                        //readOnly: true
                     }
                 }).error( function ( x, t, m ) {
                    console.log('ERROR auto generate MRN');
                 });
+            }
+            if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
+                cleanHTableCell( row, col+1, true )
             }
             break;
         case 'Accession Type':
@@ -14697,16 +14764,31 @@ function getAutoGenKeys( row, col, value ) {
                     if( data ) {
                         var autogenValue = data.accession[0].text;
                         //console.log('autogenValue='+autogenValue);
-                        _sotable.setDataAtCell(row,col+1,autogenValue);
+                        setDataCell(row,col+1,autogenValue);
                     }
                 }).error( function ( x, t, m ) {
                     console.log('ERROR auto generate Accession Number');
                 });
             }
+            if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
+                cleanHTableCell( row, col+1, true )
+            }
             break;
         default:
             //
     }
+}
+
+function setDataCell( row, col, value ) {
+
+    if( value && value != '' ) {    //set
+        _sotable.setDataAtCell(row,col,value);
+        _sotable.getCellMeta(row,col).readOnly = true;
+    } else {    //clean
+        _sotable.setDataAtCell(row,col,null);
+        _sotable.getCellMeta(row,col).readOnly = false;
+    }
+
 }
 
 function processDataForm( action ) {
@@ -14719,20 +14801,20 @@ function processDataForm( action ) {
     console.log( 'column'+'0'+',row'+'1'+':'+ hdata[0][1] );
     console.log( 'column'+'1'+',row'+'2'+':'+ hdata[1][2] );
 
-    //for each row
+    //for each row (except the first one)
     for( var i=0; i<hdata.length-1; i++ ) {
 
         //console.log( 'row'+(i+1)+':' + hdata[i] );
         if( hdata[i] !== undefined && hdata[i] !== null && hdata[i] != '' ) {
 
-            //for each column
+            //for each column (except the first one)
             for( var ii=0; ii<hdata[i].length-1; ii++ ) {
 
                 //console.log( 'column'+(ii+1)+':' + hdata[i][ii] );
                 //validateCell( i, ii, hdata[i][ii], true );
 
                 if( action == 'clean' ) {
-                    cleanHTableCell(i,ii);
+                    cleanHTableCell(i,ii, false);
                 }
 
             } //for column
@@ -14751,11 +14833,11 @@ function processDataForm( action ) {
 
 }
 
-function cleanHTableCell( row, col ) {
+function cleanHTableCell( row, col, force ) {
 
     var value = _sotable.getDataAtCell(row,col);
 
-    if( value === undefined || value === null || value == '' ) {
+    if( !force && (value === undefined || value === null || value == '') ) {
         return;
     }
 
@@ -14774,58 +14856,57 @@ function cleanHTableCell( row, col ) {
     switch( columnHeader )
     {
         case 'MRN':
-            //console.log('MRN => value='+value);
-            if( value ) {
-                //console.log('delete value='+value);
-                $.ajax({
-                    url: urlCheck+"patient/delete/"+value+"?extra=13",
-                    type: 'DELETE',
-                    timeout: _ajaxTimeout,
-                    async: asyncflag
-                }).success( function(data) {
-                    if( data >= 0 ) {
-                        //console.debug("Delete Success, data="+data);
-                    } else {
-                        console.debug("Delete with data Error: data="+data);
-                    }
-                }).error( function ( x, t, m ) {
-                    console.log('ERROR delete MRN');
-                });
-            }
+            //console.log('delete value='+value);
+            $.ajax({
+                url: urlCheck+"patient/delete/"+value+"?extra=13",
+                type: 'DELETE',
+                timeout: _ajaxTimeout,
+                async: asyncflag
+            }).success( function(data) {
+                if( data >= 0 ) {
+                    //console.debug("Delete Success, data="+data);
+                    setDataCell(row,col,null);
+                } else {
+                    console.debug("Delete with data Error: data="+data);
+                }
+            }).error( function ( x, t, m ) {
+                console.log('ERROR delete MRN');
+            });
+
             break;
         case 'Accession Number':
             //console.log('Accession => value='+value);
-            if( value ) {
-                $.ajax({
-                    url: urlCheck+"accession/delete/"+value+"?extra=8",
-                    type: 'DELETE',
-                    timeout: _ajaxTimeout,
-                    async: asyncflag
-                }).success( function(data) {
-                    if( data >= 0 ) {
-                        //console.debug("Delete Success, data="+data);
-                    } else {
-                        console.debug("Delete with data Error: data="+data);
-                    }
-                }).error( function ( x, t, m ) {
-                    console.log('ERROR delete Accession Number');
-                });
-            }
+            $.ajax({
+                url: urlCheck+"accession/delete/"+value+"?extra=8",
+                type: 'DELETE',
+                timeout: _ajaxTimeout,
+                async: asyncflag
+            }).success( function(data) {
+                if( data >= 0 ) {
+                    //console.debug("Delete Success, data="+data);
+                    setDataCell(row,col,null);
+                } else {
+                    console.debug("Delete with data Error: data="+data);
+                }
+            }).error( function ( x, t, m ) {
+                console.log('ERROR delete Accession Number');
+            });
             break;
+        case 'ID':
+            //don't clean id
         default:
-            //
+            setDataCell(row,col,null);
     }
 
-    _sotable.setDataAtCell(row,col,null);
 }
 
-function validateCell( row, column, value, mark ) {
+function validateCell( row, col, value, mark ) {
 
     if( _sotable == null ) {
         _sotable = $(_htableid).handsontable('getInstance');
     }
 
-    //console.log( 'validate: '+_sotable.countRows()+':'+row+','+column+' value=' + value );
+    //console.log( 'validate: '+_sotable.countRows()+':'+row+','+col+' value=' + value );
 
     var valid = true;
 
@@ -14834,10 +14915,10 @@ function validateCell( row, column, value, mark ) {
         return valid;
     }
 
-    var columnHeader = _columnData_scanorder[column].header;
+    var columnHeader = _columnData_scanorder[col].header;
 
     if( value === undefined || value === null ) {
-        value = $(_htableid).handsontable('getData')[row][column];
+        value = $(_htableid).handsontable('getData')[row][col];
     }
 
     switch( columnHeader )
@@ -14858,6 +14939,7 @@ function validateCell( row, column, value, mark ) {
             if( !value || value == '' || value == null ) {
                 //console.log('Part Name: value null !!!!!!!!!!!!!');
                 valid = false;
+
             }
             break;
         case 'Block Name':
@@ -14871,7 +14953,7 @@ function validateCell( row, column, value, mark ) {
     }
 
     if( mark ) {
-        var checkcell = _sotable.getCell(row,column);
+        var checkcell = _sotable.getCell(row,col);
 
         if( checkcell && !valid ) {
             checkcell.style.backgroundColor = '#F2DEDE';
@@ -14916,8 +14998,31 @@ var redRendererForKey = function (instance, td, row, col, prop, value, cellPrope
 };
 var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
+//    $(td).css({
+//        background: '#F2DEDE'
+//    });
+    $(td).addClass('ht-validation-error');
+};
+var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
     $(td).css({
         background: '#F2DEDE'
+    });
+    $(td).addClass('ht-validation-error');
+};
+
+//not used renderers
+var minWidthRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+    var width = (value.clientWidth + 1) + "px";
+    $(td).css({
+        colWidths : width
+    });
+};
+var yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+    $(td).css({
+        background: 'yellow'
     });
 };
 var redRendererIfEmpty = function (instance, td, row, col, prop, value, cellProperties) {
