@@ -22,35 +22,96 @@ var _slidetypes_simple = new Array();
 
 var _slidetypes = new Array();
 
-var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
+//var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
-//validators
-var accession_validator_fn = function (value, callback) {
+//accession validator
+var accession_validator = function (value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
     var notzeros = notAllZeros(value);
-    var res = value.match(/^(\w{1,2})\/(\w{1,2})\/(\w{4})$/);
-    console.log('res='+res+', notzeros='+notzeros);
+    var res = value.match(/^[A-Z]{1,2}[0-9]{1,2}[-][1-9]{1,6}$/);
+    //console.log('acc validator: res='+res+', notzeros='+notzeros);
     if( res && notzeros ) {
-        callback(true);
+        return true;
     }
     else {
-        callback(false);
+        return false;
+    }
+}
+var accession_validator_fn = function (value, callback) {
+    callback( accession_validator(value) );
+};
+////////////////////////////
+
+//25 non zeros characters
+var general_validator = function (value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
+    var notzeros = notAllZeros(value);
+    var res = value.match(/^[a-zA-Z1-9][a-zA-Z0-9-]{0,23}[a-zA-Z0-9]{0,1}$/);
+    //console.log('general validator: res='+res+', notzeros='+notzeros);
+    if( res && notzeros ) {
+        return true;
+    }
+    else {
+        return false;
     }
 };
+var general_validator_fn = function (value, callback) {
+    callback( general_validator(value) );
+};
+////////////////////////////
+
+//noaccession-provided and nomrn-provided non zeros characters not limited
+var generated_validator = function (value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
+    var notzeros = notAllZeros(value);
+    var res = value.match(/^[a-zA-Z1-9][a-zA-Z0-9-]{1,}$/);
+    //console.log('general validator: res='+res+', notzeros='+notzeros);
+    if( res && notzeros ) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+var generated_validator_fn = function (value, callback) {
+    callback( generated_validator(value) );
+};
+////////////////////////////
 
 //mm/dd/yyyy
-var date_validator_fn = function (value, callback) {
+var date_validator = function (value) {
+    //console.log('value=('+value+')');
+    if( isValueEmpty(value) ) {
+        return true;
+    }
     var res = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     var notzeros = notAllZeros(value);
-    console.log('res='+res+', notzeros='+notzeros);
+    //console.log('date validator: res='+res+', notzeros='+notzeros);
     if( res && notzeros ) {
-        callback(true);
+        //console.log('date2 ok');
+        return true;
     }
     else {
-        callback(false);
+        //console.log('date not ok');
+        return false;
     }
 };
+var date_validator_fn = function (value, callback) {
+    callback( date_validator(value) );
+};
+//////////////////////
 
 function notAllZeros(value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
+
     var allzeros = value.match(/^[0]+$/);
     //console.log('allzeros='+allzeros);
     if( allzeros ) {
@@ -61,6 +122,30 @@ function notAllZeros(value) {
     }
 };
 
+
+//renderers
+var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null,null) ) {
+        //console.log('add error');
+        $(td).addClass('ht-validation-error');
+    } else {
+        //console.log('remove error');
+        $(td).removeClass('ht-validation-error');
+    }
+};
+
+var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null,null) ) {
+        $(td).addClass('ht-validation-error');
+    } else {
+        $(td).removeClass('ht-validation-error');
+    }
+
+    //capitalizeAccession( row, col, value );
+};
+
 //total 31
 var _columnData_scanorder = [
 
@@ -68,52 +153,52 @@ var _columnData_scanorder = [
     //{ header:'ID', columns:{} },
 
     //accession: 2
-    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false} },
-    { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true} },
+    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true, renderer:redRenderer} },
 
     //part: 1
-    { header:'Part Name', columns:{type:'autocomplete', source:_partname_simple, strict:false} },
+    { header:'Part Name', default:0, columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
     //block: 1
-    { header:'Block Name', columns:{type:'autocomplete', source:_blockname_simple, strict:false} },
+    { header:'Block Name', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
     //slide: 4
-    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, colWidths:'120px'} },
-    { header:'Scan Magnificaiton', default:0, columns:{type:'autocomplete', source:['20X','40X'], strict:false} },
-    { header:'Diagnosis', columns:{validator: accession_validator_fn, allowInvalid: true} },
+    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
+    { header:'Scan Magnificaiton', default:0, columns:{type:'dropdown', source:['20X','40X'], strict:false} },
+    { header:'Diagnosis', columns:{} },
     { header:'Reason for Scan/Note', columns:{} },
 
     //patient: 7
-    { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false} },
-    { header:'MRN', columns:{colWidths:'100px'} },
+    { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
+    { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn} },
     { header:'Patient Name', columns:{} },
-    { header:'Patient Sex', columns:{type:'autocomplete', source:['Female','Male','Unspecified'], strict:false} },
+    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
     { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
     { header:'Patient Age', columns:{} },
     { header:'Clinical History', columns:{} },
 
     //procedure: 1
-    { header:'Procedure Type', columns:{type:'autocomplete', source:_procedures_simple, strict:false} },
+    { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
 
     //part: 6
-    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, colWidths:'100px'} },
+    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
     { header:'Gross Description', columns:{} },
     { header:'Differential Diagnoses', columns:{} },
-    { header:'Type of Disease', columns:{type:'autocomplete', source:['Neoplastic','Non-Neoplastic','None','Unspecified'], strict:false} },
-    { header:'Origin', columns:{type:'autocomplete', source:['Primary','Metastatic','Unspecified'], strict:false, colWidths:'100px'} },
-    { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+    { header:'Type of Disease', default:0, columns:{type:'dropdown', source:['','Neoplastic','Non-Neoplastic','None','Unspecified'], strict:true} },
+    { header:'Origin of Disease', default:0, columns:{type:'dropdown', source:['','Primary','Metastatic','Unspecified'], strict:true, colWidths:'100px'} },
+    { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false} },
 
     //block: 1
     { header:'Block Section Source', columns:{} },
 
     //slide: 7
     { header:'Slide Title', columns:{} },
-    { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false} },
+    { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false, filter:false} },
     { header:'Microscopic Description', columns:{} },
-    { header:'Special Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, colWidths:'120px'} },
+    { header:'Special Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
     { header:'Results of Special Stains', columns:{} },
     { header:'Link(s) to related image(s)', columns:{} },
-    { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false} }
+    { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false, filter:false} }
 
 ];
 
@@ -154,11 +239,13 @@ function ajaxFinishedCondition() {
             _mrntypes_simple.push( _mrntype[i].text );
         }
 
+        _partname_simple.push('');  //insert first empty value
         for(var i = 0; i < _partname.length; i++) {
             //console.log('mrntype='+ _mrntype[i].text);
             _partname_simple.push( _partname[i].text );
         }
 
+        _blockname_simple.push(''); //insert first empty value
         for(var i = 0; i < _blockname.length; i++) {
             //console.log('mrntype='+ _mrntype[i].text);
             _blockname_simple.push( _blockname[i].text );
@@ -168,6 +255,7 @@ function ajaxFinishedCondition() {
             _stains_simple.push( _stain[i].text );
         }
 
+        _procedures_simple.push('');
         for(var i = 0; i < _procedure.length; i++) {
             _procedures_simple.push( _procedure[i].text );
         }
@@ -200,12 +288,12 @@ function handsonTableInit() {
     var colHeader = new Array();
     var rows = 11;//51;//501;
 
-    // make init data
+    // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
 
         var rowElement = new Array();
         //rowElement[0] = i;
-        for( var ii=0; ii<_columnData_scanorder.length-1; ii++ ) {  //foreach column
+        for( var ii=0; ii<_columnData_scanorder.length; ii++ ) {  //foreach column
 
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
@@ -240,48 +328,58 @@ function handsonTableInit() {
     $(_htableid).handsontable({
         data: data,
         colHeaders: colHeader,
+        columns: columnsType,
         minSpareRows: 1,
         contextMenu: ['row_above', 'row_below', 'remove_row'],
         manualColumnMove: true,
         manualColumnResize: true,
-        autoWrapRow: true,
+        //autoWrapRow: true,
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
         stretchH: 'all',
-        columns: columnsType,
-        cells: function (row, col, prop) {
-
-            //var cellProperties = {};
-            if( col < 0 ){
-                return;
-            }
-
-            //////////// set renderer ////////////
-            var columnHeader = _columnData_scanorder[col].header;
-            if( !validateCell(row,col,null,null) ) {
-                if( columnHeader == 'Part Name' || columnHeader == 'Block Name'  ) {
-                    this.renderer = redRendererAutocomplete;
-                } else {
-                    this.renderer = redRenderer;
-                }
-            } else {
-                this.renderer = null;
-            }
-            //////////// EOF set renderer ////////////
-
-           //return this;
-        },
         beforeChange: function (changes, source) {
             for( var i=0; i<changes.length; i++ ) {
 //                //console.log(changes[i]);
-
                 var row = changes[i][0];
                 var col = changes[i][1];
                 var oldvalue = changes[i][2];
                 var value = changes[i][3];
 
                 processKeyTypes( row, col, value, oldvalue );
+
+                //capitalize first two chars for Accession Number, when accession type 'NYH CoPath Anatomic Pathology Accession Number' is set
+                var columnHeader = _columnData_scanorder[col].header;
+                if( columnHeader == 'Accession Number' && changes[i][3] && changes[i][3] != '' && changes[i][3].charAt(0) ) {
+                    //changes[i][3] = changes[i][3].slice(0,1).toUpperCase() + changes[i][3].slice(2);
+                    changes[i][3] = changes[i][3].charAt(0).toUpperCase() + changes[i][3].slice(1); //capitalise first letter
+                    if( changes[i][3].charAt(1) ) {
+                        changes[i][3] = changes[i][3].charAt(0) + changes[i][3].charAt(1).toUpperCase() + changes[i][3].slice(2); //capitalise second letter
+                    }
+                }
+
             }
+        },
+        afterCreateRow: function (index, amount) {
+            return; //TODO: testing
+            if( !_sotable || typeof _sotable === 'undefined' ) {
+                return;
+            }
+
+            //pre-populate cells
+            for( var col=0; col<_columnData_scanorder.length; col++ ) {  //foreach column
+                var value = null;
+                if( 'default' in _columnData_scanorder[col] ) {
+                    var indexSource = _columnData_scanorder[col]['default'];
+                    value = _columnData_scanorder[col]['columns']['source'][indexSource];
+                }
+
+                //var row = this.countRows()-2;
+                //console.log('row='+row);
+                //console.log('amount='+amount+', index='+index+',col='+col+', value='+value);
+                this.setDataAtCell(index-1,col,value);
+
+            }//foreach column
+
         }
 //        afterChange: function (changes, source) {
 //
@@ -323,6 +421,32 @@ function handsonTableInit() {
 
 }
 
+//function capitalizeAccession( row, col, value ) {
+//
+//    if( !value || value == '' ) {
+//        return;
+//    }
+//
+//    //console.log('capitalize ' +row+','+col+':value='+value);
+//    var columnHeader = _columnData_scanorder[col].header;
+//    if( columnHeader == 'Accession Number' ) {
+//
+//        var upperCaseValue = value.slice(0,1).toUpperCase + value.slice(2);
+//        _sotable.setDataAtCell(row,col,upperCaseValue);
+//
+////        if( value.match(/^[A-Z]/) ) {
+////            var upperCaseValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+////            _sotable.setDataAtCell(row,col,upperCaseValue);
+////        }
+////        if( value.match(/^[A-Z][A-Z]/) && !value.match(/^[A-Z][0-9]/) ) {
+////            //var upperCaseValue = value.replace(/^[a-z]{1,2}/, function(m){ return m.toUpperCase() });
+////            var upperCaseValue = value.charAt(0).toUpperCase() + value.charAt(1).toUpperCase() + value.slice(2).toLowerCase();
+////            _sotable.setDataAtCell(row,col,upperCaseValue);
+////        }
+//    }
+//    return;
+//}
+
 function processKeyTypes( row, col, value, oldvalue ) {
 
     var columnHeader = _columnData_scanorder[col].header;
@@ -340,7 +464,6 @@ function processKeyTypes( row, col, value, oldvalue ) {
                         var autogenValue = data.mrn[0].text;
                         //console.log('autogenValue='+autogenValue);
                         setDataCell(row,col+1,autogenValue);
-                        //readOnly: true
                     }
                 }).error( function ( x, t, m ) {
                    console.log('ERROR auto generate MRN');
@@ -349,6 +472,7 @@ function processKeyTypes( row, col, value, oldvalue ) {
             if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
                 cleanHTableCell( row, col+1, true )
             }
+
             break;
         case 'Accession Type':
             if( value && value == 'Auto-generated Accession Number' ) {
@@ -370,42 +494,80 @@ function processKeyTypes( row, col, value, oldvalue ) {
             if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
                 cleanHTableCell( row, col+1, true )
             }
+
+            ////////////// set validator ///////////////
+            //if( !value || value == '' ) {
+            if( isValueEmpty(value) ) {
+                break;
+            }
+            var accNum = _sotable.getDataAtCell(row,col+1);
+            if( value == 'NYH CoPath Anatomic Pathology Accession Number' ) {
+                _sotable.getCellMeta(row,col+1).validator = accession_validator_fn;
+                _sotable.getCellMeta(row,col+1).valid = accession_validator(accNum);
+            }
+            else if( value == 'Auto-generated Accession Number' || value == 'Existing Auto-generated Accession Number' ) {
+                _sotable.getCellMeta(row,col+1).validator = generated_validator_fn;
+                _sotable.getCellMeta(row,col+1).valid = generated_validator(accNum);
+            }
+            else {
+                _sotable.getCellMeta(row,col+1).validator = general_validator_fn;
+                _sotable.getCellMeta(row,col+1).valid = general_validator(accNum);
+            }
+            ////////////// EOF set validator ///////////////
+
             break;
         default:
             //
     }
+    return;
 }
 
 function setDataCell( row, col, value ) {
 
-    if( value && value != '' ) {    //set
+    //if( value && value != '' ) {    //set
+    if( !isValueEmpty(value) ) {
+
         _sotable.setDataAtCell(row,col,value);
         _sotable.getCellMeta(row,col).readOnly = true;
+
     } else {    //clean
-        _sotable.setDataAtCell(row,col,null);
+
+        var newValue = null;
+
+        //if default exists => set to the element of source array, at the index specified by default
+        if( 'default' in _columnData_scanorder[col] ) {
+            var index = _columnData_scanorder[col]['default'];
+            var newValue = _columnData_scanorder[col]['columns']['source'][index];
+        }
+
+        console.log('clean data cell at '+row+","+col+", value="+newValue);
+
+        _sotable.setDataAtCell(row,col,newValue);
         _sotable.getCellMeta(row,col).readOnly = false;
+
     }
 
 }
 
+//clean form
 function processDataForm( action ) {
 
     var handsontable = $(_htableid).data('handsontable');
 
     var hdata = handsontable.getData();
 
-    console.log('data len='+hdata.length);
-    console.log( 'column'+'0'+',row'+'1'+':'+ hdata[0][1] );
-    console.log( 'column'+'1'+',row'+'2'+':'+ hdata[1][2] );
+    //console.log('data len='+hdata.length);
+    //console.log( 'column'+'0'+',row'+'1'+':'+ hdata[0][1] );
+    //console.log( 'column'+'1'+',row'+'2'+':'+ hdata[1][2] );
 
     //for each row (except the first one)
-    for( var i=0; i<hdata.length-1; i++ ) {
+    for( var i=0; i<hdata.length; i++ ) {
 
         //console.log( 'row'+(i+1)+':' + hdata[i] );
         if( hdata[i] !== undefined && hdata[i] !== null && hdata[i] != '' ) {
 
             //for each column (except the first one)
-            for( var ii=0; ii<hdata[i].length-1; ii++ ) {
+            for( var ii=0; ii<hdata[i].length; ii++ ) {
 
                 //console.log( 'column'+(ii+1)+':' + hdata[i][ii] );
                 //validateCell( i, ii, hdata[i][ii], true );
@@ -434,19 +596,16 @@ function cleanHTableCell( row, col, force ) {
 
     var value = _sotable.getDataAtCell(row,col);
 
-    if( !force && (value === undefined || value === null || value == '') ) {
-        return;
-    }
-
-    if( col == 0 ) {
-        return;
+    //if( !force && (value === undefined || value === null || value == '') ) {
+    if( !force && isValueEmpty(value) ) {
+        return; //don't clean empty cells
     }
 
     if( _sotable && _sotable.countRows() == (row+1) ) {
-        return;
+        return; //don't clean the last row (it is empty)
     }
 
-    //console.log('row='+row+', col='+col+', value='+value);
+    //console.log('clean: row='+row+', col='+col+', value='+value);
 
     var columnHeader = _columnData_scanorder[col].header;
 
@@ -454,40 +613,48 @@ function cleanHTableCell( row, col, force ) {
     {
         case 'MRN':
             //console.log('delete value='+value);
-            $.ajax({
-                url: urlCheck+"patient/delete/"+value+"?extra=13",
-                type: 'DELETE',
-                timeout: _ajaxTimeout,
-                async: asyncflag
-            }).success( function(data) {
-                if( data >= 0 ) {
-                    //console.debug("Delete Success, data="+data);
-                    setDataCell(row,col,null);
-                } else {
-                    console.debug("Delete with data Error: data="+data);
-                }
-            }).error( function ( x, t, m ) {
-                console.log('ERROR delete MRN');
-            });
-
+            if( _sotable.getDataAtCell(row,col-1) == 'Auto-generated MRN' || _sotable.getDataAtCell(row,col-1) == 'Existing Auto-generated MRN' ) {
+                $.ajax({
+                    url: urlCheck+"patient/delete/"+value+"?extra=13",
+                    type: 'DELETE',
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success( function(data) {
+                    if( data >= 0 ) {
+                        //console.debug("Delete Success, data="+data);
+                        setDataCell(row,col,null);
+                    } else {
+                        console.debug("Delete with data Error: data="+data);
+                    }
+                }).error( function ( x, t, m ) {
+                    console.log('ERROR delete MRN');
+                });
+            } else  {
+                setDataCell(row,col,null);
+            }
             break;
         case 'Accession Number':
             //console.log('Accession => value='+value);
-            $.ajax({
-                url: urlCheck+"accession/delete/"+value+"?extra=8",
-                type: 'DELETE',
-                timeout: _ajaxTimeout,
-                async: asyncflag
-            }).success( function(data) {
-                if( data >= 0 ) {
-                    //console.debug("Delete Success, data="+data);
-                    setDataCell(row,col,null);
-                } else {
-                    console.debug("Delete with data Error: data="+data);
-                }
-            }).error( function ( x, t, m ) {
-                console.log('ERROR delete Accession Number');
-            });
+            if( _sotable.getDataAtCell(row,col-1) == 'Auto-generated Accession Number' || _sotable.getDataAtCell(row,col-1) == 'Existing Auto-generated Accession Number' ) {
+                $.ajax({
+                    url: urlCheck+"accession/delete/"+value+"?extra=8",
+                    type: 'DELETE',
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success( function(data) {
+                    if( data >= 0 ) {
+                        //console.debug("Delete Success, data="+data);
+                        setDataCell(row,col,null);
+                    } else {
+                        console.debug("Delete with data Error: data="+data);
+                    }
+                }).error( function ( x, t, m ) {
+                    console.log('ERROR delete Accession Number');
+                });
+            } else {
+                setDataCell(row,col,null);
+            }
+
             break;
         case 'ID':
             //don't clean id
@@ -497,7 +664,7 @@ function cleanHTableCell( row, col, force ) {
 
 }
 
-function validateCell( row, col, value, mark ) {
+function validateCell( row, col, value ) {
 
     if( _sotable == null ) {
         _sotable = $(_htableid).handsontable('getInstance');
@@ -514,128 +681,38 @@ function validateCell( row, col, value, mark ) {
 
     var columnHeader = _columnData_scanorder[col].header;
 
-    if( value === undefined || value === null ) {
+    //if( value === undefined || value === null ) {
+    if( isValueEmpty(value) ) {
         value = $(_htableid).handsontable('getData')[row][col];
     }
 
     switch( columnHeader )
     {
+        case 'Accession Type':
+        case 'MRN Type':
         case 'MRN':
-            if( !value || value == '' || value == null ) {
-                //console.log('Accession Number: value null !!!!!!!!!!!!!');
-                valid = false;
-            }
-            break;
         case 'Accession Number':
-            if( !value || value == '' || value == null ) {
-                //console.log('Accession Number: value null !!!!!!!!!!!!!');
-                valid = false;
-            }
-            break;
         case 'Part Name':
-            if( !value || value == '' || value == null ) {
-                //console.log('Part Name: value null !!!!!!!!!!!!!');
-                valid = false;
-
-            }
-            break;
         case 'Block Name':
-            if( !value || value == '' || value == null ) {
-                //console.log('Block Name: value null !!!!!!!!!!!!!');
+            //if( !value || value == '' || value == null ) {
+            if( isValueEmpty(value) ) {
+                //console.log(columnHeader+': value null !!!!!!!!!!!!!');
                 valid = false;
             }
             break;
         default:
-
     }
 
-    if( mark ) {
-        var checkcell = _sotable.getCell(row,col);
-
-        if( checkcell && !valid ) {
-            checkcell.style.backgroundColor = '#F2DEDE';
-        }
-    }
+//    if( mark ) {
+//        var checkcell = _sotable.getCell(row,col);
+//
+//        if( checkcell && !valid ) {
+//            checkcell.style.backgroundColor = '#F2DEDE';
+//        }
+//    }
 
     return valid;
 }
-
-//testing
-function negativeValueRenderer(instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-    if( parseInt(value, 10) < 0 ) { //if row contains negative number
-        td.className = 'negative'; //add class "negative"
-    }
-
-    if (!value || value === '') {
-        td.style.background = '#F2DEDE';
-    }
-    else {
-        if (value === 'Nissan') {
-            td.style.fontStyle = 'italic';
-        }
-        td.style.background = '';
-    }
-}
-
-//renderers
-var redRendererForKey = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-
-    if( !validateCell(row, col, value, null)  ) {
-        $(td).css({
-            background: '#F2DEDE'
-        });
-    } else {
-        $(td).css({
-            background: null
-        });
-    }
-
-};
-var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-//    $(td).css({
-//        background: '#F2DEDE'
-//    });
-    $(td).addClass('ht-validation-error');
-};
-var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-//    $(td).css({
-//        background: '#F2DEDE'
-//    });
-    $(td).addClass('ht-validation-error');
-};
-
-//not used renderers
-var minWidthRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    var width = (value.clientWidth + 1) + "px";
-    $(td).css({
-        colWidths : width
-    });
-};
-var yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    $(td).css({
-        background: 'yellow'
-    });
-};
-var redRendererIfEmpty = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-    if( !value || value == '' || value == null ) {
-        $(td).css({
-            background: '#F2DEDE'
-        });
-    } else {
-        $(td).css({
-            background: null
-        });
-    }
-};
-
-
 
 
 
@@ -654,6 +731,13 @@ function getSlideTypes() {
     }
 }
 
+function isValueEmpty(value) {
+    if( value && typeof value !== 'undefined' && value != '' ) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 //**********************************************************************
 // function waitfor - Wait until a condition is met

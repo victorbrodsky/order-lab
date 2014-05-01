@@ -97,7 +97,7 @@ class TableController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/scan-order/multi-slide-table-view/new", name="singleorder_create")
+     * @Route("/scan-order/multi-slide-table-view/new", name="table_create_submit")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
      */

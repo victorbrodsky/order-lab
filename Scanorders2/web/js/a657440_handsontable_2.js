@@ -24,6 +24,80 @@ var _slidetypes = new Array();
 
 var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
+//validators
+var accession_validator_fn = function (value, callback) {
+    var notzeros = notAllZeros(value);
+    var res = value.match(/^[A-Z]{1,2}[0-9]{1,2}[-][1-9]{1,6}$/);
+    console.log('acc validator: res='+res+', notzeros='+notzeros);
+    if( res && notzeros ) {
+        callback(true);
+    }
+    else {
+        callback(false);
+    }
+};
+
+//25 non zeros characters
+var general_validator_fn = function (value, callback) {
+    var notzeros = notAllZeros(value);
+    var res = value.match(/^[a-zA-Z1-9][a-zA-Z0-9-]{0,23}[a-zA-Z0-9]{0,1}$/);
+    console.log('general validator: res='+res+', notzeros='+notzeros);
+    if( res && notzeros ) {
+        callback(true);
+    }
+    else {
+        callback(false);
+    }
+};
+
+//mm/dd/yyyy
+var date_validator_fn = function (value, callback) {
+    var res = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    var notzeros = notAllZeros(value);
+    console.log('date validator: res='+res+', notzeros='+notzeros);
+    if( res && notzeros ) {
+        callback(true);
+    }
+    else {
+        callback(false);
+    }
+};
+
+function notAllZeros(value) {
+    var allzeros = value.match(/^[0]+$/);
+    //console.log('allzeros='+allzeros);
+    if( allzeros ) {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+
+
+//renderers
+var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null,null) ) {
+        //console.log('add error');
+        $(td).addClass('ht-validation-error');
+    } else {
+        //console.log('remove error');
+        $(td).removeClass('ht-validation-error');
+    }
+};
+
+var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null,null) ) {
+        $(td).addClass('ht-validation-error');
+    } else {
+        $(td).removeClass('ht-validation-error');
+    }
+
+    //capitalizeAccession( row, col, value );
+};
+
 //total 31
 var _columnData_scanorder = [
 
@@ -31,52 +105,52 @@ var _columnData_scanorder = [
     //{ header:'ID', columns:{} },
 
     //accession: 2
-    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false} },
-    { header:'Accession Number', columns:{validator: accession_validator_fn} },
+    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true, renderer:redRenderer} },
 
     //part: 1
-    { header:'Part Name', columns:{type:'autocomplete', source:_partname_simple, strict:false} },
+    { header:'Part Name', columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
     //block: 1
-    { header:'Block Name', columns:{type:'autocomplete', source:_blockname_simple, strict:false} },
+    { header:'Block Name', columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
     //slide: 4
-    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, colWidths:'120px'} },
-    { header:'Scan Magnificaiton', default:0, columns:{type:'autocomplete', source:['20X','40X'], strict:false} },
+    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
+    { header:'Scan Magnificaiton', default:0, columns:{type:'dropdown', source:['20X','40X'], strict:true} },
     { header:'Diagnosis', columns:{} },
     { header:'Reason for Scan/Note', columns:{} },
 
     //patient: 7
-    { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false} },
-    { header:'MRN', columns:{colWidths:'100px'} },
+    { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
+    { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn} },
     { header:'Patient Name', columns:{} },
-    { header:'Patient Sex', columns:{type:'autocomplete', source:['Female','Male','Unspecified'], strict:false} },
-    { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy'} },
+    { header:'Patient Sex', columns:{type:'dropdown', source:['Female','Male','Unspecified'], strict:true} },
+    { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
     { header:'Patient Age', columns:{} },
     { header:'Clinical History', columns:{} },
 
     //procedure: 1
-    { header:'Procedure Type', columns:{type:'autocomplete', source:_procedures_simple, strict:false} },
+    { header:'Procedure Type', columns:{type:'dropdown', source:_procedures_simple, strict:true} },
 
     //part: 6
-    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, colWidths:'100px'} },
+    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
     { header:'Gross Description', columns:{} },
     { header:'Differential Diagnoses', columns:{} },
-    { header:'Type of Disease', columns:{type:'autocomplete', source:['Neoplastic','Non-Neoplastic','None','Unspecified'], strict:false} },
-    { header:'Origin', columns:{type:'autocomplete', source:['Primary','Metastatic','Unspecified'], strict:false, colWidths:'100px'} },
-    { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false} },
+    { header:'Type of Disease', columns:{type:'dropdown', source:['Neoplastic','Non-Neoplastic','None','Unspecified'], strict:true} },
+    { header:'Origin of Disease', columns:{type:'dropdown', source:['Primary','Metastatic','Unspecified'], strict:true, colWidths:'100px'} },
+    { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false} },
 
     //block: 1
     { header:'Block Section Source', columns:{} },
 
     //slide: 7
     { header:'Slide Title', columns:{} },
-    { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false} },
+    { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false, filter:false} },
     { header:'Microscopic Description', columns:{} },
-    { header:'Special Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, colWidths:'120px'} },
+    { header:'Special Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
     { header:'Results of Special Stains', columns:{} },
     { header:'Link(s) to related image(s)', columns:{} },
-    { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false} }
+    { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false, filter:false} }
 
 ];
 
@@ -90,7 +164,7 @@ $(document).ready(function() {
 
     // Wait until idle (busy must be false)
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
-        //console.log('The show can resume !');
+        console.log('The show can resume !');
         handsonTableInit();
     });
 
@@ -117,11 +191,13 @@ function ajaxFinishedCondition() {
             _mrntypes_simple.push( _mrntype[i].text );
         }
 
+        _partname_simple.push('');  //insert first empty value
         for(var i = 0; i < _partname.length; i++) {
             //console.log('mrntype='+ _mrntype[i].text);
             _partname_simple.push( _partname[i].text );
         }
 
+        _blockname_simple.push(''); //insert first empty value
         for(var i = 0; i < _blockname.length; i++) {
             //console.log('mrntype='+ _mrntype[i].text);
             _blockname_simple.push( _blockname[i].text );
@@ -163,12 +239,12 @@ function handsonTableInit() {
     var colHeader = new Array();
     var rows = 11;//51;//501;
 
-    // make init data
+    // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
 
         var rowElement = new Array();
         //rowElement[0] = i;
-        for( var ii=0; ii<_columnData_scanorder.length-1; ii++ ) {  //foreach column
+        for( var ii=0; ii<_columnData_scanorder.length; ii++ ) {  //foreach column
 
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
@@ -190,7 +266,7 @@ function handsonTableInit() {
         columnsType.push( _columnData_scanorder[i]['columns'] );
     }
 
-
+    //console.log(columnsType);
     //$('#multi-dataTable').doubleScroll();
 
     //console.log(data);
@@ -212,28 +288,6 @@ function handsonTableInit() {
         currentColClassName: 'currentColScanorder',
         stretchH: 'all',
         columns: columnsType,
-        cells: function (row, col, prop) {
-
-            //var cellProperties = {};
-            if( col < 0 ){
-                return;
-            }
-
-            //////////// set renderer ////////////
-            var columnHeader = _columnData_scanorder[col].header;
-            if( !validateCell(row,col,null,null) ) {
-                if( columnHeader == 'Part Name' || columnHeader == 'Block Name'  ) {
-                    this.renderer = redRendererAutocomplete;
-                } else {
-                    this.renderer = redRenderer;
-                }
-            } else {
-                this.renderer = null;
-            }
-            //////////// EOF set renderer ////////////
-
-           //return this;
-        },
         beforeChange: function (changes, source) {
             for( var i=0; i<changes.length; i++ ) {
 //                //console.log(changes[i]);
@@ -244,6 +298,7 @@ function handsonTableInit() {
                 var value = changes[i][3];
 
                 processKeyTypes( row, col, value, oldvalue );
+
             }
         }
 //        afterChange: function (changes, source) {
@@ -286,15 +341,31 @@ function handsonTableInit() {
 
 }
 
-var accession_validator_fn = function (value, callback) {
-    var res = value.match(/^[0]+$/);
-    if( res ) {
-        callback(true);
+function capitalizeAccession( row, col, value ) {
+
+    if( !value || value == '' ) {
+        return;
     }
-    else {
-        callback(false);
+
+    console.log('capitalize ' +row+','+col+':value='+value);
+    var columnHeader = _columnData_scanorder[col].header;
+    if( columnHeader == 'Accession Number' ) {
+
+        var upperCaseValue = value.slice(0,1).toUpperCase + value.slice(2);
+        _sotable.setDataAtCell(row,col,upperCaseValue);
+
+//        if( value.match(/^[A-Z]/) ) {
+//            var upperCaseValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+//            _sotable.setDataAtCell(row,col,upperCaseValue);
+//        }
+//        if( value.match(/^[A-Z][A-Z]/) && !value.match(/^[A-Z][0-9]/) ) {
+//            //var upperCaseValue = value.replace(/^[a-z]{1,2}/, function(m){ return m.toUpperCase() });
+//            var upperCaseValue = value.charAt(0).toUpperCase() + value.charAt(1).toUpperCase() + value.slice(2).toLowerCase();
+//            _sotable.setDataAtCell(row,col,upperCaseValue);
+//        }
     }
-};
+    return;
+}
 
 function processKeyTypes( row, col, value, oldvalue ) {
 
@@ -313,7 +384,6 @@ function processKeyTypes( row, col, value, oldvalue ) {
                         var autogenValue = data.mrn[0].text;
                         //console.log('autogenValue='+autogenValue);
                         setDataCell(row,col+1,autogenValue);
-                        //readOnly: true
                     }
                 }).error( function ( x, t, m ) {
                    console.log('ERROR auto generate MRN');
@@ -322,6 +392,7 @@ function processKeyTypes( row, col, value, oldvalue ) {
             if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
                 cleanHTableCell( row, col+1, true )
             }
+
             break;
         case 'Accession Type':
             if( value && value == 'Auto-generated Accession Number' ) {
@@ -343,10 +414,19 @@ function processKeyTypes( row, col, value, oldvalue ) {
             if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
                 cleanHTableCell( row, col+1, true )
             }
+
+            //set validator
+            if( value && value == 'NYH CoPath Anatomic Pathology Accession Number' ) {
+                _sotable.getCellMeta(row,col+1).validator = accession_validator_fn;
+            } else {
+                _sotable.getCellMeta(row,col+1).validator = general_validator_fn;
+            }
+
             break;
         default:
             //
     }
+    return;
 }
 
 function setDataCell( row, col, value ) {
@@ -419,7 +499,7 @@ function cleanHTableCell( row, col, force ) {
         return;
     }
 
-    //console.log('row='+row+', col='+col+', value='+value);
+    console.log('clean: row='+row+', col='+col+', value='+value);
 
     var columnHeader = _columnData_scanorder[col].header;
 
@@ -470,7 +550,7 @@ function cleanHTableCell( row, col, force ) {
 
 }
 
-function validateCell( row, col, value, mark ) {
+function validateCell( row, col, value ) {
 
     if( _sotable == null ) {
         _sotable = $(_htableid).handsontable('getInstance');
@@ -493,42 +573,27 @@ function validateCell( row, col, value, mark ) {
 
     switch( columnHeader )
     {
+        case 'Accession Type':
+        case 'MRN Type':
         case 'MRN':
-            if( !value || value == '' || value == null ) {
-                //console.log('Accession Number: value null !!!!!!!!!!!!!');
-                valid = false;
-            }
-            break;
         case 'Accession Number':
-            if( !value || value == '' || value == null ) {
-                //console.log('Accession Number: value null !!!!!!!!!!!!!');
-                valid = false;
-            }
-            break;
         case 'Part Name':
-            if( !value || value == '' || value == null ) {
-                //console.log('Part Name: value null !!!!!!!!!!!!!');
-                valid = false;
-
-            }
-            break;
         case 'Block Name':
             if( !value || value == '' || value == null ) {
-                //console.log('Block Name: value null !!!!!!!!!!!!!');
+                //console.log(columnHeader+': value null !!!!!!!!!!!!!');
                 valid = false;
             }
             break;
         default:
-
     }
 
-    if( mark ) {
-        var checkcell = _sotable.getCell(row,col);
-
-        if( checkcell && !valid ) {
-            checkcell.style.backgroundColor = '#F2DEDE';
-        }
-    }
+//    if( mark ) {
+//        var checkcell = _sotable.getCell(row,col);
+//
+//        if( checkcell && !valid ) {
+//            checkcell.style.backgroundColor = '#F2DEDE';
+//        }
+//    }
 
     return valid;
 }
@@ -550,65 +615,6 @@ function negativeValueRenderer(instance, td, row, col, prop, value, cellProperti
         td.style.background = '';
     }
 }
-
-//renderers
-var redRendererForKey = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-
-    if( !validateCell(row, col, value, null)  ) {
-        $(td).css({
-            background: '#F2DEDE'
-        });
-    } else {
-        $(td).css({
-            background: null
-        });
-    }
-
-};
-var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-//    $(td).css({
-//        background: '#F2DEDE'
-//    });
-    $(td).addClass('ht-validation-error');
-};
-var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    $(td).css({
-        background: '#F2DEDE'
-    });
-    $(td).addClass('ht-validation-error');
-};
-
-//not used renderers
-var minWidthRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    var width = (value.clientWidth + 1) + "px";
-    $(td).css({
-        colWidths : width
-    });
-};
-var yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    $(td).css({
-        background: 'yellow'
-    });
-};
-var redRendererIfEmpty = function (instance, td, row, col, prop, value, cellProperties) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-    if( !value || value == '' || value == null ) {
-        $(td).css({
-            background: '#F2DEDE'
-        });
-    } else {
-        $(td).css({
-            background: null
-        });
-    }
-};
-
-
 
 
 
@@ -641,10 +647,10 @@ function getSlideTypes() {
 //    source: a string to specify an ID, a message, etc
 //**********************************************************************
 function waitfor(test, expectedValue, msec, count, source, callback) {
-    //console.log('waitfor, count='+count);
+    console.log('waitfor, count='+count);
 
     if( count > 200 ) {
-        //console.log('waitfor, exit on count');
+        console.log('waitfor, exit on count');
         return;
     }
 
@@ -657,6 +663,6 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
         return;
     }
     // Condition finally met. callback() can be executed.
-    //console.log(source + ': ' + test() + ', expected: ' + expectedValue + ', ' + count + ' loops.');
+    console.log(source + ': ' + test() + ', expected: ' + expectedValue + ', ' + count + ' loops.');
     callback();
 }
