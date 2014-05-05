@@ -286,7 +286,7 @@ function handsonTableInit() {
     var data = new Array();
     var columnsType = new Array();
     var colHeader = new Array();
-    var rows = 11;//51;//501;
+    var rows = 11;//21;//501;
 
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
