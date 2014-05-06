@@ -39,6 +39,8 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         return $entity;
     }
 
+    //if keytype is "Existing Auto-generated Accession Number", then get "Auto-generated Accession Number" object and return its id
+    //return id of the correct AccessionType
     public function getCorrectKeytypeId($keytypeid,$user=null) {
         $em = $this->_em;
 

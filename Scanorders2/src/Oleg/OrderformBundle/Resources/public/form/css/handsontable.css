@@ -37,3 +37,7 @@
     background-color: #F2DEDE;
 }
 
+.handsontable .ht-conflict-error {
+    background-color: yellow;
+}
+

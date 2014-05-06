@@ -25,6 +25,7 @@
     {% javascripts
     '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
     '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
+    '@OlegOrderformBundle/Resources/public/form/js/handsontable_validation.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -82,9 +83,19 @@
 
         <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
 
+
+
     </form>
     {############ END FORM ##############}
 
 
+    <p>
+        <button onclick="validateHandsonTable()" class="btn_margin_top btn btn-primary btn-info" name="btnTableValidate" type="submit">Validate</button>
+        <button class="btn_margin_top btn btn-primary btn-success" name="btnTableSubmit" type="submit">Submit</button>
+    </p>
+
+
+    <div id="validationerror" style="padding-top: 2%">
+    </div>
 
 {% endblock %}

@@ -9,6 +9,7 @@
 var _htableid = "#multi-dataTable";
 
 var _sotable = null;    //scan order table
+var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part Name, Block Name
 
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
@@ -30,7 +31,7 @@ var accession_validator = function (value) {
         return true;
     }
     var notzeros = notAllZeros(value);
-    var res = value.match(/^[A-Z]{1,2}[0-9]{1,2}[-][1-9]{1,6}$/);
+    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{1,2}[-][1-9]{1,6}$/);
     //console.log('acc validator: res='+res+', notzeros='+notzeros);
     if( res && notzeros ) {
         return true;
@@ -126,7 +127,7 @@ function notAllZeros(value) {
 //renderers
 var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    if( !validateCell(row,col,null,null) ) {
+    if( !validateCell(row,col,null) ) {
         //console.log('add error');
         $(td).addClass('ht-validation-error');
     } else {
@@ -137,10 +138,21 @@ var redRendererAutocomplete = function (instance, td, row, col, prop, value, cel
 
 var redRenderer = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
-    if( !validateCell(row,col,null,null) ) {
+    if( !validateCell(row,col,null) ) {
         $(td).addClass('ht-validation-error');
     } else {
         $(td).removeClass('ht-validation-error');
+    }
+
+    //capitalizeAccession( row, col, value );
+};
+
+var yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( 1 ) {
+        $(td).addClass('ht-conflict-error');
+    } else {
+        $(td).removeClass('ht-conflict-error');
     }
 
     //capitalizeAccession( row, col, value );
@@ -345,8 +357,6 @@ function handsonTableInit() {
                 var oldvalue = changes[i][2];
                 var value = changes[i][3];
 
-                processKeyTypes( row, col, value, oldvalue );
-
                 //capitalize first two chars for Accession Number, when accession type 'NYH CoPath Anatomic Pathology Accession Number' is set
                 var columnHeader = _columnData_scanorder[col].header;
                 if( columnHeader == 'Accession Number' && changes[i][3] && changes[i][3] != '' && changes[i][3].charAt(0) ) {
@@ -356,6 +366,8 @@ function handsonTableInit() {
                         changes[i][3] = changes[i][3].charAt(0) + changes[i][3].charAt(1).toUpperCase() + changes[i][3].slice(2); //capitalise second letter
                     }
                 }
+
+                processKeyTypes( row, col, value, oldvalue );
 
             }
         },
@@ -664,6 +676,7 @@ function cleanHTableCell( row, col, force ) {
 
 }
 
+//the cell's value for Types, Acc, MRN, Part, Block should not be empty
 function validateCell( row, col, value ) {
 
     if( _sotable == null ) {

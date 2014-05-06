@@ -233,7 +233,7 @@ class CheckController extends Controller {
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
-        $keytype = trim( $request->get('extra') );
+        $keytype = trim( $request->get('extra') );  //id or string of accession type
         
         $originalKeytype = $keytype;
 
@@ -655,6 +655,36 @@ class CheckController extends Controller {
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($res));
+        return $response;
+    }
+
+
+    //get keytype ids by keytype string for handsontable
+    /**
+     * @Route("/accession/keytype/{keytype}", name="get-accession-keytypeid")
+     * @Route("/patient/keytype/{keytype}", name="get-patient-keytypeid")
+     * @Method("GET")
+     */
+    public function getKeytypeIdAction(Request $request, $keytype) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        if( $request->get('_route') == "get-accession-keytypeid" ) {
+            $keytypeEntity = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($keytype);
+        } else
+        if( $request->get('_route') == "get-patient-keytypeid" ) {
+            $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName($keytype);
+        } else {
+            $keytypeEntity = null;
+        }
+
+        if( $keytypeEntity ) {
+            $keytype = $keytypeEntity->getId();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($keytype));
         return $response;
     }
 

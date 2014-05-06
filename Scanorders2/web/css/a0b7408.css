@@ -527,3 +527,7 @@ ul.context-menu-list li {
     background-color: #F2DEDE;
 }
 
+.handsontable .ht-conflict-error {
+    background-color: yellow;
+}
+

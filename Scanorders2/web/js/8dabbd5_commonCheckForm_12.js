@@ -481,7 +481,8 @@ function checkMrnAccessionConflict() {
         if(
             accValue && accValue !="" && acctypeValue && acctypeValue !="" &&
                 mrnValue && mrnValue !="" && mrntypeValue && mrntypeValue !=""
-            ) {
+        )
+        {
             //console.log("validate accession-mrn-mrntype");
 
 //            var mrn = "";
