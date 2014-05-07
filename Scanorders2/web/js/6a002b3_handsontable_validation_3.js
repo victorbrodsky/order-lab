@@ -243,9 +243,6 @@ function checkExistingKeyTable(row) {
             if( !response ) {
                 var errorHtml = createTableErrorWell('Previously auto-generated Accession Numbers is not correct. Please correct the auto-generated number.');
                 $('#validationerror').append(errorHtml);
-                //highlight error row
-                //_sotable.selectCell(row,_tableMainIndexes.acc);
-                _sotable.getCellMeta(row,_tableMainIndexes.acc).addClass('ht-validation-error');
             } else {
                 if( response instanceof Array && "parentkeyvalue" in response ) {
                     //console.log("parentkeyvalue="+response['parentkeyvalue']);
@@ -261,6 +258,7 @@ function checkExistingKeyTable(row) {
             if( mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
                 var errorHtml = createTableErrorWell('MRN - Accession Numbers conflict.');
                 $('#validationerror').append(errorHtml);
+                setErrorToRow(row);
             }
         }
     ).
@@ -275,6 +273,15 @@ function checkExistingKeyTable(row) {
 
 
 }
+
+function setErrorToRow(row) {
+    var headers = _sotable.getColHeader();
+    for( var col=0; col< headers.length; col++ ) {  //foreach column
+        _sotable.getCellMeta(row,col).renderer = yellowRenderer;
+        //_sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = yellowRenderer;
+    }
+}
+
 function mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
     console.log("conflict:"+mrnDB + " " + mrn + " " + mrntypeDB + " " + mrnTypeCorrect);
     if( !mrnDB || !mrntypeDB ) {

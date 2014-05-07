@@ -147,6 +147,15 @@ var redRenderer = function (instance, td, row, col, prop, value, cellProperties)
     //capitalizeAccession( row, col, value );
 };
 
+var yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( 1 ) {
+        $(td).addClass('ht-conflict-error');
+    } else {
+        $(td).removeClass('ht-conflict-error');
+    }
+};
+
 //total 31
 var _columnData_scanorder = [
 

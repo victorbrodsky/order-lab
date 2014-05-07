@@ -95,48 +95,79 @@ class TableController extends Controller {
     }
 
     /**
-     * Creates a new OrderInfo entity.
-     *
-     * @Route("/scan-order/multi-slide-table-view/new", name="table_create_submit")
+     * Creates a new Table OrderInfo.
+
+     * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {
 
-        //echo "multi new controller !!!! <br>";
+        //echo "table new controller !!!! <br>";
+        $data = $request->request->all();
+        //echo "data: => <br>";
+        //var_dump($data);
+        //echo " => ";
         //exit();
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
-        ) {
-            return $this->redirect( $this->generateUrl('scan-order-home') );
+        $em = $this->getDoctrine()->getManager();
+
+        $rowCount = 0;
+
+        $columnData = array_shift($data['data']);
+
+        foreach( $data['data'] as $row ) {
+            //var_dump($row);
+
+            echo $rowCount.": ".$this->getClassType(0,$columnData)."=".$row[0].", ".$this->getClassType(1,$columnData)."=".$row[1]." \n ";
+            $rowCount++;
+
+
+
         }
 
-        $em = $this->getDoctrine()->getManager();
+
         $entity  = new OrderInfo();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $conflicts = array();
-        $cicle = 'new';
-        $type = "Table-View Scan Order";
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        $conflicts = array();
+//        $cicle = 'new';
+//        $type = "Table-View Scan Order";
+//
+//        $params = array('type'=>$type, 'cicle'=>$cicle, 'service'=>null);
+//
+//        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+//
+//        //$form->bind($request);
+//        $form->handleRequest($request);
+//
+//        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
 
-        $params = array('type'=>$type, 'cicle'=>$cicle, 'service'=>null);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode('ok'));
+        return $response;
 
-        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+//        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+//            'oid' => $entity->getOid(),
+//            'conflicts' => null,
+//            'cicle' => 'new'
+//        ));
 
-        //$form->bind($request);
-        $form->handleRequest($request);
+    }
 
-        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
+    public function getClassType($col, $columnData) {
 
+        $header = $columnData[$col];
+        switch($header) {
+            case 'Accession Type':
+                $className = "accType";
+                break;
+            case 'Accession Number':
+                $className = "acc";
+                break;
+        }
 
-
-        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-            'oid' => $entity->getOid(),
-            'conflicts' => $conflicts,
-            'cicle' => $cicle
-        ));
-
+        return $className;
     }
 
 }

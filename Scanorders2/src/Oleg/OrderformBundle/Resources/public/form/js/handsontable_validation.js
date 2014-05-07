@@ -2,6 +2,9 @@
  * Created by oli2002 on 5/6/14.
  */
 
+var _processedRowCount = 0;
+var _mrnAccessionArr = new Array();
+
 //1) check if cell validators are ok
 //2) check for key empty cells
 //3) check if previously generated keys are exists in DB (ajax)
@@ -12,13 +15,14 @@ function validateHandsonTable() {
     _tableMainIndexes = getTableDataIndexes();
 
     //clean all previous error wells
-    $('.tablerowerror-added').remove();
+    cleanErrorTable();
 
     /////////// 1) Check cell validator ///////////
     var errCells = $('.htInvalid').length;
     if( errCells > 0 ) {
         var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
+        return;
     }
     /////////// EOF Check cell validation ///////////
 
@@ -34,158 +38,77 @@ function validateHandsonTable() {
         }
     } //for each row
     if( emptyRows > 0 ) {
-        var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Error cells are marked with red.');
+        var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
+        return;
     }
     /////////// EOF Empty main cells validation ///////////
 
-    /////////// 3) Check existing keytypes //////////////
+    /////////// 3) Check existing keytypes and MRN-Accession conflicts //////////////
     for( var i=0; i<countRow-1; i++ ) { //for each row (except the last one)
-        checkExistingKeyTable(i)
+        checkPrevGenAndConflictTable(i);
     }
-    /////////// EOF existing keytype ///////////////////
+    /////////// EOF Check existing keytypes and MRN-Accession conflicts //////////////
 
-    /////////// 3) MRN-Accession conflict validation ///////////
-//    var conflictRows = 0;
-//    for( var i=0; i<countRow-1; i++ ) { //for each row (except the last one)
-//        if( !validateConflictHandsonRow(i) ) {
-//            conflictRows++;
-//        }
-//    }
-//    if( conflictRows > 0 ) {
-//        var errorHtml = createTableErrorWell('There are MRN-Accession Conflicts. Number of conflicting rows:'+conflictRows);
-//        $('#validationerror').append(errorHtml);
-//    }
-    /////////// EOF MRN-Accession conflict validation ///////////
+    //submit if no errors for all rows
+    // Wait until idle (busy must be false)
+    var _TIMEOUT = 300; // waitfor test rate [msec]
+    waitfor( allRowProcessed, true, _TIMEOUT, 0, 'play->busy false', function() {
+        if( $('.tablerowerror-added').length == 0 ) {
+            submitTableScanOrder();
+        }
+    });
 
 }
 
-//check for MRN-Accession conflict in DB and in Table
-function validateConflictHandsonRow( row ) {
-    var dataRow = _sotable.getDataAtRow(row);
-    var accType = dataRow[_tableMainIndexes.acctype];
-    var acc = dataRow[_tableMainIndexes.acc];
-    var mrnType = dataRow[_tableMainIndexes.mrntype];
-    var mrn = dataRow[_tableMainIndexes.mrn];
-    var part = dataRow[_tableMainIndexes.part];
-    var block = dataRow[_tableMainIndexes.block];
-    console.log('row:'+row+': accType='+accType+', acc='+acc+' <= accTypeIndex='+_tableMainIndexes.acctype+', accIndex='+_tableMainIndexes.acc);
+function submitTableScanOrder() {
+    //getData (row: Number, col: Number, row2: Number, col2: Number)
+    var data = _sotable.getData( 0, 0, _sotable.countRows()-1, _sotable.countCols() );
+    console.log('######### submit data ##########:');
+    console.log(data);
 
-    var existingErrors = 0;
+    var urlBase = $("#baseurl").val();
+    var url = "http://"+urlBase+"/scan-order/multi-slide-table-view/submit";
+    console.log('url='+url);
 
-    //check for DB conflict
-    if(
-        acc && acc !="" && accType && accType !="" &&
-            mrn && mrn !="" && mrnType && mrnType !=""
-        )
-    {
-        //console.log("validate accession-mrn-mrntype");
-        acc = trimWithCheck(acc);
-        accType = trimWithCheck(accType);
+//    var fullData = new Array();
+//    fullData['tabledata'] = data;
+//    fullData['columndata'] = _sotable.getColHeader();
+    data.unshift(_sotable.getColHeader());
 
-        $.ajax({
-            url: urlCheck+"accession/check",
-            type: 'GET',
-            data: {key: acc, extra: accType},
-            contentType: 'application/json',
-            dataType: 'json',
-            timeout: _ajaxTimeout,
-            async: false,
-            success: function (data) {
-
-                if( data == -2 ) {
-                    //Existing Auto-generated object does not exist in DB
-                    //var errorHtml = createErrorWell(accInput,"accession");
-                    //$('#validationerror').append(errorHtml);
-                    existingErrors++;
-                    return false;
-                }
-
-                if( data.id ) {
-
-                    var mrn = data['parent'];
-                    var mrntype = data['extraid'];
-                    var mrnstring = data['mrnstring'];
-                    var orderinfo = data['orderinfo'];
-
-                    mrn = trimWithCheck(mrn);
-                    mrntype = trimWithCheck(mrntype);
-                    mrnValue = trimWithCheck(mrnValue);
-                    mrntypeValue = trimWithCheck(mrntypeValue);
-
-                    //console.log('mrn='+mrn+', mrntype='+mrntype);
-
-                    if( mrn == mrnValue && ( mrntype == mrntypeValue || 13 == mrntypeValue ) ) {    //13 - Auto-generated MRN. Need it for edit or amend form
-                        //console.log("validated successfully !");
-                    } else {
-                        //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
-
-                        var nl = "\n";    //"&#13;&#10;";
-
-                        var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
-                            +mrnValue+" ["+mrntypeText+"] as you have entered.";
-                        var message = message_short + " Please correct either the MRN or the Accession Number above.";
-
-
-                        var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
-                        var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+" ["+mrntypeText+"] belong to the same patient";
-                        dataquality_message1.push(dataquality_message_1);
-
-                        var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
-                        var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" ["+mrntypeText+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
-                        dataquality_message2.push(dataquality_message_2);
-
-                        var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";
-
-                        if( !prototype ) {
-                            //console.log('WARNING: conflict prototype is not found!!!');
-                            return false;
-                        }
-
-                        var newForm = prototype.replace(/__dataquality__/g, index);
-
-                        newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
-
-                        newForm = newForm.replace("TEXT1", message1);
-                        newForm = newForm.replace("TEXT2", message2);
-                        newForm = newForm.replace("TEXT3", message3);
-
-                        //console.log("newForm="+newForm);
-
-                        var newElementsAppended = $('#validationerror').append(newForm);
-                        //var newElementsAppended = newForm.appendTo("#validationerror");
-
-                        //red
-                        accInput.parent().addClass("has-error");
-                        patientInputs.parent().addClass("has-error");
-
-                        setDataqualityData( index, accValue, acctypeValue, mrnValue, mrntypeValue );
-
-                        index++;
-                        totalError++;
-
-                        //console.log('end of conflict process');
-
-                    }
-
-                } else {
-                    console.debug("validation: accession object not found");
-                }
-            },
-            error: function ( x, t, m ) {
-                console.debug("validation: get object ajax error accession");
-                if( t === "timeout" ) {
-                    getAjaxTimeoutMsg();
-                }
-                return false;
+    $.ajax({
+        url: url,
+        data: {"data": data}, //returns all cells' data
+        dataType: 'json',
+        type: 'POST',
+        success: function (res) {
+            if (res == 'ok') {
+                console.log('Data saved');
             }
-        });
+            else {
+                console.log('Save error');
+            }
+        },
+        error: function () {
+            console.log('Save error.');
+        }
+    });
 
+    return;
+}
+
+function allRowProcessed() {
+    var countRow = _sotable.countRows();
+    if( _processedRowCount == countRow-1 ) {
+        return true;
+    } else {
+        return false;
     }
 
 }
 
-function checkExistingKeyTable(row) {
+
+function checkPrevGenAndConflictTable(row) {
 
     var dataRow = _sotable.getDataAtRow(row);
     var accType = dataRow[_tableMainIndexes.acctype];
@@ -215,10 +138,13 @@ function checkExistingKeyTable(row) {
     //add error for mrn
     then(
         function(response) {
-            console.log("after mrn check PrevGenKeyTable:"+response);
+            //console.log("after mrn check PrevGenKeyTable:"+response);
             if( !response ) {
-                var errorHtml = createTableErrorWell('Previously auto-generated MRN Numbers is not correct. Please correct the auto-generated number.');
+                var errorHtml = createTableErrorWell('Previously auto-generated MRN Numbers is not correct. Please correct the auto-generated number. Cell with error is marked with red.');
                 $('#validationerror').append(errorHtml);
+                //_sotable.getCellMeta(row,mrnType).renderer = forceRedRenderer;
+                _sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = forceRedRenderer;
+                _sotable.render();
             }
         }
     ).
@@ -239,13 +165,12 @@ function checkExistingKeyTable(row) {
     //add error for acc
     then(
         function(response) {
-            console.log("after acc check PrevGenKey Table:"+response);
+            //console.log("after acc check PrevGenKey Table:"+response);
             if( !response ) {
-                var errorHtml = createTableErrorWell('Previously auto-generated Accession Numbers is not correct. Please correct the auto-generated number.');
+                var errorHtml = createTableErrorWell('Previously auto-generated Accession Numbers is not correct. Please correct the auto-generated number. Cell with error is marked with red.');
                 $('#validationerror').append(errorHtml);
-                //highlight error row
-                //_sotable.selectCell(row,_tableMainIndexes.acc);
-                _sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = yellowRenderer;
+                _sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = forceRedRenderer;
+                _sotable.render();
             } else {
                 if( response instanceof Array && "parentkeyvalue" in response ) {
                     //console.log("parentkeyvalue="+response['parentkeyvalue']);
@@ -255,19 +180,32 @@ function checkExistingKeyTable(row) {
             }
         }
     ).
-    //check conflict
+    //check internal conflict within the table
     then(
         function(response) {
-            if( mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
-                var errorHtml = createTableErrorWell('MRN - Accession Numbers conflict.');
+            var errLen = $('.tablerowerror-added').length;
+            if( errLen == 0 && mrnAccInternalConflict( acc, accType, mrn, mrnType ) ) {
+                var errorHtml = createTableErrorWell('MRN - Accession Numbers internal conflict within the table. Rows with error cells are marked with yellow.');
                 $('#validationerror').append(errorHtml);
-                _sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = yellowRenderer;
+                setErrorToRow(row,true);
+            }
+        }
+    ).
+    //check conflict with DB
+    then(
+        function(response) {
+            var errLen = $('.tablerowerror-added').length;
+            if( errLen == 0 && mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
+                var errorHtml = createTableErrorWell('MRN - Accession Numbers conflict. Rows with error cells are marked with yellow.');
+                $('#validationerror').append(errorHtml);
+                setErrorToRow(row,true);
             }
         }
     ).
     then(
         function(response) {
             console.log("Chaining OK, response="+response);
+            _processedRowCount++;
         },
         function(error) {
             console.error("Failed! error=", error);
@@ -276,6 +214,63 @@ function checkExistingKeyTable(row) {
 
 
 }
+
+function cleanErrorTable() {
+    _mrnAccessionArr.length = 0;
+    _processedRowCount = 0;
+    $('.tablerowerror-added').remove();
+    var rowsCount = _sotable.countRows();
+    for( var row=0; row<rowsCount; row++ ) {  //foreach row
+        setErrorToRow(row,false);
+    }
+    _sotable.render();
+}
+
+function setErrorToRow(row,setError) {
+    var headers = _sotable.getColHeader();
+    for( var col=0; col< headers.length; col++ ) {  //foreach column
+        if( setError ) {
+            _sotable.getCellMeta(row,col).renderer = conflictRenderer;
+        } else {
+            _sotable.getCellMeta(row,col).renderer = _columnData_scanorder[col].columns.renderer;
+        }
+    }
+    _sotable.render();
+}
+
+
+function mrnAccInternalConflict( acc, accType, mrn, mrnType ) {
+
+    var conflict = false;
+
+    if( _mrnAccessionArr.length > 0 ) {
+        for( var i=0; i< _mrnAccessionArr.length; i++ ) {
+            var accArr = _mrnAccessionArr[i].acc;
+            var accTypeArr = _mrnAccessionArr[i].accType;
+            var mrnArr = _mrnAccessionArr[i].mrn;
+            var mrnTypeArr = _mrnAccessionArr[i].mrnType;
+            if( acc == accArr && accType == accTypeArr ) {
+                if( mrnAccConflict(mrnArr,mrn,mrnTypeArr,mrnType) ) {
+                    //console.log('internal conflict detected');
+                    setErrorToRow(i,true);
+                    conflict = true;
+                }
+            }
+        }
+    }
+
+    if( !conflict ) {
+        var mrnacc = Array();
+        mrnacc['acc'] = acc;
+        mrnacc['accType'] = accType;
+        mrnacc['mrn'] = mrn;
+        mrnacc['mrnType'] = mrnType;
+        _mrnAccessionArr.push(mrnacc);
+    }
+
+    return conflict;
+}
+
 function mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
     console.log("conflict:"+mrnDB + " " + mrn + " " + mrntypeDB + " " + mrnTypeCorrect);
     if( !mrnDB || !mrntypeDB ) {
