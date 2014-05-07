@@ -390,8 +390,9 @@ class MultyScanOrderController extends Controller {
             $type = "One Slide Scan Order";
         }
 
-        if( $lastProxy )
+        if( $lastProxy ) {
             $entity->setProxyuser($lastProxy);
+        }
 
         //$slide2 = new Slide();
         //$block->addSlide($slide2);

@@ -11,7 +11,7 @@ class EducationalRepository extends ListAbstractRepository {
 
         $educational = $orderinfo->getEducational();
 
-        if( $educational->isEmpty() ) {
+        if( !$educational || $educational->isEmpty() ) {
             $orderinfo->setEducational(NULL);
             return $orderinfo;
         }

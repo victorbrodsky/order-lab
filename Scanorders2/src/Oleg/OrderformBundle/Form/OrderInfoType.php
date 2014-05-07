@@ -40,15 +40,15 @@ class OrderInfoType extends AbstractType
 
         $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'orderinfo-id')) );
 
-        //$builder->add( 'type', 'hidden' );
-        $builder->add('type', 'entity', array(
-            'class' => 'OlegOrderformBundle:FormType',
-            'required' => true,
-            'attr' => array('type'=>'hidden'),
-        ));
+//        $builder->add('type', 'entity', array(
+//            'class' => 'OlegOrderformBundle:FormType',
+//            'required' => true,
+//            'attr' => array('type'=>'hidden'),
+//        ));
 
         //add children
         if( $this->params['type'] != 'Table-View Scan Order' ) {
+
             $builder->add('patient', 'collection', array(
                 'type' => new PatientType($this->params,$this->entity),    //$this->type),
                 'required' => false,
@@ -59,6 +59,17 @@ class OrderInfoType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__patient__',
             ));
+
+            $builder->add('dataquality', 'collection', array(
+                'type' => new DataQualityType($this->params, null),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__dataquality__',
+            ));
+
         }
 
         //echo "<br>type=".$this->type."<br>";
@@ -154,15 +165,7 @@ class OrderInfoType extends AbstractType
             },
         ));
 
-        $builder->add('dataquality', 'collection', array(
-            'type' => new DataQualityType($this->params, null),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__dataquality__',
-        ));
+
         
     }
 

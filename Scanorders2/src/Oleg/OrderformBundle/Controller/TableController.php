@@ -19,31 +19,28 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
+
 use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientMrn;
+use Oleg\OrderformBundle\Entity\PatientName;
+
 use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Form\ProcedureType;
+use Oleg\OrderformBundle\Entity\ProcedureEncounter;
 use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Form\AccessionType;
+use Oleg\OrderformBundle\Entity\AccessionAccession;
 use Oleg\OrderformBundle\Entity\Part;
-//use Oleg\OrderformBundle\Entity\DiffDiagnoses;
+use Oleg\OrderformBundle\Entity\PartPartname;
 use Oleg\OrderformBundle\Entity\RelevantScans;
 use Oleg\OrderformBundle\Entity\SpecialStains;
-use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Form\BlockType;
+use Oleg\OrderformBundle\Entity\BlockBlockname;
 use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\SlideType;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Stain;
-//use Oleg\OrderformBundle\Entity\PartPaper;
 
 use Oleg\OrderformBundle\Entity\Educational;
-//use Oleg\OrderformBundle\Form\EducationalType;
 use Oleg\OrderformBundle\Entity\Research;
-//use Oleg\OrderformBundle\Form\ResearchType;
 
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
@@ -52,6 +49,13 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Oleg\OrderformBundle\Helper\UserUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
+
+use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 
 
 class TableController extends Controller {
@@ -64,8 +68,38 @@ class TableController extends Controller {
     public function multiTableCreationAction()
     {
 
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new OrderInfo();
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //***************** get ordering provider from most recent order ***************************//
+        $lastProxy = null;
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+        $dql =  $repository->createQueryBuilder("orderinfo");
+        $dql->select('orderinfo');
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+        $dql->where("provider=:user AND proxyuser IS NOT NULL");
+        $dql->orderBy("orderinfo.orderdate","DESC");
+        $query = $em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
+        $lastOrderWithProxies = $query->getResult();
+        //echo "count=".count($lastOrderWithProxies)."<br>";
+
+        if( count($lastOrderWithProxies) > 0 ) {
+            if( count($lastOrderWithProxies) > 1 ) {
+                throw new \Exception( 'More than one orderinfo found count='.count($lastOrderWithProxies).' objects' );
+            }
+            $lastOrderWithProxy = $lastOrderWithProxies[0];
+            $lastProxy = $lastOrderWithProxy->getProxyuser()->first();
+        } else {
+            $lastProxy = null;
+        }
+        //echo "lastProxy=".$lastProxy."<br>";
+        if( $lastProxy ) {
+            $entity->setProxyuser($lastProxy);
+        }
+        //***************** end of get ordering provider from most recent order ***************************//
 
         $source = 'scanorder';
 
@@ -114,33 +148,51 @@ class TableController extends Controller {
 
         $rowCount = 0;
 
-        $columnData = array_shift($data['data']);
+        $headers = array_shift($data['data']);
+        //var_dump($columnData);
 
         foreach( $data['data'] as $row ) {
             //var_dump($row);
 
-            echo $rowCount.": ".$this->getClassType(0,$columnData)."=".$row[0].", ".$this->getClassType(1,$columnData)."=".$row[1]." \n ";
+            $accValue = $this->getValueByHeaderName('Accession Number',$row,$headers);
+
+            if( !$accValue || $accValue == '' ) {
+                continue;   //skip row if accession number is empty
+            }
+
+            echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
             $rowCount++;
 
+            $patient = $this->constractPatientByTableData($row,$headers);
 
-
-        }
+        }//foreach row
 
 
         $entity  = new OrderInfo();
-//        $user = $this->get('security.context')->getToken()->getUser();
-//        $conflicts = array();
-//        $cicle = 'new';
-//        $type = "Table-View Scan Order";
-//
-//        $params = array('type'=>$type, 'cicle'=>$cicle, 'service'=>null);
-//
-//        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
-//
-//        //$form->bind($request);
-//        $form->handleRequest($request);
-//
-//        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
+
+        $type = "Table-View Scan Order";
+        $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
+
+        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+
+        //$form->bind($request);
+        $form->handleRequest($request);
+
+        $entity->addPatient($patient);
+
+//        if( $form->isValid() ) {
+//            echo "form is valid";
+//        } else {
+//            echo "form is not valid!";
+//        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $entity->setProvider($user);
+
+        $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
+        $entity->setStatus($status);
+
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -155,19 +207,264 @@ class TableController extends Controller {
 
     }
 
-    public function getClassType($col, $columnData) {
+    public function constractPatientByTableData($row, $columnData) {
 
-        $header = $columnData[$col];
-        switch($header) {
-            case 'Accession Type':
-                $className = "accType";
-                break;
-            case 'Accession Number':
-                $className = "acc";
-                break;
+        $force = true; //true - create fields even if the value is empty
+        $status = "valid";
+        $provider = $this->get('security.context')->getToken()->getUser();
+        $source = "scanorder";
+        $em = $this->getDoctrine()->getManager();
+
+        /////////////// Patient ///////////////////
+        $patient = new Patient(false, $status, $provider, $source);
+
+        //mrn
+        $patientmrn = new PatientMrn($status,$provider,$source);
+        $mrnTransformer = new MrnTypeTransformer($em,$provider);
+        $mrntype = $mrnTransformer->reverseTransform($this->getValueByHeaderName('MRN Type',$row,$columnData));
+        $patientmrn->setKeytype($mrntype);
+        $mrnValue = $this->getValueByHeaderName('MRN',$row,$columnData);
+        $patientmrn->setField($mrnValue);
+        $patientmrn->setOriginal($mrnValue);
+        $patient->addMrn($patientmrn);
+
+        //name
+        $name = $this->getValueByHeaderName('Patient Name',$row,$columnData);
+        if( !$force && $name && $name != '' ) {
+            $patientname = new PatientName($status,$provider,$source);
+            $patientname->setField($name);
+            $patient->addName($patientname);
         }
 
-        return $className;
+        //sex
+        $sex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
+        if( !$force && $sex && $sex != '' ) {
+            $patientsex = new PatientSex($status,$provider,$source);
+            $patientsex->setField($sex);
+            $patient->addSex($patientsex);
+        }
+
+        //dob
+        $dob = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
+        if( !$force && $dob && $dob != '' ) {
+            $patientdob = new PatientDob($status,$provider,$source);
+            $patientdob->setField($dob);
+            $patient->addDob($patientdob);
+        }
+
+        //age
+        $age = $this->getValueByHeaderName('Patient Age',$row,$columnData);
+        if( !$force && $age && $age != '' ) {
+            $patientage = new PatientAge($status,$provider,$source);
+            $patientage->setField($age);
+            $patient->addDob($patientage);
+        }
+
+        //Clinical History
+        $ch = $this->getValueByHeaderName('Clinical History',$row,$columnData);
+        if( !$force && $ch && $ch != '' ) {
+            $patientch = new PatientClinicalHistory($status,$provider,$source);
+            $patientch->setField($age);
+            $patient->addClinicalHistory($patientch);
+        }
+
+
+        ///////////////// Procedure /////////////////
+        $procedure = new Procedure(false, $status, $provider, $source);
+
+        //Procedure name
+        $ptype = $this->getValueByHeaderName('Procedure Type',$row,$columnData);
+        if( !$force && $ptype && $ptype != '' ) {
+            $procedureTransform = new ProcedureTransformer($em,$provider);
+            $procedurename = $procedureTransform->reverseTransform($ptype);
+            $procedurename->setField($ptype);
+            $procedure->addName($procedurename);
+        }
+
+        //Procedure Encounter
+        $procedureenc = new ProcedureEncounter($status,$provider,$source);
+        $procedure->addEncounter($procedureenc);
+
+        $patient->addProcedure($procedure);
+
+        ///////////////// Accession /////////////////
+        $accession = new Accession(false, $status, $provider, $source);
+
+        //AccessionAccession
+        $accValue = $this->getValueByHeaderName('Accession Number',$row,$columnData);
+        $accacc = new AccessionAccession($status,$provider,$source);
+        $accacc->setField($accValue);
+        $accacc->setOriginal($accValue);
+        $accTransformer = new AccessionTypeTransformer($em,$provider);
+        $acctype = $accTransformer->reverseTransform($this->getValueByHeaderName('Accession Type',$row,$columnData));
+        $accacc->setKeytype($acctype);
+        $accession->addAccession($accacc);
+
+        $procedure->addAccession($accession);
+
+
+        ///////////////// Part /////////////////
+        $part = new Part(false, $status, $provider, $source);
+
+        //part name
+        $partname = new PartPartname($status,$provider,$source);
+        $pname = $this->getValueByHeaderName('Part Name',$row,$columnData);
+        $partname->setField($pname);
+        $part->addPartname($partname);
+
+        //Source Organ
+        $partso = $this->getValueByHeaderName('Source Organ',$row,$columnData);
+        if( !$force && $partso && $partso != '' ) {
+            $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
+            $sourceOrgan = $sourceOrganTransformer->reverseTransform($partso);
+            $sourceOrgan->setField($partso);
+            $part->addSourceOrgan($sourceOrgan);
+        }
+
+        //Gross Description
+        $partgd = $this->getValueByHeaderName('Gross Description',$row,$columnData);
+        if( !$force && $partgd && $partgd != '' ) {
+            $gs = new PartDescription($status,$provider,$source);
+            $gs->setField($partgd);
+            $part->addDescription($gs);
+        }
+
+        //Diagnosis
+        $partdiag = $this->getValueByHeaderName('Diagnosis',$row,$columnData);
+        if( !$force && $partdiag && $partdiag != '' ) {
+            $diag = new PartDisident($status,$provider,$source);
+            $diag->setField($partdiag);
+            $part->addDisident($diag);
+        }
+
+        //Differential Diagnoses
+        $partdiffdiag = $this->getValueByHeaderName('Differential Diagnoses',$row,$columnData);
+        if( !$force && $partdiffdiag && $partdiffdiag != '' ) {
+            $diffdiag = new PartDiffDisident($status,$provider,$source);
+            $diffdiag->setField($partdiffdiag);
+            $part->addDiffDisident($diffdiag);
+        }
+
+        //Type of Disease
+        $partdistype = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
+        if( !$force && $partdistype && $partdistype != '' ) {
+            $distype = new PartDiseaseType($status,$provider,$source);
+            $distype->setField($partdistype);
+            //Origin of Disease
+            $distype->setOrigin($this->getValueByHeaderName('Origin of Disease',$row,$columnData));
+            //Primary Site of Disease Origin
+            $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
+            $primaryOrgan = $sourceOrganTransformer->reverseTransform($this->getValueByHeaderName('Primary Site of Disease Origin',$row,$columnData));
+            $distype->setPrimaryOrgan($primaryOrgan);
+            $part->addDiseaseType($distype);
+        }
+
+        $accession->addPart($part);
+
+
+        ///////////////// Block /////////////////
+        $block = new Block(false, $status, $provider, $source);
+
+        //block name
+        $blockname = new BlockBlockname($status,$provider,$source);
+        $blockname->setField($this->getValueByHeaderName('Block Name',$row,$columnData));
+        $block->addBlockname($blockname);
+
+        //Block Section Source
+        $sections = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
+        if( !$force && $sections && $sections != '' ) {
+            $blocksection = new BlockSectionsource($status,$provider,$source);
+            $blocksection->setField($sections);
+            $block->addSectionsource($blocksection);
+        }
+
+        $part->addBlock($block);
+
+
+        ////////////////// Slide /////////////////
+        $slide = new Slide(false, $status, $provider, $source);
+
+        //Slide Title
+        $slide->setTitle($this->getValueByHeaderName('Slide Title',$row,$columnData));
+
+        //Slide Type
+        $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData));
+        $slide->setSlidetype($slidetype);
+
+        //Stain
+        $stainValue = $this->getValueByHeaderName('Stain',$row,$columnData);
+        if( !$force && $stainValue && $stainValue != '' ) {
+            $stainTransformer = new StainTransformer($em,$provider);
+            $stainList = $stainTransformer->reverseTransform($stainValue);
+
+            $stain = new Stain(false, $status, $provider, $source);
+            $stain->setField($stainList);
+
+            $slide->addStain($stain);
+        }
+
+        ///// Scan /////
+        $scan = new Scan(false, $status, $provider, $source);
+
+        //Scan: Scan Magnificaiton
+        $scan->setField($this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData));
+
+        //Scan: Region to Scan
+        $regTransformer = new StringTransformer($em,$provider);
+        $scanregion = $regTransformer->reverseTransform($this->getValueByHeaderName('Region to Scan',$row,$columnData));
+        $scan->setScanregion($scanregion);
+
+        //Scan: Reason for Scan/Note
+        $scan->setNote($this->getValueByHeaderName('Reason for Scan/Note',$row,$columnData));
+
+        //Microscopic Description
+        $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData));
+
+        $slide->addScan($scan);
+
+        //Stain: Results of Special Stains: StainList + field
+        $specialStainValue = $this->getValueByHeaderName('Results of Special Stains',$row,$columnData);
+        if( !$force && $specialStainValue && $specialStainValue != '' ) {
+            $stainTransformer = new StainTransformer($em,$provider);
+            $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Special Stain',$row,$columnData)); //list
+            $specialstain = new SpecialStains($status,$provider,$source);
+            $specialstain->setStaintype($specialstainList); //StainList
+            $specialstain->setField($specialStainValue);    //field
+            $slide->addSpecialStain($specialstain);
+        }
+
+        //Link(s) to related image(s)
+        $relevantScans = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);
+        if( !$force && $relevantScans && $relevantScans != '' ) {
+            $relScan = new RelevantScans($status,$provider,$source);
+            $relScan->setField($relevantScans);
+            $slide->addRelevantScan($relScan);
+        }
+
+
+        $block->addSlide($slide);
+
+        return $patient;
     }
+
+    public function getValueByHeaderName($header, $row, $headers) {
+        $key = array_search($header, $headers);
+        return $row[$key];
+    }
+
+//    public function getClassType($col, $columnData) {
+//
+//        $header = $columnData[$col];
+//        switch($header) {
+//            case 'Accession Type':
+//                $className = "accType";
+//                break;
+//            case 'Accession Number':
+//                $className = "acc";
+//                break;
+//        }
+//
+//        return $className;
+//    }
 
 }

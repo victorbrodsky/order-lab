@@ -11,6 +11,8 @@ var _mrnAccessionArr = new Array();
 //4) check for MRN-Accession conflicts
 function validateHandsonTable() {
 
+    $('#tableview-submit-btn').button('loading');
+
     //set main indexes for the column such as Acc Type, Acc Number ...
     _tableMainIndexes = getTableDataIndexes();
 
@@ -22,6 +24,7 @@ function validateHandsonTable() {
     if( errCells > 0 ) {
         var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
+        $('#tableview-submit-btn').button('reset');
         return;
     }
     /////////// EOF Check cell validation ///////////
@@ -40,6 +43,7 @@ function validateHandsonTable() {
     if( emptyRows > 0 ) {
         var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
+        $('#tableview-submit-btn').button('reset');
         return;
     }
     /////////// EOF Empty main cells validation ///////////
@@ -63,7 +67,8 @@ function validateHandsonTable() {
 
 function submitTableScanOrder() {
     //getData (row: Number, col: Number, row2: Number, col2: Number)
-    var data = _sotable.getData( 0, 0, _sotable.countRows()-1, _sotable.countCols() );
+    //var data = _sotable.getData( 0, 0, _sotable.countRows()-2, _sotable.countCols() );  //don't get data for the last row
+    var data = _sotable.getData();  //don't get data for the last row
     console.log('######### submit data ##########:');
     console.log(data);
 
@@ -71,10 +76,7 @@ function submitTableScanOrder() {
     var url = "http://"+urlBase+"/scan-order/multi-slide-table-view/submit";
     console.log('url='+url);
 
-//    var fullData = new Array();
-//    fullData['tabledata'] = data;
-//    fullData['columndata'] = _sotable.getColHeader();
-    data.unshift(_sotable.getColHeader());
+    data.unshift(_sotable.getColHeader());  //insert as the first element headers
 
     $.ajax({
         url: url,
@@ -117,6 +119,7 @@ function checkPrevGenAndConflictTable(row) {
     var mrn = dataRow[_tableMainIndexes.mrn];
 
     if( isValueEmpty(accType) || isValueEmpty(acc) || isValueEmpty(mrnType) || isValueEmpty(mrn) ) {
+        $('#tableview-submit-btn').button('reset');
         return false;
     }
 
@@ -209,6 +212,12 @@ function checkPrevGenAndConflictTable(row) {
         },
         function(error) {
             console.error("Failed! error=", error);
+        }
+    ).
+    done(
+        function(response) {
+            //console.log("Done ", response);
+            $('#tableview-submit-btn').button('reset');
         }
     );
 

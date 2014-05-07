@@ -11,7 +11,7 @@ class ResearchRepository extends ListAbstractRepository {
 
         $research = $orderinfo->getResearch();
 
-        if( $research->isEmpty() ) {
+        if( !$research || $research->isEmpty() ) {
             $orderinfo->setResearch(NULL);
             return $orderinfo;
         }
