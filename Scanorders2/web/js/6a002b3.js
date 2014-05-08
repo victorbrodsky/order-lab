@@ -14453,6 +14453,8 @@ var _slidetypes_simple = new Array();
 
 var _slidetypes = new Array();
 
+var _errorValidatorRows = new Array(); //keep rows with validator error
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -14587,6 +14589,20 @@ var conflictRenderer = function (instance, td, row, col, prop, value, cellProper
     $(td).addClass('ht-conflict-error');
 };
 
+var conflictBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).addClass('ht-conflictborder-error');
+};
+
+var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null) ) {
+        $(td).addClass('ht-redwithconflictborder-error');
+    } else {
+        $(td).addClass('ht-conflictborder-error');
+    }
+};
+
 //total 31
 var _columnData_scanorder = [
 
@@ -14656,6 +14672,10 @@ $(document).ready(function() {
         handsonTableInit();
     });
 
+    //validation on form submit
+    //$("#table-scanorderform").on("submit", function () {
+    //    return validateHandsonTable();
+    //});
 
 });
 
@@ -14820,6 +14840,15 @@ function handsonTableInit() {
 
             }//foreach column
 
+        },
+        afterValidate: function(isValid, value, row, prop, source) {
+            if( isValid ) { //remove row from array
+                _errorValidatorRows = jQuery.grep(_errorValidatorRows, function(value) {
+                    return value != row;
+                });
+            } else {    //add row to array
+                _errorValidatorRows.push(row);
+            }
         }
 //        afterChange: function (changes, source) {
 //
@@ -14980,7 +15009,7 @@ function setDataCell( row, col, value ) {
             var newValue = _columnData_scanorder[col]['columns']['source'][index];
         }
 
-        console.log('clean data cell at '+row+","+col+", value="+newValue);
+        //console.log('clean data cell at '+row+","+col+", value="+newValue);
 
         _sotable.setDataAtCell(row,col,newValue);
         _sotable.getCellMeta(row,col).readOnly = false;
@@ -15217,8 +15246,10 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
  * Created by oli2002 on 5/6/14.
  */
 
+var _rowToProcessArr = new Array();
 var _processedRowCount = 0;
 var _mrnAccessionArr = new Array();
+
 
 //1) check if cell validators are ok
 //2) check for key empty cells
@@ -15235,31 +15266,57 @@ function validateHandsonTable() {
     cleanErrorTable();
 
     /////////// 1) Check cell validator ///////////
-    var errCells = $('.htInvalid').length;
+    //var errCells = $('.htInvalid').length;
+    var errCells = 0;
+    //console.log('_errorValidatorRows.length='+_errorValidatorRows.length);
+    //console.log(_errorValidatorRows);
+
+    //don't check cell validator if row is empty
+    for( var i=0; i<_errorValidatorRows.length; i++) {
+        var row = _errorValidatorRows[i];
+        if( _sotable.isEmptyRow(row) ) {                        //no error row
+            //console.log(row+": empty row!");
+        } else {                                                //error row
+            //console.log(row+": not empty row");
+            setErrorToRow(row,conflictBorderRenderer,true);
+            errCells++;
+        }
+    }
+    //console.log('errCells='+errCells);
     if( errCells > 0 ) {
-        var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
+        var errmsg = "Please review the cells marked bright red, in the highlight row(s), and correct the entered values to match the expected format. The expected formats are as follows:<br>"+
+            "CoPath Accession Number Example: S14-1 or SC14-1 (no leading zeros after the dash such as S14-01)<br>" +
+            "All other Accession and MRN Types: max of 25 characters; non leading zero and special characters; non all zeros; non last special character. Example: SC100000000211";
+        var errorHtml = createTableErrorWell(errmsg);
+        //var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
         $('#tableview-submit-btn').button('reset');
-        return;
+        return false;
     }
     /////////// EOF Check cell validation ///////////
 
 
     var countRow = _sotable.countRows();
-    console.log( 'countRow=' + countRow );
+    //console.log( 'countRow=' + countRow );
 
     /////////// 2) Empty main cells validation ///////////
     var emptyRows = 0;
-    for( var i=0; i<countRow-1; i++ ) { //for each row (except the last one)
-        if( !validateEmptyHandsonRow(i) ) {
+    for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
+        if( !validateEmptyHandsonRow(row) ) {
+            setSpecialErrorToRow(row);
             emptyRows++;
         }
     } //for each row
     if( emptyRows > 0 ) {
-        var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
+        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
+            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
+            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
+            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>"
+        var errorHtml = createTableErrorWell(errmsg);
+        //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
         $('#tableview-submit-btn').button('reset');
-        return;
+        return false;
     }
     /////////// EOF Empty main cells validation ///////////
 
@@ -15273,11 +15330,44 @@ function validateHandsonTable() {
     // Wait until idle (busy must be false)
     var _TIMEOUT = 300; // waitfor test rate [msec]
     waitfor( allRowProcessed, true, _TIMEOUT, 0, 'play->busy false', function() {
-        if( $('.tablerowerror-added').length == 0 ) {
-            submitTableScanOrder();
+
+        //console.log("All rows processed!!!!!!!!!!!");
+        $('#tableview-submit-btn').button('reset');
+
+        if( _rowToProcessArr.length == 0 ) {
+            var errorHtml = createTableErrorWell('No data to submit. All rows are empty or in the default state.');
+            $('#validationerror').append(errorHtml);
+            $('#tableview-submit-btn').button('reset');
+            return false;
         }
+
+        if( $('.tablerowerror-added').length == 0 ) {
+            //console.log("Submit form!!!!!!!!!!!!!!!");
+            //submitTableScanOrder(); //submit by Ajax
+            //get rows data from _rowToProcessArr
+            var data = new Array();
+            data.push(_sotable.getColHeader());
+            for( var i=0; i<_rowToProcessArr.length; i++ ) {
+                data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+            }
+            //console.log(data);
+
+            //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
+            var jsonstr = JSON.stringify(data);
+            //console.log("jsonstr="+jsonstr);
+            $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+
+            //return false; //testing
+
+            $('#table-scanorderform').submit();
+
+            return true;
+        }
+
     });
 
+    //console.log("END !!!!!!!!!!!");
+    return false;
 }
 
 function submitTableScanOrder() {
@@ -15315,8 +15405,8 @@ function submitTableScanOrder() {
 }
 
 function allRowProcessed() {
-    var countRow = _sotable.countRows();
-    if( _processedRowCount == countRow-1 ) {
+    console.log( _processedRowCount +"=="+ _rowToProcessArr.length );
+    if( _processedRowCount == _rowToProcessArr.length ) {
         return true;
     } else {
         return false;
@@ -15334,9 +15424,15 @@ function checkPrevGenAndConflictTable(row) {
     var mrn = dataRow[_tableMainIndexes.mrn];
 
     if( isValueEmpty(accType) || isValueEmpty(acc) || isValueEmpty(mrnType) || isValueEmpty(mrn) ) {
-        $('#tableview-submit-btn').button('reset');
         return false;
     }
+
+    //don't validate the untouched OR is empty rows
+    if( exceptionRow(row) ) {
+        return false;
+    }
+
+    //console.log("check PrevGen And Conflicts, row=", row + ": accType="+accType+", acc="+acc);
 
     var accTypeCorrect = null;
     var mrnTypeCorrect = null;
@@ -15358,10 +15454,11 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             //console.log("after mrn check PrevGenKeyTable:"+response);
             if( !response ) {
-                var errorHtml = createTableErrorWell('Previously auto-generated MRN Numbers is not correct. Please correct the auto-generated number. Cell with error is marked with red.');
+                var errorHtml = createTableErrorWell('Previously auto-generated MRN Numbers "'+mrn+'" is not correct. Please correct the auto-generated number in the highlight row(s).');
                 $('#validationerror').append(errorHtml);
                 //_sotable.getCellMeta(row,mrnType).renderer = forceRedRenderer;
-                _sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = forceRedRenderer;
+                //_sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = forceRedRenderer;
+                setSpecialErrorToRow(row);
                 _sotable.render();
             }
         }
@@ -15385,9 +15482,10 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             //console.log("after acc check PrevGenKey Table:"+response);
             if( !response ) {
-                var errorHtml = createTableErrorWell('Previously auto-generated Accession Numbers is not correct. Please correct the auto-generated number. Cell with error is marked with red.');
+                var errorHtml = createTableErrorWell('Previously auto-generated Accession Numbers "'+acc+'" is not correct. Please correct the auto-generated number in the highlight row(s).');
                 $('#validationerror').append(errorHtml);
-                _sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = forceRedRenderer;
+                //_sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = forceRedRenderer;
+                setSpecialErrorToRow(row);
                 _sotable.render();
             } else {
                 if( response instanceof Array && "parentkeyvalue" in response ) {
@@ -15403,9 +15501,12 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             var errLen = $('.tablerowerror-added').length;
             if( errLen == 0 && mrnAccInternalConflict( acc, accType, mrn, mrnType ) ) {
-                var errorHtml = createTableErrorWell('MRN - Accession Numbers internal conflict within the table. Rows with error cells are marked with yellow.');
+                //var errorHtml = createTableErrorWell('MRN - Accession Numbers internal conflict within the table. Rows with error cells are marked with yellow.');
+                var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
+                    "The same accession number can not be tied to two different patients.";
+                var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
-                setErrorToRow(row,true);
+                setErrorToRow(row,conflictRenderer,true);
             }
         }
     ).
@@ -15414,9 +15515,12 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             var errLen = $('.tablerowerror-added').length;
             if( errLen == 0 && mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
-                var errorHtml = createTableErrorWell('MRN - Accession Numbers conflict. Rows with error cells are marked with yellow.');
+                //var errorHtml = createTableErrorWell('MRN - Accession Numbers conflict. Rows with error cells are marked with yellow.');
+                var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
+                    "The same accession number can not be tied to two different patients.";
+                var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
-                setErrorToRow(row,true);
+                setErrorToRow(row,conflictRenderer,true);
             }
         }
     ).
@@ -15432,7 +15536,6 @@ function checkPrevGenAndConflictTable(row) {
     done(
         function(response) {
             //console.log("Done ", response);
-            $('#tableview-submit-btn').button('reset');
         }
     );
 
@@ -15442,22 +15545,31 @@ function checkPrevGenAndConflictTable(row) {
 function cleanErrorTable() {
     _mrnAccessionArr.length = 0;
     _processedRowCount = 0;
+    _rowToProcessArr.length = 0;
     $('.tablerowerror-added').remove();
     var rowsCount = _sotable.countRows();
     for( var row=0; row<rowsCount; row++ ) {  //foreach row
-        setErrorToRow(row,false);
+        setErrorToRow(row,conflictRenderer,false);
     }
     _sotable.render();
 }
 
-function setErrorToRow(row,setError) {
+function setErrorToRow(row,type,setError) {
     var headers = _sotable.getColHeader();
     for( var col=0; col< headers.length; col++ ) {  //foreach column
         if( setError ) {
-            _sotable.getCellMeta(row,col).renderer = conflictRenderer;
+            _sotable.getCellMeta(row,col).renderer = type;  //conflictRenderer;
         } else {
             _sotable.getCellMeta(row,col).renderer = _columnData_scanorder[col].columns.renderer;
         }
+    }
+    _sotable.render();
+}
+
+function setSpecialErrorToRow(row) {
+    var headers = _sotable.getColHeader();
+    for( var col=0; col< headers.length; col++ ) {  //foreach column
+        _sotable.getCellMeta(row,col).renderer = redWithBorderRenderer;
     }
     _sotable.render();
 }
@@ -15476,7 +15588,7 @@ function mrnAccInternalConflict( acc, accType, mrn, mrnType ) {
             if( acc == accArr && accType == accTypeArr ) {
                 if( mrnAccConflict(mrnArr,mrn,mrnTypeArr,mrnType) ) {
                     //console.log('internal conflict detected');
-                    setErrorToRow(i,true);
+                    setErrorToRow(i,conflictRenderer,true);
                     conflict = true;
                 }
             }
@@ -15516,27 +15628,27 @@ function mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
 
     return Q.promise(function(resolve, reject) {
-        console.log(name+': keyvalue='+keyvalue+', keytype='+keytype);
+        //console.log(name+': keyvalue='+keyvalue+', keytype='+keytype);
 
         var makeCheck = true;
 
         if( keyvalue == '' || keytype == '' ) {
-            console.log(name+": keytype or keyvalue are null");
+            //console.log(name+": keytype or keyvalue are null");
             makeCheck = false;
         }
 
         if( !keytypeCorrect ) {
-            console.log(name+": keytypeCorrect is null");
+            //console.log(name+": keytypeCorrect is null");
             makeCheck = false;
         }
 
         if( !force && name == 'accession' && keytype != 'Existing Auto-generated Accession Number' ) {
-            console.log(name+": no check for prev gen is required");
+            //console.log(name+": no check for prev gen is required");
             makeCheck = false;
         }
 
         if( !force && name == 'patient' && keytype != 'Existing Auto-generated MRN' ) {
-            console.log(name+": no check for prev gen is required");
+            //console.log(name+": no check for prev gen is required");
             makeCheck = false;
         }
 
@@ -15595,15 +15707,15 @@ function getKeyTypeID( name, keytype ) {
             success: function (data) {
                 //console.debug("get element ajax ok");
                 if( data && data != '' ) {
-                    console.log(name+": keytype is found. keytype="+data);
+                    //console.log(name+": keytype is found. keytype="+data);
                     resolve(data);
                 } else {
-                    console.log(name+": keytype is not found.");
+                    //console.log(name+": keytype is not found.");
                     resolve(keytype);
                 }
             },
             error: function ( x, t, m ) {
-                console.debug("keytype id: ajax error "+name);
+                //console.debug("keytype id: ajax error "+name);
                 if( t === "timeout" ) {
                     getAjaxTimeoutMsg();
                 }
@@ -15624,8 +15736,50 @@ function validateEmptyHandsonRow( row ) {
     var block = dataRow[_tableMainIndexes.block];
     //console.log('row:'+row+': accType='+accType+', acc='+acc+' <= accTypeIndex='+_tableMainIndexes.acctype+', accIndex='+_tableMainIndexes.acc);
 
+    //don't validate the untouched OR is empty rows
+    if( exceptionRow(row) ) {
+        return true;
+    } else {
+        _rowToProcessArr.push(row); //count rows to process. Later we will need it to check if all rows were processed by ajax
+    }
+
     if( isValueEmpty(accType) || isValueEmpty(acc) || isValueEmpty(mrnType) || isValueEmpty(mrn) || isValueEmpty(part) || isValueEmpty(block) ) {
         return false;
+    }
+
+    return true;
+}
+
+//check if the row is untouched (default) OR is empty
+//return true if row was untouched or empty; return false if row was modified
+function exceptionRow( row ) {
+
+    //if row is empty
+    if( _sotable.isEmptyRow(row) ) {
+        //console.log("empty row!");
+        return true;
+    }
+
+    //if columns have default state
+    var headers = _sotable.getColHeader();
+    for( var col=0; col<headers.length; col++ ) {
+        var val = _sotable.getDataAtCell(row,col);
+        var defVal = null;
+        if( 'default' in _columnData_scanorder[col] ) {
+            var index = _columnData_scanorder[col]['default'];
+            defVal = _columnData_scanorder[col]['columns']['source'][index];
+            //console.log(col+": "+val +"!="+ defVal);
+            if( val != defVal ) {
+                //console.log(col+": "+'no default!!!!!!!!!!!!!!');
+                return false;
+            }
+        } else {
+            //console.log(col+": "+"no default (val should be empty), val="+val);
+            if( !isValueEmpty(val) ) {
+                //console.log(col+": "+'no empty!!!!!!!!!!!!!!');
+                return false;
+            }
+        }
     }
 
     return true;

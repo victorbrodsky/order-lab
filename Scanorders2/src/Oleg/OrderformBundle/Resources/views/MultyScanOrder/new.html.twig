@@ -12,6 +12,10 @@
     {% set formpath = 'multi_create' %}
 {% endif %}
 
+{% if formtype == 'Table-View Scan Order' %}
+    {% set formpath = 'multi_create' %}
+{% endif %}
+
 {% block title %}
     {{ formtype }}
 {% endblock %}
@@ -391,9 +395,7 @@
                     <p><button class="btn_margin_top btn btn-primary btn-success" name="btnAmend" type="submit">Amend</button></p>
                 {% else %}
                     <p><button class="btn_margin_top btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button></p>
-                    {#style="display: none;"#}
                     <p><button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;">Save and Continue Later</button></p>
-                    {#<p><button id="save_order_btn" class="btn btn-default" name="btnSave" type="submit">Save and Continue Later</button></p>#}
                 {% endif %}
             </div>
         </div>

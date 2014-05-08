@@ -23,6 +23,8 @@ var _slidetypes_simple = new Array();
 
 var _slidetypes = new Array();
 
+var _errorValidatorRows = new Array(); //keep rows with validator error
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -31,7 +33,7 @@ var accession_validator = function (value) {
         return true;
     }
     var notzeros = notAllZeros(value);
-    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{1,2}[-][1-9]{1,6}$/);
+    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{1,2}[-][1-9]{1}[0-9]{0,5}$/);      //S11-1, SS11-1, S1-10, not S11-01
     //console.log('acc validator: res='+res+', notzeros='+notzeros);
     if( res && notzeros ) {
         return true;
@@ -147,12 +149,27 @@ var redRenderer = function (instance, td, row, col, prop, value, cellProperties)
     //capitalizeAccession( row, col, value );
 };
 
-var yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+var forceRedRenderer = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
-    if( 1 ) {
-        $(td).addClass('ht-conflict-error');
+    $(td).addClass('ht-validation-error');
+};
+
+var conflictRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).addClass('ht-conflict-error');
+};
+
+var conflictBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).addClass('ht-conflictborder-error');
+};
+
+var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null) ) {
+        $(td).addClass('ht-redwithconflictborder-error');
     } else {
-        $(td).removeClass('ht-conflict-error');
+        $(td).addClass('ht-conflictborder-error');
     }
 };
 
@@ -218,9 +235,8 @@ $(document).ready(function() {
 
     getSlideTypes();
 
-    var _TIMEOUT = 300; // waitfor test rate [msec]
-
     // Wait until idle (busy must be false)
+    var _TIMEOUT = 300; // waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
         //console.log('The show can resume !');
         handsonTableInit();
@@ -390,6 +406,15 @@ function handsonTableInit() {
 
             }//foreach column
 
+        },
+        afterValidate: function(isValid, value, row, prop, source) {
+            if( isValid ) { //remove row from array
+                _errorValidatorRows = jQuery.grep(_errorValidatorRows, function(value) {
+                    return value != row;
+                });
+            } else {    //add row to array
+                _errorValidatorRows.push(row);
+            }
         }
 //        afterChange: function (changes, source) {
 //
@@ -550,7 +575,7 @@ function setDataCell( row, col, value ) {
             var newValue = _columnData_scanorder[col]['columns']['source'][index];
         }
 
-        console.log('clean data cell at '+row+","+col+", value="+newValue);
+        //console.log('clean data cell at '+row+","+col+", value="+newValue);
 
         _sotable.setDataAtCell(row,col,newValue);
         _sotable.getCellMeta(row,col).readOnly = false;

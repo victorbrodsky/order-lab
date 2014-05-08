@@ -33,7 +33,8 @@ class OrderInfoType extends AbstractType
     {
 
 //        echo "orderinfo params=";
-//        echo "type=".$this->params['type']."<br>";
+        //echo "type=".$this->params['type']."<br>";
+        //echo "cicle=".$this->params['cicle']."<br>";
 //        echo "<br>";
 
         $helper = new FormHelper();
@@ -47,8 +48,8 @@ class OrderInfoType extends AbstractType
 //        ));
 
         //add children
-        if( $this->params['type'] != 'Table-View Scan Order' ) {
-
+        if( $this->params['type'] != 'Table-View Scan Order' || ($this->params['type'] == 'Table-View Scan Order' && $this->params['cicle'] != 'new') ) {
+            //echo "orderinfo type: show patient <br>";
             $builder->add('patient', 'collection', array(
                 'type' => new PatientType($this->params,$this->entity),    //$this->type),
                 'required' => false,
@@ -68,6 +69,14 @@ class OrderInfoType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__dataquality__',
+            ));
+
+        } else {
+
+            //echo "orderinfo type: show datalocker <br>";
+
+            $builder->add('datalocker','hidden', array(
+                "mapped" => false
             ));
 
         }

@@ -24,17 +24,33 @@ use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientName;
+use Oleg\OrderformBundle\Entity\PatientSex;
+use Oleg\OrderformBundle\Entity\PatientDob;
+use Oleg\OrderformBundle\Entity\PatientAge;
+use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 
 use Oleg\OrderformBundle\Entity\Procedure;
 use Oleg\OrderformBundle\Entity\ProcedureEncounter;
+use Oleg\OrderformBundle\Entity\ProcedureName;
+
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\AccessionAccession;
+
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\PartPartname;
-use Oleg\OrderformBundle\Entity\RelevantScans;
-use Oleg\OrderformBundle\Entity\SpecialStains;
+use Oleg\OrderformBundle\Entity\PartSourceOrgan;
+use Oleg\OrderformBundle\Entity\PartDescription;
+use Oleg\OrderformBundle\Entity\PartDisident;
+use Oleg\OrderformBundle\Entity\PartDiffDisident;
+use Oleg\OrderformBundle\Entity\PartDiseaseType;
+use Oleg\OrderformBundle\Entity\PartPaper;
+
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\BlockBlockname;
+use Oleg\OrderformBundle\Entity\BlockSectionsource;
+
+use Oleg\OrderformBundle\Entity\RelevantScans;
+use Oleg\OrderformBundle\Entity\SpecialStains;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Stain;
@@ -119,7 +135,7 @@ class TableController extends Controller {
         $type = "Table-View Scan Order";
 
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
-        $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
+        $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         return $this->render('OlegOrderformBundle:MultyScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
@@ -133,12 +149,13 @@ class TableController extends Controller {
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
+     * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {
 
         //echo "table new controller !!!! <br>";
-        $data = $request->request->all();
+        //$data = $request->request->all();
         //echo "data: => <br>";
         //var_dump($data);
         //echo " => ";
@@ -146,12 +163,34 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
+        $entity  = new OrderInfo();
+
+        $type = "Table-View Scan Order";
+        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>null);
+
+        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
+
+        //$form->bind($request);
+        $form->handleRequest($request);
+
+//        if( $form->isValid() ) {
+//            echo "form is valid <br>";
+//        } else {
+//            echo "form is not valid! <br>";
+//        }
+
+        //////////////// process handsontable rows ////////////////
+        $datajson = $form->get('datalocker')->getData();
+
+        $data = json_decode($datajson, true);
+        //var_dump($data);
+
         $rowCount = 0;
 
-        $headers = array_shift($data['data']);
+        $headers = array_shift($data);
         //var_dump($columnData);
 
-        foreach( $data['data'] as $row ) {
+        foreach( $data as $row ) {
             //var_dump($row);
 
             $accValue = $this->getValueByHeaderName('Accession Number',$row,$headers);
@@ -160,31 +199,15 @@ class TableController extends Controller {
                 continue;   //skip row if accession number is empty
             }
 
-            echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
+            //echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
             $rowCount++;
 
             $patient = $this->constractPatientByTableData($row,$headers);
 
         }//foreach row
-
-
-        $entity  = new OrderInfo();
-
-        $type = "Table-View Scan Order";
-        $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
-
-        $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
-
-        //$form->bind($request);
-        $form->handleRequest($request);
+        //////////////// process handsontable rows ////////////////
 
         $entity->addPatient($patient);
-
-//        if( $form->isValid() ) {
-//            echo "form is valid";
-//        } else {
-//            echo "form is not valid!";
-//        }
 
         $user = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($user);
@@ -194,16 +217,21 @@ class TableController extends Controller {
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode('ok'));
-        return $response;
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode('ok'));
+//        return $response;
 
-//        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-//            'oid' => $entity->getOid(),
-//            'conflicts' => null,
-//            'cicle' => 'new'
-//        ));
+
+        //email
+        $emailUtil = new EmailUtil();
+        $emailUtil->sendEmail( $user->getEmail(), $entity );
+
+        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+            'oid' => $entity->getOid(),
+            'conflicts' => null,
+            'cicle' => 'new'
+        ));
 
     }
 
@@ -230,7 +258,7 @@ class TableController extends Controller {
 
         //name
         $name = $this->getValueByHeaderName('Patient Name',$row,$columnData);
-        if( !$force && $name && $name != '' ) {
+        if( !$force || $name && $name != '' ) {
             $patientname = new PatientName($status,$provider,$source);
             $patientname->setField($name);
             $patient->addName($patientname);
@@ -238,7 +266,7 @@ class TableController extends Controller {
 
         //sex
         $sex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
-        if( !$force && $sex && $sex != '' ) {
+        if( !$force || $sex && $sex != '' ) {
             $patientsex = new PatientSex($status,$provider,$source);
             $patientsex->setField($sex);
             $patient->addSex($patientsex);
@@ -246,39 +274,44 @@ class TableController extends Controller {
 
         //dob
         $dob = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
-        if( !$force && $dob && $dob != '' ) {
+        if( !$force || $dob && $dob != '' ) {
             $patientdob = new PatientDob($status,$provider,$source);
-            $patientdob->setField($dob);
+            $dobFormat = new \DateTime($dob);
+            $patientdob->setField($dobFormat);
             $patient->addDob($patientdob);
         }
 
         //age
         $age = $this->getValueByHeaderName('Patient Age',$row,$columnData);
-        if( !$force && $age && $age != '' ) {
+        if( !$force || $age && $age != '' ) {
             $patientage = new PatientAge($status,$provider,$source);
             $patientage->setField($age);
-            $patient->addDob($patientage);
+            $patient->addAge($patientage);
         }
 
         //Clinical History
         $ch = $this->getValueByHeaderName('Clinical History',$row,$columnData);
-        if( !$force && $ch && $ch != '' ) {
+        if( !$force || $ch && $ch != '' ) {
             $patientch = new PatientClinicalHistory($status,$provider,$source);
             $patientch->setField($age);
             $patient->addClinicalHistory($patientch);
         }
 
+        //echo "name=".$patient->getName()->first()."<br>";
+        //exit();
+        //return $patient;
 
         ///////////////// Procedure /////////////////
         $procedure = new Procedure(false, $status, $provider, $source);
 
         //Procedure name
         $ptype = $this->getValueByHeaderName('Procedure Type',$row,$columnData);
-        if( !$force && $ptype && $ptype != '' ) {
+        if( !$force || $ptype && $ptype != '' ) {
             $procedureTransform = new ProcedureTransformer($em,$provider);
-            $procedurename = $procedureTransform->reverseTransform($ptype);
-            $procedurename->setField($ptype);
-            $procedure->addName($procedurename);
+            $procedurenameList = $procedureTransform->reverseTransform($ptype); //ProcedureList
+            $procedureName = new ProcedureName($status, $provider, $source);
+            $procedureName->setField($procedurenameList);
+            $procedure->addName($procedureName);
         }
 
         //Procedure Encounter
@@ -302,65 +335,69 @@ class TableController extends Controller {
 
         $procedure->addAccession($accession);
 
-
         ///////////////// Part /////////////////
         $part = new Part(false, $status, $provider, $source);
 
         //part name
         $partname = new PartPartname($status,$provider,$source);
         $pname = $this->getValueByHeaderName('Part Name',$row,$columnData);
+        //echo "pname=".$pname."<br>";
         $partname->setField($pname);
         $part->addPartname($partname);
 
         //Source Organ
         $partso = $this->getValueByHeaderName('Source Organ',$row,$columnData);
-        if( !$force && $partso && $partso != '' ) {
+        if( !$force || $partso && $partso != '' ) {
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
-            $sourceOrgan = $sourceOrganTransformer->reverseTransform($partso);
-            $sourceOrgan->setField($partso);
-            $part->addSourceOrgan($sourceOrgan);
+            $sourceOrganList = $sourceOrganTransformer->reverseTransform($partso); //OrganList
+            $partSourceOrgan = new PartSourceOrgan($status, $provider, $source);
+            $partSourceOrgan->setField($sourceOrganList);
+            $part->addSourceOrgan($partSourceOrgan);
         }
 
         //Gross Description
         $partgd = $this->getValueByHeaderName('Gross Description',$row,$columnData);
-        if( !$force && $partgd && $partgd != '' ) {
-            $gs = new PartDescription($status,$provider,$source);
-            $gs->setField($partgd);
-            $part->addDescription($gs);
+        if( !$force || $partgd && $partgd != '' ) {
+            $partDescription = new PartDescription($status,$provider,$source);
+            $partDescription->setField($partgd);
+            $part->addDescription($partDescription);
         }
 
         //Diagnosis
         $partdiag = $this->getValueByHeaderName('Diagnosis',$row,$columnData);
-        if( !$force && $partdiag && $partdiag != '' ) {
-            $diag = new PartDisident($status,$provider,$source);
-            $diag->setField($partdiag);
-            $part->addDisident($diag);
+        if( !$force || $partdiag && $partdiag != '' ) {
+            $partDisident = new PartDisident($status,$provider,$source);
+            $partDisident->setField($partdiag);
+            $part->addDisident($partDisident);
         }
 
         //Differential Diagnoses
         $partdiffdiag = $this->getValueByHeaderName('Differential Diagnoses',$row,$columnData);
-        if( !$force && $partdiffdiag && $partdiffdiag != '' ) {
-            $diffdiag = new PartDiffDisident($status,$provider,$source);
-            $diffdiag->setField($partdiffdiag);
-            $part->addDiffDisident($diffdiag);
+        if( !$force || $partdiffdiag && $partdiffdiag != '' ) {
+            $partDiffDisident = new PartDiffDisident($status,$provider,$source);
+            $partDiffDisident->setField($partdiffdiag);
+            $part->addDiffDisident($partDiffDisident);
         }
 
         //Type of Disease
         $partdistype = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
-        if( !$force && $partdistype && $partdistype != '' ) {
-            $distype = new PartDiseaseType($status,$provider,$source);
-            $distype->setField($partdistype);
+        if( !$force || $partdistype && $partdistype != '' ) {
+            $partDiseaseType = new PartDiseaseType($status,$provider,$source);
+            $partDiseaseType->setField($partdistype);
             //Origin of Disease
-            $distype->setOrigin($this->getValueByHeaderName('Origin of Disease',$row,$columnData));
+            $partDiseaseType->setOrigin($this->getValueByHeaderName('Origin of Disease',$row,$columnData));
             //Primary Site of Disease Origin
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
-            $primaryOrgan = $sourceOrganTransformer->reverseTransform($this->getValueByHeaderName('Primary Site of Disease Origin',$row,$columnData));
-            $distype->setPrimaryOrgan($primaryOrgan);
-            $part->addDiseaseType($distype);
+            $primaryOrganList = $sourceOrganTransformer->reverseTransform($this->getValueByHeaderName('Primary Site of Disease Origin',$row,$columnData)); //OrganList
+            $partDiseaseType->setPrimaryOrgan($primaryOrganList);
+            $part->addDiseaseType($partDiseaseType);
         }
 
-        $accession->addPart($part);
+        //paper
+        $partPaper = new PartPaper($status,$provider,$source);
+        $part->addPaper( $partPaper );
 
+        $accession->addPart($part);
 
         ///////////////// Block /////////////////
         $block = new Block(false, $status, $provider, $source);
@@ -372,7 +409,7 @@ class TableController extends Controller {
 
         //Block Section Source
         $sections = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
-        if( !$force && $sections && $sections != '' ) {
+        if( !$force || $sections && $sections != '' ) {
             $blocksection = new BlockSectionsource($status,$provider,$source);
             $blocksection->setField($sections);
             $block->addSectionsource($blocksection);
@@ -380,12 +417,14 @@ class TableController extends Controller {
 
         $part->addBlock($block);
 
-
         ////////////////// Slide /////////////////
         $slide = new Slide(false, $status, $provider, $source);
 
         //Slide Title
         $slide->setTitle($this->getValueByHeaderName('Slide Title',$row,$columnData));
+
+        //Microscopic Description
+        $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData));
 
         //Slide Type
         $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData));
@@ -393,38 +432,42 @@ class TableController extends Controller {
 
         //Stain
         $stainValue = $this->getValueByHeaderName('Stain',$row,$columnData);
-        if( !$force && $stainValue && $stainValue != '' ) {
+        if( !$force || $stainValue && $stainValue != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
             $stainList = $stainTransformer->reverseTransform($stainValue);
 
-            $stain = new Stain(false, $status, $provider, $source);
+            $stain = new Stain($status, $provider, $source);
             $stain->setField($stainList);
 
             $slide->addStain($stain);
         }
 
         ///// Scan /////
-        $scan = new Scan(false, $status, $provider, $source);
+        $scan = new Scan($status, $provider, $source);
 
         //Scan: Scan Magnificaiton
-        $scan->setField($this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData));
+        $mag = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);
+        //echo "<br>mag=".$mag."<br>";
+        $scan->setField($mag);
 
         //Scan: Region to Scan
         $regTransformer = new StringTransformer($em,$provider);
         $scanregion = $regTransformer->reverseTransform($this->getValueByHeaderName('Region to Scan',$row,$columnData));
+        //echo "scanregion=".$scanregion."<br>";
         $scan->setScanregion($scanregion);
 
         //Scan: Reason for Scan/Note
-        $scan->setNote($this->getValueByHeaderName('Reason for Scan/Note',$row,$columnData));
-
-        //Microscopic Description
-        $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData));
+        $note = $this->getValueByHeaderName('Reason for Scan/Note',$row,$columnData);
+        //echo "note=".$note."<br>";
+        $scan->setNote($note);
 
         $slide->addScan($scan);
+        ///// EOF Scan /////
+
 
         //Stain: Results of Special Stains: StainList + field
         $specialStainValue = $this->getValueByHeaderName('Results of Special Stains',$row,$columnData);
-        if( !$force && $specialStainValue && $specialStainValue != '' ) {
+        if( !$force || $specialStainValue && $specialStainValue != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
             $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Special Stain',$row,$columnData)); //list
             $specialstain = new SpecialStains($status,$provider,$source);
@@ -435,7 +478,7 @@ class TableController extends Controller {
 
         //Link(s) to related image(s)
         $relevantScans = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);
-        if( !$force && $relevantScans && $relevantScans != '' ) {
+        if( !$force || $relevantScans && $relevantScans != '' ) {
             $relScan = new RelevantScans($status,$provider,$source);
             $relScan->setField($relevantScans);
             $slide->addRelevantScan($relScan);

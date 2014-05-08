@@ -23,6 +23,8 @@ var _slidetypes_simple = new Array();
 
 var _slidetypes = new Array();
 
+var _errorValidatorRows = new Array(); //keep rows with validator error
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -157,6 +159,20 @@ var conflictRenderer = function (instance, td, row, col, prop, value, cellProper
     $(td).addClass('ht-conflict-error');
 };
 
+var conflictBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).addClass('ht-conflictborder-error');
+};
+
+var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null) ) {
+        $(td).addClass('ht-redwithconflictborder-error');
+    } else {
+        $(td).addClass('ht-conflictborder-error');
+    }
+};
+
 //total 31
 var _columnData_scanorder = [
 
@@ -226,6 +242,10 @@ $(document).ready(function() {
         handsonTableInit();
     });
 
+    //validation on form submit
+    //$("#table-scanorderform").on("submit", function () {
+    //    return validateHandsonTable();
+    //});
 
 });
 
@@ -390,6 +410,15 @@ function handsonTableInit() {
 
             }//foreach column
 
+        },
+        afterValidate: function(isValid, value, row, prop, source) {
+            if( isValid ) { //remove row from array
+                _errorValidatorRows = jQuery.grep(_errorValidatorRows, function(value) {
+                    return value != row;
+                });
+            } else {    //add row to array
+                _errorValidatorRows.push(row);
+            }
         }
 //        afterChange: function (changes, source) {
 //
@@ -550,7 +579,7 @@ function setDataCell( row, col, value ) {
             var newValue = _columnData_scanorder[col]['columns']['source'][index];
         }
 
-        console.log('clean data cell at '+row+","+col+", value="+newValue);
+        //console.log('clean data cell at '+row+","+col+", value="+newValue);
 
         _sotable.setDataAtCell(row,col,newValue);
         _sotable.getCellMeta(row,col).readOnly = false;

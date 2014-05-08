@@ -41,3 +41,16 @@
     background-color: yellow;
 }
 
+.handsontable .ht-conflictborder-error {
+    //border-left:1px solid red;
+    border-width:1px 0;
+    border-style:solid;
+    border-color:red;
+}
+
+.handsontable .ht-redwithconflictborder-error {
+    background-color: #F2DEDE;
+    border-width:1px 0;
+    border-style:solid;
+    border-color:red;
+}

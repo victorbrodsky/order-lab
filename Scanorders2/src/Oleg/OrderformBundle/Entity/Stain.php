@@ -26,7 +26,7 @@ class Stain extends SlideArrayFieldAbstract
     protected $field;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $stainer;
     

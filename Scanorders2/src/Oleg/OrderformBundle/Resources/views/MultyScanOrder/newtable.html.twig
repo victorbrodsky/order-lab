@@ -45,7 +45,7 @@
     <br />
 
     {############ START FORM ##############}
-    <form id="scanorderform" action="{{ path('table_create_submit') }}" method="post" {{ form_enctype(form) }}>
+    <form id="table-scanorderform" action="{{ path('table_create_submit') }}" method="post" {{ form_enctype(form) }}>
 
         {% include 'OlegOrderformBundle::MultyScanOrder/edu_res.html.twig' %}
 
@@ -83,16 +83,16 @@
         <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
 
         <p>
-            <button id="tableview-submit-btn" onclick="validateHandsonTable()" class="btn_margin_top btn btn-primary btn-success" name="btnTableSubmit" data-loading-text="Validating..." type="submit">Submit</button>
-            {#<button class="btn_margin_top btn btn-primary btn-success" name="btnTableSubmit" type="submit">Submit</button>#}
+            {#onclick="validateHandsonTable()"#}
+            <button id="tableview-submit-btn" onclick="validateHandsonTable()" class="btn_margin_top btn btn-primary btn-success" name="btnTableSubmit" data-loading-text="Validating..." type="button">Submit</button>
         </p>
 
         <div id="validationerror" style="padding-top: 2%"></div>
 
         {{ form_rest(form) }}
 
+
     </form>
     {############ END FORM ##############}
-
 
 {% endblock %}

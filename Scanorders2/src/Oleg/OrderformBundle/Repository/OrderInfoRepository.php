@@ -158,7 +158,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         }
 
-        //echo $entity;
 //        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
 //        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
 //        echo $entity->getPatient()->first();
@@ -177,6 +176,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        echo "parts=".count($entity->getPart())."<br>";
 //        echo "blocks=".count($entity->getBlock())."<br>";
 //        echo "slides=".count($entity->getSlide())."<br>";
+        //echo $entity;
         //exit('orderinfo repo exit');
 
         //create new orderinfo
