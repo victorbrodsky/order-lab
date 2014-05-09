@@ -107,7 +107,11 @@ class CheckController extends Controller {
         $extra["keytype"] = $keytype;
         //echo "key=".$key.", keytype=".$keytype."; ";
 
-        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",true,true,$extra);   //findOneByIdJoinedToMrn($mrn);        
+        $validity = array();
+        $validity[] = "valid";
+        $validity[] = "reserved";
+
+        $entity = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($key,"Patient","mrn",$validity,true,$extra);   //findOneByIdJoinedToMrn($mrn);
 
         $element = array();
         
@@ -246,7 +250,11 @@ class CheckController extends Controller {
         $extra = array();
         $extra["keytype"] = $keytype;
 
-        $entity = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",true,true,$extra);
+        $validity = array();
+        $validity[] = "valid";
+        $validity[] = "reserved";
+
+        $entity = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($key,"Accession","accession",$validity,true,$extra);
 
         $element = array();
               
@@ -277,35 +285,45 @@ class CheckController extends Controller {
         
         if( $entity ) {
 
-            //find patient mrn
-            $patient = $entity->getProcedure()->getPatient();
-            if( !$permission ) {
-                $patient->filterArrayFields($user,true);
-            }
-
             $parentKey = null;
-            if( $patient ) {
-                $parentKey = $patient->obtainValidKeyfield();
+
+            if( $entity->getProcedure() ) {
+
+                //find patient mrn
+                $patient = $entity->getProcedure()->getPatient();
+                if( !$permission ) {
+                    $patient->filterArrayFields($user,true);
+                }
+
+                if( $patient ) {
+                    $parentKey = $patient->obtainValidKeyfield();
+                }
+
+                if( $patient && $parentKey ) {
+                    $parentKey = $patient->obtainValidKeyfield();
+                    $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+                    $dateStr = $transformer->transform($parentKey->getCreationdate());
+                    $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'], (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
+                    $extraid = $parentKey->getKeytype()->getId()."";
+                    $mrnkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extraid);
+                    if( $mrnkeytype == "Auto-generated MRN" ) {
+                        //set to "Existing Auto-generated MRN" in order to correct set select2 to "Existing Auto-generated MRN"
+                        $newkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
+                        $extraid = $newkeytype->getId()."";
+                    }
+                    $orderinfoString = "Order ".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider()->first();
+                }
+
+                $procedureName = $entity->getProcedure()->getName();
+
             }
 
-            if( $patient && $parentKey ) {
-                $parentKey = $patient->obtainValidKeyfield();
-                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-                $dateStr = $transformer->transform($parentKey->getCreationdate());
-                $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'], (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
-                $extraid = $parentKey->getKeytype()->getId()."";
-                $mrnkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extraid);
-                if( $mrnkeytype == "Auto-generated MRN" ) {
-                    //set to "Existing Auto-generated MRN" in order to correct set select2 to "Existing Auto-generated MRN"
-                    $newkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
-                    $extraid = $newkeytype->getId()."";
-                }
-                $orderinfoString = "Order ".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider()->first();
-            } else {
+            if( !$parentKey ) {
                 $parentKey = null;
                 $mrnstring = "";
                 $extraid = "";
                 $orderinfoString = "";
+                $procedureName = array();
             }
 
             //echo "mrnstring=".$mrnstring." ";
@@ -316,7 +334,7 @@ class CheckController extends Controller {
                 'extraid'=>$extraid,
                 'mrnstring'=>$mrnstring,
                 'orderinfo'=>$orderinfoString,
-                'procedure'=>$this->getArrayFieldJson($entity->getProcedure()->getName()),
+                'procedure'=>$this->getArrayFieldJson($procedureName),
                 'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype'))
             );
         } 

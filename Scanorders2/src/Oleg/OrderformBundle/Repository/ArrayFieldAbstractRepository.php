@@ -542,20 +542,37 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
-        //echo " validity=".$validity." ";       
+        //echo " validity=".$validity."<br>";
 
         $onlyValid = "";
         if( $validity ) {
             //echo " check validity ";
+            if( is_array($validity) && count($validity)>0 ) {
+
+                $validityStr = "(";  //"(".implode("OR", $validity).")";
+                $count = 1;
+                foreach( $validity as $val ) {
+                    $validityStr .= "c.status='".$val."'";
+                    if( $count < count($validity) ) {
+                        $validityStr .= " OR ";
+                    }
+                    $count++;
+                }
+                $validityStr .= ")";
+
+            } else
             if( $validity != "" && $validity !=  1 ) {
                 //echo "validity == string1 ";
+                $validityStr = "c.status='".$validity."'";
             } else if( $validity ==  1 ) {
                 //echo "validity == true ";
-                $validity = self::STATUS_VALID;
+                //$validity = self::STATUS_VALID;
+                $validityStr = "c.status='".self::STATUS_VALID."'";
             } else {
                 //echo "else-validity == string ";
             }
-            $onlyValid = " AND c.status='".$validity."' AND cfield.status='".self::STATUS_VALID."'";
+            //$onlyValid = " AND c.status='".$validity."' AND cfield.status='".self::STATUS_VALID."'";
+            $onlyValid = " AND ".$validityStr." AND cfield.status='".self::STATUS_VALID."'";
         }
 
         $extraStr = "";
@@ -567,20 +584,44 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." <br> ";
 
+        $dql = 'SELECT c FROM OlegOrderformBundle:'.$className.' c
+                JOIN c.'.$fieldName.' cfield
+                WHERE cfield.field = :field'.$onlyValid.$extraStr;
+
         $query = $this->getEntityManager()
-            ->createQuery('
-        SELECT c FROM OlegOrderformBundle:'.$className.' c
-        JOIN c.'.$fieldName.' cfield
-        WHERE cfield.field = :field'.$onlyValid.$extraStr
-            )->setParameter('field', $fieldStr."");
+            ->createQuery($dql)->setParameter('field', $fieldStr."");
+
+        //echo "dql=".$dql."<br>";
+        //echo "field=".$fieldStr." <br> ";
 
         try {
+
+            $entities = $query->getResult();
+
             if( $single ) {
-                //echo "find return single<br>";
-                return $query->getSingleResult();
+                //echo "count=".count($entities)."<br>";
+                if( count($entities) == 1 ) {
+                    //echo $entities[0];
+                    //return single entity
+                    return $entities[0];
+                } else
+                if( count($entities) > 0 ) {
+                    //throw new \Exception( 'More than one entity found, but single entity is expected for ' . $className. ' with key='. $fieldStr. ', type=' . $extraStr );
+                    foreach( $entities as $entity ) {
+                        if( $entity->obtainValidKeyfield() ) {
+                            //we should return a single result, but we got multiple entity, so return the first valid key one.
+                            return $entity;
+                        }
+                    }
+                    //no valid entity found, so return null
+                    return null;
+                } else {
+                    //count == 0 => no entity found, so return null
+                    return null;
+                }
+
             } else {
-                //echo "find multi return<br>";
-                return $query->getResult();
+                return $entities;
             }
 
         } catch (\Doctrine\ORM\NoResultException $e) {

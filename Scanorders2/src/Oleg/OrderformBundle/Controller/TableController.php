@@ -192,6 +192,7 @@ class TableController extends Controller {
 
         foreach( $data as $row ) {
             //var_dump($row);
+            //echo "<br>";
 
             $accValue = $this->getValueByHeaderName('Accession Number',$row,$headers);
 
@@ -204,10 +205,10 @@ class TableController extends Controller {
 
             $patient = $this->constractPatientByTableData($row,$headers);
 
+            $entity->addPatient($patient);
+
         }//foreach row
         //////////////// process handsontable rows ////////////////
-
-        $entity->addPatient($patient);
 
         $user = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($user);
