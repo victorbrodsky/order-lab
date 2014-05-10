@@ -51,16 +51,11 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         //add educational and research
         //********** take care of educational and research director and principal investigator ***********//
         if( $orderinfo->getEducational() && !$orderinfo->getEducational()->isEmpty() ) {
-            $slide->setEducational($orderinfo->getEducational());
-        } else {
-            $slide->setEducational(NULL);
+            $orderinfo->getEducational()->addSlide($slide);
         }
 
         if( $orderinfo->getResearch() && !$orderinfo->getResearch()->isEmpty() ) {
-            //echo "not empty <br>";
-            $slide->setResearch($orderinfo->getResearch());
-        } else {
-            $slide->setResearch(NULL);
+            $orderinfo->getResearch()->addSlide($slide);
         }
         //********** end of educational and research processing ***********//
 

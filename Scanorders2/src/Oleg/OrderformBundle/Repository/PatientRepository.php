@@ -102,6 +102,43 @@ class PatientRepository extends ArrayFieldAbstractRepository
 //        return $entity;
 //    }
 
+
+
+    public function attachToParent_TODEL( $entity, $child ) {
+
+        //TODO: testing
+        if( $child ) {
+            $entity->addChildren($child);
+        }
+        return;
+
+        //1) check if order has zero or one patient
+        $orderinfo = $entity->getOrderinfo()-first();
+        $patients = $orderinfo->getPatient();
+        if( count($patients) <= 1 ) {
+            return $entity; //zero or one patient, so can't compare
+        }
+
+        //2) compare only valid key value and key type for patient, without parent
+        $mrn = $entity->obtainValidKeyfield()->getField();
+        $keytype = $entity->obtainValidKeyfield()->getKeytype();
+        foreach( $patients as $patient ) {
+            $mrnThis = $patient->obtainValidKeyfield()->getField();
+            $keytypeThis = $patient->obtainValidKeyfield()->getKeytype();
+            if( $mrn."" == $mrnThis."" && $keytype == $keytypeThis ) {
+                if( count($orderinfo->getPatient()) > 1 ) {
+                    $orderinfo->removePatient($entity);
+                    //return;
+                }
+            }
+        }
+
+    }
+
+
+
+
+
     //filter out duplicate virtual (in form, not in DB) patients
     //after js check form, theoretically we should not have duplicate entities submitted by the form, but let's have it just in case ...
     public function removeDuplicateEntities( $entity ) {

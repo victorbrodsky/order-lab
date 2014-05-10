@@ -34,6 +34,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //return $entity;
         }
 
+        $em = $this->_em;
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
@@ -41,9 +42,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo $entity;
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
-        //$entity = $em->getRepository('OlegOrderformBundle:'.$childName)->removeDuplicateEntities( $entity );
+        //$entity = $em->getRepository('OlegOrderformBundle:'.$className)->cleanDuplicateEntities( $entity );
 
-        $em = $this->_em;
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
 
         $keys = $entity->obtainAllKeyfield();
@@ -53,7 +53,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( count($keys) == 0 ) {
             $entity->createKeyField();  //this should never execute in normal situation
-            throw new \Exception( 'Key field does not exists for '.$className );
+            //throw new \Exception( 'Key field does not exists for '.$className );
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
             //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
@@ -110,10 +110,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function setResult( $entity, $orderinfo, $original=null ) {
 
+        $em = $this->_em;
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-
-        $em = $this->_em;
 
         //echo "Set Result for entity:".$entity;
 
@@ -162,10 +161,103 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
+    //attach to parent if the parent does not have the same child (the same key,keytype and parent key,keytype)
     public function attachToParent( $entity, $child ) {
         //echo "start adding to orderinfo <br>";
         if( $child ) {
-            $entity->addChildren($child);
+            //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
+            //So, use only one block instead of creating two same entity in DB.
+            $sameChild = $this->findSimilarChild($entity,$child);
+            if( $sameChild ) {
+                //attach all sub-children to found similar child
+                $children = $child->getChildren();
+                foreach( $children as $child ) {
+                    $sameChild->addChildren($child);
+                }
+                //remove $child
+                $child->setParent(null);
+                $entity->removeChildren($child);
+                $child->clearOrderinfo();
+
+            } else {
+                $entity->addChildren($child);
+            }
+        }
+    }
+    public function findSimilarChild($parent,$newChild) {
+        $children = $parent->getChildren();
+
+        //echo "<br>";
+        //echo $newChild;
+        //echo "newChild key=".$newChild->obtainValidKeyfield()."<br>";
+        if( $newChild->obtainValidKeyfield()."" == "" ) {   //no name is provided, so can't compare => does not exist
+            //echo "false: no name <br>";
+            return false;
+        }
+
+        if( !$children || count($children) == 0 ) { //no children => does not exist
+            //echo "false: no children <br>";
+            return false;
+        }
+
+        foreach( $children as $child ) {
+            //echo $child;
+
+            $key = $child->obtainValidKeyfield();
+            $newchildKey = $newChild->obtainValidKeyfield();
+
+            //echo $key."?a=".$newchildKey."<br>";
+
+            //check 1: compare keys
+            if( $this->keysEqual($key,$newchildKey) ) { //keys are the same
+
+                //check 2: compare parent's keys
+                $parent = $child->getParent();
+                if( $parent ) {
+                    $parKey = $parent->obtainValidKeyfield();
+
+                    $newParent = $newChild->getParent();
+                    if( $newParent ) {
+                        $newparKey = $newParent->obtainValidKeyfield();
+                    } else {
+                        $newparKey = null;
+                    }
+
+                    //echo $parKey."?b=".$newparKey."<br>";
+
+                    if( $this->keysEqual($parKey,$newparKey) ) {
+                        //echo "return found similar child: keys are the same <br>";
+                        //echo $child;
+                        return $child;
+                    }
+                } else {
+                    //parent does not exist, but keys are equal => return found similar child
+                    return $child;
+                }//if parent
+
+            }//if keys equal
+
+        }//foreach
+
+        return false;
+    }
+    public function keysEqual($key1, $key2) {
+        //check 1: compare keys
+        if( $key1."" == $key2."" ) {   //key values are the same
+            //compare keytype if exists
+            if( $key1 && method_exists($key1,'getKeytype') ) {
+                $keytype1 = $key1->getKeytype();
+                $keytype2 = $key2->getKeytype();
+                if( $keytype1 == $keytype2 ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 
@@ -919,6 +1011,47 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         return $newEntity;
     }
+
+    //check this element in parent, if found similar, then replace this one by the similar
+    //filter out duplicate virtual (in form, not in DB) blocks from a part
+    //since we check the block for this particular part, then use just block's name (?!)
+    public function cleanDuplicateEntities_TODEL( $entity ) {
+
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+
+        $parent = $entity->getParent();
+
+        if( !$parent ) {
+            if( $className == 'Patient' ) {
+                //1) check if order has zero or one patient
+                $orderinfo = $entity->getOrderinfo()-first();
+                $patients = $orderinfo->getPatient();
+                if( count($patients) <= 1 ) {
+                    return $entity; //zero or one patient, so can't compare
+                }
+
+                //2) compare only valid key value and key type for patient, without parent
+                $mrn = $entity->obtainValidKeyfield()->getField();
+                $keytype = $entity->obtainValidKeyfield()->getKeytype();
+                foreach( $patients as $patient ) {
+                    $mrnThis = $patient->obtainValidKeyfield()->getField();
+                    $keytypeThis = $patient->obtainValidKeyfield()->getKeytype();
+                    if( $mrn."" == $mrnThis."" && $keytype == $keytypeThis ) {
+                        if( count($orderinfo->getPatient()) > 1 ) {
+                            $orderinfo->removePatient($entity);
+                            //return;
+                        }
+                    }
+                }
+            } else {//Patient
+                return $entity;     //no parent, so can't compare
+            }
+        }
+
+        return $entity;
+    }
+
 
     public function printTree( $entity ) {
 

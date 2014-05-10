@@ -15342,15 +15342,19 @@ function validateHandsonTable() {
         }
 
         if( $('.tablerowerror-added').length == 0 ) {
+
             //console.log("Submit form!!!!!!!!!!!!!!!");
             //submitTableScanOrder(); //submit by Ajax
+
             //get rows data from _rowToProcessArr
             var data = new Array();
             data.push(_sotable.getColHeader());
             for( var i=0; i<_rowToProcessArr.length; i++ ) {
+                console.log("data row="+_rowToProcessArr[i]);
                 data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
             }
             //console.log(data);
+            //return false;//testing
 
             //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
             var jsonstr = JSON.stringify(data);

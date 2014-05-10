@@ -845,7 +845,13 @@ class OrderInfo
         $this->provider->removeElement($provider);
     }
 
-
+    //TODO: testing
+    public function getChildren() {
+        return $this->getPatient();
+    }
+    public function addChildren($child) {
+        $this->addPatient($child);
+    }
 
 
 }

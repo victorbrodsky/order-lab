@@ -32,10 +32,14 @@ class Research
      */
     protected $orderinfo;
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="Slide", mappedBy="research")
+//     */
+//    protected $slide;
     /**
-     * @ORM\OneToOne(targetEntity="Slide", mappedBy="research")
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="research")
      */
-    protected $slide;
+    protected $slides;
 
     //principal as entered by a user. Use a wrapper because research can have multiple PIs
     /**
@@ -78,6 +82,7 @@ class Research
 
     public function __construct() {
         $this->principalWrappers = new ArrayCollection();
+        $this->slides = new ArrayCollection();
     }
 
 //    public function __clone() {
@@ -112,21 +117,55 @@ class Research
         return $this->orderinfo;
     }
 
+//    /**
+//     * @param mixed $slide
+//     */
+//    public function setSlide($slide)
+//    {
+//        $this->slide = $slide;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
     /**
-     * @param mixed $slide
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return Block
      */
-    public function setSlide($slide)
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        $this->slide = $slide;
+        if( !$this->slides->contains($slide) ) {
+            $slide->setResearch($this);
+            $this->slides->add($slide);
+        }
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-    public function getSlide()
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        return $this->slide;
+        $this->slides->removeElement($slide);
     }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSlides()
+    {
+        return $this->slides;
+    }
+
 
     /**
      * @param mixed $projectTitle

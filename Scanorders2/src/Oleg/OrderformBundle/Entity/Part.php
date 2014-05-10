@@ -258,11 +258,16 @@ class Part extends OrderAbstract
      */
     public function addBlock(\Oleg\OrderformBundle\Entity\Block $block)
     {
+        //echo "block count1=".count($this->getBlock())."<br>";
         if( !$this->block->contains($block) ) {
+        //if( !$this->childAlreadyExist($block) ) {
+            //echo "add block name=".$block->getBlockname()->first()."<br>";
             $block->setPart($this);
             $this->block->add($block);
+        } else {
+            //echo "Exist!!!!!!!!!!!!!!!!!!!! block name=".$block->getBlockname()->first()."<br>";
         }
-
+        //echo "block count2=".count($this->getBlock())."<br><br>";
         return $this;
     }
 

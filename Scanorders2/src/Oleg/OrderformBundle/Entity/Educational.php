@@ -38,10 +38,14 @@ class Educational
      */
     protected $orderinfo;
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="Slide", mappedBy="educational")
+//     */
+//    protected $slide;
     /**
-     * @ORM\OneToOne(targetEntity="Slide", mappedBy="educational")
+     * @ORM\OneToMany(targetEntity="Slide", mappedBy="educational")
      */
-    protected $slide;
+    protected $slides;
 
 
     //directors
@@ -85,6 +89,7 @@ class Educational
 
     public function __construct() {
         $this->directorWrappers = new ArrayCollection();
+        $this->slides = new ArrayCollection();
     }
 
 
@@ -114,20 +119,53 @@ class Educational
         return $this->orderinfo;
     }
 
+//    /**
+//     * @param mixed $slide
+//     */
+//    public function setSlide($slide)
+//    {
+//        $this->slide = $slide;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSlide()
+//    {
+//        return $this->slide;
+//    }
     /**
-     * @param mixed $slide
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @return Block
      */
-    public function setSlide($slide)
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        $this->slide = $slide;
+        if( !$this->slides->contains($slide) ) {
+            $slide->setEducational($this);
+            $this->slides->add($slide);
+        }
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove slide
+     *
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-    public function getSlide()
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        return $this->slide;
+        $this->slides->removeElement($slide);
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSlides()
+    {
+        return $this->slides;
     }
 
     /**

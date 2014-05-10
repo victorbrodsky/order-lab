@@ -369,6 +369,56 @@ abstract class OrderAbstract
         return $count;
     }
 
+//    //replace contains in AddChild
+//    public function childAlreadyExist( $newChild ) {
+//
+//        $children = $this->getChildren();
+//
+//        echo "<br>";
+//        echo $newChild;
+//        echo "newChild key=".$newChild->obtainValidKeyfield()."<br>";
+//        if( $newChild->obtainValidKeyfield()."" == "" ) {   //no name is provided, so can't compare => does not exist
+//            echo "false: no name <br>";
+//            return false;
+//        }
+//
+//        if( !$children || count($children) == 0 ) { //no children => does not exist
+//            echo "false: no children <br>";
+//            return false;
+//        }
+//
+//        foreach( $children as $child ) {
+//            echo $child;
+//
+//            echo $child->obtainValidKeyfield()."?a=".$newChild->obtainValidKeyfield()."<br>";
+//
+//            //check 1: compare keys
+//            if( $child->obtainValidKeyfield()."" == $newChild->obtainValidKeyfield()."" ) {   //keys are the same
+//
+//                $parent = $child->getParent();
+//                $parKey = $parent->obtainValidKeyfield();
+//
+//                $newParent = $newChild->getParent();
+//                if( $newParent ) {
+//                    $newparKey = $newParent->obtainValidKeyfield();
+//                } else {
+//                    $newparKey = null;
+//                }
+//
+//                echo $parKey."?b=".$newparKey."<br>";
+//
+//                //check 2: compare parent's keys
+//                if( $parKey."" == $newparKey."" ) {
+//                    return true;
+//                }
+//
+//            }
+//
+//        }
+//
+//        return false;
+//    }
+
 //    //TODO: compare two orderinfo: dirty and from db?
 //    //get children which belongs to provided orderinfo
 //    public function countChildrenWithOrderinfo( $orderinfo ) {

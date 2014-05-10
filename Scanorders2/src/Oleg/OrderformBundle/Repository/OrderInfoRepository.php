@@ -32,6 +32,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //$status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
         //$entity->setStatus($status);
 
+//        $blocks = $entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock();
+//        echo "<br>############################## Start: blocks=".count($blocks).":<br>";
+//        foreach($blocks as $block ) {
+//            echo $block;
+//        }
+//        echo "##################################<br><br>";
+
         if( $type ) {
             $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
             $entity->setType($formtype);
@@ -91,7 +98,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
             $entity->removePatient($patient);
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
-            $entity->addPatient($patient);
+
+
+            //$entity->addPatient($patient);
+            //add children
+            $em->getRepository('OlegOrderformBundle:Patient')->attachToParent( $entity, $patient );
+
+            //save patient to db
+            //$em->persist($patient);
+            //$em->flush();
         }
 
         //add slide's parents recursevely to this orderinfo
@@ -170,13 +185,19 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo $elem;
 //        }
 
+//        echo "<br>################################## Finish:<br>";
 //        echo "patients=".count($entity->getPatient())."<br>";
 //        echo "procedures=".count($entity->getProcedure())."<br>";
 //        echo "accessions=".count($entity->getAccession())."<br>";
 //        echo "parts=".count($entity->getPart())."<br>";
 //        echo "blocks=".count($entity->getBlock())."<br>";
 //        echo "slides=".count($entity->getSlide())."<br>";
-        //echo $entity;
+//        echo $entity;
+//        foreach( $entity->getAccession() as $elem ) {
+//            echo $elem;
+//        }
+//        echo "proc acc count=".count($entity->getProcedure()->first()->getAccession()),"<br>";
+
         //exit('orderinfo repo exit');
 
         //create new orderinfo

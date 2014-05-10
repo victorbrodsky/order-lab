@@ -20,6 +20,27 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //find accession
         $accessions = $entity->getAccession();
 
+//        ////////////////////// clean acc ////////////////////////
+//        //clean accession: for example, user eneterd the same patient with the same acc number => we will have more than one accession in procedure
+//        foreach( $accessions as $acc ) {
+//            $sameAcc = $this->findSimilarChild($entity,$acc);
+//            if( $sameAcc ) {
+//                echo "same acc found<br>";
+//                //attach all sub-children to found similar child
+//                $children = $acc->getChildren();
+//                foreach( $children as $child ) {
+//                    $sameAcc->addChildren($child);
+//                }
+//                if( count($entity->getAccession()) > 1 ) {
+//                    echo "remove acc=".$acc;
+//                    $entity->removeChildren($acc);
+//                    //$orderinfo->removeAccession($acc);
+//                    $acc->removeOrderinfo($orderinfo);
+//                }
+//            }
+//        }
+//        ////////////////////// clean acc ////////////////////////
+
         if( count($accessions) > 1 ) {
             throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
         }
@@ -93,6 +114,24 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 //        }
 
         //echo "acc children=".count();
+
+//        ////////////////////// clean acc ////////////////////////
+//        //clean accession: for example, user entered the same patient with the same acc number => we will have more than one accession in procedure
+//        foreach( $procedure->getAccession() as $acc ) {
+//            $sameAcc = $this->findSimilarChild($procedure,$acc);
+//            if( $sameAcc ) {
+//                //attach all sub-children to found similar child
+//                $children = $acc->getChildren();
+//                foreach( $children as $child ) {
+//                    $sameAcc->addChildren($child);
+//                }
+//                if( count($procedure->getAccession()) > 1 ) {
+//                    $procedure->removeChildren($acc);
+//                    $orderinfo->removeAccession($acc);
+//                }
+//            }
+//        }
+//        ////////////////////// clean acc ////////////////////////
 
         if( !$procedure->getId() || $procedure->getId() == "" ) {
             //echo "persist Procedure<br>";

@@ -11,7 +11,7 @@ namespace Oleg\OrderformBundle\Repository;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
-    //ift this element does not have any slide belonging to this order (with id=null) or children (empty branch for this orderinfo),
+    //if this element does not have any slide belonging to this order (with id=null) or children (empty branch for this orderinfo),
     //so remove this element and all its parents from orderinfo
     public function attachToOrderinfo( $entity, $orderinfo ) {
 
@@ -64,7 +64,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         //echo "childClassName=".$childClassName."<br>";
 
         if( $childClassName == "Slide" ) {
-            parent::attachToParent( $part, $block );
+            parent::attachToParent( $part, $block );    //call parent method to simple attach slide to part
             return;
         }
 
@@ -75,9 +75,21 @@ class PartRepository extends ArrayFieldAbstractRepository
             //if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) {
                 //echo "block slides=".count($block->getChildren())."<br>";
                 //add only if this block has slides
-                if( count($block->getChildren()) > 0 ) {
+                if( count($block->getChildren()) > 0 ) {   //TODO: testing
                     //echo "block has slides<br>";
-                    $part->addChildren($block);
+
+                    //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
+                    //So, use only one block instead of creating two same entity in DB.
+                    $sameChild = $this->findSimilarChild($part,$block);
+                    if( $sameChild ) {
+                        //attach all sub-children to found similar child
+                        $children = $block->getChildren();
+                        foreach( $children as $child ) {
+                            $sameChild->addChildren($child);
+                        }
+                    } else {
+                        $part->addChildren($block);
+                    }
                 } else {
                     //remove block if it does not have any slides
                     //echo "remove block <br>";
@@ -90,6 +102,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
 
     }
+
 
     //override parent method to get next key string
     public function getNextNonProvided( $entity, $extra=null, $orderinfo=null ) {
@@ -283,6 +296,47 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     }
 
+
+//    //check and replace duplication objects such as two Part 'A'
+//    public function cleanDuplicateEntities( $entity ) {
+//
+//        $children = $this->getChildren();
+//
+//        if( !$children || count($children) <= 1 ) { //zero or one child => nothing to clean
+//            echo "zero or one child => nothing to clean <br>";
+//            return $entity;
+//        }
+//
+//        foreach( $children as $child ) {
+//            echo $child;
+//
+//            echo $child->obtainValidKeyfield()."?a=".$newChild->obtainValidKeyfield()."<br>";
+//
+//            //check 1: compare keys
+//            if( $child->obtainValidKeyfield()."" == $newChild->obtainValidKeyfield()."" ) {   //keys are the same
+//
+//                $parent = $child->getParent();
+//                $parKey = $parent->obtainValidKeyfield();
+//
+//                $newParent = $newChild->getParent();
+//                if( $newParent ) {
+//                    $newparKey = $newParent->obtainValidKeyfield();
+//                } else {
+//                    $newparKey = null;
+//                }
+//
+//                echo $parKey."?b=".$newparKey."<br>";
+//
+//                //check 2: compare parent's keys
+//                if( $parKey."" == $newparKey."" ) {
+//                    return true;
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
 
     //filter out duplicate virtual (in form, not in DB) parts from accession
     //unique part can be identified by the accession and part name => same part has the same accession number and part name;

@@ -198,9 +198,14 @@ class Block extends OrderAbstract
 //        }
 //        $slide_info .= ")";
 //        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
-        return "Block: id=".$this->id.
+
+        $parentId = null;
+        if( $this->getParent() )
+            $parentId = $this->getParent()->getId();
+
+        return "Block: id=".$this->getId().
         ", blockname=".$this->blockname->first().
-        ", parentId=".$this->getParent()->getId().
+        ", parentId=".$parentId.
         "<br>";
     }
 

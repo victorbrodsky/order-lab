@@ -11,9 +11,9 @@ use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
-    public function attachToOrderinfo( $entity, $orderinfo ) {
-        return 0;   //don't add accession here. Added in Procedure's 'setResult' method
-    }
+//    public function attachToOrderinfo( $entity, $orderinfo ) {
+//        return 0;   //don't add accession here. Added in Procedure's 'setResult' method
+//    }
 
     public function changeKeytype($entity) {
         $key = $entity->obtainValidKeyField();
