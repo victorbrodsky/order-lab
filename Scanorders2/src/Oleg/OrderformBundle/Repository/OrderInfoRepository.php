@@ -195,6 +195,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        echo "parts=".count($entity->getPart())."<br>";
 //        echo "blocks=".count($entity->getBlock())."<br>";
 //        echo "slides=".count($entity->getSlide())."<br>";
+        //echo "acc = ".$entity->getAccession()->first();
+        //echo "acc's procedure=".$entity->getAccession()->first()->getParent();
 //        echo $entity;
 //        foreach( $entity->getAccession() as $elem ) {
 //            echo $elem;

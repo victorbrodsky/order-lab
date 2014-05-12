@@ -53,94 +53,11 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["keytype"]);
     }
 
-//    //replace field entity if not existed from source object to destination object
-//    public function copyField_TODEL( $entity, $field, $className, $methodName, $fields ) {
-//        $em = $this->_em;
-//        echo "copyField!!! (Patient): class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
-//
-//        //echo $methodName.": this fields count=".count($fields)."<br>";
-//
-//        //if similar field is already set and provided field is empty => don't add provided field
-//        if( !$field || trim($field) == "" ) {
-//            if( $this->validFieldIsSet( $fields ) ) {
-//                //echo "field is empty and non empty valid field exists => don't add provided field => return<br>";
-//                return $entity;
-//            }
-//        }
-//
-//        //for Patient $field is not ID, but field value MRN number.
-//        //if id=null, check if entity already has mrn field (mrn+mrntype)
-//        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
-//            //echo "field value=".$field."<br>";
-//            $foundFields = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findByField($field.""); //PatientMrn
-//            //echo "count foundFields=".count($foundFields)."<br>";
-//            foreach( $foundFields as $thisField ) {
-//                echo "thisField=".$thisField->getField().", field=".$field->getField().", original=".$field->getOriginal()."<br>";
-//                echo "field id=".$field->getId()."<br>";
-//                if( $thisField->getId() == $field->getId() && $thisField->getStatus() == self::STATUS_VALID ) {
-//                    //this field is already exists in entity => don't add this field
-//                    return $entity;
-//                }
-//            }
-//        }
-//
-//        //if we reach this point, then now we have $field->getId(), exception - if not
-//        if( !$field->getId() || $field->getId() == null || $field->getId() == "" ) {
-//            throw new \Exception( 'Object '.$className.' does not have ID for field:'.$methodName );
-//        }
-//
-//        $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
-//
-//        if( !$found ) {
-//            //echo( "### ".$methodName." not found !!!!!! => add <br>" );
-//            $methodName = "add".$methodName;
-//            $entity->$methodName( $field );
-//        } else {
-//            //
-//        }
-//
-//        return $entity;
-//    }
-
-
-
-    public function attachToParent_TODEL( $entity, $child ) {
-
-        //TODO: testing
-        if( $child ) {
-            $entity->addChildren($child);
-        }
-        return;
-
-        //1) check if order has zero or one patient
-        $orderinfo = $entity->getOrderinfo()-first();
-        $patients = $orderinfo->getPatient();
-        if( count($patients) <= 1 ) {
-            return $entity; //zero or one patient, so can't compare
-        }
-
-        //2) compare only valid key value and key type for patient, without parent
-        $mrn = $entity->obtainValidKeyfield()->getField();
-        $keytype = $entity->obtainValidKeyfield()->getKeytype();
-        foreach( $patients as $patient ) {
-            $mrnThis = $patient->obtainValidKeyfield()->getField();
-            $keytypeThis = $patient->obtainValidKeyfield()->getKeytype();
-            if( $mrn."" == $mrnThis."" && $keytype == $keytypeThis ) {
-                if( count($orderinfo->getPatient()) > 1 ) {
-                    $orderinfo->removePatient($entity);
-                    //return;
-                }
-            }
-        }
-
-    }
-
-
     //replace child of patient if duplicated
     //$parent: orderinfo
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
 
-        echo "Patient replace duplicates:".$parent;
+        //echo "Patient replace duplicates:".$parent;
 
         $children = $parent->getChildren();
 
@@ -150,7 +67,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
         $count = 0;
         foreach( $children as $child ) {    //child is Procedure object
-            echo $count.": Testing child(procedure)=".$child."<br>";
+            //echo $count.": Testing child(procedure)=".$child."<br>";
 
             if( count($child->getAccession()) != 1 ) {
                 throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getAccession()) );
@@ -161,7 +78,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             $sameChild = $em->getRepository('OlegOrderformBundle:Procedure')->findSimilarChild( $parent, $child->getAccession()->first() );
 
             if( $sameChild ) {
-                echo "Found similar child=".$child."<br>";
+                //echo "Found similar child=".$child."<br>";
 
                 $thisChildren = $child->getChildren();
                 foreach( $thisChildren as $thisChild ) {
@@ -184,7 +101,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
                 $sameAccession = $this->processFieldArrays($sameAccession,$orderinfo,$accession);
 
                 //clear accession
-                echo "Clear Duplicated Accession:".$accession;
+                //echo "Clear Duplicated Accession:".$accession;
                 $sameChild->removeAccession($accession);
                 $orderinfo->removeAccession($accession);
                 $accession->setParent(null);
@@ -206,37 +123,5 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
 
-
-    //filter out duplicate virtual (in form, not in DB) patients
-    //after js check form, theoretically we should not have duplicate entities submitted by the form, but let's have it just in case ...
-    public function removeDuplicateEntities_OLD( $entity ) {
-
-        $patients = $entity->getPatient();
-
-        if( count($patients) == 1 ) {
-            return $entity;
-        }
-
-        $mrns = array();
-
-        foreach( $patients as $patient ) {
-
-            $mrn = $patient->getMrn();
-
-            if( $mrn != null && $mrn != "" ) {
-                if( count($mrns) == 0 || !in_array($mrn, $mrns) ) {
-                    $mrns[] = $mrn;
-                    //persist the rest of entities, because they will be added to DB.
-                    $em = $this->_em;
-                    $em->persist($patient);
-                } else {
-                    //echo "remove pat:".$patient;
-                    $entity->removePatient($patient);
-                }
-            }
-        }
-
-        return $entity;
-    }
     
 }

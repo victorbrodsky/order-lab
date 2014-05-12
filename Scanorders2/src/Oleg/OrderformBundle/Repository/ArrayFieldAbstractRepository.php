@@ -41,8 +41,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
         //echo $entity;
 
-        //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
-        //$entity = $em->getRepository('OlegOrderformBundle:'.$className)->cleanDuplicateEntities( $entity );
+        //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
 
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
@@ -54,8 +53,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
-            $entity->createKeyField();  //this should never execute in normal situation
-            //throw new \Exception( 'Key field does not exists for '.$className );
+            //$entity->createKeyField();  //this should never execute in normal situation
+            throw new \Exception( 'Key field does not exists for '.$className );
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
             //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
@@ -128,7 +127,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
 
         //echo "After process fields:".$entity;
-        //echo "count of children=".count($children)."<br>";
+        //echo $className.": count of children=".count($children)."<br>";
 
         foreach( $children as $child ) {
 
@@ -950,49 +949,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $newEntity;
     }
 
-    //check this element in parent, if found similar, then replace this one by the similar
-    //filter out duplicate virtual (in form, not in DB) blocks from a part
-    //since we check the block for this particular part, then use just block's name (?!)
-    public function cleanDuplicateEntities( $entity ) {
-        return $entity;
-    }
-
-    public function cleanDuplicateEntities_Patient( $entity ) {
-
-        $class = new \ReflectionClass($entity);
-        $className = $class->getShortName();
-
-        $parent = $entity->getParent();
-
-        if( !$parent ) {
-            if( $className == 'Patient' ) {
-                //1) check if order has zero or one patient
-                $orderinfo = $entity->getOrderinfo()-first();
-                $patients = $orderinfo->getPatient();
-                if( count($patients) <= 1 ) {
-                    return $entity; //zero or one patient, so can't compare
-                }
-
-                //2) compare only valid key value and key type for patient, without parent
-                $mrn = $entity->obtainValidKeyfield()->getField();
-                $keytype = $entity->obtainValidKeyfield()->getKeytype();
-                foreach( $patients as $patient ) {
-                    $mrnThis = $patient->obtainValidKeyfield()->getField();
-                    $keytypeThis = $patient->obtainValidKeyfield()->getKeytype();
-                    if( $mrn."" == $mrnThis."" && $keytype == $keytypeThis ) {
-                        if( count($orderinfo->getPatient()) > 1 ) {
-                            $orderinfo->removePatient($entity);
-                            //return;
-                        }
-                    }
-                }
-            } else {//Patient
-                return $entity;     //no parent, so can't compare
-            }
-        }
-
-        return $entity;
-    }
 
     //replace child if duplicated
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
@@ -1013,12 +969,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         $count = 0;
         foreach( $children as $child ) {
-            echo $count.": Testing child=".$child."<br>";
+            //echo $count.": Testing child=".$child."<br>";
 
             $sameChild = $this->findSimilarChild($parent,$child);
 
             if( $sameChild ) {
-                echo "Found similar child=".$child."<br>";
+                //echo "Found similar child=".$child."<br>";
 
                 $thisChildren = $child->getChildren();
                 foreach( $thisChildren as $thisChild ) {
@@ -1040,10 +996,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //testing
-        $children = $parent->getChildren();
-        foreach( $children as $child ) {
-            echo "Res child=".$child."<br>";
-        }
+//        $children = $parent->getChildren();
+//        foreach( $children as $child ) {
+//            echo "Res child=".$child."<br>";
+//        }
 
         return $parent;
     }

@@ -13,6 +13,137 @@ namespace Oleg\OrderformBundle\Repository;
 class ProcedureRepository extends ArrayFieldAbstractRepository
 {
 
+    //$entity is procedure
+    public function processEntity( $entity, $orderinfo ) {
+
+        if( !$entity ) {
+            throw new \Exception('Provided entity for processing is null');
+            //return $entity;
+        }
+
+        $em = $this->_em;
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+
+        //echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        //echo $entity;
+
+        //check and remove duplication objects such as two Part 'A'.
+        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+
+        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
+
+        $keys = $entity->obtainAllKeyfield();
+
+        //echo "count keys=".count($keys)."<br>";
+        //echo "key=".$keys->first()."<br>";
+
+        if( count($keys) == 0 ) {
+            //$entity->createKeyField();  //this should never execute in normal situation
+            throw new \Exception( 'Key field does not exists for '.$className );
+        } elseif( count($keys) > 1 ) {
+            //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
+            //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
+
+        }
+
+        $key = $entity->obtainValidKeyField();
+        //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
+
+        //change keytype from Existing Auto-generated MRN to Existing Auto-generated MRN
+        $entity = $this->changeKeytype($entity);
+
+        if( $orderinfo->getStatus() == 'Amended' ) {
+            $found = null;
+        } else {
+            //this is a main function to check uniqueness
+            $found = $this->findUniqueByKey($entity);   //$found - procedure in DB
+        }
+
+        if( $found ) {
+            //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+            //CopyChildren: copy form's object children to the found one.
+            foreach( $entity->getChildren() as $child ) {
+                //echo "adding: ".$child."<br>";
+                $found->addChildren( $child );
+            }
+            return $this->setResult($found, $orderinfo, $entity);
+
+            //$entity->setId( $found->getId() );
+            //return $this->setResult($entity, $orderinfo);
+
+        } else
+        if( $key == "" ) {
+            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+
+            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+
+            //we should have only one key field !!!
+            $key->setField($nextKey);
+            $key->setStatus(self::STATUS_VALID);
+            $key->setProvider($orderinfo->getProvider()->first());
+        }
+        else {
+            //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+            throw new \Exception('Invalid logic for Procedure, key='.$key);
+        }
+
+
+
+//        if( $key == ""  ) { //$key == "" is the same as $key->getName().""
+//            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+//
+//            //additional comparison by accession
+//
+//            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+//
+//            //we should have only one key field !!!
+//            $key->setField($nextKey);
+//            $key->setStatus(self::STATUS_VALID);
+//            $key->setProvider($orderinfo->getProvider()->first());
+//
+//        } else {
+//
+//            if( $orderinfo->getStatus() == 'Amended' ) {
+//                $found = null;
+//            } else {
+//                //this is a main function to check uniqueness
+//                $found = $this->findUniqueByKey($entity);   //$found - procedure in DB
+//            }
+//
+//
+//            if( $found ) {
+//                echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+//                //CopyChildren: copy form's object children to the found one.
+//                foreach( $entity->getChildren() as $child ) {
+//                    echo "adding: ".$child."<br>";
+//                    $found->addChildren( $child );
+//                }
+//                return $this->setResult($found, $orderinfo, $entity);
+//
+//                //$entity->setId( $found->getId() );
+//                //return $this->setResult($entity, $orderinfo);
+//
+//            } else {
+//                echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+//            }
+//
+//        }
+
+        $accessions = $entity->getAccession();
+        if( count($accessions) > 1 ) {
+            throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
+        }
+
+        return $this->setResult($entity, $orderinfo);
+
+    }
+
+
+
+
+
     public function processEntity_OLD( $entity, $orderinfo ) {
 
         $em = $this->_em;
@@ -174,7 +305,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //$parent: patient
     //procedure has only one accession
     public function replaceDuplicateEntities( $parent, $orderinfo ) {
-        echo "Procedure replace duplicates:".$parent;
+        //echo "Procedure replace duplicates:".$parent;
         return $parent;
     }
 
@@ -187,7 +318,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //find similar child and return the first one
     //return false if no similar children are found
     public function findSimilarChild($parent,$newChild) {
-        echo "Procedure: find similar Child to: ".$newChild." <br>";
+        //echo "Procedure: find similar Child to: ".$newChild." <br>";
 
         $children = $parent->getChildren();
 
@@ -212,15 +343,15 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             }
 
             if( $child->getAccession()->first() === $newChild ) {
-                echo "the same child: continue<br>";
+                //echo "the same child: continue<br>";
                 return false;
             }
 
             if( $this->entityEqualByComplexKey($child->getAccession()->first(), $newChild) ) {
-                echo "MATCH!: ".$child." <br>";
+                //echo "MATCH!: ".$child." <br>";
                 return $child;
             } else {
-                echo "NO MATCH! <br>";
+                //echo "NO MATCH! <br>";
             }
 
         }//foreach
