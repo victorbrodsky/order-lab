@@ -143,9 +143,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         }
 
-        //link entity with orderinfo
-        //$em->getRepository('OlegOrderformBundle:'.$className)->attachToOrderinfo( $entity, $orderinfo );
-
         if( !$entity->getId() || $entity->getId() == "" ) {
             //echo "persist ".$className."<br>";
             $em->persist($entity);
@@ -162,6 +159,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
+    //overrided by block and part repositories
     public function attachToParent( $entity, $child ) {
         //echo "start adding to orderinfo <br>";
         if( $child ) {
@@ -350,6 +348,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
     }
 
+    //overwrited by accession only => conflicting accession number replaced by a new generated one
     public function processDuplicationKeyField($entity,$orderinfo) {
         return $entity; //override it for accession only
     }

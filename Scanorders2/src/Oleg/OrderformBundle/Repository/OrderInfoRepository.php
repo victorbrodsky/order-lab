@@ -25,8 +25,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         $em = $this->_em;
 
-        //one way to solve multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
-        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
+        //replace duplicate entities to filter the similar entities.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->replaceDuplicateProcedures( $entity, $entity );
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
 

@@ -11,51 +11,51 @@ namespace Oleg\OrderformBundle\Repository;
 class PartRepository extends ArrayFieldAbstractRepository
 {
 
-    //if this element does not have any slide belonging to this order (with id=null) or children (empty branch for this orderinfo),
-    //so remove this element and all its parents from orderinfo
-    public function attachToOrderinfo( $entity, $orderinfo ) {
-
-        $children = $entity->getChildren();
-
-        $ret = 0;
-        $countNotEmptyChildren = 0;
-
-        foreach( $children as $child ) {
-            $childClass = new \ReflectionClass($child);
-            $childClassName = $childClass->getShortName();
-            if( $childClassName == "Block" ) {
-                //echo "check if this block has slides belongs to this orderinfo <br>";
-                $slides = $child->getChildren();
-                foreach( $slides as $slide ) {
-                    $res = $this->isEntityBelongsToOrderinfo( $slide, $orderinfo );
-                    if( $res ) {
-                        $countNotEmptyChildren++;
-                    }
-                }
-            } else
-            if( $childClassName == "Slide") {
-                //echo "check if this slide belongs to this orderinfo <br>";
-                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
-                if( $res ) {
-                    $countNotEmptyChildren++;
-                }
-            } else {
-                throw new \Exception('Part has not valid child of the class ' . $childClassName );
-            }
-        }
-
-        if( $countNotEmptyChildren == 0 ) {
-            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
-            $ret = -1;
-        } else {
-            //echo "added to orderinfo: Part ret=".$ret.", count=".count($entity->getChildren())."<br>";
-            //echo $entity."<br>";
-            $orderinfo->addPart($entity);
-            $ret = 1;
-        }
-
-        return $ret;
-    }
+//    //if this element does not have any slide belonging to this order (with id=null) or children (empty branch for this orderinfo),
+//    //so remove this element and all its parents from orderinfo
+//    public function attachToOrderinfo( $entity, $orderinfo ) {
+//
+//        $children = $entity->getChildren();
+//
+//        $ret = 0;
+//        $countNotEmptyChildren = 0;
+//
+//        foreach( $children as $child ) {
+//            $childClass = new \ReflectionClass($child);
+//            $childClassName = $childClass->getShortName();
+//            if( $childClassName == "Block" ) {
+//                //echo "check if this block has slides belongs to this orderinfo <br>";
+//                $slides = $child->getChildren();
+//                foreach( $slides as $slide ) {
+//                    $res = $this->isEntityBelongsToOrderinfo( $slide, $orderinfo );
+//                    if( $res ) {
+//                        $countNotEmptyChildren++;
+//                    }
+//                }
+//            } else
+//            if( $childClassName == "Slide") {
+//                //echo "check if this slide belongs to this orderinfo <br>";
+//                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+//                if( $res ) {
+//                    $countNotEmptyChildren++;
+//                }
+//            } else {
+//                throw new \Exception('Part has not valid child of the class ' . $childClassName );
+//            }
+//        }
+//
+//        if( $countNotEmptyChildren == 0 ) {
+//            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+//            $ret = -1;
+//        } else {
+//            //echo "added to orderinfo: Part ret=".$ret.", count=".count($entity->getChildren())."<br>";
+//            //echo $entity."<br>";
+//            $orderinfo->addPart($entity);
+//            $ret = 1;
+//        }
+//
+//        return $ret;
+//    }
 
     public function attachToParent( $part, $block ) {
 
@@ -295,81 +295,6 @@ class PartRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
-    }
-
-
-//    //check and replace duplication objects such as two Part 'A'
-//    public function cleanDuplicateEntities( $entity ) {
-//
-//        $children = $this->getChildren();
-//
-//        if( !$children || count($children) <= 1 ) { //zero or one child => nothing to clean
-//            echo "zero or one child => nothing to clean <br>";
-//            return $entity;
-//        }
-//
-//        foreach( $children as $child ) {
-//            echo $child;
-//
-//            echo $child->obtainValidKeyfield()."?a=".$newChild->obtainValidKeyfield()."<br>";
-//
-//            //check 1: compare keys
-//            if( $child->obtainValidKeyfield()."" == $newChild->obtainValidKeyfield()."" ) {   //keys are the same
-//
-//                $parent = $child->getParent();
-//                $parKey = $parent->obtainValidKeyfield();
-//
-//                $newParent = $newChild->getParent();
-//                if( $newParent ) {
-//                    $newparKey = $newParent->obtainValidKeyfield();
-//                } else {
-//                    $newparKey = null;
-//                }
-//
-//                echo $parKey."?b=".$newparKey."<br>";
-//
-//                //check 2: compare parent's keys
-//                if( $parKey."" == $newparKey."" ) {
-//                    return true;
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
-
-    //filter out duplicate virtual (in form, not in DB) parts from accession
-    //unique part can be identified by the accession and part name => same part has the same accession number and part name;
-    //since we check the part for this particular accession, then use just part's name (?!)
-    public function removeDuplicateEntities( $accession ) {
-
-        $parts = $accession->getPart();
-        //echo "<br>remove duplication: part count=".count($parts)."<br>";
-
-        if( count($parts) == 1 ) {
-            return $accession;
-        }
-
-        $names = array();
-
-        foreach( $parts as $part ) {
-
-            //echo "remove duplication: partname=".$part->getPartname()->first()."<br>";
-            $thisName = $this->obtainValidField($part->getPartname());
-
-            if( count($names) == 0 || !in_array($thisName, $names) ) {
-                $names[] = $thisName;
-                //persist the rest of entities, because they will be added to DB.
-                $em = $this->_em;
-                $em->persist($part);
-            } else {
-                $accession->removePart($part);
-            }
-
-        }
-
-        return $accession;
     }
 
 }

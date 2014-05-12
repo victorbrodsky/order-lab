@@ -15,43 +15,43 @@ namespace Oleg\OrderformBundle\Repository;
 class BlockRepository extends ArrayFieldAbstractRepository
 {
 
-    //ift this element does not have any slide belonging to this order (with id=null) (empty branch for this orderinfo),
-    //so remove this element and all its parents from orderinfo
-    public function attachToOrderinfo( $entity, $orderinfo ) {
-
-        $children = $entity->getChildren();
-
-        $ret = 0;
-        $countNotEmptyChildren = 0;
-
-        foreach( $children as $child ) {
-            $childClass = new \ReflectionClass($child);
-            $childClassName = $childClass->getShortName();
-            if( $childClassName == "Slide") {
-                //echo "check if this slide belongs to this orderinfo <br>";
-                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
-                if( $res ) {
-                    $countNotEmptyChildren++;
-                }
-            } else {
-                throw new \Exception('Block has not valid child of the class ' . $childClassName );
-            }
-        }
-
-        if( $countNotEmptyChildren == 0 ) {
-            //echo "block: start removing parents ################################ <br>";
-            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
-            //echo "block: finished removing parents ############################### <br>";
-            $ret = -1;
-        } else {
-            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
-            //echo $entity."<br>";
-            $orderinfo->addBlock($entity);
-            $ret = 1;
-        }
-
-        return $ret;
-    }
+//    //ift this element does not have any slide belonging to this order (with id=null) (empty branch for this orderinfo),
+//    //so remove this element and all its parents from orderinfo
+//    public function attachToOrderinfo( $entity, $orderinfo ) {
+//
+//        $children = $entity->getChildren();
+//
+//        $ret = 0;
+//        $countNotEmptyChildren = 0;
+//
+//        foreach( $children as $child ) {
+//            $childClass = new \ReflectionClass($child);
+//            $childClassName = $childClass->getShortName();
+//            if( $childClassName == "Slide") {
+//                //echo "check if this slide belongs to this orderinfo <br>";
+//                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
+//                if( $res ) {
+//                    $countNotEmptyChildren++;
+//                }
+//            } else {
+//                throw new \Exception('Block has not valid child of the class ' . $childClassName );
+//            }
+//        }
+//
+//        if( $countNotEmptyChildren == 0 ) {
+//            //echo "block: start removing parents ################################ <br>";
+//            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
+//            //echo "block: finished removing parents ############################### <br>";
+//            $ret = -1;
+//        } else {
+//            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
+//            //echo $entity."<br>";
+//            $orderinfo->addBlock($entity);
+//            $ret = 1;
+//        }
+//
+//        return $ret;
+//    }
 
     public function attachToParent( $block, $slide ) {
 
@@ -268,35 +268,6 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         //return $this->getNextByMax($lastFieldStr, $name);
         return $maxKey;
-    }
-
-    //filter out duplicate virtual (in form, not in DB) blocks from a part
-    //since we check the block for this particular part, then use just block's name (?!)
-    public function removeDuplicateEntities( $part ) {
-
-        $blocks = $part->getBlock();
-
-        if( count($blocks) == 1 ) {
-            return $part;
-        }
-
-        $names = array();
-
-        foreach( $blocks as $block ) {
-
-            $thisName = $block->getBlockname();
-
-            if( count($names) == 0 || !in_array($thisName, $names) ) {
-                $names[] = $thisName;
-                //persist the rest of entities, because they will be added to DB.
-                $em = $this->_em;
-                $em->persist($block);
-            } else {
-                $part->removeBlock($block);
-            }
-        }
-
-        return $part;
     }
 
     //$parent is block. Don't replace slides

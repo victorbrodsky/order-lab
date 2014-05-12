@@ -11,10 +11,6 @@ use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
-//    public function attachToOrderinfo( $entity, $orderinfo ) {
-//        return 0;   //don't add accession here. Added in Procedure's 'setResult' method
-//    }
-
     public function changeKeytype($entity) {
         $key = $entity->obtainValidKeyField();
         $newkeytypeid = $this->getCorrectKeytypeId($key->getKeytype()->getId());
@@ -161,36 +157,6 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         return $accession;
 
-    }
-
-    //filter out duplicate virtual (in form, not in DB) accessions from specimen
-    public function removeDuplicateEntities( $procedure ) {
-
-        $accessions = $procedure->getAccession();
-        
-        if( count($accessions) == 1 ) {
-            return $procedure;
-        }
-
-        $accessionNums = array();
-
-        foreach( $accessions as $accession ) {
-
-            //echo "accession=".$accession."<br>";
-            $accNum = $accession->getAccession();
-
-            if( count($accessionNums) == 0 || !in_array($accNum, $accessionNums) ) {
-                $accessionNums[] = $accNum;
-                //persist the rest of entities, because they will be added to DB.
-                $em = $this->_em;
-                $em->persist($accession);
-            } else {
-                $procedure->removeAccession($accession);
-            }
-
-        }
-
-        return $procedure;
     }
 
 }

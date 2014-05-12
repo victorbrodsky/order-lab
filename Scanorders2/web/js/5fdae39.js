@@ -14906,13 +14906,6 @@ function handsonTableInit() {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
-    //orderinfo datepicker
-    //var datepicker = $.fn.datepicker.noConflict();
-    //$.fn.bootstrapDP = datepicker;
-    //$('#priority_option').find('.datepicker').bootstrapDP();
-    //$('#priority_option').find('.datepicker').datepicker();
-    //$('.datepicker').datepicker();
-
 }
 
 //function capitalizeAccession( row, col, value ) {
@@ -14949,6 +14942,12 @@ function processKeyTypes( row, col, value, oldvalue ) {
     {
         case 'MRN Type':
             if( value && value == 'Auto-generated MRN' ) {
+
+                //check if the field is not readOnly
+                if( _sotable.getCellMeta(row,col+1).readOnly == true ) {
+                    break;
+                }
+
                 $.ajax({
                     url: urlCheck+"patient/generate",
                     timeout: _ajaxTimeout,
@@ -14962,15 +14961,23 @@ function processKeyTypes( row, col, value, oldvalue ) {
                 }).error( function ( x, t, m ) {
                    console.log('ERROR auto generate MRN');
                 });
+            } else {
+                cleanHTableCell( row, col+1, true );
             }
-            if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
-                cleanHTableCell( row, col+1, true )
-            }
+//            if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
+//                cleanHTableCell( row, col+1, true )
+//            }
 
             break;
         case 'Accession Type':
             if( value && value == 'Auto-generated Accession Number' ) {
                 //console.log('Accession Type: value null !!!!!!!!!!!!!');
+
+                //check if the field is not readOnly
+                if( _sotable.getCellMeta(row,col+1).readOnly == true ) {
+                   break;
+                }
+
                 $.ajax({
                     url: urlCheck+"accession/generate",
                     timeout: _ajaxTimeout,
@@ -14984,10 +14991,12 @@ function processKeyTypes( row, col, value, oldvalue ) {
                 }).error( function ( x, t, m ) {
                     console.log('ERROR auto generate Accession Number');
                 });
+            } else {
+                cleanHTableCell( row, col+1, true );
             }
-            if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
-                cleanHTableCell( row, col+1, true )
-            }
+            //if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
+                //cleanHTableCell( row, col+1, true )
+            //}
 
             ////////////// set validator ///////////////
             //if( !value || value == '' ) {
