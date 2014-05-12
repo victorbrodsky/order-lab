@@ -163,7 +163,7 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity  = new OrderInfo();
+        $entity = new OrderInfo();
 
         $type = "Table-View Scan Order";
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>null);

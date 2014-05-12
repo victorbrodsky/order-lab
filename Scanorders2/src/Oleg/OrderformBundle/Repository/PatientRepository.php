@@ -136,12 +136,80 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
 
+    //replace child of patient if duplicated
+    //$parent: orderinfo
+    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+
+        echo "Patient replace duplicates:".$parent;
+
+        $children = $parent->getChildren();
+
+        if( !$children ) {
+            return $parent;
+        }
+
+        $count = 0;
+        foreach( $children as $child ) {    //child is Procedure object
+            echo $count.": Testing child(procedure)=".$child."<br>";
+
+            if( count($child->getAccession()) != 1 ) {
+                throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getAccession()) );
+            }
+
+            //$sameChild = $this->findSimilarChild($parent,$child->getAccession()->first());
+            $em = $this->_em;
+            $sameChild = $em->getRepository('OlegOrderformBundle:Procedure')->findSimilarChild( $parent, $child->getAccession()->first() );
+
+            if( $sameChild ) {
+                echo "Found similar child=".$child."<br>";
+
+                $thisChildren = $child->getChildren();
+                foreach( $thisChildren as $thisChild ) {
+                    $sameChild->addChildren($thisChild);
+                }
+
+                //Copy Fields for Procedure
+                //echo "<br>######################################## Process similar fields ########################################<br>";
+                $sameChild = $this->processFieldArrays($sameChild,$orderinfo,$child);
+                //echo "######################################## EOF Process similar fields ########################################<br>";
+
+                //copy parts to the found same accession
+                $sameAccession = $sameChild->getAccession()->first();
+                $parts = $child->getAccession()->first()->getChildren();
+                foreach( $parts as $part ) {
+                    $sameAccession->addChildren($part);
+                }
+
+                $accession = $child->getAccession()->first();
+                $sameAccession = $this->processFieldArrays($sameAccession,$orderinfo,$accession);
+
+                //clear accession
+                echo "Clear Duplicated Accession:".$accession;
+                $sameChild->removeAccession($accession);
+                $orderinfo->removeAccession($accession);
+                $accession->setParent(null);
+                $accession->clearOrderinfo();
+                //unset($accession);
+
+                //clear procedure
+                $parent->removeChildren($child);
+                $orderinfo->removeProcedure($child);
+                $child->setParent(null);
+                $child->clearOrderinfo();
+                unset($child);
+            }
+
+            $count++;
+        }
+
+        return $parent;
+    }
 
 
 
     //filter out duplicate virtual (in form, not in DB) patients
     //after js check form, theoretically we should not have duplicate entities submitted by the form, but let's have it just in case ...
-    public function removeDuplicateEntities( $entity ) {
+    public function removeDuplicateEntities_OLD( $entity ) {
 
         $patients = $entity->getPatient();
 

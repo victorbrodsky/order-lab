@@ -852,6 +852,9 @@ class OrderInfo
     public function addChildren($child) {
         $this->addPatient($child);
     }
+    public function removeChildren($child) {
+        $this->removePatient($child);
+    }
 
 
 }

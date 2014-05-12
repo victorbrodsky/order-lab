@@ -77,19 +77,20 @@ class PartRepository extends ArrayFieldAbstractRepository
                 //add only if this block has slides
                 if( count($block->getChildren()) > 0 ) {   //TODO: testing
                     //echo "block has slides<br>";
+                    $part->addChildren($block);
 
-                    //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
-                    //So, use only one block instead of creating two same entity in DB.
-                    $sameChild = $this->findSimilarChild($part,$block);
-                    if( $sameChild ) {
-                        //attach all sub-children to found similar child
-                        $children = $block->getChildren();
-                        foreach( $children as $child ) {
-                            $sameChild->addChildren($child);
-                        }
-                    } else {
-                        $part->addChildren($block);
-                    }
+//                    //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
+//                    //So, use only one block instead of creating two same entity in DB.
+//                    $sameChild = $this->findSimilarChild($part,$block);
+//                    if( $sameChild ) {
+//                        //attach all sub-children to found similar child
+//                        $children = $block->getChildren();
+//                        foreach( $children as $child ) {
+//                            $sameChild->addChildren($child);
+//                        }
+//                    } else {
+//                        $part->addChildren($block);
+//                    }
                 } else {
                     //remove block if it does not have any slides
                     //echo "remove block <br>";

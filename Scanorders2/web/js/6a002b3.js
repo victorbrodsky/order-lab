@@ -14888,6 +14888,13 @@ function handsonTableInit() {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
+    //orderinfo datepicker
+    var datepickerb = $.fn.datepicker.noConflict();
+    $.fn.bootstrapDP = datepickerb;
+    $('#priority_option').find('.datepicker').bootstrapDP();
+    //$('#priority_option').find('.datepicker').datepicker();
+    //$('.datepicker').datepicker();
+
 }
 
 //function capitalizeAccession( row, col, value ) {

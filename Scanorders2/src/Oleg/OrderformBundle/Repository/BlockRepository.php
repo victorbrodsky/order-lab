@@ -299,4 +299,9 @@ class BlockRepository extends ArrayFieldAbstractRepository
         return $part;
     }
 
+    //$parent is block. Don't replace slides
+    public function replaceDuplicateEntities($parent,$orderinfo) {
+        return $parent;
+    }
+
 }

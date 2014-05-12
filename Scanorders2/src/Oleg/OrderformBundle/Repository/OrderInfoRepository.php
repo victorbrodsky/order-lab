@@ -27,6 +27,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //one way to solve multi duplicate entities to filter the similar entities. But for complex entities such as Specimen or Block it is not easy to filter duplicates out.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->removeDuplicateEntities( $entity );
+        //$entity = $em->getRepository('OlegOrderformBundle:Patient')->replaceDuplicateProcedures( $entity, $entity );
+        $entity = $this->replaceDuplicateEntities( $entity, $entity );
 
         //set Status with Type and Group
         //$status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
@@ -186,6 +188,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
 //        echo "<br>################################## Finish:<br>";
+//        echo $entity->getPatient()->first()."<br>";
 //        echo "patients=".count($entity->getPatient())."<br>";
 //        echo "procedures=".count($entity->getProcedure())."<br>";
 //        echo "accessions=".count($entity->getAccession())."<br>";
@@ -197,6 +200,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo $elem;
 //        }
 //        echo "proc acc count=".count($entity->getProcedure()->first()->getAccession()),"<br>";
+//        foreach( $entity->getBlock() as $child ) {
+//            echo "Res block=".$child."<br>";
+//        }
+//        foreach($entity->getAccession() as $acc) {
+//            echo "parent=".$acc->getParent()."=>";
+//            echo $acc;
+//        }
 
         //exit('orderinfo repo exit');
 

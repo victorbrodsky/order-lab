@@ -114,7 +114,7 @@ class MultyScanOrderController extends Controller {
         $entity->setProvider($user);
 //        echo "provider1=".$entity->getProvider()->first()."<br>";
 
-        $status = 'invalid';
+        $status = 'valid';    //invalid
         $source = 'scanorder';
 
         $patient = new Patient(true,$status,$user,$source);
@@ -351,22 +351,23 @@ class MultyScanOrderController extends Controller {
         //$email = $user->getEmail();
 
         $source = 'scanorder';
+        $status = 'valid';
 
         $entity->setProvider($user);
 
-        $patient = new Patient(true,'invalid',$user,$source);
+        $patient = new Patient(true,$status,$user,$source);
         $entity->addPatient($patient);
 
-        $procedure = new Procedure(true,'invalid',$user,$source);
+        $procedure = new Procedure(true,$status,$user,$source);
         $patient->addProcedure($procedure);
 
-        $accession = new Accession(true,'invalid',$user,$source);
+        $accession = new Accession(true,$status,$user,$source);
         $procedure->addAccession($accession);
 
-        $part = new Part(true,'invalid',$user,$source);
+        $part = new Part(true,$status,$user,$source);
         $accession->addPart($part);
 
-        $block = new Block(true,'invalid',$user,$source);
+        $block = new Block(true,$status,$user,$source);
         $part->addBlock($block);
 
         $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default

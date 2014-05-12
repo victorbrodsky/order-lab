@@ -1,0 +1,24 @@
+
+/*action buttons*/
+.action-cancel-status {
+    /*background-color: rgb(242, 222, 222);*/
+    background:  linear-gradient( rgb(242, 222, 222), rgb(233, 199, 210) );
+}
+
+.action-amend-status {
+    background:  linear-gradient( rgb(241, 215, 179), rgb(233, 196, 143) );
+}
+
+/*lists*/
+.order-neutral-status {
+    background: rgb(247, 247, 247);
+}
+
+.order-urgent-status {
+    background: rgb(245, 229, 229);
+}
+
+.order-someattention-status {
+    background: rgb(252, 245, 229);
+}
+

@@ -13,7 +13,7 @@ namespace Oleg\OrderformBundle\Repository;
 class ProcedureRepository extends ArrayFieldAbstractRepository
 {
 
-    public function processEntity( $entity, $orderinfo ) {
+    public function processEntity_OLD( $entity, $orderinfo ) {
 
         $em = $this->_em;
 
@@ -80,10 +80,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //echo "after process:".$entity;
 
         return $procedureProcessed;
-
     }
 
-    public function setResult( $procedure, $orderinfo=null, $original=null ) {
+    public function setResult_OLD( $procedure, $orderinfo=null, $original=null ) {
 
         //set status 'valid'
         $procedure->setStatus(self::STATUS_VALID);
@@ -169,6 +168,64 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         } else {
             return null;
         }
+    }
+
+    //replace child if duplicated
+    //$parent: patient
+    //procedure has only one accession
+    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+        echo "Procedure replace duplicates:".$parent;
+        return $parent;
+    }
+
+
+
+    //find similar procedure in patient.
+    //However, procedure is identified by accession number
+    //$parent: patient
+    //$newChild: accession
+    //find similar child and return the first one
+    //return false if no similar children are found
+    public function findSimilarChild($parent,$newChild) {
+        echo "Procedure: find similar Child to: ".$newChild." <br>";
+
+        $children = $parent->getChildren();
+
+        //echo "<br>";
+        //echo $newChild;
+        //echo "newChild key=".$newChild->obtainValidKeyfield()."<br>";
+        if( $newChild->obtainValidKeyfield()."" == "" ) {   //no name is provided, so can't compare => does not exist
+            //echo "false: no name <br>";
+            return false;
+        }
+
+        if( !$children || count($children) == 0 ) { //no children => does not exist
+            //echo "false: no children <br>";
+            return false;
+        }
+
+        foreach( $children as $child ) {
+            //echo $child;
+
+            if( count($child->getAccession()) != 1 ) {
+                throw new \Exception( 'This entity must have only one child. Number of children=' . count($child->getAccession()) );
+            }
+
+            if( $child->getAccession()->first() === $newChild ) {
+                echo "the same child: continue<br>";
+                return false;
+            }
+
+            if( $this->entityEqualByComplexKey($child->getAccession()->first(), $newChild) ) {
+                echo "MATCH!: ".$child." <br>";
+                return $child;
+            } else {
+                echo "NO MATCH! <br>";
+            }
+
+        }//foreach
+
+        return false;
     }
 
 

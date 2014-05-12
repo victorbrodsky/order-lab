@@ -231,6 +231,12 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
+    $(function(){
+        var datepicker = $.fn.datepicker.noConflict;
+        $.fn.bootstrapDP = datepicker;
+        $('#priority_option').find('.datepicker').bootstrapDP();
+    });
+
     //Handsontable.renderers.registerRenderer('redRenderer', redRenderer); //maps function to lookup string
 
     getSlideTypes();
@@ -457,6 +463,13 @@ function handsonTableInit() {
 
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
+
+    //orderinfo datepicker
+    //var datepicker = $.fn.datepicker.noConflict();
+    //$.fn.bootstrapDP = datepicker;
+    //$('#priority_option').find('.datepicker').bootstrapDP();
+    //$('#priority_option').find('.datepicker').datepicker();
+    //$('.datepicker').datepicker();
 
 }
 

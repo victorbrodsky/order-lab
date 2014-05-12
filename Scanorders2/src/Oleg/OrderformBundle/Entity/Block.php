@@ -189,22 +189,19 @@ class Block extends OrderAbstract
 
     public function __toString()
     {
-        //return "Block: id=".$this->id.", name".$this->name."<br>";
-//        $slide_info = "(";
-//        $count = 0;
-//        foreach( $this->slide as $slide ) {
-//            $slide_info .= $count.":" . $slide. "; ";
-//            $count++;
-//        }
-//        $slide_info .= ")";
-//        return "Block: id=".$this->id.", name=".$this->name.", slideCount=".count($this->slide)." (".$slide_info.")<br>";
-
         $parentId = null;
         if( $this->getParent() )
             $parentId = $this->getParent()->getId();
 
+        $sectionStr = "";
+        foreach( $this->sectionsource as $section ) {
+            $sectionStr .= $section."(".$section->getStatus()."),";
+        }
+
         return "Block: id=".$this->getId().
         ", blockname=".$this->blockname->first().
+        ", section=".$sectionStr.
+        ", status=".$this->status.
         ", parentId=".$parentId.
         "<br>";
     }

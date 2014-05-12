@@ -65,7 +65,7 @@ class Accession extends OrderAbstract {
         return "Accession: id=".$this->id.
             ", accessionCount=".count($this->accession).
             ", accessions#=".$accNameStr.
-            ", parentId=".$this->getParent()->getId().
+            //", parentId=".$this->getParent()->getId().
             ", partCount=".count($this->part).
             ", status=".$this->status."<br>";
     }

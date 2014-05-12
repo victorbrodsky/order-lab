@@ -62,7 +62,13 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         return $slide;
     }
 
+    //$parent is slide. Slide does not have children.
+    public function replaceDuplicateEntities($parent,$orderinfo) {
+        return $parent;
+    }
 
 }
+
+
 
 ?>

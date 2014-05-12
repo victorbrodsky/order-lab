@@ -473,6 +473,7 @@ class Patient extends OrderAbstract
         ", names=".$names.
         ", sexs=".$sexs.
         ", age=".$this->age->first().", nameID=".$this->age->first()->getId().
+        ", status=".$this->status.
         ", procedureCount=".count($this->procedure).
         //", firstprocedureID=".$this->procedure->first()->getId().
         ", orderinfo=".$orders.

@@ -43,7 +43,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //check and remove duplication objects such as two Part 'A'. We don't need this if we have JS form check(?)
         //$entity = $em->getRepository('OlegOrderformBundle:'.$className)->cleanDuplicateEntities( $entity );
+        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
 
+        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
 
         $keys = $entity->obtainAllKeyfield();
@@ -108,6 +110,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     }
 
+
     public function setResult( $entity, $orderinfo, $original=null ) {
 
         $em = $this->_em;
@@ -125,7 +128,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
 
         //echo "After process fields:".$entity;
-
         //echo "count of children=".count($children)."<br>";
 
         foreach( $children as $child ) {
@@ -161,29 +163,15 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
-    //attach to parent if the parent does not have the same child (the same key,keytype and parent key,keytype)
     public function attachToParent( $entity, $child ) {
         //echo "start adding to orderinfo <br>";
         if( $child ) {
-            //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
-            //So, use only one block instead of creating two same entity in DB.
-            $sameChild = $this->findSimilarChild($entity,$child);
-            if( $sameChild ) {
-                //attach all sub-children to found similar child
-                $children = $child->getChildren();
-                foreach( $children as $child ) {
-                    $sameChild->addChildren($child);
-                }
-                //remove $child
-                $child->setParent(null);
-                $entity->removeChildren($child);
-                $child->clearOrderinfo();
-
-            } else {
-                $entity->addChildren($child);
-            }
+            $entity->addChildren($child);
         }
     }
+
+    //find similar child and return the first one
+    //return false if no similar children are found
     public function findSimilarChild($parent,$newChild) {
         $children = $parent->getChildren();
 
@@ -203,41 +191,54 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         foreach( $children as $child ) {
             //echo $child;
 
-            $key = $child->obtainValidKeyfield();
-            $newchildKey = $newChild->obtainValidKeyfield();
+            if( $child === $newChild ) {
+                //echo "the same child: continue<br>";
+                return false;
+            }
 
-            //echo $key."?a=".$newchildKey."<br>";
-
-            //check 1: compare keys
-            if( $this->keysEqual($key,$newchildKey) ) { //keys are the same
-
-                //check 2: compare parent's keys
-                $parent = $child->getParent();
-                if( $parent ) {
-                    $parKey = $parent->obtainValidKeyfield();
-
-                    $newParent = $newChild->getParent();
-                    if( $newParent ) {
-                        $newparKey = $newParent->obtainValidKeyfield();
-                    } else {
-                        $newparKey = null;
-                    }
-
-                    //echo $parKey."?b=".$newparKey."<br>";
-
-                    if( $this->keysEqual($parKey,$newparKey) ) {
-                        //echo "return found similar child: keys are the same <br>";
-                        //echo $child;
-                        return $child;
-                    }
-                } else {
-                    //parent does not exist, but keys are equal => return found similar child
-                    return $child;
-                }//if parent
-
-            }//if keys equal
+            if( $this->entityEqualByComplexKey($child, $newChild) ) {
+                return $child;
+            }
 
         }//foreach
+
+        return false;
+    }
+    public function entityEqualByComplexKey($entity1, $entity2) {
+
+        $key1 = $entity1->obtainValidKeyfield();
+        $key2 = $entity2->obtainValidKeyfield();
+
+        //echo $key1."?a=".$key2."<br>";
+
+        //check 1: compare keys
+        if( $this->keysEqual($key1,$key2) ) { //keys are the same
+
+            //check 2: compare parent's keys
+            $parent = $entity1->getParent();
+            if( $parent ) {
+                $parKey = $parent->obtainValidKeyfield();
+
+                $newParent = $entity2->getParent();
+                if( $newParent ) {
+                    $newparKey = $newParent->obtainValidKeyfield();
+                } else {
+                    $newparKey = null;
+                }
+
+                //echo $parKey."?b=".$newparKey."<br>";
+
+                if( $this->keysEqual($parKey,$newparKey) ) {
+                    //echo "return found similar child: keys are the same <br>";
+                    //echo $child;
+                    return true;
+                }
+            } else {
+                //parent does not exist, but keys are equal => return found similar child
+                return true;
+            }//if parent
+
+        }//if keys equal
 
         return false;
     }
@@ -260,69 +261,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return false;
         }
     }
-
-//    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
-//    public function attachToOrderinfo_OLD( $entity, $orderinfo ) {
-//
-//        $ret = 0;
-//
-//        $className = new \ReflectionClass($entity);
-//        $shortClassName = $className->getShortName();
-//        $addClassMethod = "add".$shortClassName;    //"addPatient"
-//
-//        if( count($entity->getChildren()) > 0 ) {
-//            //if( $entity->countChildrenWithOrderinfo($orderinfo) > 0 ) {
-//            $orderinfo->$addClassMethod($entity);
-//            $ret = 1;
-//        }
-//
-//        //echo "added to orderinfo: ".$shortClassName." ret=".$ret.", count=".count($entity->getChildren())."<br>";
-//        //echo $entity."<br>";
-//
-//        return $ret;
-//    }
-//
-//    //add to orderinfo if has at least one child which belongs to this orderinfo too. Otherwise it's an empty branch
-//    public function attachToOrderinfo( $entity, $orderinfo ) {
-//
-//        return false;
-//
-//        $className = new \ReflectionClass($entity);
-//        $shortClassName = $className->getShortName();
-//        $addClassMethod = "add".$shortClassName;    //"addPatient"
-//        echo "<br>add to orderinfo: ".$shortClassName."<br>";
-//
-//        $ret = 0;
-//        $countNotEmptyChildren = 0;
-//
-//        $children = $entity->getChildren();
-//        echo "childrens=".count($entity->getChildren())."<br>";
-//
-//        foreach( $children as $child ) {
-//            //echo "check if this slide belongs to this orderinfo <br>";
-//            $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
-//            if( $res ) {
-//                $countNotEmptyChildren++;
-//            }
-//        }
-//
-//        if( $countNotEmptyChildren == 0 ) {
-//            //echo "block: start removing parents ################################ <br>";
-//            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
-//            //echo "block: finished removing parents ############################### <br>";
-//            $ret = -1;
-//        } else {
-//            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
-//            //echo $entity."<br>";
-//            $orderinfo->$addClassMethod($entity);
-//            $ret = 1;
-//        }
-//
-//        echo "added to orderinfo?: ".$shortClassName." ret=".$ret.", childCount=".count($entity->getChildren())."<br>";
-//        echo $entity."<br>";
-//
-//        return $ret;
-//    }
 
     //if child has orderinfo without id => child belongs to this orderinfo
     public function isEntityBelongsToOrderinfo_NEW( $entity, $orderinfo ) {
@@ -352,7 +290,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
     }
 
-    //TODO: this method will not work on postgresql because id is pre-set for not flushed entity
+
     public function isEntityBelongsToOrderinfo( $entity, $orderinfo ) {
 
         //echo "check if belongs to orderinfo. entity: ".$entity;
@@ -1015,7 +953,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //check this element in parent, if found similar, then replace this one by the similar
     //filter out duplicate virtual (in form, not in DB) blocks from a part
     //since we check the block for this particular part, then use just block's name (?!)
-    public function cleanDuplicateEntities_TODEL( $entity ) {
+    public function cleanDuplicateEntities( $entity ) {
+        return $entity;
+    }
+
+    public function cleanDuplicateEntities_Patient( $entity ) {
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
@@ -1052,6 +994,59 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
+    //replace child if duplicated
+    public function replaceDuplicateEntities( $parent, $orderinfo ) {
+
+        if( $parent === $orderinfo ) {
+            $children = $orderinfo->getChildren();
+        } else {
+            $children = $parent->getChildren();
+        }
+
+        if( !$children ) {
+            return $parent;
+        }
+
+        if( count($children) <= 1 ) {
+            return $parent;
+        }
+
+        $count = 0;
+        foreach( $children as $child ) {
+            echo $count.": Testing child=".$child."<br>";
+
+            $sameChild = $this->findSimilarChild($parent,$child);
+
+            if( $sameChild ) {
+                echo "Found similar child=".$child."<br>";
+
+                $thisChildren = $child->getChildren();
+                foreach( $thisChildren as $thisChild ) {
+                    $sameChild->addChildren($thisChild);
+                }
+
+                //Copy Fields
+                //echo "<br>######################################## Process similar fields ########################################<br>";
+                $sameChild = $this->processFieldArrays($sameChild,$orderinfo,$child);
+                //echo "######################################## EOF Process similar fields ########################################<br>";
+
+                $parent->removeChildren($child);
+                //$orderinfo->removeAccession($child);
+                $child->setParent(null);
+                $child->clearOrderinfo();
+                unset($child);
+            }
+            $count++;
+        }
+
+        //testing
+        $children = $parent->getChildren();
+        foreach( $children as $child ) {
+            echo "Res child=".$child."<br>";
+        }
+
+        return $parent;
+    }
 
     public function printTree( $entity ) {
 

@@ -64,9 +64,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     }
 
 
-
-
-    //process conflict if exists
+    //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
         if( count($orderinfo->getDataquality()) == 0 ) {
