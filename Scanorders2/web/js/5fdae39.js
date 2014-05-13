@@ -14475,7 +14475,7 @@ var accession_validator = function (value) {
         return true;
     }
     var notzeros = notAllZeros(value);
-    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{1,2}[-][1-9]{1}[0-9]{0,5}$/);      //S11-1, SS11-1, S1-10, not S11-01
+    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{2}[-][1-9]{1}[0-9]{0,5}$/);      //S11-1, SS11-1, S1-10, not S11-01
     //console.log('acc validator: res='+res+', notzeros='+notzeros);
     if( res && notzeros ) {
         return true;
@@ -15318,9 +15318,16 @@ function validateHandsonTable() {
     }
     //console.log('errCells='+errCells);
     if( errCells > 0 ) {
-        var errmsg = "Please review the cells marked bright red, in the highlight row(s), and correct the entered values to match the expected format. The expected formats are as follows:<br>"+
-            "CoPath Accession Number Example: S14-1 or SC14-1 (no leading zeros after the dash such as S14-01)<br>" +
-            "All other Accession and MRN Types: max of 25 characters; non leading zero and special characters; non all zeros; non last special character. Example: SC100000000211";
+//        var errmsg = "Please review the cells marked bright red, in the highlight row(s), and correct the entered values to match the expected format. The expected formats are as follows:<br>"+
+//            "CoPath Accession Number Example: S14-1 or SC14-1 (no leading zeros after the dash such as S14-01)<br>" +
+//            "All other Accession and MRN Types: max of 25 characters; non leading zero and special characters; non all zeros; non last special character. Example: SC100000000211";
+        var errmsg = "Please review the cell(s) marked bright red in the highlighted row(s), and correct the entered values to match the expected format. " +
+            "The expected formats are as follows:<br>"+ "CoPath Accession Number: example of acceptable numbers are S14-1 or SC14-100001 " +
+            "(must have a dash with no leading zeros after the dash such as S14-01; must start with either one or two letters followed by two digits; " +
+            "maximum character string length is 11; must contain only letters or digits)<br>" +
+            "All other Accession and MRN Types: maximum of 25 characters; must not start with one or more consequtive zeros; " +
+            "must be made up of letters, numbers and possibly a dash; the first and last character must be either digits or letters (not a dash). " +
+            "Example of an acceptable character string: DC100000000211";
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
@@ -15342,10 +15349,15 @@ function validateHandsonTable() {
         }
     } //for each row
     if( emptyRows > 0 ) {
-        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
+//        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
+//            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
+//            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
+//            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
+        var errmsg = "Please review the cell(s) marked light red, in the highlighted row(s), and enter the missing required information.<br>" +
             "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
-            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>"
+            "If you have accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
+
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
@@ -15492,7 +15504,8 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             //console.log("after mrn check PrevGenKeyTable:"+response);
             if( !response ) {
-                var errorHtml = createTableErrorWell('Previously auto-generated MRN Numbers "'+mrn+'" is not correct. Please correct the auto-generated number in the highlight row(s).');
+                var errmsg = 'The MRN(s) you have specified to be Previously Auto-Generated "'+mrn+'" were not found. Please correct the MRN in the highlighted row(s) or change the MRN Type.';
+                var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
                 //_sotable.getCellMeta(row,mrnType).renderer = forceRedRenderer;
                 //_sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = forceRedRenderer;
@@ -15520,7 +15533,8 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             //console.log("after acc check PrevGenKey Table:"+response);
             if( !response ) {
-                var errorHtml = createTableErrorWell('Previously auto-generated Accession Numbers "'+acc+'" is not correct. Please correct the auto-generated number in the highlight row(s).');
+                var errmsg = 'The Accession Numbers you have specified to be Previously Auto-Generated "'+acc+'" were not found. Please correct the Accesion Number in the highlighted row(s) or hange the Accession Number Type.';
+                var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
                 //_sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = forceRedRenderer;
                 setSpecialErrorToRow(row);
@@ -15539,9 +15553,10 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             var errLen = $('.tablerowerror-added').length;
             if( errLen == 0 && mrnAccInternalConflict( acc, accType, mrn, mrnType ) ) {
-                //var errorHtml = createTableErrorWell('MRN - Accession Numbers internal conflict within the table. Rows with error cells are marked with yellow.');
-                var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
-                    "The same accession number can not be tied to two different patients.";
+                //var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
+                //    "The same accession number can not be tied to two different patients.";
+                var errmsg = "Please review the cell(s) marked yellow and make sure each accession number is always listed as belonging " +
+                            "to the same patient's MRN. <br>" + "The same accession number can not be tied to two different patients.";
                 var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
                 setErrorToRow(row,conflictRenderer,true);
@@ -15553,9 +15568,10 @@ function checkPrevGenAndConflictTable(row) {
         function(response) {
             var errLen = $('.tablerowerror-added').length;
             if( errLen == 0 && mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
-                //var errorHtml = createTableErrorWell('MRN - Accession Numbers conflict. Rows with error cells are marked with yellow.');
-                var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
-                    "The same accession number can not be tied to two different patients.";
+                //var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
+                //    "The same accession number can not be tied to two different patients.";
+                var errmsg = "Please review the cell(s) marked yellow and make sure each accession number is always listed as belonging " +
+                            "to the same patient's MRN. <br>" + "The same accession number can not be tied to two different patients.";
                 var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
                 setErrorToRow(row,conflictRenderer,true);
@@ -27879,6 +27895,7 @@ function getButtonElementParent( btn ) {
  * Date: 8/14/13
  * Time: 12:36 PM
  */
+
 
 //add all element to listeners again, the same as in ready
 function initAdd() {

@@ -207,8 +207,12 @@ class TableController extends Controller {
 
             $entity->addPatient($patient);
 
+            //echo $patient->getProcedure()->first()->getAccession()->first();
+
         }//foreach row
         //////////////// process handsontable rows ////////////////
+
+        //exit('table order testing');
 
         $user = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($user);

@@ -37,10 +37,12 @@
 
         <!-- send width and height info to the server -->
         {% javascripts
+            '@OlegOrderformBundle/Resources/public/form/js/errorwatch.js'
             '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
 
         <script language="Javascript">
             var _ajaxTimeout = 15000;  //15000 => 15 sec

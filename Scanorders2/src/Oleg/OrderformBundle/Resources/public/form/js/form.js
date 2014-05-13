@@ -4,6 +4,7 @@
  * Time: 12:36 PM
  */
 
+
 //add all element to listeners again, the same as in ready
 function initAdd() {
 

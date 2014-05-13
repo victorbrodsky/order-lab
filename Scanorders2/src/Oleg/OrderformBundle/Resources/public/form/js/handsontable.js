@@ -33,7 +33,7 @@ var accession_validator = function (value) {
         return true;
     }
     var notzeros = notAllZeros(value);
-    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{1,2}[-][1-9]{1}[0-9]{0,5}$/);      //S11-1, SS11-1, S1-10, not S11-01
+    var res = value.match(/^[a-zA-Z]{1,2}[0-9]{2}[-][1-9]{1}[0-9]{0,5}$/);      //S11-1, SS11-1, S1-10, not S11-01
     //console.log('acc validator: res='+res+', notzeros='+notzeros);
     if( res && notzeros ) {
         return true;

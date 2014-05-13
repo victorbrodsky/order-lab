@@ -193,13 +193,20 @@ class Block extends OrderAbstract
         if( $this->getParent() )
             $parentId = $this->getParent()->getId();
 
-        $sectionStr = "";
+        $sectionStr = "{";
         foreach( $this->sectionsource as $section ) {
             $sectionStr .= $section."(".$section->getStatus()."),";
         }
+        $sectionStr .= "}";
+
+        $nameStr = "{";
+        foreach( $this->blockname as $name ) {
+            $nameStr .= $name."(".$name->getStatus()."),";
+        }
+        $nameStr .= "}";
 
         return "Block: id=".$this->getId().
-        ", blockname=".$this->blockname->first().
+        ", blocknames=".$nameStr.
         ", section=".$sectionStr.
         ", status=".$this->status.
         ", parentId=".$parentId.
