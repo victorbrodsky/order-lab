@@ -22,8 +22,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function __construct($em, $class)
     {
         parent::__construct($em, $class);
-        $this->log = new Logger('FieldAbstractRep');
-        $this->log->pushHandler(new StreamHandler('./Scanorder.log', Logger::WARNING));
+        //$this->log = new Logger('FieldAbstractRep');
+        //$this->log->pushHandler(new StreamHandler('./Scanorder.log', Logger::WARNING));
 
     }
 
@@ -100,7 +100,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
+                //echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
             }
 
         }
@@ -111,6 +111,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
     public function setResult( $entity, $orderinfo, $original=null ) {
+
+        //echo 'mem before set result: ' . (memory_get_usage()/1024/1024) . "<br />\n";
 
         $em = $this->_em;
         $class = new \ReflectionClass($entity);
@@ -125,6 +127,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //Copy Fields
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
+
+        if( $original ) {
+            $em->detach($original);
+            unset($original); //force garbage collector to clean memory
+            gc_collect_cycles();
+        }
 
         //echo "After process fields:".$entity;
         //echo $className.": count of children=".count($children)."<br>";
@@ -155,6 +163,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity->setProvider($orderinfo->getProvider()->first());
 
         //echo "Finish Set Result for entity:".$entity;
+        //echo 'mem after set result: ' . (memory_get_usage()/1024/1024) . "<br />\n";
 
         return $entity;
     }
@@ -1005,10 +1014,23 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //echo "######################################## EOF Process similar fields ########################################<br>";
 
                 $parent->removeChildren($child);
-                //$orderinfo->removeAccession($child);
                 $child->setParent(null);
                 $child->clearOrderinfo();
+
+                //make $orderinfo->removeAccession($child);
+                $class = new \ReflectionClass($child);
+                $className = $class->getShortName();
+                $removeEntity = "remove".$className;
+                $orderinfo->$removeEntity($child);
+
+                //clean child
+                //echo 'mem: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+                $em = $this->_em;
+                $em->detach($child);
                 unset($child);
+                gc_collect_cycles();
+                //exit();
+
             }
             $count++;
         }

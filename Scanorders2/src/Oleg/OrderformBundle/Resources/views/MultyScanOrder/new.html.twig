@@ -143,7 +143,7 @@
 
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
         {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
-        {#{% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounter,type,"","prototype") %}#}
+        {#{% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounter,type,"","prototype","","","nolabel") %}#}
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
@@ -189,7 +189,7 @@
           data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
-         {{ formmacros.accessionForm(form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,form.vars.value.status,procedureHtml,accessionHtml)|e }}
+         {{ formmacros.accessionForm(form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,form.vars.value.status,procedureHtml,'',accessionHtml)|e }}
          "
          data-prototype-accessionaccession= "{{ accessionHtml|e }}"
          data-prototype-procedurename= "{{ procedureHtml|e }}"
@@ -298,6 +298,7 @@
                                                 {#block#}
                                                 {% set blockCount = 0 %}
                                                 {% for block in part.block %}
+                                                    block id={{ block.vars.value.id }}
                                                     {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
                                                     <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
                                                         {{ formmacros.orderinfo_panel_header(
@@ -313,6 +314,7 @@
                                                             {#slide#}
                                                             {% set slideCount = 0 %}
                                                             {% for slide in block.slide %}
+                                                                slide id={{ slide.vars.value.id }}
                                                                 {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                                 <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
                                                                     {{ formmacros.orderinfo_panel_header(

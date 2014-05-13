@@ -45,7 +45,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
             //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
-
         }
 
         $key = $entity->obtainValidKeyField();
@@ -85,8 +84,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $key->setProvider($orderinfo->getProvider()->first());
         }
         else {
-            //echo "Case 3: object does not exist in DB (new key is eneterd) <br>";
-            throw new \Exception('Invalid logic for Procedure, key='.$key);
+            //echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
+            //throw new \Exception('Invalid logic for Procedure, key='.$key);
         }
 
         $accessions = $entity->getAccession();
@@ -111,7 +110,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 //        $accession = $entity->getChildren()->first();
 //        $class = new \ReflectionClass($accession);
 //        $className = $class->getShortName();
-//        //echo "findUniqueByKey: Procedure: className=".$className."<br>";
+//        echo "findUniqueByKey: Procedure: className=".$className."<br>";
 
         $em = $this->_em;
         $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");

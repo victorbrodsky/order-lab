@@ -89,7 +89,6 @@ class Patient extends OrderAbstract
 
     }
 
-
     public function makeDependClone() {
         $this->mrn = $this->cloneDepend($this->mrn,$this);
         $this->name = $this->cloneDepend($this->name,$this);

@@ -10290,7 +10290,16 @@ function setArrayField(element, dataArr, parent) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+
+        //if(
+            //(validity == 'invalid' && dataArr.length > 1)
+                //&&
+            //!(validity == 'invalid' && dataArr.length == 1 && provider == user_name )
+        //) {
+        if( validity == 'invalid' && dataArr.length > 1 ) {
+            continue;
+        }
 
         //console.log("parent id=" + parent.attr("id"));
         var idsArr = parent.attr("id").split("_");

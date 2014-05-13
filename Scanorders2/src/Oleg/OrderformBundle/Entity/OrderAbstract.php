@@ -57,6 +57,10 @@ abstract class OrderAbstract
         $this->orderinfo = new ArrayCollection();
     }
 
+//    public function __destruct() {
+//        exit("abstract destruct");
+//    }
+
     public function __clone() {
         if( $this->getId() ) {
             $this->setId(null);

@@ -20,10 +20,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     //process orderinfo and all entities
     public function processOrderInfoEntity( $entity, $user, $type=null, $router = null ) {
 
+        gc_enable();
+        $em = $this->_em;
+        //$em->getConnection()->getConfiguration()->setSQLLogger(null);
+
+        //echo "memory limit=".ini_get("memory_limit")."<br>";
+        //echo 'mem: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+        //exit();
+
         $this->user = $user;
         $this->router = $router;
-
-        $em = $this->_em;
 
         //replace duplicate entities to filter the similar entities.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->replaceDuplicateProcedures( $entity, $entity );
@@ -108,6 +114,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //save patient to db
             //$em->persist($patient);
             //$em->flush();
+            //$em->clear();
         }
 
         //add slide's parents recursevely to this orderinfo
@@ -151,7 +158,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        echo "original=".$patient->obtainValidKeyField()->getOriginal()."<br>";
 //        echo "keytype=".$patient->obtainValidKeyField()->getKeytype()."<br>";
 //
-        //exit('orderinfo repo exit');
+        //exit('orderinfo repoexit');
 
         $originalStatus = $entity->getStatus();
         //echo "status=".$originalStatus."<br>";
@@ -171,7 +178,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             $entity->setId(null);
             $entity->setOid($originalId);
-
         }
 
 //        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
@@ -209,18 +215,24 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo $acc;
 //        }
 
-        //exit('orderinfo repo exit');
+        //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+        //exit('orderinfo repoexit');
 
         //create new orderinfo
         $em = $this->_em;
         $em->persist($entity);
         $em->flush();
+        //$em->clear();
+
+        //echo 'mem before insert oid: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+        //exit('before insert oid');
 
         //insert oid to entity
         if( !$entity->getOid() ) {
             //echo "insert oid <br>";
             $entity->setOid($entity->getId());
             $em->flush();
+            //$em->clear();
         }
 
         //clean empty blocks
@@ -230,13 +242,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
                 //echo "final remove block from orderinfo: ".$block;
                 $em->remove($block);
                 $em->flush();
+                //$em->clear();
             }
         }
 
         //final step for amend: swap newly created oid with Superseded order oid
         if( $originalStatus == 'Amended' ) {
 
-            //exit('amended orderinfo repo exit');
+            //exit('amended orderinfo repoexit');
             $newId = $entity->getId();
 
             //clone orderinfo object by id
@@ -255,6 +268,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             //$em->persist($entity);
             $em->flush();
+            //$em->clear();
         }
 
         //*********** record history ***********//
@@ -289,6 +303,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //*********** EOF record history ***********//
 
         $em->clear();
+
+        //exit('end of order processing');
+        //echo 'mem on end of order processing: ' . (memory_get_usage()/1024/1024) . "<br />\n";
 
         return $entity;
     }

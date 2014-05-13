@@ -21,6 +21,17 @@ class ProcedureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add('encounter', 'collection', array(
+            'type' => new ProcedureEncounterType($this->params, $this->entity),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedureencounter__',
+        ));
+
         $builder->add('name', 'collection', array(
             'type' => new ProcedureNameType($this->params, $this->entity),
             'allow_add' => true,

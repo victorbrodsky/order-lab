@@ -348,15 +348,6 @@
     {% import _self as formmacros %}
     {% set count = 1 %}
 
-    {#cycle:{{ cycle }}#}
-    {#status:{{ status }}#}
-    {#{% if is_granted('ROLE_SUBMITTER') %}#}
-        {#submitter!#}
-    {#{% endif %}#}
-    {#{% if is_granted('ROLE_EXTERNAL_SUBMITTER') %}#}
-        {#external!#}
-    {#{% endif %}#}
-
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
@@ -732,7 +723,7 @@
 
 
 
-{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, accessionHtml ) %}
+{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -755,11 +746,11 @@
             <p><div class="procedurename">{{ procedureHtml }}</div></p>
         {% endif %}
 
-        {#{% if encounterHtml is not defined or encounterHtml == "" %}#}
-            {#{{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter") }}#}
-        {#{% else  %}#}
-            {#<p><div class="procedureencounter">{{ encounterHtml }}</div></p>#}
-        {#{% endif %}#}
+        {% if encounterHtml is not defined or encounterHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter","","","nolabel") }}
+        {% else  %}
+            <p><div class="procedureencounter">{{ encounterHtml }}</div></p>
+        {% endif %}
 
     </div>
 {% endmacro %}

@@ -118,7 +118,7 @@ class CheckController extends Controller {
         $security_content = $this->get('security.context');
         $userUtil = new UserUtil();
         if( $entity && !$userUtil->hasPermission($security_content) ) {
-            echo "no permission ";
+            //echo "no permission ";
             $user = $this->get('security.context')->getToken()->getUser();
             $entity->filterArrayFields($user,true);
 

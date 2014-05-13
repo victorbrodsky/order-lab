@@ -121,6 +121,9 @@ class OrderUtil {
             $em->persist($history);
             $em->flush();
             //$em->clear();
+            //unset($entity);
+            //unset($history);
+            //gc_collect_cycles();
 
         } else if( $status == 'Un-Cancel' || $status == 'Submit' ) {  //this is un-cancel action
 
@@ -238,39 +241,39 @@ class OrderUtil {
         return $res;
     }
 
-    public function makeOrderInfoClone( $entity, $status_entity, $statusStr ) {
-
-        $em = $this->em;
-
-        if( !$status_entity  ) {
-            $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
-        }
-
-        //CLONING
-        $oid = $entity->getOid();
-        $oidArr = explode("-", $oid);
-        $originalId = $oidArr[0];
-
-        $newOrderinfo = clone $entity;
-
-        $em->detach($entity);
-        $em->detach($newOrderinfo);
-
-        $newOrderinfo->setStatus($status_entity);
-        //$newOrderinfo->setCicle('submit');
-        $newOrderinfo->setOid($originalId);
-
-        //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
-
-        //change status to valid
-        $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
-
-        $res = array();
-        $res['message'] = $message;
-        $res['orderinfo'] = $newOrderinfo;
-
-        return $res;
-    }
+//    public function makeOrderInfoClone( $entity, $status_entity, $statusStr ) {
+//
+//        $em = $this->em;
+//
+//        if( !$status_entity  ) {
+//            $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
+//        }
+//
+//        //CLONING
+//        $oid = $entity->getOid();
+//        $oidArr = explode("-", $oid);
+//        $originalId = $oidArr[0];
+//
+//        $newOrderinfo = clone $entity;
+//
+//        $em->detach($entity);
+//        $em->detach($newOrderinfo);
+//
+//        $newOrderinfo->setStatus($status_entity);
+//        //$newOrderinfo->setCicle('submit');
+//        $newOrderinfo->setOid($originalId);
+//
+//        //$newOrderinfo = $this->iterateOrderInfo( $newOrderinfo, $statusStr );
+//
+//        //change status to valid
+//        $message = $this->processObjects( $newOrderinfo, $status_entity, $statusStr );
+//
+//        $res = array();
+//        $res['message'] = $message;
+//        $res['orderinfo'] = $newOrderinfo;
+//
+//        return $res;
+//    }
 
     public function processObjects( $entity, $status_entity, $statusStr ) {
 

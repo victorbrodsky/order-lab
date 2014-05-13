@@ -1142,7 +1142,12 @@ function setArrayField(element, dataArr, parent) {
 
         console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
-        if( validity == 'invalid' ) {
+        //if(
+            //(validity == 'invalid' && dataArr.length > 1)
+                //&&
+            //!(validity == 'invalid' && dataArr.length == 1 && provider == user_name )
+        //) {
+        if( validity == 'invalid' && dataArr.length > 1 ) {
             continue;
         }
 

@@ -95,6 +95,7 @@ class Procedure extends OrderAbstract
 
     //Encounter
     public function getEncounter() {
+        //echo "ecounter count=".count($this->encounter)."<br>";
         return $this->encounter;
     }
 
@@ -104,6 +105,7 @@ class Procedure extends OrderAbstract
 
     public function addEncounter($encounter)
     {
+        //echo "encounter add: id=".$encounter->getId().", name=".$encounter->getField()."<br>";
         if( $encounter ) {
             if( !$this->encounter->contains($encounter) ) {
                 $encounter->setProcedure($this);
@@ -202,7 +204,7 @@ class Procedure extends OrderAbstract
 
         return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().
             ", procedureNameCount=" . count($this->getName()) . " => Names=".$procNames.
-            ", encounterCount=" . count($this->encounter->first()) .
+            ", encounterCount=" . count($this->encounter) .
             ": encounter->first=" . $this->encounter->first() .
             ", parentId=".$this->getParent()->getId().
             "; linked accessionCount=".count($this->accession).":".$this->accession->first();
