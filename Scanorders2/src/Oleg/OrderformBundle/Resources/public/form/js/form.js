@@ -591,8 +591,9 @@ function priorityOption() {
 //}
 
 function expandTextarea() {
-//    var $element = $('.textarea').get(0);
-    var elements = document.getElementsByClassName('textarea');
+    //var elements = document.getElementsByClassName('textarea');
+    var elements = $('.textarea');
+
     for (var i = 0; i < elements.length; ++i) {
         var element = elements[i];
         element.addEventListener('keyup', function() {
@@ -603,7 +604,6 @@ function expandTextarea() {
             this.style.height = newH + 'px';
         }, false);
     }
-
 }
 
 

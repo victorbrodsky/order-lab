@@ -44,6 +44,7 @@ class Patient extends OrderAbstract
     protected $dob;
 
     /**
+     * Patient's Clinical Summary
      * @param \Doctrine\Common\Collections\Collection $property
      * @ORM\OneToMany(targetEntity="PatientClinicalHistory", mappedBy="patient", cascade={"persist"})
      */
@@ -471,7 +472,7 @@ class Patient extends OrderAbstract
         //", name=".$this->name->first().", nameID=".$this->name->first()->getId().
         ", names=".$names.
         ", sexs=".$sexs.
-        ", age=".$this->age->first().", nameID=".$this->age->first()->getId().
+        //", age=".$this->age->first().", nameID=".$this->age->first()->getId().
         ", status=".$this->status.
         ", procedureCount=".count($this->procedure).
         //", firstprocedureID=".$this->procedure->first()->getId().

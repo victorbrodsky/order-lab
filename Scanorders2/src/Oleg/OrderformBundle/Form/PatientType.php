@@ -41,9 +41,48 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientmrn__',
         ));
 
+        $builder->add('dob', 'collection', array(
+            'type' => new PatientDobType($this->params, null),
+            'read_only' => $flag,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+//            'label' => "Dob:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__patientdob__',
+        ));
+
+        $attr = array('class'=>'textarea form-control');
+        $gen_attr = array('label'=>'Clinical Summary','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
+        $builder->add('clinicalHistory', 'collection', array(
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+            //'read_only' => $flag,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => "Clinical Summary:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__patientclinicalhistory__',
+        ));
+
+        $builder->add('procedure', 'collection', array(
+            'type' => new ProcedureType($this->params,$this->entity),
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => " ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedure__',
+        ));
+
+        //use these fields only for data reviewer
+        $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
         $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
         $builder->add('name', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
@@ -54,8 +93,7 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientname__',
         ));
 
-
-        $attr = array('class'=>'form-control patientage-mask');
+        $attr = array('class'=>'form-control patientage-field patientage-mask', 'disabled' => 'disabled');
         $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
         $builder->add('age', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
@@ -78,43 +116,6 @@ class PatientType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__patientsex__',
-        ));
-
-        $builder->add('dob', 'collection', array(
-            'type' => new PatientDobType($this->params, null),
-            'read_only' => $flag,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-//            'label' => "Dob:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patientdob__',
-        ));
-
-        $attr = array('class'=>'textarea form-control');
-        $gen_attr = array('label'=>'Clinical History','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
-        $builder->add('clinicalHistory', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            //'read_only' => $flag,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Clinical History:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patientclinicalhistory__',
-        ));
-
-        $builder->add('procedure', 'collection', array(
-            'type' => new ProcedureType($this->params,$this->entity),
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => " ",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedure__',
         ));
 
     }

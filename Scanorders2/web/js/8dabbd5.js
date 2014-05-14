@@ -9994,6 +9994,18 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
             continue;
         }
 
+        //don't process constatly locked fields: patient's name,sex,age
+        if( elements.eq(i).hasClass('patientname-field') ) {
+            continue;
+        }
+        if( elements.eq(i).hasClass('patientsex-field') ) {
+            continue;
+        }
+        if( elements.eq(i).hasClass('patientage-field') ) {
+            continue;
+        }
+
+
         if( id && type != "hidden" ) {
 
             var thisfieldIndex = fieldIndex;
@@ -10065,6 +10077,17 @@ function disableElement(parentname,element, flag) {
         //console.log("continue");
     } else {
         return;
+    }
+
+    //exception for simple fields; used for tooltip
+    if(
+            element.hasClass('procedurename-field') ||
+            element.hasClass('proceduresex-field') ||
+            element.hasClass('procedureage-field') ||
+            element.hasClass('proceduredate-field') ||
+            element.hasClass('procedurehistory-field')
+    ) {
+        fieldParentName = "accession";
     }
 
     attachTooltip(element,flag,fieldParentName);
@@ -10853,8 +10876,8 @@ var urlCheck = "http://"+urlBase+"/check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");
 var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
-//var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
-var selectStr = 'input[type=file],input.form-control,div.patientsexclass,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
+//var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
 
 var orderformtype = $("#orderformtype").val();
 
@@ -12612,8 +12635,9 @@ function priorityOption() {
 //}
 
 function expandTextarea() {
-//    var $element = $('.textarea').get(0);
-    var elements = document.getElementsByClassName('textarea');
+    //var elements = document.getElementsByClassName('textarea');
+    var elements = $('.textarea');
+
     for (var i = 0; i < elements.length; ++i) {
         var element = elements[i];
         element.addEventListener('keyup', function() {
@@ -12624,7 +12648,6 @@ function expandTextarea() {
             this.style.height = newH + 'px';
         }, false);
     }
-
 }
 
 
@@ -12990,7 +13013,7 @@ function capitaliseFirstLetter(string)
 function attachTooltip( element, flag, fieldParentName ) {
 
     var userPreferencesTooltip = $("#user-preferences-tooltip").val();
-    //console.log( 'id='+element.attr('id')+', class='+element.attr('class')+', flag='+flag+', userPreferencesTooltip='+userPreferencesTooltip);
+    //console.log( 'id='+element.attr('id')+', class='+element.attr('class')+', flag='+flag+', userPreferencesTooltip='+userPreferencesTooltip + ", fieldParentName="+fieldParentName);
 
     if( userPreferencesTooltip == 0 ) {
         return false;

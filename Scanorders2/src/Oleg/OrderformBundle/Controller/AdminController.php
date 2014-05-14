@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 
 use Oleg\OrderformBundle\Entity\AccessionType;
+use Oleg\OrderformBundle\Entity\EncounterType;
 use Oleg\OrderformBundle\Entity\FormType;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
@@ -78,6 +79,7 @@ class AdminController extends Controller
 
         $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
+        $count_enctype = $this->generateEncounterType();
         $count_formtype = $this->generateFormType();
         $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
@@ -100,6 +102,7 @@ class AdminController extends Controller
             'Generated Tables: '.
             'Roles='.$count_roles.', '.
             'Accession Types='.$count_acctype.', '.
+            'Encounter Types='.$count_enctype.', '.
             'Form Types='.$count_formtype.', '.
             'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
@@ -677,7 +680,7 @@ class AdminController extends Controller
             'Specify Another Specimen ID Issuer',
             'TMA Slide',
             'Auto-generated Accession Number',
-            "Existing Auto-generated Accession Number"
+            'Existing Auto-generated Accession Number'
         );
 
         $username = $this->get('security.context')->getToken()->getUser();
@@ -693,6 +696,39 @@ class AdminController extends Controller
             }
 
             $em->persist($accType);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return $count;
+    }
+
+
+    public function generateEncounterType() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:EncounterType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Auto-generated Encounter Number',
+            'Existing Auto-generated Encounter Number'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $encType = new EncounterType();
+            $this->setDefaultList($encType,$count,$username,$type);
+
+            $em->persist($encType);
             $em->flush();
 
             $count = $count + 10;

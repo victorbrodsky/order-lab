@@ -53,6 +53,43 @@ class ProcedureType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__accession__',
         ));
+
+        //simple fields
+
+        $builder->add('encounterDate', 'date', array(
+            'label' => "Encounter Date",
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM-dd-yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
+            'attr' => array('class' => 'datepicker form-control patientdob-mask proceduredate-field', 'style'=>'margin-top: 0;'),
+        ));
+
+        $builder->add( 'patname', 'text', array(
+            'label'=>"Patient's Name (at the time of encounter)",
+            'required'=>false,
+            'attr' => array('class' => 'form-control procedurename-field')
+        ));
+
+        $builder->add( 'patsex', 'choice', array(
+            'label'=>"Patient's Sex (at the time of encounter)",
+            'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type proceduresex-field')
+        ));
+
+        $builder->add( 'patage', 'text', array(
+            'label'=>"Patient's Age (at the time of encounter)",
+            'required'=>false,
+            'attr' => array('class' => 'form-control procedureage-field patientage-mask')
+        ));
+
+        $builder->add('pathistory', 'textarea', array(
+            'max_length'=>10000,
+            'required'=>false,
+            'label'=>'Clinical History (at the time of encounter)',
+            'attr' => array('class'=>'textarea form-control procedurehistory-field'),
+        ));
         
     }
 

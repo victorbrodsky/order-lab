@@ -571,13 +571,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function validFieldIsSet( $fields ) {
 
+        if( !$fields->first() ) {
+            return false;
+        }
+
         //exception for array fields such as Part Differential Diagnosis field. Always added as valid
         $class = new \ReflectionClass($fields->first());
         $className = $class->getShortName();
         //echo "if valid: className=".$className."<br>";
         if( $className == 'PartDiffDisident' ||
-            $className == 'PatientClinicalHistory' ||
-            $className == 'PatientAge' ||
+            //$className == 'PatientClinicalHistory' ||
+            //$className == 'PatientAge' ||
             $className == 'RelevantScans' ||
             $className == 'SpecialStains'
         ) {

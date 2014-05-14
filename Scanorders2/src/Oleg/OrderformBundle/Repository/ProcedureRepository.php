@@ -2,7 +2,10 @@
 
 namespace Oleg\OrderformBundle\Repository;
 
-//use Doctrine\ORM\EntityRepository;
+
+use Oleg\OrderformBundle\Entity\PatientName;
+use Oleg\OrderformBundle\Entity\PatientSex;
+use Oleg\OrderformBundle\Entity\PatientAge;
 
 /**
  * ProcedureRepository
@@ -33,6 +36,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
+
+        //add procedure's name, sex, age to the corresponding patient fields
+        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider()->first());
 
         $keys = $entity->obtainAllKeyfield();
 
@@ -76,12 +82,16 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( $key == "" ) {
             //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
+            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+            $key->setKeytype($newkeytypeEntity);
+
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
             //we should have only one key field !!!
             $key->setField($nextKey);
             $key->setStatus(self::STATUS_VALID);
             $key->setProvider($orderinfo->getProvider()->first());
+
         }
         else {
             //echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
@@ -96,6 +106,41 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         return $this->setResult($entity, $orderinfo);
 
     }
+
+    //add procedure's name, sex, age to the corresponding patient fields
+    public function copyCommonFieldsToPatient($procedure,$user) {
+
+        $patient = $procedure->getParent();
+
+        $source = "scanorder";
+        $status = self::STATUS_VALID;
+
+        //name
+        if( $this->validFieldIsSet( $patient->getName() ) ) {
+            $status = self::STATUS_INVALID;
+        }
+        $patientname = new PatientName($status,$user,$source);
+        $patientname->setField($procedure->getPatname());
+        $patient->addName($patientname);
+
+        //sex
+        if( $this->validFieldIsSet( $patient->getSex() ) ) {
+            $status = self::STATUS_INVALID;
+        }
+        $patientsex = new PatientSex($status,$user,$source);
+        $patientsex->setField($procedure->getPatsex());
+        $patient->addSex($patientsex);
+
+        //age
+        if( $this->validFieldIsSet( $patient->getAge() ) ) {
+            $status = self::STATUS_INVALID;
+        }
+        $patientage = new PatientAge($status,$user,$source);
+        $patientage->setField($procedure->getPatage());
+        $patient->addAge($patientage);
+
+    }
+
 
 
     //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure

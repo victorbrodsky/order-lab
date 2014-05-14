@@ -25,6 +25,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/", name="mrntype-list")
      * @Route("/accession-types/", name="accessiontype-list")
+     * @Route("/encounter-types/", name="encountertype-list")
      * @Route("/stains/", name="stain-list")
      * @Route("/organs/", name="organ-list")
      * @Route("/procedures/", name="procedure-list")
@@ -107,6 +108,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/", name="mrntype_create")
      * @Route("/accession-types/", name="accessiontype_create")
+     * @Route("/encounter-types/", name="encountertype_create")
      * @Route("/stains/", name="stain_create")
      * @Route("/organs/", name="organ_create")
      * @Route("/procedures/", name="procedure_create")
@@ -227,6 +229,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/new", name="mrntype_new")
      * @Route("/accession-types/new", name="accessiontype_new")
+     * @Route("/encounter-types/new", name="encountertype_new")
      * @Route("/stains/new", name="stain_new")
      * @Route("/organs/new", name="organ_new")
      * @Route("/procedures/new", name="procedure_new")
@@ -292,6 +295,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/{id}", name="mrntype_show")
      * @Route("/accession-types/{id}", name="accessiontype_show")
+     * @Route("/encounter-types/{id}", name="encountertype_show")
      * @Route("/stains/{id}", name="stain_show")
      * @Route("/organs/{id}", name="organ_show")
      * @Route("/procedures/{id}", name="procedure_show")
@@ -349,6 +353,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/{id}/edit", name="mrntype_edit")
      * @Route("/accession-types/{id}/edit", name="accessiontype_edit")
+     * @Route("/encounter-types/{id}/edit", name="encountertype_edit")
      * @Route("/stains/{id}/edit", name="stain_edit")
      * @Route("/organs/{id}/edit", name="organ_edit")
      * @Route("/procedures/{id}/edit", name="procedure_edit")
@@ -452,6 +457,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/{id}", name="mrntype_update")
      * @Route("/accession-types/{id}", name="accessiontype_update")
+     * @Route("/encounter-types/{id}", name="encountertype_update")
      * @Route("/stains/{id}", name="stain_update")
      * @Route("/organs/{id}", name="organ_update")
      * @Route("/procedures/{id}", name="procedure_update")
@@ -568,6 +574,10 @@ class ListController extends Controller
             $className = "accessiontype";
             $displayName = "Accession Types";
             break;
+        case "encountertype":
+            $className = "encountertype";
+            $displayName = "Encounter Types";
+            break;
         case "stain":
             $className = "stainlist";
             $displayName = "Stains";
@@ -660,6 +670,7 @@ class ListController extends Controller
      *
      * @Route("/mrn-types/{id}", name="mrntype_delete")
      * @Route("/accession-types/{id}", name="accessiontype_delete")
+     * @Route("/encounter-types/{id}", name="encountertype_delete")
      * @Route("/stains/{id}", name="stain_delete")
      * @Route("/organs/{id}", name="organ_delete")
      * @Route("/procedures/{id}", name="procedure_delete")

@@ -693,12 +693,23 @@
         {% else  %}
             <p><div class="patientname">{{ nameHtml }}</div></p>
         {% endif %}
+        {#{% for name in patient.name %}#}
+            {#name:{{ name.vars.value }}#}
+            {#{% if name.vars.value.status == 'valid' %}#}
+                {#{{ formmacros.simplefield( "Name:", name.vars.value, "input", "disabled" ) }}#}
+            {#{% endif %}#}
+        {#{% endfor %}#}
 
         {% if sexHtml is not defined or sexHtml == "" %}
             {{ formmacros.inputArrayField(patient.sex,cycle,"patientsex","","","","",status) }}
         {% else  %}
             <p><div class="patientsex">{{ sexHtml }}</div></p>
         {% endif %}
+        {#{% for sex in patient.sex %}#}
+            {#{% if sex.vars.value.status == 'valid' %}#}
+                {#{{ formmacros.simplefield( "Sex:", sex.vars.value, "input", "disabled" ) }}#}
+            {#{% endif %}#}
+        {#{% endfor %}#}
 
         {% if dobHtml is not defined or dobHtml == "" %}
             {{ formmacros.inputArrayField(patient.dob,cycle,"patientdob","date","","","",status) }}
@@ -711,6 +722,11 @@
         {% else  %}
             <p><div class="patientage">{{ ageHtml }}</div></p>
         {% endif %}
+        {#{% for age in patient.age %}#}
+            {#{% if age.vars.value.status == 'valid' %}#}
+                {#{{ formmacros.simplefield( "Age:", age.vars.value, "input", "disabled" ) }}#}
+            {#{% endif %}#}
+        {#{% endfor %}#}
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
             {{ formmacros.inputArrayField(patient.clinicalHistory,cycle,"patientclinicalhistory","","","","",status) }}
@@ -751,6 +767,14 @@
         {% else  %}
             <p><div class="procedureencounter">{{ encounterHtml }}</div></p>
         {% endif %}
+
+        {#patient's data: single simple fields#}
+        {{ formmacros.fieldDateLabel(procedure.encounterDate) }}
+        {{ formmacros.field(procedure.patname) }}
+        {{ formmacros.field(procedure.patsex) }}
+        {{ formmacros.field(procedure.patage) }}
+        {{ formmacros.field(procedure.pathistory) }}
+
 
     </div>
 {% endmacro %}

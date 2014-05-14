@@ -325,6 +325,8 @@ class TableController extends Controller {
 
         $patient->addProcedure($procedure);
 
+        //TODO: add procedure simple fields
+
         ///////////////// Accession /////////////////
         $accession = new Accession(false, $status, $provider, $source);
 

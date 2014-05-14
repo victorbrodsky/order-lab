@@ -39,7 +39,35 @@ class Procedure extends OrderAbstract
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="procedure")
      **/
-    protected $orderinfo; 
+    protected $orderinfo;
+
+
+    //Patient's info: age, name, sex
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $encounterDate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $patname;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $patsex;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $patage;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $pathistory;
+
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);
@@ -59,6 +87,87 @@ class Procedure extends OrderAbstract
         $this->name = $this->cloneDepend($this->name,$this);
         $this->encounter = $this->cloneDepend($this->encounter,$this);
     }
+
+    /**
+     * @param mixed $encounterDate
+     */
+    public function setEncounterDate($encounterDate)
+    {
+        $this->encounterDate = $encounterDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncounterDate()
+    {
+        return $this->encounterDate;
+    }
+
+    /**
+     * @param mixed $patage
+     */
+    public function setPatage($patage)
+    {
+        $this->patage = $patage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatage()
+    {
+        return $this->patage;
+    }
+
+    /**
+     * @param mixed $pathistory
+     */
+    public function setPathistory($pathistory)
+    {
+        $this->pathistory = $pathistory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPathistory()
+    {
+        return $this->pathistory;
+    }
+
+    /**
+     * @param mixed $patname
+     */
+    public function setPatname($patname)
+    {
+        $this->patname = $patname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatname()
+    {
+        return $this->patname;
+    }
+
+    /**
+     * @param mixed $patsex
+     */
+    public function setPatsex($patsex)
+    {
+        $this->patsex = $patsex;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatsex()
+    {
+        return $this->patsex;
+    }
+
 
     //Name
     public function getName() {

@@ -10,7 +10,7 @@
 function attachTooltip( element, flag, fieldParentName ) {
 
     var userPreferencesTooltip = $("#user-preferences-tooltip").val();
-    //console.log( 'id='+element.attr('id')+', class='+element.attr('class')+', flag='+flag+', userPreferencesTooltip='+userPreferencesTooltip);
+    //console.log( 'id='+element.attr('id')+', class='+element.attr('class')+', flag='+flag+', userPreferencesTooltip='+userPreferencesTooltip + ", fieldParentName="+fieldParentName);
 
     if( userPreferencesTooltip == 0 ) {
         return false;

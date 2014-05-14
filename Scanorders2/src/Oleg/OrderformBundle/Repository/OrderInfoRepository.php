@@ -101,13 +101,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity, $this->user );
         //********** end of educational and research processing ***********//
 
-        echo "Count of patients=".count($patients)."<br>";
+        //echo "Count of patients=".count($patients)."<br>";
 
         foreach( $patients as $patient ) {
+
+            //remove name, sex and age from patient original object from form if id is null. Those fields in Patient are just for displaying existing info. (Remove them from form?)
+            $this->copyCommonFieldsToProcedure($patient);
+
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
             $entity->removePatient($patient);
             $patient = $em->getRepository('OlegOrderformBundle:Patient')->processEntity( $patient, $entity, "Patient", "mrn", "Procedure" );
-
 
             //$entity->addPatient($patient);
             //add children
@@ -125,20 +128,23 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $this->addOrderinfoToThisAndAllParents( $slide, $entity );
         }
 
-        //echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
-        //foreach( $entity->getPatient() as $patient ) {
+//        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
+//        foreach( $entity->getPatient() as $patient ) {
+//            foreach( $patient->getName() as $name ) {
+//                echo "name=".$name."<br>";
+//            }
 //            echo 'patient nameCount='.count($patient->getName())." :".$patient->getName()->first().", status=".$patient->getName()->first()->getStatus()."<br>";
 //////            echo 'patient orderinfo count='.count($patient->getOrderinfo())."<br>";
 //////            //echo 'patient orderinfo='.$patient->getOrderinfo()->first()->getId()."<br>";
 //            echo 'orderinfo patient ='.$entity->getPatient()->first()->getName()->first()."<br>";
-            //echo $patient;
+//            echo $patient;
 ////            echo "patient accessions count =".count($patient->getProcedure()->first()->getAccession())."<br>";
 ////            echo "patient parts count =".count($patient->getProcedure()->first()->getAccession()->first()->getPart())."<br>";
 ////            //echo "patient accession=".$patient->getProcedure()->first()->getAccession()->first()."<br>";
 //            echo "<br>--------------------------<br>";
 //            $this->printTree( $patient );
 //            echo "--------------------------<br>";
-        //}
+//        }
 
 //        echo $entity;
 //        $research = $entity->getResearch();
@@ -360,6 +366,38 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         if( $parent ) {
             $this->addOrderinfoToThisAndAllParents( $parent, $orderinfo );
         }
+    }
+
+
+    public function copyCommonFieldsToProcedure($patient) {
+
+        //name
+        if( count($patient->getName()) > 1 ) {
+            throw new \Exception('Patient has multiple field name, count='.count($patient->getName()));
+        }
+        $name = $patient->getName()->first();
+        if( !$name->getId() ) {
+            $patient->removeName($name);
+        }
+
+        //age
+        if( count($patient->getAge()) > 1 ) {
+            throw new \Exception('Patient has multiple field age, count='.count($patient->getAge()));
+        }
+        $age = $patient->getAge()->first();
+        if( !$age->getId() ) {
+            $patient->removeAge($age);
+        }
+
+        //sex
+        if( count($patient->getSex()) > 1 ) {
+            throw new \Exception('Patient has multiple field sex, count='.count($patient->getSex()));
+        }
+        $sex = $patient->getSex()->first();
+        if( !$sex->getId() ) {
+            $patient->removeSex($sex);
+        }
+
     }
 
 }

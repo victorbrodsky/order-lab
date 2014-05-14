@@ -844,6 +844,18 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
             continue;
         }
 
+        //don't process constatly locked fields: patient's name,sex,age
+        if( elements.eq(i).hasClass('patientname-field') ) {
+            continue;
+        }
+        if( elements.eq(i).hasClass('patientsex-field') ) {
+            continue;
+        }
+        if( elements.eq(i).hasClass('patientage-field') ) {
+            continue;
+        }
+
+
         if( id && type != "hidden" ) {
 
             var thisfieldIndex = fieldIndex;
@@ -915,6 +927,17 @@ function disableElement(parentname,element, flag) {
         //console.log("continue");
     } else {
         return;
+    }
+
+    //exception for simple fields; used for tooltip
+    if(
+            element.hasClass('procedurename-field') ||
+            element.hasClass('proceduresex-field') ||
+            element.hasClass('procedureage-field') ||
+            element.hasClass('proceduredate-field') ||
+            element.hasClass('procedurehistory-field')
+    ) {
+        fieldParentName = "accession";
     }
 
     attachTooltip(element,flag,fieldParentName);
