@@ -120,7 +120,7 @@ class OrderUtil {
             $em->persist($entity);
             $em->persist($history);
             $em->flush();
-            //$em->clear();
+            //$em->clear();   //testing clear
             //unset($entity);
             //unset($history);
             //gc_collect_cycles();

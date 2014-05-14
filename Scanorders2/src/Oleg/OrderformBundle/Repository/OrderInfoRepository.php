@@ -101,6 +101,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity, $this->user );
         //********** end of educational and research processing ***********//
 
+        echo "Count of patients=".count($patients)."<br>";
+
         foreach( $patients as $patient ) {
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
             $entity->removePatient($patient);
@@ -200,7 +202,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        echo "parts=".count($entity->getPart())."<br>";
 //        echo "blocks=".count($entity->getBlock())."<br>";
 //        echo "slides=".count($entity->getSlide())."<br>";
-        //echo "block= ".$entity->getBlock()->first();
+//        echo "block= ".$entity->getBlock()->first();
         //echo "acc's procedure=".$entity->getAccession()->first()->getParent();
 //        echo $entity;
 //        foreach( $entity->getBlock() as $elem ) {
@@ -219,10 +221,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //exit('orderinfo repoexit');
 
         //create new orderinfo
-        $em = $this->_em;
+        //$em = $this->_em;
         $em->persist($entity);
         $em->flush();
-        //$em->clear();
+        //TODO: amend order with new elements added cause: The connection was reset
+        //$em->clear();   //test clear
 
         //echo 'mem before insert oid: ' . (memory_get_usage()/1024/1024) . "<br />\n";
         //exit('before insert oid');
@@ -231,8 +234,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         if( !$entity->getOid() ) {
             //echo "insert oid <br>";
             $entity->setOid($entity->getId());
+
+            //if clear is used above => doctrine error: A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\OrderInfo#patient' that was not configured to cascade persist operations
+            //it is happened because all objects are not persisted anymore.
             $em->flush();
-            //$em->clear();
         }
 
         //clean empty blocks
@@ -241,10 +246,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             if( count($block->getSlide()) == 0 ) {
                 //echo "final remove block from orderinfo: ".$block;
                 $em->remove($block);
+                $em->persist($block);
                 $em->flush();
-                //$em->clear();
             }
         }
+        $em->clear();
+        ////////////////////// finished save new orderinfo ///////////////////////////
+
 
         //final step for amend: swap newly created oid with Superseded order oid
         if( $originalStatus == 'Amended' ) {
@@ -252,9 +260,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //exit('amended orderinfo repoexit');
             $newId = $entity->getId();
 
+            $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
+
             //clone orderinfo object by id
             $orderUtil = new OrderUtil($em);
-            $message = $orderUtil->changeStatus($originalId, 'Supersede', $this->user, $this->router, $newId);
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $this->router, $newId);
 
             //now entity is a cloned order object
             //echo "rep: provider 3=".$entity->getProvider()->first()."<br>";
@@ -268,16 +278,18 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             //$em->persist($entity);
             $em->flush();
-            //$em->clear();
+            $em->clear();
         }
 
         //*********** record history ***********//
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($entity->getOid());
+        $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
         $history = new History();
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
         $history->setCurrentstatus($entity->getStatus());
-        $history->setProvider($this->user);
-        $history->setRoles($this->user->getRoles());
+        $history->setProvider($user);
+        $history->setRoles($user->getRoles());
         $history->setCurrentstatus($entity->getStatus());
 
         if( $originalStatus == 'Amended' ) {

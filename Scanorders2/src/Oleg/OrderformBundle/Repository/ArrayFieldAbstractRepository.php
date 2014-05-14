@@ -38,8 +38,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
+        echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -88,7 +88,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+                echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
                 //CopyChildren: copy form's object children to the found one.
                 foreach( $entity->getChildren() as $child ) {
                     //echo "adding: ".$child."<br>";
@@ -134,8 +134,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             gc_collect_cycles();
         }
 
-        //echo "After process fields:".$entity;
-        //echo $className.": count of children=".count($children)."<br>";
+        echo "After process fields:".$entity;
+        echo $className.": count of children=".count($children)."<br>";
 
         foreach( $children as $child ) {
 

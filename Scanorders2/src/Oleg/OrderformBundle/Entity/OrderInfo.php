@@ -204,6 +204,8 @@ class OrderInfo
 
     public function __clone() {
 
+        //throw new \Exception('Cloning orderinfo');
+
         if ($this->id) {
             $this->setId(null);
 

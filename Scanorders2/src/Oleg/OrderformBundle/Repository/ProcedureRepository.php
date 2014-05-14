@@ -25,8 +25,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        //echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
+        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -61,7 +61,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         if( $found ) {
-            //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+            echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
             //CopyChildren: copy form's object children to the found one.
             foreach( $entity->getChildren() as $child ) {
                 //echo "adding: ".$child."<br>";

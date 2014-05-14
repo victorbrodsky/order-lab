@@ -298,7 +298,7 @@
                                                 {#block#}
                                                 {% set blockCount = 0 %}
                                                 {% for block in part.block %}
-                                                    block id={{ block.vars.value.id }}
+                                                    {#block id={{ block.vars.value.id }}#}
                                                     {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
                                                     <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
                                                         {{ formmacros.orderinfo_panel_header(
@@ -314,7 +314,7 @@
                                                             {#slide#}
                                                             {% set slideCount = 0 %}
                                                             {% for slide in block.slide %}
-                                                                slide id={{ slide.vars.value.id }}
+                                                                {#slide id={{ slide.vars.value.id }}#}
                                                                 {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                                 <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
                                                                     {{ formmacros.orderinfo_panel_header(
