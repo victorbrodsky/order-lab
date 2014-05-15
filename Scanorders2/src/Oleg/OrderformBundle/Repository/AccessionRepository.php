@@ -63,12 +63,14 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
-        if( count($orderinfo->getDataquality()) == 0 ) {
-            return $accession;
-        }
+//        if( count($orderinfo->getDataquality()) == 0 ) {
+//            return $accession;
+//        }
 
         //echo "process Accession: ".$accession;
         //$this->printTree( $accession->getParent()->getParent() );
+
+        $em = $this->_em;
 
         //process data quality
         $currentDataquality = null;
@@ -124,6 +126,50 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             return $accession;
         }
 
+        ///////////////// check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
+        $dbconflict = false;
+        $accKey = $accession->obtainValidKeyfield();
+        $accValue = $accKey->getField()."";
+        $accKeytype = $accKey->getKeytype();
+
+        $procedure = $accession->getParent();
+        if( !$procedure ) {
+            throw new \Exception( 'Accession does not belong to Procedure' );
+        }
+
+        $patient = $procedure->getParent();
+        if( !$patient ) {
+            throw new \Exception( 'Procedure does not belong to Patient' );
+        }
+
+        $mrnKey = $patient->obtainValidKeyField();
+        $mrnValue = $mrnKey->getField()."";
+        $mrnKeytype = $mrnKey->getKeytype();
+
+        if( isDBConflictByAccession( $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
+
+            $dbconflict = true;
+
+            $currentDataquality = new DataQuality();
+
+            //set mrntype
+            $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrnKeytype );
+            $currentDataquality->setMrntype($mrntype);
+            $currentDataquality->setMrn($mrnValue);
+
+            //set accessiontype
+            $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $accKeytype );
+            $currentDataquality->setAccessiontype($accessiontype);
+            $currentDataquality->setAccession($accValue);
+
+            $currentDataquality->setOrderinfo($orderinfo);
+            $currentDataquality->setProvider($orderinfo->getProvider()->first());
+            $currentDataquality->setStatus('active');
+
+        }
+        ///////////////// EOF check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
+
+
         //Now we know that this accession has MRN conflict
         //echo "Now we know that this accession has MRN conflict <br>";
 
@@ -133,7 +179,6 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $accession->setStatusAllKeyfield(self::STATUS_INVALID);
         $accession->createKeyField();
 
-        $em = $this->_em;
         $acctype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
 
         //we should have only one key field !!!
@@ -150,6 +195,13 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $currentDataquality->setNewaccession($nextKey);
         $currentDataquality->setNewaccessiontype($acctype);
 
+        if( $dbconflict ) {
+            $desc = "MRN-Accession conflict detected in submit logic. Submitted values are ".
+            "Accession Number: ".$accValue.", Accession Type: ".$accKeytype.", MRN: ".$mrnValue.", MRN Type: ".$mrnKeytype."\n" .
+            "Conflict was resolved by generating new Accession with Accession Number:".$nextKey.", Accession Type:".$acctype;
+            $currentDataquality->setDescription($desc);
+        }
+
 //        echo "<br>-----------------Original Accession:<br>";
 //        $this->printTree( $accession );
 //        echo "--------------------------<br>";
@@ -157,6 +209,56 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         return $accession;
 
+    }
+
+    //check if there is a conflict in DB
+    public function isDBConflictByAccession( $accValue, $accKeytype, $mrnValue, $mrnKeytype ) {
+
+        $extra = array();
+        $extra["keytype"] = $accKeytype;
+
+        $validity = array();
+        $validity[] = "valid";
+        $validity[] = "reserved";
+
+        $accessions = $this->_em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(
+            $accValue,      //$fieldStr
+            "Accession",    //$className
+            "accession",    //$fieldName
+            $validity,      //$validity
+            false,           //$single
+            $extra          //$extra
+        );
+
+        if( count($accessions) > 1 ) {
+            throw new \Exception( 'More than one Accession found, but single entity is expected:  key='. $accValue. ', type=' . $accKeytype );
+        }
+
+        if( count($accessions) == 0 ) {
+            return false;   //Accession does not exist in DB => no conflict
+        }
+
+        $accession = $accessions->first();
+
+        $procedure = $accession->getParent();
+        if( !$procedure ) {
+            return false;
+        }
+
+        $patient = $procedure->getParent();
+        if( !$patient ) {
+            return false;
+        }
+
+        $mrnKey = $patient->obtainValidKeyField();
+        $mrnValueDb = $mrnKey->getField()."";
+        $mrnKeytypeDb = $mrnKey->getKeytype();
+
+        if( $mrnValueDb == $mrnValue && $mrnKeytypeDb == $mrnKeytype ) {
+            return true;
+        }
+
+        return false;
     }
 
 }

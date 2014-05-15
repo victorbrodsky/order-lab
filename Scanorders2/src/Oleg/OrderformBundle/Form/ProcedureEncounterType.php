@@ -23,6 +23,8 @@ class ProcedureEncounterType extends AbstractType
 
         $builder->add('field', 'hidden', array('label'=>false));
 
+        //$builder->add('keytype', 'hidden', array('label'=>false));
+
         $builder->add('procedureencounterothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounter',
             'label' => false

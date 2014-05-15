@@ -289,6 +289,8 @@ class CheckController extends Controller {
 
             if( $entity->getProcedure() ) {
 
+                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
                 //find patient mrn
                 $patient = $entity->getProcedure()->getPatient();
                 if( !$permission ) {
@@ -301,7 +303,6 @@ class CheckController extends Controller {
 
                 if( $patient && $parentKey ) {
                     $parentKey = $patient->obtainValidKeyfield();
-                    $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
                     $dateStr = $transformer->transform($parentKey->getCreationdate());
                     $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'], (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
                     $extraid = $parentKey->getKeytype()->getId()."";
@@ -316,6 +317,12 @@ class CheckController extends Controller {
 
                 $procedureName = $entity->getProcedure()->getName();
 
+                $encDate = $transformer->transform( $entity->getProcedure()->getEncounterDate() );
+                $patName = $entity->getProcedure()->getPatname();
+                $patSex = $entity->getProcedure()->getPatsex();
+                $patAge = $entity->getProcedure()->getPatage();
+                $patHist = $entity->getProcedure()->getPathistory();
+
             }
 
             if( !$parentKey ) {
@@ -324,6 +331,12 @@ class CheckController extends Controller {
                 $extraid = "";
                 $orderinfoString = "";
                 $procedureName = array();
+
+                $encDate = "";
+                $patName = "";
+                $patSex = "";
+                $patAge = "";
+                $patHist = "";
             }
 
             //echo "mrnstring=".$mrnstring." ";
@@ -335,6 +348,11 @@ class CheckController extends Controller {
                 'mrnstring'=>$mrnstring,
                 'orderinfo'=>$orderinfoString,
                 'procedure'=>$this->getArrayFieldJson($procedureName),
+                'encounterDate'=>$encDate,
+                'patname'=>$patName,
+                'patsex'=>$patSex,
+                'patage'=>$patAge,
+                'pathistory'=>$patHist,
                 'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype'))
             );
         } 

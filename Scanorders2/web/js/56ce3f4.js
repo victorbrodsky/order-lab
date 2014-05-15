@@ -14640,14 +14640,19 @@ var _columnData_scanorder = [
     //patient: 7
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
     { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn} },
-    { header:'Patient Name', columns:{} },
-    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
+//    { header:'Patient Name', columns:{} },
+//    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
     { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
-    { header:'Patient Age', columns:{} },
-    { header:'Clinical History', columns:{} },
+//    { header:'Patient Age', columns:{} },
+    { header:'Clinical Summary', columns:{} },
 
     //procedure: 1
     { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
+    { header:'Encounter Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
+    { header:'Patient Name', columns:{} },
+    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
+    { header:'Patient Age', columns:{} },
+    { header:'Clinical History', columns:{} },
 
     //part: 6
     { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
@@ -25838,7 +25843,7 @@ function checkSpecifyAnotherIssuer( name ) {
 //flagArrayField: "notarrayfield" => disable/enable array fields
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
-    console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
+    //console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
 
     var parentname = ""; //for multi form
     if( element.hasClass('accessionbtn') ) {
@@ -25870,7 +25875,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     for (var i = 0; i < elements.length; i++) {
 
-        console.log("\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        //console.log("\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -25914,7 +25919,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
             var idsArr = elements.eq(i).attr("id").split("_");
             var field = idsArr[idsArr.length-thisfieldIndex];
-            console.log("disable field=(" + field + ")");
+            //console.log("disable field=(" + field + ")");
 
             if( all == "all" ) {
                 disableElement(parentname, elements.eq(i),disabled);
@@ -25963,7 +25968,7 @@ function disableElement(parentname,element, flag) {
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
 
     //return if this element does not belong to a pressed key element
     var idArr = element.attr('id').split("_");
@@ -25983,7 +25988,7 @@ function disableElement(parentname,element, flag) {
         fieldParentName = "accession";
     }
 
-    console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
+    //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
     if( parentname == "" || parentname == fieldParentName ) {
         //console.log("continue");
     } else {
@@ -26020,7 +26025,7 @@ function disableElement(parentname,element, flag) {
             //console.log("file disable field id="+element.attr("id"));
             element.attr('disabled', true);
         } else {
-            console.log("general disable field id="+element.attr("id"));
+            //console.log("general disable field id="+element.attr("id"));
             element.attr('readonly', true);
         }
 
@@ -26061,7 +26066,7 @@ function disableElement(parentname,element, flag) {
 //key: set only key field
 function setElementBlock( element, data, cleanall, key ) {
 
-    console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
+    //console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
     var parent = element.parent().parent().parent().parent().parent().parent();
     //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
 
@@ -26102,13 +26107,13 @@ function setElementBlock( element, data, cleanall, key ) {
 
     for( var i = 0; i < elements.length; i++ ) {
 
-        console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        //console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         /////////////// exception for simple fields /////////////////////////
         var simpleField = getSimpleFieldName( elements.eq(i) );
         if( simpleField && (simpleField in data) ) {
             var simpleValue = data[simpleField];
-            console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
+            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
             if( simpleField == 'patsex' ) {
                 var dataArr = {text: simpleValue};
                 processGroup( elements.eq(i), dataArr, "ignoreDisable" );

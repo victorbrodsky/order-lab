@@ -57,7 +57,8 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
     }
 
     public function __toString() {
-        return $this->field."";
+        return (string)$this->field."";
+        //return $this->field."";
     }
 
     //set and get parent

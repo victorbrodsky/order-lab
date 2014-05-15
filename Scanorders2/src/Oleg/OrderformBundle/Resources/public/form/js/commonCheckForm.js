@@ -291,6 +291,25 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
+function getSimpleFieldName( inputEl ) {
+    if( inputEl.hasClass("proceduredate-field") ) {
+        return "encounterDate";
+    }
+    if( inputEl.hasClass("procedurename-field") ) {
+        return "patname";
+    }
+    if( inputEl.hasClass("proceduresex-field") ) {
+        return "patsex";
+    }
+    if( inputEl.hasClass("procedureage-field") ) {
+        return "patage";
+    }
+    if( inputEl.hasClass("procedurehistory-field") ) {
+        return "pathistory";
+    }
+    return null;
+}
+
 function getAjaxTimeoutMsg() {
     alert("Could not communicate with server: no answer after 15 seconds.");
     return false;
@@ -821,7 +840,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     for (var i = 0; i < elements.length; i++) {
 
-        //console.log("element.id=" + elements.eq(i).attr("id"));
+        //console.log("\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -922,22 +941,23 @@ function disableElement(parentname,element, flag) {
     if( fieldParentName == "procedure" ) {
         fieldParentName = "accession";
     }
+
+    //exception for simple fields; used for tooltip
+    if(
+        element.hasClass('procedurename-field') ||
+        element.hasClass('proceduresex-field') ||
+        element.hasClass('procedureage-field') ||
+        element.hasClass('proceduredate-field') ||
+        element.hasClass('procedurehistory-field')
+    ) {
+        fieldParentName = "accession";
+    }
+
     //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
     if( parentname == "" || parentname == fieldParentName ) {
         //console.log("continue");
     } else {
         return;
-    }
-
-    //exception for simple fields; used for tooltip
-    if(
-            element.hasClass('procedurename-field') ||
-            element.hasClass('proceduresex-field') ||
-            element.hasClass('procedureage-field') ||
-            element.hasClass('proceduredate-field') ||
-            element.hasClass('procedurehistory-field')
-    ) {
-        fieldParentName = "accession";
     }
 
     attachTooltip(element,flag,fieldParentName);
@@ -1041,7 +1061,7 @@ function setElementBlock( element, data, cleanall, key ) {
         } else if( field == "mrn" ) {
             var elements = $('.singleorderinfo').find('.mrntype-combobox').not("*[id^='s2id_']");    //treat mrn as a group
         } else {
-            console.debug('WARNING: logical error! No key for single order form is found: field='+field);
+            //console.debug('WARNING: logical error! No key for single order form is found: field='+field);
         }
     } else {
         //console.log("regular set element block");
@@ -1053,6 +1073,21 @@ function setElementBlock( element, data, cleanall, key ) {
     for( var i = 0; i < elements.length; i++ ) {
 
         //console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+
+        /////////////// exception for simple fields /////////////////////////
+        var simpleField = getSimpleFieldName( elements.eq(i) );
+        if( simpleField && (simpleField in data) ) {
+            var simpleValue = data[simpleField];
+            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
+            if( simpleField == 'patsex' ) {
+                var dataArr = {text: simpleValue};
+                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
+            } else {
+                elements.eq(i).val(simpleValue);
+            }
+            continue;
+        }
+        /////////////// EOF exception for simple fields /////////////////////////
 
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
@@ -1143,6 +1178,8 @@ function setElementBlock( element, data, cleanall, key ) {
 //element is an input element jquery object
 function setArrayField(element, dataArr, parent) {
 
+    //console.log(dataArr);
+
     if( !dataArr ) {
         return false;
     }
@@ -1163,7 +1200,7 @@ function setArrayField(element, dataArr, parent) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
         //if(
             //(validity == 'invalid' && dataArr.length > 1)
@@ -1177,11 +1214,6 @@ function setArrayField(element, dataArr, parent) {
         //console.log("parent id=" + parent.attr("id"));
         var idsArr = parent.attr("id").split("_");
         var elementIdArr = element.attr("id").split("_");
-        // 0        1               2           3    4      5          6        7
-        //oleg_orderformbundle_orderinfotype_patient_0_clinicalHistory_0_clinicalHistory
-        // 0        1               2           3    4      5   6     7     8   9  10      11      12 13
-        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_0_name
-
         //console.log("in loop parent.id=" + parent.attr("id") + ", tagName=" + tagName + ", type=" + type + ", classs=" + classs + ", text=" + text );
 
         var fieldName = elementIdArr[elementIdArr.length-fieldIndex];
@@ -1263,16 +1295,6 @@ function setArrayField(element, dataArr, parent) {
                 }
 
                 //find the last attached element to attachElement
-
-//                if( fieldName != "diffDisident" && orderformtype == "single" ) {
-//
-//                    //var firstAttachedElement = element; //for single & disident (Diagnosis) there is only one field: this element
-//                    var firstAttachedElement = attachElement.find('input,textarea').first();
-//                    //console.log(fieldName+': single');
-//
-//                } else {
-//                    var firstAttachedElement = attachElement.find('input,textarea').first();
-//                }
 
                 var firstAttachedElement = attachElement.find('input,textarea').first();
                 
@@ -1422,6 +1444,12 @@ function setKeyGroup( element, data ) {
 
 //process groups such as radio button group
 function processGroup( element, data, disableFlag ) {
+
+    //printF(element,"process group:");
+
+    if( typeof element.attr("id") == 'undefined' || element.attr("id") == "" ) {
+        return;
+    }
 
     var elementIdArr = element.attr("id").split("_");
     var fieldName = elementIdArr[elementIdArr.length-(fieldIndex+1)];

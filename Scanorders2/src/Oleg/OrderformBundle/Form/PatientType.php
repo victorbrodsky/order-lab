@@ -78,45 +78,49 @@ class PatientType extends AbstractType
             'prototype_name' => '__procedure__',
         ));
 
-        //use these fields only for data reviewer
-        $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
-        $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
-        $builder->add('name', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            'read_only' => $flag,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Name:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patientname__',
-        ));
+        //use these fields only for data reviewer and for view
+        if( 1 ) {
 
-        $attr = array('class'=>'form-control patientage-field patientage-mask', 'disabled' => 'disabled');
-        $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
-        $builder->add('age', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
-            'read_only' => $flag,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Age:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patientage__',
-        ));
+            $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
+            $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
+            $builder->add('name', 'collection', array(
+                'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+                'read_only' => $flag,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => "Name:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patientname__',
+            ));
 
-        $builder->add('sex', 'collection', array(
-            'type' => new PatientSexType($this->params, null),
-            'read_only' => $flag,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patientsex__',
-        ));
+            $attr = array('class'=>'form-control patientage-field patientage-mask', 'disabled' => 'disabled');
+            $gen_attr = array('label'=>'Age','class'=>'Oleg\OrderformBundle\Entity\PatientAge','type'=>'text');
+            $builder->add('age', 'collection', array(
+                'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+                'read_only' => $flag,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => "Age:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patientage__',
+            ));
+
+            $builder->add('sex', 'collection', array(
+                'type' => new PatientSexType($this->params, null),
+                'read_only' => $flag,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patientsex__',
+            ));
+
+        }
 
     }
 

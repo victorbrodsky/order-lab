@@ -265,6 +265,14 @@
                                     <div class="panel-heading"><h3 class="panel-title">Procedure</h3></div>
                                     <div class="panel-body">
                                         {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
+
+                                        {#patient's data: single simple fields#}
+                                        {{ formmacros.fieldDateLabel(form_procedure.encounterDate) }}
+                                        {{ formmacros.field(form_procedure.patname) }}
+                                        {{ formmacros.field(form_procedure.patsex) }}
+                                        {{ formmacros.field(form_procedure.patage) }}
+                                        {{ formmacros.field(form_procedure.pathistory) }}
+
                                     </div>
                                 </div>
 

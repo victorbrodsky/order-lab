@@ -261,22 +261,6 @@ class TableController extends Controller {
         $patientmrn->setOriginal($mrnValue);
         $patient->addMrn($patientmrn);
 
-        //name
-        $name = $this->getValueByHeaderName('Patient Name',$row,$columnData);
-        if( !$force || $name && $name != '' ) {
-            $patientname = new PatientName($status,$provider,$source);
-            $patientname->setField($name);
-            $patient->addName($patientname);
-        }
-
-        //sex
-        $sex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
-        if( !$force || $sex && $sex != '' ) {
-            $patientsex = new PatientSex($status,$provider,$source);
-            $patientsex->setField($sex);
-            $patient->addSex($patientsex);
-        }
-
         //dob
         $dob = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
         if( !$force || $dob && $dob != '' ) {
@@ -286,21 +270,37 @@ class TableController extends Controller {
             $patient->addDob($patientdob);
         }
 
-        //age
-        $age = $this->getValueByHeaderName('Patient Age',$row,$columnData);
-        if( !$force || $age && $age != '' ) {
-            $patientage = new PatientAge($status,$provider,$source);
-            $patientage->setField($age);
-            $patient->addAge($patientage);
-        }
-
         //Clinical History
-        $ch = $this->getValueByHeaderName('Clinical History',$row,$columnData);
-        if( !$force || $ch && $ch != '' ) {
+        $clsum = $this->getValueByHeaderName('Clinical Summary',$row,$columnData);
+        if( !$force || $clsum && $clsum != '' ) {
             $patientch = new PatientClinicalHistory($status,$provider,$source);
-            $patientch->setField($age);
+            $patientch->setField($clsum);
             $patient->addClinicalHistory($patientch);
         }
+
+//        //name
+//        $name = $this->getValueByHeaderName('Patient Name',$row,$columnData);
+//        if( !$force || $name && $name != '' ) {
+//            $patientname = new PatientName($status,$provider,$source);
+//            $patientname->setField($name);
+//            $patient->addName($patientname);
+//        }
+//
+//        //sex
+//        $sex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
+//        if( !$force || $sex && $sex != '' ) {
+//            $patientsex = new PatientSex($status,$provider,$source);
+//            $patientsex->setField($sex);
+//            $patient->addSex($patientsex);
+//        }
+//
+//        //age
+//        $age = $this->getValueByHeaderName('Patient Age',$row,$columnData);
+//        if( !$force || $age && $age != '' ) {
+//            $patientage = new PatientAge($status,$provider,$source);
+//            $patientage->setField($age);
+//            $patient->addAge($patientage);
+//        }
 
         //echo "name=".$patient->getName()->first()."<br>";
         //exit();
@@ -325,7 +325,38 @@ class TableController extends Controller {
 
         $patient->addProcedure($procedure);
 
-        //TODO: add procedure simple fields
+        //add procedure simple fields
+        //Encounter Date
+        $encounterDate = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
+        if( !$force || $encounterDate && $encounterDate != '' ) {
+            $encounterDateFormat = new \DateTime($encounterDate);
+            $procedure->setEncounterDate($encounterDateFormat);
+        }
+
+        //Patient Name
+        $patname = $this->getValueByHeaderName('Patient Name',$row,$columnData);
+        if( !$force || $patname && $patname != '' ) {
+            $procedure->setPatname($patname);
+        }
+
+        //Patient Sex
+        $patsex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
+        if( !$force || $patsex && $patsex != '' ) {
+            $procedure->setPatsex($patsex);
+        }
+
+        //Patient Age
+        $patage = $this->getValueByHeaderName('Patient Age',$row,$columnData);
+        if( !$force || $patage && $patage != '' ) {
+            $procedure->setPatage($patage);
+        }
+
+        //Clinical History
+        $pathistory = $this->getValueByHeaderName('Clinical History',$row,$columnData);
+        if( !$force || $pathistory && $pathistory != '' ) {
+            $procedure->setPathistory($pathistory);
+        }
+
 
         ///////////////// Accession /////////////////
         $accession = new Accession(false, $status, $provider, $source);

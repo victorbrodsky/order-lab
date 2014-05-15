@@ -81,11 +81,11 @@ class Patient extends OrderAbstract
 
         if( $withfields ) {
             $this->addMrn( new PatientMrn($status,$provider,$source) );
+            $this->addDob( new PatientDob($status,$provider,$source) );
+            $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$source) );
             $this->addName( new PatientName($status,$provider,$source) );
             $this->addSex( new PatientSex($status,$provider,$source) );
-            $this->addDob( new PatientDob($status,$provider,$source) );
             $this->addAge( new PatientAge($status,$provider,$source) );
-            $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$source) );
         }
 
     }

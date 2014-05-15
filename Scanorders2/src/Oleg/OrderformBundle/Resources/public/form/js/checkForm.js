@@ -9,9 +9,12 @@ var urlBase = $("#baseurl").val();
 var urlCheck = "http://"+urlBase+"/check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");
-var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
+
+//var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
+var arrayFieldShow = new Array("diffDisident");
+
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
-var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
+var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
 
 var orderformtype = $("#orderformtype").val();
 

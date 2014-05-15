@@ -105,8 +105,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         foreach( $patients as $patient ) {
 
-            //remove name, sex and age from patient original object from form if id is null. Those fields in Patient are just for displaying existing info. (Remove them from form?)
-            $this->copyCommonFieldsToProcedure($patient);
+            //testing
+//            $procedures = $patient->getChildren();
+//            foreach( $procedures as $procedure ) {
+//                echo "orig proc=".$procedure;
+//                echo "orig keytype count=".count($procedure->obtainAllKeyfield())."<br>";
+//                echo "orig first key=".$procedure->obtainAllKeyfield()->first()->getField().", orig first keytype=".$procedure->obtainAllKeyfield()->first()->getKeytype()."<br>";
+//            }
+
+            //remove name, sex and age from patient original object from form if id is null. Those fields in Patient are just for displaying existing info.
+            $this->removeDisplayFields($patient);
 
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
             $entity->removePatient($patient);
@@ -369,14 +377,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     }
 
 
-    public function copyCommonFieldsToProcedure($patient) {
+    public function removeDisplayFields($patient) {
 
         //name
         if( count($patient->getName()) > 1 ) {
             throw new \Exception('Patient has multiple field name, count='.count($patient->getName()));
         }
         $name = $patient->getName()->first();
-        if( !$name->getId() ) {
+        if( $name && !$name->getId() ) {
             $patient->removeName($name);
         }
 
@@ -385,7 +393,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             throw new \Exception('Patient has multiple field age, count='.count($patient->getAge()));
         }
         $age = $patient->getAge()->first();
-        if( !$age->getId() ) {
+        if( $age && !$age->getId() ) {
             $patient->removeAge($age);
         }
 
@@ -394,7 +402,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             throw new \Exception('Patient has multiple field sex, count='.count($patient->getSex()));
         }
         $sex = $patient->getSex()->first();
-        if( !$sex->getId() ) {
+        if( $sex && !$sex->getId() ) {
             $patient->removeSex($sex);
         }
 

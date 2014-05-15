@@ -28,8 +28,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        echo $entity;
+        //echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        //echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -37,17 +37,14 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
 
-        //add procedure's name, sex, age to the corresponding patient fields
-        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider()->first());
-
         $keys = $entity->obtainAllKeyfield();
 
         //echo "count keys=".count($keys)."<br>";
         //echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
-            //$entity->createKeyField();  //this should never execute in normal situation
-            throw new \Exception( 'Key field does not exists for '.$className );
+            $entity->createKeyField();  //this can happen for procedure, because key and keytype fields are hidden in the form
+            //throw new \Exception( 'Key field does not exists for '.$className );
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
             //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
@@ -67,12 +64,17 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         if( $found ) {
-            echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+            //echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
             //CopyChildren: copy form's object children to the found one.
             foreach( $entity->getChildren() as $child ) {
                 //echo "adding: ".$child."<br>";
                 $found->addChildren( $child );
             }
+
+            //procedure were obtained from accession, so it's not persisted.
+            $em->persist($found);
+            //$found = $em->getRepository('OlegOrderformBundle:Procedure')->findOneById( $found->getId() );
+
             return $this->setResult($found, $orderinfo, $entity);
 
             //$entity->setId( $found->getId() );
@@ -103,6 +105,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
         }
 
+        //add procedure's name, sex, age to the corresponding patient fields in case if this is a new procedure (not found in DB)
+        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider()->first());
+
         return $this->setResult($entity, $orderinfo);
 
     }
@@ -121,15 +126,26 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
         $patientname = new PatientName($status,$user,$source);
         $patientname->setField($procedure->getPatname());
+        $patientname->setProcedure($procedure);
         $patient->addName($patientname);
 
         //sex
+//        echo "original patient sex count=".count($patient->getSex())."<br>";
+//        foreach( $patient->getSex() as $sex ) {
+//            echo "original patient sex=".$sex."<br>";
+//        }
         if( $this->validFieldIsSet( $patient->getSex() ) ) {
             $status = self::STATUS_INVALID;
         }
         $patientsex = new PatientSex($status,$user,$source);
+        //echo "procedure sex=".$procedure->getPatsex()."<br>";
         $patientsex->setField($procedure->getPatsex());
+        $patientsex->setProcedure($procedure);
         $patient->addSex($patientsex);
+//        echo "after patient sex count=".count($patient->getSex())."<br>";
+//        foreach( $patient->getSex() as $sex ) {
+//            echo "patient sex=".$sex."<br>";
+//        }
 
         //age
         if( $this->validFieldIsSet( $patient->getAge() ) ) {
@@ -137,6 +153,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
         $patientage = new PatientAge($status,$user,$source);
         $patientage->setField($procedure->getPatage());
+        $patientage->setProcedure($procedure);
         $patient->addAge($patientage);
 
     }

@@ -56,18 +56,6 @@ class DataQuality
      */
     protected $newaccessiontype;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="AccessionAccession", cascade={"persist"})
-//     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $accession;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="AccessionAccession", cascade={"persist"})
-//     * @ORM\JoinColumn(name="newaccession_id", referencedColumnName="id", nullable=true)
-//     */
-//    protected $newaccession;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      */
