@@ -137,7 +137,6 @@ abstract class ArrayFieldAbstract {
         return $this->source;
     }
 
-
     public function __toString() {
         return $this->field."";
     }

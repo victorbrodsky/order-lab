@@ -277,6 +277,13 @@
                                 </div>
 
                                 <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Accession</h3></div>
+                                    <div class="panel-body">
+                                        {{ formmacros.fieldDateLabel(form_accession.accessionDate) }}
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Part</h3></div>
                                     <div class="panel-body">
                                         {{ formmacros.inputArrayField(form_part.sourceOrgan,'new',"partsourceorgan") }}

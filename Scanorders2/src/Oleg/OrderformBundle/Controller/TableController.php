@@ -371,6 +371,13 @@ class TableController extends Controller {
         $accacc->setKeytype($acctype);
         $accession->addAccession($accacc);
 
+        //Accession Date
+        $accessionDate = $this->getValueByHeaderName('Accession Date',$row,$columnData);
+        if( !$force || $accessionDate && $accessionDate != '' ) {
+            $accessionDateFormat = new \DateTime($accessionDate);
+            $accession->setAccessionDate($accessionDateFormat);
+        }
+
         $procedure->addAccession($accession);
 
         ///////////////// Part /////////////////

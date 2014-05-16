@@ -130,7 +130,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $dbconflict = false;
         $accKey = $accession->obtainValidKeyfield();
         $accValue = $accKey->getField()."";
-        $accKeytype = $accKey->getKeytype();
+        $accKeytype = $accKey->getKeytype()->getId();
 
         $procedure = $accession->getParent();
         if( !$procedure ) {
@@ -144,10 +144,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $mrnKey = $patient->obtainValidKeyField();
         $mrnValue = $mrnKey->getField()."";
-        $mrnKeytype = $mrnKey->getKeytype();
+        $mrnKeytype = $mrnKey->getKeytype()->getId();
+        //echo "mrnKeytype Id=".$mrnKeytype."<br>";
 
-        if( isDBConflictByAccession( $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
-
+        if( $this->isDBConflictByAccession( $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
+            //echo "DB conflict!<br>";
             $dbconflict = true;
 
             $currentDataquality = new DataQuality();
@@ -238,7 +239,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             return false;   //Accession does not exist in DB => no conflict
         }
 
-        $accession = $accessions->first();
+        $accession = $accessions[0];
 
         $procedure = $accession->getParent();
         if( !$procedure ) {
@@ -252,7 +253,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $mrnKey = $patient->obtainValidKeyField();
         $mrnValueDb = $mrnKey->getField()."";
-        $mrnKeytypeDb = $mrnKey->getKeytype();
+        $mrnKeytypeDb = $mrnKey->getKeytype()->getId();
 
         if( $mrnValueDb == $mrnValue && $mrnKeytypeDb == $mrnKeytype ) {
             return true;

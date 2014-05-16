@@ -113,7 +113,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //                echo "orig first key=".$procedure->obtainAllKeyfield()->first()->getField().", orig first keytype=".$procedure->obtainAllKeyfield()->first()->getKeytype()."<br>";
 //            }
 
-            //remove name, sex and age from patient original object from form if id is null. Those fields in Patient are just for displaying existing info.
+            //make sure to remove name, sex and age from patient original object from form if id is null.
+            //Those fields in Patient are just for displaying existing info.
             $this->removeDisplayFields($patient);
 
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
@@ -210,6 +211,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
 //        echo "<br>################################## Finish:<br>";
 //        echo $entity->getPatient()->first()."<br>";
+//        echo "final pat name count=".count($entity->getPatient()->first()->getName())."<br>";
+//
 //        echo "patients=".count($entity->getPatient())."<br>";
 //        echo "procedures=".count($entity->getProcedure())."<br>";
 //        echo "accessions=".count($entity->getAccession())."<br>";
@@ -229,6 +232,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        foreach($entity->getAccession() as $acc) {
 //            echo "parent=".$acc->getParent()."=>";
 //            echo $acc;
+//        }
+//        foreach($entity->getPatient()->first()->getName() as $el) {
+//            echo "name=".$el."<br>";
+//        }
+//        foreach($entity->getPatient()->first()->getAge() as $el) {
+//            echo "age=".$el."<br>";
+//        }
+//        foreach($entity->getPatient()->first()->getSex() as $el) {
+//            echo "sex=".$el."<br>";
 //        }
 
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
@@ -386,6 +398,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $name = $patient->getName()->first();
         if( $name && !$name->getId() ) {
             $patient->removeName($name);
+        } else {
         }
 
         //age

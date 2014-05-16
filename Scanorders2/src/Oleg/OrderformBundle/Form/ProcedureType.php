@@ -57,7 +57,7 @@ class ProcedureType extends AbstractType
         //simple fields
 
         $builder->add('encounterDate', 'date', array(
-            'label' => "Encounter Date",
+            'label' => "Encounter Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
@@ -65,13 +65,13 @@ class ProcedureType extends AbstractType
         ));
 
         $builder->add( 'patname', 'text', array(
-            'label'=>"Patient's Name (at the time of encounter)",
+            'label'=>"Patient's Name (at the time of encounter):",
             'required'=>false,
             'attr' => array('class' => 'form-control procedurename-field')
         ));
 
         $builder->add( 'patsex', 'choice', array(
-            'label'=>"Patient's Sex (at the time of encounter)",
+            'label'=>"Patient's Sex (at the time of encounter):",
             'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
             'multiple' => false,
             'expanded' => true,
@@ -79,7 +79,7 @@ class ProcedureType extends AbstractType
         ));
 
         $builder->add( 'patage', 'text', array(
-            'label'=>"Patient's Age (at the time of encounter)",
+            'label'=>"Patient's Age (at the time of encounter):",
             'required'=>false,
             'attr' => array('class' => 'form-control procedureage-field patientage-mask')
         ));
@@ -87,7 +87,7 @@ class ProcedureType extends AbstractType
         $builder->add('pathistory', 'textarea', array(
             'max_length'=>10000,
             'required'=>false,
-            'label'=>'Clinical History (at the time of encounter)',
+            'label'=>'Clinical History (at the time of encounter):',
             'attr' => array('class'=>'textarea form-control procedurehistory-field'),
         ));
         

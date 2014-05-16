@@ -690,26 +690,28 @@
 
         {% if nameHtml is not defined or nameHtml == "" %}
             {{ formmacros.inputArrayField(patient.name,cycle,"patientname","","","","",status) }}
+            {#{% for name in patient.name %}#}
+                {#&#123;&#35;id:{{ name.vars.value.id }} | name:{{ name.vars.value }} | status:{{ name.vars.value.status }}&#35;&#125;#}
+                {#{% if name.vars.value.status == 'valid' %}#}
+                    {#<p>{{ formmacros.inputField(name,cycle,"patientname","","","","","","","") }}</p>#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
         {% else  %}
             <p><div class="patientname">{{ nameHtml }}</div></p>
         {% endif %}
-        {#{% for name in patient.name %}#}
-            {#name:{{ name.vars.value }}#}
-            {#{% if name.vars.value.status == 'valid' %}#}
-                {#{{ formmacros.simplefield( "Name:", name.vars.value, "input", "disabled" ) }}#}
-            {#{% endif %}#}
-        {#{% endfor %}#}
+
 
         {% if sexHtml is not defined or sexHtml == "" %}
             {{ formmacros.inputArrayField(patient.sex,cycle,"patientsex","","","","",status) }}
+            {#{% for sex in patient.sex %}#}
+                {#{% if sex.vars.value.status == 'valid' %}#}
+                    {#<p>{{ formmacros.inputField(sex,cycle,"patientsex","","","","","","","") }}</p>#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
         {% else  %}
             <p><div class="patientsex">{{ sexHtml }}</div></p>
         {% endif %}
-        {#{% for sex in patient.sex %}#}
-            {#{% if sex.vars.value.status == 'valid' %}#}
-                {#{{ formmacros.simplefield( "Sex:", sex.vars.value, "input", "disabled" ) }}#}
-            {#{% endif %}#}
-        {#{% endfor %}#}
+
 
         {% if dobHtml is not defined or dobHtml == "" %}
             {{ formmacros.inputArrayField(patient.dob,cycle,"patientdob","date","","","",status) }}
@@ -719,14 +721,15 @@
 
         {% if ageHtml is not defined or ageHtml == "" %}
             {{ formmacros.inputArrayField(patient.age,cycle,"patientage","","","","",status) }}
+            {#{% for age in patient.age %}#}
+                {#{% if age.vars.value.status == 'valid' %}#}
+                    {#<p>{{ formmacros.inputField(age,cycle,"patientage","","","","","","","") }}</p>#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
         {% else  %}
             <p><div class="patientage">{{ ageHtml }}</div></p>
         {% endif %}
-        {#{% for age in patient.age %}#}
-            {#{% if age.vars.value.status == 'valid' %}#}
-                {#{{ formmacros.simplefield( "Age:", age.vars.value, "input", "disabled" ) }}#}
-            {#{% endif %}#}
-        {#{% endfor %}#}
+
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}
             {{ formmacros.inputArrayField(patient.clinicalHistory,cycle,"patientclinicalhistory","","","","",status) }}
@@ -755,6 +758,8 @@
             <p><div class="accessionaccession">{{ accessionHtml }}</div></p>
         {% endif %}
 
+        {{ formmacros.fieldDateLabel(accession.accessionDate) }}
+
         {#{{ formmacros.field(procedure.name) }}#}
         {% if procedureHtml is not defined or procedureHtml == "" %}
             {{ formmacros.inputArrayField(procedure.name,cycle,"procedurename","","","","",status) }}
@@ -763,7 +768,15 @@
         {% endif %}
 
         {% if encounterHtml is not defined or encounterHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter","","","nolabel") }}
+            {#{{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter","","","nolabel") }}#}
+            {#{{ form_widget(procedure.encounter|first) }}#}
+            {% for encounter in procedure.encounter %}
+                {#status:{{ encounter.vars.value.status }}#}
+                {% if encounter.vars.value.status == 'valid' %}
+                    {#{{ form_widget(procedure.encounter) }}#}
+                    {{ form_row(encounter, {'label': false}) }}
+                {% endif %}
+            {% endfor %}
         {% else  %}
             <p><div class="procedureencounter">{{ encounterHtml }}</div></p>
         {% endif %}

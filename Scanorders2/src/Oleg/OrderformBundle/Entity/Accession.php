@@ -18,7 +18,12 @@ class Accession extends OrderAbstract {
      * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="accession", cascade={"persist"})
      */
     protected $accession;
-    
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $accessionDate;
+
     ///////////////////////////////////////////
     
     //Accession belongs to exactly one Procedure => Accession has only one Procedure
@@ -180,6 +185,22 @@ class Accession extends OrderAbstract {
 
     public function clearPart(){
         $this->part->clear();
+    }
+
+    /**
+     * @param mixed $accessionDate
+     */
+    public function setAccessionDate($accessionDate)
+    {
+        $this->accessionDate = $accessionDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessionDate()
+    {
+        return $this->accessionDate;
     }
 
 

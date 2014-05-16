@@ -9185,22 +9185,33 @@ function initAllElements() {
 
 
 function isKey(element, field) {
-    var idsArr = element.attr("id").split("_");
-    if( $.inArray(field, keys) == -1 ) {
-        return false;
+
+    if(
+            element.hasClass('keyfield') ||
+            element.hasClass('accessiontype-combobox') ||
+            element.hasClass('mrntype-combobox')
+    ) {
+        return true;
     } else {
-        if( field == "name" ) {
-            var holder = idsArr[idsArr.length-holderIndex];
-            //console.log("holder="+holder);
-            if( holder == "part" || holder == "block" ) {
-                return true
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
+        return false;
     }
+
+//    var idsArr = element.attr("id").split("_");
+//    if( $.inArray(field, keys) == -1 ) {
+//        return false;
+//    } else {
+//        if( field == "name" ) {
+//            var holder = idsArr[idsArr.length-holderIndex];
+//            console.log("is key: holder="+holder);
+//            if( holder == "part" || holder == "block" ) {
+//                return true
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return true;
+//        }
+//    }
 }
 
 
@@ -9458,6 +9469,45 @@ function getSimpleFieldName( inputEl ) {
         return "pathistory";
     }
     return null;
+}
+
+function calculateAgeByDob( btn ) {
+    var accessionBtnObj = new btnObject(btn,'full');
+    //console.log("accessionBtnObj.name="+accessionBtnObj.name);
+
+    if( accessionBtnObj.name != 'accession' ) {
+        return;
+    }
+
+    var patientBtnObj = accessionBtnObj.parentbtn;
+    //console.log("par btn name="+patientBtnObj.name);
+
+    var patientEl = getButtonElementParent(patientBtnObj);
+    //console.log(patientEl);
+    var dob = patientEl.find('.patientdob-mask');
+    var dobValue = dob.val();
+    //console.log("dobValue="+dobValue);
+
+    var procedureEl = getButtonElementParent(btn);
+    //console.log(procedureEl);
+    var ageEl = procedureEl.find('.procedureage-field');
+
+    //var dobDate = new Date(dobValue);
+    var curAge = getAge(dobValue);
+    //console.log("curAge=("+curAge+")");
+
+    ageEl.val(curAge);
+}
+
+function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
 }
 
 function getAjaxTimeoutMsg() {
@@ -9953,6 +10003,7 @@ function checkSpecifyAnotherIssuer( name ) {
 
 //TODO: functions to rewrite
 
+
 //all: "all" => disable/enable all fields including key field
 //flagKey: "notkey" => disable/enable all fields, but not key field (inverse key)
 //flagArrayField: "notarrayfield" => disable/enable array fields
@@ -10173,7 +10224,6 @@ function disableElement(parentname,element, flag) {
 
     }
 }
-
 
 //set Element. Element is a block of fields
 //element: check_btn element
@@ -10807,6 +10857,11 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
         //console.log("\n\nClean Element id="+id+", classs="+classs+", type="+type+", tagName="+tagName);
 
+        //don't process simple fields, these fileds don't have id because they are not part of form
+        if( typeof id === 'undefined' ) {
+            continue;
+        }
+
         //don't process slide fields
         if( id && id.indexOf("_slide_") != -1 ) {
             continue;
@@ -11417,6 +11472,7 @@ function executeClick( btnObjInit ) {
                             //console.debug("not found");
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
+                            calculateAgeByDob(btn);
                             resolve("data is null");
                         }
 
@@ -12059,6 +12115,10 @@ function getButtonParent(elem) {
 
 //get a block holder by button; this element should contain all form input fields belonging to this button
 function getButtonElementParent( btn ) {
+
+    if( btn == null ) {
+        return null;
+    }
 
     var parent = btn.closest('.form-element-holder');
 
@@ -12715,7 +12775,7 @@ function processDatepicker( element, remove ) {
         }
 
         //var btn = element.parent().find('.input-group-addon');
-        //printF(btn,"Datepicker Btn:");
+        //printF(element,"Datepicker Btn:");
 
         if( remove == "remove" ) {
             //printF(element,"Remove datepicker:");

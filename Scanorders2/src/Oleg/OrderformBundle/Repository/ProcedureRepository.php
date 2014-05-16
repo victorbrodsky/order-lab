@@ -124,6 +124,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( $this->validFieldIsSet( $patient->getName() ) ) {
             $status = self::STATUS_INVALID;
         }
+        //echo "pat name count=".count($patient->getName())."<br>";
+        //echo "copy name=".$procedure->getPatname()."<br>";
         $patientname = new PatientName($status,$user,$source);
         $patientname->setField($procedure->getPatname());
         $patientname->setProcedure($procedure);
@@ -245,5 +247,27 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         return false;
     }
 
+
+    //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+    //This function redirects to the same overrided function by Accession Repository
+    public function processDuplicationKeyField( $procedure, $orderinfo ) {
+
+        $accessions = $procedure->getChildren();
+
+        if( count($accessions) != 1 ) {
+            throw new \Exception( 'Procedure entity must have only one Accession. Number of Accession found is ' . count($accessions) );
+        }
+
+        $accession = $accessions->first();
+
+        $procedure->removeChildren($accession);
+
+        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+        $accession = $this->_em->getRepository('OlegOrderformBundle:Accession')->processDuplicationKeyField($accession,$orderinfo);
+
+        $procedure->addChildren($accession);
+
+        return $procedure;
+    }
 
 }

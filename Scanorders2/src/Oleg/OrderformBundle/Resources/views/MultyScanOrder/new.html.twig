@@ -245,6 +245,7 @@
     {#patient#}
     {% set patientCount = 0 %}
     {% for patient in form.patient %}
+        {#patient id={{ patient.vars.value.id }}#}
         {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
         {#{% set patientCountNext = patientCount + 1 %}#}
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">

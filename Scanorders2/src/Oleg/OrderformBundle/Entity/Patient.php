@@ -333,11 +333,14 @@ class Patient extends OrderAbstract
      */
     public function addName($name)
     {
+
+        //echo "Patient add name: name=".$name."<br>";
+
         if( $name == null ) {
             $name = new PatientName();
         }
 
-        if( !$this->name->contains($name) ) {
+        if( !$this->name->contains($name) && !$this->hasSimpleField($name,"getName") ) {
             $name->setPatient($this);
             $this->name->add($name);
         }
@@ -367,7 +370,7 @@ class Patient extends OrderAbstract
             $age = new PatientAge();
         }
 
-        if( !$this->age->contains($age) ) {
+        if( !$this->age->contains($age) && !$this->hasSimpleField($age,"getAge") ) {
             $age->setPatient($this);
             $this->age->add($age);
         }
@@ -397,7 +400,7 @@ class Patient extends OrderAbstract
             $sex = new PatientSex();
         }
 
-        if( !$this->sex->contains($sex) ) {
+        if( !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex") ) {
             $sex->setPatient($this);
             $this->sex->add($sex);
         }
@@ -467,11 +470,17 @@ class Patient extends OrderAbstract
             $sexs = $sexs . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $ages = ", ageCount=".count($this->age).": ";
+        foreach( $this->age as $name ) {
+            $ages = $ages . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
         //", name=".$this->name->first().", nameID=".$this->name->first()->getId().
         ", names=".$names.
         ", sexs=".$sexs.
+        ", ages=".$ages.
         //", age=".$this->age->first().", nameID=".$this->age->first()->getId().
         ", status=".$this->status.
         ", procedureCount=".count($this->procedure).
@@ -506,7 +515,25 @@ class Patient extends OrderAbstract
     public function setChildren($children) {
         $this->setProcedure($children);
     }
-    
+
+    //if simple field already exists. Compare by field name
+    public function hasSimpleField( $field, $getMethod ) {
+
+        foreach( $this->$getMethod() as $obj ) {
+            if( $obj->getField()."" == $field->getField()."" ) {
+                //echo $getMethod.":field exists = ".$field."<br>";
+                return true;
+            } else {
+                //echo $getMethod.":does not exists = ".$field."<br>";
+                return false;
+            }
+        }
+        //echo $getMethod.":no loop: field does not = ".$field."<br>";
+        return false;
+    }
+
+
+
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getMrn();
