@@ -523,6 +523,7 @@ function executeClick( btnObjInit ) {
                             //console.debug("not found");
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
+                            calculateAgeByDob(btn);
                             resolve("data is null");
                         }
 

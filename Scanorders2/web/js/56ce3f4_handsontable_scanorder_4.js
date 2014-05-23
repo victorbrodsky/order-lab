@@ -173,7 +173,7 @@ var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellP
     }
 };
 
-//total 31
+//total 33
 var _columnData_scanorder = [
 
     //header: 1
@@ -195,18 +195,25 @@ var _columnData_scanorder = [
     { header:'Diagnosis', columns:{} },
     { header:'Reason for Scan/Note', columns:{} },
 
-    //patient: 7
+    //patient: 4
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
     { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn} },
 //    { header:'Patient Name', columns:{} },
 //    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
     { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
 //    { header:'Patient Age', columns:{} },
-    { header:'Clinical History', columns:{} },
+    { header:'Clinical Summary', columns:{} },
 
-    //procedure: 1
+    //accession: 1
+    { header:'Accession Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
+
+    //procedure: 6
     { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
-    { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
+    { header:'Encounter Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
+    { header:'Patient Name', columns:{} },
+    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
+    { header:'Patient Age', columns:{} },
+    { header:'Clinical History', columns:{} },
 
     //part: 6
     { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },

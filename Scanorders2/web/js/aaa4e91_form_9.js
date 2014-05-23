@@ -640,7 +640,7 @@ function processDatepicker( element, remove ) {
         }
 
         //var btn = element.parent().find('.input-group-addon');
-        //printF(btn,"Datepicker Btn:");
+        //printF(element,"Datepicker Btn:");
 
         if( remove == "remove" ) {
             //printF(element,"Remove datepicker:");

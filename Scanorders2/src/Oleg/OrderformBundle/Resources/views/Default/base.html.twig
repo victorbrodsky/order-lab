@@ -33,10 +33,10 @@
     {#'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
 
     {% stylesheets
-    'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
-    'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
+        'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
+        'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
     %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+        <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {% block errorwatchjs %}
@@ -80,8 +80,8 @@
         {% endblock %}
     </title>
 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- we want to force people to click a button, so hide the close link in the toolbar -->
     {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}

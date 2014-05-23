@@ -53,8 +53,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "key=".$keys->first()."<br>";
 
         if( count($keys) == 0 ) {
-            //$entity->createKeyField();  //this should never execute in normal situation
-            throw new \Exception( 'Key field does not exists for '.$className );
+            $entity->createKeyField();  //this should never execute in normal situation. This happens when form submit with empty fields added by js
+            //throw new \Exception( 'Key field does not exists for '.$className );
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
             //echo( 'This Object ' . $className . ' should have only one key field. Number of key field=' . count($keys) );
