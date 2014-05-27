@@ -7848,7 +7848,7 @@ function addCollectionField( elem, btnpos ) {
 
     //make sure to get only one element with correct id containing patient, procedure ... indexes
     var elementInputFind = parent.find('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");    //.find('[id^=_patient_]');    //has("[id^=_patient_]");  //.not("*[id^='s2id_']");
-    //var elementInputFind = parent.find('.slidespecialstains').find(findCollectionStr).not("*[id^='s2id_']");
+    //var elementInputFind = parent.find('.blockspecialstains').find(findCollectionStr).not("*[id^='s2id_']");
 
     var elementInput =  elementInputFind.first();
     for( var i = 0; i < elementInputFind.length; i++ ) {
@@ -8039,7 +8039,7 @@ function delCollectionField( elem, btnpos ) {
     var element = $(elem);
 
     if( btnpos && btnpos == "bottom" ) {
-        var parent = element.parent().parent().parent(); //field parent i.e. slidespecialstains
+        var parent = element.parent().parent().parent(); //field parent i.e. blockspecialstains
         var elementHolder = parent.find(".row").last();
         var holder = parent;
     } else {

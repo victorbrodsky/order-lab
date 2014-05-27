@@ -235,7 +235,8 @@ class TableController extends Controller {
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $entity->getOid(),
             'conflicts' => null,
-            'cicle' => 'new'
+            'cicle' => 'new',
+            'neworder' => "table_create"
         ));
 
     }

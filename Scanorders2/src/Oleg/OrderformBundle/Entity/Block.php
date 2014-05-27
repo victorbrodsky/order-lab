@@ -42,12 +42,19 @@ class Block extends OrderAbstract
     /**
      * @ORM\ManyToMany(targetEntity="OrderInfo", mappedBy="block")
      **/
-    protected $orderinfo; 
+    protected $orderinfo;
+
+    /**
+     * @param \Doctrine\Common\Collections\Collection $property
+     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="block", cascade={"persist"})
+     */
+    protected $specialStains;
 
     
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);
         $this->slide = new ArrayCollection();
+        $this->specialStains = new ArrayCollection();
 
         //fields:
         $this->blockname = new ArrayCollection();
@@ -56,12 +63,14 @@ class Block extends OrderAbstract
         if( $withfields ) {
             $this->addBlockname( new BlockBlockname($status,$provider,$source) );
             $this->addSectionsource( new BlockSectionsource($status,$provider,$source) );
+            $this->addSpecialStain( new SpecialStains($status,$provider,$source) );
         }
     }
 
     public function makeDependClone() {
         $this->blockname = $this->cloneDepend($this->blockname,$this);
         $this->sectionsource = $this->cloneDepend($this->sectionsource,$this);
+        $this->specialStains = $this->cloneDepend($this->specialStains,$this);
     }
 
 
@@ -185,6 +194,28 @@ class Block extends OrderAbstract
     public function getPart()
     {
         return $this->part;
+    }
+
+    public function addSpecialStain( $specialStains )
+    {
+        if( $specialStains != null ) {
+            if( !$this->specialStains->contains($specialStains) ) {
+                $this->specialStains->add($specialStains);
+                $specialStains->setBlock($this);
+                $specialStains->setProvider($this->getProvider());
+            }
+        }
+        return $this;
+    }
+
+    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
+    {
+        $this->specialStains->removeElement($specialStains);
+    }
+
+    public function getSpecialStains()
+    {
+        return $this->specialStains;
     }
 
     public function __toString()

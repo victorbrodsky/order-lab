@@ -141,10 +141,13 @@ class MultyScanOrderController extends Controller {
 
         if( $routeName == "singleorder_create" ) {
             $type = "One Slide Scan Order";
+            $new_order = "single_new";
         } elseif( $routeName == "multi_create") {
             $type = "Multi-Slide Scan Order";
+            $new_order = "multi_new";
         } else {
             $type = "One Slide Scan Order";
+            $new_order = "single_new";
         }
 
         $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
@@ -283,7 +286,8 @@ class MultyScanOrderController extends Controller {
                 return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
                     'oid' => $entity->getOid(),
                     'conflicts' => $conflicts,
-                    'cicle' => $cicle
+                    'cicle' => $cicle,
+                    'neworder' => $new_order
                 ));
             }
 

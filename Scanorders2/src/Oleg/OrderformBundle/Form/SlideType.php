@@ -54,16 +54,16 @@ class SlideType extends AbstractType
                 'attr' => array('class'=>'textarea form-control'),
         ));
 
-        $builder->add('specialStains', 'collection', array(
-            'type' => new SpecialStainsType($this->params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,   //"Special Stain Results:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__slidespecialstains__',
-        ));
+//        $builder->add('specialStains', 'collection', array(
+//            'type' => new SpecialStainsType($this->params),
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'label' => false,   //"Special Stain Results:",
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__slidespecialstains__',
+//        ));
 
         //relevantScans
         $gen_attr = array('label'=>'Link(s) to related image(s)','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type

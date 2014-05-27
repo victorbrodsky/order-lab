@@ -165,9 +165,9 @@
         {% set relevantScansWidget = formmacros.fieldWidget(relevantScansField) %}
         {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
 
-        {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains %}
+        {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.specialStains %}
         {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
-        {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
+        {% set specialStainsHtml = formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
     {% endif %}
 
@@ -213,7 +213,7 @@
           data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,type,"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","","","withspace")|e }}"
 
          data-prototype-block="
-        {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, form.vars.value.status, blocknameHtml, sectionsourceHtml)|e }}
+        {{ formmacros.blockForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype, "check", uid, type, form.vars.value.status, blocknameHtml, sectionsourceHtml, specialStainsHtml)|e }}
         "
           data-prototype-slide="
         {{ formmacros.slideForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype, "", uid, type,
@@ -223,8 +223,7 @@
           formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.scanregion),
           formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.scan.vars.prototype.note),
           formmacros.field(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.microscopicdescr),
-          relevantScansHtml,
-          specialStainsHtml
+          relevantScansHtml
           )|e }}
         "
 
@@ -234,9 +233,9 @@
           data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","","","withspace")|e }}"
 
           {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-          data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
+          data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
           {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-          data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,type,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
+          data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,type,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
 
       {% endif %}
 

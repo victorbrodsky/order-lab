@@ -60,6 +60,17 @@ class BlockType extends AbstractType
             'prototype_name' => '__slide__',
         ));
 
+        $builder->add('specialStains', 'collection', array(
+            'type' => new SpecialStainsType($this->params),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => false,   //"Special Stain Results:",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__blockspecialstains__',
+        ));
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

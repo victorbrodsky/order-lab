@@ -475,7 +475,7 @@
                             fieldtype == "sliderelevantScans"
                             and cycle != 'show' %}
                     {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
-                {% elseif fieldtype == "slidespecialStains" %}
+                {% elseif fieldtype == "blockspecialStains" %}
                     {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
                 {% else %}
                     {{ form_widget(fieldThis.field) }}
@@ -855,7 +855,7 @@
 
 
 
-{% macro blockForm( block, flag, uid, cycle, status, blocknameHtml, sectionsourceHtml ) %}
+{% macro blockForm( block, flag, uid, cycle, status, blocknameHtml, sectionsourceHtml, specialStainsHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -878,13 +878,20 @@
             <p><div class="blocksectionsource">{{ sectionsourceHtml }}</div></p>
         {% endif %}
 
+        {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
+            {#                                        (fields,    cycle,     classname,           fieldtype,        nobtn,     nolabel)#}
+            {{ formmacros.inputArrayField(block.specialStains,cycle,"blockspecialstains","blockspecialStains","buttonbottom","","","withspace") }}
+        {% else  %}
+            <p><div class="blockspecialstains">{{ specialStainsHtml }}</div></p>
+        {% endif %}
+
     </div>
 {% endmacro %}
 
 
 
 
-{% macro slideForm( slide, flag, uid, cycle, slidetypeHtml, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml, specialStainsHtml ) %}
+{% macro slideForm( slide, flag, uid, cycle, slidetypeHtml, stainHtml, scanHtml, scanregionHtml, noteHtml, microscopicdescrHtml, relevantScansHtml ) %}
     {% import _self as formmacros %}
 
     <div id="slide_{{ uid }}" class="form-element-holder">
@@ -924,12 +931,12 @@
             <p><div class="slidemicroscopicdescr">{{ microscopicdescrHtml }}</div></p>
         {% endif %}
 
-        {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
-        {#                                        (fields,    cycle,     classname,           fieldtype,        nobtn,     nolabel)#}
-            {{ formmacros.inputArrayField(slide.specialStains,cycle,"slidespecialstains","slidespecialStains","buttonbottom","","","withspace") }}
-        {% else  %}
-            <p><div class="slidespecialstains">{{ specialStainsHtml }}</div></p>
-        {% endif %}
+        {#{% if specialStainsHtml is not defined or specialStainsHtml == "" %}#}
+        {#&#123;&#35;                                        (fields,    cycle,     classname,           fieldtype,        nobtn,     nolabel)&#35;&#125;#}
+            {#{{ formmacros.inputArrayField(slide.specialStains,cycle,"blockspecialstains","blockspecialStains","buttonbottom","","","withspace") }}#}
+        {#{% else  %}#}
+            {#<p><div class="blockspecialstains">{{ specialStainsHtml }}</div></p>#}
+        {#{% endif %}#}
 
         {% if relevantScansHtml is not defined or relevantScansHtml == "" %}
             {{ formmacros.inputArrayField(slide.relevantScans,cycle,"sliderelevantscans","sliderelevantScans") }}

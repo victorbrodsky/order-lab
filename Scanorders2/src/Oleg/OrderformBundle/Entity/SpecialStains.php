@@ -10,14 +10,20 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="specialStains")
  */
-class SpecialStains extends SlideArrayFieldAbstract
+class SpecialStains extends BlockArrayFieldAbstract
 {
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="specialStains")
+//     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id", nullable=true)
+//     */
+//    protected $slide;
+
     /**
-     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="specialStains")
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Block", inversedBy="specialStains")
+     * @ORM\JoinColumn(name="block_id", referencedColumnName="id", nullable=true)
      */
-    protected $slide;
+    protected $block;
 
     /**
      * @ORM\Column(type="text", nullable=true)

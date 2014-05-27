@@ -44,7 +44,7 @@
 
         {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains %}
         {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
-        {% set specialStainsHtml = formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
+        {% set specialStainsHtml = formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
         {#{% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}#}
         {% set imgLoading = "http://collage.med.cornell.edu/order/bundles/olegorderform/form/img/select2-spinner.gif" %}
@@ -114,9 +114,9 @@
              data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 
                 {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-             data-prototype-addslidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
+             data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
                 {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-             data-prototype-slidespecialStains="{{ formmacros.inputField(specialStainsField,cycle,"slidespecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
+             data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
 
         >
         </div>
@@ -313,7 +313,7 @@
                                         {{ formmacros.field(form_slide.title) }}
                                         {{ formmacros.field(form_slide.slidetype) }}
                                         {{ formmacros.field(form_slide.microscopicdescr) }}
-                                        {{ formmacros.inputArrayField(form_slide.specialStains,'new',"slidespecialstains","slidespecialStains","buttonbottom","") }}
+                                        {{ formmacros.inputArrayField(form_slide.specialStains,'new',"blockspecialstains","blockspecialStains","buttonbottom","") }}
                                         {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
                                     </div>
                                 </div>

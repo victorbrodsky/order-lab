@@ -38,11 +38,11 @@ class Slide extends OrderAbstract
      */
     protected $microscopicdescr;
 
-    /**
-     * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="slide", cascade={"persist"})
-     */
-    protected $specialStains;
+//    /**
+//     * @param \Doctrine\Common\Collections\Collection $property
+//     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="slide", cascade={"persist"})
+//     */
+//    protected $specialStains;
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
@@ -122,12 +122,12 @@ class Slide extends OrderAbstract
         parent::__construct($status,$provider);
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
-        $this->specialStains = new ArrayCollection();
+        //$this->specialStains = new ArrayCollection();
         $this->relevantScans = new ArrayCollection();
 
         if( $withfields ) {
             $this->addRelevantScan( new RelevantScans($status,$provider,$source) );
-            $this->addSpecialStain( new SpecialStains($status,$provider,$source) );
+            //$this->addSpecialStain( new SpecialStains($status,$provider,$source) );
             $this->addScan( new Scan($status,$provider,$source) );
             $this->addStain( new Stain($status,$provider,$source) );
         }
@@ -136,7 +136,7 @@ class Slide extends OrderAbstract
     public function makeDependClone() {
         $this->scan = $this->cloneDepend($this->scan,$this);
         $this->stain = $this->cloneDepend($this->stain,$this);
-        $this->specialStains = $this->cloneDepend($this->specialStains,$this);
+        //$this->specialStains = $this->cloneDepend($this->specialStains,$this);
         $this->relevantScans = $this->cloneDepend($this->relevantScans,$this);
 
 //        foreach( $this->scan as $depend ) {
@@ -310,33 +310,32 @@ class Slide extends OrderAbstract
                 ", orderinfo count=".count($this->getOrderinfo()).", first orderinfo:=".$this->getOrderinfo()->first().
                 ", scan count=".count($this->getScan()).", firstscanid=".$this->getScan()->first()->getId().
                 ", stain count=".count($this->getStain()).", firststainid=".$this->getStain()->first()->getId().
-                //", specialStains count=".count($this->getSpecialStains()).", firstspecialStainsId=".$this->getSpecialStains()->first()->getId().
                 ", stain=".$stain.", mag=".$mag.
                 ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }
 
 
-    public function addSpecialStain( $specialStains )
-    {
-        if( $specialStains != null ) {
-            if( !$this->specialStains->contains($specialStains) ) {
-                $this->specialStains->add($specialStains);
-                $specialStains->setSlide($this);
-                $specialStains->setProvider($this->getProvider());
-            }
-        }
-        return $this;
-    }
-
-    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
-    {
-        $this->specialStains->removeElement($specialStains);
-    }
-
-    public function getSpecialStains()
-    {
-        return $this->specialStains;
-    }
+//    public function addSpecialStain( $specialStains )
+//    {
+//        if( $specialStains != null ) {
+//            if( !$this->specialStains->contains($specialStains) ) {
+//                $this->specialStains->add($specialStains);
+//                $specialStains->setSlide($this);
+//                $specialStains->setProvider($this->getProvider());
+//            }
+//        }
+//        return $this;
+//    }
+//
+//    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
+//    {
+//        $this->specialStains->removeElement($specialStains);
+//    }
+//
+//    public function getSpecialStains()
+//    {
+//        return $this->specialStains;
+//    }
     
 
     /**
