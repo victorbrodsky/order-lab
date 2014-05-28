@@ -351,6 +351,15 @@
     <p>
     <div class="{{ classname }}">
     {% for field in fields %}
+
+        {% if classname == "blockspecialstains" %}
+            {#{{ form_label(field.staintype) }}#}
+            {#{{ form_widget(field.staintype) }}#}
+            {#{{ form_label(field.field) }}#}
+            {#{{ form_widget(field.field) }}#}
+            {#{{ form_row(field) }}#}
+        {% endif %}
+
         {#( field.vars.value.status == 'valid' and is_granted('ROLE_SUBMITTER') ) or#}
         {#get correct field: valid for submitter and all for external submitter (only latest fields are queried by controller for external)#}
         {% if is_granted('ROLE_SUBMITTER') and field.vars.value.status == 'valid' %}
@@ -372,11 +381,10 @@
         {% if show == 1 or
               cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'
         %}
-
-            {% set btntype = '' %}
+            {% set btntype = 'plusbtn' %}
             {% if cycle == 'amend' %}
                 {% if fields|length == 1 %}
-                    {% set btntype = '' %}
+                    {% set btntype = 'plusbtn' %}
                 {% else %}
                     {% if count < fields|length %}
                         {% set btntype = 'minusbtn' %}
@@ -384,6 +392,10 @@
                         {% set btntype = 'minusplusbtn' %}
                     {% endif %}
                 {% endif %}
+            {% endif %}
+
+            {% if cycle == 'show' %}
+                {% set btntype = 'none' %}
             {% endif %}
 
             <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}</p>
@@ -487,38 +499,6 @@
 
         </div>
 
-        {#add + button after the field#}
-        {% if ( nobtn is defined and nobtn == "buttonbottom") and (cycle == 'new' or cycle == 'edit' or cycle == 'amend') %}
-            {#{% if cycle == 'amend' and btntype != "" %}#}
-                {% if btntype == 'minusplusbtn' %}
-                    <div class="col-xs-6" align="right"><p></p></div>
-                    <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                        <div class="addDelBtnColl">
-                            <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
-                            <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if btntype == '' %}
-                    <div class="col-xs-6" align="right"><p></p></div>
-                    <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                        <div class="addDelBtnColl">
-                            <button onClick="addCollectionField(this,'bottom')" class="btn btn-sm btn-info" type="button">+</button>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if btntype == 'minustn' %}
-                    <div class="col-xs-6" align="right"><p></p></div>
-                    <div class="col-xs-6" align="left" style="padding-bottom: 1%">
-                        <div class="addDelBtnColl">
-                            <button onClick="delCollectionField(this,'bottom')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>
-                        </div>
-                    </div>
-                {% endif %}
-            {#{% endif %}#}
-
-        {% endif %}
-
     {% endif %}
 
 {% endmacro %}
@@ -578,7 +558,7 @@
                             </span>
                         {% endif %}
 
-                        {% if btntype == "" %}
+                        {% if btntype == "plusbtn" %}
                             <span
                                 onClick="addCollectionField(this)"
                                 class="input-group-addon btn addbtnCollField" type="button">
@@ -599,16 +579,50 @@
 
 {% macro fieldCollectionInputTextarea(field, cycle, prototype, widget, nobtn, btntype) %}
 
+    {{ form_errors(field.field) }}
+
+    {% if nobtn is defined and nobtn == "nobtn" %}
+
+        {{ form_widget(field.staintype) }}
+        {{ form_widget(field.field) }}
+
+    {% else %}
+
         <div style="float:left; width:100%">
             <div class="fieldInputColl">
-                {% if widget is not defined or widget == "" %}
-                    {{ form_widget(field.staintype) }}
-                    {{ form_widget(field.field) }}
-                {% else %}
-                    {{ widget }}
-                {% endif %}
+                <div class="input-group-oleg">
+
+                    {% if widget is not defined or widget == "" %}
+                        {{ form_widget(field.staintype,{'label': 'Associated Special Stain Name:'}) }}
+                        {{ form_widget(field.field) }}
+                    {% else %}
+                        {{ widget }}
+                    {% endif %}
+
+                    {% if btntype == 'minusplusbtn' %}
+                        <div class="addDelBtnColl" style="width:100%;">
+                            <button onClick="addCollectionField(this,'bottom')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                            <button onClick="delCollectionField(this,'bottom')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                        </div>
+                    {% endif %}
+
+                    {% if btntype == "plusbtn" %}
+                        <div class="addDelBtnColl" style="width:100%; float:left;">
+                            <button onClick="addCollectionField(this,'bottom')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                        </div>
+                    {% endif %}
+
+                    {% if btntype == 'minustn' %}
+                        <div class="addDelBtnColl" style="width:100%;">
+                            <button onClick="delCollectionField(this,'bottom')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                        </div>
+                    {% endif %}
+
+                </div>
             </div>
         </div>
+
+    {% endif %}
 
 {% endmacro %}
 
@@ -879,8 +893,8 @@
         {% endif %}
 
         {% if specialStainsHtml is not defined or specialStainsHtml == "" %}
-            {#                                        (fields,    cycle,     classname,           fieldtype,        nobtn,     nolabel)#}
-            {{ formmacros.inputArrayField(block.specialStains,cycle,"blockspecialstains","blockspecialStains","buttonbottom","","","withspace") }}
+            {#                              fields,             cycle,classname,            fieldtype,          nobtn,      nolabel,withspace,status#}
+            {{ formmacros.inputArrayField(block.specialStains,cycle,"blockspecialstains","blockspecialStains","","","",status) }}
         {% else  %}
             <p><div class="blockspecialstains">{{ specialStainsHtml }}</div></p>
         {% endif %}

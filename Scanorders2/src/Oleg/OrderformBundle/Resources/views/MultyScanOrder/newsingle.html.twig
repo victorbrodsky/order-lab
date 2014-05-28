@@ -42,7 +42,7 @@
         {% set relevantScansWidget = formmacros.fieldWidget(relevantScansField) %}
         {% set relevantScansHtml = formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"") %}
 
-        {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.specialStains %}
+        {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.specialStains %}
         {% set specialStainsWidget = formmacros.fieldSpecialStainsWidget(specialStainsField) %}
         {% set specialStainsHtml = formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"buttonbottom","") %}
 
@@ -113,9 +113,9 @@
                 {#requires for check form to populate fields by AJAX (no '+' buttons)#}
              data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 
-                {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-             data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
-                {#requires for check form to populate fields by AJAX (no '+' buttons)#}
+            {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
+             data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"","","","withspace","minusplusbtn")|e }}"
+            {#requires for check form to populate fields by AJAX (no '+' buttons)#}
              data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
 
         >
@@ -304,6 +304,7 @@
                                     <div class="panel-heading"><h3 class="panel-title">Block</h3></div>
                                     <div class="panel-body">
                                         {{ formmacros.inputArrayField(form_block.sectionsource,'new',"blocksectionsource","blocksectionsource") }}
+                                        {{ formmacros.inputArrayField(form_block.specialStains,'new',"blockspecialstains","blockspecialStains","buttonbottom","") }}
                                     </div>
                                 </div>
 
@@ -313,7 +314,6 @@
                                         {{ formmacros.field(form_slide.title) }}
                                         {{ formmacros.field(form_slide.slidetype) }}
                                         {{ formmacros.field(form_slide.microscopicdescr) }}
-                                        {{ formmacros.inputArrayField(form_slide.specialStains,'new',"blockspecialstains","blockspecialStains","buttonbottom","") }}
                                         {{ formmacros.inputArrayField(form_slide.relevantScans,'new',"sliderelevantscans","sliderelevantScans") }}
                                     </div>
                                 </div>

@@ -1051,7 +1051,7 @@ function disableElement(parentname,element, flag) {
         }
 
         //disable children buttons
-        element.parent().find("span[type=button]").attr("disabled", "disabled");
+        element.parent().find("span[type=button],button[type=button]").attr("disabled", "disabled");
 
     } else {
 
@@ -1065,7 +1065,7 @@ function disableElement(parentname,element, flag) {
         }
 
         //enable children buttons
-        element.parent().find("span[type=button]").removeAttr("disabled");
+        element.parent().find("span[type=button],button[type=button]").removeAttr("disabled");
 
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);
@@ -1567,13 +1567,14 @@ function cleanArrayFieldSimple( element, field, single ) {
 //element - input field element
 function cleanArrayField( element, field, single ) {
 
-    if( field != "diffDisident" ) {
+    //if( field != "diffDisident" ) {
+    if( $.inArray(field, arrayFieldShow) == -1 ) {
         cleanArrayFieldSimple(element,field,single);
         return;
     }
 
     //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_2_field
-    //console.log( "clean array element id=" + element.attr("id") + ", field=" + field );
+    //console.log( "\nclean array element id=" + element.attr("id") + ", field=" + field );
     //delete if id != 0 or its not the last element
 
     //get row element - fieldHolder
@@ -1619,6 +1620,11 @@ function cleanArrayField( element, field, single ) {
 
         //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
         changeIdtoIndex(element,field,0);
+
+        //set to the first item
+        if( field == "specialStains" ) {
+            setToFirstElement( element, _stain );
+        }
 
     } else {
         //delete hole row

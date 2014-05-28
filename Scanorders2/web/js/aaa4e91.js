@@ -12,7 +12,7 @@ window.onerror=function(msg, url, linenumber){
         alert(  'Internal system error. Please reload the page by clicking "OK" button.\n' +
             'Please e-mail us at slidescan@med.cornell.edu if the problem persists.\n\n'+
             'Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber   );
-        location.reload();
+        //location.reload();
     }
 
 }
@@ -5967,7 +5967,7 @@ function customCombobox() {
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"),false);
+        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0"),false);
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
@@ -6069,9 +6069,9 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
 
     var targetid = "";
     if( cicle == "new" || (cicle == "amend" && preset) || (cicle == "edit" && preset) ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        targetid = id+"specialStains_"+ids[6]+"_staintype";
+        targetid = id+"specialStains_"+ids[5]+"_staintype";
         //console.log("targetid="+targetid);
     }
 
@@ -7370,10 +7370,10 @@ var urlCheck = "http://"+urlBase+"/check/";
 var keys = new Array("mrn", "accession", "partname", "blockname");
 
 //var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
-var arrayFieldShow = new Array("diffDisident");
+var arrayFieldShow = new Array("diffDisident","specialStains");
 
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
-var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
+var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 
 var orderformtype = $("#orderformtype").val();
 
@@ -9690,7 +9690,7 @@ function disableElement(parentname,element, flag) {
         }
 
         //disable children buttons
-        element.parent().find("span[type=button]").attr("disabled", "disabled");
+        element.parent().find("span[type=button],button[type=button]").attr("disabled", "disabled");
 
     } else {
 
@@ -9704,7 +9704,7 @@ function disableElement(parentname,element, flag) {
         }
 
         //enable children buttons
-        element.parent().find("span[type=button]").removeAttr("disabled");
+        element.parent().find("span[type=button],button[type=button]").removeAttr("disabled");
 
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);
@@ -10206,13 +10206,14 @@ function cleanArrayFieldSimple( element, field, single ) {
 //element - input field element
 function cleanArrayField( element, field, single ) {
 
-    if( field != "diffDisident" ) {
+    //if( field != "diffDisident" ) {
+    if( $.inArray(field, arrayFieldShow) == -1 ) {
         cleanArrayFieldSimple(element,field,single);
         return;
     }
 
     //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_2_field
-    //console.log( "clean array element id=" + element.attr("id") + ", field=" + field );
+    //console.log( "\nclean array element id=" + element.attr("id") + ", field=" + field );
     //delete if id != 0 or its not the last element
 
     //get row element - fieldHolder
@@ -10258,6 +10259,11 @@ function cleanArrayField( element, field, single ) {
 
         //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
         changeIdtoIndex(element,field,0);
+
+        //set to the first item
+        if( field == "specialStains" ) {
+            setToFirstElement( element, _stain );
+        }
 
     } else {
         //delete hole row

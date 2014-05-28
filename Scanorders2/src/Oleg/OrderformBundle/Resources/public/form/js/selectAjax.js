@@ -92,7 +92,7 @@ function customCombobox() {
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"),false);
+        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0"),false);
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
@@ -194,9 +194,9 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
 
     var targetid = "";
     if( cicle == "new" || (cicle == "amend" && preset) || (cicle == "edit" && preset) ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        targetid = id+"specialStains_"+ids[6]+"_staintype";
+        targetid = id+"specialStains_"+ids[5]+"_staintype";
         //console.log("targetid="+targetid);
     }
 

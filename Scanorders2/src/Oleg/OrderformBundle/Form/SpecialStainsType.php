@@ -27,7 +27,7 @@ class SpecialStainsType extends AbstractType
 
         //field
         $builder->add('field', 'textarea', array(
-            'label' => 'Results of Special Stains',
+            'label' => 'Associated Special Stain Result',
             'required' => false,
             'attr' => array('class'=>'textarea form-control form-control-modif')
         ));
@@ -35,7 +35,7 @@ class SpecialStainsType extends AbstractType
         //staintype
         $attr = array('class' => 'ajax-combobox-staintype', 'type' => 'hidden');
         $options = array(
-            'label' => false,
+            'label' => 'Associated Special Stain Name',
             'required' => true,
             'attr' => $attr,
             'classtype' => 'staintype'

@@ -7802,7 +7802,7 @@ function initOptionalParam() {
 ////////////////// uses as generic collection field with + and - buttons ////////////////////////
 
 var findCollectionStr = 'input[type=text],.ajax-combobox-staintype';
-var findCollectionSpecialStr = 'input[type=text],.ajax-combobox-staintype';
+//var findCollectionSpecialStr = 'input[type=text],.ajax-combobox-staintype';
 var findCollectionEnabledStr = 'input[type=text]:enabled:not([readonly])';  //,.ajax-combobox-staintype:enabled:not([readonly])';
 
 //get input field only
@@ -7843,12 +7843,8 @@ function addCollectionField( elem, btnpos ) {
     var element = $(elem);
     //console.log("element.class="+element.attr('class'));
 
-    var parent = element.parent().parent().parent();
-    //console.log("parent id="+parent.attr('id')+", class="+parent.attr('class'));
-
     //make sure to get only one element with correct id containing patient, procedure ... indexes
-    var elementInputFind = parent.find('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");    //.find('[id^=_patient_]');    //has("[id^=_patient_]");  //.not("*[id^='s2id_']");
-    //var elementInputFind = parent.find('.blockspecialstains').find(findCollectionStr).not("*[id^='s2id_']");
+    var elementInputFind = element.closest('.fieldInputColl').find(findCollectionStr).not("*[id^='s2id_']");
 
     var elementInput =  elementInputFind.first();
     for( var i = 0; i < elementInputFind.length; i++ ) {
@@ -7886,7 +7882,7 @@ function addCollectionField( elem, btnpos ) {
     }
 
     if( btnpos && btnpos == "bottom" ) {
-        var elementHolder = element.parent().parent().parent();
+        var elementHolder = element.closest('.blockspecialstains');  //parent().parent().parent().parent().parent().parent().parent();
     } else {
         var elementHolder = element.parent().parent().parent().parent().parent().parent();
     }
@@ -7907,31 +7903,39 @@ function addCollectionField( elem, btnpos ) {
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, maxId+1, prefix );
     //console.log("newForm="+newForm);
 
-    //var collInputs = elementHolder.find('input[type=text],textarea');
-    var collInputs = elementHolder.find(findCollectionSpecialStr);
-    var lastInput = collInputs.eq(collHoldersCount-1);
-    //console.log("attach to el id="+lastInput.attr("id")+",class="+lastInput.attr("class"));
-
-    //add to last input field
-    var lastcollHolder = collHolders.last();    //eq(collHoldersCount-1);
-
-    var btnDel = getDelBtn(btnpos);
-
     if( btnpos && btnpos == "bottom" ) {    //TEXTAREA with button at the bottom
 
-        lastcollHolder.after(newForm);
+        //remove + and add - button
+        var btnDel = getDelBtn(btnpos);
+        var btnRow = element.closest('.addDelBtnColl');
 
-        //add - button to + button if does not exists
-        var delLen = element.closest('.addDelBtnColl').find('.delbtnCollField').length;
-        //console.log("delLen="+delLen);
-        if( delLen == 0 ) {
-            //console.log("add - button to textarea + button");
-            element.after(btnDel);
+        //replace + by -
+        btnRow.find('.addbtnCollField').replaceWith(btnDel);
+
+        //remove - button if there are more than one
+        if( btnRow.find('.delbtnCollField').length > 1 ) {
+            btnRow.find('.delbtnCollField').last().remove();
         }
+
+        //apend new form to the end of input-group-oleg
+        //var lastcollHolder = elementHolder.find('.input-group-oleg').last();
+        var lastcollHolder = collHolders.last();
+        //console.log("lastcollHolder=");
+        //console.log(lastcollHolder);
+        lastcollHolder.after(newForm);
 
         expandTextarea();
 
     } else {    //INPUT with attached button
+
+        var btnDel = getDelBtn(btnpos);
+
+        var collInputs = elementHolder.find(findCollectionStr);
+        var lastInput = collInputs.eq(collHoldersCount-1);
+        //console.log("attach to el id="+lastInput.attr("id")+",class="+lastInput.attr("class"));
+
+        //add to last input field
+        var lastcollHolder = collHolders.last();    //eq(collHoldersCount-1);
 
         lastcollHolder.after(newForm);
 
@@ -7942,11 +7946,13 @@ function addCollectionField( elem, btnpos ) {
         var delBtnEl = lastInput.parent().find('.addbtnCollField');
         //console.log("delBtnEl id="+delBtnEl.attr("id")+",class="+delBtnEl.attr("class"));
         delBtnEl.remove();
+
         //add - to the last element if not exists
         //console.log("count="+lastInput.parent().find('.delbtnCollField').length);
         if( lastInput.parent().find('.delbtnCollField').length == 0 ) {
             lastInput.after(btnDel);
         }
+
         //add - to created element (this element has + button)
         var addBtnElement = elementHolder.find('.addbtnCollField');   //find + button
         addBtnElement.before(btnDel);
@@ -7955,7 +7961,7 @@ function addCollectionField( elem, btnpos ) {
 
     //populate the combobox by Ajax
     if( btnpos && btnpos == "bottom" ) {
-        getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,slide,maxId+1),true);
+        getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,maxId+1),true);
     }
 }
 
@@ -8039,8 +8045,8 @@ function delCollectionField( elem, btnpos ) {
     var element = $(elem);
 
     if( btnpos && btnpos == "bottom" ) {
-        var parent = element.parent().parent().parent(); //field parent i.e. blockspecialstains
-        var elementHolder = parent.find(".row").last();
+        var parent = element.closest('.blockspecialstains');//parent().parent().parent(); //field parent i.e. blockspecialstains
+        var elementHolder = element.closest(".row");
         var holder = parent;
     } else {
         var parent = element.parent();
@@ -8054,7 +8060,8 @@ function delCollectionField( elem, btnpos ) {
     elementHolder.remove();
 
     if( btnpos && btnpos == "bottom" ) {
-        var elementsEnabledCount = parent.find(".row").length;
+        var elementsEnabled = holder.find('textarea:enabled:not([readonly])');
+        var elementsEnabledCount = elementsEnabled.length;
     } else {
         //var elementsEnabled = holder.find('input[type=text]:enabled:not([readonly]),textarea:enabled:not([readonly])');
         var elementsEnabled = holder.find(findCollectionEnabledStr);
@@ -8063,23 +8070,24 @@ function delCollectionField( elem, btnpos ) {
 
     //console.log("elementsEnabledCount="+elementsEnabledCount);
 
-    if( !btnpos || btnpos != "bottom" ) { //only for attached field-button
+    //if( !btnpos || btnpos != "bottom" ) { //only for attached field-button
         //add '+' button if the last visible field doesn't have it
         var lastEnabledEl = elementsEnabled.last();
         //console.log("lastEnabledEl id="+lastEnabledEl.attr("id")+", class="+lastEnabledEl.attr("class"));
         if( lastEnabledEl.parent().find('.addbtnCollField').length == 0 ) {
             //console.log("add + btn");
             var delBtnEl = lastEnabledEl.parent().find('.delbtnCollField');
-            delBtnEl.after(getAddBtn());
+            delBtnEl.after( getAddBtn(btnpos) );
         }
-    }
+    //}
 
     //remove '-' button if only one visible field left
     if( elementsEnabledCount == 1 ) {
         //console.log('remove - btn, count='+elementsEnabledCount);
         if( btnpos && btnpos == "bottom" ) {
             //console.log('button at the bottom => text area');
-            element.remove();
+            //element.remove();
+            elementsEnabled.first().parent().find('.delbtnCollField').remove();
         } else {
             elementsEnabled.first().parent().find('.delbtnCollField').remove();
         }
@@ -8088,16 +8096,22 @@ function delCollectionField( elem, btnpos ) {
     return false;
 }
 
-function getAddBtn() {
+function getAddBtn(btnpos) {
     //var addbtnId = 'addbtn_patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+'_'+ident+'_'+collInt+'_'+ident;
-    var btn = '<span onClick="addCollectionField(this)"'+
-        'class="input-group-addon btn addbtnCollField" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-plus-sign"></i></span>';
+    if( btnpos && btnpos == "bottom" ) {
+        var btn = '<button onClick="addCollectionField(this,\''+btnpos+'\')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>';
+    } else {
+        var btn = '<span onClick="addCollectionField(this)"'+
+            'class="input-group-addon btn addbtnCollField" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-plus-sign"></i></span>';
+    }
+
     return btn;
 }
 
 function getDelBtn(btnpos) {
     if( btnpos && btnpos == "bottom" ) {
-        var btn = '&nbsp;<button onClick="delCollectionField(this,\''+btnpos+'\')" class="btn btn-sm btn-danger delbtnCollField" type="button">-</button>';
+        //var btn = '<button onClick="delCollectionField(this,\''+btnpos+'\')" class="btn btn-sm delbtnCollField '+addClass+'" type="button">-</button>';
+        var btn = '<button onClick="delCollectionField(this,\''+btnpos+'\')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>';
     } else {
         var btn = '<span onClick="delCollectionField(this)"'+
             'class="input-group-addon btn delbtnCollField" data-toggle="datepicker" type="button"><i class="glyphicon glyphicon-minus-sign"></i></span>';
@@ -8383,7 +8397,7 @@ function customCombobox() {
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"),false);
+        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0"),false);
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
@@ -8485,9 +8499,9 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
 
     var targetid = "";
     if( cicle == "new" || (cicle == "amend" && preset) || (cicle == "edit" && preset) ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        targetid = id+"specialStains_"+ids[6]+"_staintype";
+        targetid = id+"specialStains_"+ids[5]+"_staintype";
         //console.log("targetid="+targetid);
     }
 
@@ -10201,7 +10215,7 @@ function disableElement(parentname,element, flag) {
         }
 
         //disable children buttons
-        element.parent().find("span[type=button]").attr("disabled", "disabled");
+        element.parent().find("span[type=button],button[type=button]").attr("disabled", "disabled");
 
     } else {
 
@@ -10215,7 +10229,7 @@ function disableElement(parentname,element, flag) {
         }
 
         //enable children buttons
-        element.parent().find("span[type=button]").removeAttr("disabled");
+        element.parent().find("span[type=button],button[type=button]").removeAttr("disabled");
 
         if( classs && classs.indexOf("datepicker") != -1 ) {
             //console.log("enable datepicker classs="+classs);
@@ -10717,13 +10731,14 @@ function cleanArrayFieldSimple( element, field, single ) {
 //element - input field element
 function cleanArrayField( element, field, single ) {
 
-    if( field != "diffDisident" ) {
+    //if( field != "diffDisident" ) {
+    if( $.inArray(field, arrayFieldShow) == -1 ) {
         cleanArrayFieldSimple(element,field,single);
         return;
     }
 
     //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_2_field
-    //console.log( "clean array element id=" + element.attr("id") + ", field=" + field );
+    //console.log( "\nclean array element id=" + element.attr("id") + ", field=" + field );
     //delete if id != 0 or its not the last element
 
     //get row element - fieldHolder
@@ -10769,6 +10784,11 @@ function cleanArrayField( element, field, single ) {
 
         //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
         changeIdtoIndex(element,field,0);
+
+        //set to the first item
+        if( field == "specialStains" ) {
+            setToFirstElement( element, _stain );
+        }
 
     } else {
         //delete hole row
@@ -10960,10 +10980,10 @@ var urlCheck = "http://"+urlBase+"/check/";
 var keys = new Array("mrn", "accession", "partname", "blockname");
 
 //var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
-var arrayFieldShow = new Array("diffDisident");
+var arrayFieldShow = new Array("diffDisident","specialStains");
 
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
-var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
+var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 
 var orderformtype = $("#orderformtype").val();
 
