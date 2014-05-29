@@ -352,14 +352,6 @@
     <div class="{{ classname }}">
     {% for field in fields %}
 
-        {% if classname == "blockspecialstains" %}
-            {#{{ form_label(field.staintype) }}#}
-            {#{{ form_widget(field.staintype) }}#}
-            {#{{ form_label(field.field) }}#}
-            {#{{ form_widget(field.field) }}#}
-            {#{{ form_row(field) }}#}
-        {% endif %}
-
         {#( field.vars.value.status == 'valid' and is_granted('ROLE_SUBMITTER') ) or#}
         {#get correct field: valid for submitter and all for external submitter (only latest fields are queried by controller for external)#}
         {% if is_granted('ROLE_SUBMITTER') and field.vars.value.status == 'valid' %}
@@ -436,6 +428,9 @@
                 {% else %}
                     {% if fieldtype == "paper" and cycle == "show" %}
                         {{form_label(fieldThis.name)}}<!--
+                    {% elseif fieldtype == "blockspecialStains" %}
+                        {{form_label(fieldThis.staintype)}}<br>
+                        {{form_label(fieldThis.field)}}<!--
                     {% else %}
                         {{form_label(fieldThis.field)}}<!--
                     {% endif %}
@@ -520,6 +515,10 @@
 
     {{ form_errors(field.field) }}
 
+    {% if btntype is not defined or btntype == "" %}
+        {% set btntype = 'plusbtn' %}
+    {% endif %}
+
     {% if nobtn is defined and nobtn == "nobtn" %}
         {{ widget }}
     {% else %}
@@ -581,6 +580,12 @@
 
     {{ form_errors(field.field) }}
 
+    btntype:{{ btntype }}
+
+    {% if btntype is not defined or btntype == "" %}
+        {% set btntype = 'plusbtn' %}
+    {% endif %}
+
     {% if nobtn is defined and nobtn == "nobtn" %}
 
         {{ form_widget(field.staintype) }}
@@ -593,7 +598,7 @@
                 <div class="input-group-oleg">
 
                     {% if widget is not defined or widget == "" %}
-                        {{ form_widget(field.staintype,{'label': 'Associated Special Stain Name:'}) }}
+                        {{ form_widget(field.staintype) }}
                         {{ form_widget(field.field) }}
                     {% else %}
                         {{ widget }}
@@ -601,8 +606,8 @@
 
                     {% if btntype == 'minusplusbtn' %}
                         <div class="addDelBtnColl" style="width:100%;">
-                            <button onClick="addCollectionField(this,'bottom')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>
                             <button onClick="delCollectionField(this,'bottom')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            <button onClick="addCollectionField(this,'bottom')" type="button" class="btn btn-sm addbtnCollField"><span class="glyphicon glyphicon-plus-sign"></span></button>
                         </div>
                     {% endif %}
 
@@ -612,7 +617,7 @@
                         </div>
                     {% endif %}
 
-                    {% if btntype == 'minustn' %}
+                    {% if btntype == 'minusbtn' %}
                         <div class="addDelBtnColl" style="width:100%;">
                             <button onClick="delCollectionField(this,'bottom')" type="button" class="btn btn-sm delbtnCollField"><span class="glyphicon glyphicon-minus-sign"></span></button>
                         </div>

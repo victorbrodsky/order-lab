@@ -7954,8 +7954,8 @@ function addCollectionField( elem, btnpos ) {
         }
 
         //add - to created element (this element has + button)
-        var addBtnElement = elementHolder.find('.addbtnCollField');   //find + button
-        addBtnElement.before(btnDel);
+        //var addBtnElement = elementHolder.find('.addbtnCollField');   //find + button
+        //addBtnElement.before(btnDel);
 
     }
 

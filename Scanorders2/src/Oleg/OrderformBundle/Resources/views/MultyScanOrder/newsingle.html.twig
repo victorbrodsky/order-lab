@@ -103,13 +103,13 @@
              {#data-prototype-addpartdisident="{{ formmacros.inputField(disidentField,'new',"partdisident","prototype",disidentWidget,"nobtn","")|e }}"#}
              data-prototype-partdisident="{{ formmacros.inputField(disidentField,'new',"partdisident","prototype",disidentWidget,"nobtn","")|e }}"
 
-             data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","")|e }}"
+             data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","","","withspace","minusplusbtn")|e }}"
              data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
 
              {#data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.field)|e }}"#}
              {#data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.field)|e }}"#}
                 {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
-             data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"","")|e }}"
+             data-prototype-addsliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"","","","withspace","minusplusbtn")|e }}"
                 {#requires for check form to populate fields by AJAX (no '+' buttons)#}
              data-prototype-sliderelevantScans="{{ formmacros.inputField(relevantScansField,cycle,"sliderelevantScans","prototype",relevantScansWidget,"nobtn","")|e }}"
 

@@ -35,7 +35,7 @@ class SpecialStainsType extends AbstractType
         //staintype
         $attr = array('class' => 'ajax-combobox-staintype', 'type' => 'hidden');
         $options = array(
-            'label' => 'Associated Special Stain Name',
+            'label' => 'Associated Special Stain Name:',
             'required' => true,
             'attr' => $attr,
             'classtype' => 'staintype'
