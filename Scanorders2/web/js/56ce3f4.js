@@ -14471,16 +14471,20 @@ var _errorValidatorRows = new Array(); //keep rows with validator error
 
 //accession validator
 var accession_validator = function (value) {
+    //console.log('acc validator: value='+value);
     if( isValueEmpty(value) ) {
+        //console.log('acc validator: empty => ret true');
         return true;
     }
     var notzeros = notAllZeros(value);
     var res = value.match(/^[a-zA-Z]{1,2}[0-9]{2}[-][1-9]{1}[0-9]{0,5}$/);      //S11-1, SS11-1, S1-10, not S11-01
     //console.log('acc validator: res='+res+', notzeros='+notzeros);
-    if( res && notzeros ) {
+    if( res != null && notzeros ) {
+        //console.log('acc validator: ret true');
         return true;
     }
     else {
+        //console.log('acc validator: ret false');
         return false;
     }
 }
@@ -14497,7 +14501,7 @@ var general_validator = function (value) {
     var notzeros = notAllZeros(value);
     var res = value.match(/^[a-zA-Z1-9][a-zA-Z0-9-]{0,23}[a-zA-Z0-9]{0,1}$/);
     //console.log('general validator: res='+res+', notzeros='+notzeros);
-    if( res && notzeros ) {
+    if( res != null && notzeros ) {
         return true;
     }
     else {
@@ -14517,7 +14521,7 @@ var generated_validator = function (value) {
     var notzeros = notAllZeros(value);
     var res = value.match(/^[a-zA-Z1-9][a-zA-Z0-9-]{1,}$/);
     //console.log('general validator: res='+res+', notzeros='+notzeros);
-    if( res && notzeros ) {
+    if( res != null && notzeros ) {
         return true;
     }
     else {
@@ -14538,7 +14542,7 @@ var date_validator = function (value) {
     var res = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     var notzeros = notAllZeros(value);
     //console.log('date validator: res='+res+', notzeros='+notzeros);
-    if( res && notzeros ) {
+    if( res != null && notzeros ) {
         //console.log('date2 ok');
         return true;
     }
@@ -14552,6 +14556,26 @@ var date_validator_fn = function (value, callback) {
 };
 //////////////////////
 
+//age validator 0-999
+var age_validator = function (value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
+
+    var res = value.match(/^[0-9]{0,3}$/);
+
+    if( res != null ) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+var age_validator_fn = function (value, callback) {
+    callback( age_validator(value) );
+};
+////////////////////////////
+
 function notAllZeros(value) {
     if( isValueEmpty(value) ) {
         return true;
@@ -14559,7 +14583,7 @@ function notAllZeros(value) {
 
     var allzeros = value.match(/^[0]+$/);
     //console.log('allzeros='+allzeros);
-    if( allzeros ) {
+    if( allzeros != null ) {
         return false;
     }
     else {
@@ -14639,7 +14663,7 @@ var _columnData_scanorder = [
 
     //patient: 4
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
-    { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn} },
+    { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn, allowInvalid: true} },
 //    { header:'Patient Name', columns:{} },
 //    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
     { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
@@ -14654,7 +14678,7 @@ var _columnData_scanorder = [
     { header:'Encounter Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
     { header:'Patient Name', columns:{} },
     { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
-    { header:'Patient Age', columns:{} },
+    { header:'Patient Age', columns:{validator: age_validator_fn, allowInvalid: true} },
     { header:'Clinical History', columns:{} },
 
     //part: 6
@@ -14665,15 +14689,15 @@ var _columnData_scanorder = [
     { header:'Origin of Disease', default:0, columns:{type:'dropdown', source:['','Primary','Metastatic','Unspecified'], strict:true, colWidths:'100px'} },
     { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false} },
 
-    //block: 1
+    //block: 3
     { header:'Block Section Source', columns:{} },
+    { header:'Associated Special Stain Name', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false} },
+    { header:'Associated Special Stain Result', columns:{} },
 
-    //slide: 7
+    //slide: 5
     { header:'Slide Title', columns:{} },
     { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false, filter:false} },
     { header:'Microscopic Description', columns:{} },
-    { header:'Special Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
-    { header:'Results of Special Stains', columns:{} },
     { header:'Link(s) to related image(s)', columns:{} },
     { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false, filter:false} }
 
@@ -14876,35 +14900,6 @@ function handsonTableInit() {
                 _errorValidatorRows.push(row);
             }
         }
-//        afterChange: function (changes, source) {
-//
-//            if( !changes ) {
-//                return;
-//            }
-//
-//            for( var i=0; i<changes.length; i++ ) {
-////                //console.log(changes[i]);
-//
-//                var row = changes[i][0];
-//                var col = changes[i][1];
-//                var oldvalue = changes[i][2];
-//                var value = changes[i][3];
-//
-//                //generate Id for a new row
-//                var totalrows = this.countRows();
-//                console.log('totalrows='+totalrows);
-//                console.log('row='+row+', col='+col+', value='+value);
-//                if( totalrows == (row+2) ) {
-//                    console.log('row='+row+', col='+col+', value='+value);
-//                    var curId = _sotable.getDataAtCell(row,0);
-//                    if( curId == '' || curId == null ) {
-//                        var lastId = _sotable.getDataAtCell(row-1,0);
-//                        _sotable.setDataAtCell(row,0,lastId+1);
-//                    }
-//                }
-//            }//for
-//
-//        }//afterChange
     });
 
     //set bs table
@@ -14916,33 +14911,11 @@ function handsonTableInit() {
 
 }
 
-//function capitalizeAccession( row, col, value ) {
-//
-//    if( !value || value == '' ) {
-//        return;
-//    }
-//
-//    //console.log('capitalize ' +row+','+col+':value='+value);
-//    var columnHeader = _columnData_scanorder[col].header;
-//    if( columnHeader == 'Accession Number' ) {
-//
-//        var upperCaseValue = value.slice(0,1).toUpperCase + value.slice(2);
-//        _sotable.setDataAtCell(row,col,upperCaseValue);
-//
-////        if( value.match(/^[A-Z]/) ) {
-////            var upperCaseValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-////            _sotable.setDataAtCell(row,col,upperCaseValue);
-////        }
-////        if( value.match(/^[A-Z][A-Z]/) && !value.match(/^[A-Z][0-9]/) ) {
-////            //var upperCaseValue = value.replace(/^[a-z]{1,2}/, function(m){ return m.toUpperCase() });
-////            var upperCaseValue = value.charAt(0).toUpperCase() + value.charAt(1).toUpperCase() + value.slice(2).toLowerCase();
-////            _sotable.setDataAtCell(row,col,upperCaseValue);
-////        }
-//    }
-//    return;
-//}
 
 function processKeyTypes( row, col, value, oldvalue ) {
+
+    if( value == oldvalue )
+        return;
 
     var columnHeader = _columnData_scanorder[col].header;
 
@@ -14970,14 +14943,16 @@ function processKeyTypes( row, col, value, oldvalue ) {
                    console.log('ERROR auto generate MRN');
                 });
             } else {
-                cleanHTableCell( row, col+1, true );
+                //cleanHTableCell( row, col+1, true );
             }
-//            if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
-//                cleanHTableCell( row, col+1, true )
-//            }
+
+            if( oldvalue && oldvalue == 'Auto-generated MRN' && value != 'Auto-generated MRN' ) {
+                cleanHTableCell( row, col+1, true )
+            }
 
             break;
         case 'Accession Type':
+
             if( value && value == 'Auto-generated Accession Number' ) {
                 //console.log('Accession Type: value null !!!!!!!!!!!!!');
 
@@ -15000,11 +14975,13 @@ function processKeyTypes( row, col, value, oldvalue ) {
                     console.log('ERROR auto generate Accession Number');
                 });
             } else {
-                cleanHTableCell( row, col+1, true );
+                //console.log('cleanHTableCell!?');
+                //cleanHTableCell( row, col+1, true );
             }
-            //if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
-                //cleanHTableCell( row, col+1, true )
-            //}
+
+            if( oldvalue && oldvalue == 'Auto-generated Accession Number' && value != 'Auto-generated Accession Number' ) {
+                cleanHTableCell( row, col+1, true )
+            }
 
             ////////////// set validator ///////////////
             //if( !value || value == '' ) {
@@ -15107,6 +15084,8 @@ function cleanHTableCell( row, col, force ) {
 
     var value = _sotable.getDataAtCell(row,col);
 
+    console.log('clean: row='+row+', col='+col+', value='+value);
+
     //if( !force && (value === undefined || value === null || value == '') ) {
     if( !force && isValueEmpty(value) ) {
         return; //don't clean empty cells
@@ -15115,8 +15094,6 @@ function cleanHTableCell( row, col, force ) {
     if( _sotable && _sotable.countRows() == (row+1) ) {
         return; //don't clean the last row (it is empty)
     }
-
-    //console.log('clean: row='+row+', col='+col+', value='+value);
 
     var columnHeader = _columnData_scanorder[col].header;
 
@@ -15291,6 +15268,7 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 var _rowToProcessArr = new Array();
 var _processedRowCount = 0;
 var _mrnAccessionArr = new Array();
+var _mrnDobArr = new Array();
 
 
 //1) check if cell validators are ok
@@ -15408,7 +15386,6 @@ function validateHandsonTable() {
                 data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
             }
             //console.log(data);
-            //return false;//testing
 
             //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
             var jsonstr = JSON.stringify(data);
@@ -15463,7 +15440,7 @@ function submitTableScanOrder() {
 }
 
 function allRowProcessed() {
-    console.log( _processedRowCount +"=="+ _rowToProcessArr.length );
+    //console.log( _processedRowCount +"=="+ _rowToProcessArr.length );
     if( _processedRowCount == _rowToProcessArr.length ) {
         return true;
     } else {
@@ -15480,6 +15457,7 @@ function checkPrevGenAndConflictTable(row) {
     var acc = dataRow[_tableMainIndexes.acc];
     var mrnType = dataRow[_tableMainIndexes.mrntype];
     var mrn = dataRow[_tableMainIndexes.mrn];
+    var dob = dataRow[_tableMainIndexes.dob];
 
     if( isValueEmpty(accType) || isValueEmpty(acc) || isValueEmpty(mrnType) || isValueEmpty(mrn) ) {
         return false;
@@ -15496,6 +15474,7 @@ function checkPrevGenAndConflictTable(row) {
     var mrnTypeCorrect = null;
     var mrnDB = null;
     var mrntypeDB = null;
+    var dobDB = null;
 
     //get mrn keytype id
     getKeyTypeID('patient',mrnType).
@@ -15552,11 +15531,12 @@ function checkPrevGenAndConflictTable(row) {
                     //console.log("parentkeyvalue="+response['parentkeyvalue']);
                     mrnDB = response['parentkeyvalue'];
                     mrntypeDB = response['parentkeytype'];
+                    dobDB = response['parentdob'];
                 }
             }
         }
     ).
-    //check internal conflict within the table
+    //check internal MRN-Accession Number conflict within the table
     then(
         function(response) {
             var errLen = $('.tablerowerror-added').length;
@@ -15571,15 +15551,46 @@ function checkPrevGenAndConflictTable(row) {
             }
         }
     ).
-    //check conflict with DB
+    //check internal MRN-DOB conflict within the table
     then(
         function(response) {
             var errLen = $('.tablerowerror-added').length;
-            if( errLen == 0 && mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
+            if( errLen == 0 && mrnDobInternalConflict( mrn, mrnType, dob ) ) {
+                var errmsg = "Please correct multiple different Date of Birth values for a patient with the same MRN listed in highlighted rows.";
+                var errorHtml = createTableErrorWell(errmsg);
+                $('#validationerror').append(errorHtml);
+                setErrorToRow(row,conflictRenderer,true);
+            }
+        }
+    ).
+    //check MRN-Accession conflict with DB
+    then(
+        function(response) {
+            var errLen = $('.tablerowerror-added').length;
+            if( errLen == 0 && !mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
                 //var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
                 //    "The same accession number can not be tied to two different patients.";
                 var errmsg = "Please review the cell(s) marked yellow and make sure each accession number is always listed as belonging " +
                             "to the same patient's MRN. <br>" + "The same accession number can not be tied to two different patients.";
+                var errorHtml = createTableErrorWell(errmsg);
+                $('#validationerror').append(errorHtml);
+                setErrorToRow(row,conflictRenderer,true);
+            }
+        }
+    ).
+    //check MRN-DOB conflict with DB
+    then(
+        function(response) {
+            var errLen = $('.tablerowerror-added').length;
+            if( errLen == 0 && !mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) ) {
+                //var errmsg = "The Date of Birth value you have provided for the patient in the highlighted row is not equal to the Date of Birth " +
+                //            "that is on file for the patient with this MRN. Please correct it or let the system administrator know about this issue.";
+
+                var errmsg = "The Date of Birth value of " + dob + " you have provided for the patient in the highlighted row with MRN " +
+                    mrn + ", " + mrnType +
+                    " is not equal to the " + dobDB + " Date of Birth that is on file for the patient with this MRN." +
+                    " Please correct it or let the system administrator know about this issue";
+
                 var errorHtml = createTableErrorWell(errmsg);
                 $('#validationerror').append(errorHtml);
                 setErrorToRow(row,conflictRenderer,true);
@@ -15605,6 +15616,7 @@ function checkPrevGenAndConflictTable(row) {
 }
 
 function cleanErrorTable() {
+    _mrnDobArr.length = 0;
     _mrnAccessionArr.length = 0;
     _processedRowCount = 0;
     _rowToProcessArr.length = 0;
@@ -15636,6 +15648,42 @@ function setSpecialErrorToRow(row) {
     _sotable.render();
 }
 
+function mrnDobInternalConflict( mrn, mrnType, dob ) {
+
+    var conflict = false;
+
+    if( isValueEmpty(dob) )
+        return conflict;
+
+    //console.log('check conflict internal mrn-DOB: mrn='+mrn+", mrnType="+mrnType+", dob="+dob + " arrlen="+_mrnDobArr.length);
+
+    if( _mrnDobArr.length > 0 ) {
+        for( var i=0; i< _mrnDobArr.length; i++ ) {
+            var dobArr = _mrnDobArr[i].dob;
+            var mrnArr = _mrnDobArr[i].mrn;
+            var mrnTypeArr = _mrnDobArr[i].mrnType;
+            //console.log('internal mrn-DOB: dob='+dob+", dobArr="+dobArr);
+            if( mrnMrnDBEqual(mrnArr,mrn,mrnTypeArr,mrnType) ) {
+                //console.log('mrnMrnDBEqual true');
+                if( dob !== dobArr ) {
+                    //console.log('internal mrn,mrntype-DOB conflict detected');
+                    conflict = true;
+                }
+            }
+        }
+    }
+
+    if( !conflict ) {
+        var mrndob = Array();
+        mrndob['dob'] = dob;
+        mrndob['mrn'] = mrn;
+        mrndob['mrnType'] = mrnType;
+        _mrnDobArr.push(mrndob);
+    }
+
+    return conflict;
+}
+
 
 function mrnAccInternalConflict( acc, accType, mrn, mrnType ) {
 
@@ -15648,9 +15696,7 @@ function mrnAccInternalConflict( acc, accType, mrn, mrnType ) {
             var mrnArr = _mrnAccessionArr[i].mrn;
             var mrnTypeArr = _mrnAccessionArr[i].mrnType;
             if( acc == accArr && accType == accTypeArr ) {
-                if( mrnAccConflict(mrnArr,mrn,mrnTypeArr,mrnType) ) {
-                    //console.log('internal conflict detected');
-                    setErrorToRow(i,conflictRenderer,true);
+                if( !mrnMrnDBEqual(mrnArr,mrn,mrnTypeArr,mrnType) ) {
                     conflict = true;
                 }
             }
@@ -15669,22 +15715,41 @@ function mrnAccInternalConflict( acc, accType, mrn, mrnType ) {
     return conflict;
 }
 
-function mrnAccConflict( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
-    console.log("conflict:"+mrnDB + " " + mrn + " " + mrntypeDB + " " + mrnTypeCorrect);
+function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
+    //console.log("conflict: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")");
     if( !mrnDB || !mrntypeDB ) {
         console.log("ERROR: DB's mrn and/or mrntype are null");
-        return false;
+        return true;
     }
     mrnDB = trimWithCheck(mrnDB);
     mrn = trimWithCheck(mrn);
     mrntypeDB = trimWithCheck(mrntypeDB);
     mrnTypeCorrect = trimWithCheck(mrnTypeCorrect);
     if( mrnDB == mrn && mrntypeDB == mrnTypeCorrect ) {
-        return false;
-    } else {
         return true;
+    } else {
+        return false;
     }
 }
+
+function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
+
+    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+
+    if( !mrnDB || !mrntypeDB ) {
+        //console.log("Do not compare: DB's mrn and/or mrntype are null");
+        return true;
+    }
+
+    if( mrnMrnDBEqual(mrnDB, mrn, mrntypeDB, mrnTypeCorrect) ) {
+        if( dobDB === dob ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 //return true if ok, false if prev gen value is not found in DB
 //force - if true then make ajax check even if there is no "Existing Auto-generated" type
 function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
@@ -15733,6 +15798,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
                             var res = new Array();
                             res['parentkeyvalue'] = data['parent'];
                             res['parentkeytype'] = data['extraid'];
+                            res['parentdob'] = data['parentdob'];
                             resolve(res);
                         } else {
                             resolve(true);
@@ -15884,6 +15950,9 @@ function getTableDataIndexes() {
                 break;
             case 'Block Name':
                 res['block'] = i;
+                break;
+            case 'Patient DOB':
+                res['dob'] = i;
                 break;
             default:
         }
@@ -25702,8 +25771,7 @@ function checkMrnAccessionConflict() {
                             totalError++;
 
                             //console.log('end of conflict process');
-
-                        }
+                        }//if
 
                     } else {
                         console.debug("validation: accession object not found");

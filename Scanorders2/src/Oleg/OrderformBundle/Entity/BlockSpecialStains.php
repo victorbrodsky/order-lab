@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="specialStains")
+ * @ORM\Table(name="blockSpecialStains")
  */
-class SpecialStains extends BlockArrayFieldAbstract
+class BlockSpecialStains extends BlockArrayFieldAbstract
 {
 
 //    /**

@@ -50,7 +50,7 @@ class ProjectTitleListType extends AbstractType
 
         $builder->add('primaryPrincipal', 'choice', array(
             'required' => true,
-            'label'=>'11Primary Principal Investigator (as entered by user'.$comment.'):',
+            'label'=>'Primary Principal Investigator (as entered by user'.$comment.'):',
             'attr' => array('class' => 'combobox combobox-width'),
             'choices' => $principalArr,
         ));

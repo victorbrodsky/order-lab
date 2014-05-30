@@ -583,7 +583,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //$className == 'PatientClinicalHistory' ||
             //$className == 'PatientAge' ||
             $className == 'RelevantScans' ||
-            $className == 'SpecialStains'
+            $className == 'BlockSpecialStains'
         ) {
             //echo "skip!!! <br>";
             return false;

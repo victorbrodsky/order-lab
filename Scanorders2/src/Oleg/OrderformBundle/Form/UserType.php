@@ -116,15 +116,18 @@ class UserType extends AbstractType
         //Roles
         $attr = array('class' => 'combobox combobox-width');
 
-        if( $this->roleAdmin ) {
+        if( $this->cicle == "show" || $this->roleAdmin ) {
 
             $builder->add('roles', 'choice', array(
                 'choices' => $this->roles,
                 'label' => 'Role(s):',
-                'attr'=>$attr,
-                'multiple'  => true,
+                'attr' => $attr,
+                'multiple' => true,
             ));
 
+        }
+
+        if( $this->roleAdmin ) {
 //            $builder->add('enabled', null, array(
 //                'label' => 'Enabled',
 //                'attr' => array('class'=>'form-control form-control-modif')

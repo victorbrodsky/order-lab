@@ -50,7 +50,7 @@ use Oleg\OrderformBundle\Entity\BlockBlockname;
 use Oleg\OrderformBundle\Entity\BlockSectionsource;
 
 use Oleg\OrderformBundle\Entity\RelevantScans;
-use Oleg\OrderformBundle\Entity\SpecialStains;
+use Oleg\OrderformBundle\Entity\BlockSpecialStains;
 use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Entity\Scan;
 use Oleg\OrderformBundle\Entity\Stain;
@@ -131,6 +131,11 @@ class TableController extends Controller {
         $entity->setResearch($res);
 
         $service = $user->getPathologyServices();
+
+        //set the first service
+        if( count($service) > 0 ) {
+            $entity->setPathologyService($service->first());
+        }
 
         $type = "Table-View Scan Order";
 
@@ -453,12 +458,23 @@ class TableController extends Controller {
         $blockname->setField($this->getValueByHeaderName('Block Name',$row,$columnData));
         $block->addBlockname($blockname);
 
-        //Block Section Source
+        //Block: Section Source
         $sections = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
         if( !$force || $sections && $sections != '' ) {
             $blocksection = new BlockSectionsource($status,$provider,$source);
             $blocksection->setField($sections);
             $block->addSectionsource($blocksection);
+        }
+
+        //Block: Results of Special Stains: StainList + field
+        $specialStainValue = $this->getValueByHeaderName('Associated Special Stain Result',$row,$columnData);
+        if( !$force || $specialStainValue && $specialStainValue != '' ) {
+            $stainTransformer = new StainTransformer($em,$provider);
+            $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)); //list
+            $specialstain = new BlockSpecialStains($status,$provider,$source);
+            $specialstain->setStaintype($specialstainList); //StainList
+            $specialstain->setField($specialStainValue);    //field
+            $block->addSpecialStain($specialstain);
         }
 
         $part->addBlock($block);
@@ -509,18 +525,6 @@ class TableController extends Controller {
 
         $slide->addScan($scan);
         ///// EOF Scan /////
-
-
-        //Stain: Results of Special Stains: StainList + field
-        $specialStainValue = $this->getValueByHeaderName('Results of Special Stains',$row,$columnData);
-        if( !$force || $specialStainValue && $specialStainValue != '' ) {
-            $stainTransformer = new StainTransformer($em,$provider);
-            $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Special Stain',$row,$columnData)); //list
-            $specialstain = new SpecialStains($status,$provider,$source);
-            $specialstain->setStaintype($specialstainList); //StainList
-            $specialstain->setField($specialStainValue);    //field
-            $slide->addSpecialStain($specialstain);
-        }
 
         //Link(s) to related image(s)
         $relevantScans = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);

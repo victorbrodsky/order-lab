@@ -192,6 +192,10 @@ class UserController extends Controller
 
         $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
 
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
         //Roles
         $rolesArr = $this->getUserRoles();
 
@@ -338,10 +342,8 @@ class UserController extends Controller
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
         $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getName()] = $role->getAlias();
         }
         return $rolesArr;
     }

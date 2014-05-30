@@ -184,9 +184,9 @@ class ScanOrderController extends Controller {
                     break;
                 case "No Course Director Link":
                     $dql->innerJoin("orderinfo.educational", "educational");
-                    $dql->innerJoin("educational.courseTitle", "courseTitle");
-                    $dql->innerJoin("courseTitle.directors", "directors");
-                    $criteriastr .= " directors.director IS NULL AND status.name != 'Superseded'";
+                    $dql->innerJoin("educational.directorWrappers", "directorWrappers");
+                    $dql->innerJoin("directorWrappers.director", "director");
+                    $criteriastr .= " director.director IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
                     $dql->innerJoin("orderinfo.research", "research");
@@ -277,25 +277,36 @@ class ScanOrderController extends Controller {
                 //***************** END of Proxy User Orders *************************//
             }
             if( $service == "Where I am the Course Director" ) {
-                $dql->innerJoin("orderinfo.educational", "educational");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "educational.director=".$user->getId();
+                $dql->innerJoin("orderinfo.educational", "educational");
+                $dql->innerJoin("educational.directorWrappers", "directorWrappers");
+                $dql->innerJoin("directorWrappers.director", "director");
+                $crituser .= "director.director=".$user->getId();
             }
             if( $service == "Where I am the Principal Investigator" ) {
-                //echo "Where I am the Principal Investigator <br>";
-                $dql->innerJoin("orderinfo.research", "research");
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "research.principal=".$user->getId();
+                $dql->innerJoin("orderinfo.research", "research");
+                $dql->innerJoin("research.principalWrappers", "principalWrappers");
+                $dql->innerJoin("principalWrappers.principal", "principal");
+                $crituser .= "principal.principal=".$user->getId();
             }
             if( $service == "Where I am the Amendment Author" ) {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
                 $crituser .= "history.provider=".$user->getId()." AND history.eventtype='Amended Order Submission'";
+            }
+
+            //"All ".$service->getName()." Orders"; => $service is service's id
+            if( is_int($service) ) {
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "orderinfo.pathologyService=".$service;
             }
 
             if( $criteriastr != "" && $crituser != "" ) {
@@ -343,7 +354,7 @@ class ScanOrderController extends Controller {
         
         //echo "dql=".$dql;
         
-        $limit = 15;
+        $limit = 50;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

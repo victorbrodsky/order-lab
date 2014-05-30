@@ -46,7 +46,7 @@ class Block extends OrderAbstract
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="block", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="BlockSpecialStains", mappedBy="block", cascade={"persist"})
      */
     protected $specialStains;
 
@@ -63,7 +63,7 @@ class Block extends OrderAbstract
         if( $withfields ) {
             $this->addBlockname( new BlockBlockname($status,$provider,$source) );
             $this->addSectionsource( new BlockSectionsource($status,$provider,$source) );
-            $this->addSpecialStain( new SpecialStains($status,$provider,$source) );
+            $this->addSpecialStain( new BlockSpecialStains($status,$provider,$source) );
         }
     }
 
@@ -196,21 +196,29 @@ class Block extends OrderAbstract
         return $this->part;
     }
 
-    public function addSpecialStain( $specialStains )
+    public function addSpecialStain( $specialStain )
     {
-        if( $specialStains != null ) {
-            if( !$this->specialStains->contains($specialStains) ) {
-                $this->specialStains->add($specialStains);
-                $specialStains->setBlock($this);
-                $specialStains->setProvider($this->getProvider());
+        if( $specialStain != null ) {
+            if( !$this->specialStains->contains($specialStain) ) {
+                $this->specialStains->add($specialStain);
+                $specialStain->setBlock($this);
+                $specialStain->setProvider($this->getProvider());
             }
         }
         return $this;
     }
+    public function addSpecialStains( $specialStain ) {
+        $this->addSpecialStain( $specialStain );
+        return $this;
+    }
 
-    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
+    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\BlockSpecialStains $specialStain)
     {
-        $this->specialStains->removeElement($specialStains);
+        $this->specialStains->removeElement($specialStain);
+    }
+    public function removeSpecialStains(\Oleg\OrderformBundle\Entity\BlockSpecialStains $specialStain)
+    {
+        $this->removeSpecialStain($specialStain);
     }
 
     public function getSpecialStains()

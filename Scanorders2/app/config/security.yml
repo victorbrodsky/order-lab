@@ -64,7 +64,7 @@ security:
 
             anonymous:  true
 
-            access_denied_url: /scan-order/nopermission
+            access_denied_url: /scan-order/no-permission
 
           
     access_control:
@@ -85,12 +85,13 @@ security:
      - { path: ^/access-requests, role: ROLE_PROCESSOR }
      - { path: ^/account-requests, role: ROLE_PROCESSOR }
      - { path: ^/event-log, role: ROLE_PROCESSOR }
-     - { path: ^/edit-user-profile/, role: [ROLE_PROCESSOR] }
 
      - { path: ^/util/pathservice, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/util/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
-     - { path: ^/users/, role: ROLE_USER }
      - { path: ^/check/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
+
+     - { path: ^/users/, role: ROLE_USER }
+     - { path: ^/edit-user-profile/, role: [ROLE_USER] }
 
      - { path: ^/scan-order, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
      - { path: ^/my-scan-orders, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}

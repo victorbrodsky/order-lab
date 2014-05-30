@@ -23,7 +23,6 @@ use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
 //use Oleg\OrderformBundle\Entity\DiffDiagnoses;
 use Oleg\OrderformBundle\Entity\RelevantScans;
-use Oleg\OrderformBundle\Entity\SpecialStains;
 use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Form\BlockType;
@@ -404,6 +403,11 @@ class MultyScanOrderController extends Controller {
 
         //get pathology service for this user
         $service = $user->getPathologyServices();
+
+        //set the first service
+        if( count($service) > 0 ) {
+            $entity->setPathologyService($service->first());
+        }
 
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );

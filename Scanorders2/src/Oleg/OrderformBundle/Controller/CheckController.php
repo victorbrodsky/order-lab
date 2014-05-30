@@ -299,6 +299,7 @@ class CheckController extends Controller {
 
                 if( $patient ) {
                     $parentKey = $patient->obtainValidKeyfield();
+                    $parentDob = $patient->obtainValidDob();
                 }
 
                 if( $patient && $parentKey ) {
@@ -329,6 +330,7 @@ class CheckController extends Controller {
                 $parentKey = null;
                 $mrnstring = "";
                 $extraid = "";
+                $parentDob = "";
                 $orderinfoString = "";
                 $procedureName = array();
 
@@ -345,6 +347,7 @@ class CheckController extends Controller {
                 'id'=>$entity->getId(),
                 'parent'=>$parentKey."",
                 'extraid'=>$extraid,
+                'parentdob'=>$parentDob."",
                 'mrnstring'=>$mrnstring,
                 'orderinfo'=>$orderinfoString,
                 'procedure'=>$this->getArrayFieldJson($procedureName),

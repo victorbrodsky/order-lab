@@ -390,7 +390,9 @@
                 {% set btntype = 'none' %}
             {% endif %}
 
-            <p>{{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}</p>
+            {#<p>#}
+                {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
+            {#</p>#}
 
         {% endif %}
         {% set count = count + 1 %}
@@ -579,8 +581,6 @@
 {% macro fieldCollectionInputTextarea(field, cycle, prototype, widget, nobtn, btntype) %}
 
     {{ form_errors(field.field) }}
-
-    btntype:{{ btntype }}
 
     {% if btntype is not defined or btntype == "" %}
         {% set btntype = 'plusbtn' %}

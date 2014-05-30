@@ -47,7 +47,7 @@ class SpecialStainsType extends AbstractType
 
         //stainothers
         $builder->add('stainothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\SpecialStains',
+            'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains',
             'label' => false
         ));
 
@@ -56,7 +56,7 @@ class SpecialStainsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\SpecialStains'
+            'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains'
         ));
     }
 

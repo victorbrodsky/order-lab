@@ -30,7 +30,7 @@ class StainList extends ListAbstract
     protected $stain;
 
     /**
-     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="staintype")
+     * @ORM\OneToMany(targetEntity="BlockSpecialStains", mappedBy="staintype")
      */
     protected $specialstain;
 
@@ -146,7 +146,7 @@ class StainList extends ListAbstract
     }
 
 
-    public function addSpecialstain(\Oleg\OrderformBundle\Entity\SpecialStains $specialstain)
+    public function addSpecialstain(\Oleg\OrderformBundle\Entity\BlockSpecialStains $specialstain)
     {
         if( !$this->specialstain->contains($specialstain) ) {
             $this->specialstain->add($specialstain);
@@ -155,7 +155,7 @@ class StainList extends ListAbstract
         return $this;
     }
 
-    public function removeSpecialstain(\Oleg\OrderformBundle\Entity\SpecialStains $specialstain)
+    public function removeSpecialstain(\Oleg\OrderformBundle\Entity\BlockSpecialStains $specialstain)
     {
         $this->specialstain->removeElement($specialstain);
     }

@@ -650,8 +650,7 @@ function checkMrnAccessionConflict() {
                             totalError++;
 
                             //console.log('end of conflict process');
-
-                        }
+                        }//if
 
                     } else {
                         console.debug("validation: accession object not found");

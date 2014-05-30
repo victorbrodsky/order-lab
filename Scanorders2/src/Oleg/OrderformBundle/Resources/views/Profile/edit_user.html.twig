@@ -25,9 +25,8 @@
     {{ formmacros.field(form.pathologyServices) }}
     {#{{ formmacros.field(form.defaultPathService) }}#}
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if cicle == "show_user" or is_granted('ROLE_ADMIN') %}
         {{ formmacros.field(form.roles) }}
-
     {% endif %}
 
     {{ formmacros.field(form.chiefservices) }}

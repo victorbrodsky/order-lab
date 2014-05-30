@@ -532,11 +532,18 @@ class Patient extends OrderAbstract
         return false;
     }
 
-
-
     //don't use 'get' because later repo functions relay on "get" keyword
     public function obtainKeyField() {
         return $this->getMrn();
+    }
+
+    public function obtainValidDob() {
+        foreach( $this->getDob() as $dob ) {
+            if( $dob->getStatus() == 'valid' ) {
+                return $dob;
+            }
+        }
+        return null;
     }
 
 //    public function obtainExtraKey() {
