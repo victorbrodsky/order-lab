@@ -48,7 +48,7 @@ class ProcedureType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => " ",
+            'label' => false,//" ",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__accession__',

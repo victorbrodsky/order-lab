@@ -139,6 +139,12 @@ class CheckController extends Controller {
         }
         
         if( $entity ) {
+
+            //TODO: get valid MRN for this user
+
+            //TODO: get valid DOB for this user
+
+
             $element = array(
                 //'inmrn'=>$mrn,
                 'id'=>$entity->getId(),

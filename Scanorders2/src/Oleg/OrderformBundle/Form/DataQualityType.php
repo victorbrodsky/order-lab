@@ -27,7 +27,7 @@ class DataQualityType extends AbstractType
             $labelDescr = false;
             $labelAccession = false;
             $labelAccessiontype = false;
-            $labelNewaccession = false;
+            //$labelNewaccession = false;
             $labelMrn = false;
             $labelMrntype = false;
 
@@ -46,7 +46,7 @@ class DataQualityType extends AbstractType
             $labelDescr = "MRN-ACCESSION CONFLICT";
             $labelAccession = "Conflict Accession#";
             $labelAccessiontype = "Conflict Accession Type";
-            $labelNewaccession = "New Assigned Accession#";
+            //$labelNewaccession = "New Assigned Accession#";
             $labelMrn = "Conflict MRN";
             $labelMrntype = "Conflict MRN Type";
 

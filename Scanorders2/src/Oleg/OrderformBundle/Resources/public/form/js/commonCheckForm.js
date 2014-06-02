@@ -443,62 +443,8 @@ function checkMrnAccessionConflict() {
         return false;
     }
 
-    //Initial check: get total number of checkboxes
-    var totalcheckboxes = 0;
-
-    var reruncount = 0;
-
-    //console.log( "dataquality_message1[0]="+dataquality_message1[0] );
-    //console.log( "dataquality_message2[0]="+dataquality_message2[0] );
-
-    var countErrorBoxes = 0;
-
-    var errorBoxes = $('#validationerror').find('.validationerror-added');
-    //console.log("errorBoxes.length="+errorBoxes.length);
-
-    for (var i = 0; i < errorBoxes.length; i++) {
-
-        var errorBox = errorBoxes.eq(i);
-
-        var checkedEl = errorBox.find("input:checked");
-        //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
-
-        //console.log("value="+checkedEl.val());
-        if( checkedEl.is(":checked") ){
-            //console.log("checked value="+checkedEl.val());
-            if( checkedEl.val() == "OPTION3" ) {
-                reruncount++;
-            }
-            if( checkedEl.val() == "OPTION1" ) {
-                setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
-            }
-            if( checkedEl.val() == "OPTION2" ) {
-                setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
-            }
-        } else {
-            //
-        }
-        totalcheckboxes++;
-
-        countErrorBoxes++;
-
-    }
-
-    //clear array
-    dataquality_message1.length = 0;
-    dataquality_message2.length = 0;
-
-    //console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
-
-
-    if( totalcheckboxes == 0 ) {
-        //continue
-//    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
-//        cleanValidationAlert();
-    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
-        cleanValidationAlert();
-    } else {    //return true;
-        //return false; //testing
+    //check if conflict was handled by a choice, otherwise, do validation again.
+    if( checkIfMrnAccConflictHandled() ) {
         return true;
     }
 
@@ -511,7 +457,7 @@ function checkMrnAccessionConflict() {
     }
 
     //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
-    var prototype = $('#form-prototype-data').data('prototype-dataquality');
+    //var prototype = $('#form-prototype-data').data('prototype-dataquality');
     //console.log("prototype="+prototype);
     var index = 0;
 
@@ -533,9 +479,9 @@ function checkMrnAccessionConflict() {
             var mrnHolder = accInput.closest('.panel-patient').find(".patientmrn");
         }
 
-        var patientInputs = mrnHolder.find('.keyfield').not("*[id^='s2id_']").first();
-        var mrnValue = patientInputs.val();
-        //console.log("patientInputs.first().id=" + patientInputs.first().attr('id') + ", class=" + patientInputs.first().attr('class'));
+        var patientInput = mrnHolder.find('.keyfield').not("*[id^='s2id_']").first();
+        var mrnValue = patientInput.val();
+        //console.log("patientInput.first().id=" + patientInput.first().attr('id') + ", class=" + patientInput.first().attr('class'));
 
         var patientMrnInputs = mrnHolder.find('.mrntype-combobox').not("*[id^='s2id_']").first();
         //var mrntypeValue = patientMrnInputs.select2("val");
@@ -543,7 +489,7 @@ function checkMrnAccessionConflict() {
         var mrntypeData = patientMrnInputs.select2("data");
         //console.log("sel id="+mrntypeData.id);
         var mrntypeText = mrntypeData.text;
-        //console.log("patientInputs.last().id=" + patientInputs.last().attr('id') + ", class=" + patientInputs.last().attr('class'));
+        //console.log("patientInput.last().id=" + patientInput.last().attr('id') + ", class=" + patientInput.last().attr('class'));
 
         //console.log("accValue="+accValue + ", acctypeValue=" + acctypeValue + "; mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue  );
 
@@ -605,46 +551,22 @@ function checkMrnAccessionConflict() {
                         } else {
                             //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
 
-                            var nl = "\n";    //"&#13;&#10;";
+                            var mrnObj = Array();
+                            mrnObj["mrnValueForm"] = mrnValue;
+                            mrnObj["mrnValueDB"] = mrn;
+                            mrnObj["mrntypeIDForm"] = mrntypeValue;
+                            mrnObj["mrntypeTextForm"] = mrntypeText;
+                            mrnObj["mrnstring"] = mrnstring;
+                            mrnObj["patientInput"] = patientInput;
 
-                            var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValue+" ["+acctypeText+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
-                                +mrnValue+" ["+mrntypeText+"] as you have entered.";
-                            var message = message_short + " Please correct either the MRN or the Accession Number above.";
+                            var accObj = Array();
+                            accObj["accValueForm"] = accValue;
+                            accObj["accValueDB"] = null;
+                            accObj["acctypeTextForm"] = acctypeText;
+                            accObj["acctypeIDForm"] = acctypeValue;
+                            accObj["accInput"] = accInput;
 
-
-                            var message1 = "If you believe MRN "+mrn+" and MRN "+mrnValue + " belong to the same patient, please mark here:";
-                            var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValue+" ["+mrntypeText+"] belong to the same patient";
-                            dataquality_message1.push(dataquality_message_1);
-
-                            var message2 = "If you believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" and not patient MRN "+mrn+" (as stated by "+orderinfo+"), please mark here:";
-                            var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValue+" belongs to patient MRN "+mrnValue+" ["+mrntypeText+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
-                            dataquality_message2.push(dataquality_message_2);
-
-                            var message3 = "If you have changed the involved MRN "+mrnValue+" or the Accession Number "+accValue+" in the form above, please mark here:";
-
-                            if( !prototype ) {
-                                //console.log('WARNING: conflict prototype is not found!!!');
-                                return false;
-                            }
-
-                            var newForm = prototype.replace(/__dataquality__/g, index);
-
-                            newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
-
-                            newForm = newForm.replace("TEXT1", message1);
-                            newForm = newForm.replace("TEXT2", message2);
-                            newForm = newForm.replace("TEXT3", message3);
-
-                            //console.log("newForm="+newForm);
-
-                            var newElementsAppended = $('#validationerror').append(newForm);
-                            //var newElementsAppended = newForm.appendTo("#validationerror");
-
-                            //red
-                            accInput.parent().addClass("has-error");
-                            patientInputs.parent().addClass("has-error");
-
-                            setDataqualityData( index, accValue, acctypeValue, mrnValue, mrntypeValue );
+                            createDataquality( mrnObj, accObj, orderinfo, index );
 
                             index++;
                             totalError++;
@@ -680,6 +602,147 @@ function checkMrnAccessionConflict() {
 
 }
 
+function checkIfMrnAccConflictHandled() {
+
+    //Initial check: get total number of checkboxes
+    var totalcheckboxes = 0;
+
+    var reruncount = 0;
+
+    //console.log( "dataquality_message1[0]="+dataquality_message1[0] );
+    //console.log( "dataquality_message2[0]="+dataquality_message2[0] );
+
+    var countErrorBoxes = 0;
+
+    var errorBoxes = $('#validationerror').find('.validationerror-added');
+    console.log("errorBoxes.length="+errorBoxes.length);
+
+    for (var i = 0; i < errorBoxes.length; i++) {
+
+        var errorBox = errorBoxes.eq(i);
+
+        var checkedEl = errorBox.find("input:checked");
+        console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+
+        var checkedVal = checkedEl.val();
+        //console.log("value="+checkedVal);
+
+//        if( typeof checkedVal === 'undefined') {
+//            return false;
+//        }
+
+        if( checkedEl.is(":checked") ){
+            console.log("checked value="+checkedVal);
+            if( checkedVal == "OPTION3" ) {
+                reruncount++;
+            }
+            if( checkedVal == "OPTION1" ) {
+                setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+            }
+            if( checkedVal == "OPTION2" ) {
+                setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
+            }
+        } else {
+            //
+        }
+        totalcheckboxes++;
+
+        countErrorBoxes++;
+
+    }
+
+    //clear array
+    dataquality_message1.length = 0;
+    dataquality_message2.length = 0;
+
+    console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
+
+
+    if( totalcheckboxes == 0 ) {
+        //continue
+        console.log("totalcheckboxes is zero");
+//    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
+//        cleanValidationAlert();
+    } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
+        console.log("conflict is not handled => clean validation alerts");
+        cleanValidationAlert();
+    } else {    //return true;
+        console.log("conflict handled => return true");
+        //return false; //testing
+        return true;
+    }
+
+    //validate form again
+    console.log("validate form again => return false");
+    return false;
+}
+
+//create MRN-ACC conflict questions and highlight by red the error fields
+function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueForm, mrnValueDB, mrntypeTextForm, accValueForm, accValueDB, acctypeTextForm, mrnstring, orderinfo ) {
+
+    var prototype = $('#form-prototype-data').data('prototype-dataquality');
+    //console.log("prototype="+prototype);
+
+    var nl = "\n";    //"&#13;&#10;";
+
+    var mrnValueForm = mrnObj["mrnValueForm"];
+    var mrnValueDB = mrnObj["mrnValueDB"];
+    var mrntypeIDForm = mrnObj["mrntypeIDForm"];
+    var mrntypeTextForm = mrnObj["mrntypeTextForm"];
+    var mrnstring = mrnObj["mrnstring"];
+    var patientInput = mrnObj["patientInput"];
+
+    var accValueForm = accObj["accValueForm"];
+    var accValueDB = accObj["accValueDB"];
+    var acctypeTextForm = accObj["acctypeTextForm"];
+    var acctypeIDForm = accObj["acctypeIDForm"];
+    var accInput = accObj["accInput"];
+
+
+    var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValueForm+" ["+acctypeTextForm+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
+        +mrnValueForm+" ["+mrntypeTextForm+"] as you have entered.";
+    var message = message_short + " Please correct either the MRN or the Accession Number above.";
+
+
+    var message1 = "If you believe MRN "+mrnValueForm+" and MRN "+mrnValueDB + " belong to the same patient, please mark here:";
+    var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValueForm+" ["+mrntypeTextForm+"] belong to the same patient";
+    dataquality_message1.push(dataquality_message_1);
+    //dataquality_message1[index] = dataquality_message_1;
+
+    var message2 = "If you believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" and not patient MRN "+mrnValueDB+" (as stated by "+orderinfo+"), please mark here:";
+    var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" ["+mrntypeTextForm+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
+    dataquality_message2.push(dataquality_message_2);
+    //dataquality_message2[index] = dataquality_message_2;
+
+    var message3 = "If you have changed the involved MRN "+mrnValueForm+" or the Accession Number "+accValueForm+" in the form above, please mark here:";
+
+    if( !prototype ) {
+        //console.log('WARNING: conflict prototype is not found!!!');
+        return false;
+    }
+
+    var newForm = prototype.replace(/__dataquality__/g, index);
+
+    newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
+
+    newForm = newForm.replace("TEXT1", message1);
+    newForm = newForm.replace("TEXT2", message2);
+    newForm = newForm.replace("TEXT3", message3);
+
+    //console.log("newForm="+newForm);
+
+    var newElementsAppended = $('#validationerror').append(newForm);
+    //var newElementsAppended = newForm.appendTo("#validationerror");
+
+    //red
+    if( accInput && patientInput ) {
+        accInput.parent().addClass("has-error");
+        patientInput.parent().addClass("has-error");
+    }
+
+    setDataqualityData( index, accValueForm, acctypeIDForm, mrnValueForm, mrntypeIDForm );
+}
+
 function setDataquality(index,message) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
     //console.log("message=" + message);
@@ -689,22 +752,11 @@ function setDataquality(index,message) {
 
 function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
     var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
-    //console.log("setDataqualityData: "+accession + " " + acctype + " " + mrn + " " + mrntype);
+    //console.log("set Dataquality Data: "+accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'accessiontype').val(acctype);
     $(partid+'mrn').val(mrn);
     $(partid+'mrntype').val(mrntype);
-}
-
-function cleanValidationAlert() {
-    if( cicle == "new" || cicle == "amend" || cicle == "edit" ) {
-        $('.validationerror-added').each(function() {
-            $(this).remove();
-        });
-        //$('#validationerror').html('')
-        dataquality_message1.length = 0;
-        dataquality_message2.length = 0;
-    }
 }
 
 function checkExistingKey(name) {

@@ -75,48 +75,31 @@
 
         {% include 'OlegOrderformBundle::MultyScanOrder/edu_res.html.twig' %}
 
+        <div id="form-prototype-data"
+            {% if cycle != 'show' %}
+                data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,cycle)|e }}"
+            {% endif %}
+        ></div>
+
         <!-- handsontable -->
         <br>
+
         <p>
-
-            {#<div id="top-scrollbar-handsontable" class="dragdealer" style="overflow-x: scroll; overflow-y:hidden; width: 100px;">#}
-                {#<div class="handle red-bar">drag me</div>#}
-                {#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv#}
-            {#</div>#}
-
             <div id="multi-dataTable" class="text-center" align="middle" style="overflow: scroll"></div>
-
-
-        {#<div class="wrapper1">#}
-            {#<div class="div1">#}
-            {#</div>#}
-        {#</div>#}
-        {#<div class="wrapper2">#}
-            {#<div id="multi-dataTable" class="div2 text-center" align="middle">#}
-                {#&#123;&#35;aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd aaaa bbbb cccc dddd&#35;&#125;#}
-            {#</div>#}
-        {#</div>#}
-
         </p>
+
         <br>
-
-        {#<p>#}
-            {#<button onclick="processDataForm()">Validate Data</button>#}
-            {#<button onclick="processDataForm('clean')">Clean Data</button>#}
-        {#</p>#}
-
 
         <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
 
         <p>
-            {#onclick="validateHandsonTable()"#}
             <button id="tableview-submit-btn" onclick="validateHandsonTable()" class="btn_margin_top btn btn-primary btn-success" name="btnTableSubmit" data-loading-text="Validating..." type="button">Submit</button>
         </p>
 
         <div id="validationerror" style="padding-top: 2%"></div>
 
-        {{ form_rest(form) }}
 
+        {{ form_rest(form) }}
 
     </form>
     {############ END FORM ##############}

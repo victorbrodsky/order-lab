@@ -72,7 +72,7 @@ class PatientType extends AbstractType
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
-            'label' => " ",
+            'label' => false,//" ",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__procedure__',
