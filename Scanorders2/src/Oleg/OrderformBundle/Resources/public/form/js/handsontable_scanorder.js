@@ -281,9 +281,9 @@ $(document).ready(function() {
     });
 
     //validation on form submit
-    //$("#table-scanorderform").on("submit", function () {
-    //    return validateHandsonTable();
-    //});
+    $("#table-scanorderform").on("submit", function () {
+        return validateHandsonTable();
+    });
 
 });
 
@@ -424,8 +424,10 @@ function handsonTableInit() {
                 }
 
                 processKeyTypes( row, col, value, oldvalue );
-
             }
+            //clean any error wells to make validation again
+            cleanErrorTable();  //clean tablerowerror-added: simple errors
+            cleanValidationAlert(); //clean validationerror-added: MRN-ACC choice errors
         },
         afterCreateRow: function (index, amount) {
             return; //TODO: testing
@@ -642,7 +644,7 @@ function cleanHTableCell( row, col, force ) {
 
     var value = _sotable.getDataAtCell(row,col);
 
-    console.log('clean: row='+row+', col='+col+', value='+value);
+    //console.log('clean: row='+row+', col='+col+', value='+value);
 
     //if( !force && (value === undefined || value === null || value == '') ) {
     if( !force && isValueEmpty(value) ) {

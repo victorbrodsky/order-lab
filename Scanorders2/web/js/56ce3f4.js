@@ -14723,9 +14723,9 @@ $(document).ready(function() {
     });
 
     //validation on form submit
-    //$("#table-scanorderform").on("submit", function () {
-    //    return validateHandsonTable();
-    //});
+    $("#table-scanorderform").on("submit", function () {
+        return validateHandsonTable();
+    });
 
 });
 
@@ -14866,8 +14866,10 @@ function handsonTableInit() {
                 }
 
                 processKeyTypes( row, col, value, oldvalue );
-
             }
+            //clean any error wells to make validation again
+            cleanErrorTable();  //clean tablerowerror-added: simple errors
+            cleanValidationAlert(); //clean validationerror-added: MRN-ACC choice errors
         },
         afterCreateRow: function (index, amount) {
             return; //TODO: testing
@@ -15084,7 +15086,7 @@ function cleanHTableCell( row, col, force ) {
 
     var value = _sotable.getDataAtCell(row,col);
 
-    console.log('clean: row='+row+', col='+col+', value='+value);
+    //console.log('clean: row='+row+', col='+col+', value='+value);
 
     //if( !force && (value === undefined || value === null || value == '') ) {
     if( !force && isValueEmpty(value) ) {
@@ -15270,13 +15272,33 @@ var _processedRowCount = 0;
 var _mrnAccessionArr = new Array();
 var _mrnDobArr = new Array();
 
-var _handledMrnAccConflictRowArr = new Array();
+var _mrnAccConflictRowArr = new Array();
+
+var _tableValidated = false;
 
 //1) check if cell validators are ok
 //2) check for key empty cells
 //3) check if previously generated keys are exists in DB (ajax)
 //4) check for MRN-Accession conflicts
 function validateHandsonTable() {
+
+    if( _tableValidated === true ) {
+        return true;
+    }
+
+    //this is a case when submit is pressed with 3 options for each conflict row
+    //check if conflict was handled by a choice, otherwise, do validation again.
+    var conflictLen = _mrnAccConflictRowArr.length;
+    //console.log('conflictLen='+conflictLen);
+    if( conflictLen > 0 ) {
+        var errLen = $('.tablerowerror-added').length;
+        if( errLen == 0 && checkIfMrnAccConflictHandled() ) {
+            //console.log('conflict was handled !!!!!!!!!!!!!!');
+            assignDataToDatalocker();
+            //return false; //testing
+            return true;
+        }
+    }
 
     $('#tableview-submit-btn').button('loading');
 
@@ -15303,6 +15325,7 @@ function validateHandsonTable() {
             errCells++;
         }
     }
+
     //console.log('errCells='+errCells);
     if( errCells > 0 ) {
 //        var errmsg = "Please review the cells marked bright red, in the highlight row(s), and correct the entered values to match the expected format. The expected formats are as follows:<br>"+
@@ -15354,39 +15377,9 @@ function validateHandsonTable() {
     /////////// EOF Empty main cells validation ///////////
 
     /////////// 3) Check existing keytypes and MRN-Accession conflicts //////////////
-
-    //check if conflict was handled by a choice; otherwise, do validation again.
-//    var mrnAccConflictHandled = false;
-//    if( checkIfMrnAccConflictHandled() ) {
-//        mrnAccConflictHandled = true;
-//    }
-
-    //var funcs = new Array;
     for( var i=0; i<countRow-1; i++ ) { //for each row (except the last one)
-
         checkPrevGenAndConflictTable(i);
-
-        //funcs.push(checkPrevGenAndConflictTable(i));
-
-//        Q.fcall( checkPrevGenAndConflictTable(i) )
-//        .then(function (response) {
-//            //check if this row has errors
-//            var tableErrorsLen = $('.tablerowerror-added').length;
-//            var mrnAccErrorsLen = $('#validationerror').find('.validationerror-added').length;
-//            console.log(i+" !!!!!!!!!!!!!!!!!!!: tableErrorsLen="+tableErrorsLen+", mrnAccErrorsLen="+mrnAccErrorsLen);
-//            if( tableErrorsLen > 0 || mrnAccErrorsLen > 0 ) {
-//                return false;
-//            }
-//        });
-//
     }//for
-
-//    funcs.forEach(function (f) {
-//        if( typeof result !== 'undefined' ) {
-//            result = result.then(f);
-//        }
-//    });
-
     /////////// EOF Check existing keytypes and MRN-Accession conflicts //////////////
 
     //submit if no errors for all rows
@@ -15406,29 +15399,35 @@ function validateHandsonTable() {
 
         if( $('.tablerowerror-added').length == 0 ) {
 
+            /////////////// Display MRN-ACC choices /////////////////////
+            //Now we don't have any simple errors - errors without any choices to handle them.
+            //Last validation step: show MRN-ACC conflict choices recorded as array _mrnAccConflictRowArr
+            var index = 0;
+            for( row in _mrnAccConflictRowArr ) {
+                var mrnObj = _mrnAccConflictRowArr[row]["mrnObj"];
+                var accObj = _mrnAccConflictRowArr[row]["accObj"];
+                var orderinfo = _mrnAccConflictRowArr[row]["orderinfo"];
+
+                createDataquality( mrnObj, accObj, orderinfo, index );
+                setErrorToRow(row,conflictRenderer,true);
+                index++;
+            }
+            if( index > 0 ) {
+                //console.log("There are MRN-ACC conflicts ="+index);
+                _tableValidated = false;
+                return false;   //There are MRN-ACC conflicts
+            }
+            /////////////// EOF MRN-ACC choices /////////////////////
+
             //console.log("Submit form!!!!!!!!!!!!!!!");
-            //submitTableScanOrder(); //submit by Ajax
 
             //get rows data from _rowToProcessArr
-            var data = new Array();
-            data.push(_sotable.getColHeader());
-            for( var i=0; i<_rowToProcessArr.length; i++ ) {
-                console.log("data row="+_rowToProcessArr[i]);
-                data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
-            }
-            //console.log(data);
+            assignDataToDatalocker();
 
-            //provide table data to controller
-            //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
-            var jsonstr = JSON.stringify(data);
-            //console.log("jsonstr="+jsonstr);
-            $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+            _tableValidated = true;
 
-            return false; //testing
-
+            //return false; //testing
             $('#table-scanorderform').submit();
-
-            return true;
         }
 
     });
@@ -15437,38 +15436,22 @@ function validateHandsonTable() {
     return false;
 }
 
-function submitTableScanOrder() {
-    //getData (row: Number, col: Number, row2: Number, col2: Number)
-    //var data = _sotable.getData( 0, 0, _sotable.countRows()-2, _sotable.countCols() );  //don't get data for the last row
-    var data = _sotable.getData();  //don't get data for the last row
-    console.log('######### submit data ##########:');
-    console.log(data);
+//get rows data from _rowToProcessArr and assign this to datalocker field
+function assignDataToDatalocker() {
+    //get rows data from _rowToProcessArr
+    var data = new Array();
+    data.push(_sotable.getColHeader());
+    for( var i=0; i<_rowToProcessArr.length; i++ ) {
+        //console.log("data row="+_rowToProcessArr[i]);
+        data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+    }
+    //console.log(data);
 
-    var urlBase = $("#baseurl").val();
-    var url = "http://"+urlBase+"/scan-order/multi-slide-table-view/submit";
-    console.log('url='+url);
-
-    data.unshift(_sotable.getColHeader());  //insert as the first element headers
-
-    $.ajax({
-        url: url,
-        data: {"data": data}, //returns all cells' data
-        dataType: 'json',
-        type: 'POST',
-        success: function (res) {
-            if (res == 'ok') {
-                console.log('Data saved');
-            }
-            else {
-                console.log('Save error');
-            }
-        },
-        error: function () {
-            console.log('Save error.');
-        }
-    });
-
-    return;
+    //provide table data to controller
+    //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
+    var jsonstr = JSON.stringify(data);
+    //console.log("jsonstr="+jsonstr);
+    $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
 }
 
 function allRowProcessed() {
@@ -15492,242 +15475,212 @@ function checkPrevGenAndConflictTable(row) {
         var mrn = dataRow[_tableMainIndexes.mrn];
         var dob = dataRow[_tableMainIndexes.dob];
 
-        var valuesValid = true;
-
         if( isValueEmpty(accType) || isValueEmpty(acc) || isValueEmpty(mrnType) || isValueEmpty(mrn) ) {
-            //resolve("keys are empty");
             return false;
-            //valuesValid = false;
         }
 
         //don't validate the untouched OR is empty rows
         if( exceptionRow(row) ) {
-            //resolve("row is empty");
             return false;
-            //valuesValid = false;
         }
 
-        if( valuesValid ) {
+        //console.log("check PrevGen And Conflicts, row=", row + ": accType="+accType+", acc="+acc);
 
-            console.log("check PrevGen And Conflicts, row=", row + ": accType="+accType+", acc="+acc);
+        //required for MRN-ACC conflict
+        var accTypeCorrect = null;
+        var mrnTypeCorrect = null;
+        var mrnDB = null;
+        var mrntypeDB = null;
+        var mrnstring = null;
+        var orderinfo = null;
 
-            //required for MRN-ACC conflict
-            var accTypeCorrect = null;
-            var mrnTypeCorrect = null;
-            var mrnDB = null;
-            var mrntypeDB = null;
-            var mrnstring = null;
-            var orderinfo = null;
+        //required for MRN-DOB conflict
+        var mrnDBByPatient = null;
+        var mrntypeIDDBByPatient = null;
+        var dobDBByPatient = null;
 
-            //required for MRN-DOB conflict
-            var mrnDBByPatient = null;
-            var mrntypeIDDBByPatient = null;
-            var dobDBByPatient = null;
-
-            //get mrn keytype id
-            getKeyTypeID('patient',mrnType).
-            //check existing mrn keytype
-            then(
-                function(response) {
-                    mrnTypeCorrect = response;
-                    //console.log("Before checkPrevGenKeyTable for patient", response);
-                    return checkPrevGenKeyTable('patient',mrn,mrnType,mrnTypeCorrect,true);
-                }
-            ).
-            //add error for mrn
-            then(
-                function(response) {
-                    //console.log("after mrn check PrevGenKeyTable:"+response);
-                    if( !response ) {
-                        var errmsg = 'The MRN(s) you have specified to be Previously Auto-Generated "'+mrn+'" were not found. Please correct the MRN in the highlighted row(s) or change the MRN Type.';
-                        var errorHtml = createTableErrorWell(errmsg);
-                        $('#validationerror').append(errorHtml);
-                        //_sotable.getCellMeta(row,mrnType).renderer = forceRedRenderer;
-                        //_sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = forceRedRenderer;
-                        setSpecialErrorToRow(row);
-                        _sotable.render();
-                    } else {
-                        if( response instanceof Array && "mrn" in response ) {
-                            //we should have only one correct mrn and dob provided by a check controller
-                            mrnDBByPatient = response['mrn'];
-                            mrntypeIDDBByPatient = response['mrntypeID'];
-                            dobDBByPatient = response['dob'];
-                        }
+        //get mrn keytype id
+        getKeyTypeID('patient',mrnType).
+        //check existing mrn keytype
+        then(
+            function(response) {
+                mrnTypeCorrect = response;
+                //console.log("Before checkPrevGenKeyTable for patient", response);
+                return checkPrevGenKeyTable('patient',mrn,mrnType,mrnTypeCorrect,true);
+            }
+        ).
+        //add error for mrn
+        then(
+            function(response) {
+                //console.log("after mrn check PrevGenKeyTable:"+response);
+                if( !response ) {
+                    var errmsg = 'The MRN(s) you have specified to be Previously Auto-Generated "'+mrn+'" were not found. Please correct the MRN in the highlighted row(s) or change the MRN Type.';
+                    var errorHtml = createTableErrorWell(errmsg);
+                    $('#validationerror').append(errorHtml);
+                    //_sotable.getCellMeta(row,mrnType).renderer = forceRedRenderer;
+                    //_sotable.getCellMeta(row,_tableMainIndexes.mrn).renderer = forceRedRenderer;
+                    setSpecialErrorToRow(row);
+                    _sotable.render();
+                } else {
+                    if( response instanceof Array && "mrn" in response ) {
+                        //we should have only one correct mrn and dob provided by a check controller
+                        mrnDBByPatient = response['mrn'];
+                        mrntypeIDDBByPatient = response['mrntypeID'];
+                        dobDBByPatient = response['dob'];
                     }
                 }
-            ).
-            //get acc keytype id
-            then(
-                function() {
-                    return getKeyTypeID('accession',accType);
-                }
-            ).
-            //check existing acc keytype
-            then(
-                function(response) {
-                    accTypeCorrect = response;
-                    //console.log("Success!", response);
-                    return checkPrevGenKeyTable('accession',acc,accType,accTypeCorrect,true);   //true-force run check for accession. We need it for MRN-Acc conflict check
-                }
-            ).
-            //add error for acc
-            then(
-                function(response) {
-                    //console.log("after acc check PrevGenKey Table:"+response);
-                    if( !response ) {
-                        var errmsg = 'The Accession Numbers you have specified to be Previously Auto-Generated "'+acc+'" were not found. Please correct the Accesion Number in the highlighted row(s) or hange the Accession Number Type.';
-                        var errorHtml = createTableErrorWell(errmsg);
-                        $('#validationerror').append(errorHtml);
-                        //_sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = forceRedRenderer;
-                        setSpecialErrorToRow(row);
-                        _sotable.render();
-                    } else {
-                        if( response instanceof Array && "parentkeyvalue" in response ) {
-                            //console.log("parentkeyvalue="+response['parentkeyvalue']);
-                            mrnDB = response['parentkeyvalue'];
-                            mrntypeDB = response['parentkeytype'];
-                            mrnstring = response['mrnstring'];
-                            orderinfo = response['orderinfo'];
-                        }
+            }
+        ).
+        //get acc keytype id
+        then(
+            function() {
+                return getKeyTypeID('accession',accType);
+            }
+        ).
+        //check existing acc keytype
+        then(
+            function(response) {
+                accTypeCorrect = response;
+                //console.log("Success!", response);
+                return checkPrevGenKeyTable('accession',acc,accType,accTypeCorrect,true);   //true-force run check for accession. We need it for MRN-Acc conflict check
+            }
+        ).
+        //add error for acc
+        then(
+            function(response) {
+                //console.log("after acc check PrevGenKey Table:"+response);
+                if( !response ) {
+                    var errmsg = 'The Accession Numbers you have specified to be Previously Auto-Generated "'+acc+'" were not found. Please correct the Accesion Number in the highlighted row(s) or hange the Accession Number Type.';
+                    var errorHtml = createTableErrorWell(errmsg);
+                    $('#validationerror').append(errorHtml);
+                    //_sotable.getCellMeta(row,_tableMainIndexes.acc).renderer = forceRedRenderer;
+                    setSpecialErrorToRow(row);
+                    _sotable.render();
+                } else {
+                    if( response instanceof Array && "parentkeyvalue" in response ) {
+                        //console.log("parentkeyvalue="+response['parentkeyvalue']);
+                        mrnDB = response['parentkeyvalue'];
+                        mrntypeDB = response['parentkeytype'];
+                        mrnstring = response['mrnstring'];
+                        orderinfo = response['orderinfo'];
                     }
                 }
-            ).
-            //check internal MRN-Accession Number conflict within the table
-            then(
-                function(response) {
-                    var errLen = $('.tablerowerror-added').length;
-                    if( errLen == 0 && mrnAccInternalConflict( acc, accType, mrn, mrnType ) ) {
-                        //var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
-                        //"The same accession number can not be tied to two different patients.";
-                        var errmsg = "Please review the cell(s) marked yellow and make sure each accession number is always listed as belonging " +
-                                     "to the same patient's MRN. <br>" + "The same accession number can not be tied to two different patients.";
-                        var errorHtml = createTableErrorWell(errmsg);
-                        $('#validationerror').append(errorHtml);
-                        setErrorToRow(row,conflictRenderer,true);
-                    }
+            }
+        ).
+        //check internal MRN-Accession Number conflict within the table
+        then(
+            function(response) {
+                var errLen = $('.tablerowerror-added').length;
+                if( errLen == 0 && mrnAccInternalConflict( acc, accType, mrn, mrnType ) ) {
+                    //var errmsg = "Please review the cells marked yellow and make sure the same accession number is always listed as belonging to the same patient MRN. <br>" +
+                    //"The same accession number can not be tied to two different patients.";
+                    var errmsg = "Please review the cell(s) marked yellow and make sure each accession number is always listed as belonging " +
+                                 "to the same patient's MRN. <br>" + "The same accession number can not be tied to two different patients.";
+                    var errorHtml = createTableErrorWell(errmsg);
+                    $('#validationerror').append(errorHtml);
+                    setErrorToRow(row,conflictRenderer,true);
                 }
-            ).
-            //check internal MRN-DOB conflict within the table
-            then(
-                function(response) {
-                    var errLen = $('.tablerowerror-added').length;
-                    if( errLen == 0 && mrnDobInternalConflict( mrn, mrnType, dob ) ) {
-                        var errmsg = "Please correct multiple different Date of Birth values for a patient with the same MRN listed in highlighted rows.";
+            }
+        ).
+        //check internal MRN-DOB conflict within the table
+        then(
+            function(response) {
+                var errLen = $('.tablerowerror-added').length;
+                if( errLen == 0 && mrnDobInternalConflict( mrn, mrnType, dob ) ) {
+                    var errmsg = "Please correct multiple different Date of Birth values for a patient with the same MRN listed in highlighted rows.";
 
-                        var errorHtml = createTableErrorWell(errmsg);
-                        $('#validationerror').append(errorHtml);
-                        setErrorToRow(row,conflictRenderer,true);
-                    }
+                    var errorHtml = createTableErrorWell(errmsg);
+                    $('#validationerror').append(errorHtml);
+                    setErrorToRow(row,conflictRenderer,true);
                 }
-            ).
-            //check MRN-Accession conflict with DB
-            then(
-                function(response) {
+            }
+        ).
+        //check MRN-Accession conflict with DB
+        then(
+            function(response) {
 
-                    var errLen = $('.tablerowerror-added').length;
+                var errLen = $('.tablerowerror-added').length;
 
-                    console.log("before check MRN-Accession conflict with DB: errLen="+errLen);
+                //console.log("before check MRN-Accession conflict with DB: errLen="+errLen);
 
-                    if( !conflictHandled(row) ) { //===false
+                if( errLen == 0 && !mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
 
-                        if( errLen == 0 && !mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) ) {
+                    var mrnObj = Array();
+                    mrnObj["mrnValueForm"] = mrn;
+                    mrnObj["mrnValueDB"] = mrnDB;
+                    mrnObj["mrntypeIDForm"] = mrnTypeCorrect;
+                    mrnObj["mrntypeTextForm"] = mrnType;
+                    mrnObj["mrnstring"] = mrnstring;
+                    mrnObj["patientInput"] = null;
 
-                            console.log("check MRN-Accession conflict with DB");
-                            //                var errmsg = "Please review the cell(s) marked yellow and make sure each accession number is always listed as belonging " +
-                            //                             "to the same patient's MRN. <br>" + "The same accession number can not be tied to two different patients.";
-                            //                var errorHtml = createTableErrorWell(errmsg);
-                            //                $('#validationerror').append(errorHtml);
+                    var accObj = Array();
+                    accObj["accValueForm"] = acc;
+                    accObj["accValueDB"] = null;
+                    accObj["acctypeTextForm"] = accType;
+                    accObj["acctypeIDForm"] = accTypeCorrect;
+                    accObj["accInput"] = null;
 
-                            var mrnObj = Array();
-                            mrnObj["mrnValueForm"] = mrn;
-                            mrnObj["mrnValueDB"] = mrnDB;
-                            mrnObj["mrntypeIDForm"] = mrnTypeCorrect;
-                            mrnObj["mrntypeTextForm"] = mrnType;
-                            mrnObj["mrnstring"] = mrnstring;
-                            mrnObj["patientInput"] = null;
+                    _mrnAccConflictRowArr[row] = new Array();
+                    _mrnAccConflictRowArr[row]['mrnObj'] = mrnObj;
+                    _mrnAccConflictRowArr[row]['accObj'] = accObj;
+                    _mrnAccConflictRowArr[row]['orderinfo'] = orderinfo;
 
-                            var accObj = Array();
-                            accObj["accValueForm"] = acc;
-                            accObj["accValueDB"] = null;
-                            accObj["acctypeTextForm"] = accType;
-                            accObj["acctypeIDForm"] = null;
-                            accObj["accInput"] = null;
+                }//if
 
-                            createDataquality( mrnObj, accObj, orderinfo, row );
+            }
+        ).
+        //check MRN-DOB conflict with DB
+        then(
+            function(response) {
+                var errLen = $('.tablerowerror-added').length;
+                var mrnAccErrorBoxesLen = $('#validationerror').find('.validationerror-added').length;
 
-                            setErrorToRow(row,conflictRenderer,true);
-
-                            _handledMrnAccConflictRowArr[row] = false;
-
-                            //throw new Error("Conflict detected, row="+row);
-                            //                return Q.promise(function(resolve, reject) {
-                            //                    reject("Conflict detected, row="+row);
-                            //                });
-                        }//if
-
-                    }
-
-
-
+                if( errLen == 0 && mrnAccErrorBoxesLen == 0 && !mrnDobDBEqual( mrnDBByPatient, mrn, mrntypeIDDBByPatient, mrnTypeCorrect, dobDBByPatient, dob ) ) {
+                    //var errmsg = "The Date of Birth value you have provided for the patient in the highlighted row is not equal to the Date of Birth " +
+                    //"that is on file for the patient with this MRN. Please correct it or let the system administrator know about this issue.";
+                    var errmsg = "The Date of Birth value of " + dob + " you have provided for the patient in the highlighted row with MRN " +
+                        mrn + ", " + mrnType +
+                        " is not equal to the " + dobDBByPatient + " Date of Birth that is on file for the patient with this MRN." +
+                        " Please correct it or let the system administrator know about this issue";
+                    var errorHtml = createTableErrorWell(errmsg);
+                    $('#validationerror').append(errorHtml);
+                    setErrorToRow(row,conflictRenderer,true);
                 }
-            ).
-            //check MRN-DOB conflict with DB
-            then(
-                function(response) {
-                    var errLen = $('.tablerowerror-added').length;
-                    var mrnAccErrorBoxesLen = $('#validationerror').find('.validationerror-added').length;
+            }
+        ).
+    //    //recursive call
+    //    then(
+    //        function(response) {
+    //            if( row+1 < countRow ) {
+    //                checkPrevGenAndConflictTable(row+1, countRow);
+    //            }
+    //        }
+    //    ).
+        then(
+            function(response) {
+                //console.log("Chaining OK, row="+row+", response="+response);
+                _processedRowCount++;
+            },
+            function(error) {
+                //console.error("Failed! error=", error);
+                $('#tableview-submit-btn').button('reset');
+            }
+        ).
+        done(
+            function(response) {
+                //console.log("Done ", response);
+            }
+        );
 
-                    if( errLen == 0 && mrnAccErrorBoxesLen == 0 && !mrnDobDBEqual( mrnDBByPatient, mrn, mrntypeIDDBByPatient, mrnTypeCorrect, dobDBByPatient, dob ) ) {
-                        //var errmsg = "The Date of Birth value you have provided for the patient in the highlighted row is not equal to the Date of Birth " +
-                        //"that is on file for the patient with this MRN. Please correct it or let the system administrator know about this issue.";
-                        var errmsg = "The Date of Birth value of " + dob + " you have provided for the patient in the highlighted row with MRN " +
-                            mrn + ", " + mrnType +
-                            " is not equal to the " + dobDBByPatient + " Date of Birth that is on file for the patient with this MRN." +
-                            " Please correct it or let the system administrator know about this issue";
-                        var errorHtml = createTableErrorWell(errmsg);
-                        $('#validationerror').append(errorHtml);
-                        setErrorToRow(row,conflictRenderer,true);
-                    }
-                }
-            ).
-        //    //recursive call
-        //    then(
-        //        function(response) {
-        //            if( row+1 < countRow ) {
-        //                checkPrevGenAndConflictTable(row+1, countRow);
-        //            }
-        //        }
-        //    ).
-            then(
-                function(response) {
-                    console.log("Chaining OK, row="+row+", response="+response);
-                    _processedRowCount++;
-                },
-                function(error) {
-                    console.error("Failed! error=", error);
-                    $('#tableview-submit-btn').button('reset');
-                    //reject("Failed! error=", error);
-                }
-            ).
-            done(
-                function(response) {
-                    console.log("Done ", response);
-                    //resolve("OK");
-                }
-            );
 
-        } else {
-            //resolve("OK");
-        } //if valuesValid
 
-    //});//return promise
 
 }
 
 function conflictHandled(row) {
     var errorBoxes = $('#validationerror').find('.validationerror-added');
 
-    console.log( "errorBoxes.length="+errorBoxes.length );
+    //console.log( "errorBoxes.length="+errorBoxes.length );
 
     for (var i = 0; i < errorBoxes.length; i++) {
 
@@ -15737,8 +15690,8 @@ function conflictHandled(row) {
         if( checkedEl && typeof checkedEl.attr("id") != "undefined" ) {
             var idArr = checkedEl.attr("id").split("_");
 
-            console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
-            console.log( "row="+row+", idArr[4]="+idArr[4] );
+            //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+            //console.log( "row="+row+", idArr[4]="+idArr[4] );
 
             var checkedVal = checkedEl.val();
 
@@ -15760,7 +15713,7 @@ function cleanErrorTable() {
     _mrnAccessionArr.length = 0;
     _processedRowCount = 0;
     _rowToProcessArr.length = 0;
-    _handledMrnAccConflictRowArr.length = 0;
+    _mrnAccConflictRowArr.length = 0;
     $('.tablerowerror-added').remove();
     var rowsCount = _sotable.countRows();
     for( var row=0; row<rowsCount; row++ ) {  //foreach row
@@ -15857,9 +15810,9 @@ function mrnAccInternalConflict( acc, accType, mrn, mrnType ) {
 }
 
 function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
-    console.log("conflict: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")");
+    //console.log("conflict: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")");
     if( !mrnDB || !mrntypeDB ) {
-        console.log("ERROR: DB's mrn and/or mrntype are null");
+        //console.log("ERROR: DB's mrn and/or mrntype are null");
         return true;
     }
     mrnDB = trimWithCheck(mrnDB);
@@ -15875,10 +15828,10 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
     if( !mrnDB || !mrntypeDB ) {
-        console.log("Do not compare: DB's mrn and/or mrntype are null");
+        //console.log("Do not compare: DB's mrn and/or mrntype are null");
         return true;
     }
 
@@ -15932,7 +15885,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
                 success: function (data) {
                     //console.debug("get element ajax ok");
                     if( data == -2 ) {
-                        console.log("Existing Auto-generated object does not exist in DB for "+name);
+                        //console.log("Existing Auto-generated object does not exist in DB for "+name);
                         resolve(false);
                     } else {
                         if( "extraid" in data ) {
@@ -15956,7 +15909,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
                     }
                 },
                 error: function ( x, t, m ) {
-                    console.debug("validation: get object ajax error "+name);
+                    //console.debug("validation: get object ajax error "+name);
                     if( t === "timeout" ) {
                         getAjaxTimeoutMsg();
                     }
@@ -25886,24 +25839,20 @@ function checkIfMrnAccConflictHandled() {
     var countErrorBoxes = 0;
 
     var errorBoxes = $('#validationerror').find('.validationerror-added');
-    console.log("errorBoxes.length="+errorBoxes.length);
+    //console.log("errorBoxes.length="+errorBoxes.length);
 
     for (var i = 0; i < errorBoxes.length; i++) {
 
         var errorBox = errorBoxes.eq(i);
 
         var checkedEl = errorBox.find("input:checked");
-        console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+        //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
 
         var checkedVal = checkedEl.val();
         //console.log("value="+checkedVal);
 
-//        if( typeof checkedVal === 'undefined') {
-//            return false;
-//        }
-
         if( checkedEl.is(":checked") ){
-            console.log("checked value="+checkedVal);
+            //console.log("checked value="+checkedVal);
             if( checkedVal == "OPTION3" ) {
                 reruncount++;
             }
@@ -25914,7 +25863,7 @@ function checkIfMrnAccConflictHandled() {
                 setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
             }
         } else {
-            //
+            //alert("Please select one of these options.");
         }
         totalcheckboxes++;
 
@@ -25926,25 +25875,25 @@ function checkIfMrnAccConflictHandled() {
     dataquality_message1.length = 0;
     dataquality_message2.length = 0;
 
-    console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
+    //console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
 
 
     if( totalcheckboxes == 0 ) {
         //continue
-        console.log("totalcheckboxes is zero");
+        //console.log("totalcheckboxes is zero");
 //    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
 //        cleanValidationAlert();
     } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
-        console.log("conflict is not handled => clean validation alerts");
+        //console.log("conflict is not handled => clean validation alerts");
         cleanValidationAlert();
     } else {    //return true;
-        console.log("conflict handled => return true");
+        //console.log("conflict handled => return true");
         //return false; //testing
         return true;
     }
 
     //validate form again
-    console.log("validate form again => return false");
+    //console.log("validate form again => return false");
     return false;
 }
 
@@ -25969,6 +25918,7 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     var acctypeIDForm = accObj["acctypeIDForm"];
     var accInput = accObj["accInput"];
 
+    //console.log("create data quality: mrnValueForm="+mrnValueForm+", mrnValueDB="+mrnValueDB+", accValueForm="+accValueForm+", accValueDB="+accValueDB);
 
     var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValueForm+" ["+acctypeTextForm+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
         +mrnValueForm+" ["+mrntypeTextForm+"] as you have entered.";
@@ -25978,12 +25928,10 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     var message1 = "If you believe MRN "+mrnValueForm+" and MRN "+mrnValueDB + " belong to the same patient, please mark here:";
     var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValueForm+" ["+mrntypeTextForm+"] belong to the same patient";
     dataquality_message1.push(dataquality_message_1);
-    //dataquality_message1[index] = dataquality_message_1;
 
     var message2 = "If you believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" and not patient MRN "+mrnValueDB+" (as stated by "+orderinfo+"), please mark here:";
     var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" ["+mrntypeTextForm+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
     dataquality_message2.push(dataquality_message_2);
-    //dataquality_message2[index] = dataquality_message_2;
 
     var message3 = "If you have changed the involved MRN "+mrnValueForm+" or the Accession Number "+accValueForm+" in the form above, please mark here:";
 

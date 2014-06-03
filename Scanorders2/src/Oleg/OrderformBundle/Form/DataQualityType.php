@@ -37,7 +37,8 @@ class DataQualityType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
                 'mapped' => false,
-                'attr' => array('required'=>'required')
+                'required' => true,
+                //'attr' => array('required'=>'required')
             ));
 
         } else {

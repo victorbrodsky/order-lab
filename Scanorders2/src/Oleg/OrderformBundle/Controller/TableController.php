@@ -190,6 +190,10 @@ class TableController extends Controller {
         $data = json_decode($datajson, true);
         //var_dump($data);
 
+        if( $data == null ) {
+            throw new \Exception( 'Table order data is null.' );
+        }
+
         $rowCount = 0;
 
         $headers = array_shift($data);
@@ -231,7 +235,6 @@ class TableController extends Controller {
 //        $response->headers->set('Content-Type', 'application/json');
 //        $response->setContent(json_encode('ok'));
 //        return $response;
-
 
         //email
         $emailUtil = new EmailUtil();

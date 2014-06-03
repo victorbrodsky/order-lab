@@ -12,7 +12,7 @@ window.onerror=function(msg, url, linenumber){
         alert(  'Internal system error. Please reload the page by clicking "OK" button.\n' +
             'Please e-mail us at slidescan@med.cornell.edu if the problem persists.\n\n'+
             'Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber   );
-        //location.reload();
+        location.reload();
     }
 
 }
@@ -9254,24 +9254,20 @@ function checkIfMrnAccConflictHandled() {
     var countErrorBoxes = 0;
 
     var errorBoxes = $('#validationerror').find('.validationerror-added');
-    console.log("errorBoxes.length="+errorBoxes.length);
+    //console.log("errorBoxes.length="+errorBoxes.length);
 
     for (var i = 0; i < errorBoxes.length; i++) {
 
         var errorBox = errorBoxes.eq(i);
 
         var checkedEl = errorBox.find("input:checked");
-        console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
+        //console.log("checkedEl="+checkedEl.val()+", id="+checkedEl.attr("id")+", class="+checkedEl.attr("class"));
 
         var checkedVal = checkedEl.val();
         //console.log("value="+checkedVal);
 
-//        if( typeof checkedVal === 'undefined') {
-//            return false;
-//        }
-
         if( checkedEl.is(":checked") ){
-            console.log("checked value="+checkedVal);
+            //console.log("checked value="+checkedVal);
             if( checkedVal == "OPTION3" ) {
                 reruncount++;
             }
@@ -9282,7 +9278,7 @@ function checkIfMrnAccConflictHandled() {
                 setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
             }
         } else {
-            //
+            //alert("Please select one of these options.");
         }
         totalcheckboxes++;
 
@@ -9294,25 +9290,25 @@ function checkIfMrnAccConflictHandled() {
     dataquality_message1.length = 0;
     dataquality_message2.length = 0;
 
-    console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
+    //console.log("totalcheckboxes="+totalcheckboxes+",reruncount="+reruncount);
 
 
     if( totalcheckboxes == 0 ) {
         //continue
-        console.log("totalcheckboxes is zero");
+        //console.log("totalcheckboxes is zero");
 //    } else if( totalcheckboxes != 0 && totalcheckboxes == reruncount ) {    //all error boxes have third option checked
 //        cleanValidationAlert();
     } else if( totalcheckboxes > 0 && reruncount > 0 ) { //submit was already pressed before and the third option is checked
-        console.log("conflict is not handled => clean validation alerts");
+        //console.log("conflict is not handled => clean validation alerts");
         cleanValidationAlert();
     } else {    //return true;
-        console.log("conflict handled => return true");
+        //console.log("conflict handled => return true");
         //return false; //testing
         return true;
     }
 
     //validate form again
-    console.log("validate form again => return false");
+    //console.log("validate form again => return false");
     return false;
 }
 
@@ -9337,6 +9333,7 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     var acctypeIDForm = accObj["acctypeIDForm"];
     var accInput = accObj["accInput"];
 
+    //console.log("create data quality: mrnValueForm="+mrnValueForm+", mrnValueDB="+mrnValueDB+", accValueForm="+accValueForm+", accValueDB="+accValueDB);
 
     var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValueForm+" ["+acctypeTextForm+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
         +mrnValueForm+" ["+mrntypeTextForm+"] as you have entered.";
@@ -9346,12 +9343,10 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     var message1 = "If you believe MRN "+mrnValueForm+" and MRN "+mrnValueDB + " belong to the same patient, please mark here:";
     var dataquality_message_1 = message_short+nl+"I believe "+mrnstring+" and MRN "+mrnValueForm+" ["+mrntypeTextForm+"] belong to the same patient";
     dataquality_message1.push(dataquality_message_1);
-    //dataquality_message1[index] = dataquality_message_1;
 
     var message2 = "If you believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" and not patient MRN "+mrnValueDB+" (as stated by "+orderinfo+"), please mark here:";
     var dataquality_message_2 = message_short+nl+"I believe Accession Number "+accValueForm+" belongs to patient MRN "+mrnValueForm+" ["+mrntypeTextForm+"] and not patient "+mrnstring+" (as stated by "+orderinfo+")";
     dataquality_message2.push(dataquality_message_2);
-    //dataquality_message2[index] = dataquality_message_2;
 
     var message3 = "If you have changed the involved MRN "+mrnValueForm+" or the Accession Number "+accValueForm+" in the form above, please mark here:";
 

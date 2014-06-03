@@ -90,6 +90,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $accmrntype = $validMrn->getKeytype();
             //echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
 
+            if( $mrntype == "" ) {
+                throw new \Exception( 'Conflicting MRN Type is not provided: ' . $mrntype );
+            }
+
             if( $mrn && $mrn != '' && $accmrn && $accmrn != '' ) {
                 //valid values are not empty
             } else {
@@ -107,8 +111,14 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $conflictAccessionType = $dataquality->getAccessiontype()."";
             $currentAccessionNum = $accession->obtainValidKeyfield();
             $currentAccessionType = $accession->obtainValidKeyfield()->getKeytype()."";
+
+            if( $conflictAccessionType == "" ) {
+                throw new \Exception( 'Conflicting Accession Type is not provided: ' . $conflictAccessionType );
+            }
+
             //echo $currentAccessionNum."?=".$conflictAccessionNum.", newAccession=".$dataquality->getNewaccession()."<br>";
             //echo $currentAccessionType."?=".$conflictAccessionType."<br>";
+
             if( $currentAccessionNum == $conflictAccessionNum && $currentAccessionType == $conflictAccessionType ) { //only for match accessions and if this accession was not processed yet
                 if( !$dataquality->getNewaccession() ) {
                     $accessionConflict = true;
