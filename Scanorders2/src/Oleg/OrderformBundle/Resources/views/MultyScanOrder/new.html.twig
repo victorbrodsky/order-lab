@@ -145,6 +145,13 @@
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
         {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
         {% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounter,type,"","prototype","","","nolabel") %}
+        {% set encounterdateHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounterDate,type,"","prototype") %}
+        {% set patnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patname,type,"","prototype") %}
+        {% set patageHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patage,type,"","prototype") %}
+        {% set patsexHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patsex,type,"","prototype") %}
+        {% set patpathistoryHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.pathistory,type,"","prototype") %}
+
+        {% set accessiondateHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accessionDate,type,"date","prototype") %}
 
         {% set partnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.partname,type,"key","prototype") %}
         {% set sourceorganHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.sourceOrgan,type,"","prototype") %}
@@ -190,11 +197,20 @@
           data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="
-         {{ formmacros.accessionForm(form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,form.vars.value.status,procedureHtml,encounterHtml,accessionHtml)|e }}
+         {{ formmacros.accessionForm(
+            form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,form.vars.value.status,
+            procedureHtml,encounterHtml,accessionHtml,accessiondateHtml,encounterdateHtml,patnameHtml,patageHtml,patsexHtml,patpathistoryHtml
+         )|e }}
          "
          data-prototype-accessionaccession= "{{ accessionHtml|e }}"
+         data-prototype-accessionaccessiondate= "{{ accessiondateHtml|e }}"
          data-prototype-procedurename= "{{ procedureHtml|e }}"
          data-prototype-procedureencounter= "{{ encounterHtml|e }}"
+         data-prototype-procedureencounterdate= "{{ encounterdateHtml|e }}"
+         data-prototype-procedurepatname= "{{ patnameHtml|e }}"
+         data-prototype-procedurepatage= "{{ patageHtml|e }}"
+         data-prototype-procedurepatsex= "{{ patsexHtml|e }}"
+         data-prototype-procedurepatpathistory= "{{ patpathistoryHtml|e }}"
 
           data-prototype-part="
         {{ formmacros.partForm( form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype, "check", uid, type, form.vars.value.status,

@@ -43,28 +43,48 @@ class Procedure extends OrderAbstract
 
 
     //Patient's info: age, name, sex
+//    /**
+//     * @ORM\Column(type="datetime", nullable=true)
+//     */
+//    protected $encounterDate;
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\OneToMany(targetEntity="ProcedureEncounterDate", mappedBy="procedure", cascade={"persist"})
      */
     protected $encounterDate;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $patname;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity="ProcedurePatname", mappedBy="procedure", cascade={"persist"})
      */
     protected $patname;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $patsex;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity="ProcedurePatsex", mappedBy="procedure", cascade={"persist"})
      */
     protected $patsex;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $patage;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity="ProcedurePatage", mappedBy="procedure", cascade={"persist"})
      */
     protected $patage;
 
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    protected $pathistory;
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\OneToMany(targetEntity="ProcedurePathistory", mappedBy="procedure", cascade={"persist"})
      */
     protected $pathistory;
 
@@ -77,15 +97,33 @@ class Procedure extends OrderAbstract
         $this->name = new ArrayCollection();
         $this->encounter = new ArrayCollection();
 
+        $this->encounterDate = new ArrayCollection();
+        $this->patname = new ArrayCollection();
+        $this->patsex = new ArrayCollection();
+        $this->patage = new ArrayCollection();
+        $this->pathistory = new ArrayCollection();
+
         if( $withfields ) {
             $this->addName( new ProcedureName($status,$provider,$source) );
             $this->addEncounter( new ProcedureEncounter($status,$provider,$source) );
+
+            $this->addEncounterDate( new ProcedureEncounterDate($status,$provider,$source) );
+            $this->addPatname( new ProcedurePatname($status,$provider,$source) );
+            $this->addPatsex( new ProcedurePatsex($status,$provider,$source) );
+            $this->addPatage( new ProcedurePatage($status,$provider,$source) );
+            $this->addPathistory( new ProcedurePathistory($status,$provider,$source) );
         }
     }
 
     public function makeDependClone() {
         $this->name = $this->cloneDepend($this->name,$this);
         $this->encounter = $this->cloneDepend($this->encounter,$this);
+
+        $this->encounterDate = $this->cloneDepend($this->encounterDate,$this);
+        $this->patname = $this->cloneDepend($this->patname,$this);
+        $this->patsex = $this->cloneDepend($this->patsex,$this);
+        $this->patage = $this->cloneDepend($this->patage,$this);
+        $this->pathistory = $this->cloneDepend($this->pathistory,$this);
     }
 
     /**
@@ -95,13 +133,29 @@ class Procedure extends OrderAbstract
     {
         $this->encounterDate = $encounterDate;
     }
-
     /**
      * @return mixed
      */
     public function getEncounterDate()
     {
         return $this->encounterDate;
+    }
+    public function addEncounterDate($encounterDate)
+    {
+        if( $encounterDate == null ) {
+            $encounterDate = new ProcedureEncounterDate();
+        }
+
+        if( !$this->encounterDate->contains($encounterDate) ) {
+            $encounterDate->setProcedure($this);
+            $this->encounterDate->add($encounterDate);
+        }
+
+        return $this;
+    }
+    public function removeEncounterDate($encounterDate)
+    {
+        $this->encounterDate->removeElement($encounterDate);
     }
 
     /**
@@ -111,13 +165,29 @@ class Procedure extends OrderAbstract
     {
         $this->patage = $patage;
     }
-
     /**
      * @return mixed
      */
     public function getPatage()
     {
         return $this->patage;
+    }
+    public function addPatage($patage)
+    {
+        if( $patage == null ) {
+            $patage = new ProcedurePatage();
+        }
+
+        if( !$this->patage->contains($patage) ) {
+            $patage->setProcedure($this);
+            $this->patage->add($patage);
+        }
+
+        return $this;
+    }
+    public function removePatage($patage)
+    {
+        $this->patage->removeElement($patage);
     }
 
     /**
@@ -127,13 +197,29 @@ class Procedure extends OrderAbstract
     {
         $this->pathistory = $pathistory;
     }
-
     /**
      * @return mixed
      */
     public function getPathistory()
     {
         return $this->pathistory;
+    }
+    public function addPathistory($pathistory)
+    {
+        if( $pathistory == null ) {
+            $pathistory = new ProcedurePathistory();
+        }
+
+        if( !$this->pathistory->contains($pathistory) ) {
+            $pathistory->setProcedure($this);
+            $this->pathistory->add($pathistory);
+        }
+
+        return $this;
+    }
+    public function removePathistory($pathistory)
+    {
+        $this->pathistory->removeElement($pathistory);
     }
 
     /**
@@ -143,13 +229,29 @@ class Procedure extends OrderAbstract
     {
         $this->patname = $patname;
     }
-
     /**
      * @return mixed
      */
     public function getPatname()
     {
         return $this->patname;
+    }
+    public function addPatname($patname)
+    {
+        if( $patname == null ) {
+            $patname = new ProcedurePatname();
+        }
+
+        if( !$this->patname->contains($patname) ) {
+            $patname->setProcedure($this);
+            $this->patname->add($patname);
+        }
+
+        return $this;
+    }
+    public function removePatname($patname)
+    {
+        $this->patname->removeElement($patname);
     }
 
     /**
@@ -159,13 +261,29 @@ class Procedure extends OrderAbstract
     {
         $this->patsex = $patsex;
     }
-
     /**
      * @return mixed
      */
     public function getPatsex()
     {
         return $this->patsex;
+    }
+    public function addPatsex($patsex)
+    {
+        if( $patsex == null ) {
+            $patsex = new ProcedurePatsex();
+        }
+
+        if( !$this->patsex->contains($patsex) ) {
+            $patsex->setProcedure($this);
+            $this->patsex->add($patsex);
+        }
+
+        return $this;
+    }
+    public function removePatsex($patsex)
+    {
+        $this->patsex->removeElement($patsex);
     }
 
 
@@ -312,6 +430,7 @@ class Procedure extends OrderAbstract
         }
 
         return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().
+            ", patname=" . $this->getPatname() . ", patage=" . $this->getPatage() . ", Clinical History=".$this->getPathistory().
             ", procedureNameCount=" . count($this->getName()) . " => Names=".$procNames.
             ", encounterCount=" . count($this->encounter) .
             ": encounter->first=" . $this->encounter->first() .
@@ -363,7 +482,7 @@ class Procedure extends OrderAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Encounter','Name');
+        $fieldsArr = array('Encounter','Name','EncounterDate','Patname','Patage','Patsex','Pathistory');
         return $fieldsArr;
     }
 

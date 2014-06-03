@@ -230,10 +230,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        foreach( $entity->getBlock() as $child ) {
 //            echo "Res block=".$child."<br>";
 //        }
-//        foreach($entity->getAccession() as $acc) {
-//            //echo "parent=".$acc->getParent()."=>";
-//            echo $acc;
-//        }
+        foreach($entity->getAccession() as $acc) {
+            echo "parent=".$acc->getParent()."=>";
+            echo $acc;
+        }
 //        foreach($entity->getPatient()->first()->getName() as $el) {
 //            echo "name=".$el."<br>";
 //        }

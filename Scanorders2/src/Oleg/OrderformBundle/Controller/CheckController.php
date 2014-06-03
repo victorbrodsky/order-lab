@@ -140,10 +140,8 @@ class CheckController extends Controller {
         
         if( $entity ) {
 
-            //TODO: get valid MRN for this user
-
-            //TODO: get valid DOB for this user
-
+            //TODO: get one 'valid' MRN for this user?
+            //TODO: get one 'valid' DOB for this user?
 
             $element = array(
                 //'inmrn'=>$mrn,

@@ -19,8 +19,12 @@ class Accession extends OrderAbstract {
      */
     protected $accession;
 
+//    /**
+//     * @ORM\Column(type="datetime", nullable=true)
+//     */
+//    protected $accessionDate;
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\OneToMany(targetEntity="AccessionDate", mappedBy="accession", cascade={"persist"})
      */
     protected $accessionDate;
 
@@ -51,14 +55,17 @@ class Accession extends OrderAbstract {
 
         //fields:
         $this->accession = new ArrayCollection();
+        $this->accessionDate = new ArrayCollection();
 
         if( $withfields ) {
             $this->addAccession( new AccessionAccession($status,$provider,$source) );
+            $this->addAccessionDate( new AccessionDate($status,$provider,$source) );
         }
     }
 
     public function makeDependClone() {
         $this->accession = $this->cloneDepend($this->accession,$this);
+        $this->accessionDate = $this->cloneDepend($this->accessionDate,$this);
     }
 
     public function __toString()
@@ -194,13 +201,30 @@ class Accession extends OrderAbstract {
     {
         $this->accessionDate = $accessionDate;
     }
-
     /**
      * @return mixed
      */
     public function getAccessionDate()
     {
         return $this->accessionDate;
+    }
+
+    public function addAccessionDate($accessionDate)
+    {
+        if( $accessionDate == null ) {
+            $accessionDate = new AccessionDate();
+        }
+
+        if( !$this->accessionDate->contains($accessionDate) ) {
+            $accessionDate->setAccession($this);
+            $this->accessionDate->add($accessionDate);
+        }
+
+        return $this;
+    }
+    public function removeAccessionDate($accessionDate)
+    {
+        $this->accessionDate->removeElement($accessionDate);
     }
 
 
@@ -260,7 +284,7 @@ class Accession extends OrderAbstract {
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Accession');
+        $fieldsArr = array('Accession', 'AccessionDate');
         return $fieldsArr;
     }
 

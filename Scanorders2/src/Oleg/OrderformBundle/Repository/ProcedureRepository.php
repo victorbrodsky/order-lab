@@ -254,9 +254,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         $accessions = $procedure->getChildren();
 
-        foreach( $accessions as $acc ) {
-            echo $acc."<br>";
-        }
+//        foreach( $accessions as $acc ) {
+//            echo $acc."<br>";
+//        }
 
         if( count($accessions) != 1 ) {
             throw new \Exception( 'Procedure entity must have only one Accession. Number of Accession found is ' . count($accessions) );
