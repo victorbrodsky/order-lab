@@ -24,7 +24,7 @@ class Accession extends OrderAbstract {
 //     */
 //    protected $accessionDate;
     /**
-     * @ORM\OneToMany(targetEntity="AccessionDate", mappedBy="accession", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AccessionAccessionDate", mappedBy="accession", cascade={"persist"})
      */
     protected $accessionDate;
 
@@ -59,7 +59,7 @@ class Accession extends OrderAbstract {
 
         if( $withfields ) {
             $this->addAccession( new AccessionAccession($status,$provider,$source) );
-            $this->addAccessionDate( new AccessionDate($status,$provider,$source) );
+            $this->addAccessionDate( new AccessionAccessionDate($status,$provider,$source) );
         }
     }
 
@@ -212,7 +212,7 @@ class Accession extends OrderAbstract {
     public function addAccessionDate($accessionDate)
     {
         if( $accessionDate == null ) {
-            $accessionDate = new AccessionDate();
+            $accessionDate = new AccessionAccessionDate();
         }
 
         if( !$this->accessionDate->contains($accessionDate) ) {

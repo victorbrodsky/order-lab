@@ -429,8 +429,28 @@ class Procedure extends OrderAbstract
             $procNames = $procNames . " name=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $patName = "";
+        foreach( $this->getPatname() as $name ) {
+            $patName = $patName . " patname=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
+        $patAge = "";
+        foreach( $this->getPatage() as $name ) {
+            $patAge = $patAge . " patage=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
+        $patSex = "";
+        foreach( $this->getPatsex() as $name ) {
+            $patSex = $patSex . " patsex=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
+        $hist = "";
+        foreach( $this->getPathistory() as $name ) {
+            $hist = $hist . " pathist=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
         return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().
-            ", patname=" . $this->getPatname() . ", patage=" . $this->getPatage() . ", Clinical History=".$this->getPathistory().
+            ", patname=" . $patName . ", patage=" . $patAge . ", patsex=".$patSex.", Clinical History=".$hist.
             ", procedureNameCount=" . count($this->getName()) . " => Names=".$procNames.
             ", encounterCount=" . count($this->encounter) .
             ": encounter->first=" . $this->encounter->first() .

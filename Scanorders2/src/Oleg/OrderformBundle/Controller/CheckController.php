@@ -67,6 +67,10 @@ class CheckController extends Controller {
                         //echo "childValue=".$childValue."<br>";
                         $hist[$child] = $childValue;
                         $hist['keytypename'] = $field->$getMethod()."";
+                    } else
+                    if( $child == "staintype" ) {
+                        $childValue = $field->$getMethod()->getId();
+                        $hist[$child] = $childValue;
                     } else {
                         $childValue = $field->$getMethod()."";
                         //echo "childValue=".$childValue."<br>";
@@ -322,7 +326,8 @@ class CheckController extends Controller {
 
                 $procedureName = $entity->getProcedure()->getName();
 
-                $encDate = $transformer->transform( $entity->getProcedure()->getEncounterDate() );
+                //$encDate = $transformer->transform( $entity->getProcedure()->getEncounterDate()->first() );
+                $encDate = $entity->getProcedure()->getEncounterDate();
                 $patName = $entity->getProcedure()->getPatname();
                 $patSex = $entity->getProcedure()->getPatsex();
                 $patAge = $entity->getProcedure()->getPatage();
@@ -355,12 +360,15 @@ class CheckController extends Controller {
                 'mrnstring'=>$mrnstring,
                 'orderinfo'=>$orderinfoString,
                 'procedure'=>$this->getArrayFieldJson($procedureName),
-                'encounterDate'=>$encDate,
-                'patname'=>$patName,
-                'patsex'=>$patSex,
-                'patage'=>$patAge,
-                'pathistory'=>$patHist,
-                'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype'))
+
+                'encounterDate'=>$this->getArrayFieldJson($encDate),
+                'patname'=>$this->getArrayFieldJson($patName),
+                'patsex'=>$this->getArrayFieldJson($patSex),
+                'patage'=>$this->getArrayFieldJson($patAge),
+                'pathistory'=>$this->getArrayFieldJson($patHist),
+
+                'accession'=>$this->getArrayFieldJson($entity->getAccession(),array('keytype')),
+                'accessionDate'=>$this->getArrayFieldJson($entity->getAccessionDate())
             );
         } 
 
@@ -614,7 +622,8 @@ class CheckController extends Controller {
                 $element = array(
                     'id'=>$entity->getId(),
                     'blockname'=>$this->getArrayFieldJson($entity->getBlockname()),
-                    'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource())
+                    'sectionsource'=>$this->getArrayFieldJson($entity->getSectionsource()),
+                    'specialStains'=>$this->getArrayFieldJson( $entity->getSpecialStains(), array("field","staintype") )
                 );
             } 
             

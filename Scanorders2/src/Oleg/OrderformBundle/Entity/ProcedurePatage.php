@@ -13,7 +13,7 @@ class ProcedurePatage extends ProcedureArrayFieldAbstract
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="name", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="patage", cascade={"persist"})
      * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $procedure;

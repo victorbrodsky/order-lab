@@ -126,13 +126,13 @@ class ProcedureType extends AbstractType
 //            'attr' => array('class' => 'form-control procedureage-field patientage-mask')
 //        ));
         $attr = array('class'=>'form-control procedureage-field patientage-mask');
-        $gen_attr = array('label'=>"Patient's Sex (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\ProcedurePatage','type'=>null);
+        $gen_attr = array('label'=>"Patient's Age (at the time of encounter)",'class'=>'Oleg\OrderformBundle\Entity\ProcedurePatage','type'=>null);
         $builder->add('patage', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => "Patient's Sex (at the time of encounter):",
+            'label' => "Patient's Age (at the time of encounter):",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__procedurepatage__',

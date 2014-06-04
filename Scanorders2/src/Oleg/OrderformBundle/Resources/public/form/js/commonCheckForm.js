@@ -302,24 +302,24 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
-function getSimpleFieldName( inputEl ) {
-    if( inputEl.hasClass("proceduredate-field") ) {
-        return "encounterDate";
-    }
-    if( inputEl.hasClass("procedurename-field") ) {
-        return "patname";
-    }
-    if( inputEl.hasClass("proceduresex-field") ) {
-        return "patsex";
-    }
-    if( inputEl.hasClass("procedureage-field") ) {
-        return "patage";
-    }
-    if( inputEl.hasClass("procedurehistory-field") ) {
-        return "pathistory";
-    }
-    return null;
-}
+//function getSimpleFieldName( inputEl ) {
+//    if( inputEl.hasClass("proceduredate-field") ) {
+//        return "encounterDate";
+//    }
+//    if( inputEl.hasClass("procedurename-field") ) {
+//        return "patname";
+//    }
+//    if( inputEl.hasClass("proceduresex-field") ) {
+//        return "patsex";
+//    }
+//    if( inputEl.hasClass("procedureage-field") ) {
+//        return "patage";
+//    }
+//    if( inputEl.hasClass("procedurehistory-field") ) {
+//        return "pathistory";
+//    }
+//    return null;
+//}
 
 function calculateAgeByDob( btn ) {
     var accessionBtnObj = new btnObject(btn,'full');
@@ -937,7 +937,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     for (var i = 0; i < elements.length; i++) {
 
-        //console.log("\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
@@ -970,7 +970,6 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         if( elements.eq(i).hasClass('patientage-field') ) {
             continue;
         }
-
 
         if( id && type != "hidden" ) {
 
@@ -1007,8 +1006,9 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
             if( flagArrayField == "notarrayfield" ) {
                 if( $.inArray(field, arrayFieldShow) != -1 ) {
-                    //console.log("notarrayfield (not '_0_field'): disable array id="+elements.eq(i).attr("id"));
-                    if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0_field") != -1 ) {
+                    //console.log("Arrayfield: disable/enable array id="+elements.eq(i).attr("id"));
+                    if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0") != -1 ) {
+                        //console.log(field+"_0_field'");
                         if( disabled ) {    //inverse disable flag for key field
                             disableElement(parentname,elements.eq(i),false);
                         } else {
@@ -1030,7 +1030,7 @@ function disableElement(parentname,element, flag) {
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id')+", flag="+flag);
 
     //return if this element does not belong to a pressed key element
     var idArr = element.attr('id').split("_");
@@ -1040,15 +1040,15 @@ function disableElement(parentname,element, flag) {
     }
 
     //exception for simple fields; used for tooltip
-    if(
-        element.hasClass('procedurename-field') ||
-        element.hasClass('proceduresex-field') ||
-        element.hasClass('procedureage-field') ||
-        element.hasClass('proceduredate-field') ||
-        element.hasClass('procedurehistory-field')
-    ) {
-        fieldParentName = "accession";
-    }
+//    if(
+//        element.hasClass('procedurename-field') ||
+//        element.hasClass('proceduresex-field') ||
+//        element.hasClass('procedureage-field') ||
+//        element.hasClass('proceduredate-field') ||
+//        element.hasClass('procedurehistory-field')
+//    ) {
+//        fieldParentName = "accession";
+//    }
 
     //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
     if( parentname == "" || parentname == fieldParentName ) {
@@ -1065,7 +1065,7 @@ function disableElement(parentname,element, flag) {
         return;
     }
 
-    if( tagName == "SELECT" || tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
+    if( tagName == "SELECT" || typeof classs !== "undefined" && classs.indexOf("select2") != -1 && ( tagName == "DIV" || tagName == "INPUT" ) ) { //only for select group
         //console.log("select disable classs="+classs+", id="+element.attr('id')+", flag="+flag);
         if( flag ) {    //disable
             //console.log("disable select2");
@@ -1168,21 +1168,21 @@ function setElementBlock( element, data, cleanall, key ) {
 
     for( var i = 0; i < elements.length; i++ ) {
 
-        //console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        console.log('\n\n'+"Set Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         /////////////// exception for simple fields /////////////////////////
-        var simpleField = getSimpleFieldName( elements.eq(i) );
-        if( simpleField && (simpleField in data) ) {
-            var simpleValue = data[simpleField];
-            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
-            if( simpleField == 'patsex' ) {
-                var dataArr = {text: simpleValue};
-                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
-            } else {
-                elements.eq(i).val(simpleValue);
-            }
-            continue;
-        }
+//        var simpleField = getSimpleFieldName( elements.eq(i) );
+//        if( simpleField && (simpleField in data) ) {
+//            var simpleValue = data[simpleField];
+//            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
+//            if( simpleField == 'patsex' ) {
+//                var dataArr = {text: simpleValue};
+//                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
+//            } else {
+//                elements.eq(i).val(simpleValue);
+//            }
+//            continue;
+//        }
         /////////////// EOF exception for simple fields /////////////////////////
 
         //  0         1              2           3   4  5
@@ -1196,6 +1196,11 @@ function setElementBlock( element, data, cleanall, key ) {
         //exception
         if( id && id.indexOf("primaryOrgan") != -1 ) {
             //console.log("skip id="+id);
+            continue;
+        }
+
+        //don't process ajax-combobox-staintype. It will be populated by block's field field
+        if( elements.eq(i).hasClass('ajax-combobox-staintype') ) {
             continue;
         }
 
@@ -1338,6 +1343,12 @@ function setArrayField(element, dataArr, parent) {
             var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, coll );
             //console.log("newForm="+newForm);
 
+            var origId = id;
+            if( fieldName == "specialStains" ) {
+                //special stain has id of the staintipe select box
+                id = dataArr[i]["staintype"];
+            }
+
             var labelStr = " entered on " + date + " by "+provider + "</label>";
             newForm = newForm.replace("</label>", labelStr);
 
@@ -1356,8 +1367,13 @@ function setArrayField(element, dataArr, parent) {
                 attachElement.prepend(newForm);
             }
 
+            if( fieldName == "specialStains" ) {
+                //pre-populate select2 with stains
+                getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,coll),true,id);
+            }
+
         } else {    //show the valid field (with validity=1)
-            //console.log("NO SHOW");
+            //console.log("NO array Fiel dShow");
         }
 
         //set data
@@ -1600,7 +1616,7 @@ function processGroup( element, data, disableFlag ) {
 }
 
 function cleanArrayFieldSimple( element, field, single ) {
-    //console.log( "clean array field id=" + element.attr("id") );
+    //console.log( "clean simple array field id=" + element.attr("id") );
 
     //delete if id != 0
     if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 ) {
@@ -1610,10 +1626,83 @@ function cleanArrayFieldSimple( element, field, single ) {
     }
 }
 
+function cleanBlockSpecialStains( element, field, single ) {
+
+    //printF(element,'clean block element:');
+
+    //don't process special staintype. It will be processed by special stain field.
+    if( element.hasClass('ajax-combobox-staintype') ) {
+        return;
+    }
+
+    //don't process not 0 id. They will be delete by 0 id field
+    //if( element.attr('id').indexOf("specialStains_0_field") == -1 ) {
+    //    return;
+    //}
+
+    //console.log( "\nClean Block Special Stains elements id=" + element.attr("id") + ", field=" + field );
+
+    var fieldHolder = element.closest('.blockspecialstains');
+    var fieldInputColls = fieldHolder.parent().find('.fieldInputColl');
+    //console.log( "fieldInputColls.length=" + fieldInputColls.length );
+
+    if( fieldInputColls.length == 0 ) {
+        return false;
+    }
+
+    var stainfieldEl = fieldInputColls.first().find('.input-group-oleg').find('textarea');
+    var idsArr = stainfieldEl.attr("id").split("_");
+
+    fieldInputColls.each( function() {
+
+        //var stainfieldEl = $(this).find('.input-group-oleg').find('textarea');
+        //if( stainfieldEl.attr('id').indexOf("specialStains_0_field") == -1 ) {
+            $(this).closest('.row').remove();
+//        } {
+//            var idsArr = stainfieldEl.attr("id").split("_");
+//            var patient = idsArr[1];
+//            var procedure = idsArr[2];
+//            var accession = idsArr[3];
+//            var part = idsArr[4];
+//            var block = idsArr[5];
+//            var slide = null;
+//            var ident = "block"+"specialStains";
+//            var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
+//            $(this).closest('.blockspecialstains').prepend(newForm);
+//            getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,0),true);
+//            $(this).closest('.row').remove();
+//        }
+
+    });
+
+    //construct new 0 special stain group
+    var patient = idsArr[1];
+    var procedure = idsArr[2];
+    var accession = idsArr[3];
+    var part = idsArr[4];
+    var block = idsArr[5];
+    var slide = null;
+    var ident = "block"+"specialStains";
+    var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
+    fieldHolder.prepend(newForm);
+    getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,0),true);
+
+//    //set to the first item
+//    if( field == "specialStains" ) {
+//        setElementToId( element, _stain );
+//    }
+}
+
 //element - input field element
 function cleanArrayField( element, field, single ) {
 
-    //if( field != "diffDisident" ) {
+    //console.log( "\nClean field=" + field );
+
+    if( field == "specialStains" ) {
+        cleanBlockSpecialStains(element, field, single);
+        return;
+    }
+
     if( $.inArray(field, arrayFieldShow) == -1 ) {
         cleanArrayFieldSimple(element,field,single);
         return;
@@ -1625,13 +1714,14 @@ function cleanArrayField( element, field, single ) {
 
     //get row element - fieldHolder
     if( element.is('[readonly]') ) {    //get row for gray out fields without buttons
+        //console.log( "readonly" );
         var fieldHolder = element.parent().parent();
-    } else {                            //get row for enabled fields with buttons
-        //var fieldHolder = element.parent().parent().parent().parent().parent();
+    } else {
+        //console.log( "not readonly" );
         var fieldHolder = element.parent().parent().parent().parent().parent();
     }
 
-    //console.log( "fieldHolder id=" + fieldHolder.attr("id") + ", field=" + fieldHolder.attr("class") );
+    //console.log( "fieldHolder id=" + fieldHolder.attr("id") + ", class=" + fieldHolder.attr("class") );
 
     var rows = fieldHolder.parent().find('.row');
 
@@ -1666,11 +1756,6 @@ function cleanArrayField( element, field, single ) {
 
         //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
         changeIdtoIndex(element,field,0);
-
-        //set to the first item
-        if( field == "specialStains" ) {
-            setToFirstElement( element, _stain );
-        }
 
     } else {
         //delete hole row
@@ -1757,7 +1842,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
         var tagName = elements.eq(i).prop('tagName');
         var classs = elements.eq(i).attr('class');
 
-        //console.log("\n\nClean Element id="+id+", classs="+classs+", type="+type+", tagName="+tagName);
+        console.log("\n\nClean Element id="+id+", classs="+classs+", type="+type+", tagName="+tagName);
 
         //don't process simple fields, these fileds don't have id because they are not part of form
         if( typeof id === 'undefined' ) {
@@ -1798,7 +1883,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
             //check field
             //console.log("btn field id="+btnObj.element.attr('id'));
             //console.log("element field id="+elements.eq(i).attr('id'));
-            if( btnObj.element.attr('id') != elements.eq(i).attr('id') ) {
+            if( btnObj.element && btnObj.element.attr('id') != elements.eq(i).attr('id') ) {
                 //console.log("don't clean this field!");
                 continue;
             }

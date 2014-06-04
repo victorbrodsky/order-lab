@@ -214,13 +214,13 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        echo $entity->getPatient()->first()."<br>";
 //        echo "final pat name count=".count($entity->getPatient()->first()->getName())."<br>";
 //
-        echo "patients=".count($entity->getPatient())."<br>";
-        echo "procedures=".count($entity->getProcedure())."<br>";
-        echo "accessions=".count($entity->getAccession())."<br>";
-        echo "parts=".count($entity->getPart())."<br>";
-        echo "blocks=".count($entity->getBlock())."<br>";
-        echo "slides=".count($entity->getSlide())."<br>";
-        echo "block= ".$entity->getBlock()->first();
+//        echo "patients=".count($entity->getPatient())."<br>";
+//        echo "procedures=".count($entity->getProcedure())."<br>";
+//        echo "accessions=".count($entity->getAccession())."<br>";
+//        echo "parts=".count($entity->getPart())."<br>";
+//        echo "blocks=".count($entity->getBlock())."<br>";
+//        echo "slides=".count($entity->getSlide())."<br>";
+//        echo "block= ".$entity->getBlock()->first();
         //echo "acc's procedure=".$entity->getAccession()->first()->getParent();
 //        echo $entity;
 //        foreach( $entity->getBlock() as $elem ) {
@@ -230,10 +230,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        foreach( $entity->getBlock() as $child ) {
 //            echo "Res block=".$child."<br>";
 //        }
-        foreach($entity->getAccession() as $acc) {
-            echo "parent=".$acc->getParent()."=>";
-            echo $acc;
-        }
+//        foreach($entity->getAccession() as $acc) {
+//            echo $acc->getParent()."=>";
+//            echo $acc;
+//        }
 //        foreach($entity->getPatient()->first()->getName() as $el) {
 //            echo "name=".$el."<br>";
 //        }
@@ -245,7 +245,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-        exit('orderinfo repoexit');
+        //exit('orderinfo repoexit');
 
         //create new orderinfo
         //$em = $this->_em;

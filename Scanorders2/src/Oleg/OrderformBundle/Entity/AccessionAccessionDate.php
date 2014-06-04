@@ -11,17 +11,16 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="accessionDate")
  */
-class AccessionDate extends AccessionArrayFieldAbstract
+class AccessionAccessionDate extends AccessionArrayFieldAbstract
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="accession", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="accessionDate", cascade={"persist"})
      * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $accession;
@@ -31,5 +30,10 @@ class AccessionDate extends AccessionArrayFieldAbstract
      */
     protected $field;
 
+
+    public function __toString() {
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        return $dateStr = $transformer->transform($this->field);
+    }
 
 }

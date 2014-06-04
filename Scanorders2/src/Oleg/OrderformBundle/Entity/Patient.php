@@ -258,7 +258,7 @@ class Patient extends OrderAbstract
     /**
      * Remove procedure
      *
-     * @param \Oleg\OrderformBundle\Entity\procedure $procedure
+     * @param \Oleg\OrderformBundle\Entity\Procedure $procedure
      */
     public function removeProcedure(\Oleg\OrderformBundle\Entity\Procedure $procedure)
     {
@@ -361,7 +361,7 @@ class Patient extends OrderAbstract
     /**
      * Add age
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientName $age
+     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
      * @return Patient
      */
     public function addAge($age)
@@ -381,7 +381,7 @@ class Patient extends OrderAbstract
     /**
      * Remove age
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientName $age
+     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
      */
     public function removeAge($age)
     {

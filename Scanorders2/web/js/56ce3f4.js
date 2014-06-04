@@ -25526,24 +25526,24 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
-function getSimpleFieldName( inputEl ) {
-    if( inputEl.hasClass("proceduredate-field") ) {
-        return "encounterDate";
-    }
-    if( inputEl.hasClass("procedurename-field") ) {
-        return "patname";
-    }
-    if( inputEl.hasClass("proceduresex-field") ) {
-        return "patsex";
-    }
-    if( inputEl.hasClass("procedureage-field") ) {
-        return "patage";
-    }
-    if( inputEl.hasClass("procedurehistory-field") ) {
-        return "pathistory";
-    }
-    return null;
-}
+//function getSimpleFieldName( inputEl ) {
+//    if( inputEl.hasClass("proceduredate-field") ) {
+//        return "encounterDate";
+//    }
+//    if( inputEl.hasClass("procedurename-field") ) {
+//        return "patname";
+//    }
+//    if( inputEl.hasClass("proceduresex-field") ) {
+//        return "patsex";
+//    }
+//    if( inputEl.hasClass("procedureage-field") ) {
+//        return "patage";
+//    }
+//    if( inputEl.hasClass("procedurehistory-field") ) {
+//        return "pathistory";
+//    }
+//    return null;
+//}
 
 function calculateAgeByDob( btn ) {
     var accessionBtnObj = new btnObject(btn,'full');
@@ -26264,15 +26264,15 @@ function disableElement(parentname,element, flag) {
     }
 
     //exception for simple fields; used for tooltip
-    if(
-        element.hasClass('procedurename-field') ||
-        element.hasClass('proceduresex-field') ||
-        element.hasClass('procedureage-field') ||
-        element.hasClass('proceduredate-field') ||
-        element.hasClass('procedurehistory-field')
-    ) {
-        fieldParentName = "accession";
-    }
+//    if(
+//        element.hasClass('procedurename-field') ||
+//        element.hasClass('proceduresex-field') ||
+//        element.hasClass('procedureage-field') ||
+//        element.hasClass('proceduredate-field') ||
+//        element.hasClass('procedurehistory-field')
+//    ) {
+//        fieldParentName = "accession";
+//    }
 
     //console.log("fieldParentName="+fieldParentName+", parentname="+parentname);
     if( parentname == "" || parentname == fieldParentName ) {
@@ -26392,21 +26392,21 @@ function setElementBlock( element, data, cleanall, key ) {
 
     for( var i = 0; i < elements.length; i++ ) {
 
-        //console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         /////////////// exception for simple fields /////////////////////////
-        var simpleField = getSimpleFieldName( elements.eq(i) );
-        if( simpleField && (simpleField in data) ) {
-            var simpleValue = data[simpleField];
-            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
-            if( simpleField == 'patsex' ) {
-                var dataArr = {text: simpleValue};
-                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
-            } else {
-                elements.eq(i).val(simpleValue);
-            }
-            continue;
-        }
+//        var simpleField = getSimpleFieldName( elements.eq(i) );
+//        if( simpleField && (simpleField in data) ) {
+//            var simpleValue = data[simpleField];
+//            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
+//            if( simpleField == 'patsex' ) {
+//                var dataArr = {text: simpleValue};
+//                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
+//            } else {
+//                elements.eq(i).val(simpleValue);
+//            }
+//            continue;
+//        }
         /////////////// EOF exception for simple fields /////////////////////////
 
         //  0         1              2           3   4  5
@@ -26420,6 +26420,11 @@ function setElementBlock( element, data, cleanall, key ) {
         //exception
         if( id && id.indexOf("primaryOrgan") != -1 ) {
             //console.log("skip id="+id);
+            continue;
+        }
+
+        //don't process ajax-combobox-staintype. It will be populated by block's field field
+        if( elements.eq(i).hasClass('ajax-combobox-staintype') ) {
             continue;
         }
 
@@ -26520,7 +26525,7 @@ function setArrayField(element, dataArr, parent) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
         //if(
             //(validity == 'invalid' && dataArr.length > 1)
@@ -26568,7 +26573,7 @@ function setArrayField(element, dataArr, parent) {
             var idStr = 'type="hidden" value="'+id+'" ';
             newForm = newForm.replace('type="hidden"', idStr);
 
-            //console.log("newForm="+newForm);
+            console.log("newForm="+newForm);
 
             if( fieldName == "disident" && orderformtype == "single" ) {
                 //attachElement
@@ -26576,17 +26581,17 @@ function setArrayField(element, dataArr, parent) {
                 //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 $('#partdisident_marker').append(newForm);
             } else {
-                //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+                console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 attachElement.prepend(newForm);
             }
 
         } else {    //show the valid field (with validity=1)
-            //console.log("NO SHOW");
+            console.log("NO array Fiel dShow");
         }
 
         //set data
         if( tagName == "INPUT" ) {
-            //console.log("input tagName: fieldName="+fieldName);
+            console.log("input tagName: fieldName="+fieldName);
 
             if( type == "file" ) {
 
@@ -26665,12 +26670,12 @@ function setArrayField(element, dataArr, parent) {
                 var firstAttachedElement = attachElement.find('textarea').first();
             }
 
-            //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
+            console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
             firstAttachedElement.val(text);
 
         } else if ( (tagName == "DIV" && classs.indexOf("select2") != -1) || tagName == "SELECT" ) {
 
-            //console.log("### DIV select2:  select field, id="+id+",text="+text);
+            console.log("### DIV select2:  select field, id="+id+",text="+text);
             //console.log("id="+element.attr("id"));
 
             //set mrntype
@@ -26683,12 +26688,12 @@ function setArrayField(element, dataArr, parent) {
             }
 
         } else if ( tagName == "DIV" ) {
-            //console.log("### set array field as DIV, id="+element.attr("id")+", text="+text );
+            console.log("### set array field as DIV, id="+element.attr("id")+", text="+text );
             //get the first (the most recent added) group
             var firstAttachedElement = attachElement.find('.horizontal_type').first();
             processGroup( firstAttachedElement, dataArr[i], "ignoreDisable" );
         } else {
-            //console.log("logical error: undefined tagName="+tagName);
+            console.log("logical error: undefined tagName="+tagName);
         }
 
         //set hidden id of the element
@@ -27089,6 +27094,7 @@ var keys = new Array("mrn", "accession", "partname", "blockname");
 var arrayFieldShow = new Array("diffDisident","specialStains");
 
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+//var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 
 var orderformtype = $("#orderformtype").val();

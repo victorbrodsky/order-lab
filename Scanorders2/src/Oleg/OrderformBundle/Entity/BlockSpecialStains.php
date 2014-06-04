@@ -21,7 +21,7 @@ class BlockSpecialStains extends BlockArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="specialStains")
-     * @ORM\JoinColumn(name="block_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="block_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $block;
 

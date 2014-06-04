@@ -30,7 +30,7 @@ class AccessionDateType extends AbstractType
         ));
 
         $builder->add('dobothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionDate',
+            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccessionDate',
             'label' => false
         ));
 
@@ -39,7 +39,7 @@ class AccessionDateType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionDate',
+            'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccessionDate',
         ));
     }
 

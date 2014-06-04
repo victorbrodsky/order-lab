@@ -779,9 +779,9 @@
 
         {#{{ formmacros.fieldDateLabel(accession.accessionDate) }}#}
         {% if accessiondateHtml is not defined or accessiondateHtml == "" %}
-            {{ formmacros.inputArrayField(accession.accessionDate,cycle,"accessionDate","date","","","",status) }}
+            {{ formmacros.inputArrayField(accession.accessionDate,cycle,"accessionaccessiondate","date","","","",status) }}
         {% else  %}
-            <p><div class="accessionDate">{{ accessiondateHtml }}</div></p>
+            <p><div class="accessionaccessiondate">{{ accessiondateHtml }}</div></p>
         {% endif %}
 
         {#{{ formmacros.field(procedure.name) }}#}
@@ -808,9 +808,9 @@
         {#patient's data: single simple fields#}
         {#{{ formmacros.fieldDateLabel(procedure.encounterDate) }}#}
         {% if encounterdateHtml is not defined or encounterdateHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.encounterDate,cycle,"procedureencounterDate","date","","","",status) }}
+            {{ formmacros.inputArrayField(procedure.encounterDate,cycle,"procedureencounterdate","date","","","",status) }}
         {% else  %}
-            <p><div class="procedureencounterDate">{{ encounterdateHtml }}</div></p>
+            <p><div class="procedureencounterdate">{{ encounterdateHtml }}</div></p>
         {% endif %}
 
         {#{{ formmacros.field(procedure.patname) }}#}

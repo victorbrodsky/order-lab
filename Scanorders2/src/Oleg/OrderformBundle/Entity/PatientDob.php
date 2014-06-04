@@ -29,7 +29,6 @@ class PatientDob extends PatientArrayFieldAbstract
 
 
     public function __toString() {
-        //return $this->field;
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
         return $dateStr = $transformer->transform($this->field);
     }

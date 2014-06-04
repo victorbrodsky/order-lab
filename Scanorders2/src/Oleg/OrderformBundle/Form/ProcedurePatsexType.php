@@ -23,7 +23,6 @@ class ProcedurePatsexType extends AbstractType
 
         $builder->add( 'field', 'choice', array(
             'label'=>"Patient's Sex (at the time of encounter)",
-            'disabled' => true,
             'choices' => array("Female"=>"Female", "Male"=>"Male", "Unspecified"=>"Unspecified"),
             'multiple' => false,
             'expanded' => true,

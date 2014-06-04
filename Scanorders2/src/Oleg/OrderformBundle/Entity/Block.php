@@ -212,11 +212,11 @@ class Block extends OrderAbstract
         return $this;
     }
 
-    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\BlockSpecialStains $specialStain)
+    public function removeSpecialStain($specialStain)
     {
         $this->specialStains->removeElement($specialStain);
     }
-    public function removeSpecialStains(\Oleg\OrderformBundle\Entity\BlockSpecialStains $specialStain)
+    public function removeSpecialStains($specialStain)
     {
         $this->removeSpecialStain($specialStain);
     }
@@ -294,7 +294,7 @@ class Block extends OrderAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Blockname','Sectionsource');
+        $fieldsArr = array('Blockname','Sectionsource','Specialstains');
         return $fieldsArr;
     }
 

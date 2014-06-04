@@ -179,12 +179,12 @@ function getComboboxStain(urlCommon, ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"stain_0_field";
         //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, _stain );
+        setElementToId( targetid, _stain );
     }
 
 }
 
-function getComboboxSpecialStain(urlCommon, ids, preset) {
+function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
 
     var url = urlCommon+"stain";
 
@@ -201,6 +201,7 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
     }
 
     if( _stain.length == 0 ) {
+        //console.log("_stain.length is zero");
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
@@ -210,13 +211,13 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
                 populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
             });
     } else {
+        //console.log("populate _stain.length="+_stain.length);
         populateSelectCombobox( targetid, _stain, null );
     }
 
     //console.log("special stain preset="+preset);
     if( targetid != "" ) {
-        //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, _stain );
+        setElementToId( targetid, _stain, setId );
     }
 }
 
@@ -248,7 +249,7 @@ function getComboboxScanregion(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"scan_0_scanregion";
         //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
-        setToFirstElement( targetid, _scanregion );
+        setElementToId( targetid, _scanregion );
     }
 }
 
@@ -335,7 +336,7 @@ function getComboboxAccessionType(urlCommon,ids) {
         var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
-        setToFirstElement( targetid, _accessiontype );
+        setElementToId( targetid, _accessiontype );
     }
 }
 
@@ -370,7 +371,7 @@ function getComboboxMrnType(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"mrn_0_mrntype";
         //console.log("targetid="+targetid);
-        setToFirstElement( targetid, _mrntype );
+        setElementToId( targetid, _mrntype );
     }
 }
 
@@ -450,13 +451,13 @@ function getComboboxDelivery(urlCommon,ids) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
             if( cicle == "new"  ) {
-                setToFirstElement( target, _delivery );
+                setElementToId( target, _delivery );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
         if( cicle == "new"  ) {
-            setToFirstElement( target, _delivery );
+            setElementToId( target, _delivery );
         }
     }
 
@@ -484,14 +485,14 @@ function getComboboxReturn(urlCommon,ids) {
             populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
             if( cicle == "new"  ) {
                 //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-                setToFirstElement( ".ajax-combobox-return", _returnslide );
+                setElementToId( ".ajax-combobox-return", _returnslide );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
         if( cicle == "new"  ) {
             //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-            setToFirstElement( ".ajax-combobox-return", _returnslide );
+            setElementToId( ".ajax-combobox-return", _returnslide );
         }
     }
 
@@ -602,7 +603,7 @@ function getSetTitle() {
             //console.log("id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
-            //setToFirstElement( targetid, data );
+            //setElementToId( targetid, data );
         }
     });
 
@@ -846,13 +847,16 @@ function slideType(ids) {
     });   
 }
 
-function setToFirstElement( target, dataarr ) {
+function setElementToId( target, dataarr, setId ) {
     if( dataarr == undefined || dataarr.length == 0 ) {
         return;
     }
-    var firstObj = dataarr[0];
-    var firstId = firstObj.id;
-    //console.log("first="+firstId);
-    $(target).select2('val', firstId);
-    //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+
+    if( typeof setId === "undefined" ) {
+        var firstObj = dataarr[0];
+        var setId = firstObj.id;
+    }
+
+    //console.log("setId="+setId);
+    $(target).select2('val', setId);
 }

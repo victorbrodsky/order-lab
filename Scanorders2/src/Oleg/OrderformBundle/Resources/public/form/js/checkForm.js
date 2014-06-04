@@ -14,6 +14,7 @@ var keys = new Array("mrn", "accession", "partname", "blockname");
 var arrayFieldShow = new Array("diffDisident","specialStains");
 
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
+//var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 
 var orderformtype = $("#orderformtype").val();
@@ -100,18 +101,20 @@ function btnObject( btn, parent ) {
     var gocontinue = true;
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
-        //console.log('button is null => exit button object');
+        console.log('button is null => exit button object');
         //return null;
         gocontinue = false;
     }
 
     if( gocontinue ) {
         var parentEl = getParentElByBtn(btn);
+        printF(parentEl,"parent btn:");
 
         var inputEl = parentEl.find('input.keyfield');
+        printF(inputEl,"after find:");
 
-        if( !inputEl || inputEl.attr('class') == '' ) {
-            //return null;
+        if( !inputEl || (inputEl.attr('class') == '') ) {
+        //if( !inputEl || (typeof inputEl.attr('class') === "undefined") || (inputEl.attr('class') == '') ) {
             gocontinue = false;
         }
     }
@@ -136,9 +139,14 @@ function btnObject( btn, parent ) {
         this.typeelement = typeObj.typeelement;
 
         //get name
-        var idsArr = inputEl.attr('id').split("_");
-        this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
-        this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
+        printF(inputEl,"btn Object:");
+        console.log(btn);
+        console.log(inputEl);
+        //if( typeof inputEl.attr('id') !== "undefined" ) {
+            var idsArr = inputEl.attr('id').split("_");
+            this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
+            this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
+        //}
 
         //get parent
         if( this.name == 'part' || this.name == 'block' || parent == 'full' ) {
@@ -195,11 +203,11 @@ function typeByKeyInput(keyEl) {
 function getParentElByBtn(btn) {
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
-        //console.log('WARNING: button is not defined');
+        console.log('WARNING: button is not defined');
         return null;
     }
 
-    //printF(btn,"get Parent By Btn: ");
+    printF(btn,"get Parent By Btn: ");
 
     var parent = btn.closest('.row');
 

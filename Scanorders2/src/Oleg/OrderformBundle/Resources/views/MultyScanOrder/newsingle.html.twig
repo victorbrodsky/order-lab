@@ -116,7 +116,7 @@
             {#requires for adding field by pressing +; to remove label replace the last "" by "nolabel"#}
              data-prototype-addblockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"","","","withspace","minusplusbtn")|e }}"
             {#requires for check form to populate fields by AJAX (no '+' buttons)#}
-             data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"nobtn","","","withspace")|e }}"
+             data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"","","","","plusbtn")|e }}"
 
         >
         </div>
@@ -267,11 +267,20 @@
                                         {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
 
                                         {#patient's data: single simple fields#}
-                                        {{ formmacros.fieldDateLabel(form_procedure.encounterDate) }}
-                                        {{ formmacros.field(form_procedure.patname) }}
-                                        {{ formmacros.field(form_procedure.patsex) }}
-                                        {{ formmacros.field(form_procedure.patage) }}
-                                        {{ formmacros.field(form_procedure.pathistory) }}
+                                        {#{{ formmacros.fieldDateLabel(form_procedure.encounterDate) }}#}
+                                        {{ formmacros.inputArrayField(form_procedure.encounterDate,'new',"procedureencounterdate") }}
+
+                                        {#{{ formmacros.field(form_procedure.patname) }}#}
+                                        {{ formmacros.inputArrayField(form_procedure.patname,'new',"procedurepatname") }}
+
+                                        {#{{ formmacros.field(form_procedure.patsex) }}#}
+                                        {{ formmacros.inputArrayField(form_procedure.patsex,'new',"procedurepatsex") }}
+
+                                        {#{{ formmacros.field(form_procedure.patage) }}#}
+                                        {{ formmacros.inputArrayField(form_procedure.patage,'new',"procedurepatage") }}
+
+                                        {#{{ formmacros.field(form_procedure.pathistory) }}#}
+                                        {{ formmacros.inputArrayField(form_procedure.pathistory,'new',"procedurepathistory") }}
 
                                     </div>
                                 </div>
@@ -279,7 +288,8 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Accession</h3></div>
                                     <div class="panel-body">
-                                        {{ formmacros.fieldDateLabel(form_accession.accessionDate) }}
+                                        {#{{ formmacros.fieldDateLabel(form_accession.accessionDate) }}#}
+                                        {{ formmacros.inputArrayField(form_accession.accessionDate,'new',"accessionaccessiondate") }}
                                     </div>
                                 </div>
 
