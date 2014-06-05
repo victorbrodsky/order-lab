@@ -112,6 +112,29 @@ class OrderInfo
     protected $proxyuser;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Department", inversedBy="orderinfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="department_id", referencedColumnName="id", nullable=true)
+     */
+    protected $department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="orderinfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
+     */
+    protected $institution;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $purpose;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="orderinfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="account_id", referencedColumnName="id", nullable=true)
+     */
+    protected $account;
+
+    /**
      * @ORM\OneToMany(targetEntity="DataQuality", mappedBy="orderinfo", cascade={"persist"})
      */
     private $dataquality;
@@ -506,6 +529,72 @@ class OrderInfo
     public function setType($type) {
         $this->type = $type;
     }
+
+    /**
+     * @param mixed $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @param mixed $department
+     */
+    public function setDepartment($department)
+    {
+        $this->department = $department;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartment()
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $purpose
+     */
+    public function setPurpose($purpose)
+    {
+        $this->purpose = $purpose;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPurpose()
+    {
+        return $this->purpose;
+    }
+
+
 
     /**
      * @param string $oid

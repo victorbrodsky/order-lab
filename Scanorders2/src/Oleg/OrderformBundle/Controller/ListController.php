@@ -44,6 +44,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/", name="educationallessontitles-list")
      * @Route("/principal-investigators/", name="principalinvestigators-list")
      * @Route("/course-directors/", name="coursedirectors-list")
+     * @Route("/departments/", name="departments-list")
+     * @Route("/institutions/", name="institutions-list")
+     * @Route("/accounts/", name="accounts-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -127,6 +130,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/", name="educationallessontitles_create")
      * @Route("/principal-investigators/", name="principalinvestigators_create")
      * @Route("/course-directors/", name="coursedirectors_create")
+     * @Route("/departments/", name="departments_create")
+     * @Route("/institutions/", name="institutions_create")
+     * @Route("/accounts/", name="accounts_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -248,6 +254,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/new", name="educationallessontitles_new")
      * @Route("/principal-investigators/new", name="principalinvestigators_new")
      * @Route("/course-directors/new", name="coursedirectors_new")
+     * @Route("/departments/new", name="departments_new")
+     * @Route("/institutions/new", name="institutions_new")
+     * @Route("/accounts/new", name="accounts_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -314,6 +323,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_show")
      * @Route("/principal-investigators/{id}", name="principalinvestigators_show")
      * @Route("/course-directors/{id}", name="coursedirectors_show")
+     * @Route("/departments/{id}", name="departments_show")
+     * @Route("/institutions/{id}", name="institutions_show")
+     * @Route("/accounts/{id}", name="accounts_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -372,6 +384,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/{id}/edit", name="educationallessontitles_edit")
      * @Route("/principal-investigators/{id}/edit", name="principalinvestigators_edit")
      * @Route("/course-directors/{id}/edit", name="coursedirectors_edit")
+     * @Route("/departments/{id}/edit", name="departments_edit")
+     * @Route("/institutions/{id}/edit", name="institutions_edit")
+     * @Route("/accounts/{id}", name="accounts_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -476,6 +491,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_update")
      * @Route("/principal-investigators/{id}", name="principalinvestigators_update")
      * @Route("/course-directors/{id}", name="coursedirectors_update")
+     * @Route("/departments/{id}", name="departments_update")
+     * @Route("/institutions/{id}", name="institutions_update")
+     * @Route("/accounts/{id}", name="accounts_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -650,6 +668,18 @@ class ListController extends Controller
             $className = "DirectorList";
             $displayName = "Course Directors";
             break;
+        case "departments":
+            $className = "Department";
+            $displayName = "Departments";
+            break;
+        case "institutions":
+            $className = "Institution";
+            $displayName = "Institutions";
+            break;
+        case "accounts":
+            $className = "Account";
+            $displayName = "Accounts";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -689,6 +719,9 @@ class ListController extends Controller
      * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_delete")
      * @Route("/principal-investigators/{id}", name="principalinvestigators_delete")
      * @Route("/course-directors/{id}", name="coursedirectors_delete")
+     * @Route("/departments/{id}", name="departments_delete")
+     * @Route("/institutions/{id}", name="institutions_delete")
+     * @Route("/accounts/{id}", name="accounts_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

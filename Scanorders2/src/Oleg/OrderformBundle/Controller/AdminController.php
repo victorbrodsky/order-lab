@@ -27,6 +27,8 @@ use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
+use Oleg\OrderformBundle\Entity\Department;
+use Oleg\OrderformBundle\Entity\Institution;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -93,6 +95,8 @@ class AdminController extends Controller
         $count_RegionToScan = $this->generateRegionToScan();
         $count_siteParameters = $this->generateSiteParameters();
         $count_comments = $this->generateProcessorComments();
+        $count_department = $this->generateDepartments();
+        $count_institution = $this->generateInstitutions();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
@@ -116,6 +120,8 @@ class AdminController extends Controller
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
             'Site Parameters='.$count_siteParameters.' '.
+            'Departments='.$count_department.' '.
+            'Institutions='.$count_institution.' '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -961,6 +967,63 @@ class AdminController extends Controller
 
             $count = $count + 10;
         }
+
+        return $count;
+    }
+
+
+    public function generateDepartments() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:Department')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Department of Pathology and Laboratory Medicine'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+            $formType = new FormType();
+            $this->setDefaultList($formType,$count,$username,$type);
+
+            $em->persist($formType);
+            $em->flush();
+            $count = $count + 10;
+        } //foreach
+
+        return $count;
+    }
+
+    public function generateInstitutions() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:Institution')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Weill Cornell Medical College'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+            $formType = new FormType();
+            $this->setDefaultList($formType,$count,$username,$type);
+
+            $em->persist($formType);
+            $em->flush();
+            $count = $count + 10;
+        } //foreach
 
         return $count;
     }

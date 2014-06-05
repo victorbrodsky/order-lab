@@ -176,6 +176,23 @@
         <a href="{{ path('coursedirectors-list') }}">List of Course Directors</a>
     </p>
 
+    <hr>
+
+    <h3 class="text-info">Departments</h3>
+    <p>
+        <a href="{{ path('departments-list') }}">List of Departments</a>
+    </p>
+
+    <h3 class="text-info">Institutions</h3>
+    <p>
+        <a href="{{ path('institutions-list') }}">List of Institutions</a>
+    </p>
+
+    <h3 class="text-info">Accounts</h3>
+    <p>
+        <a href="{{ path('accounts-list') }}">List of Accounts</a>
+    </p>
+
     {% if environment is not defined %}
         {% set environment = 'dev' %}
     {% endif %}

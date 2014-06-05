@@ -12,14 +12,16 @@ use Doctrine\ORM\Mapping\AttributeOverride;
 //use FR3D\LdapBundle\Model\LdapUserInterface;
 
 //TODO: fix: Invalid field override named 'email' for class 'Oleg\OrderformBundle\Entity\User'.
+
+//Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
+//User is a reserved keyword in SQL so you cannot use it as table name
+
 /**
- * use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
- * User is a reserved keyword in SQL so you cannot use it as table name
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
  * @ORM\AttributeOverrides({
- *      @ORM\AttributeOverride(name="email", column=@ORM\Column(type="string", name="email", length=255, unique=false, nullable=true)),
- *      @ORM\AttributeOverride(name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", length=255, unique=false, nullable=true))
+ *      @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", length=255, unique=false, nullable=true) ),
+ *      @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", length=255, unique=false, nullable=true) )
  * })
  */
 class User extends BaseUser

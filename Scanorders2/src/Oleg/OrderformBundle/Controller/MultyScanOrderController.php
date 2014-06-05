@@ -356,6 +356,8 @@ class MultyScanOrderController extends Controller {
         $source = 'scanorder';
         $status = 'valid';
 
+        $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
+
         $entity->setProvider($user);
 
         $patient = new Patient(true,$status,$user,$source);

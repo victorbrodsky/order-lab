@@ -144,10 +144,19 @@
 
     {{ formmacros.field(form.pathologyService) }}
 
+    {{ formmacros.field(form.department) }}
+
+    {{ formmacros.field(form.institution) }}
+
+    {{ formmacros.field(form.purpose) }}
+
+    <div id="purpose_option" class="collapse">
+        {{ formmacros.field(form.account) }}
+    </div>
+
     {{ formmacros.field(form.priority) }}
 
-
-    {#            optional for priority#}
+    {#optional for priority#}
     <div id="priority_option" class="collapse">
         <div class="well" align='center'>
 

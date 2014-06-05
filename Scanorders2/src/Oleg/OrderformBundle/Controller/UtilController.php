@@ -979,6 +979,106 @@ class UtilController extends Controller {
     }
 
 
+
+    /**
+     * @Route("/department", name="get-department")
+     * @Method("GET")
+     */
+    public function getDepartmentAction() {
+
+        $whereServicesList = "";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Department', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
+     * @Route("/institution", name="get-institution")
+     * @Method("GET")
+     */
+    public function getInstitutionAction() {
+
+        $whereServicesList = "";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Institution', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+    /**
+     * @Route("/account", name="get-account")
+     * @Method("GET")
+     */
+    public function getAccountAction() {
+
+        $whereServicesList = "";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Account', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            //$query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);
+        } else {
+            $query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);
+        }
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+
+
+
     //search if $needle exists in array $products
     public function in_complex_array($needle,$products,$indexstr='text') {
         foreach( $products as $product ) {

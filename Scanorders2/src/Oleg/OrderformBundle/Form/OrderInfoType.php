@@ -170,6 +170,39 @@ class OrderInfoType extends AbstractType
         ));
 
 
+        //new fields
+        $attr = array('class' => 'ajax-combobox-department', 'type' => 'hidden');
+        $builder->add('department', 'custom_selector', array(
+            'label' => 'Department:',
+            'attr' => $attr,
+            'required' => false,
+            'classtype' => 'department'
+        ));
+
+        $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');
+        $builder->add('institution', 'custom_selector', array(
+            'label' => 'Institution:',
+            'attr' => $attr,
+            'required' => false,
+            'classtype' => 'institution'
+        ));
+
+        $builder->add( 'purpose', 'choice', array(
+            'label'=>'Purpose:',
+            'required' => true,
+            'choices' => array("For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology", "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"),
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type')
+        ));
+
+        $attr = array('class' => 'ajax-combobox-account', 'type' => 'hidden');
+        $builder->add('account', 'custom_selector', array(
+            'label' => 'Account:',
+            'attr' => $attr,
+            'required' => false,
+            'classtype' => 'account'
+        ));
         
     }
 

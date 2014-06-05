@@ -119,6 +119,8 @@ class TableController extends Controller {
 
         $source = 'scanorder';
 
+        $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
+
         $entity->setProvider($user);
 
         $patient = new Patient(true,'invalid',$user,$source);
