@@ -8484,12 +8484,12 @@ function getComboboxStain(urlCommon, ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"stain_0_field";
         //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, _stain );
+        setElementToId( targetid, _stain );
     }
 
 }
 
-function getComboboxSpecialStain(urlCommon, ids, preset) {
+function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
 
     var url = urlCommon+"stain";
 
@@ -8506,6 +8506,7 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
     }
 
     if( _stain.length == 0 ) {
+        //console.log("_stain.length is zero");
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
@@ -8515,13 +8516,13 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
                 populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
             });
     } else {
+        //console.log("populate _stain.length="+_stain.length);
         populateSelectCombobox( targetid, _stain, null );
     }
 
     //console.log("special stain preset="+preset);
     if( targetid != "" ) {
-        //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, _stain );
+        setElementToId( targetid, _stain, setId );
     }
 }
 
@@ -8553,7 +8554,7 @@ function getComboboxScanregion(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"scan_0_scanregion";
         //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
-        setToFirstElement( targetid, _scanregion );
+        setElementToId( targetid, _scanregion );
     }
 }
 
@@ -8640,7 +8641,7 @@ function getComboboxAccessionType(urlCommon,ids) {
         var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
-        setToFirstElement( targetid, _accessiontype );
+        setElementToId( targetid, _accessiontype );
     }
 }
 
@@ -8675,7 +8676,7 @@ function getComboboxMrnType(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"mrn_0_mrntype";
         //console.log("targetid="+targetid);
-        setToFirstElement( targetid, _mrntype );
+        setElementToId( targetid, _mrntype );
     }
 }
 
@@ -8755,13 +8756,13 @@ function getComboboxDelivery(urlCommon,ids) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
             if( cicle == "new"  ) {
-                setToFirstElement( target, _delivery );
+                setElementToId( target, _delivery );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
         if( cicle == "new"  ) {
-            setToFirstElement( target, _delivery );
+            setElementToId( target, _delivery );
         }
     }
 
@@ -8789,14 +8790,14 @@ function getComboboxReturn(urlCommon,ids) {
             populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
             if( cicle == "new"  ) {
                 //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-                setToFirstElement( ".ajax-combobox-return", _returnslide );
+                setElementToId( ".ajax-combobox-return", _returnslide );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
         if( cicle == "new"  ) {
             //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-            setToFirstElement( ".ajax-combobox-return", _returnslide );
+            setElementToId( ".ajax-combobox-return", _returnslide );
         }
     }
 
@@ -8907,7 +8908,7 @@ function getSetTitle() {
             //console.log("id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
-            //setToFirstElement( targetid, data );
+            //setElementToId( targetid, data );
         }
     });
 
@@ -9151,15 +9152,18 @@ function slideType(ids) {
     });   
 }
 
-function setToFirstElement( target, dataarr ) {
+function setElementToId( target, dataarr, setId ) {
     if( dataarr == undefined || dataarr.length == 0 ) {
         return;
     }
-    var firstObj = dataarr[0];
-    var firstId = firstObj.id;
-    //console.log("first="+firstId);
-    $(target).select2('val', firstId);
-    //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+
+    if( typeof setId === "undefined" ) {
+        var firstObj = dataarr[0];
+        var setId = firstObj.id;
+    }
+
+    //console.log("setId="+setId);
+    $(target).select2('val', setId);
 }
 
 /* 
@@ -9396,6 +9400,7 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
     if( !parentBtnObj || !btnObj.parentbtn || keyvalue == '' ) {
         console.log("WARNING: Parent (here Patient) does not exists");
+        return 0;
     }
 
     parentKey = trimWithCheck(parentBtnObj.key);
@@ -10085,13 +10090,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         parentname = "patient";
     }
 
-    var parent = element.parent().parent().parent().parent().parent().parent();
-
-    var single = false;
-    if( !parent.attr('id') ) {
-        var parent = element.parent().parent().parent().parent().parent().parent().parent();
-        var single = true;
-    }
+    var parent = getButtonElementParent( element );
 
     //console.log("parent.id=" + parent.attr('id') + ", parent.class=" + parent.attr('class'));
 
@@ -10101,28 +10100,40 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
     for (var i = 0; i < elements.length; i++) {
 
-        //console.log("\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        //console.log("\n\nDisable element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
         var id = elements.eq(i).attr("id");
         var type = elements.eq(i).attr("type");
 
+        //don't process elements not belonging to this button
+        if( fieldBelongsToButton( element, elements.eq(i) ) === false ) {
+            //console.log("this field does not belong to clicked button");
+            continue;
+        }
+
         //don't process slide fields
         if( id && id.indexOf("_slide_") != -1 ) {
             continue;
         }
+
         //don't process fields not containing patient (orderinfo fields)
         if( id && id.indexOf("_patient_") == -1 ) {
             continue;
         }
+
+//        console.log("proceed before submitted by single form ...");
         //don't process patient fields if the form was submitted by single form: click on accession,part,block delete button
-        if( single && id && id.indexOf("_procedure_") == -1 ) {
-            continue;
-        }
+//        if( orderformtype == "single" && id && id.indexOf("_procedure_") == -1 ) {
+//            continue;
+//        }
+
         //don't process 0 disident field: part's Diagnosis :
-        if( single && id && id.indexOf("disident_0_field") != -1 ) {
+        if( orderformtype == "single" && id && id.indexOf("disident_0_field") != -1 ) {
             continue;
         }
+
+        //console.log("proceed before patient's name,sex,age ...");
 
         //don't process constatly locked fields: patient's name,sex,age
         if( elements.eq(i).hasClass('patientname-field') ) {
@@ -10134,7 +10145,6 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
         if( elements.eq(i).hasClass('patientage-field') ) {
             continue;
         }
-
 
         if( id && type != "hidden" ) {
 
@@ -10171,8 +10181,9 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
             if( flagArrayField == "notarrayfield" ) {
                 if( $.inArray(field, arrayFieldShow) != -1 ) {
-                    //console.log("notarrayfield (not '_0_field'): disable array id="+elements.eq(i).attr("id"));
-                    if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0_field") != -1 ) {
+                    //console.log("Arrayfield: disable/enable array id="+elements.eq(i).attr("id"));
+                    if( elements.eq(i).attr("id") && elements.eq(i).attr("id").indexOf(field+"_0") != -1 ) {
+                        //console.log(field+"_0_field'");
                         if( disabled ) {    //inverse disable flag for key field
                             disableElement(parentname,elements.eq(i),false);
                         } else {
@@ -10194,7 +10205,7 @@ function disableElement(parentname,element, flag) {
     var classs = element.attr('class');
     var tagName = element.prop('tagName');
 
-    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id'));
+    //console.log("disable classs="+classs+", tagName="+tagName+", type="+type+", id="+element.attr('id')+", flag="+flag);
 
     //return if this element does not belong to a pressed key element
     var idArr = element.attr('id').split("_");
@@ -10229,7 +10240,7 @@ function disableElement(parentname,element, flag) {
         return;
     }
 
-    if( tagName == "SELECT" || tagName == "DIV" && classs.indexOf("select2") != -1 ) { //only for select group
+    if( tagName == "SELECT" || typeof classs !== "undefined" && classs.indexOf("select2") != -1 && ( tagName == "DIV" || tagName == "INPUT" ) ) { //only for select group
         //console.log("select disable classs="+classs+", id="+element.attr('id')+", flag="+flag);
         if( flag ) {    //disable
             //console.log("disable select2");
@@ -10291,23 +10302,28 @@ function disableElement(parentname,element, flag) {
 //key: set only key field
 function setElementBlock( element, data, cleanall, key ) {
 
-    //console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
-    var parent = element.parent().parent().parent().parent().parent().parent();
-    //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+//    //console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
+//    var parent = element.parent().parent().parent().parent().parent().parent();
+//    //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+//
+//    //var single = false;
+//    if( orderformtype == "single" ) {
+//    //if( !parent.attr('id') ) {
+//        //var single = true;
+//        var parent = element.parent().parent().parent().parent().parent().parent().parent();
+//        console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
+//    }
 
-    var single = false;
-    if( !parent.attr('id') ) {
-        var single = true;
-        var parent = element.parent().parent().parent().parent().parent().parent().parent();
-        //console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
-    }
+    var parent = getButtonElementParent( element );
 
+    //console.log(parent);
     //console.log("key="+key+", single="+single);
     //printF(parent,"Set Element Parent: ");
 
-    if( key == "key" && single ) {
+    if( key == "key" && orderformtype == "single" && !element.hasClass("patientmrnbtn") ) {
         var inputField = element.parent().find('.keyfield').not("*[id^='s2id_']");
         //console.log("inputField.id=" + inputField.attr('id') + ", class=" + inputField.attr('class'));
+        //console.log(inputField);
         var idsArrTemp = inputField.attr("id").split("_");
         var field = idsArrTemp[idsArrTemp.length-fieldIndex];    //default
         //console.log("Single Key field=" + field);
@@ -10332,7 +10348,7 @@ function setElementBlock( element, data, cleanall, key ) {
 
     for( var i = 0; i < elements.length; i++ ) {
 
-        console.log('\n\n'+"Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
+        //console.log('\n\n'+"Set Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
 
         /////////////// exception for simple fields /////////////////////////
 //        var simpleField = getSimpleFieldName( elements.eq(i) );
@@ -10356,6 +10372,11 @@ function setElementBlock( element, data, cleanall, key ) {
         var classs = elements.eq(i).attr("class");
         var value = elements.eq(i).attr("value");
         //console.log("id=" + id + ", type=" + type + ", class=" + classs + ", value=" + value );
+
+        //don't process elements not belonging to this button
+        if( fieldBelongsToButton( element, elements.eq(i) ) === false ) {
+            continue;
+        }
 
         //exception
         if( id && id.indexOf("primaryOrgan") != -1 ) {
@@ -10465,7 +10486,7 @@ function setArrayField(element, dataArr, parent) {
         var validity = dataArr[i]["validity"];
         var coll = i+1;
 
-        console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
+        //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
         //if(
             //(validity == 'invalid' && dataArr.length > 1)
@@ -10507,13 +10528,19 @@ function setArrayField(element, dataArr, parent) {
             var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, coll );
             //console.log("newForm="+newForm);
 
+            var origId = id;
+            if( fieldName == "specialStains" ) {
+                //special stain has id of the staintipe select box
+                id = dataArr[i]["staintype"];
+            }
+
             var labelStr = " entered on " + date + " by "+provider + "</label>";
             newForm = newForm.replace("</label>", labelStr);
 
             var idStr = 'type="hidden" value="'+id+'" ';
             newForm = newForm.replace('type="hidden"', idStr);
 
-            console.log("newForm="+newForm);
+            //console.log("newForm="+newForm);
 
             if( fieldName == "disident" && orderformtype == "single" ) {
                 //attachElement
@@ -10521,17 +10548,22 @@ function setArrayField(element, dataArr, parent) {
                 //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 $('#partdisident_marker').append(newForm);
             } else {
-                console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+                //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 attachElement.prepend(newForm);
             }
 
+            if( fieldName == "specialStains" ) {
+                //pre-populate select2 with stains
+                getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,coll),true,id);
+            }
+
         } else {    //show the valid field (with validity=1)
-            console.log("NO array Fiel dShow");
+            //console.log("NO array Fiel dShow");
         }
 
         //set data
         if( tagName == "INPUT" ) {
-            console.log("input tagName: fieldName="+fieldName);
+            //console.log("input tagName: fieldName="+fieldName);
 
             if( type == "file" ) {
 
@@ -10610,12 +10642,12 @@ function setArrayField(element, dataArr, parent) {
                 var firstAttachedElement = attachElement.find('textarea').first();
             }
 
-            console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
+            //console.log("textarea firstAttachedElement class="+firstAttachedElement.attr("class")+",id="+firstAttachedElement.attr("id") + ", text="+text);
             firstAttachedElement.val(text);
 
         } else if ( (tagName == "DIV" && classs.indexOf("select2") != -1) || tagName == "SELECT" ) {
 
-            console.log("### DIV select2:  select field, id="+id+",text="+text);
+            //console.log("### DIV select2:  select field, id="+id+",text="+text);
             //console.log("id="+element.attr("id"));
 
             //set mrntype
@@ -10628,12 +10660,12 @@ function setArrayField(element, dataArr, parent) {
             }
 
         } else if ( tagName == "DIV" ) {
-            console.log("### set array field as DIV, id="+element.attr("id")+", text="+text );
+            //console.log("### set array field as DIV, id="+element.attr("id")+", text="+text );
             //get the first (the most recent added) group
             var firstAttachedElement = attachElement.find('.horizontal_type').first();
             processGroup( firstAttachedElement, dataArr[i], "ignoreDisable" );
         } else {
-            console.log("logical error: undefined tagName="+tagName);
+            //console.log("logical error: undefined tagName="+tagName);
         }
 
         //set hidden id of the element
@@ -10768,8 +10800,41 @@ function processGroup( element, data, disableFlag ) {
 
 }
 
+//check for single form if the field belongs to the button
+function fieldBelongsToButton(btn,fieldEl) {
+
+    if( orderformtype != "single") {
+        return true;
+    }
+
+    var id = fieldEl.attr('id');
+
+    if( !id || typeof id === "undefined" || id == "" ) {
+        return false;
+    }
+
+    var idsArr = id.split("_");
+    //var fieldName = idsArr[idsArr.length-fieldIndex];
+    var holdername = idsArr[idsArr.length-holderIndex];
+
+    var btnObj = new btnObject(btn);
+
+    //compare button name with holdername: 'patient' ?= 'accession'
+    //console.log("compare:"+btnObj.name+"?="+holdername);
+    if( btnObj.name == holdername ) {
+        return true;
+    }
+
+    //excemption: procedure does not have its own button; it is triggered by accession
+    if( btnObj.name == 'accession' && holdername == 'procedure' ) {
+        return true;
+    }
+
+    return false;
+}
+
 function cleanArrayFieldSimple( element, field, single ) {
-    //console.log( "clean array field id=" + element.attr("id") );
+    //console.log( "clean simple array field id=" + element.attr("id") );
 
     //delete if id != 0
     if( element.attr("id") && element.attr("id").indexOf(field+"_0_field") != -1 ) {
@@ -10779,14 +10844,134 @@ function cleanArrayFieldSimple( element, field, single ) {
     }
 }
 
+function cleanBlockSpecialStains( element, field, single ) {
+
+    //printF(element,'clean block element:');
+
+    //don't process special staintype. It will be processed by special stain field.
+    if( element.hasClass('ajax-combobox-staintype') ) {
+        return;
+    }
+
+    //don't process not 0 id. They will be delete by 0 id field
+    //if( element.attr('id').indexOf("specialStains_0_field") == -1 ) {
+    //    return;
+    //}
+
+    //console.log( "\nClean Block Special Stains elements id=" + element.attr("id") + ", field=" + field );
+
+    var fieldHolder = element.closest('.blockspecialstains');
+    var fieldInputColls = fieldHolder.find('.fieldInputColl');
+    //console.log( "fieldInputColls.length=" + fieldInputColls.length );
+
+    if( fieldInputColls.length == 0 ) {
+        return false;
+    }
+
+    var stainfieldEl = fieldInputColls.first().find('.input-group-oleg').find('textarea');
+    var idsArr = stainfieldEl.attr("id").split("_");
+
+    fieldInputColls.each( function() {
+        $(this).closest('.row').remove();
+    });
+
+    //construct new 0 special stain group
+    var patient = idsArr[1];
+    var procedure = idsArr[2];
+    var accession = idsArr[3];
+    var part = idsArr[4];
+    var block = idsArr[5];
+    var slide = null;
+    var ident = "block"+"specialStains";
+    var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
+    fieldHolder.prepend(newForm);
+    getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,0),true);
+
+//    //set to the first item
+//    if( field == "specialStains" ) {
+//        setElementToId( element, _stain );
+//    }
+}
+
+function cleanPartDiffDisident( element, field, single ) {
+
+    //console.log( "\nClean Part Diff Disident elements id=" + element.attr("id") + ", field=" + field );
+
+    var fieldHolder = element.closest('.partdiffdisident');
+    var fieldInputColls = fieldHolder.find('.form-control');
+    //console.log( "fieldInputColls.length=" + fieldInputColls.length );
+
+    if( fieldInputColls.length == 0 ) {
+        return false;
+    }
+
+    var stainfieldEl = fieldInputColls.first();
+    var idsArr = stainfieldEl.attr("id").split("_");
+
+    fieldInputColls.each( function() {
+        $(this).closest('.row').remove();
+    });
+
+    //construct new 0 special stain group
+    var patient = idsArr[1];
+    var procedure = idsArr[2];
+    var accession = idsArr[3];
+    var part = idsArr[4];
+    var block = null;
+    var slide = null;
+    var ident = "part"+"diffDisident";
+    var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
+    fieldHolder.prepend(newForm);
+}
+
+function cleanPartDisident( element, field, single ) {
+
+    //console.log( "\nClean Part Disident elements id=" + element.attr("id") + ", field=" + field );
+
+    //just clean tex from 0 field
+    if( element.attr('id').indexOf("disident_0_field") != -1 ) {
+        element.val(null);
+        return;
+    }
+
+    var fieldHolder = element.closest('#partdisident_marker');
+    var fieldInputColls = fieldHolder.find('textarea');
+    //console.log( "fieldInputColls.length=" + fieldInputColls.length );
+
+    if( fieldInputColls.length == 0 ) {
+        return;
+    }
+
+    fieldInputColls.each( function() {
+        $(this).closest('.row').remove();
+    });
+}
+
 //element - input field element
 function cleanArrayField( element, field, single ) {
 
-    //if( field != "diffDisident" ) {
+    //console.log( "Clean field=" + field );
+
+    if( field == "specialStains" ) {
+        cleanBlockSpecialStains(element, field, single);
+        return;
+    }
+
+    if( field == "diffDisident" ) {
+        cleanPartDiffDisident(element, field, single);
+        return;
+    }
+
+    if( field == "disident" && orderformtype == "single" ) {
+        cleanPartDisident(element, field, single);
+        return;
+    }
+
     if( $.inArray(field, arrayFieldShow) == -1 ) {
         cleanArrayFieldSimple(element,field,single);
         return;
     }
+
 
     //clean array field id=oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_2_field
     //console.log( "\nclean array element id=" + element.attr("id") + ", field=" + field );
@@ -10794,13 +10979,14 @@ function cleanArrayField( element, field, single ) {
 
     //get row element - fieldHolder
     if( element.is('[readonly]') ) {    //get row for gray out fields without buttons
+        //console.log( "readonly" );
         var fieldHolder = element.parent().parent();
-    } else {                            //get row for enabled fields with buttons
-        //var fieldHolder = element.parent().parent().parent().parent().parent();
+    } else {
+        //console.log( "not readonly" );
         var fieldHolder = element.parent().parent().parent().parent().parent();
     }
 
-    //console.log( "fieldHolder id=" + fieldHolder.attr("id") + ", field=" + fieldHolder.attr("class") );
+    //console.log( "fieldHolder id=" + fieldHolder.attr("id") + ", class=" + fieldHolder.attr("class") );
 
     var rows = fieldHolder.parent().find('.row');
 
@@ -10836,15 +11022,17 @@ function cleanArrayField( element, field, single ) {
         //Optional: change id of all element in row to '0'. This will bring the form to the initial state.
         changeIdtoIndex(element,field,0);
 
-        //set to the first item
-        if( field == "specialStains" ) {
-            setToFirstElement( element, _stain );
-        }
-
     } else {
         //delete hole row
-        //console.log( "delete: fieldHolder id=" + fieldHolder.attr("id") + ", class=" + fieldHolder.attr("class") );
-        fieldHolder.remove();
+        //console.log( "prepare to delete: fieldHolder id=" + fieldHolder.attr("id") + ", class=" + fieldHolder.attr("class") );
+        //console.log(fieldHolder);
+        //disident "Diagnosis" field has fieldHolder "Slide Info" for a single form.
+        //It is array field for single form ( arrayFieldShow.push("disident") ), however it is excemption field because it's single
+        //if( fieldHolder.attr("id") != "single-scan-order-slide-info" && fieldHolder.hasClass("panel") ) {
+        if( !fieldHolder.hasClass("panel") ) {
+            //console.log( "delete: fieldHolder id=" + fieldHolder.attr("id") + ", class=" + fieldHolder.attr("class") );
+            fieldHolder.remove();
+        }
     }
 }
 
@@ -10928,6 +11116,12 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
         //console.log("\n\nClean Element id="+id+", classs="+classs+", type="+type+", tagName="+tagName);
 
+        //don't process elements not belonging to this button
+        if( fieldBelongsToButton( element, elements.eq(i) ) === false ) {
+            //console.log("this field does not belong to clicked button");
+            continue;
+        }
+
         //don't process simple fields, these fileds don't have id because they are not part of form
         if( typeof id === 'undefined' ) {
             continue;
@@ -10967,7 +11161,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
             //check field
             //console.log("btn field id="+btnObj.element.attr('id'));
             //console.log("element field id="+elements.eq(i).attr('id'));
-            if( btnObj.element.attr('id') != elements.eq(i).attr('id') ) {
+            if( btnObj.element && btnObj.element.attr('id') != elements.eq(i).attr('id') ) {
                 //console.log("don't clean this field!");
                 continue;
             }
@@ -11122,7 +11316,6 @@ function btnObject( btn, parent ) {
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
         //console.log('button is null => exit button object');
-        //return null;
         gocontinue = false;
     }
 
@@ -11131,8 +11324,7 @@ function btnObject( btn, parent ) {
 
         var inputEl = parentEl.find('input.keyfield');
 
-        if( !inputEl || inputEl.attr('class') == '' ) {
-            //return null;
+        if( !inputEl || (inputEl.attr('class') == '') ) {
             gocontinue = false;
         }
     }
@@ -11140,7 +11332,6 @@ function btnObject( btn, parent ) {
     if( gocontinue ) {
 
         this.element = inputEl;
-        //if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
         if( inputEl.hasClass("ajax-combobox") ) {
             if( inputEl.select2("val") ) {
                 //console.log('select2 data OK');
@@ -11267,7 +11458,7 @@ function getParentBtn( btn, name ) {
 
     //console.log("parentBtn.length="+parentBtn.length);
 
-    if( parentBtn.length == 0 ) {
+    if( parentBtn && parentBtn.length == 0 ) {
         parentBtn = null;
     }
     

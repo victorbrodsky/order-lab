@@ -104,7 +104,7 @@
              data-prototype-partdisident="{{ formmacros.inputField(disidentField,'new',"partdisident","prototype",disidentWidget,"nobtn","")|e }}"
 
              data-prototype-addpartdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","","","withspace","minusplusbtn")|e }}"
-             data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"nobtn","")|e }}"
+             data-prototype-partdiffDisident="{{ formmacros.inputField(diffDiagnosesField,'new',"partdiffDisident","prototype",diffDiagnosesWidget,"","","","","plusbtn")|e }}"
 
              {#data-prototype-relevantscans="{{ form_widget(form_slide.relevantScans.vars.prototype.field)|e }}"#}
              {#data-prototype-specialstains="{{ form_widget(form_slide.specialStains.vars.prototype.field)|e }}"#}
@@ -123,7 +123,8 @@
 
     <div class="singleorderinfo" id="singleorderinfo_0_0_0_0_0_0_0_0">
 
-        <div class="panel panel-primary">
+        {#<div class="panel panel-primary single-scan-order-slide-info">#}
+        <div id="single-scan-order-slide-info" class="panel panel-primary">
 
             <div class="panel-heading">
                 {#<div class="row">#}

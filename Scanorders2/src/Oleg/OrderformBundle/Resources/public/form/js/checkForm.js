@@ -101,20 +101,16 @@ function btnObject( btn, parent ) {
     var gocontinue = true;
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
-        console.log('button is null => exit button object');
-        //return null;
+        //console.log('button is null => exit button object');
         gocontinue = false;
     }
 
     if( gocontinue ) {
         var parentEl = getParentElByBtn(btn);
-        printF(parentEl,"parent btn:");
 
         var inputEl = parentEl.find('input.keyfield');
-        printF(inputEl,"after find:");
 
         if( !inputEl || (inputEl.attr('class') == '') ) {
-        //if( !inputEl || (typeof inputEl.attr('class') === "undefined") || (inputEl.attr('class') == '') ) {
             gocontinue = false;
         }
     }
@@ -122,7 +118,6 @@ function btnObject( btn, parent ) {
     if( gocontinue ) {
 
         this.element = inputEl;
-        //if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
         if( inputEl.hasClass("ajax-combobox") ) {
             if( inputEl.select2("val") ) {
                 //console.log('select2 data OK');
@@ -139,14 +134,9 @@ function btnObject( btn, parent ) {
         this.typeelement = typeObj.typeelement;
 
         //get name
-        printF(inputEl,"btn Object:");
-        console.log(btn);
-        console.log(inputEl);
-        //if( typeof inputEl.attr('id') !== "undefined" ) {
-            var idsArr = inputEl.attr('id').split("_");
-            this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
-            this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
-        //}
+        var idsArr = inputEl.attr('id').split("_");
+        this.name = idsArr[idsArr.length-holderIndex];       //i.e. "patient"
+        this.fieldname = idsArr[idsArr.length-fieldIndex];   //i.e. "mrn"
 
         //get parent
         if( this.name == 'part' || this.name == 'block' || parent == 'full' ) {
@@ -203,11 +193,11 @@ function typeByKeyInput(keyEl) {
 function getParentElByBtn(btn) {
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
-        console.log('WARNING: button is not defined');
+        //console.log('WARNING: button is not defined');
         return null;
     }
 
-    printF(btn,"get Parent By Btn: ");
+    //printF(btn,"get Parent By Btn: ");
 
     var parent = btn.closest('.row');
 
@@ -254,7 +244,7 @@ function getParentBtn( btn, name ) {
 
     //console.log("parentBtn.length="+parentBtn.length);
 
-    if( parentBtn.length == 0 ) {
+    if( parentBtn && parentBtn.length == 0 ) {
         parentBtn = null;
     }
     

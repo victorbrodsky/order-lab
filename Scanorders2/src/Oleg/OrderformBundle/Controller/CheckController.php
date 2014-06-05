@@ -29,6 +29,7 @@ class CheckController extends Controller {
 
         //echo "fields count=".count($fields)."  ";
         $fieldJson = array();
+
         foreach( $fields as $field ) {
 
             //echo "field=".$field." ";
