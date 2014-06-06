@@ -26221,6 +26221,80 @@ function checkSpecifyAnotherIssuer( name ) {
 ////////////////////// end of validtion related functions //////////////////////
 
 
+//create information well. Do not show it for external submitter
+//flag 0: Adding new *. (patient, acc number)
+//flag 1: Existing patient information loaded
+function setObjectInfo(btnObj,flag) {
+
+    //check if the user is external submitter
+    getUserRole();
+
+    if( _external_user === false ) {
+        //console.log("show info");
+
+        if( flag === 1 ) {
+            var msg = "Existing "+btnObj.name+" information loaded";
+            if( orderformtype == "single" && (btnObj.name == 'part' || btnObj.name == 'block') ) {
+                var msg = "Existing "+btnObj.name;
+            }
+        } else {
+            var msg = "Adding new "+btnObj.name;
+        }
+
+        attachInfoToElement( btnObj.element, msg );
+
+    } else {
+        //console.log("external user: do not show info");
+    }
+
+}
+
+function attachInfoToElement( element, msg ) {
+    //label label-info alert alert-success
+    var html = '<div class="label label-info scanorder-element-info">'+
+                msg +
+            '</div>';
+    element.after( html );
+}
+
+function removeInfoFromElement( btnObj ) {
+    var inputEl = btnObj.element;
+    //console.log(inputEl);
+    var info = inputEl.parent().find('.scanorder-element-info');
+    info.remove();
+}
+
+function getUserRole() {
+
+    if( _external_user !== null ) {
+        return;
+    }
+
+    $.ajax({
+        url: urlCheck+'userrole',
+        type: 'POST',
+        data: {userid: user_id},
+        contentType: 'application/json',
+        dataType: 'json',
+        timeout: _ajaxTimeout,
+        async: false,
+        success: function (data) {
+            if( data && data != '' ) {
+                if( data == 'not_external_role' ) {
+                    _external_user = false;
+                } else {
+                    _external_user = true;
+                }
+            }
+        },
+        error: function ( x, t, m ) {
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+        }
+    });
+}
+
 
 
 
@@ -27396,6 +27470,8 @@ var dataquality_message2 = new Array();
 
 var _ajaxTimeout = 20000;  //15000 => 15 sec
 
+var _external_user = null;
+
 //var _autogenAcc = 8;
 //var _autogenMrn = 13;
 
@@ -27825,6 +27901,7 @@ function executeClick( btnObjInit ) {
                             invertButton(btn);
                             setElementBlock(btn, data, null, "key");
                             disableInElementBlock(btn, false, null, "notkey", null);
+                            setObjectInfo(btnObj,0);
                             resolve("Object was generated successfully");
                         } else {
                             //console.debug("Object was not generated");
@@ -27845,6 +27922,7 @@ function executeClick( btnObjInit ) {
                             //invertButton(btn);
                             reject(Error("Delete ok with Error"));
                         }
+                        removeInfoFromElement(btnObj);
                     }
                     //////////////// end of delete ////////////////
 
@@ -27876,6 +27954,7 @@ function executeClick( btnObjInit ) {
                                 //second: disable or enable element. Make sure this function runs after set Element Block
                                 disableInElementBlock(btn, true, "all", null, "notarrayfield");
                                 invertButton(btn);
+                                setObjectInfo(btnObj,1);
 
                                 //set patient (in accession case)
                                 if( btnObj.name == "accession" && gonext == 1) {
@@ -27894,6 +27973,7 @@ function executeClick( btnObjInit ) {
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
                             calculateAgeByDob(btn);
+                            setObjectInfo(btnObj,0);
                             resolve("data is null");
                         }
 

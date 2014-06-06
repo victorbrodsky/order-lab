@@ -741,4 +741,25 @@ class CheckController extends Controller {
         return $response;
     }
 
+    /**
+     * @Route("/userrole", name="get-user-role")
+     * @Method("POST")
+     */
+    public function getUserRoleAction(Request $request) {
+
+        $external = 'true';
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if( !$user->hasRole('ROLE_EXTERNAL_SUBMITTER') && !$user->hasRole('ROLE_EXTERNAL_ORDERING_PROVIDER') ) {
+            $external = 'not_external_role';
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($external));
+        return $response;
+    }
+
+
 }

@@ -846,10 +846,10 @@
         {% endif %}
 
         {#{{ formmacros.field(procedure.pathistory) }}#}
-        {% if pathistoryHtml is not defined or pathistoryHtml == "" %}
+        {% if patpathistoryHtml is not defined or patpathistoryHtml == "" %}
             {{ formmacros.inputArrayField(procedure.pathistory,cycle,"procedurepathistory","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepathistory">{{ pathistoryHtml }}</div></p>
+            <p><div class="procedurepathistory">{{ patpathistoryHtml }}</div></p>
         {% endif %}
 
 

@@ -895,6 +895,80 @@ function checkSpecifyAnotherIssuer( name ) {
 ////////////////////// end of validtion related functions //////////////////////
 
 
+//create information well. Do not show it for external submitter
+//flag 0: Adding new *. (patient, acc number)
+//flag 1: Existing patient information loaded
+function setObjectInfo(btnObj,flag) {
+
+    //check if the user is external submitter
+    getUserRole();
+
+    if( _external_user === false ) {
+        //console.log("show info");
+
+        if( flag === 1 ) {
+            var msg = "Existing "+btnObj.name+" information loaded";
+            if( orderformtype == "single" && (btnObj.name == 'part' || btnObj.name == 'block') ) {
+                var msg = "Existing "+btnObj.name;
+            }
+        } else {
+            var msg = "Adding new "+btnObj.name;
+        }
+
+        attachInfoToElement( btnObj.element, msg );
+
+    } else {
+        //console.log("external user: do not show info");
+    }
+
+}
+
+function attachInfoToElement( element, msg ) {
+    //label label-info alert alert-success
+    var html = '<div class="label label-info scanorder-element-info">'+
+                msg +
+            '</div>';
+    element.after( html );
+}
+
+function removeInfoFromElement( btnObj ) {
+    var inputEl = btnObj.element;
+    //console.log(inputEl);
+    var info = inputEl.parent().find('.scanorder-element-info');
+    info.remove();
+}
+
+function getUserRole() {
+
+    if( _external_user !== null ) {
+        return;
+    }
+
+    $.ajax({
+        url: urlCheck+'userrole',
+        type: 'POST',
+        data: {userid: user_id},
+        contentType: 'application/json',
+        dataType: 'json',
+        timeout: _ajaxTimeout,
+        async: false,
+        success: function (data) {
+            if( data && data != '' ) {
+                if( data == 'not_external_role' ) {
+                    _external_user = false;
+                } else {
+                    _external_user = true;
+                }
+            }
+        },
+        error: function ( x, t, m ) {
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+        }
+    });
+}
+
 
 
 

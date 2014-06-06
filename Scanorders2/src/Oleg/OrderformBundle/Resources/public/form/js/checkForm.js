@@ -24,6 +24,8 @@ var dataquality_message2 = new Array();
 
 var _ajaxTimeout = 20000;  //15000 => 15 sec
 
+var _external_user = null;
+
 //var _autogenAcc = 8;
 //var _autogenMrn = 13;
 
@@ -453,6 +455,7 @@ function executeClick( btnObjInit ) {
                             invertButton(btn);
                             setElementBlock(btn, data, null, "key");
                             disableInElementBlock(btn, false, null, "notkey", null);
+                            setObjectInfo(btnObj,0);
                             resolve("Object was generated successfully");
                         } else {
                             //console.debug("Object was not generated");
@@ -473,6 +476,7 @@ function executeClick( btnObjInit ) {
                             //invertButton(btn);
                             reject(Error("Delete ok with Error"));
                         }
+                        removeInfoFromElement(btnObj);
                     }
                     //////////////// end of delete ////////////////
 
@@ -504,6 +508,7 @@ function executeClick( btnObjInit ) {
                                 //second: disable or enable element. Make sure this function runs after set Element Block
                                 disableInElementBlock(btn, true, "all", null, "notarrayfield");
                                 invertButton(btn);
+                                setObjectInfo(btnObj,1);
 
                                 //set patient (in accession case)
                                 if( btnObj.name == "accession" && gonext == 1) {
@@ -522,6 +527,7 @@ function executeClick( btnObjInit ) {
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
                             calculateAgeByDob(btn);
+                            setObjectInfo(btnObj,0);
                             resolve("data is null");
                         }
 
