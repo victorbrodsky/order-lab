@@ -121,6 +121,7 @@ class ScanOrderController extends Controller {
 
         //***************** Pathology Service filetr ***************************//
         $showprovider = 'false';
+        $showproxyuser = 'false';
 
         //***************** Status filetr ***************************//
         $dql->innerJoin("orderinfo.status", "status");
@@ -303,6 +304,8 @@ class ScanOrderController extends Controller {
 
             //"All ".$service->getName()." Orders"; => $service is service's id
             if( is_int($service) ) {
+                //echo "service=".$service."<br>";
+                $showprovider = 'true';
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
@@ -324,6 +327,20 @@ class ScanOrderController extends Controller {
 //            "No Course Director Link" => "No Course Director Link",
 //            "No Principal Investigator Link" => "No Principal Investigator Link"
             //***************** End of Service filter ***************************//
+
+            //filter by service
+            $critservice = "";
+            if( is_int($service) ) {
+                //echo "service=".$service."<br>";
+                $showproxyuser = 'true';
+                $critservice = "orderinfo.pathologyService=".$service;
+            }
+
+            if( $criteriastr != "" && $critservice != "" ) {
+                $criteriastr = $criteriastr." AND ".$critservice;
+            } else {
+                $criteriastr .= $critservice;
+            }
         }
 
         //echo "<br>criteriastr=".$criteriastr."<br>";
@@ -376,6 +393,7 @@ class ScanOrderController extends Controller {
         return array(
             'form' => $form->createView(),
             'showprovider' => $showprovider,
+            'showproxyuser' => $showproxyuser,
             'pagination' => $pagination,
             'accountreqs' => $accountreqs,
             'accessreqs' => $accessreqs,
@@ -583,7 +601,7 @@ class ScanOrderController extends Controller {
         return $filterType;
     }
 
-    //Pathology Service filetr
+    //Pathology Service filter
     public function allServiceFilter( $service, $routeName, $user, $criterions ) {
 
         $criteriastr = "";

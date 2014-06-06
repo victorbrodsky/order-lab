@@ -198,7 +198,7 @@ class OrderInfoType extends AbstractType
 
         $attr = array('class' => 'ajax-combobox-account', 'type' => 'hidden');
         $builder->add('account', 'custom_selector', array(
-            'label' => 'Account:',
+            'label' => 'Debit Fund WBS Account Number:',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'account'

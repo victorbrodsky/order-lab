@@ -62,7 +62,7 @@
                     <th>{{ knp_pagination_sortable(pagination, 'Return to', 'orderinfo.returnoption') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>
                     {% if showprovider is defined and showprovider == 'true' %}
-                       <th>{{ knp_pagination_sortable(pagination, 'Provider', 'provider.username') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>
                     {% endif %}
                 
                 {% endif %}
@@ -73,7 +73,10 @@
                     <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Stat', 'orderinfo.scandeadline') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
-                    <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>  
+                    <th>{{ knp_pagination_sortable(pagination, 'Submitter', 'provider.username') }}</th>
+                    {% if showproxyuser is defined and showproxyuser == 'true' %}
+                        <th>{{ knp_pagination_sortable(pagination, 'Ordering Provider', 'proxyuser.username') }}</th>
+                    {% endif %}
                     <th>{{ knp_pagination_sortable(pagination, 'Slides', 'slidecount') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Return To', 'orderinfo.returnSlide') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Type', 'formtype.name') }}</th>                   
@@ -194,6 +197,13 @@
                 {% endif %}
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
                 <td>{{ entity.provider|first }}</td>
+                {% if showproxyuser is defined and showproxyuser == 'true' %}
+                    <td>
+                        {% for proxyuser in entity.proxyuser %}
+                            {{ proxyuser.username }}
+                        {% endfor %}
+                    </td>
+                {% endif %}
                 <td>{{ entity.slide|length }}</td> 
                 <td>{{ entity.returnSlide }}</td>
                 <td>{{ entity.type }}</td>
