@@ -250,33 +250,32 @@ class MultyScanOrderController extends Controller {
                     $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
                 }
 
+                $conflicts = array();
+                foreach( $entity->getDataquality() as $dq ) {
+                    $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
+                }
+
                 //email
                 //$email = $this->get('security.context')->getToken()->getAttribute('email');
                 //$user = $this->get('security.context')->getToken()->getUser();
                 $email = $user->getEmail();
                 $emailUtil = new EmailUtil();
 
+                $submitStatusStr = null;
                 if( isset($_POST['btnAmend']) ) {
-                    $text =
-                        "Thank You For Your Order !\r\n"
-                        . "Order " . $entity->getId() . " Successfully Amended.\r\n"
-                        . "Confirmation Email was sent to " . $email . "\r\n";
+                    $submitStatusStr = "has been successfully amended";
                 } else
                 if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
-                    $text =
-                        "Thank You For Your Order !\r\n"
-                        . "Your Order " . $entity->getId() . " is saved but not submitted.\r\n"
-                        . "Confirmation Email was sent to " . $email . "\r\n";
+                    $submitStatusStr = "is saved but not submitted";
                 } else {
                     $text = null;
                 }
 
-                $emailUtil->sendEmail( $email, $entity, $text, $conflictStr );
+                $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
-                $conflicts = array();
-                foreach( $entity->getDataquality() as $dq ) {
-                    $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
-                }
+                //TODO: get siteemail from DB
+
+                $emailUtil->sendEmail( $email, $entity, $orderurl, $text, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {
                     return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));

@@ -35,11 +35,8 @@ class AperioProvider implements AuthenticationProviderInterface {
         $user = $aperioUtil->aperioAuthenticateToken( $token, $this->serviceContainer );
 
         //echo "token username=".$token->getUsername()."<br>";
-        //exit("Aperio Authentication");
 
-        if( $user ) {
-
-            //echo("user exists!");
+        if( $user !== null ) {
             return new UsernamePasswordToken($user, null, $this->providerKey, $user->getRoles());
         }
 

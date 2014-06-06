@@ -35,7 +35,6 @@ class AperioUtil {
         if( $AuthResult && isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
             //echo "<br>Aperio got UserId!<br>";
 
-//            $user = $userProvider->findUser($token->getUsername());
             $userManager = $serviceContainer->get('fos_user.user_manager');
             $user = $userManager->findUserByUsername($token->getUsername());
 
@@ -80,8 +79,6 @@ class AperioUtil {
             $_SESSION ['AuthToken'] = $AuthResult['Token'];
             $userid = $AuthResult['UserId'];
 
-            //$userid = $this->getUserIdByUserName($token->getUsername());
-
             //echo "aperio userid=".$userid."<br>";
 
             $aperioRoles = $this->getUserGroupMembership($userid);
@@ -96,6 +93,7 @@ class AperioUtil {
             return $user;
 
         } else {
+            //exit('Aperio Auth failed');
             throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
         }
 
@@ -108,6 +106,8 @@ class AperioUtil {
         //echo "Aperio Auth Changeit back !!!";
         //exit();
         //echo " skip login=".$loginName.", pass=". $password." <br>";
+
+        set_error_handler(array($this, 'errorToException'));
 
         if( $this->ldap ) {
             include_once '\Skeleton.php';
@@ -123,8 +123,6 @@ class AperioUtil {
 
             try {
 
-                set_error_handler(array($this, 'errorToException'));
-
                 $DataServerURL = GetDataServerURL();
 
                 //echo "DataServerURL=".$DataServerURL."<br>";  //$DataServerURL = "http://127.0.0.1:86";
@@ -135,7 +133,7 @@ class AperioUtil {
 
             } catch (MongoCursorException $e) {
 
-                throw new \Exception( 'Can not connect to Aperio Data Server. Please try again later' );
+                //throw new \Exception( 'Can not connect to Aperio Data Server. Please try again later' );
 
             }
 
@@ -299,14 +297,15 @@ class AperioUtil {
     }
 
     public function errorToException($code, $message, $file = null, $line = 0) {
-        if( error_reporting() == 0 ) {
+        if( error_reporting() == 0 || $code == E_WARNING || $code == E_NOTICE ) {
             return true;
         }
+        //echo "error_reporting=".error_reporting().", code=".$code." ,message=".$message."<br>";
         throw new \Exception("Error exception: code=".$code." ,message=".$message.", file=".$file.", line=".$line);
     }
 
     public function errorTest() {
-        trigger_error ("DataServer timed-out after 10 seconds when trying to load this page.  Please wait a moment and try again by pressing the refresh button.", E_USER_ERROR);
+        trigger_error("DataServer timed-out after 10 seconds when trying to load this page.  Please wait a moment and try again by pressing the refresh button.", E_USER_ERROR);
     }
 
 }

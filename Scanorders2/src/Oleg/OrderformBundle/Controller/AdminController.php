@@ -920,7 +920,15 @@ class AdminController extends Controller
 
         $types = array(
             "maxIdleTime" => "30",
-            "environment" => "dev"
+            "environment" => "dev",
+            "siteEmail" => "slidescan@med.cornell.edu",
+
+            "smtpServerAddress" => "smtp.med.cornell.edu",
+
+            "aDLDAPServerAddress" => "a.wcmc-ad.net",
+            "aDLDAPServerOu" => "a.wcmc-ad.net",
+            "aDLDAPServerAccountUserName" => "svc_aperio_spectrum@a.wcmc-ad.net",
+            "aDLDAPServerAccountPassword" => "Aperi0,123",
         );
 
         $params = new SiteParameters();
@@ -984,17 +992,20 @@ class AdminController extends Controller
         }
 
         $types = array(
-            'Department of Pathology and Laboratory Medicine'
+            'Department of Pathology and Laboratory Medicine',
         );
 
         $count = 1;
         foreach( $types as $type ) {
-            $formType = new FormType();
+
+            $formType = new Department();
             $this->setDefaultList($formType,$count,$username,$type);
 
             $em->persist($formType);
             $em->flush();
+
             $count = $count + 10;
+
         } //foreach
 
         return $count;
@@ -1012,12 +1023,12 @@ class AdminController extends Controller
         }
 
         $types = array(
-            'Weill Cornell Medical College'
+            'Weill Cornell Medical College',
         );
 
         $count = 1;
         foreach( $types as $type ) {
-            $formType = new FormType();
+            $formType = new Institution();
             $this->setDefaultList($formType,$count,$username,$type);
 
             $em->persist($formType);

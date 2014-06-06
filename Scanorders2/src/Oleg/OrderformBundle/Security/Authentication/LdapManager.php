@@ -34,7 +34,6 @@ class LdapManager extends BaseLdapManager
         parent::hydrate($user, $entry);
 
         $user->setCreatedby('ldap');
-        $user->setCreatedby('ldap');
         $user->getPreferences()->setTimezone($this->timezone);
 
         $user->addRole('ROLE_UNAPPROVED_SUBMITTER');

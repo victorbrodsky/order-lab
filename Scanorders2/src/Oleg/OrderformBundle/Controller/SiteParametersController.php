@@ -23,10 +23,11 @@ class SiteParametersController extends Controller
      *
      * @Route("/", name="siteparameters")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:SiteParameters:edit.html.twig")
      */
     public function indexAction()
     {
+
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
@@ -35,99 +36,16 @@ class SiteParametersController extends Controller
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }
 
-        return array(
-            'entity' => $entities[0],
-        );
-    }
-    /**
-     * Creates a new SiteParameters entity.
-     *
-     * @Route("/", name="siteparameters_create")
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:SiteParameters:new.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        $entity = new SiteParameters();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
+        $entity = $entities[0];
 
-        if( $form->isValid() ) {
-            //echo "par not valid!";
-            //exit();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        $disabled = true;
 
-//            return $this->redirect($this->generateUrl('siteparameters_show', array('id' => $entity->getId())));
-            return $this->redirect($this->generateUrl('siteparameters'));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to create a SiteParameters entity.
-    *
-    * @param SiteParameters $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createCreateForm(SiteParameters $entity)
-    {
-        $form = $this->createForm(new SiteParametersType(), $entity, array(
-            'action' => $this->generateUrl('siteparameters_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new SiteParameters entity.
-     *
-     * @Route("/new", name="siteparameters_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $entity = new SiteParameters();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Finds and displays a SiteParameters entity.
-     *
-     * @Route("/{id}", name="siteparameters_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity,$disabled);
 
         return array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'edit_form'   => $editForm->createView(),
+            'cicle' => 'show'
         );
     }
 
@@ -149,33 +67,16 @@ class SiteParametersController extends Controller
         }
 
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        //$deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'cicle' => 'edit'
+            //'delete_form' => $deleteForm->createView(),
         );
     }
 
-    /**
-    * Creates a form to edit a SiteParameters entity.
-    *
-    * @param SiteParameters $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(SiteParameters $entity)
-    {
-        $form = $this->createForm(new SiteParametersType(), $entity, array(
-            'action' => $this->generateUrl('siteparameters_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
     /**
      * Edits an existing SiteParameters entity.
      *
@@ -193,7 +94,7 @@ class SiteParametersController extends Controller
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        //$deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
@@ -207,49 +108,175 @@ class SiteParametersController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'cicle' => 'edit'
+            //'delete_form' => $deleteForm->createView(),
         );
     }
-    /**
-     * Deletes a SiteParameters entity.
-     *
-     * @Route("/{id}", name="siteparameters_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find SiteParameters entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('siteparameters'));
-    }
 
     /**
-     * Creates a form to delete a SiteParameters entity by id.
+     * Creates a form to edit a SiteParameters entity.
      *
-     * @param mixed $id The entity id
+     * @param SiteParameters $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createEditForm(SiteParameters $entity, $disabled=false)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('siteparameters_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+
+        $form = $this->createForm(new SiteParametersType(), $entity, array(
+            'action' => $this->generateUrl('siteparameters_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+            'disabled' => $disabled
+        ));
+
+        if( $disabled === false ) {
+            $form->add('submit', 'submit', array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning')));
+        }
+
+        return $form;
     }
+
+
+
+
+
+
+
+
+
+    //    /**
+//     * Creates a new SiteParameters entity.
+//     *
+//     * @Route("/", name="siteparameters_create")
+//     * @Method("POST")
+//     * @Template("OlegOrderformBundle:SiteParameters:new.html.twig")
+//     */
+//    public function createAction(Request $request)
+//    {
+//        $entity = new SiteParameters();
+//        $form = $this->createCreateForm($entity);
+//        $form->handleRequest($request);
+//
+//        if( $form->isValid() ) {
+//            //echo "par not valid!";
+//            //exit();
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($entity);
+//            $em->flush();
+//
+////            return $this->redirect($this->generateUrl('siteparameters_show', array('id' => $entity->getId())));
+//            return $this->redirect($this->generateUrl('siteparameters'));
+//        }
+//
+//        return array(
+//            'entity' => $entity,
+//            'form'   => $form->createView(),
+//        );
+//    }
+
+//    /**
+//    * Creates a form to create a SiteParameters entity.
+//    *
+//    * @param SiteParameters $entity The entity
+//    *
+//    * @return \Symfony\Component\Form\Form The form
+//    */
+//    private function createCreateForm(SiteParameters $entity)
+//    {
+//        $form = $this->createForm(new SiteParametersType(), $entity, array(
+//            'action' => $this->generateUrl('siteparameters_create'),
+//            'method' => 'POST',
+//        ));
+//
+//        $form->add('submit', 'submit', array('label' => 'Create'));
+//
+//        return $form;
+//    }
+
+//    /**
+//     * Displays a form to create a new SiteParameters entity.
+//     *
+//     * @Route("/new", name="siteparameters_new")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function newAction()
+//    {
+//        $entity = new SiteParameters();
+//        $form   = $this->createCreateForm($entity);
+//
+//        return array(
+//            'entity' => $entity,
+//            'form'   => $form->createView(),
+//        );
+//    }
+
+//    /**
+//     * Finds and displays a SiteParameters entity.
+//     *
+//     * @Route("/{id}", name="siteparameters_show")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function showAction($id)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
+//
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
+//        }
+//
+//        $deleteForm = $this->createDeleteForm($id);
+//
+//        return array(
+//            'entity'      => $entity,
+//            'delete_form' => $deleteForm->createView(),
+//        );
+//    }
+
+//    /**
+//     * Deletes a SiteParameters entity.
+//     *
+//     * @Route("/{id}", name="siteparameters_delete")
+//     * @Method("DELETE")
+//     */
+//    public function deleteAction(Request $request, $id)
+//    {
+//        $form = $this->createDeleteForm($id);
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $em = $this->getDoctrine()->getManager();
+//            $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
+//
+//            if (!$entity) {
+//                throw $this->createNotFoundException('Unable to find SiteParameters entity.');
+//            }
+//
+//            $em->remove($entity);
+//            $em->flush();
+//        }
+//
+//        return $this->redirect($this->generateUrl('siteparameters'));
+//    }
+
+//    /**
+//     * Creates a form to delete a SiteParameters entity by id.
+//     *
+//     * @param mixed $id The entity id
+//     *
+//     * @return \Symfony\Component\Form\Form The form
+//     */
+//    private function createDeleteForm($id)
+//    {
+//        return $this->createFormBuilder()
+//            ->setAction($this->generateUrl('siteparameters_delete', array('id' => $id)))
+//            ->setMethod('DELETE')
+//            ->add('submit', 'submit', array('label' => 'Delete'))
+//            ->getForm()
+//        ;
+//    }
+
 }

@@ -9,33 +9,12 @@ parameters:
 #        cookie_lifetime: 20
 #        gc_maxlifetime: 10
 
-
-#    aperio_user_provider.class: Oleg\OrderformBundle\Security\AperioUser\AperioUserProvider
-
-#    ztec.security.active_directory.settings:
-#                account_suffix : a.wcmc-ad.net  #riper.fr # without the @ at the beginning
-#                base_dn : dc=a,dc=wcmc-ad,dc=net  #DC=RIPER,DC=FR #The DN of the domain
-#                domain_controllers : [ a.wcmc-ad.net ] #[ baudrive.kim.riper.fr ] #Servers to use for ldap connexion (Random)
-#                admin_username: svc_aperio_spectrum #Null to use the userConnexion
-#                admin_password: Aperi0,123  #Null to use the userConnexion
-#                real_primarygroup : true #For Linux compatibility.
-#                use_ssl : false #Set it true need configuration of the server to be usefull
-#                use_tls : false #Set it true need configuration of the server to be usefull
-#                recursive_grouproles: false #recursive group roles
-
-#                username_validation_pattern: /^[a-z0-9-.]+$/i #Regex that check the final username value (extracted from patterns below). Must be complient with you Active directory acceptance.
-#                username_patterns: #username is extracted from the string the user put into the login form
-#                  - /([^@]*)@a.wcmc-ad.net/i  # like toto@riper.fr
-#                  - /wcmc-ad\\(.*)/i #like RIPER\toto
-#                  - /wcmc-ad.net\\(.*)/i #like RIEPER.FR\toto
-#                  - /(.*)/i #like toto
-
 fr3d_ldap:
     driver:
-       host:          a.wcmc-ad.net
+       host:          a.wcmc-ad.net                         # Required
        username:      svc_aperio_spectrum@a.wcmc-ad.net     # Optional
-       password:      Aperi0,123              # Optional
-       accountDomainName: a.wcmc-ad.net
+       password:      Aperi0,123                            # Optional
+       accountDomainName: a.wcmc-ad.net                     # Required
 #       accountDomainNameShort: LOCAL
 #       bindRequiresDn:      true   # Optional
 #       baseDn:              ou=users, dc=host, dc=foo   # Optional
@@ -44,7 +23,7 @@ fr3d_ldap:
 #       useSsl:              true   # Enable SSL negotiation. Optional
 #       useStartTls:         true   # Enable TLS negotiation. Optional
     user:
-            baseDn: dc=a,dc=wcmc-ad,dc=net
+            baseDn: dc=a,dc=wcmc-ad,dc=net                  # Required
             filter: (&(ObjectClass=user))
             attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
                 - { ldap_attr: cn,   user_method: setUsername }

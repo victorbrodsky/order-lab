@@ -10,8 +10,70 @@
 
     {{ form_start(edit_form) }}
 
+        <hr>
+
         {{ formmacros.field(edit_form.maxIdleTime) }}
         {{ formmacros.field(edit_form.environment) }}
+
+        <hr>
+
+        <h3 class="text-info">Email</h3>
+        {{ formmacros.field(edit_form.siteEmail) }}
+        {{ formmacros.field(edit_form.smtpServerAddress) }}
+
+        <hr>
+
+        <h3 class="text-info">ScanOrder DB</h3>
+        Note: Parameters are stored in app/config/parameters.yml
+        <br><br>
+
+        {{ formmacros.field(edit_form.dbServerAddress) }}
+        {{ formmacros.field(edit_form.dbServerPort) }}
+        {{ formmacros.field(edit_form.dbServerAccountUserName) }}
+        {{ formmacros.field(edit_form.dbServerAccountPassword) }}
+        {{ formmacros.field(edit_form.dbDatabaseName) }}
+        {{ formmacros.field(edit_form.smtpServerAddress) }}
+
+        <hr>
+
+        <h3 class="text-info">AD/LDAP</h3>
+
+        {{ formmacros.field(edit_form.aDLDAPServerAddress) }}
+        {{ formmacros.field(edit_form.aDLDAPServerPort) }}
+        {{ formmacros.field(edit_form.aDLDAPServerOu) }}
+        {{ formmacros.field(edit_form.aDLDAPServerAccountUserName) }}
+        {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
+
+        <hr>
+
+        <h3 class="text-info">CoPath DB</h3>
+
+        {{ formmacros.field(edit_form.coPathDBServerAddress) }}
+        {{ formmacros.field(edit_form.coPathDBServerPort) }}
+        {{ formmacros.field(edit_form.coPathDBAccountUserName) }}
+        {{ formmacros.field(edit_form.coPathDBAccountPassword) }}
+        {{ formmacros.field(edit_form.coPathDBName) }}
+
+        <hr>
+
+        <h3 class="text-info">Aperio eSlide Manager DB</h3>
+
+        {{ formmacros.field(edit_form.aperioeSlideManagerDBServerAddress) }}
+        {{ formmacros.field(edit_form.aperioeSlideManagerDBServerPort) }}
+        {{ formmacros.field(edit_form.aperioeSlideManagerDBUserName) }}
+        {{ formmacros.field(edit_form.aperioeSlideManagerDBPassword) }}
+        {{ formmacros.field(edit_form.aperioeSlideManagerDBName) }}
+
+        <br>
+
+        {% if cicle == "show" %}
+
+            <p>
+                <a class="btn btn-success" href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>
+            </p>
+
+        {% endif %}
+
         {{ form_rest(edit_form) }}
 
         {#{{ form(edit_form) }}#}

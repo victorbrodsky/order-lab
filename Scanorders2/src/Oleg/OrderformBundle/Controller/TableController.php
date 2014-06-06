@@ -238,13 +238,25 @@ class TableController extends Controller {
 //        $response->setContent(json_encode('ok'));
 //        return $response;
 
+        $conflictStr = "";
+        foreach( $entity->getDataquality() as $dq ) {
+            $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
+        }
+
+        $conflicts = array();
+        foreach( $entity->getDataquality() as $dq ) {
+            $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
+        }
+
+        $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
+
         //email
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $user->getEmail(), $entity );
+        $emailUtil->sendEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, null );
 
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $entity->getOid(),
-            'conflicts' => null,
+            'conflicts' => $conflicts,
             'cicle' => 'new',
             'neworder' => "table_create"
         ));
