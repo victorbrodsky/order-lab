@@ -331,8 +331,10 @@ class UserController extends Controller
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
         $userutil = new UserUtil();
-        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager());
+        $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
         //exit();
         return $this->redirect($this->generateUrl('listusers'));

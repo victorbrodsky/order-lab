@@ -6,6 +6,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Oleg\OrderformBundle\DependencyInjection\Security\Factory\AperioFactory;
 
+use Oleg\OrderformBundle\Helper\Parameters;
+
 class OlegOrderformBundle extends Bundle
 {
     
@@ -15,6 +17,7 @@ class OlegOrderformBundle extends Bundle
 
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new AperioFactory());
+
     }
 
     public function getParent()

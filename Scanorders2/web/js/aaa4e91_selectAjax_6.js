@@ -32,13 +32,12 @@ var _organ = new Array();
 var _delivery = new Array();
 var _returnslide = new Array();
 var _pathservice = new Array();
-//var _userpathservice = new Array();
-//var _optionaluserEducational = new Array();
-//var _optionaluserResearch = new Array();
 var _projectTitle = new Array();
-//var _setTitle = new Array();
 var _courseTitle = new Array();
-//var _lessonTitle = new Array();
+
+var _department = new Array();
+var _institution = new Array();
+var _account = new Array();
 
 //var userpathserviceflag = false;
 
@@ -92,7 +91,7 @@ function customCombobox() {
         getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0","0"),false);
+        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0"),false);
         getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
         getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
@@ -102,6 +101,10 @@ function customCombobox() {
         slideType(new Array("0","0","0","0","0","0"));
         getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
         getCourseTitle(urlCommon,new Array("0","0","0","0","0","0"));
+
+        getComboboxDepartment(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxInstitution(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxAccount(urlCommon,new Array("0","0","0","0","0","0"));
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
@@ -179,12 +182,12 @@ function getComboboxStain(urlCommon, ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"stain_0_field";
         //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, _stain );
+        setElementToId( targetid, _stain );
     }
 
 }
 
-function getComboboxSpecialStain(urlCommon, ids, preset) {
+function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
 
     var url = urlCommon+"stain";
 
@@ -194,13 +197,14 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
 
     var targetid = "";
     if( cicle == "new" || (cicle == "amend" && preset) || (cicle == "edit" && preset) ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        targetid = id+"specialStains_"+ids[6]+"_staintype";
+        targetid = id+"specialStains_"+ids[5]+"_staintype";
         //console.log("targetid="+targetid);
     }
 
     if( _stain.length == 0 ) {
+        //console.log("_stain.length is zero");
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
@@ -210,13 +214,13 @@ function getComboboxSpecialStain(urlCommon, ids, preset) {
                 populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
             });
     } else {
+        //console.log("populate _stain.length="+_stain.length);
         populateSelectCombobox( targetid, _stain, null );
     }
 
     //console.log("special stain preset="+preset);
     if( targetid != "" ) {
-        //$(targetid).select2('val', '1');
-        setToFirstElement( targetid, _stain );
+        setElementToId( targetid, _stain, setId );
     }
 }
 
@@ -248,7 +252,7 @@ function getComboboxScanregion(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"scan_0_scanregion";
         //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
-        setToFirstElement( targetid, _scanregion );
+        setElementToId( targetid, _scanregion );
     }
 }
 
@@ -335,7 +339,7 @@ function getComboboxAccessionType(urlCommon,ids) {
         var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
-        setToFirstElement( targetid, _accessiontype );
+        setElementToId( targetid, _accessiontype );
     }
 }
 
@@ -370,7 +374,7 @@ function getComboboxMrnType(urlCommon,ids) {
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         var targetid = id+"mrn_0_mrntype";
         //console.log("targetid="+targetid);
-        setToFirstElement( targetid, _mrntype );
+        setElementToId( targetid, _mrntype );
     }
 }
 
@@ -450,13 +454,13 @@ function getComboboxDelivery(urlCommon,ids) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
             if( cicle == "new"  ) {
-                setToFirstElement( target, _delivery );
+                setElementToId( target, _delivery );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
         if( cicle == "new"  ) {
-            setToFirstElement( target, _delivery );
+            setElementToId( target, _delivery );
         }
     }
 
@@ -484,14 +488,14 @@ function getComboboxReturn(urlCommon,ids) {
             populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
             if( cicle == "new"  ) {
                 //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-                setToFirstElement( ".ajax-combobox-return", _returnslide );
+                setElementToId( ".ajax-combobox-return", _returnslide );
             }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-return", _returnslide, null );
         if( cicle == "new"  ) {
             //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
-            setToFirstElement( ".ajax-combobox-return", _returnslide );
+            setElementToId( ".ajax-combobox-return", _returnslide );
         }
     }
 
@@ -602,7 +606,7 @@ function getSetTitle() {
             //console.log("id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
-            //setToFirstElement( targetid, data );
+            //setElementToId( targetid, data );
         }
     });
 
@@ -781,6 +785,97 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 //#############  EOF Research Educational Utils  ##############//
 
 
+//#############  department  ##############//
+function getComboboxDepartment(urlCommon,ids) {
+
+    var url = urlCommon+"department";
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "?opt="+orderinfoid;
+    }
+
+    if( _department.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _department = data;
+            populateSelectCombobox( ".ajax-combobox-department", _department, "Choose an option" );
+            if( cicle == "new"  ) {
+                setElementToId( ".ajax-combobox-department", _department );
+            }
+        });
+    } else {
+        populateSelectCombobox( ".ajax-combobox-department", _department, "Choose an option" );
+        if( cicle == "new"  ) {
+            setElementToId( ".ajax-combobox-department", _department );
+        }
+    }
+
+}
+
+//#############  institution  ##############//
+function getComboboxInstitution(urlCommon,ids) {
+
+    var url = urlCommon+"institution";
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "?opt="+orderinfoid;
+    }
+
+    if( _institution.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _institution = data;
+            populateSelectCombobox( ".ajax-combobox-institution", _institution, "Choose an option" );
+            if( cicle == "new"  ) {
+                setElementToId( ".ajax-combobox-institution", _institution );
+            }
+        });
+    } else {
+        populateSelectCombobox( ".ajax-combobox-institution", _institution, "Choose an option" );
+        if( cicle == "new"  ) {
+            setElementToId( ".ajax-combobox-institution", _institution );
+        }
+    }
+
+}
+
+//#############  account  ##############//
+function getComboboxAccount(urlCommon,ids) {
+
+    var url = urlCommon+"account";
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "?opt="+orderinfoid;
+    }
+
+    if( _account.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _account = data;
+            populateSelectCombobox( ".ajax-combobox-account", _account, "Choose an option" );
+            if( cicle == "new"  ) {
+                //setElementToId( ".ajax-combobox-account", _account );
+            }
+        });
+    } else {
+        populateSelectCombobox( ".ajax-combobox-account", _account, "Choose an option" );
+        if( cicle == "new"  ) {
+            //setElementToId( ".ajax-combobox-account", _account );
+        }
+    }
+
+}
+
+
 
 
 function initComboboxJs(ids) {
@@ -803,6 +898,10 @@ function initComboboxJs(ids) {
         slideType(ids);
         getProjectTitle(urlCommon,ids);
         getCourseTitle(urlCommon,ids);
+
+        getComboboxDepartment(urlCommon,ids);
+        getComboboxInstitution(urlCommon,ids);
+        getComboboxAccount(urlCommon,ids);
     }
 }
 
@@ -846,13 +945,16 @@ function slideType(ids) {
     });   
 }
 
-function setToFirstElement( target, dataarr ) {
+function setElementToId( target, dataarr, setId ) {
     if( dataarr == undefined || dataarr.length == 0 ) {
         return;
     }
-    var firstObj = dataarr[0];
-    var firstId = firstObj.id;
-    //console.log("first="+firstId);
-    $(target).select2('val', firstId);
-    //$(".ajax-combobox-return").select2('data', {id: "Filing Room", text: "Filing Room"});
+
+    if( typeof setId === "undefined" ) {
+        var firstObj = dataarr[0];
+        var setId = firstObj.id;
+    }
+
+    //console.log("setId="+setId);
+    $(target).select2('val', setId);
 }

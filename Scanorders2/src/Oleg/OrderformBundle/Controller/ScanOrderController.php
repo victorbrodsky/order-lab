@@ -89,6 +89,13 @@ class ScanOrderController extends Controller {
             $commentFlag = null;
         }
 
+//        $adminemail = $this->container->getParameter('scanorder.adminemail');
+//        echo "adminemail=".$adminemail."<br>";
+//        exit();
+        //throw new \Exception( 'Test' );
+        //http://knpbundles.com/craue/CraueConfigBundle
+        //$this->get('craue_config')->set('ldap_driver_host', 'a.wcmc-ad.net');
+
         //create filters
         $form = $this->createForm(new FilterType( $this->getFilter($routeName), $user, $services ), null);
         $form->bind($request);

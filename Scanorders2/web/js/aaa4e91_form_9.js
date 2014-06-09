@@ -586,6 +586,24 @@ function priorityOption() {
     }
 }
 
+function purposeOption() {
+
+    if( $('#purpose_option').is(':visible') ) {
+        $('#purpose_option').collapse('hide');
+    }
+
+    $('#oleg_orderformbundle_orderinfotype_purpose').change(function(e) {
+        e.preventDefault();
+        $('#purpose_option').collapse('toggle');
+    });
+
+    var checked = $('#oleg_orderformbundle_orderinfotype_purpose').find('input[type=radio]:checked').val();
+    //console.log("checked="+checked);
+    if( checked == 'For External Use (Invoice Fund Number)' ) {
+        $('#purpose_option').collapse('show');
+    }
+}
+
 //function onCwid(){
 //    window.open("http://weill.cornell.edu/its/identity-security/identity/cwid/")
 //}

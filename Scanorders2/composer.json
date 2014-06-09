@@ -23,6 +23,7 @@
         "knplabs/knp-paginator-bundle": "2.4.*@dev",
         "fr3d/ldap-bundle": "2.0.*@dev",
         "phpexcel/phpexcel": "dev-master"
+
     },
     "scripts": {
         "post-install-cmd": [

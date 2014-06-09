@@ -250,9 +250,12 @@ class TableController extends Controller {
 
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
+        $userutil = new UserUtil();
+        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+
         //email
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, null );
+        $emailUtil->sendEmail( $user->getEmail(), $adminemail, $entity, $orderurl, null, $conflictStr, null );
 
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $entity->getOid(),

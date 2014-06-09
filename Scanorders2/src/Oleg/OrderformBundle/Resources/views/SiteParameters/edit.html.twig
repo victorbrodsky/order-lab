@@ -4,72 +4,106 @@
 
 {% block content %}
 
-    <h3 class="text-info">Site Parameters</h3>
+    <h3 class="text-info">Update Site Parameter: {{ param }}</h3>
 
     <br>
 
     {{ form_start(edit_form) }}
 
+    {% if cicle == 'show' %}
         <hr>
+    {% endif %}
 
-        {{ formmacros.field(edit_form.maxIdleTime) }}
-        {{ formmacros.field(edit_form.environment) }}
+        {% if edit_form.maxIdleTime is defined %}
+            {{ formmacros.field(edit_form.maxIdleTime) }}
+        {% endif %}
 
+        {% if edit_form.environment is defined %}
+            {{ formmacros.field(edit_form.environment) }}
+        {% endif %}
+
+        {% if cicle == 'show' %}
+            <hr>
+            <h3 class="text-info">Email</h3>
+        {% endif %}
+
+        {% if edit_form.siteEmail is defined %}
+            {{ formmacros.field(edit_form.siteEmail) }}
+        {% endif %}
+
+        {% if edit_form.smtpServerAddress is defined %}
+            {{ formmacros.field(edit_form.smtpServerAddress) }}
+        {% endif %}
+
+    {% if cicle == 'show' %}
         <hr>
-
-        <h3 class="text-info">Email</h3>
-        {{ formmacros.field(edit_form.siteEmail) }}
-        {{ formmacros.field(edit_form.smtpServerAddress) }}
-
-        <hr>
-
         <h3 class="text-info">ScanOrder DB</h3>
         Note: Parameters are stored in app/config/parameters.yml
         <br><br>
+    {% endif %}
 
-        {{ formmacros.field(edit_form.dbServerAddress) }}
-        {{ formmacros.field(edit_form.dbServerPort) }}
-        {{ formmacros.field(edit_form.dbServerAccountUserName) }}
-        {{ formmacros.field(edit_form.dbServerAccountPassword) }}
-        {{ formmacros.field(edit_form.dbDatabaseName) }}
-        {{ formmacros.field(edit_form.smtpServerAddress) }}
+        {% if edit_form.dbServerAddress is defined %}
+            {{ formmacros.field(edit_form.dbServerAddress) }}
+        {% endif %}
 
+        {% if edit_form.dbServerPort is defined %}
+            {{ formmacros.field(edit_form.dbServerPort) }}
+        {% endif %}
+
+        {% if edit_form.dbServerAccountUserName is defined %}
+            {{ formmacros.field(edit_form.dbServerAccountUserName) }}
+        {% endif %}
+
+        {% if edit_form.dbServerAccountPassword is defined %}
+            {{ formmacros.field(edit_form.dbServerAccountPassword) }}
+        {% endif %}
+
+        {% if edit_form.dbDatabaseName is defined %}
+            {{ formmacros.field(edit_form.dbDatabaseName) }}
+        {% endif %}
+
+        {% if edit_form.smtpServerAddress is defined %}
+            {{ formmacros.field(edit_form.smtpServerAddress) }}
+        {% endif %}
+
+    {% if cicle == 'show' %}
         <hr>
 
         <h3 class="text-info">AD/LDAP</h3>
+        Note: Parameters are stored in Resources/config/services.yml
+        <br><br>
+    {% endif %}
 
-        {{ formmacros.field(edit_form.aDLDAPServerAddress) }}
-        {{ formmacros.field(edit_form.aDLDAPServerPort) }}
-        {{ formmacros.field(edit_form.aDLDAPServerOu) }}
-        {{ formmacros.field(edit_form.aDLDAPServerAccountUserName) }}
-        {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
+        {% if edit_form.aDLDAPServerAddress is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerAddress) }}
+        {% endif %}
 
+        {% if edit_form.aDLDAPServerPort is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerPort) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerOu is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerOu) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerAccountUserName is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerAccountUserName) }}
+        {% endif %}
+
+        {% if edit_form.aDLDAPServerAccountPassword is defined %}
+            {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
+        {% endif %}
+
+    {% if cicle == 'show' %}
         <hr>
-
-        <h3 class="text-info">CoPath DB</h3>
-
-        {{ formmacros.field(edit_form.coPathDBServerAddress) }}
-        {{ formmacros.field(edit_form.coPathDBServerPort) }}
-        {{ formmacros.field(edit_form.coPathDBAccountUserName) }}
-        {{ formmacros.field(edit_form.coPathDBAccountPassword) }}
-        {{ formmacros.field(edit_form.coPathDBName) }}
-
-        <hr>
-
-        <h3 class="text-info">Aperio eSlide Manager DB</h3>
-
-        {{ formmacros.field(edit_form.aperioeSlideManagerDBServerAddress) }}
-        {{ formmacros.field(edit_form.aperioeSlideManagerDBServerPort) }}
-        {{ formmacros.field(edit_form.aperioeSlideManagerDBUserName) }}
-        {{ formmacros.field(edit_form.aperioeSlideManagerDBPassword) }}
-        {{ formmacros.field(edit_form.aperioeSlideManagerDBName) }}
+    {% endif %}
 
         <br>
 
         {% if cicle == "show" %}
 
             <p>
-                <a class="btn btn-success" href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>
+                <a class="btn btn-success" href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': param }) }}">Edit</a>
             </p>
 
         {% endif %}

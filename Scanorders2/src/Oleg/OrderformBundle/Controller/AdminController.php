@@ -79,6 +79,7 @@ class AdminController extends Controller
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
+        $count_siteParameters = $this->generateSiteParameters();
         $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
@@ -93,13 +94,11 @@ class AdminController extends Controller
         $count_returnslide = $this->generateReturnSlideTo();
         $count_SlideDelivery = $this->generateSlideDelivery();
         $count_RegionToScan = $this->generateRegionToScan();
-        $count_siteParameters = $this->generateSiteParameters();
         $count_comments = $this->generateProcessorComments();
         $count_department = $this->generateDepartments();
         $count_institution = $this->generateInstitutions();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
-
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -848,6 +847,9 @@ class AdminController extends Controller
             return -1;
         }
 
+        $userutil = new UserUtil();
+        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+
         $types = array(
             "I'll give slides to Melody - ST1015E (212) 746-2993",
             "I have given slides to Melody already",
@@ -855,7 +857,7 @@ class AdminController extends Controller
             "I have handed the slides to Liza already",
             "I will write S on the slide & submit as a consult",
             "I will write S4 on the slide & submit as a consult",
-            "I will email slidescan@med.cornell.edu about it",
+            "I will email ".$adminemail." about it",
             "Please e-mail me to set the time & pick up slides",
         );
 

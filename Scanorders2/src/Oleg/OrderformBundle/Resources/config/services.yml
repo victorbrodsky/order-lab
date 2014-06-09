@@ -1,7 +1,10 @@
+#imports:
+#    - { resource: "@OlegOrderformBundle/Helper/Parameters.php" }
+
 parameters:
 
-    #idle time in seconds: 60 min * 60 sec = 3600 seconds
-#    session_max_idle_time: 3600
+  default_time_zone: America/New_York
+
 
 
 #framework:
@@ -105,3 +108,9 @@ services:
         arguments: ["@twig", "@security.context", %default_time_zone%]
         tags:
               - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+
+#    #set scan order parameters src/Oleg/OrderformBundle/Helper/Parameters.php
+    scanorder.setparameters:
+            class: Oleg\OrderformBundle\Helper\Parameters
+            arguments: [@doctrine.orm.entity_manager,@security.context, @service_container]

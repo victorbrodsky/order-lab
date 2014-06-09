@@ -31,10 +31,11 @@ $(document).ready(function() {
         $("#optional_button").show();
     });
 
-    //priority and disease type options
+    //priority option
     priorityOption();
-    //originOption();
-    //primaryOrganOption();
+
+    //purpose option
+    purposeOption();
 
     //tabs for single form
     //initOptionalParam();

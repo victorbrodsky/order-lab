@@ -29,7 +29,7 @@ class LdapManager extends BaseLdapManager
     protected function hydrate(UserInterface $user, array $entry)
     {
 
-        //exit("using ldap! <br>");
+        exit("using ldap! <br>");
 
         parent::hydrate($user, $entry);
 

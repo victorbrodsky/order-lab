@@ -3,12 +3,15 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Form\SiteParametersType;
+use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 /**
  * SiteParameters controller.
@@ -23,7 +26,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/", name="siteparameters")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SiteParameters:edit.html.twig")
+     * @Template("OlegOrderformBundle:SiteParameters:index.html.twig")
      */
     public function indexAction()
     {
@@ -40,12 +43,28 @@ class SiteParametersController extends Controller
 
         $disabled = true;
 
+        $passw = "*******";
+        if( $entity->getAperioeSlideManagerDBPassword() != '' )
+            $entity->setAperioeSlideManagerDBPassword($passw);
+
+        if( $entity->getCoPathDBAccountPassword() != '' )
+            $entity->setCoPathDBAccountPassword($passw);
+
+        if( $entity->getADLDAPServerAccountPassword() != '' )
+            $entity->setADLDAPServerAccountPassword($passw);
+
+        if( $entity->getDbServerAccountPassword() != '' )
+            $entity->setDbServerAccountPassword($passw);
+
         $editForm = $this->createEditForm($entity,$disabled);
+
+        $host = 'http://'.$_SERVER['HTTP_HOST'];//.$_SERVER['PHP_SELF'];
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'cicle' => 'show'
+            'cicle' => 'show',
+            'link' => $host
         );
     }
 
@@ -58,6 +77,9 @@ class SiteParametersController extends Controller
      */
     public function editAction($id)
     {
+        $request = $this->get('request');
+        $param = trim( $request->get('param') );
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
@@ -66,13 +88,14 @@ class SiteParametersController extends Controller
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($entity,$param,false);
         //$deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'cicle' => 'edit'
+            'cicle' => 'edit',
+            'param' => $param
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -94,22 +117,24 @@ class SiteParametersController extends Controller
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
         }
 
-        //$deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $param = trim( $request->get('param') );
+        //echo "param=".$param."<br>";
+
+        $editForm = $this->createEditForm($entity,$param,false);
+
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
+        if( $editForm->isValid() ) {
             $em->flush();
 
             return $this->redirect($this->generateUrl('siteparameters'));
-            //return $this->redirect($this->generateUrl('siteparameters_edit', array('id' => $id)));
         }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'cicle' => 'edit'
-            //'delete_form' => $deleteForm->createView(),
+            'cicle' => 'edit',
+            'param' => ''
         );
     }
 
@@ -120,11 +145,18 @@ class SiteParametersController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(SiteParameters $entity, $disabled=false)
+    private function createEditForm(SiteParameters $entity, $param=null,$disabled=false)
     {
 
-        $form = $this->createForm(new SiteParametersType(), $entity, array(
-            'action' => $this->generateUrl('siteparameters_update', array('id' => $entity->getId())),
+        $cycle = 'show';
+
+        if( !$disabled ) {
+            $cycle = 'edit';
+        }
+        $params = array('cicle'=>$cycle,'param'=>$param);
+
+        $form = $this->createForm(new SiteParametersType($params), $entity, array(
+            'action' => $this->generateUrl('siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),
             'method' => 'PUT',
             'disabled' => $disabled
         ));
@@ -138,6 +170,25 @@ class SiteParametersController extends Controller
 
 
 
+    /**
+     * Displays a admin email.
+     *
+     * @Route("/scan-order/admin-email", name="scan-order-admin-email")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:History:index.html.twig")
+     */
+    public function getAdminEmailAction()
+    {
+
+        $userutil = new UserUtil();
+        $em = $this->getDoctrine()->getManager();
+        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+
+        $response = new Response();
+        $response->setContent($adminemail);
+
+        return $response;
+    }
 
 
 

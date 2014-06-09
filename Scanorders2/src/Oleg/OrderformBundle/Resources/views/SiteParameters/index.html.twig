@@ -1,0 +1,122 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h3 class="text-info">Site Parameters</h3>
+
+    <table class="records_list table table-bordered table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+            <tr>
+                <td>Max Idle Time (minutes)</td>
+                <td>{{ entity.maxIdleTime }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maxIdleTime'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Environment</td>
+                <td>{{ entity.environment }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'environment'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Site Email</td>
+                <td>{{ entity.siteEmail }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'siteEmail'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>SMTP Server Address</td>
+                <td>{{ entity.smtpServerAddress }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'smtpServerAddress'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h6>ScanOrder DB (Parameters are stored in app/config/parameters.yml)</h6>
+                </td>
+            </tr>
+
+            <tr>
+                <td>ScanOrder DB Server Address</td>
+                <td>{{ entity.dbServerAddress }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'dbServerAddress'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td>ScanOrder DB Server Port</td>
+                <td>{{ entity.dbServerPort }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'dbServerPort'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td>ScanOrder DB Server Account User Name</td>
+                <td>{{ entity.dbServerAccountUserName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'dbServerAccountUserName'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td>ScanOrder DB Server Account Password</td>
+                <td>{{ entity.dbServerAccountPassword }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'dbServerAccountPassword'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td>ScanOrder DB Server Account Name</td>
+                <td>{{ entity.dbDatabaseName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'dbDatabaseName'}) }}">Edit</a></td>
+            </tr>
+
+
+            {#link:{{ link }}#}
+            {#link:http://collage.med.cornell.edu/order/app_dev.php/settings/#}
+            {#Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\config\services.yml#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    {#<h6>AD/LDAP (Parameters are stored in <a href="{{ link }}\order\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\config\Resources\config\services.yml">Resources/config/services.yml</a>)</h6>#}
+                    <h6>AD/LDAP (Parameters are stored in Resources/config/services.yml)</h6>
+                </td>
+            </tr>
+
+            <tr>
+                <td>AD/LDAP Server Address</td>
+                <td>{{ entity.aDLDAPServerAddress }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAddress'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server Port</td>
+                <td>{{ entity.aDLDAPServerPort }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerPort'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server OU</td>
+                <td>{{ entity.aDLDAPServerOu }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerOu'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server Account User Name</td>
+                <td>{{ entity.aDLDAPServerAccountUserName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountUserName'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server Account Password</td>
+                <td>{{ entity.aDLDAPServerAccountPassword }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword'}) }}">Edit</a></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+
+    {#<br>#}
+    {#<p>#}
+        {#<a href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>#}
+    {#</p>#}
+
+{% endblock %}

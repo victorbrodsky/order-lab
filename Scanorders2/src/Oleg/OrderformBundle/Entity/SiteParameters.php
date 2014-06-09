@@ -4,7 +4,6 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="siteParameters")
@@ -137,7 +136,6 @@ class SiteParameters {
      * @ORM\Column(type="string",nullable=true)
      */
     protected $aperioeSlideManagerDBName;
-
 
 
     /**

@@ -11,10 +11,11 @@ var urlCheck = "http://"+urlBase+"/check/";
 var keys = new Array("mrn", "accession", "partname", "blockname");
 
 //var arrayFieldShow = new Array("clinicalHistory","age","diffDisident"); //,"disident"); //display as array fields "sex"
-var arrayFieldShow = new Array("diffDisident");
+var arrayFieldShow = new Array("diffDisident","specialStains");
 
 //var selectStr = 'input[type=file],input.form-control,div.patientsex-field,div.diseaseType,div.select2-container,[class^="ajax-combobox-"],[class^="combobox"],textarea,select';  //div.select2-container, select.combobox, div.horizontal_type
-var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select';
+//var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
+var selectStr = 'input[type=file],input.form-control,div.proceduresex-field,div.patientsex-field,div.diseaseType,div.select2-container,input.ajax-combobox,[class^="combobox"],textarea,select,input.ajax-combobox-staintype';
 
 var orderformtype = $("#orderformtype").val();
 
@@ -22,6 +23,8 @@ var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
 
 var _ajaxTimeout = 20000;  //15000 => 15 sec
+
+var _external_user = null;
 
 //var _autogenAcc = 8;
 //var _autogenMrn = 13;
@@ -101,7 +104,6 @@ function btnObject( btn, parent ) {
 
     if( !btn || typeof btn === 'undefined' || btn.length == 0 ) {
         //console.log('button is null => exit button object');
-        //return null;
         gocontinue = false;
     }
 
@@ -110,8 +112,7 @@ function btnObject( btn, parent ) {
 
         var inputEl = parentEl.find('input.keyfield');
 
-        if( !inputEl || inputEl.attr('class') == '' ) {
-            //return null;
+        if( !inputEl || (inputEl.attr('class') == '') ) {
             gocontinue = false;
         }
     }
@@ -119,7 +120,6 @@ function btnObject( btn, parent ) {
     if( gocontinue ) {
 
         this.element = inputEl;
-        //if( inputEl.attr('class').indexOf("ajax-combobox") != -1 ) {    //select2
         if( inputEl.hasClass("ajax-combobox") ) {
             if( inputEl.select2("val") ) {
                 //console.log('select2 data OK');
@@ -246,7 +246,7 @@ function getParentBtn( btn, name ) {
 
     //console.log("parentBtn.length="+parentBtn.length);
 
-    if( parentBtn.length == 0 ) {
+    if( parentBtn && parentBtn.length == 0 ) {
         parentBtn = null;
     }
     
@@ -455,6 +455,7 @@ function executeClick( btnObjInit ) {
                             invertButton(btn);
                             setElementBlock(btn, data, null, "key");
                             disableInElementBlock(btn, false, null, "notkey", null);
+                            setObjectInfo(btnObj,0);
                             resolve("Object was generated successfully");
                         } else {
                             //console.debug("Object was not generated");
@@ -475,6 +476,7 @@ function executeClick( btnObjInit ) {
                             //invertButton(btn);
                             reject(Error("Delete ok with Error"));
                         }
+                        removeInfoFromElement(btnObj);
                     }
                     //////////////// end of delete ////////////////
 
@@ -506,6 +508,7 @@ function executeClick( btnObjInit ) {
                                 //second: disable or enable element. Make sure this function runs after set Element Block
                                 disableInElementBlock(btn, true, "all", null, "notarrayfield");
                                 invertButton(btn);
+                                setObjectInfo(btnObj,1);
 
                                 //set patient (in accession case)
                                 if( btnObj.name == "accession" && gonext == 1) {
@@ -524,6 +527,7 @@ function executeClick( btnObjInit ) {
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
                             calculateAgeByDob(btn);
+                            setObjectInfo(btnObj,0);
                             resolve("data is null");
                         }
 

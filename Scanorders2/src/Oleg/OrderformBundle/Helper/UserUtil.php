@@ -17,7 +17,7 @@ use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 class UserUtil {
 
-    public function generateUsersExcel( $em, $default_time_zone = null ) {
+    public function generateUsersExcel( $em, $default_time_zone ) {
         $inputFileName = __DIR__ . '/../Helper/users.xlsx';
 
         try {
@@ -34,9 +34,10 @@ class UserUtil {
         $count = 0;
 
         ////////////// add system user /////////////////
+        $adminemail = $this->getSiteSetting($em,'siteEmail');
         $user = new User();
-        $user->setEmail('slidescan@med.cornell.edu');
-        $user->setEmailCanonical('slidescan@med.cornell.edu');
+        $user->setEmail($adminemail);
+        $user->setEmailCanonical($adminemail);
         $user->setUsername('system');
         $user->setUsernameCanonical('system');
         $user->setPassword("");
@@ -276,6 +277,26 @@ class UserUtil {
         $maxIdleTime = $maxIdleTime * 60;
 
         return $maxIdleTime;
+    }
+
+    public function getSiteSetting($em,$setting) {
+
+        $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+
+        if( !$params ) {
+            //throw new \Exception( 'Parameter object is not found' );
+        }
+
+        if( count($params) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+        }
+
+        $param = $params[0];
+
+        $getSettingMethod = "get".$setting;
+        $res = $param->$getSettingMethod();
+
+        return $res;
     }
 
 }

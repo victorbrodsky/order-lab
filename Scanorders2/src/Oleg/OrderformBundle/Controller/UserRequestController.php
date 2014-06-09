@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\UserRequest;
 use Oleg\OrderformBundle\Form\UserRequestType;
 use Oleg\OrderformBundle\Helper\EmailUtil;
+use Oleg\OrderformBundle\Helper\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
@@ -388,7 +389,10 @@ class UserRequestController extends Controller
             "Thank You For Access Request !\r\n"
             . "Confirmation Email was sent to " . $email . "\r\n";
 
-        $emailUtil->sendEmail( $email, null, $text, null );
+        $userutil = new UserUtil();
+        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+
+        $emailUtil->sendEmail( $email, $adminemail, null, $text, null );
 
         $emailStr = "";
         if( $email && $email != "" ) {

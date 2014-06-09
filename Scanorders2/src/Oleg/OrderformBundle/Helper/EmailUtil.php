@@ -8,13 +8,13 @@ namespace Oleg\OrderformBundle\Helper;
  */
 class EmailUtil {
     
-    public function sendEmail( $email, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
+    public function sendEmail( $email, $adminemail, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
 
         if( !$email || $email == "" ) {
             return false;
         }
 
-        ini_set( 'sendmail_from', "slidescan@med.cornell.edu" ); //My usual e-mail address
+        ini_set( 'sendmail_from', $adminemail ); //My usual e-mail address
         ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
         //ini_set( 'smtp_port', 25 );
 
@@ -30,7 +30,7 @@ class EmailUtil {
                 . "Your order #" . $entity->getId() . " to scan " . $slideCount . " slide(s) " . $submitStatusStr . ".\r\n"
                 . "To check the current status of this order, to amend or cancel it, or to request the submitted glass slides back, visit: \r\n"
                 . $orderurl . "\r\n\r\n"
-                . "If you have any additional questions, please don't hesitate to email slidescan@med.cornell.edu \r\n\r\n"
+                . "If you have any additional questions, please don't hesitate to email ".$adminemail." \r\n\r\n"
                 . "Thank You! \r\n\r\n"
                 . "Sincerely, \r\n"
                 . "The WCMC Slide Scanning Service.";
