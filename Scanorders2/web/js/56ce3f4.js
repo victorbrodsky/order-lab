@@ -30245,7 +30245,7 @@ function idleTimeout() {
         AJAXTimeout: null,
         failedRequests: 1,
         idleAfter: _idleAfter,
-        warningLength: 30,
+        warningLength: 5,                   //30,
         pollingInterval: _idleAfter-50,
         keepAliveURL: urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
@@ -30256,7 +30256,8 @@ function idleTimeout() {
             //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
 
             if( $('#save_order_onidletimeout_btn').length > 0 &&
-                ( cicle == "new" || cicle == "amend" || cicle == "edit" )
+                ( cicle == "new" || cicle == "edit" ) &&
+                checkIfOrderWasModified()
             ) {
                 //console.log("save!!!!!!!!!!!");
                 //save if all fields are not empty; don't validate
@@ -30291,15 +30292,81 @@ function logoff() {
     window.location = urlRegularLogout;
 }
 
+//redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    //console.log("logoff");
-//    var str = "";
-//    if( saveorder && saveorder == 'saveorder'  ) {
-//        str = "?opt=saveorder";
-//    }
-    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout"; //+str;
-    //console.log("urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
     window.location = urlIdleTimeoutLogout;
+}
+
+//check if the order is empty:
+function checkIfOrderWasModified() {
+
+    var modified = false;
+
+    //if at least one keyfield is not empty, then the form was modified
+    $('.checkbtn').each(function() {
+        if( modified )
+            return true;
+        var btnObj = new btnObject( $(this) );
+        if( btnObj.key != "" ) {
+            //console.log("at least one keyfield is not empty");
+            modified = true;
+            return;
+        }
+    });
+
+    if( modified ) return true;
+
+    //if at least one button is checked (was pressed), then form was modified
+    var btnsRemove = $('.removebtn');
+    if( btnsRemove.length > 0 ) {
+        //console.log("at least one button is checked (was pressed)");
+        modified = true;
+        return;
+    }
+
+    if( modified ) return true;
+
+    //if at least one input field (input,textarea,select) is not empty, then form was modified (this is slide input fields check)
+    $(":input").each(function(){
+
+        if( modified )
+            return true;
+
+        var id = $(this).attr('id');
+        if( !id || typeof id === "undefined" || id.indexOf("_slide_") === -1 )
+            return true;
+
+        //ignore slide type (preselected)
+        if( $(this).hasClass('combobox') )
+            return true;
+
+        //ignore stain (preselected)
+        if( $(this).hasClass('ajax-combobox-stain') )
+            return true;
+
+        //ignore magnification (preselected)
+        //if( $(this).hasClass('horizontal_type') )
+        if( $(this).is(':radio') )
+            return true;
+
+        //ignore scanregion (preselected)
+        if( $(this).hasClass('ajax-combobox-scanregion') )
+            return true;
+
+        if( !$(this).is('[readonly]') && $(this).val() != "" ) {    //&& !$(this).hasClass('ajax-combobox-staintype')
+            //console.log($(this));
+            //console.log("at least one input field (input,textarea,select) is not empty");
+            modified = true;
+            return;
+        }
+
+    });
+
+    if( modified ) return true;
+
+    //console.log("not modified");
+    return false;
 }
 
 /* ============================================================

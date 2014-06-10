@@ -245,7 +245,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-        //exit('orderinfo repoexit');
+        //exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;
