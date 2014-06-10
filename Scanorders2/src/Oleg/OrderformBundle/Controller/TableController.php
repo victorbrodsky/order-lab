@@ -23,10 +23,10 @@ use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientMrn;
-use Oleg\OrderformBundle\Entity\PatientName;
-use Oleg\OrderformBundle\Entity\PatientSex;
+//use Oleg\OrderformBundle\Entity\PatientName;
+//use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientDob;
-use Oleg\OrderformBundle\Entity\PatientAge;
+//use Oleg\OrderformBundle\Entity\PatientAge;
 use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 
 use Oleg\OrderformBundle\Entity\Procedure;
@@ -61,10 +61,8 @@ use Oleg\OrderformBundle\Entity\Research;
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\FormHelper;
+//use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
@@ -250,12 +248,9 @@ class TableController extends Controller {
 
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
-        $userutil = new UserUtil();
-        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-
         //email
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $user->getEmail(), $adminemail, $entity, $orderurl, null, $conflictStr, null );
+        $emailUtil->sendEmail( $user->getEmail(), $em, $entity, $orderurl, null, $conflictStr, null );
 
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $entity->getOid(),

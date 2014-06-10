@@ -58,13 +58,14 @@ class SiteParametersController extends Controller
 
         $editForm = $this->createEditForm($entity,$disabled);
 
-        $host = 'http://'.$_SERVER['HTTP_HOST'];//.$_SERVER['PHP_SELF'];
+        $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
+        //echo "link=".$link."<br>";
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'cicle' => 'show',
-            'link' => $host
+            'link' => $link
         );
     }
 

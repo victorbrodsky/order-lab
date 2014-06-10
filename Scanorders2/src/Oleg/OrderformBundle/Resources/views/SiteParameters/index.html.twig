@@ -13,6 +13,8 @@
             </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
+
+
             <tr>
                 <td>Max Idle Time (minutes)</td>
                 <td>{{ entity.maxIdleTime }}</td>
@@ -34,9 +36,11 @@
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'smtpServerAddress'}) }}">Edit</a></td>
             </tr>
 
+
+            {#ScanOrder DB#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h6>ScanOrder DB (Parameters are stored in app/config/parameters.yml)</h6>
+                    <h6>ScanOrder DB (Parameters are stored in {{ link }}):</h6>
                 </td>
             </tr>
 
@@ -71,13 +75,10 @@
             </tr>
 
 
-            {#link:{{ link }}#}
-            {#link:http://collage.med.cornell.edu/order/app_dev.php/settings/#}
-            {#Z:\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\config\services.yml#}
+            {#AD/LDAP#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    {#<h6>AD/LDAP (Parameters are stored in <a href="{{ link }}\order\scanorder\Scanorders2\src\Oleg\OrderformBundle\Resources\config\Resources\config\services.yml">Resources/config/services.yml</a>)</h6>#}
-                    <h6>AD/LDAP (Parameters are stored in Resources/config/services.yml)</h6>
+                    <h6>AD/LDAP:</h6>
                 </td>
             </tr>
 
@@ -107,8 +108,69 @@
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword'}) }}">Edit</a></td>
             </tr>
 
+            {#CoPath#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h6>CoPath DB:</h6>
+                </td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Address</td>
+                <td>{{ entity.coPathDBServerAddress }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBServerAddress'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Port</td>
+                <td>{{ entity.coPathDBServerPort }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBServerPort'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Account User Name</td>
+                <td>{{ entity.coPathDBAccountUserName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBAccountUserName'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath DB Server Account Password</td>
+                <td>{{ entity.coPathDBAccountPassword }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBAccountPassword'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>CoPath Database Name</td>
+                <td>{{ entity.coPathDBName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'coPathDBName'}) }}">Edit</a></td>
+            </tr>
 
-
+            {#Aperio#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h6>Aperio eSlide Manager DB:</h6>
+                </td>
+            </tr>
+            <tr>
+                <td>Aperio eSlide Manager DB Server Address</td>
+                <td>{{ entity.aperioeSlideManagerDBServerAddress }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBServerAddress'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Aperio eSlide Manager DB Server Port</td>
+                <td>{{ entity.aperioeSlideManagerDBServerPort }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBServerPort'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Aperio eSlide Manager DB Server User Name</td>
+                <td>{{ entity.aperioeSlideManagerDBUserName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBUserName'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Aperio eSlide Manager DB Server Password</td>
+                <td>{{ entity.aperioeSlideManagerDBPassword }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBPassword'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Aperio eSlide Manager Database Name</td>
+                <td>{{ entity.aperioeSlideManagerDBName }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBName'}) }}">Edit</a></td>
+            </tr>
 
 
         </tbody>

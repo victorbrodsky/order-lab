@@ -389,10 +389,7 @@ class UserRequestController extends Controller
             "Thank You For Access Request !\r\n"
             . "Confirmation Email was sent to " . $email . "\r\n";
 
-        $userutil = new UserUtil();
-        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-
-        $emailUtil->sendEmail( $email, $adminemail, null, $text, null );
+        $emailUtil->sendEmail( $email, $em, null, $text, null );
 
         $emailStr = "";
         if( $email && $email != "" ) {

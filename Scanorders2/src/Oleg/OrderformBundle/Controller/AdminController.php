@@ -77,6 +77,9 @@ class AdminController extends Controller
     public function generateAllAction()
     {
 
+        $max_exec_time = ini_get('max_execution_time');
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $count_siteParameters = $this->generateSiteParameters();
@@ -124,6 +127,9 @@ class AdminController extends Controller
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
+
+
+        ini_set('max_execution_time', $max_exec_time); //300 seconds = 5 minutes
 
         return $this->redirect($this->generateUrl('admin_index'));
     }
@@ -931,6 +937,12 @@ class AdminController extends Controller
             "aDLDAPServerOu" => "a.wcmc-ad.net",
             "aDLDAPServerAccountUserName" => "svc_aperio_spectrum@a.wcmc-ad.net",
             "aDLDAPServerAccountPassword" => "Aperi0,123",
+
+            "dbServerAddress" => "127.0.0.1",
+            "dbServerPort" => "null",
+            "dbServerAccountUserName" => "symfony2",
+            "dbServerAccountPassword" => "symfony2",
+            "dbDatabaseName" => "ScanOrder",
         );
 
         $params = new SiteParameters();

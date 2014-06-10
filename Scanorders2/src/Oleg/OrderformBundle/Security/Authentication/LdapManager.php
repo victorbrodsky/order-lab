@@ -14,6 +14,8 @@ use FR3D\LdapBundle\Model\LdapUserInterface;
 use FR3D\LdapBundle\Driver\LdapDriverInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use Oleg\OrderformBundle\Helper\Parameters;
+
 class LdapManager extends BaseLdapManager
 {
 
@@ -29,7 +31,7 @@ class LdapManager extends BaseLdapManager
     protected function hydrate(UserInterface $user, array $entry)
     {
 
-        exit("using ldap! <br>");
+        //exit("using ldap! <br>");
 
         parent::hydrate($user, $entry);
 

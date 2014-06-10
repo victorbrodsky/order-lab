@@ -58,7 +58,7 @@ function idleTimeout() {
             //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
 
             if( $('#save_order_onidletimeout_btn').length > 0 &&
-                ( cicle == "new" || cicle == "amend" || cicle == "edit" )
+                ( cicle == "new" || cicle == "edit" )
             ) {
                 //console.log("save!!!!!!!!!!!");
                 //save if all fields are not empty; don't validate
@@ -93,13 +93,8 @@ function logoff() {
     window.location = urlRegularLogout;
 }
 
+//redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    //console.log("logoff");
-//    var str = "";
-//    if( saveorder && saveorder == 'saveorder'  ) {
-//        str = "?opt=saveorder";
-//    }
-    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout"; //+str;
-    //console.log("urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
     window.location = urlIdleTimeoutLogout;
 }

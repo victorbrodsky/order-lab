@@ -273,13 +273,9 @@ class MultyScanOrderController extends Controller {
 
                 $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
-                //get admin email
-                $userutil = new UserUtil();
-                $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-
                 //TODO: get siteemail from DB
 
-                $emailUtil->sendEmail( $email, $adminemail, $entity, $orderurl, $text, $conflictStr, $submitStatusStr );
+                $emailUtil->sendEmail( $email, $em, $entity, $orderurl, $text, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {
                     return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));

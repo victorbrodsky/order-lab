@@ -1,6 +1,8 @@
 <?php
 namespace Oleg\OrderformBundle\Helper;
 
+use Oleg\OrderformBundle\Helper\UserUtil;
+
 /**
  * Description of EmailUtil
  *
@@ -8,14 +10,19 @@ namespace Oleg\OrderformBundle\Helper;
  */
 class EmailUtil {
     
-    public function sendEmail( $email, $adminemail, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
+    public function sendEmail( $email, $em, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
 
         if( !$email || $email == "" ) {
             return false;
         }
 
-        ini_set( 'sendmail_from', $adminemail ); //My usual e-mail address
-        ini_set( "SMTP", "smtp.med.cornell.edu" );  //My usual sender
+        //get admin email
+        $userutil = new UserUtil();
+        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
+
+        ini_set( 'sendmail_from', $adminemail );
+        ini_set( "SMTP", $smtp );
         //ini_set( 'smtp_port', 25 );
 
         if( $text ) {
