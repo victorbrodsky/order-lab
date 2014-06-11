@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\AccessionRepository")
  * @ORM\Table(name="accession")
  */
-class Accession extends OrderAbstract {
+class Accession extends ObjectAbstract {
 
     /**
      * Accession Number

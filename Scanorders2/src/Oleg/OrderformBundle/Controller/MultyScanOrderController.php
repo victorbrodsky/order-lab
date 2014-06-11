@@ -397,6 +397,8 @@ class MultyScanOrderController extends Controller {
 
         if( $lastProxy ) {
             $entity->setProxyuser($lastProxy);
+        } else {
+            $entity->setProxyuser($user);
         }
 
         //$slide2 = new Slide();

@@ -13,8 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="orderinfo")
  * @ORM\HasLifecycleCallbacks
  */
-class OrderInfo
-{
+class OrderInfo extends OrderAbstract {
     /**
      * @var integer
      *

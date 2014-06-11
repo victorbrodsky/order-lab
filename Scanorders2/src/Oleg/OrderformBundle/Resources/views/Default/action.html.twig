@@ -68,6 +68,10 @@
                 </li>
             {% endif %}
 
+            <li>
+                <a href="{{ path('slide-return-request', { 'id': entity.oid }) }}">Request slide return</a>
+            </li>
+
             {###############  ADMIN ACTIONS #################}
             {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_PROCESSOR') ) and not Superseded and not Canceled %}
 

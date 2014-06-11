@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\PartRepository")
  * @ORM\Table(name="part")
  */
-class Part extends OrderAbstract
+class Part extends ObjectAbstract
 {
 
     /**

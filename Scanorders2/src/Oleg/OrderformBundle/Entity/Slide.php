@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\SlideRepository")
  * @ORM\Table(name="slide")
  */
-class Slide extends OrderAbstract
+class Slide extends ObjectAbstract
 {
 
     //*******************************// 
@@ -37,12 +37,6 @@ class Slide extends OrderAbstract
      * @ORM\Column(type="text", nullable=true, length=10000)
      */
     protected $microscopicdescr;
-
-//    /**
-//     * @param \Doctrine\Common\Collections\Collection $property
-//     * @ORM\OneToMany(targetEntity="SpecialStains", mappedBy="slide", cascade={"persist"})
-//     */
-//    protected $specialStains;
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
@@ -81,36 +75,12 @@ class Slide extends OrderAbstract
      **/
     protected $orderinfo;
 
-//    /**
-//     * @ORM\OneToOne(
-//     *      targetEntity="Educational",
-//     *      inversedBy="slide",
-//     *      cascade={"persist"}
-//     * )
-//     * @ORM\JoinColumn(
-//     *      name="educational_id",
-//     *      referencedColumnName="id"
-//     * )
-//     */
-//    private $educational;
     /**
      * @ORM\ManyToOne(targetEntity="Educational", inversedBy="slides", cascade={"persist"})
      * @ORM\JoinColumn(name="educational_id", referencedColumnName="id", nullable=true)
      */
     protected $educational;
 
-//    /**
-//     * @ORM\OneToOne(
-//     *      targetEntity="Research",
-//     *      inversedBy="slide",
-//     *      cascade={"persist"}
-//     * )
-//     * @ORM\JoinColumn(
-//     *      name="research_id",
-//     *      referencedColumnName="id"
-//     * )
-//     */
-//    private $research;
     /**
      * @ORM\ManyToOne(targetEntity="Research", inversedBy="slides", cascade={"persist"})
      * @ORM\JoinColumn(name="research_id", referencedColumnName="id", nullable=true)
@@ -122,12 +92,10 @@ class Slide extends OrderAbstract
         parent::__construct($status,$provider);
         $this->scan = new ArrayCollection();
         $this->stain = new ArrayCollection();
-        //$this->specialStains = new ArrayCollection();
         $this->relevantScans = new ArrayCollection();
 
         if( $withfields ) {
             $this->addRelevantScan( new RelevantScans($status,$provider,$source) );
-            //$this->addSpecialStain( new SpecialStains($status,$provider,$source) );
             $this->addScan( new Scan($status,$provider,$source) );
             $this->addStain( new Stain($status,$provider,$source) );
         }
@@ -136,13 +104,7 @@ class Slide extends OrderAbstract
     public function makeDependClone() {
         $this->scan = $this->cloneDepend($this->scan,$this);
         $this->stain = $this->cloneDepend($this->stain,$this);
-        //$this->specialStains = $this->cloneDepend($this->specialStains,$this);
         $this->relevantScans = $this->cloneDepend($this->relevantScans,$this);
-
-//        foreach( $this->scan as $depend ) {
-//            echo "after depend id=".$depend->getId()."<br>";
-//        }
-
     }
     
     public function getId() {
@@ -314,30 +276,6 @@ class Slide extends OrderAbstract
                 ", relScansCount=".count($this->getRelevantScans()).":".$this->getRelevantScans()->first()."<br>";
     }
 
-
-//    public function addSpecialStain( $specialStains )
-//    {
-//        if( $specialStains != null ) {
-//            if( !$this->specialStains->contains($specialStains) ) {
-//                $this->specialStains->add($specialStains);
-//                $specialStains->setSlide($this);
-//                $specialStains->setProvider($this->getProvider());
-//            }
-//        }
-//        return $this;
-//    }
-//
-//    public function removeSpecialStain(\Oleg\OrderformBundle\Entity\SpecialStains $specialStains)
-//    {
-//        $this->specialStains->removeElement($specialStains);
-//    }
-//
-//    public function getSpecialStains()
-//    {
-//        return $this->specialStains;
-//    }
-    
-
     /**
      * Add relevantScans
      *
@@ -478,8 +416,68 @@ class Slide extends OrderAbstract
         } else {
             throw new \Exception( 'Slide does not have parent; slide:'.$this );
         }
-
     }
 
+    public function obtainPatient() {
+        $parent = $this->getParent();
+        $parentClass = new \ReflectionClass($parent);
+        $parentClassName = $parentClass->getShortName();
+        if( $parentClassName == "Block" ) {
+                        //block    part        acc           proc        patient
+            $patient = $parent->getParent()->getParent()->getParent()->getParent();
+        } else
+        if( $parentClassName == "Part") {
+                        //part     acc         proc        patient
+            $patient = $parent->getParent()->getParent()->getParent();
+        } else {
+            throw new \Exception('Parent can not be set of the class ' . $parentClassName );
+        }
+        return $patient;
+    }
+
+    public function obtainAccession() {
+        $parent = $this->getParent();
+        $parentClass = new \ReflectionClass($parent);
+        $parentClassName = $parentClass->getShortName();
+        if( $parentClassName == "Block" ) {
+                       //block     part        acc
+            $accession = $parent->getParent()->getParent();
+        } else
+            if( $parentClassName == "Part") {
+                            //part       acc
+                $accession = $parent->getParent();
+            } else {
+                throw new \Exception('Accession can not be set of the class ' . $parentClassName );
+            }
+
+        return $accession;
+    }
+
+    public function obtainPart() {
+        $parent = $this->getParent();
+        $parentClass = new \ReflectionClass($parent);
+        $parentClassName = $parentClass->getShortName();
+        if( $parentClassName == "Block" ) {
+                    //block     part
+            $part = $parent->getParent();
+        } else
+            if( $parentClassName == "Part") {
+                $part = $parent;
+            } else {
+                throw new \Exception('Accession can not be set of the class ' . $parentClassName );
+            }
+
+        return $part;
+    }
+
+    public function obtainBlock() {
+        $parent = $this->getParent();
+        $parentClass = new \ReflectionClass($parent);
+        $parentClassName = $parentClass->getShortName();
+        if( $parentClassName == "Block" ) {
+            return $parent;
+        }
+        return null;
+    }
 
 }

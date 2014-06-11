@@ -1,0 +1,79 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Slide Return Request for Order# {{ orderinfo.oid }}
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">Please select the slides you would like to be returned</h3>
+
+    <br>
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>Checkmark</th>
+                <th>Patient MRN</th>
+                <th>Patient Name</th>
+                <th>Accession Number</th>
+                <th>Part</th>
+                <th>Block</th>
+                <th> Stain</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for slide in orderinfo.slide %}
+
+            {% set patient =  slide.obtainPatient.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set patientkey =  patient.obtainValidKeyfield %}
+            {% set accession =  slide.obtainAccession.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set accessionkey =  accession.obtainValidKeyfield %}
+            {% set part =  slide.obtainPart.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set partkey =  part.obtainValidKeyfield %}
+            {% set block =  slide.obtainBlock.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% if block is defined and block != null %}
+                {% set blockkey =  block.obtainValidKeyfield %}
+            {% endif %}
+
+            <tr>
+
+                <td>
+                    <input type="checkbox" name="checkSlide" value="checked" checked/>
+                </td>
+
+                <td>
+                    {{ patientkey.field }}, {{ patientkey.keytype }}
+                </td>
+
+                <td>
+                    {{ patient.getName.first }}
+                </td>
+
+                <td>
+                    {{ accessionkey.field }}, {{ accessionkey.keytype }}
+                </td>
+
+                <td>
+                    {{ partkey.field }}
+                </td>
+
+                <td>
+                    {{ blockkey.field }}
+                </td>
+
+                <td>
+                    {% for stain in slide.stain %}
+                        {{ stain }}
+                    {% endfor %}
+                </td>
+
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+{% endblock %}

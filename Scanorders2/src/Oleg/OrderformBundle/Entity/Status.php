@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//(repositoryClass="Oleg\OrderformBundle\Repository\StatusRepository")
 /**
  * @ORM\Entity
  * @ORM\Table(name="status")
@@ -21,7 +20,7 @@ class Status extends ListAbstract
     protected $action;
 
     /**
-     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="status")
+     * @ORM\OneToMany(targetEntity="Oleg\OrderformBundle\Entity\OrderAbstract", mappedBy="status")
      */
     protected $orderinfo;
 
@@ -31,7 +30,7 @@ class Status extends ListAbstract
      */
     public function __construct()
     {
-        $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orderinfo = new ArrayCollection();
     }
 
     public function __toString() {

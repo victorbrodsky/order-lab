@@ -8,11 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Table(name="slideReturnRequest")
  * @ORM\HasLifecycleCallbacks
  */
-class OrderAbstract
-{
+class SlideReturnRequest extends OrderAbstract implements OrderSubjectInterface {
+
+    // Any methods defined in the OrderSubjectInterface
+    // are already implemented in the OrderAbstract
+
     /**
      * @var integer
      *
@@ -52,31 +55,44 @@ class OrderAbstract
     private $provider;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinTable(name="proxyuser_orderinfo",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")}
-     * )
-     */
-    protected $proxyuser;
-
-    /**
      * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
      */
     private $history;
 
+
+    //////////////////////////////////
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="returnSlide", type="string", nullable=true)
+     * @Assert\NotBlank
+     */
+    protected $returnSlide;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="urgency", type="string", nullable=true)
+     * @Assert\NotBlank
+     */
+    protected $urgency;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Slide", inversedBy="orderinfo")
+     * @ORM\JoinTable(name="slide_orderinfo")
+     **/
+    private $slide;
     
     /**
      * Constructor
      */
     public function __construct()
     {
+        $this->slide = new ArrayCollection();
         $this->provider = new ArrayCollection();
-        $this->proxyuser = new ArrayCollection();
         $this->history = new ArrayCollection();
     }
-
-
+    
     /**
      * Get id
      *
@@ -130,6 +146,57 @@ class OrderAbstract
     {
         $this->history->removeElement($history);
     }
+
+    /**
+     * Set returnSlide
+     *
+     * @param string $returnSlide
+     * @return OrderInfo
+     */
+    public function setReturnSlide($returnSlide)
+    {
+        $this->returnSlide = $returnSlide;
+    
+        return $this;
+    }
+
+    /**
+     * Get returnSlide
+     *
+     * @return string 
+     */
+    public function getReturnSlide()
+    {
+        return $this->returnSlide;
+    }
+
+    /**
+     * Set provider
+     *
+     * @param \stdClass $provider
+     * @return OrderInfo
+     */
+    public function setProvider($provider)
+    {
+        if( is_array($provider ) ) {
+            $this->provider = $provider;
+        } else {
+            $this->provider->clear();
+            $this->provider->add($provider);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get provider
+     *
+     * @return \stdClass 
+     */
+    public function getProvider()
+    {
+        return $this->provider;
+    }
     
     public function getStatus() {
         return $this->status;
@@ -148,31 +215,36 @@ class OrderAbstract
     }
 
     /**
-     * Set provider
+     * Add slide
      *
-     * @param \stdClass $provider
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
      * @return OrderInfo
      */
-    public function setProvider($provider)
+    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        if( is_array($provider ) ) {
-            $this->provider = $provider;
-        } else {
-            $this->provider->clear();
-            $this->provider->add($provider);
-        }
-
-        return $this;
+        if( !$this->slide->contains($slide) ) {
+            $this->slide->add($slide);
+        }    
     }
 
     /**
-     * Get provider
+     * Remove slide
      *
-     * @return \stdClass
+     * @param \Oleg\OrderformBundle\Entity\Slide $slide
      */
-    public function getProvider()
+    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
     {
-        return $this->provider;
+        $this->slide->removeElement($slide);
+    }
+
+    /**
+     * Get slide
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSlide()
+    {
+        return $this->slide;
     }
 
     public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
@@ -188,48 +260,5 @@ class OrderAbstract
     {
         $this->provider->removeElement($provider);
     }
-
-
-    public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
-    {
-        if( $proxyuser ) {
-            if( !$this->proxyuser->contains($proxyuser) ) {
-                $this->proxyuser->add($proxyuser);
-            }
-        }
-
-        return $this;
-    }
-
-    public function removeProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
-    {
-        $this->proxyuser->removeElement($proxyuser);
-    }
-
-    /**
-     * @param mixed $proxyuser
-     */
-    public function setProxyuser($proxyuser)
-    {
-        if( $proxyuser ) {
-            if( is_array($proxyuser) ) {
-                $this->proxyuser = $proxyuser;
-            } else {
-                $this->proxyuser->clear();
-                $this->proxyuser->add($proxyuser);
-            }
-        }
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProxyuser()
-    {
-        return $this->proxyuser;
-    }
-
-
 
 }

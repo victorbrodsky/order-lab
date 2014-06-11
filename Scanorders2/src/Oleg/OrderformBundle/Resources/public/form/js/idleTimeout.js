@@ -47,7 +47,7 @@ function idleTimeout() {
         AJAXTimeout: null,
         failedRequests: 1,
         idleAfter: _idleAfter,
-        warningLength: 5,                   //30,
+        warningLength: 30,
         pollingInterval: _idleAfter-50,
         keepAliveURL: urlCommonIdleTimeout,
         serverResponseEquals: 'OK',

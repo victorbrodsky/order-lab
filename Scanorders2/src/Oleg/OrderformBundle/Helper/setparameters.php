@@ -56,18 +56,28 @@ setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$passwo
 
 
     function checkParameterTable_ScanOrder($table, $conn) {
-        try {
-            $conn->query("DESC $table");
-        }
-        catch (Exception $e) {
+        $schemaManager = $conn->getSchemaManager();
+        if( $schemaManager->tablesExist(array($table)) == true ) {
+            return true;
+        } else {
             return false;
         }
-        return true;
+//        try {
+//            $sql = "DESC ".$table;
+//            //echo "sql=".$sql."<br>";
+//            $conn->query("DESC ".$table);
+//        }
+//        catch (Exception $e) {
+//            //echo "Exception=".$e."<br>";
+//            return false;
+//        }
+//        return true;
     }
 
     function setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$password) {
 
         if( !$host || $host == "" ) {
+            //exit("host is not defined, host=" . $host);
             return;
         }
 
@@ -86,6 +96,7 @@ setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$passwo
         $table = 'siteParameters';
 
         if( !checkParameterTable_ScanOrder($table, $conn) ) {
+            //exit($table." does not exists");
             return;
         }
 
@@ -97,7 +108,7 @@ setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$passwo
             //var_dump($params);
             //echo "count=".count($params)."<br>";
 
-            if( $params && count($params) > 1 ) {
+            if( $params && count($params) >= 1 ) {
 
                 $aDLDAPServerAddress = null;
                 $aDLDAPServerOu = null;

@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureRepository")
  * @ORM\Table(name="procedures")
  */
-class Procedure extends OrderAbstract
+class Procedure extends ObjectAbstract
 {
     /**
      * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="procedure", cascade={"persist"})

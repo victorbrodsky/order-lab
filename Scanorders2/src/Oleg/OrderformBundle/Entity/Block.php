@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\BlockRepository")
  * @ORM\Table(name="block")
  */
-class Block extends OrderAbstract
+class Block extends ObjectAbstract
 {
 
     /**
