@@ -174,7 +174,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $currentDataquality->setAccession($accValue);
 
             $currentDataquality->setOrderinfo($orderinfo);
-            $currentDataquality->setProvider($orderinfo->getProvider()->first());
+            $currentDataquality->setProvider($orderinfo->getProvider());
             $currentDataquality->setStatus('active');
 
         }
@@ -197,7 +197,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $key->setKeytype($acctype);
         $key->setStatus(self::STATUS_VALID);
         $key->setSource('scanorder');
-        $key->setProvider($orderinfo->getProvider()->first());
+        $key->setProvider($orderinfo->getProvider());
 
         $nextKey = $this->getNextNonProvided($accession,null,$orderinfo);
         $key->setField($nextKey);

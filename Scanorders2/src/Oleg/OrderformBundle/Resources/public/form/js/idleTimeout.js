@@ -7,6 +7,7 @@
  */
 
 var _idleAfter = 0;
+var _ajaxTimeout = 20000;  //15000 => 15 sec
 
 //https://github.com/ehynds/jquery-idle-timeout
 function idleTimeout() {

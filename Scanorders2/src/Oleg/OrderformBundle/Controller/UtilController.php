@@ -1076,6 +1076,36 @@ class UtilController extends Controller {
     }
 
 
+    /**
+     * @Route("/urgency", name="get-urgency")
+     * @Method("GET")
+     */
+    public function getUrgencyAction() {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $request = $this->get('request');
+        $opt = trim( $request->get('opt') );
+
+        $query = $em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Urgency', 'list')
+            ->select("list.id as id, list.name as text")
+            ->orderBy("list.orderinlist","ASC");
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
+
+        $output = $query->getQuery()->getResult();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
 
 
 

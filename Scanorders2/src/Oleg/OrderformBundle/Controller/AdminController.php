@@ -29,6 +29,7 @@ use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Department;
 use Oleg\OrderformBundle\Entity\Institution;
+use Oleg\OrderformBundle\Entity\Urgency;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -100,6 +101,7 @@ class AdminController extends Controller
         $count_comments = $this->generateProcessorComments();
         $count_department = $this->generateDepartments();
         $count_institution = $this->generateInstitutions();
+        $count_urgency = $this->generateUrgency();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
@@ -124,6 +126,7 @@ class AdminController extends Controller
             'Site Parameters='.$count_siteParameters.' '.
             'Departments='.$count_department.' '.
             'Institutions='.$count_institution.' '.
+            'Urgency='.$count_urgency.' '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -1049,6 +1052,37 @@ class AdminController extends Controller
             $em->flush();
             $count = $count + 10;
         } //foreach
+
+        return $count;
+    }
+
+
+    public function generateUrgency() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:Urgency')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'As soon as possible', 'Urgently (the patient is waiting in my office)'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new Urgency();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
 
         return $count;
     }

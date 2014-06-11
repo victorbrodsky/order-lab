@@ -47,6 +47,7 @@ class ListController extends Controller
      * @Route("/departments/", name="departments-list")
      * @Route("/institutions/", name="institutions-list")
      * @Route("/accounts/", name="accounts-list")
+     * @Route("/urgency/", name="urgency-list")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
      */
@@ -133,6 +134,7 @@ class ListController extends Controller
      * @Route("/departments/", name="departments_create")
      * @Route("/institutions/", name="institutions_create")
      * @Route("/accounts/", name="accounts_create")
+     * @Route("/urgency/", name="urgency_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -257,6 +259,7 @@ class ListController extends Controller
      * @Route("/departments/new", name="departments_new")
      * @Route("/institutions/new", name="institutions_new")
      * @Route("/accounts/new", name="accounts_new")
+     * @Route("/urgency/new", name="urgency_new")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
      */
@@ -326,6 +329,7 @@ class ListController extends Controller
      * @Route("/departments/{id}", name="departments_show")
      * @Route("/institutions/{id}", name="institutions_show")
      * @Route("/accounts/{id}", name="accounts_show")
+     * @Route("/urgency/{id}", name="urgency_show")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
      */
@@ -387,6 +391,7 @@ class ListController extends Controller
      * @Route("/departments/{id}/edit", name="departments_edit")
      * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/accounts/{id}", name="accounts_edit")
+     * @Route("/urgency/{id}", name="urgency_edit")
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -494,6 +499,7 @@ class ListController extends Controller
      * @Route("/departments/{id}", name="departments_update")
      * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/accounts/{id}", name="accounts_update")
+     * @Route("/urgency/{id}", name="urgency_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
      */
@@ -680,6 +686,10 @@ class ListController extends Controller
             $className = "Account";
             $displayName = "Accounts";
             break;
+        case "urgency":
+            $className = "Urgency";
+            $displayName = "Urgencies";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -722,6 +732,7 @@ class ListController extends Controller
      * @Route("/departments/{id}", name="departments_delete")
      * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/accounts/{id}", name="accounts_delete")
+     * @Route("/urgency/{id}", name="urgency_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

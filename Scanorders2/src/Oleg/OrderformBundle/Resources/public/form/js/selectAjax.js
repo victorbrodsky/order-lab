@@ -38,6 +38,7 @@ var _courseTitle = new Array();
 var _department = new Array();
 var _institution = new Array();
 var _account = new Array();
+var _urgency = new Array();
 
 //var userpathserviceflag = false;
 
@@ -56,8 +57,8 @@ function regularCombobox() {
     });
 
     //set amd make provider read only
-    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
-    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
+//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
+//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
 
     //preselect with current user
     if( proxyuser_id ) {
@@ -113,6 +114,8 @@ function customCombobox() {
 }
 
 function populateSelectCombobox( target, data, placeholder, multiple ) {
+
+    //console.log("target="+target);
 
     if( placeholder ) {
         var allowClear = true;
@@ -875,6 +878,36 @@ function getComboboxAccount(urlCommon,ids) {
 
 }
 
+//#############  return slides to  ##############//
+function getUrgency(urlCommon) {
+
+    var url = urlCommon+"urgency";
+
+    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+        url = url + "?opt="+orderinfoid;
+    }
+
+    //console.log("scanregion.length="+organ.length);
+    if( _urgency.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _urgency = data;
+            populateSelectCombobox( ".ajax-combobox-urgency", _urgency, null );
+            if( cicle == "new"  ) {
+                setElementToId( ".ajax-combobox-urgency", _urgency );
+            }
+        });
+    } else {
+        populateSelectCombobox( ".ajax-combobox-urgency", _urgency, null );
+        if( cicle == "new"  ) {
+            setElementToId( ".ajax-combobox-urgency", _urgency );
+        }
+    }
+
+}
 
 
 

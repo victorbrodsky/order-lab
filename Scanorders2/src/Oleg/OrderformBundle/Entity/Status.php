@@ -20,10 +20,9 @@ class Status extends ListAbstract
     protected $action;
 
     /**
-     * @ORM\OneToMany(targetEntity="Oleg\OrderformBundle\Entity\OrderAbstract", mappedBy="status")
+     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="status")
      */
     protected $orderinfo;
-
 
     /**
      * Constructor

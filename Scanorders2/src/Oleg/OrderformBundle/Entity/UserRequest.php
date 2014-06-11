@@ -174,22 +174,6 @@ class UserRequest
         return $this->request;
     }
 
-//    /**
-//     * @param mixed $pathologyService
-//     */
-//    public function setPathologyService($pathologyService)
-//    {
-//        $this->pathologyService = $pathologyService;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getPathologyService()
-//    {
-//        return $this->pathologyService;
-//    }
-
     public function getName() {
         return $this->name;
     }

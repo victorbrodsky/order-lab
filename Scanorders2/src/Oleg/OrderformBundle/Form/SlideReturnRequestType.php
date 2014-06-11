@@ -1,0 +1,71 @@
+<?php
+
+namespace Oleg\OrderformBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
+
+
+class SlideReturnRequestType extends AbstractType
+{
+
+    protected $entity;
+    protected $params;
+
+    public function __construct( $params=null, $entity=null )
+    {
+        if( $params ) $this->params = $params;
+        if( $entity ) $this->entity = $entity;
+    }
+        
+    
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+
+        $builder->add('returnSlide', 'custom_selector', array(
+            'label' => '* Return Slides to:',
+            'attr' => array('class' => 'ajax-combobox-return', 'type' => 'hidden'),
+            'required'=>true,
+            'classtype' => 'returnSlide'
+        ));
+
+        //$builder->add( 'provider', new ProviderType($this->params,$this->entity), array('label'=>'Submitter:') );
+
+        $builder->add('urgency', 'custom_selector', array(
+            'label' => 'Urgency:',
+            'attr' => array('class' => 'ajax-combobox-urgency', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'urgency'
+        ));
+
+        //echo "orderid=".$this->params['orderid']."<br>";
+        //$builder->add('slide','hidden');
+        $builder->add('slide', 'entity', array(
+            'class' => 'Oleg\OrderformBundle\Entity\Slide',
+            'expanded' => true,
+            'multiple' => true,
+            'label' => false,
+            'property' => 'id',
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where( "list.id = :id" )
+                        ->setParameters( array( 'id'=> $this->params['orderid'] ) );
+            },
+        ));
+        
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest'
+        ));
+    }
+
+    public function getName()
+    {
+        return 'oleg_orderformbundle_slidereturnrequesttype';
+    }
+}

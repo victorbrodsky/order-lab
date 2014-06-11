@@ -193,6 +193,13 @@
         <a href="{{ path('accounts-list') }}">List of Accounts</a>
     </p>
 
+    <hr>
+
+    <h3 class="text-info">Urgencies</h3>
+    <p>
+        <a href="{{ path('urgency-list') }}">List of Urgencies</a>
+    </p>
+
     {% if environment is not defined %}
         {% set environment = 'dev' %}
     {% endif %}

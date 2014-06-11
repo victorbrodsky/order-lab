@@ -75,7 +75,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //we should have only one key field !!!
             $key->setField($nextKey);
             $key->setStatus(self::STATUS_VALID);
-            $key->setProvider($orderinfo->getProvider()->first());
+            $key->setProvider($orderinfo->getProvider());
 
         } else {
 
@@ -160,7 +160,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //set provider
-        $entity->setProvider($orderinfo->getProvider()->first());
+        $entity->setProvider($orderinfo->getProvider());
 
         //echo "Finish Set Result for entity:".$entity;
         //echo 'mem after set result: ' . (memory_get_usage()/1024/1024) . "<br />\n";
@@ -370,7 +370,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     public function processFieldArrays( $entity, $orderinfo=null, $original=null, $status=null ) {
 
         if( $orderinfo ) {
-            $provider = $orderinfo->getProvider()->first(); //assume orderinfo has only one provider.
+            $provider = $orderinfo->getProvider(); //assume orderinfo has only one provider.
             //echo "provider=".$provider."<br>";
         }
 

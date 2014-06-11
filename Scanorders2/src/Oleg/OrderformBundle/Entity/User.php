@@ -101,21 +101,11 @@ class User extends BaseUser
      */
     protected $appliedforaccessdate;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $timezone;
-
     /**
      * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist"})
      */
     protected $preferences;
 
-//    /**
-//     * @var array
-//     * @ORM\Column(type="array", nullable=true)
-//     */
-//    private $chiefservices;
     /**
      * @ORM\ManyToMany(targetEntity="PathServiceList")
      * @ORM\JoinTable(name="fos_user_chiefservice",
@@ -146,13 +136,7 @@ class User extends BaseUser
         $this->pathologyServices = $pathologyServices;
     }
 
-    /**
-     * @return mixed
-     */
-//    public function getPathologyServices()
-//    {
-//        return $this->pathologyServices;
-//    }
+
     /**
      * @return mixed
      */
@@ -391,22 +375,6 @@ class User extends BaseUser
     {
         return $this->primaryPathologyService;
     }
-
-//    /**
-//     * @param mixed $timezone
-//     */
-//    public function setTimezone($timezone)
-//    {
-//        $this->timezone = $timezone;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getTimezone()
-//    {
-//        return $this->timezone;
-//    }
 
     //chief services
     /**

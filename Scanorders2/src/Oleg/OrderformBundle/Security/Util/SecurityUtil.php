@@ -94,9 +94,9 @@ class SecurityUtil {
 
         if( $entity ) {
 
-            //echo "provider:".$entity->getProvider()->first()->getId()." ?= ".$user->getId()."<br>";
+            //echo "provider:".$entity->getProvider()->getId()." ?= ".$user->getId()."<br>";
 
-            if( $entity->getProvider()->first() && $entity->getProvider()->first()->getId() === $user->getId() ) {
+            if( $entity->getProvider() && $entity->getProvider()->getId() === $user->getId() ) {
                 $allow = true;
             }
 

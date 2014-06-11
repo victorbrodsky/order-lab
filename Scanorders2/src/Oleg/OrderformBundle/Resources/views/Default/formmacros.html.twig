@@ -125,10 +125,8 @@
 
 {% macro orderinfo(form) %}
 
-    {% for provider in form.vars.value.provider %}
-        <input type="hidden" id="user_name" value="{{ provider.username }}" />
-        <input type="hidden" id="user_id" value="{{ provider.id }}" />
-    {% endfor %}
+    <input type="hidden" id="user_name" value="{{ form.vars.value.provider.username }}" />
+    <input type="hidden" id="user_id" value="{{ form.vars.value.provider.id }}" />
 
     {% for proxyuser in form.vars.value.proxyuser %}
         <input type="hidden" id="proxyuser_name" value="{{ proxyuser.username }}" />
@@ -265,7 +263,7 @@
             {% if histories|first.orderinfo.status == "Amended" %}
                 <p>
                     This order has been originally submitted
-                    by {{ histories|first.orderinfo.provider|first }} on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
+                    by {{ histories|first.orderinfo.provider }} on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
                     and most recently {{ formstatus }} by {{ histories|first.provider }}
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>

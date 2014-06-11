@@ -25,21 +25,21 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         }
 
         if( !$slide->getProvider() ) {
-            //echo "set slide provider=".$orderinfo->getProvider()->first()."<br>";
-            $slide->setProvider($orderinfo->getProvider()->first());
+            //echo "set slide provider=".$orderinfo->getProvider()."<br>";
+            $slide->setProvider($orderinfo->getProvider());
         }
 
         $slide = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($slide,$orderinfo,$original);
 
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {
-            $scan->setProvider($orderinfo->getProvider()->first());
+            $scan->setProvider($orderinfo->getProvider());
             $scan = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($scan,$orderinfo,$original);
         } //scan
 
         $stains = $slide->getStain();
         foreach( $stains as $stain ) {
-            $stain->setProvider($orderinfo->getProvider()->first());
+            $stain->setProvider($orderinfo->getProvider());
             $stain = $em->getRepository('OlegOrderformBundle:Slide')->processFieldArrays($stain,$orderinfo,$original);
         } //stain
 

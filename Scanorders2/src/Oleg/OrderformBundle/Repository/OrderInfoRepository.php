@@ -76,7 +76,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $dataquality->setAccessiontype($accessiontype);
 
             $dataquality->setOrderinfo($entity);
-            $dataquality->setProvider($entity->getProvider()->first());
+            $dataquality->setProvider($entity->getProvider());
             $dataquality->setStatus('active');
 
 //            echo "dataquality: description=".$dataquality->getDescription()."<br>";
@@ -294,7 +294,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $this->router, $newId);
 
             //now entity is a cloned order object
-            //echo "rep: provider 3=".$entity->getProvider()->first()."<br>";
+            //echo "rep: provider 3=".$entity->getProvider()."<br>";
             //$entity->setProvider($this->user);
 
             //swap oid

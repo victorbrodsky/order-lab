@@ -111,7 +111,7 @@ class MultyScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entity->setProvider($user);
-//        echo "provider1=".$entity->getProvider()->first()."<br>";
+//        echo "provider1=".$entity->getProvider()."<br>";
 
         $status = 'valid';    //invalid
         $source = 'scanorder';
@@ -160,7 +160,7 @@ class MultyScanOrderController extends Controller {
         //$form->bind($request);
         $form->handleRequest($request);
 
-//        echo "provider2=".$entity->getProvider()->first()."<br>";
+//        echo "provider2=".$entity->getProvider()."<br>";
         //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_accession_0_field
 //        $patient = $form["patient"][0]->getData();
 //        $mrn = $patient->getMrn()->first()->getField();
@@ -267,15 +267,13 @@ class MultyScanOrderController extends Controller {
                 } else
                 if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
                     $submitStatusStr = "is saved but not submitted";
-                } else {
-                    $text = null;
                 }
 
                 $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
                 //TODO: get siteemail from DB
 
-                $emailUtil->sendEmail( $email, $em, $entity, $orderurl, $text, $conflictStr, $submitStatusStr );
+                $emailUtil->sendEmail( $email, $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {
                     return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));

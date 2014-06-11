@@ -92,7 +92,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             //we should have only one key field !!!
             $key->setField($nextKey);
             $key->setStatus(self::STATUS_VALID);
-            $key->setProvider($orderinfo->getProvider()->first());
+            $key->setProvider($orderinfo->getProvider());
 
         }
         else {
@@ -106,7 +106,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         //add procedure's name, sex, age to the corresponding patient fields in case if this is a new procedure (not found in DB)
-        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider()->first());
+        $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
 
         return $this->setResult($entity, $orderinfo);
 

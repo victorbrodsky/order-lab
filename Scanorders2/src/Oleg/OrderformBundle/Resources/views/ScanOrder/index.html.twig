@@ -196,7 +196,7 @@
                     <td></td>
                 {% endif %}
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
-                <td>{{ entity.provider|first }}</td>
+                <td>{{ entity.provider }}</td>
                 {% if showproxyuser is defined and showproxyuser == 'true' %}
                     <td>
                         {% for proxyuser in entity.proxyuser %}

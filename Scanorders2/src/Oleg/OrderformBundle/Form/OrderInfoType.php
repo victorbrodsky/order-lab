@@ -146,22 +146,19 @@ class OrderInfoType extends AbstractType
             'required'  => false,
         ));
 
-        $attr = array('class' => 'combobox combobox-width');
-        $builder->add('provider', 'entity', array(
-            'class' => 'OlegOrderformBundle:User',
-            'label'=>'* Submitter:',
-            'required' => true,
-            //'read_only' => true,    //not working => disable by twig
-            //'multiple' => true,
-            'attr' => $attr,
-        ));
+//        $builder->add('provider', null, array(
+//            'label'=>'* Submitter:',
+//            'required' => true,
+//            'attr' => array('class' => 'form-control')
+//        ));
+        $builder->add( 'provider', new ProviderType($this->params,$this->entity), array('label'=>'Submitter:') );
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegOrderformBundle:User',
             'label'=>'Ordering Provider:',
             'required' => false,
             //'multiple' => true,
-            'attr' => $attr,
+            'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('u')
                     ->where('u.roles LIKE :roles')

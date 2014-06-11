@@ -1,6 +1,3 @@
-#imports:
-#    - { resource: "@OlegOrderformBundle/Helper/Parameters.php" }
-
 parameters:
 
   default_time_zone: America/New_York

@@ -13,12 +13,4 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FormType extends ListAbstract
 {
 
-    /**
-     * Constructor
-     */
-//    public function __construct()
-//    {
-//        $this->orderinfo = new \Doctrine\Common\Collections\ArrayCollection();
-//    }
-
 }

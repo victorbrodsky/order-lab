@@ -4,11 +4,60 @@
     Slide Return Request for Order# {{ orderinfo.oid }}
 {% endblock %}
 
+
+
+{% block maincss %}
+
+    {% stylesheets
+    'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+    '@OlegOrderformBundle/Resources/public/select2/select2.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
+            getUrgency(urlCommon);
+
+        });
+
+    </script>
+
+{% endblock %}
+
+
+
+
 {% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <input type="hidden" id="formcicle" value="{{ cicle }}" />
 
     <h3 class="text-info">Please select the slides you would like to be returned</h3>
 
     <br>
+
+{{ form_start(form) }}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
@@ -40,7 +89,10 @@
             <tr>
 
                 <td>
-                    <input type="checkbox" name="checkSlide" value="checked" checked/>
+                    {#<input type="checkbox" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}]" value="{{ slide.id }}" checked/>#}
+                    {#<input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}" checked>#}
+                    {#<input type="checkbox" value="2" name="oleg_orderformbundle_slidereturnrequesttype[slide][]" id="oleg_orderformbundle_slidereturnrequesttype_slide_2" checked>#}
+                    {{ formmacros.field(form.slide) }}
                 </td>
 
                 <td>
@@ -76,4 +128,27 @@
     </table>
 
 
+        <div  class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h4 class="panel-title">Slide Return Request</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body collapse in">
+                {{ formmacros.field(form.returnSlide) }}
+                {{ formmacros.field(form.urgency) }}
+
+                {{ form_rest(form) }}
+            </div>
+        </div>
+
+        <p>
+            <button class="btn btn-success" type="submit">Submit</button>
+        </p>
+
+{{ form_end(form) }}
+
 {% endblock %}
+

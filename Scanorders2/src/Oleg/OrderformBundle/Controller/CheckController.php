@@ -322,7 +322,7 @@ class CheckController extends Controller {
                         $newkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
                         $extraid = $newkeytype->getId()."";
                     }
-                    $orderinfoString = "Order ".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider()->first();
+                    $orderinfoString = "Order ".$patient->getOrderinfo()->first()->getId()." submitted on ".$transformer->transform($patient->getOrderinfo()->first()->getOrderdate()). " by ". $patient->getOrderinfo()->first()->getProvider();
                 }
 
                 $procedureName = $entity->getProcedure()->getName();

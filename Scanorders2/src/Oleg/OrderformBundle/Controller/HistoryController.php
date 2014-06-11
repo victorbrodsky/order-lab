@@ -315,7 +315,7 @@ class HistoryController extends Controller
             if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
 
                 //don't mark with view comments placed by PROCESSOR to User and viewed by another PROCESSOR (order->provider does not have role PROCESSOR)
-//                $orderprovider = $entity->getOrderinfo()->getProvider()->first();
+//                $orderprovider = $entity->getOrderinfo()->getProvider();
 //                echo $orderprovider."<br>";
 //                if( $orderprovider->hasRole('ROLE_ADMIN') || $orderprovider->hasRole('ROLE_PROCESSOR') ) {
 //                    //
@@ -375,7 +375,7 @@ class HistoryController extends Controller
 
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
-        //if( $viewcount > 0 && $orderinfo->getProvider()->first()->getId() != $user->getId()) {
+        //if( $viewcount > 0 && $orderinfo->getProvider()->getId() != $user->getId()) {
         if( 1 ) {
             //add a new record in history
             $history = new History();

@@ -14,22 +14,23 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\HasLifecycleCallbacks
  */
 class OrderInfo extends OrderAbstract {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="orderdate", type="datetime", nullable=true)
-     *
-     */
-    private $orderdate;
+//    /**
+//     * @var integer
+//     *
+//     * @ORM\Column(name="id", type="integer")
+//     * @ORM\Id
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    private $id;
+//
+//    /**
+//     * @var \DateTime
+//     *
+//     * @ORM\Column(name="orderdate", type="datetime", nullable=true)
+//     *
+//     */
+//    private $orderdate;
 
     /**
      * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
@@ -42,12 +43,12 @@ class OrderInfo extends OrderAbstract {
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
      */
     private $status;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
-     * @ORM\JoinColumn(name="formtype_id", referencedColumnName="id")
-     */
-    private $type;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
+//     * @ORM\JoinColumn(name="formtype_id", referencedColumnName="id")
+//     */
+//    private $type;
 
     /**
      * oid - id of the original order.
@@ -92,14 +93,14 @@ class OrderInfo extends OrderAbstract {
      */
     protected $returnSlide;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinTable(name="provider_orderinfo",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="provider_id", referencedColumnName="id")}
-     * )
-     */
-    private $provider;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+//     * @ORM\JoinTable(name="provider_orderinfo",
+//     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="provider_id", referencedColumnName="id")}
+//     * )
+//     */
+//    private $provider;
 
     /**
      * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
@@ -218,7 +219,7 @@ class OrderInfo extends OrderAbstract {
         $this->part = new ArrayCollection();      
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
-        $this->provider = new ArrayCollection();
+        //$this->provider = new ArrayCollection();
         $this->proxyuser = new ArrayCollection();
         $this->dataquality = new ArrayCollection();
         $this->history = new ArrayCollection();
@@ -228,7 +229,7 @@ class OrderInfo extends OrderAbstract {
 
         //throw new \Exception('Cloning orderinfo');
 
-        if ($this->id) {
+        if( $this->getId() ) {
             $this->setId(null);
 
             $children = $this->getPatient(); // Get current collection
@@ -243,19 +244,20 @@ class OrderInfo extends OrderAbstract {
             $this->slide = new ArrayCollection();
 
             //
-            $providers = $this->getProvider();
+            $provider = $this->getProvider();
             $proxys = $this->getProxyuser();
             $dataqualities = $this->getDataquality();
             $histories = $this->getHistory();
 
-            $this->provider = new ArrayCollection();
+            //$this->setProvider( new ArrayCollection() );
             $this->proxyuser = new ArrayCollection();
             $this->dataquality = new ArrayCollection();
             $this->history = new ArrayCollection();
 
-            foreach( $providers as $thisprov ) {
-                $this->addProvider($thisprov);
-            }
+            $this->setProvider( $provider );
+//            foreach( $providers as $thisprov ) {
+//                $this->addProvider($thisprov);
+//            }
 
             foreach( $proxys as $thisproxy ) {
                 $this->addProxyuser($thisproxy);
@@ -293,7 +295,6 @@ class OrderInfo extends OrderAbstract {
         $class = new \ReflectionClass($depend);
         $className = $class->getShortName();    //Part
         $removeMethod = "remove".$className;
-        //echo "orderinfo remove depened:".$removeMethod."<br>";
         $this->$removeMethod($depend);
     }
 
@@ -303,43 +304,44 @@ class OrderInfo extends OrderAbstract {
         $addMethod = "add".$className;
         $this->$addMethod($depend);
     }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $id;
-    }
 
-    /**
-    * @ORM\PrePersist
-    */
-    public function setOrderdate($date=null) {
-        if( $date ) {
-            $this->orderdate = $date;
-        } else {
-            $this->orderdate = new \DateTime();
-        }
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
+//
+//    public function setId($id)
+//    {
+//        $this->id = $id;
+//        return $id;
+//    }
 
-    /**
-     * Get orderdate
-     *
-     * @return \DateTime 
-     */
-    public function getOrderdate()
-    {
-        return $this->orderdate;
-    }
+//    /**
+//    * @ORM\PrePersist
+//    */
+//    public function setOrderdate($date=null) {
+//        if( $date ) {
+//            $this->orderdate = $date;
+//        } else {
+//            $this->orderdate = new \DateTime();
+//        }
+//    }
+
+//    /**
+//     * Get orderdate
+//     *
+//     * @return \DateTime
+//     */
+//    public function getOrderdate()
+//    {
+//        return $this->orderdate;
+//    }
 
     /**
      * Set pathologyService
@@ -485,48 +487,50 @@ class OrderInfo extends OrderAbstract {
         return $this->returnSlide;
     }
 
-    /**
-     * Set provider
-     *
-     * @param \stdClass $provider
-     * @return OrderInfo
-     */
-    public function setProvider($provider)
-    {
-        if( is_array($provider ) ) {
-            $this->provider = $provider;
-        } else {
-            $this->provider->clear();
-            $this->provider->add($provider);
-        }
-    
-        return $this;
-    }
+//    /**
+//     * Set provider
+//     *
+//     * @param \stdClass $provider
+//     * @return OrderInfo
+//     */
+//    public function setProvider($provider)
+//    {
+//        if( is_array($provider ) ) {
+//            $this->provider = $provider;
+//        } else {
+//            $this->provider->clear();
+//            $this->provider->add($provider);
+//        }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get provider
+//     *
+//     * @return \stdClass
+//     */
+//    public function getProvider()
+//    {
+//        return $this->provider;
+//    }
+//
+//
+//    public function getType() {
+//        return $this->type;
+//    }
+//
+//
+//    public function setType($type) {
+//        $this->type = $type;
+//    }
 
-    /**
-     * Get provider
-     *
-     * @return \stdClass 
-     */
-    public function getProvider()
-    {
-        return $this->provider;
-    }
-    
     public function getStatus() {
         return $this->status;
     }
 
-    public function getType() {
-        return $this->type;
-    }
-
     public function setStatus($status) {
         $this->status = $status;
-    }
-
-    public function setType($type) {
-        $this->type = $type;
     }
 
     /**
@@ -735,8 +739,8 @@ class OrderInfo extends OrderAbstract {
 //        $patient_info .= ")";
 
 //        return "OrderInfo: id=".$this->id.", ".$this->educational.", ".$this->research.", patientCount=".count($this->patient).":".$patient_info.", slideCount=".count($this->slide)."<br>";
-        return "OrderInfo: id=".$this->id.", oid=".$this->oid.", status=".$this->status.
-                ", providerCount=".count($this->getProvider()).", providerName=".$this->getProvider()->first()->getUsername().", providerId=".$this->getProvider()->first()->getId().
+        return "OrderInfo: id=".$this->getId().", oid=".$this->oid.", status=".$this->getStatus().
+                ", provider=".$this->getProvider().", providerName=".$this->getProvider()->getUsername().", providerId=".$this->getProvider()->getId().
                 ", edu=".$this->educational.
                 ", res=".$this->research.", patientCount=".count($this->patient).
                 ", slideCount=".count($this->slide)."<br>";
@@ -921,19 +925,19 @@ class OrderInfo extends OrderAbstract {
         return $this->proxyuser;
     }
 
-    public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
-    {
-        if( !$this->provider->contains($provider) ) {
-            $this->provider->add($provider);
-        }
-
-        return $this;
-    }
-
-    public function removeProvider(\Oleg\OrderformBundle\Entity\User $provider)
-    {
-        $this->provider->removeElement($provider);
-    }
+//    public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
+//    {
+//        if( !$this->provider->contains($provider) ) {
+//            $this->provider->add($provider);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeProvider(\Oleg\OrderformBundle\Entity\User $provider)
+//    {
+//        $this->provider->removeElement($provider);
+//    }
 
     //TODO: testing
     public function getChildren() {

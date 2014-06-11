@@ -7,9 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="slidedelivery")
+ * @ORM\Table(name="urgency ")
  */
-class SlideDelivery extends ListAbstract
+class Urgency extends ListAbstract
 {
 
 
