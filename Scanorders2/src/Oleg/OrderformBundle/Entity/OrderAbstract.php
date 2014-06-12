@@ -43,7 +43,7 @@ class OrderAbstract {
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
      */
     protected $provider;

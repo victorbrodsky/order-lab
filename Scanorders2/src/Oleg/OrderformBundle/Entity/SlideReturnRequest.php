@@ -80,6 +80,8 @@ class SlideReturnRequest extends OrderAbstract {
         $this->status = $status;
     }
 
+
+
     /**
      * Add slide
      *
@@ -141,6 +143,42 @@ class SlideReturnRequest extends OrderAbstract {
         return $this->urgency;
     }
 
+    public function getSlideDescription( $user ) {
 
+        $description = "";
+        foreach( $this->slide as $slide ) {
+
+            $patient =  $slide->obtainPatient()->filterArrayFields($user,true);
+            $patientkey =  $patient->obtainValidKeyfield();
+
+            $accession =  $slide->obtainAccession()->filterArrayFields($user,true);
+            $accessionkey =  $accession->obtainValidKeyfield();
+
+            $part =  $slide->obtainPart()->filterArrayFields($user,true);
+            $partkey =  $part->obtainValidKeyfield();
+
+            $block =  $slide->obtainBlock()->filterArrayFields($user,true);
+            $blockDesc = "";
+            if( $block ) {
+                $blockkey =  $block->obtainValidKeyfield();
+                $blockDesc = $blockkey->getField();
+            }
+
+            $stainArr = array();
+            foreach( $slide->getStain() as $stain ) {
+                $stainArr[] = $stain."";
+            }
+            $stainDesc = implode(",", $stainArr);
+
+            $description .= "MRN: ".$patientkey->getField() . "," . $patientkey->getKeytype() . "; " .
+                            " Patient Name: " . $patient->getName()->first(). "; " .
+                            " Accession: " . $accessionkey->getField() . "," . $accessionkey->getKeytype() . "; " .
+                            " Part: " . $partkey->getField() . "; " .
+                            " Block: ".$blockDesc . "; " .
+                            " Stain: " . $stainDesc;
+        }
+
+        return $description;
+    }
 
 }

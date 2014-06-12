@@ -1097,7 +1097,15 @@ class UtilController extends Controller {
 
         $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
 
-        $output = $query->getQuery()->getResult();
+        $urgencies = $query->getQuery()->getResult();
+
+        $output = array();
+        foreach( $urgencies as $urgency ) {
+            //echo "urgency=".$urgency->getName()." ";
+            //var_dump($urgency);
+            $element = array('id'=>$urgency['text']."", 'text'=>$urgency['text']."");
+            $output[] = $element;
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

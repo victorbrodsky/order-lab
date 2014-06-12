@@ -22,8 +22,6 @@ var orderformtype = $("#orderformtype").val();
 var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
 
-var _ajaxTimeout = 20000;  //15000 => 15 sec
-
 var _external_user = null;
 
 //var _autogenAcc = 8;

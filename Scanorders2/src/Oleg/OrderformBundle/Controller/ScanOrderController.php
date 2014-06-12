@@ -98,7 +98,7 @@ class ScanOrderController extends Controller {
 
         //create filters
         $form = $this->createForm(new FilterType( $this->getFilter($routeName), $user, $services ), null);
-        $form->bind($request);
+        $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");

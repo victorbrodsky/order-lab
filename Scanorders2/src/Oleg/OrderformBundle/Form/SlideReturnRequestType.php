@@ -25,7 +25,7 @@ class SlideReturnRequestType extends AbstractType
     {
 
         $builder->add('returnSlide', 'custom_selector', array(
-            'label' => '* Return Slides to:',
+            'label' => 'Return Slides to:',
             'attr' => array('class' => 'ajax-combobox-return', 'type' => 'hidden'),
             'required'=>true,
             'classtype' => 'returnSlide'
@@ -40,19 +40,15 @@ class SlideReturnRequestType extends AbstractType
             'classtype' => 'urgency'
         ));
 
-        //echo "orderid=".$this->params['orderid']."<br>";
-        //$builder->add('slide','hidden');
-        $builder->add('slide', 'entity', array(
-            'class' => 'Oleg\OrderformBundle\Entity\Slide',
-            'expanded' => true,
-            'multiple' => true,
-            'label' => false,
-            'property' => 'id',
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where( "list.id = :id" )
-                        ->setParameters( array( 'id'=> $this->params['orderid'] ) );
-            },
+        $builder->add('slide', 'collection', array(
+            'type' => new SlideSimpleType($this->params),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'label' => false,//" ",
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__slides__',
         ));
         
     }

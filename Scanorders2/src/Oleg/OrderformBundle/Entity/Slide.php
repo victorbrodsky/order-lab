@@ -414,7 +414,7 @@ class Slide extends ObjectAbstract
         } else if( $this->getPart() ) {
             return $this->getPart();
         } else {
-            throw new \Exception( 'Slide does not have parent; slide:'.$this );
+            throw new \Exception( 'Slide does not have parent; slide id='.$this->id );
         }
     }
 

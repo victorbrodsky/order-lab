@@ -1,0 +1,190 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Slides Requested for Return
+{% endblock %}
+
+
+{% block maincss %}
+
+    {% stylesheets
+    'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/action.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+    '@OlegOrderformBundle/Resources/public/select2/select2.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $(".combobox").select2();
+
+        });
+
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    <form action="{{ path('all-slides-requested-for-return') }}" method="get" {{ form_enctype(filter) }} class="well form-search">
+
+        <div class="row">
+            <div class="col-xs-3">
+                {{ form_widget(filter) }}
+            </div>
+            <div class="col-xs-1">
+                <div class="btn-group btn-group-justified">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(filter) }}
+        {{ form_widget(filter._token) }}
+
+    </form>
+
+    <br>
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th class="col-xs-2">Return Slides to</th>
+                <th>Urgency</th>
+                <th>Slides</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+
+        {% for sliderequest in sliderequests %}
+
+            {% if sliderequest.status == 'active' %}
+                <tr class="order-urgent-status" >
+            {% elseif sliderequest.status == 'returned' %}
+                <tr class="order-neutral-status" >
+            {% else %}
+                <tr>
+            {% endif %}
+
+                <td>
+                    {{ sliderequest.status }}
+                </td>
+
+                <td>
+                    {{ sliderequest.returnSlide }}
+                </td>
+
+                <td>
+                    {{ sliderequest.urgency }}
+                </td>
+
+                <td>
+
+                    {% for slide in sliderequest.slide %}
+
+                        {% set patient =  slide.obtainPatient.filterArrayFields(app.security.getToken().getUser(),true) %}
+                        {% set patientkey =  patient.obtainValidKeyfield %}
+                        {% set accession =  slide.obtainAccession.filterArrayFields(app.security.getToken().getUser(),true) %}
+                        {% set accessionkey =  accession.obtainValidKeyfield %}
+                        {% set part =  slide.obtainPart.filterArrayFields(app.security.getToken().getUser(),true) %}
+                        {% set partkey =  part.obtainValidKeyfield %}
+                        {% set block =  slide.obtainBlock.filterArrayFields(app.security.getToken().getUser(),true) %}
+                        {% if block is defined and block != null %}
+                            {% set blockkey =  block.obtainValidKeyfield %}
+                        {% endif %}
+
+                        <p>
+                            Slide ID#{{ slide.id }}:
+                            {{ patientkey.field }}, {{ patientkey.keytype }}; {{ patient.getName.first }}; {{ accessionkey.field }}, {{ accessionkey.keytype }}; {{ partkey.field }}; {{ blockkey.field }};
+                            {% for stain in slide.stain %}
+                                {{ stain }}
+                            {% endfor %}
+                        </p>
+
+                        {#{{ sliderequest.getSlideDescription(app.security.getToken().getUser()) }}#}
+
+                    {% endfor %}
+
+                </td>
+
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            {% if sliderequest.status != 'returned' %}
+                                <li><a data-confirm="Are you sure you want to change status to Returned"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'returned' }) }}">Returned</a>
+                                </li>
+                            {% endif %}
+
+                            {% if sliderequest.status != 'Checked: Not Received' %}
+                                <li><a data-confirm="Are you sure you want to Revert Status to Active"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Not Received' }) }}">Revert Status to Active</a>
+                                </li>
+                            {% endif %}
+
+                            {% if sliderequest.status != 'Checked: Previously Returned' %}
+                                <li><a data-confirm="Are you sure you want to Revert Status to Active"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Previously Returned' }) }}">Revert Status to Active</a>
+                                </li>
+                            {% endif %}
+
+                            {% if sliderequest.status != 'Checked: Some Returned' %}
+                                <li><a data-confirm="Are you sure you want to Revert Status to Active"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Some Returned' }) }}">Checked: Some Returned</a>
+                                </li>
+                            {% endif %}
+
+                            {% if sliderequest.status != 'active' %}
+                                <li><a data-confirm="Are you sure you want to Revert Status to Active"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'active' }) }}">Revert Status to Active</a>
+                                </li>
+                            {% endif %}
+
+
+                        </ul>
+                    </div>
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}
+

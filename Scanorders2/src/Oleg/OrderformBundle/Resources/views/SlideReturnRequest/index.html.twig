@@ -73,6 +73,7 @@
         </thead>
         <tbody>
 
+
         {% for slide in orderinfo.slide %}
 
             {% set patient =  slide.obtainPatient.filterArrayFields(app.security.getToken().getUser(),true) %}
@@ -89,10 +90,13 @@
             <tr>
 
                 <td>
+                    {#<input type="checkbox" value="1" name="oleg_orderformbundle_orderinfotype[returnoption]" id="oleg_orderformbundle_orderinfotype_returnoption">#}
+                    {#{{ formmacros.field(form.slide[2]) }}#}
+                    {#{{ form_widget(form.slide|first) }}#}
                     {#<input type="checkbox" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}]" value="{{ slide.id }}" checked/>#}
-                    {#<input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}" checked>#}
+                    <input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}][id]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}_id" checked />
                     {#<input type="checkbox" value="2" name="oleg_orderformbundle_slidereturnrequesttype[slide][]" id="oleg_orderformbundle_slidereturnrequesttype_slide_2" checked>#}
-                    {{ formmacros.field(form.slide) }}
+                    {#{{ formmacros.field(form.slide) }}#}
                 </td>
 
                 <td>
@@ -122,6 +126,7 @@
                 </td>
 
             </tr>
+
         {% endfor %}
 
         </tbody>
