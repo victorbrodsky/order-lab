@@ -48,6 +48,11 @@ class OrderAbstract {
      */
     protected $provider;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")
+     */
+    protected $proxyuser;
 
     /**
      * Get id
@@ -106,5 +111,22 @@ class OrderAbstract {
     {
         return $this->provider;
     }
+
+    /**
+     * @param mixed $proxyuser
+     */
+    public function setProxyuser($proxyuser)
+    {
+        $this->proxyuser = $proxyuser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProxyuser()
+    {
+        return $this->proxyuser;
+    }
+
 
 }

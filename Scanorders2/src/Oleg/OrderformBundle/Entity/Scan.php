@@ -19,26 +19,21 @@ class Scan extends SlideArrayFieldAbstract
     protected $slide;
 
     /**
-     * @ORM\Column(name="mag", type="string", length=50)
+     * @ORM\Column(name="mag", type="string")
      */
     protected $field;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=500)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $scanregion;
     
     /**
      * Note/Reason for Scan
-     * @ORM\Column(type="text", nullable=true, length=5000)    
+     * @ORM\Column(type="text", nullable=true)    
      */
     protected $note;
     
-//    /**
-//     * status - status of the personal scan slide i.e. complete, in process, returned, canceled ...
-//     * @ORM\Column(type="string", nullable=true, length=100)
-//     */
-//    protected $status;
 
     /**
      * date of scan performed
@@ -92,19 +87,6 @@ class Scan extends SlideArrayFieldAbstract
         return $this->note;
     }
 
-//    /**
-//     * Set status
-//     *
-//     * @param string $status
-//     * @return Scan
-//     */
-//    public function setStatus($status)
-//    {
-//        $this->status = $status;
-//
-//        return $this;
-//    }
-
     public function setProvider($provider)
     {
         if( $provider ) {
@@ -115,16 +97,6 @@ class Scan extends SlideArrayFieldAbstract
 
         return $this;
     }
-
-//    /**
-//     * Get status
-//     *
-//     * @return string
-//     */
-//    public function getStatus()
-//    {
-//        return $this->status;
-//    }
 
     /**
      * Set scandate

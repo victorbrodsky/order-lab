@@ -24,7 +24,7 @@ class PartDiseaseType extends PartArrayFieldAbstract
     protected $field;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=100)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $origin;
 

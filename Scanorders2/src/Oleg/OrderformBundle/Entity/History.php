@@ -60,7 +60,7 @@ class History
     private $roles = array();
 
     /**
-     * @ORM\Column(type="text", nullable=true, length=5000)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $note;
 

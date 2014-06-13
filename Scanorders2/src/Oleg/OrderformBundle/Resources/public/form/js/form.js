@@ -524,6 +524,10 @@ function setNavBar() {
         id = 'myscanorders';
     }
 
+    if( full.indexOf("my-slide-requests") !== -1 ) {
+        id = 'mysliderequests';
+    }
+
     //Admin
     if( full.indexOf("/user/listusers") !== -1 ) {
         id = 'admin';

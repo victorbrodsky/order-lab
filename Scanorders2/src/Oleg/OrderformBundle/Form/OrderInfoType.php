@@ -151,7 +151,7 @@ class OrderInfoType extends AbstractType
 //            'required' => true,
 //            'attr' => array('class' => 'form-control')
 //        ));
-        $builder->add( 'provider', new ProviderType($this->params,$this->entity), array('label'=>'Submitter:') );
+        $builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
 
         $builder->add('proxyuser', 'entity', array(
             'class' => 'OlegOrderformBundle:User',

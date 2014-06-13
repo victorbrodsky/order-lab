@@ -34,7 +34,7 @@ class Slide extends ObjectAbstract
     //*********************************************//                
     
     /**
-     * @ORM\Column(type="text", nullable=true, length=10000)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $microscopicdescr;
 
@@ -45,7 +45,7 @@ class Slide extends ObjectAbstract
     protected $relevantScans;
     
     /**
-     * @ORM\Column(type="string", nullable=true, length=200)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $barcode;
 

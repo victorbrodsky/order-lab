@@ -37,6 +37,7 @@
 
             getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
             getUrgency(urlCommon);
+            regularCombobox();
 
         });
 
@@ -68,7 +69,7 @@
                 <th>Accession Number</th>
                 <th>Part</th>
                 <th>Block</th>
-                <th> Stain</th>
+                <th>Stain</th>
             </tr>
         </thead>
         <tbody>
@@ -90,13 +91,7 @@
             <tr>
 
                 <td>
-                    {#<input type="checkbox" value="1" name="oleg_orderformbundle_orderinfotype[returnoption]" id="oleg_orderformbundle_orderinfotype_returnoption">#}
-                    {#{{ formmacros.field(form.slide[2]) }}#}
-                    {#{{ form_widget(form.slide|first) }}#}
-                    {#<input type="checkbox" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}]" value="{{ slide.id }}" checked/>#}
                     <input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}][id]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}_id" checked />
-                    {#<input type="checkbox" value="2" name="oleg_orderformbundle_slidereturnrequesttype[slide][]" id="oleg_orderformbundle_slidereturnrequesttype_slide_2" checked>#}
-                    {#{{ formmacros.field(form.slide) }}#}
                 </td>
 
                 <td>
@@ -142,6 +137,8 @@
                 </div>
             </div>
             <div class="panel-body collapse in">
+                {{ formmacros.field(form.provider) }}
+                {{ formmacros.field(form.proxyuser) }}
                 {{ formmacros.field(form.returnSlide) }}
                 {{ formmacros.field(form.urgency) }}
 

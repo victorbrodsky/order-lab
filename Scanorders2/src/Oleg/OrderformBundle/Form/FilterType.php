@@ -75,6 +75,9 @@ class FilterType extends AbstractType
         //$resolver->setDefaults(array(
             //'data_class' => 'Oleg\OrderformBundle\Entity\Scan'
         //));
+        $resolver->setDefaults(array(
+            'csrf_protection' => false,
+        ));
     }
 
     public function getName()

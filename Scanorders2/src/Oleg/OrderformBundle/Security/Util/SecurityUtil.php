@@ -100,8 +100,8 @@ class SecurityUtil {
                 $allow = true;
             }
 
-            if( $entity->getProxyuser()->first()&& $entity->getProxyuser()->first()->getId() === $user->getId() ) {
-                //echo "proxy:".$entity->getProxyuser()->first()->getId()." ?= ".$user->getId()."<br>";
+            if( $entity->getProxyuser()&& $entity->getProxyuser()->getId() === $user->getId() ) {
+                //echo "proxy:".$entity->getProxyuser()->getId()." ?= ".$user->getId()."<br>";
                 $allow = true;
             }
 

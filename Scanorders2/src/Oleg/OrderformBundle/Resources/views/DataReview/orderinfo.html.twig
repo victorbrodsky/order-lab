@@ -2,6 +2,4 @@
 {{ myform.simplefield( "Order ID:", entity.orderinfo.id, "input", "disabled" ) }}
 {{ myform.simplefield( "Date:", entity.orderinfo.orderdate|date('Y-m-d, H:i:s'), "input", "disabled" ) }}
 {{ myform.simplefield( "Submitter:", entity.orderinfo.provider, "input", "disabled" ) }}
-{#{% if entity.orderinfo.proxyuser|length > 0 %}#}
-    {{ myform.simplefield( "Ordering Provider:", entity.orderinfo.proxyuser|first, "input", "disabled" ) }}
-{#{% endif %}#}
+{{ myform.simplefield( "Ordering Provider:", entity.orderinfo.proxyuser, "input", "disabled" ) }}

@@ -340,7 +340,7 @@ class MultyScanOrderController extends Controller {
                 throw new \Exception( 'More than one orderinfo found count='.count($lastOrderWithProxies).' objects' );
             }
             $lastOrderWithProxy = $lastOrderWithProxies[0];
-            $lastProxy = $lastOrderWithProxy->getProxyuser()->first();
+            $lastProxy = $lastOrderWithProxy->getProxyuser();
         } else {
             $lastProxy = null;
         }

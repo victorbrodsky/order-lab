@@ -50,6 +50,20 @@ class SlideReturnRequestType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__slides__',
         ));
+
+        $builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
+
+        $builder->add('proxyuser', 'entity', array(
+            'class' => 'OlegOrderformBundle:User',
+            'label'=>'Ordering Provider:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.roles LIKE :roles')
+                        ->setParameter('roles', '%' . 'ROLE_ORDERING_PROVIDER' . '%');
+                },
+        ));
         
     }
 

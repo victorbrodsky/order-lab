@@ -659,7 +659,8 @@ class AdminController extends Controller
         $types = array(
             'One Slide Scan Order',
             'Multi-Slide Scan Order',
-            'Table-View Scan Order'
+            'Table-View Scan Order',
+            'Slide Return Request'
         );
 
         $count = 1;
@@ -826,7 +827,7 @@ class AdminController extends Controller
         }
 
         $types = array(
-            'Filing Room', 'Me'
+            'Ordering Provider', 'Filing Room', 'Me'
         );
 
         $count = 1;

@@ -198,7 +198,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setOid($originalId);
         }
 
-//        //echo "proxy user=".$entity->getProxyuser()->first()."<br>";
+//        //echo "proxy user=".$entity->getProxyuser()."<br>";
 //        echo "<br><br>final patients count=".count($entity->getPatient())."<br>";
 //        echo $entity->getPatient()->first();
 //        echo "<br>--------------------------<br>";

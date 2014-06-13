@@ -105,13 +105,15 @@ class TableController extends Controller {
                 throw new \Exception( 'More than one orderinfo found count='.count($lastOrderWithProxies).' objects' );
             }
             $lastOrderWithProxy = $lastOrderWithProxies[0];
-            $lastProxy = $lastOrderWithProxy->getProxyuser()->first();
+            $lastProxy = $lastOrderWithProxy->getProxyuser();
         } else {
             $lastProxy = null;
         }
         //echo "lastProxy=".$lastProxy."<br>";
         if( $lastProxy ) {
             $entity->setProxyuser($lastProxy);
+        } else {
+            $entity->setProxyuser($user);
         }
         //***************** end of get ordering provider from most recent order ***************************//
 

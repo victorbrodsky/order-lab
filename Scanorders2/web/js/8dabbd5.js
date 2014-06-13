@@ -13131,6 +13131,10 @@ function setNavBar() {
         id = 'myscanorders';
     }
 
+    if( full.indexOf("my-slide-requests") !== -1 ) {
+        id = 'mysliderequests';
+    }
+
     //Admin
     if( full.indexOf("/user/listusers") !== -1 ) {
         id = 'admin';
@@ -13462,6 +13466,10 @@ $(document).ready(function() {
     //confirm
     confirmAction();
 
+//    $(".data-confirm-ok").click(function(){
+//        submitNewStatusComment();
+//    });
+
 });
 
 function submitNewComment(id) {
@@ -13510,6 +13518,42 @@ function submitNewComment(id) {
 
 }
 
+function submitNewStatusComment(id) {
+
+    var urlBase = $("#baseurl").val();
+    var urlCommentSubmit = "http://"+urlBase+"/slide-return-request/comment/create";
+
+    var textEl = $('#dataConfirmModal').find('.modal-body').find('.textarea');
+    var text = textEl.val();
+    //console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text);
+
+    $.ajax({
+        url: urlCommentSubmit,
+        type: 'POST',
+        data: {id: id, text: text},
+        timeout: _ajaxTimeout,
+        success: function (data) {
+            //
+        },
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
+            //console.log("Error submit a new comment");
+            return false;
+        }
+    }).done(function() {
+        $('.data-confirm-ok').show();
+        $('.data-comment-ok').hide();
+        //console.log($('.data-confirm-ok'));
+        //$('.dataConfirmModal').find('a').trigger("click");
+        document.getElementById('dataConfirmOK').click();
+    });
+
+}
+
 function cleanModal() {
     $(".modal_error_div").html('');
     $(".modal-body").find('textarea').val('');
@@ -13525,7 +13569,9 @@ function confirmAction() {
     $('a[data-confirm]').click(function(ev) {
 
         var href = $(this).attr('href');
+
         if( !$('#dataConfirmModal').length ) {
+
             var modalHtml =
                 '<div id="dataConfirmModal" class="modal fade data-confirm-modal">' +
                     '<div class="modal-dialog">' +
@@ -13534,10 +13580,12 @@ function confirmAction() {
                                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
                                 '<h3 id="dataConfirmLabel">Confirmation</h3>' +
                             '</div>' +
-                            '<div class="modal-body text-center"></div>' +
+                            '<div class="modal-body text-center">' +
+                            '</div>' +
                             '<div class="modal-footer">' +
                                 '<button class="btn btn-primary data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
                                 '<a class="btn btn-primary data-confirm-ok" id="dataConfirmOK">OK</a>' +
+                                '<button style="display: none;" class="btn btn-primary data-comment-ok" onclick="submitNewStatusComment('+$(this).attr('id')+')">OK</button>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
@@ -13547,7 +13595,22 @@ function confirmAction() {
         }
 
         $('#dataConfirmModal').find('.modal-body').text( $(this).attr('data-confirm') );
-        $('#dataConfirmOK').attr('href', href);
+        $('#dataConfirmOK').attr('href', href); //testing
+
+        /////////////// add comment /////////////////////
+        if( $(this).hasClass("status-with-comment") ) {
+            //do it by listening .data-confirm-ok
+            //console.log('add comment!');
+            var commentHtml = '<br><br>Please provide a comment:' +
+                              '<p><textarea id="'+$(this).attr('id')+'" name="addcomment" type="textarea" class="textarea form-control addcomment_text" maxlength="5000" required></textarea></p>';
+            $('#dataConfirmModal').find('.modal-body').append(commentHtml);
+            //replace href link <a> with button
+            $('.data-confirm-ok').hide();
+            $('.data-comment-ok').show();
+        } else {
+            //$('#dataConfirmOK').attr('href', href); //do it automatically
+        }
+        /////////////// EOF add comment /////////////////////
 
         ////////// assign correct confirmation text and button's text //////////
         var okText = $(this).attr('data-ok');
@@ -13568,12 +13631,15 @@ function confirmAction() {
     });
 
     //TODO: to hide modal, make button onclick function firts close modal, then redirect to href
-    $('.data-confirm-ok').click(function() {
-        console.log('ok clicked!');
-        //$('.data-confirm-cancel').trigger('click');
-        //$('.data-confirm-modal').modal({show:false});
-        $('.data-confirm-modal').modal('hide');
-    });
+//    $('.data-confirm-ok').click(function() {
+//        //console.log('ok clicked!');
+//
+//        submitNewStatusComment();
+//
+//        //$('.data-confirm-cancel').trigger('click');
+//        //$('.data-confirm-modal').modal({show:false});
+//        $('.data-confirm-modal').modal('hide');
+//    });
 
 }
 

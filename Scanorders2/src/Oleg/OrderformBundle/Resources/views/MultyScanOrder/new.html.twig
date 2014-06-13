@@ -85,6 +85,7 @@
             <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Un-Canceling</a>
         {% endif %}
 
+        <a class="btn btn-info" href="{{ path('slide-return-request', { 'id': form.vars.value.oid }) }}">Request Slide Return</a>
 
         <a class="btn btn-info" href="{{ path('history_orderinfo_show', { 'id': form.vars.value.oid }) }}">View Progress & Comments</a>
 

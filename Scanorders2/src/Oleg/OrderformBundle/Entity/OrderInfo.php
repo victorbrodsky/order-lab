@@ -61,7 +61,7 @@ class OrderInfo extends OrderAbstract {
     /**
      * @var string
      *
-     * @ORM\Column(name="priority", type="string", length=200)
+     * @ORM\Column(name="priority", type="string")
      * @Assert\NotBlank
      */
     private $priority;
@@ -80,7 +80,7 @@ class OrderInfo extends OrderAbstract {
     /**
      * @var string
      *
-     * @ORM\Column(name="slideDelivery", type="string", length=200, nullable=true)
+     * @ORM\Column(name="slideDelivery", type="string", nullable=true)
      * @Assert\NotBlank
      */
     private $slideDelivery;
@@ -88,7 +88,7 @@ class OrderInfo extends OrderAbstract {
     /**
      * @var string
      *
-     * @ORM\Column(name="returnSlide", type="string", length=200, nullable=true)
+     * @ORM\Column(name="returnSlide", type="string", nullable=true)
      * @Assert\NotBlank
      */
     protected $returnSlide;
@@ -102,14 +102,14 @@ class OrderInfo extends OrderAbstract {
 //     */
 //    private $provider;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinTable(name="proxyuser_orderinfo",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")}
-     * )
-     */
-    protected $proxyuser;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+//     * @ORM\JoinTable(name="proxyuser_orderinfo",
+//     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")}
+//     * )
+//     */
+//    protected $proxyuser;
 
     /**
      * @ORM\ManyToOne(targetEntity="Department", inversedBy="orderinfo", cascade={"persist"})
@@ -220,7 +220,7 @@ class OrderInfo extends OrderAbstract {
         $this->block = new ArrayCollection();
         $this->slide = new ArrayCollection();
         //$this->provider = new ArrayCollection();
-        $this->proxyuser = new ArrayCollection();
+        //$this->proxyuser = new ArrayCollection();
         $this->dataquality = new ArrayCollection();
         $this->history = new ArrayCollection();
     }
@@ -245,12 +245,13 @@ class OrderInfo extends OrderAbstract {
 
             //
             $provider = $this->getProvider();
-            $proxys = $this->getProxyuser();
+            $proxyuser = $this->getProxyuser();
+            //$proxys = $this->getProxyuser();
             $dataqualities = $this->getDataquality();
             $histories = $this->getHistory();
 
             //$this->setProvider( new ArrayCollection() );
-            $this->proxyuser = new ArrayCollection();
+            //$this->proxyuser = new ArrayCollection();
             $this->dataquality = new ArrayCollection();
             $this->history = new ArrayCollection();
 
@@ -259,9 +260,10 @@ class OrderInfo extends OrderAbstract {
 //                $this->addProvider($thisprov);
 //            }
 
-            foreach( $proxys as $thisproxy ) {
-                $this->addProxyuser($thisproxy);
-            }
+            $this->setProxyuser( $proxyuser );
+//            foreach( $proxys as $thisproxy ) {
+//                $this->addProxyuser($thisproxy);
+//            }
 
             foreach( $dataqualities as $dataquality ) {
                 $this->addDataquality($dataquality);
@@ -885,45 +887,45 @@ class OrderInfo extends OrderAbstract {
 //    }
 
 
-    public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
-    {
-        if( $proxyuser ) {
-            if( !$this->proxyuser->contains($proxyuser) ) {
-                $this->proxyuser->add($proxyuser);
-            }
-        }
+//    public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
+//    {
+//        if( $proxyuser ) {
+//            if( !$this->proxyuser->contains($proxyuser) ) {
+//                $this->proxyuser->add($proxyuser);
+//            }
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
+//    {
+//        $this->proxyuser->removeElement($proxyuser);
+//    }
+//
+//    /**
+//     * @param mixed $proxyuser
+//     */
+//    public function setProxyuser($proxyuser)
+//    {
+//        if( $proxyuser ) {
+//            if( is_array($proxyuser) ) {
+//                $this->proxyuser = $proxyuser;
+//            } else {
+//                $this->proxyuser->clear();
+//                $this->proxyuser->add($proxyuser);
+//            }
+//        }
+//
+//    }
 
-        return $this;
-    }
-
-    public function removeProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
-    {
-        $this->proxyuser->removeElement($proxyuser);
-    }
-
-    /**
-     * @param mixed $proxyuser
-     */
-    public function setProxyuser($proxyuser)
-    {
-        if( $proxyuser ) {
-            if( is_array($proxyuser) ) {
-                $this->proxyuser = $proxyuser;
-            } else {
-                $this->proxyuser->clear();
-                $this->proxyuser->add($proxyuser);
-            }
-        }
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProxyuser()
-    {
-        return $this->proxyuser;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getProxyuser()
+//    {
+//        return $this->proxyuser;
+//    }
 
 //    public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
 //    {

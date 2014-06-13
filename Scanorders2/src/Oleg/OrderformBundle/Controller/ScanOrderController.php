@@ -42,6 +42,8 @@ class ScanOrderController extends Controller {
 
         $unprocessed = $this->getUnprocessedOrders();
 
+        $sliderequests = $this->getUnprocessedSlideRequests();
+
         //check for active user requests
         $accountreqs = $this->getActiveAccountReq();
 
@@ -50,6 +52,7 @@ class ScanOrderController extends Controller {
 
         return array(
             'unprocessed' => $unprocessed,
+            'sliderequests' => $sliderequests,
             'accountreqs' => count($accountreqs),
             'accessreqs' => count($accessreqs)
         );
@@ -690,6 +693,24 @@ class ScanOrderController extends Controller {
 
         if( $unprocessedOrders && count($unprocessedOrders) > 0 ) {
             $unprocessed = count($unprocessedOrders);
+        }
+
+        return $unprocessed;
+    }
+
+
+    /**
+     * Finds and displays a unprocessed (active) Slide Return Requests.
+     */
+    public function getUnprocessedSlideRequests()
+    {
+        $unprocessed = 0;
+        $em = $this->getDoctrine()->getManager();
+
+        $slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->findByStatus('active');
+
+        if( $slideReturnRequest && count($slideReturnRequest) > 0 ) {
+            $unprocessed = count($slideReturnRequest);
         }
 
         return $unprocessed;

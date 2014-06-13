@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -40,6 +41,17 @@ class SlideReturnRequest extends OrderAbstract {
      * )
      */
     private $slide;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="OrderInfo")
+     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
+     */
+    protected $orderinfo;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
 
     /**
      * Constructor
@@ -143,9 +155,52 @@ class SlideReturnRequest extends OrderAbstract {
         return $this->urgency;
     }
 
+    /**
+     * @param mixed $orderinfo
+     */
+    public function setOrderinfo($orderinfo)
+    {
+        $this->orderinfo = $orderinfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
+    }
+
+    /**
+     * @param mixed $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+
+    public function addComment( $comment, $user )
+    {
+
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        $dateStr = $transformer->transform(new \DateTime());
+        $commentFull = $user . " " . $dateStr. ":\n" . $comment . "\n\n";
+
+        $this->comment .= $commentFull;
+    }
+
     public function getSlideDescription( $user ) {
 
-        $description = "";
+        $description = array();
         foreach( $this->slide as $slide ) {
 
             $patient =  $slide->obtainPatient()->filterArrayFields($user,true);
@@ -170,12 +225,17 @@ class SlideReturnRequest extends OrderAbstract {
             }
             $stainDesc = implode(",", $stainArr);
 
-            $description .= "MRN: ".$patientkey->getField() . "," . $patientkey->getKeytype() . "; " .
-                            " Patient Name: " . $patient->getName()->first(). "; " .
-                            " Accession: " . $accessionkey->getField() . "," . $accessionkey->getKeytype() . "; " .
-                            " Part: " . $partkey->getField() . "; " .
-                            " Block: ".$blockDesc . "; " .
-                            " Stain: " . $stainDesc;
+            $str = $accessionkey->getKeytype().":".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc.", ".$stainDesc.
+                    "; ".$patientkey->getKeytype().":".$patientkey->getField().", ".$patient->getName()->first().
+                    "; ".$this->getComment();
+            $description[] = $str;
+
+//            $description[] = "MRN: ".$patientkey->getField() . "," . $patientkey->getKeytype() . "; " .
+//                            " Patient Name: " . $patient->getName()->first(). "; " .
+//                            " Accession: " . $accessionkey->getField() . "," . $accessionkey->getKeytype() . "; " .
+//                            " Part: " . $partkey->getField() . "; " .
+//                            " Block: ".$blockDesc . "; " .
+//                            " Stain: " . $stainDesc;
         }
 
         return $description;
