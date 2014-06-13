@@ -276,6 +276,8 @@ abstract class ObjectAbstract
             }
         }
 
+        //echo "count=".$count."<br>";
+
         if( $count > 1 ) {
             $class = new \ReflectionClass($field);
             $className = $class->getShortName();
@@ -301,6 +303,11 @@ abstract class ObjectAbstract
 
     //For external submitter users: filter fields by author and keep only latest created fields
     public function filterArrayFields( $user, $strict = false ) {
+
+        //filter only if the user has role external submitter
+        if( !$user->hasRole('ROLE_EXTERNAL_SUBMITTER') ) {
+            return $this;
+        }
 
         $fields = $this->getArrayFields();
 

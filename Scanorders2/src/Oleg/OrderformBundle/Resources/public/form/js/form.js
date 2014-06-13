@@ -144,9 +144,17 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
+    //TODO: add Delete button if there are sibling objects
+//    var holderObj = $(holder).find('.panel-multi-form');
+//    console.log(holderObj);
+//    if( holderObj.find('delete_form_btn').length > 1 ) {
+//        var deletebtn = getHeaderDeleteBtn( name, ids, "Delete" );
+//
+//    }
+
     //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
     var thisId = "formpanel_"+name+"_"+ids.join("_");
-    //console.log("thisId="+thisId);
+    console.log("thisId="+thisId);
     var thisParent = $("#"+thisId).parent();
     var childrens = thisParent.children( ".panel" );
 
@@ -159,7 +167,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
         //rename "clear" to "Delete"
         if( childrens.length > 1 ) {
-            //console.log("childrens.length="+childrens.length);
+            console.log("childrens.length="+childrens.length);
             var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
             delBtnToRename.html('Delete');
         }

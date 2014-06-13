@@ -149,7 +149,7 @@ class MultyScanOrderController extends Controller {
             $new_order = "single_new";
         }
 
-        $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null);
+        $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null, 'user'=>$user);
 
 //        echo "controller create=";
 //        print_r($params);
@@ -410,7 +410,7 @@ class MultyScanOrderController extends Controller {
             $entity->setPathologyService($service->first());
         }
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
+        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         if( $routeName != "single_new") {
@@ -649,7 +649,7 @@ class MultyScanOrderController extends Controller {
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
-        $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null);
+        $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
         //echo "type=".$entity->getType();

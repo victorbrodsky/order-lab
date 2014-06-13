@@ -62,7 +62,7 @@ class SlideReturnRequestController extends Controller
         $slideReturnRequest->setProvider($user);
         $slideReturnRequest->setProxyuser($user);
 
-        $params = array();
+        $params = array('user'=>$user);
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
@@ -94,7 +94,7 @@ class SlideReturnRequestController extends Controller
         $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
         $slideReturnRequest->setType($formtype);
 
-        $params = array();
+        $params = array('user'=>$user);
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         $form->handleRequest($request);

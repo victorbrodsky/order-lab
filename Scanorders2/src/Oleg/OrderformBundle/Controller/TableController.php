@@ -141,7 +141,7 @@ class TableController extends Controller {
 
         $type = "Table-View Scan Order";
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service);
+        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         return $this->render('OlegOrderformBundle:MultyScanOrder:newtable.html.twig', array(
@@ -170,10 +170,12 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $entity = new OrderInfo();
 
         $type = "Table-View Scan Order";
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>null);
+        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>null, 'user'=>$user);
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 

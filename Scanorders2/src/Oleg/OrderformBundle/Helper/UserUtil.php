@@ -192,22 +192,26 @@ class UserUtil {
         return $choicesServ;
     }
 
-    //TODO: what to use ROLE_SUBMITTER or ROLE_PATHOLOGY_RESIDENT?
+    //user has permission to view other's valid field if he/she is submitter or pathology member and not external submitter and not ROLE_PROCESSOR => S+PRE+PFE+PFA * !ES * !P == !S*!PRE*!PFE*!PFA + ES
     public function hasPermission( $security_content ) {
-        if(
-            //$entity &&
-            false === $security_content->isGranted('ROLE_SUBMITTER') &&
-            false === $security_content->isGranted('ROLE_PATHOLOGY_RESIDENT') &&
-            false === $security_content->isGranted('ROLE_PATHOLOGY_FELLOW') &&
-            false === $security_content->isGranted('ROLE_PATHOLOGY_FACULTY')
-        ) {
-            return false;
-//            $user = $security_content->getToken()->getUser();
-//            if( $entity->getProvider()->getId() != $user->getId() ) {
-//                return false;
-//            }
-        } else {
+
+        if( true === $security_content->isGranted('ROLE_PROCESSOR') ) {
             return true;
+        }
+
+        if( true === $security_content->isGranted('ROLE_EXTERNAL_SUBMITTER') ) {
+            return false;
+        }
+
+        if(
+            true === $security_content->isGranted('ROLE_SUBMITTER') ||
+            true === $security_content->isGranted('ROLE_PATHOLOGY_RESIDENT') ||
+            true === $security_content->isGranted('ROLE_PATHOLOGY_FELLOW') ||
+            true === $security_content->isGranted('ROLE_PATHOLOGY_FACULTY')
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 

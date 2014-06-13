@@ -215,6 +215,7 @@ class SlideReturnRequest extends OrderAbstract {
             $block =  $slide->obtainBlock()->filterArrayFields($user,true);
             $blockDesc = "";
             if( $block ) {
+                echo $block;
                 $blockkey =  $block->obtainValidKeyfield();
                 $blockDesc = $blockkey->getField();
             }
