@@ -77,7 +77,7 @@ class TableController extends Controller {
 
     /**
      * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:multitable.html.twig")
      */
     public function multiTableCreationAction()
     {
@@ -144,7 +144,7 @@ class TableController extends Controller {
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
-        return $this->render('OlegOrderformBundle:MultyScanOrder:newtable.html.twig', array(
+        return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
             'cycle' => 'new',
             'formtype' => $type
@@ -156,7 +156,7 @@ class TableController extends Controller {
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultyScanOrder:multitable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:multitable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {

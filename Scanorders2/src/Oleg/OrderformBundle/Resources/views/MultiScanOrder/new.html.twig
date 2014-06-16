@@ -132,7 +132,7 @@
 
     <br />
 
-    {% include 'OlegOrderformBundle::MultyScanOrder/edu_res.html.twig' with {"type": type} %}
+    {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' with {"type": type} %}
 
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}

@@ -45,12 +45,9 @@ $(document).ready(function() {
     //confirm
     confirmAction();
 
-//    $(".data-confirm-ok").click(function(){
-//        submitNewStatusComment();
-//    });
-
 });
 
+//comment for scan order in history controller
 function submitNewComment(id) {
 
     var urlBase = $("#baseurl").val();
@@ -97,6 +94,52 @@ function submitNewComment(id) {
 
 }
 
+//comment for Slide Return Request in SlideReturnRequestController
+function submitNewSlideReturnRequestComment(id) {
+
+    var urlBase = $("#baseurl").val();
+    var urlCommentSubmit = "http://"+urlBase+"/slide-return-request/comment/create";
+
+    var text = $('#addSlideReturnRequestComment_'+id).find('.textarea').val();
+
+    if( $('#modal-processor-comment').select2('data') ) {
+        var selectednote = $('#modal-processor-comment').select2('data').text;
+    } else {
+        var selectednote = "";
+    }
+
+    //console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text + ", selectednote="+selectednote);
+
+    var comment_modal = $('#addSlideReturnRequestComment_'+id);
+
+    $.ajax({
+        url: urlCommentSubmit,
+        type: 'POST',
+        data: {id: id, text: text},
+        timeout: _ajaxTimeout,
+        success: function (data) {
+            //console.log("OK submit a new comment");
+            comment_modal.modal('hide');
+            cleanModal();
+            window.parent.location.reload();
+        },
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
+            //console.log("Error submit a new comment");
+            var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
+            $('#modal_error_'+id).html(errormsg);
+            return false;
+            //comment_modal.modal('hide');
+        }
+    });
+
+}
+
+//add comment before changing status in SlideReturnRequestController
 function submitNewStatusComment(id) {
 
     var urlBase = $("#baseurl").val();
@@ -126,8 +169,7 @@ function submitNewStatusComment(id) {
     }).done(function() {
         $('.data-confirm-ok').show();
         $('.data-comment-ok').hide();
-        //console.log($('.data-confirm-ok'));
-        //$('.dataConfirmModal').find('a').trigger("click");
+        //change status by simulating click on the status change modal's button
         document.getElementById('dataConfirmOK').click();
     });
 
@@ -208,17 +250,6 @@ function confirmAction() {
 
         return false;
     });
-
-    //TODO: to hide modal, make button onclick function firts close modal, then redirect to href
-//    $('.data-confirm-ok').click(function() {
-//        //console.log('ok clicked!');
-//
-//        submitNewStatusComment();
-//
-//        //$('.data-confirm-cancel').trigger('click');
-//        //$('.data-confirm-modal').modal({show:false});
-//        $('.data-confirm-modal').modal('hide');
-//    });
 
 }
 

@@ -12,7 +12,7 @@ namespace Oleg\OrderformBundle\Helper;
 
 //use Oleg\OrderformBundle\Entity\OrderInfo;
 //use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Controller\MultyScanOrderController;
+//use Oleg\OrderformBundle\Controller\MultiScanOrderController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;

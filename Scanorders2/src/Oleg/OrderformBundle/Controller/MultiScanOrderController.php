@@ -50,13 +50,13 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 /**
  * OrderInfo controller.
  */
-class MultyScanOrderController extends Controller {
+class MultiScanOrderController extends Controller {
 
     /**
      * Edit: If the form exists, use this function
      * @Route("/scan-order/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function editAction( $id )
     {
@@ -90,7 +90,7 @@ class MultyScanOrderController extends Controller {
      * @Route("/scan-order/one-slide/new", name="singleorder_create")
      * @Route("/scan-order/multi-slide/new", name="multi_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function multyCreateAction(Request $request)
     { 
@@ -304,7 +304,7 @@ class MultyScanOrderController extends Controller {
      * @Route("/scan-order/one-slide/new", name="single_new")
      * @Route("/scan-order/multi-slide/new", name="multi_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function newMultyAction()
     {
@@ -347,7 +347,7 @@ class MultyScanOrderController extends Controller {
         //echo "lastProxy=".$lastProxy."<br>";
         //***************** end of get ordering provider from most recent order ***************************//
 
-        //echo "MultyScanOrderController: User=".$user."<br>";
+        //echo "MultiScanOrderController: User=".$user."<br>";
         //$email = $user->getEmail();
 
         $source = 'scanorder';
@@ -414,14 +414,14 @@ class MultyScanOrderController extends Controller {
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         if( $routeName != "single_new") {
-            return $this->render('OlegOrderformBundle:MultyScanOrder:new.html.twig', array(
+            return $this->render('OlegOrderformBundle:MultiScanOrder:new.html.twig', array(
                 'form' => $form->createView(),
                 'type' => 'new',
                 'formtype' => $type
             ));
         } else {
             //echo "newsingle: <br>";
-            return $this->render('OlegOrderformBundle:MultyScanOrder:newsingle.html.twig', array(
+            return $this->render('OlegOrderformBundle:MultiScanOrder:newsingle.html.twig', array(
                 'form' => $form->createView(),
                 'cycle' => 'new',
                 'formtype' => $type
@@ -437,7 +437,7 @@ class MultyScanOrderController extends Controller {
      * @Route("/scan-order/{id}/amend", name="order_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:MultyScanOrder:new.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
     public function showMultyAction( Request $request, $id, $type = "show" )
     {

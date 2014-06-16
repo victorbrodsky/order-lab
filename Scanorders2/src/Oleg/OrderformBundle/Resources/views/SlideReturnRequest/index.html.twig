@@ -1,15 +1,17 @@
+{#list all slide requests for admin or user's slide requests for other users#}
+
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
 {% block title %}
-    Slide Return Request for Order# {{ orderinfo.oid }}
+    Slides Requested for Return
 {% endblock %}
-
 
 
 {% block maincss %}
 
     {% stylesheets
     'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/action.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -27,6 +29,7 @@
     '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
     '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/modal.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -35,9 +38,7 @@
 
         $(document).ready(function() {
 
-            getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
-            getUrgency(urlCommon);
-            regularCombobox();
+            $(".combobox").select2();
 
         });
 
@@ -52,72 +53,181 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    <input type="hidden" id="formcicle" value="{{ cicle }}" />
+    <form action="{{ path(route) }}" method="get" {{ form_enctype(filter) }} class="well form-search">
 
-    <h3 class="text-info">Please select the slides you would like to be returned</h3>
+        <div class="row">
+            <div class="col-xs-3">
+                {{ form_widget(filter) }}
+            </div>
+            <div class="col-xs-1">
+                <div class="btn-group btn-group-justified">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(filter) }}
+        {#{{ form_widget(filter._token) }}#}
+
+    </form>
 
     <br>
-
-{{ form_start(form) }}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
             <tr>
-                <th>Checkmark</th>
-                <th>Patient MRN</th>
-                <th>Patient Name</th>
-                <th>Accession Number</th>
-                <th>Part</th>
-                <th>Block</th>
-                <th>Stain</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'ID', 'list.id') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'list.orderdate') }}</th>
+                {% if route == 'incoming-slide-return-requests' %}
+                    <th>{{ knp_pagination_sortable(sliderequests, 'Submitter', 'provider.username') }}</th>
+                {% endif %}
+                <th>{{ knp_pagination_sortable(sliderequests, 'Ordering Provider', 'proxyuser.username') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Status', 'list.status') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Return Slides to', 'list.returnSlide') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Urgency', 'list.urgency') }}</th>
+                <th class="col-xs-3">{{ knp_pagination_sortable(sliderequests, 'Slides', 'slidecount') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Scan Order ID', 'orderinfo.id') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Comment', 'list.comment') }}</th>
+                <th>Actions</th>
             </tr>
         </thead>
+
         <tbody>
 
 
-        {% for slide in orderinfo.slide %}
+        {% for sliderequestcomplex in sliderequests %}
 
-            {% set patient =  slide.obtainPatient.filterArrayFields(app.security.getToken().getUser(),true) %}
-            {% set patientkey =  patient.obtainValidKeyfield %}
-            {% set accession =  slide.obtainAccession.filterArrayFields(app.security.getToken().getUser(),true) %}
-            {% set accessionkey =  accession.obtainValidKeyfield %}
-            {% set part =  slide.obtainPart.filterArrayFields(app.security.getToken().getUser(),true) %}
-            {% set partkey =  part.obtainValidKeyfield %}
-            {% set block =  slide.obtainBlock.filterArrayFields(app.security.getToken().getUser(),true) %}
-            {% if block is defined and block != null %}
-                {% set blockkey =  block.obtainValidKeyfield %}
+            {% set sliderequest = sliderequestcomplex|first %}
+
+            {% if is_granted('ROLE_PROCESSOR') and route == 'incoming-slide-return-requests' %}
+                {% include 'OlegOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
             {% endif %}
 
-            <tr>
+            {% if sliderequest.status == 'active' %}
+                <tr class="order-urgent-status" >
+            {% elseif sliderequest.status == 'returned' %}
+                <tr class="order-neutral-status" >
+            {% else %}
+                <tr>
+            {% endif %}
 
                 <td>
-                    <input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}][id]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}_id" checked />
+                    {{ sliderequest.id }}
                 </td>
 
                 <td>
-                    {{ patientkey.field }}, {{ patientkey.keytype }}
+                    {{ sliderequest.orderdate|date('m/d/Y H:i') }}
+                </td>
+
+                {% if route == 'incoming-slide-return-requests' %}
+                    <td>
+                        {{ sliderequest.provider }}
+                    </td>
+                {% endif %}
+
+                <td>
+                    {{ sliderequest.proxyuser }}
                 </td>
 
                 <td>
-                    {{ patient.getName.first }}
+                    {% set statusStr = sliderequest.status %}
+                    {% if sliderequest.status == 'cancel' %}
+                        {% set statusStr = 'Canceled' %}
+                    {% endif %}
+                    {% if sliderequest.status == 'cancel' or sliderequest.status == 'active' or sliderequest.status == 'returned' %}
+                        {% set statusStr = sliderequest.status|capitalize %}
+                    {% endif %}
+
+                    {{ statusStr }}
                 </td>
 
                 <td>
-                    {{ accessionkey.field }}, {{ accessionkey.keytype }}
+                    {{ sliderequest.returnSlide }}
                 </td>
 
                 <td>
-                    {{ partkey.field }}
+                    {{ sliderequest.urgency }}
                 </td>
 
                 <td>
-                    {{ blockkey.field }}
-                </td>
 
-                <td>
-                    {% for stain in slide.stain %}
-                        {{ stain }}
+                    {% for descr in sliderequest.getSlideDescription(app.security.getToken().getUser()) %}
+
+                        <p>
+                            {{ descr }}
+                        </p>
+
                     {% endfor %}
+
+                </td>
+
+                <td>
+                    <a href="{{ path('multy_show', { 'id': sliderequest.orderinfo.oid }) }}">{{ sliderequest.orderinfo.oid }}</a>
+                </td>
+
+                <td>
+                    {{ sliderequest.comment|raw }}
+                </td>
+
+                <td>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            {% if is_granted('ROLE_PROCESSOR') and route == 'incoming-slide-return-requests' %}
+
+                                {% if sliderequest.status != 'returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'returned' }) }}">Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Checked: Not Received' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Checked: Not Received?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Not Received' }) }}">Checked: Not Received</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Checked: Previously Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Checked: Previously Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Previously Returned' }) }}">Checked: Previously Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Checked: Some Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Checked: Some Returned?" class="status-with-comment" id="{{ sliderequest.id }}"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Checked: Some Returned' }) }}">Checked: Some Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#addSlideReturnRequestComment_{{ sliderequest.id }}">Add Comment</a>
+                                </li>
+
+                                <li class="divider"></li>
+
+                            {% endif %}
+
+                            {% if sliderequest.status != 'active' %}
+                                <li><a data-confirm="Are you sure you want to Revert Status to Active?"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'active' }) }}">Revert Status to Active</a>
+                                </li>
+                            {% endif %}
+
+                            {% if sliderequest.status != 'cancel' %}
+                                <li><a data-confirm="Are you sure you want to Cancel this Slide Return Request?"
+                                       href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'cancel' }) }}">Cancel</a>
+                                </li>
+                            {% endif %}
+
+
+                        </ul>
+                    </div>
                 </td>
 
             </tr>
@@ -126,31 +236,6 @@
 
         </tbody>
     </table>
-
-
-        <div  class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h4 class="panel-title">Slide Return Request</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-body collapse in">
-                {{ formmacros.field(form.provider) }}
-                {{ formmacros.field(form.proxyuser) }}
-                {{ formmacros.field(form.returnSlide) }}
-                {{ formmacros.field(form.urgency) }}
-
-                {{ form_rest(form) }}
-            </div>
-        </div>
-
-        <p>
-            <button class="btn btn-success" type="submit">Submit</button>
-        </p>
-
-{{ form_end(form) }}
 
 {% endblock %}
 

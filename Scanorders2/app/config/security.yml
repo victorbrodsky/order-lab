@@ -85,7 +85,7 @@ security:
      - { path: ^/access-requests, role: ROLE_PROCESSOR }
      - { path: ^/account-requests, role: ROLE_PROCESSOR }
      - { path: ^/event-log, role: ROLE_PROCESSOR }
-     - { path: ^/slide-return-request/all-slides-requested-for-return, role: [ROLE_PROCESSOR]}
+     - { path: ^/incoming-slide-return-requests, role: [ROLE_PROCESSOR]}
 
      - { path: ^/util/pathservice, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/util/, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER] }
@@ -98,5 +98,6 @@ security:
      - { path: ^/my-scan-orders, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
 
      - { path: ^/slide-return-request, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
+     - { path: ^/my-slide-return-requests, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
 
 

@@ -190,12 +190,12 @@ class SlideReturnRequest extends OrderAbstract {
 
     public function addComment( $comment, $user )
     {
-
-        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        // 06/15/2014 at 11:49pm
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:ia');
         $dateStr = $transformer->transform(new \DateTime());
-        $commentFull = $user . " " . $dateStr. ":\n" . $comment . "\n\n";
+        $commentFull = $user . " on " . $dateStr. ": " . $comment;
 
-        $this->comment .= $commentFull;
+        $this->comment = $commentFull . "<br>" . $this->comment;
     }
 
     public function getSlideDescription( $user ) {
@@ -215,7 +215,6 @@ class SlideReturnRequest extends OrderAbstract {
             $block =  $slide->obtainBlock()->filterArrayFields($user,true);
             $blockDesc = "";
             if( $block ) {
-                echo $block;
                 $blockkey =  $block->obtainValidKeyfield();
                 $blockDesc = $blockkey->getField();
             }
@@ -226,17 +225,10 @@ class SlideReturnRequest extends OrderAbstract {
             }
             $stainDesc = implode(",", $stainArr);
 
-            $str = $accessionkey->getKeytype().":".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc.", ".$stainDesc.
-                    "; ".$patientkey->getKeytype().":".$patientkey->getField().", ".$patient->getName()->first().
-                    "; ".$this->getComment();
+            $str = $accessionkey->getKeytype().": ".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc." ".$stainDesc.
+                    " (".$patientkey->getKeytype().": ".$patientkey->getField().", ".$patient->getName()->first().")";
             $description[] = $str;
 
-//            $description[] = "MRN: ".$patientkey->getField() . "," . $patientkey->getKeytype() . "; " .
-//                            " Patient Name: " . $patient->getName()->first(). "; " .
-//                            " Accession: " . $accessionkey->getField() . "," . $accessionkey->getKeytype() . "; " .
-//                            " Part: " . $partkey->getField() . "; " .
-//                            " Block: ".$blockDesc . "; " .
-//                            " Stain: " . $stainDesc;
         }
 
         return $description;

@@ -45,7 +45,7 @@
                     </li>
 
                     <li id="nav-bar-mysliderequests" class="divider-vertical">
-                        <a href="{{ path('my-slide-requests') }}" >My Slide Requests</a>
+                        <a href="{{ path('my-slide-return-requests') }}" >My Slide Return Requests</a>
                     </li>
 
                 </ul>
@@ -62,7 +62,7 @@
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
-                        <ul class="dropdown-menu" style="width:215px">
+                        <ul class="dropdown-menu">
                             <li id="nav-bar-myscanorders">
                                 {% if admincomments is defined and admincomments > 0 %}
                                     <a id="incoming-orders-menu-title" href="{{ path('incoming-scan-orders') }}">Incoming Scan Orders</a><!--
@@ -74,7 +74,7 @@
 
                             <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
-                            <li><a href="{{ path('all-slides-requested-for-return',{'filter_search_box[filter]': 'active'}) }}">Slide Return Requests</a></li>
+                            <li><a href="{{ path('incoming-slide-return-requests') }}">Incoming Slide Return Requests</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li class="divider"></li>
                                 <li><a href="{{ path('listusers') }}">Users</a></li>

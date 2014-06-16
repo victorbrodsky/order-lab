@@ -20,9 +20,26 @@ class FilterSlideReturnRequestType extends AbstractType
     {
 
         if( $this->status == 'all' ) {
-            $choices = array('all' => 'All', 'active' => 'Active', 'returned' => 'Returned');
+            $choices = array(   'all' => 'All',
+                                'active' => 'Active',
+                                'returned' => 'Returned',
+                                'Checked: Not Received' => 'Checked: Not Received',
+                                'Checked: Previously Returned' =>
+                                'Checked: Previously Returned',
+                                'Checked: Some Returned' => 'Checked: Some Returned',
+                                'cancel' => 'Canceled'
+                            );
         } else {
-            $choices = array('active' => 'Active', 'returned' => 'Returned', 'all' => 'All');
+            $choices = array(
+                                'active' => 'Active',
+                                'returned' => 'Returned',
+                                'all' => 'All',
+                                'Checked: Not Received' => 'Checked: Not Received',
+                                'Checked: Previously Returned' =>
+                                'Checked: Previously Returned',
+                                'Checked: Some Returned' => 'Checked: Some Returned',
+                                'cancel' => 'Canceled'
+                            );
         }
 
         $builder->add('filter', 'choice',
