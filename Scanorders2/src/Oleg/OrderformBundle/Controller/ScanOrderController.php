@@ -122,6 +122,16 @@ class ScanOrderController extends Controller {
         $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
+        $dql->leftJoin("orderinfo.educational", "educational");
+        $dql->leftJoin("educational.directorWrappers", "directorWrappers");
+        $dql->leftJoin("directorWrappers.director", "director");
+
+        $dql->leftJoin("orderinfo.research", "research");
+        $dql->leftJoin("research.principalWrappers", "principalWrappers");
+        $dql->leftJoin("principalWrappers.principal", "principal");
+
+        $dql->innerJoin("orderinfo.status", "status");
+
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
         $service = $form->get('service')->getData();
@@ -130,6 +140,8 @@ class ScanOrderController extends Controller {
         //echo "<br>service=".$service."<br>";
         //exit();
 
+        $increaseMaxExecTime = false;
+
         $criteriastr = "";
 
         //***************** Pathology Service filetr ***************************//
@@ -137,7 +149,6 @@ class ScanOrderController extends Controller {
         $showproxyuser = 'false';
 
         //***************** Status filetr ***************************//
-        $dql->innerJoin("orderinfo.status", "status");
         //echo "status filter = ".$filter."<br>";
         if( $filter && is_numeric($filter) && $filter > 0 ) {
             if( $criteriastr != "" ) {
@@ -197,15 +208,15 @@ class ScanOrderController extends Controller {
                     $criteriastr .= " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
                     break;
                 case "No Course Director Link":
-                    $dql->innerJoin("orderinfo.educational", "educational");
-                    $dql->innerJoin("educational.directorWrappers", "directorWrappers");
-                    $dql->innerJoin("directorWrappers.director", "director");
+//                    $dql->innerJoin("orderinfo.educational", "educational");
+//                    $dql->innerJoin("educational.directorWrappers", "directorWrappers");
+//                    $dql->innerJoin("directorWrappers.director", "director");
                     $criteriastr .= " director.director IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
-                    $dql->innerJoin("orderinfo.research", "research");
-                    $dql->innerJoin("research.principalWrappers", "principalWrappers");
-                    $dql->innerJoin("principalWrappers.principal", "principal");
+//                    $dql->innerJoin("orderinfo.research", "research");
+//                    $dql->innerJoin("research.principalWrappers", "principalWrappers");
+//                    $dql->innerJoin("principalWrappers.principal", "principal");
                     $criteriastr .= " principal.principal IS NULL AND status.name != 'Superseded'";
                     break;
                 default:
@@ -231,20 +242,112 @@ class ScanOrderController extends Controller {
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
+
+            $searchStr = " LIKE '%" . $search . "%'";
+
+            $criteriastr .= "orderinfo.oid".$searchStr;
+
+            //educational
+            $dql->leftJoin("educational.courseTitle", "courseTitle");
+            $criteriastr .= " OR courseTitle.name".$searchStr;
+
+            $dql->leftJoin("educational.lessonTitle", "lessonTitle");
+            $criteriastr .= " OR lessonTitle.name".$searchStr;
+
+            //Course Director
+            $dql->leftJoin("director.director", "directorUser");
+            $criteriastr .= " OR directorUser.username".$searchStr;
+            $criteriastr .= " OR directorUser.displayName".$searchStr;
+
+            //reasearch
+            $dql->leftJoin("research.projectTitle", "projectTitle");
+            $criteriastr .= " OR projectTitle.name".$searchStr;
+
+            $dql->leftJoin("research.setTitle", "setTitle");
+            $criteriastr .= " OR setTitle.name".$searchStr;
+
+            //Principal Investigator
+            $dql->leftJoin("principal.principal", "principalUser");
+            $criteriastr .= " OR principalUser.username".$searchStr;
+            $criteriastr .= " OR principalUser.displayName".$searchStr;
+
+            //Submitter
+            $criteriastr .= " OR provider.username".$searchStr;
+            $criteriastr .= " OR provider.displayName".$searchStr;
+
+            //Ordering Provider
+            $criteriastr .= " OR proxyuser.username".$searchStr;
+            $criteriastr .= " OR proxyuser.displayName".$searchStr;
+
+            //accession
             $dql->leftJoin("orderinfo.accession", "accessionobj");
             $dql->leftJoin("accessionobj.accession", "accession");
-            $criteriastr .= "accession.field LIKE '%" . $search . "%'";
+            $criteriastr .= " OR accession.field".$searchStr;
+
+            //MRN
+            $dql->leftJoin("orderinfo.patient", "patient");
+            $dql->leftJoin("patient.mrn", "mrn");
+            $criteriastr .= " OR mrn.field".$searchStr;
 
             //patient name
-            $dql->leftJoin("orderinfo.patient", "patientobj");
-            $dql->leftJoin("patientobj.name", "name");
-            $criteriastr .= "OR name.field LIKE '%" . $search . "%'";
+            $dql->leftJoin("patient.name", "name");
+            $criteriastr .= " OR name.field".$searchStr;
+
+            //Diagnosis
+            $dql->leftJoin("orderinfo.part", "part");
+            $dql->leftJoin("part.disident", "disident");
+            $criteriastr .= " OR disident.field".$searchStr;
+
+            //Differential Diagnoses
+            $dql->leftJoin("part.diffDisident", "diffDisident");
+            $criteriastr .= " OR diffDisident.field".$searchStr;
+
+            //Reason for Scan/Note
+            $dql->leftJoin("slides.scan", "scan");
+            $criteriastr .= " OR scan.note".$searchStr;
+
+            //Clinical History
+            $dql->innerJoin("orderinfo.procedure", "procedure");
+            $dql->leftJoin("procedure.pathistory", "pathistory");
+            $criteriastr .= " OR pathistory.field".$searchStr;
+
+            //Procedure Type
+            $dql->innerJoin("procedure.name", "procedureName");
+            $dql->innerJoin("procedureName.field", "procedureType");
+            $criteriastr .= " OR procedureType.name".$searchStr;
+
+            //Source Organ
+            $dql->leftJoin("orderinfo.block", "block");
+            $dql->leftJoin("block.sectionsource", "sectionsource");
+            $criteriastr .= " OR sectionsource.field".$searchStr;
 
             //part Gross Description
-            $dql->leftJoin("orderinfo.part", "partobj");
-            $dql->leftJoin("partobj.description", "description");
-            $criteriastr .= "OR description.field LIKE '%" . $search . "%'";
-            
+            $dql->leftJoin("part.description", "description");
+            $criteriastr .= " OR description.field".$searchStr;
+
+            //Microscopic Description
+            $criteriastr .= " OR slides.microscopicdescr".$searchStr;
+
+            //Disease Type [Neoplastic, non-neoplastic, metastatic]
+            $dql->leftJoin("part.diseaseType", "diseaseType");
+            $criteriastr .= " OR diseaseType.field".$searchStr;
+
+            //Stain Name
+            $dql->innerJoin("slides.stain", "stain");
+            $dql->innerJoin("stain.field", "StainList");
+            $criteriastr .= " OR StainList.name".$searchStr;
+
+            //Special Stain Results (both stain name and the result field)
+            $dql->leftJoin("block.specialStains", "specialStains");
+            $dql->leftJoin("specialStains.staintype", "specialStainsStainList");
+            $criteriastr .= " OR specialStainsStainList.name".$searchStr;
+            $criteriastr .= " OR specialStains.field".$searchStr;
+
+            //Clinical Summary
+            $dql->leftJoin("patient.clinicalHistory", "clinicalHistory");
+            $criteriastr .= " OR clinicalHistory.field".$searchStr;
+
+            $increaseMaxExecTime = true;
         }
         //***************** END of Search filetr ***************************//
 
@@ -258,7 +361,7 @@ class ScanOrderController extends Controller {
             if( $service == "" || $service == "My Orders" ) {
 
                 //show only my order and the orders where I'm a proxy
-                //Orders I Personally Placed and Where I am the Ordering Provider: $service == "My Orders"
+                //Where I am the Submitter and Where I am the Ordering Provider: $service == "My Orders"
 
                 $crituser .= "( provider.id=".$user->getId();
 
@@ -284,8 +387,8 @@ class ScanOrderController extends Controller {
                 $crituser = "";
             }
 
-            if( $service == "Orders I Personally Placed" ) {
-                //echo "Orders I Personally Placed <br>";
+            if( $service == "Where I am the Submitter" ) {
+                //echo "Where I am the Submitter <br>";
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
@@ -304,18 +407,18 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $dql->innerJoin("orderinfo.educational", "educational");
-                $dql->innerJoin("educational.directorWrappers", "directorWrappers");
-                $dql->innerJoin("directorWrappers.director", "director");
+//                $dql->innerJoin("orderinfo.educational", "educational");
+//                $dql->innerJoin("educational.directorWrappers", "directorWrappers");
+//                $dql->innerJoin("directorWrappers.director", "director");
                 $crituser .= "director.director=".$user->getId();
             }
             if( $service == "Where I am the Principal Investigator" ) {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $dql->innerJoin("orderinfo.research", "research");
-                $dql->innerJoin("research.principalWrappers", "principalWrappers");
-                $dql->innerJoin("principalWrappers.principal", "principal");
+//                $dql->innerJoin("orderinfo.research", "research");
+//                $dql->innerJoin("research.principalWrappers", "principalWrappers");
+//                $dql->innerJoin("principalWrappers.principal", "principal");
                 $crituser .= "principal.principal=".$user->getId();
             }
             if( $service == "Where I am the Amendment Author" ) {
@@ -393,7 +496,13 @@ class ScanOrderController extends Controller {
         }
         
         //echo "dql=".$dql;
-        
+
+        if( $increaseMaxExecTime ) {
+            $max_exec_time = ini_get('max_execution_time');
+            ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        }
+
+
         $limit = 50;
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
@@ -410,6 +519,10 @@ class ScanOrderController extends Controller {
         $accessreqs = $this->getActiveAccessReq();
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+
+        if( $increaseMaxExecTime ) {
+            ini_set('max_execution_time', $max_exec_time); //set back to the original value
+        }
 
         //echo "<br>pagination count=".count($pagination)."<br>";
         //exit();

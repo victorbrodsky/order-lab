@@ -33,8 +33,15 @@ use Oleg\OrderformBundle\Entity\Procedure;
 use Oleg\OrderformBundle\Entity\ProcedureEncounter;
 use Oleg\OrderformBundle\Entity\ProcedureName;
 
+use Oleg\OrderformBundle\Entity\ProcedurePatname;
+use Oleg\OrderformBundle\Entity\ProcedurePatsex;
+use Oleg\OrderformBundle\Entity\ProcedurePatage;
+use Oleg\OrderformBundle\Entity\ProcedurePathistory;
+use Oleg\OrderformBundle\Entity\ProcedureEncounterDate;
+
 use Oleg\OrderformBundle\Entity\Accession;
 use Oleg\OrderformBundle\Entity\AccessionAccession;
+use Oleg\OrderformBundle\Entity\AccessionAccessionDate;
 
 use Oleg\OrderformBundle\Entity\Part;
 use Oleg\OrderformBundle\Entity\PartPartname;
@@ -288,55 +295,32 @@ class TableController extends Controller {
 
         //dob
         $dob = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
-        if( !$force || $dob && $dob != '' ) {
+        if( $force || $dob && $dob != '' ) {
             $patientdob = new PatientDob($status,$provider,$source);
-            $dobFormat = new \DateTime($dob);
+            if( $dob == "" ) {
+                $dobFormat = null;
+            } else {
+                $dobFormat = strtotime($dob);
+            }
+            //echo date('d/M/Y H:i:s', $dobFormat);
             $patientdob->setField($dobFormat);
             $patient->addDob($patientdob);
         }
 
         //Clinical History
         $clsum = $this->getValueByHeaderName('Clinical Summary',$row,$columnData);
-        if( !$force || $clsum && $clsum != '' ) {
+        if( $force || $clsum && $clsum != '' ) {
             $patientch = new PatientClinicalHistory($status,$provider,$source);
             $patientch->setField($clsum);
             $patient->addClinicalHistory($patientch);
         }
-
-//        //name
-//        $name = $this->getValueByHeaderName('Patient Name',$row,$columnData);
-//        if( !$force || $name && $name != '' ) {
-//            $patientname = new PatientName($status,$provider,$source);
-//            $patientname->setField($name);
-//            $patient->addName($patientname);
-//        }
-//
-//        //sex
-//        $sex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
-//        if( !$force || $sex && $sex != '' ) {
-//            $patientsex = new PatientSex($status,$provider,$source);
-//            $patientsex->setField($sex);
-//            $patient->addSex($patientsex);
-//        }
-//
-//        //age
-//        $age = $this->getValueByHeaderName('Patient Age',$row,$columnData);
-//        if( !$force || $age && $age != '' ) {
-//            $patientage = new PatientAge($status,$provider,$source);
-//            $patientage->setField($age);
-//            $patient->addAge($patientage);
-//        }
-
-        //echo "name=".$patient->getName()->first()."<br>";
-        //exit();
-        //return $patient;
 
         ///////////////// Procedure /////////////////
         $procedure = new Procedure(false, $status, $provider, $source);
 
         //Procedure name
         $ptype = $this->getValueByHeaderName('Procedure Type',$row,$columnData);
-        if( !$force || $ptype && $ptype != '' ) {
+        if( $force || $ptype && $ptype != '' ) {
             $procedureTransform = new ProcedureTransformer($em,$provider);
             $procedurenameList = $procedureTransform->reverseTransform($ptype); //ProcedureList
             $procedureName = new ProcedureName($status, $provider, $source);
@@ -353,33 +337,47 @@ class TableController extends Controller {
         //add procedure simple fields
         //Encounter Date
         $encounterDate = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
-        if( !$force || $encounterDate && $encounterDate != '' ) {
-            $encounterDateFormat = new \DateTime($encounterDate);
-            $procedure->setEncounterDate($encounterDateFormat);
+        if( $force || $encounterDate && $encounterDate != '' ) {
+            if( $encounterDate == "" ) {
+                $encounterDateFormat = null;
+            } else {
+                $encounterDateFormat = strtotime($encounterDate);
+            }
+            $encounterDateObj = new ProcedureEncounterDate($status, $provider, $source);
+            $encounterDateObj->setField($encounterDateFormat);
+            $procedure->addEncounterDate($encounterDateObj);
         }
 
-        //Patient Name
+        //Procedure Name
         $patname = $this->getValueByHeaderName('Patient Name',$row,$columnData);
-        if( !$force || $patname && $patname != '' ) {
-            $procedure->setPatname($patname);
+        if( $force || $patname && $patname != '' ) {
+            $patnameObj = new ProcedurePatname($status, $provider, $source);
+            $patnameObj->setField($patname);
+            $procedure->addPatname($patnameObj);
         }
 
-        //Patient Sex
+        //Procedure Sex
         $patsex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
-        if( !$force || $patsex && $patsex != '' ) {
-            $procedure->setPatsex($patsex);
+        if( $force || $patsex && $patsex != '' ) {
+            $patsexObj = new ProcedurePatsex($status, $provider, $source);
+            $patsexObj->setField($patsex);
+            $procedure->addPatsex($patsexObj);
         }
 
-        //Patient Age
+        //Procedure Age
         $patage = $this->getValueByHeaderName('Patient Age',$row,$columnData);
-        if( !$force || $patage && $patage != '' ) {
-            $procedure->setPatage($patage);
+        if( $force || $patage && $patage != '' ) {
+            $patageObj = new ProcedurePatage($status, $provider, $source);
+            $patageObj->setField($patage);
+            $procedure->addPatage($patageObj);
         }
 
         //Clinical History
         $pathistory = $this->getValueByHeaderName('Clinical History',$row,$columnData);
-        if( !$force || $pathistory && $pathistory != '' ) {
-            $procedure->setPathistory($pathistory);
+        if( $force || $pathistory && $pathistory != '' ) {
+            $pathistoryObj = new ProcedurePathistory($status, $provider, $source);
+            $pathistoryObj->setField($pathistory);
+            $procedure->addPathistory($pathistoryObj);
         }
 
 
@@ -398,9 +396,15 @@ class TableController extends Controller {
 
         //Accession Date
         $accessionDate = $this->getValueByHeaderName('Accession Date',$row,$columnData);
-        if( !$force || $accessionDate && $accessionDate != '' ) {
-            $accessionDateFormat = new \DateTime($accessionDate);
-            $accession->setAccessionDate($accessionDateFormat);
+        if( $force || $accessionDate && $accessionDate != '' ) {
+            if( $encounterDate == "" ) {
+                $accessionDateFormat = null;
+            } else {
+                $accessionDateFormat = strtotime($accessionDate);
+            }
+            $accessionDateObj = new AccessionAccessionDate($status,$provider,$source);
+            $accessionDateObj->setField($accessionDateFormat);
+            $accession->addAccessionDate($accessionDateObj);
         }
 
         $procedure->addAccession($accession);
@@ -417,7 +421,7 @@ class TableController extends Controller {
 
         //Source Organ
         $partso = $this->getValueByHeaderName('Source Organ',$row,$columnData);
-        if( !$force || $partso && $partso != '' ) {
+        if( $force || $partso && $partso != '' ) {
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
             $sourceOrganList = $sourceOrganTransformer->reverseTransform($partso); //OrganList
             $partSourceOrgan = new PartSourceOrgan($status, $provider, $source);
@@ -427,7 +431,7 @@ class TableController extends Controller {
 
         //Gross Description
         $partgd = $this->getValueByHeaderName('Gross Description',$row,$columnData);
-        if( !$force || $partgd && $partgd != '' ) {
+        if( $force || $partgd && $partgd != '' ) {
             $partDescription = new PartDescription($status,$provider,$source);
             $partDescription->setField($partgd);
             $part->addDescription($partDescription);
@@ -435,7 +439,7 @@ class TableController extends Controller {
 
         //Diagnosis
         $partdiag = $this->getValueByHeaderName('Diagnosis',$row,$columnData);
-        if( !$force || $partdiag && $partdiag != '' ) {
+        if( $force || $partdiag && $partdiag != '' ) {
             $partDisident = new PartDisident($status,$provider,$source);
             $partDisident->setField($partdiag);
             $part->addDisident($partDisident);
@@ -443,7 +447,7 @@ class TableController extends Controller {
 
         //Differential Diagnoses
         $partdiffdiag = $this->getValueByHeaderName('Differential Diagnoses',$row,$columnData);
-        if( !$force || $partdiffdiag && $partdiffdiag != '' ) {
+        if( $force || $partdiffdiag && $partdiffdiag != '' ) {
             $partDiffDisident = new PartDiffDisident($status,$provider,$source);
             $partDiffDisident->setField($partdiffdiag);
             $part->addDiffDisident($partDiffDisident);
@@ -451,7 +455,7 @@ class TableController extends Controller {
 
         //Type of Disease
         $partdistype = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
-        if( !$force || $partdistype && $partdistype != '' ) {
+        if( $force || $partdistype && $partdistype != '' ) {
             $partDiseaseType = new PartDiseaseType($status,$provider,$source);
             $partDiseaseType->setField($partdistype);
             //Origin of Disease
@@ -479,7 +483,7 @@ class TableController extends Controller {
 
         //Block: Section Source
         $sections = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
-        if( !$force || $sections && $sections != '' ) {
+        if( $force || $sections && $sections != '' ) {
             $blocksection = new BlockSectionsource($status,$provider,$source);
             $blocksection->setField($sections);
             $block->addSectionsource($blocksection);
@@ -487,7 +491,7 @@ class TableController extends Controller {
 
         //Block: Results of Special Stains: StainList + field
         $specialStainValue = $this->getValueByHeaderName('Associated Special Stain Result',$row,$columnData);
-        if( !$force || $specialStainValue && $specialStainValue != '' ) {
+        if( $force || $specialStainValue && $specialStainValue != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
             $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)); //list
             $specialstain = new BlockSpecialStains($status,$provider,$source);
@@ -513,7 +517,7 @@ class TableController extends Controller {
 
         //Stain
         $stainValue = $this->getValueByHeaderName('Stain',$row,$columnData);
-        if( !$force || $stainValue && $stainValue != '' ) {
+        if( $force || $stainValue && $stainValue != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
             $stainList = $stainTransformer->reverseTransform($stainValue);
 
@@ -547,7 +551,7 @@ class TableController extends Controller {
 
         //Link(s) to related image(s)
         $relevantScans = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);
-        if( !$force || $relevantScans && $relevantScans != '' ) {
+        if( $force || $relevantScans && $relevantScans != '' ) {
             $relScan = new RelevantScans($status,$provider,$source);
             $relScan->setField($relevantScans);
             $slide->addRelevantScan($relScan);

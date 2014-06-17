@@ -512,8 +512,8 @@
 
 {#simple field widget. i.e. diffDiagnoses field widget#}
 {% macro fieldWidget(field) %}
-    {{ form_widget(field.vars.prototype.field) }}
     {{ form_widget(field.vars.prototype.other) }}
+    {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
 
 {% macro fieldSpecialStainsWidget(field) %}

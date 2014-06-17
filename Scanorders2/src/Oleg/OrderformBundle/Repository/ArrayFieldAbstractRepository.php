@@ -599,6 +599,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return false;
     }
 
+    //$fieldName: search field name by $fieldStr (i.e.: search for S11-12 in accession)
+    //$validity - status of the object specified by $className
     public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
@@ -690,6 +692,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
     }
 
+    //find and delete all objects where $fieldName = $fieldStr
     public function deleteIfReserved( $fieldStr, $className, $fieldName, $extra = null ) {
 
         //echo "fieldStr=(".$fieldStr.") ";
@@ -708,11 +711,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $count = 0;
             foreach( $entity->getChildren() as $child ) {
                 //echo 'status='.$child->getStatus()." ";
-                if( $child->getStatus() == 'reserved' ) {
+                if( $child->getStatus() == self::STATUS_RESERVED ) {
                     $count++;
                 }
             }
 
+            //don't delete if this entity has reserved children
             if( $count > 0 ) {
                 return -1;
             }
@@ -738,6 +742,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
+
         $em = $this->_em;
 
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
@@ -786,6 +791,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $field = $fields->first();
         $field->setField($fieldValue);
 
+        //set keyfield status to valid
         $field->setStatus(self::STATUS_VALID);
 
         if( $field && method_exists($field,'setExtra') ) {
@@ -808,6 +814,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 //
 //        $entity->$keyAddMethod($field);
 
+        //echo "set status=".$status."<br>";
+
         $entity->setStatus($status);
 
         $em->persist($entity);
@@ -819,6 +827,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         } else {
             //echo "Parent is not set<br>";
         }
+
+        //echo $entity;
+        //exit();
 
         if( $flush ) {
             $em->flush();

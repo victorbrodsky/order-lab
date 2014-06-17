@@ -132,7 +132,7 @@ class AdminController extends Controller
         );
 
 
-        ini_set('max_execution_time', $max_exec_time); //300 seconds = 5 minutes
+        ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
         return $this->redirect($this->generateUrl('admin_index'));
     }
@@ -827,7 +827,7 @@ class AdminController extends Controller
         }
 
         $types = array(
-            'Ordering Provider', 'Filing Room', 'Me'
+            'Me (the Submitter)', 'Ordering Provider', 'Filing Room'
         );
 
         $count = 1;

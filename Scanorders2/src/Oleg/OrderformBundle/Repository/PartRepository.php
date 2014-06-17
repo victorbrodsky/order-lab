@@ -161,7 +161,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     }
 
-    //create new Part by provided accession number
+    //create new Part by provided accession number. Used only by check controller, when user click generate part number
     public function createPartByAccession( $accessionNumber, $keytype, $provider ) {
 
         //echo "accessionNumber=".$accessionNumber."<br>";
@@ -188,7 +188,7 @@ class PartRepository extends ArrayFieldAbstractRepository
         if( !$accession ) {
             //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
-            //                                                                     $status, $provider, $className, $fieldName, $parent, $fieldValue
+            //                                                                         $status, $provider, $className, $fieldName, $parent, $fieldValue
             $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$provider,"Accession","accession",null,$accessionNumber,$extra,true);
         }
 //        else {

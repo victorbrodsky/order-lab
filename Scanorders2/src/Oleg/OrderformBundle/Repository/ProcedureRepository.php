@@ -121,43 +121,41 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $status = self::STATUS_VALID;
 
         //name
-        if( $this->validFieldIsSet( $patient->getName() ) ) {
-            $status = self::STATUS_INVALID;
+        if( count($procedure->getPatname()) > 0 ) {
+            if( $this->validFieldIsSet( $patient->getName() ) ) {
+                $status = self::STATUS_INVALID;
+            }
+            //echo "pat name count=".count($patient->getName())."<br>";
+            //echo "procedure patname=".$procedure->getPatname()->first()."<br>";
+            $patientname = new PatientName($status,$user,$source);
+            $patientname->setField($procedure->getPatname()->first());
+            $patientname->setProcedure($procedure);
+            $patient->addName($patientname);
         }
-        //echo "pat name count=".count($patient->getName())."<br>";
-        //echo "procedure patname=".$procedure->getPatname()->first()."<br>";
-        $patientname = new PatientName($status,$user,$source);
-        $patientname->setField($procedure->getPatname()->first());
-        $patientname->setProcedure($procedure);
-        $patient->addName($patientname);
 
         //sex
-//        echo "original patient sex count=".count($patient->getSex())."<br>";
-//        foreach( $patient->getSex() as $sex ) {
-//            echo "original patient sex=".$sex."<br>";
-//        }
-        if( $this->validFieldIsSet( $patient->getSex() ) ) {
-            $status = self::STATUS_INVALID;
+        if( count($procedure->getPatsex()) > 0 ) {
+            if( $this->validFieldIsSet( $patient->getSex() ) ) {
+                $status = self::STATUS_INVALID;
+            }
+            $patientsex = new PatientSex($status,$user,$source);
+            //echo "procedure sex=".$procedure->getPatsex()->first()."<br>";
+            $patientsex->setField($procedure->getPatsex()->first());
+            $patientsex->setProcedure($procedure);
+            $patient->addSex($patientsex);
         }
-        $patientsex = new PatientSex($status,$user,$source);
-        //echo "procedure sex=".$procedure->getPatsex()->first()."<br>";
-        $patientsex->setField($procedure->getPatsex()->first());
-        $patientsex->setProcedure($procedure);
-        $patient->addSex($patientsex);
-//        echo "after patient sex count=".count($patient->getSex())."<br>";
-//        foreach( $patient->getSex() as $sex ) {
-//            echo "patient sex=".$sex."<br>";
-//        }
 
         //age
-        if( $this->validFieldIsSet( $patient->getAge() ) ) {
-            $status = self::STATUS_INVALID;
+        if( count($procedure->getPatage()) > 0 ) {
+            if( $this->validFieldIsSet( $patient->getAge() ) ) {
+                $status = self::STATUS_INVALID;
+            }
+            $patientage = new PatientAge($status,$user,$source);
+            //echo "procedure age=".$procedure->getPatage()->first()->getField()."<br>";
+            $patientage->setField($procedure->getPatage()->first()->getField());
+            $patientage->setProcedure($procedure);
+            $patient->addAge($patientage);
         }
-        $patientage = new PatientAge($status,$user,$source);
-        //echo "procedure age=".$procedure->getPatage()->first()->getField()."<br>";
-        $patientage->setField($procedure->getPatage()->first()->getField());
-        $patientage->setProcedure($procedure);
-        $patient->addAge($patientage);
 
     }
 

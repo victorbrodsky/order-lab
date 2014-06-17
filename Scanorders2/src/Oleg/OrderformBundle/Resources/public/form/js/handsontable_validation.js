@@ -98,8 +98,8 @@ function validateHandsonTable() {
 //            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
 //            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
 //            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
-        var errmsg = "Please review the cell(s) marked light red, in the highlighted row(s), and enter the missing required information.<br>" +
-            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
+        var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
+            "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
             "If you have accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
 

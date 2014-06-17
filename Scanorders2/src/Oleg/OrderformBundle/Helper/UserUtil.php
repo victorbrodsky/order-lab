@@ -176,7 +176,7 @@ class UserUtil {
     public function generateUserPathServices( $user ) {
         $choicesServ = array(
             "My Orders"=>"My Orders",
-            "Orders I Personally Placed"=>"Orders I Personally Placed",
+            "Where I am the Submitter"=>"Where I am the Submitter",
             "Where I am the Ordering Provider"=>"Where I am the Ordering Provider",
             "Where I am the Course Director"=>"Where I am the Course Director",
             "Where I am the Principal Investigator"=>"Where I am the Principal Investigator",

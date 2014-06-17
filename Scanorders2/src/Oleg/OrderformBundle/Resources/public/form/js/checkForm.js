@@ -464,7 +464,7 @@ function executeClick( btnObjInit ) {
 
                     //////////////// delete ////////////////
                     if( casetype == 'delete' ) {
-                        if( data >= 0 ) {
+                        if( data >= 0 || data == -1 ) {
                             console.debug("Delete Success, data="+data);
                             deleteSuccess(btnObj,single);
                             resolve("Object was deleted, data="+data);

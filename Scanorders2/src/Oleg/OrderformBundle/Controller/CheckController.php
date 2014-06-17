@@ -344,11 +344,11 @@ class CheckController extends Controller {
                 $orderinfoString = "";
                 $procedureName = array();
 
-                $encDate = "";
-                $patName = "";
-                $patSex = "";
-                $patAge = "";
-                $patHist = "";
+                $encDate = array();
+                $patName = array();
+                $patSex = array();
+                $patAge = array();
+                $patHist = array();
             }
 
             //echo "mrnstring=".$mrnstring." ";
@@ -467,7 +467,8 @@ class CheckController extends Controller {
         $keytype = trim( $request->get('parentextra') );
         //echo "key=".$key."   ";
 
-        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $keytype, $key, true );
+        $validity = true; //check only valid objects
+        $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $accession, $keytype, $key, $validity );
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
