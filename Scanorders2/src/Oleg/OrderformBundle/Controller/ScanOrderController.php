@@ -112,6 +112,9 @@ class ScanOrderController extends Controller {
         $dql->addGroupBy('formtype.name');
         $dql->addGroupBy('provider.username');
 
+        //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
+        //$dql->having("( COUNT(orderinfo) > 1 )");
+
         $dql->innerJoin("orderinfo.slide", "slides");
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->innerJoin("orderinfo.type", "formtype");
@@ -228,9 +231,19 @@ class ScanOrderController extends Controller {
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
-            $dql->innerJoin("orderinfo.accession", "accessionobj");
-            $dql->innerJoin("accessionobj.accession", "accession");
+            $dql->leftJoin("orderinfo.accession", "accessionobj");
+            $dql->leftJoin("accessionobj.accession", "accession");
             $criteriastr .= "accession.field LIKE '%" . $search . "%'";
+
+            //patient name
+            $dql->leftJoin("orderinfo.patient", "patientobj");
+            $dql->leftJoin("patientobj.name", "name");
+            $criteriastr .= "OR name.field LIKE '%" . $search . "%'";
+
+            //part Gross Description
+            $dql->leftJoin("orderinfo.part", "partobj");
+            $dql->leftJoin("partobj.description", "description");
+            $criteriastr .= "OR description.field LIKE '%" . $search . "%'";
             
         }
         //***************** END of Search filetr ***************************//
@@ -398,7 +411,8 @@ class ScanOrderController extends Controller {
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
 
-        //echo "<br>page count=".count($pagination)."<br>";
+        //echo "<br>pagination count=".count($pagination)."<br>";
+        //exit();
 
         return array(
             'form' => $form->createView(),

@@ -31,7 +31,8 @@ class ProcedureEncounterDateType extends AbstractType
 
         $builder->add('dobothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounterDate',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

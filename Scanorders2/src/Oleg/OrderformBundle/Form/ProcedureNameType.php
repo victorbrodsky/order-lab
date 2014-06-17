@@ -35,7 +35,8 @@ class ProcedureNameType extends AbstractType
 
         $builder->add('procedureothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureName',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

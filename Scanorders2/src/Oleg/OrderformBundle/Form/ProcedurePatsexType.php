@@ -31,7 +31,8 @@ class ProcedurePatsexType extends AbstractType
 
         $builder->add('procedurepatsexothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatsex',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

@@ -63,7 +63,8 @@ class ScanType extends AbstractType
 
         $builder->add('scanothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Scan',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

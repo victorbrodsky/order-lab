@@ -47,7 +47,8 @@ class PartPaperType extends AbstractType
 
         $builder->add('partothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

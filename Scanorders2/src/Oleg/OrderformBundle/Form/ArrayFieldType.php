@@ -22,7 +22,6 @@ class ArrayFieldType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder->add('id','hidden');
 
         if( $this->params['cicle'] == "show" ) {

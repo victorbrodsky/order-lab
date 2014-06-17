@@ -40,7 +40,8 @@ class GenericFieldType extends AbstractType
 
         $builder->add('other', new ArrayFieldType(), array(
             'data_class' => $this->genAttr['class'],
-            'label' => false
+            'label' => false,
+            'attr' => array('style'=>'display:none;')
         ));
 
     }

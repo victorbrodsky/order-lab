@@ -61,7 +61,8 @@ class AccessionAccessionType extends AbstractType
 
         $builder->add('accessionothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

@@ -42,7 +42,8 @@ class StainType extends AbstractType
 
         $builder->add('stainothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Stain',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

@@ -67,7 +67,8 @@ class PatientMrnType extends AbstractType
         //other fields from abstract
         $builder->add('mrnothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }

@@ -31,7 +31,8 @@ class AccessionDateType extends AbstractType
 
         $builder->add('dobothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccessionDate',
-            'label' => false
+            'label' => false,
+            'attr' => array('style'=>'display:none;')
         ));
 
     }

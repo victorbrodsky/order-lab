@@ -38,7 +38,8 @@ class PartNameType extends AbstractType
 
         $builder->add('partnameothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPartname',
-            'label' => false
+            'label' => false,
+			'attr' => array('style'=>'display:none;')
         ));
 
     }
