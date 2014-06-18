@@ -563,7 +563,7 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
     if( !mrnDB || !mrntypeDB ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");
@@ -571,6 +571,12 @@ function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
     }
 
     if( mrnMrnDBEqual(mrnDB, mrn, mrntypeDB, mrnTypeCorrect) ) {
+        if( dobDB == null ) {
+            dobDB = "";
+        }
+        if( dob == null ) {
+            dob = "";
+        }
         if( dobDB === dob ) {
             return true;
         }

@@ -314,7 +314,7 @@ class CheckController extends Controller {
                 if( $patient && $parentKey ) {
                     $parentKey = $patient->obtainValidKeyfield();
                     $dateStr = $transformer->transform($parentKey->getCreationdate());
-                    $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'], (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
+                    $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'] (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
                     $extraid = $parentKey->getKeytype()->getId()."";
                     $mrnkeytype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extraid);
                     if( $mrnkeytype == "Auto-generated MRN" ) {

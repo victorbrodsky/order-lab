@@ -6,9 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
+//indexes={@Index(name="user_idx", columns={"email"})}
+//,@ORM\@Index(name="lessonTitleStr_idx", columns={"lessonTitleStr"})
+//@ORM\Table(indexes={@ORM\Index(name="email_address_idx", columns={"email_address"})})
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
- * @ORM\Table(name="educational")
+ * @ORM\Table( name="educational",
+ *  indexes={
+ *      @ORM\Index( name="courseTitleStr_idx", columns={"courseTitleStr"} ),
+ *      @ORM\Index( name="lessonTitleStr_idx", columns={"lessonTitleStr"} )
+ *  }
+ * )
  */
 class Educational
 {

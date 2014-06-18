@@ -9561,7 +9561,7 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
 
     //console.log("create data quality: mrnValueForm="+mrnValueForm+", mrnValueDB="+mrnValueDB+", accValueForm="+accValueForm+", accValueDB="+accValueDB);
 
-    var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValueForm+" ["+acctypeTextForm+"] belongs to Patient with "+mrnstring+", not Patient with MRN "
+    var message_short = "MRN-ACCESSION CONFLICT:"+nl+"Entered Accession Number "+accValueForm+" ["+acctypeTextForm+"] belongs to Patient with "+mrnstring+", not to Patient with MRN "
         +mrnValueForm+" ["+mrntypeTextForm+"] as you have entered.";
     var message = message_short + " Please correct either the MRN or the Accession Number above.";
 

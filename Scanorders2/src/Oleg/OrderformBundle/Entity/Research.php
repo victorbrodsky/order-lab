@@ -15,7 +15,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ResearchRepository")
- * @ORM\Table(name="research")
+ * @ORM\Table(name="research",
+ *  indexes={
+ *      @ORM\Index( name="projectTitleStr_idx", columns={"projectTitleStr"} ),
+ *      @ORM\Index( name="setTitleStr_idx", columns={"setTitleStr"} )
+ *  }
+ * )
  */
 class Research
 {

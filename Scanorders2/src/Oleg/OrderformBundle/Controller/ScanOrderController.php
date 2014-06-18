@@ -236,121 +236,6 @@ class ScanOrderController extends Controller {
         }
         //***************** END of Superseded filetr ***************************//
 
-
-        //***************** Search filetr ***************************//
-        if( $search && $search != "" ) {
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
-            }
-
-            $searchStr = " LIKE '%" . $search . "%'";
-
-            $criteriastr .= "orderinfo.oid".$searchStr;
-
-            //educational
-            $dql->leftJoin("educational.courseTitle", "courseTitle");
-            $criteriastr .= " OR courseTitle.name".$searchStr;
-
-            $dql->leftJoin("educational.lessonTitle", "lessonTitle");
-            $criteriastr .= " OR lessonTitle.name".$searchStr;
-
-            //Course Director
-            $dql->leftJoin("director.director", "directorUser");
-            $criteriastr .= " OR directorUser.username".$searchStr;
-            $criteriastr .= " OR directorUser.displayName".$searchStr;
-
-            //reasearch
-            $dql->leftJoin("research.projectTitle", "projectTitle");
-            $criteriastr .= " OR projectTitle.name".$searchStr;
-
-            $dql->leftJoin("research.setTitle", "setTitle");
-            $criteriastr .= " OR setTitle.name".$searchStr;
-
-            //Principal Investigator
-            $dql->leftJoin("principal.principal", "principalUser");
-            $criteriastr .= " OR principalUser.username".$searchStr;
-            $criteriastr .= " OR principalUser.displayName".$searchStr;
-
-            //Submitter
-            $criteriastr .= " OR provider.username".$searchStr;
-            $criteriastr .= " OR provider.displayName".$searchStr;
-
-            //Ordering Provider
-            $criteriastr .= " OR proxyuser.username".$searchStr;
-            $criteriastr .= " OR proxyuser.displayName".$searchStr;
-
-            //accession
-            $dql->leftJoin("orderinfo.accession", "accessionobj");
-            $dql->leftJoin("accessionobj.accession", "accession");
-            $criteriastr .= " OR accession.field".$searchStr;
-
-            //MRN
-            $dql->leftJoin("orderinfo.patient", "patient");
-            $dql->leftJoin("patient.mrn", "mrn");
-            $criteriastr .= " OR mrn.field".$searchStr;
-
-            //patient name
-            $dql->leftJoin("patient.name", "name");
-            $criteriastr .= " OR name.field".$searchStr;
-
-            //Diagnosis
-            $dql->leftJoin("orderinfo.part", "part");
-            $dql->leftJoin("part.disident", "disident");
-            $criteriastr .= " OR disident.field".$searchStr;
-
-            //Differential Diagnoses
-            $dql->leftJoin("part.diffDisident", "diffDisident");
-            $criteriastr .= " OR diffDisident.field".$searchStr;
-
-            //Reason for Scan/Note
-            $dql->leftJoin("slides.scan", "scan");
-            $criteriastr .= " OR scan.note".$searchStr;
-
-            //Clinical History
-            $dql->innerJoin("orderinfo.procedure", "procedure");
-            $dql->leftJoin("procedure.pathistory", "pathistory");
-            $criteriastr .= " OR pathistory.field".$searchStr;
-
-            //Procedure Type
-            $dql->innerJoin("procedure.name", "procedureName");
-            $dql->innerJoin("procedureName.field", "procedureType");
-            $criteriastr .= " OR procedureType.name".$searchStr;
-
-            //Source Organ
-            $dql->leftJoin("orderinfo.block", "block");
-            $dql->leftJoin("block.sectionsource", "sectionsource");
-            $criteriastr .= " OR sectionsource.field".$searchStr;
-
-            //part Gross Description
-            $dql->leftJoin("part.description", "description");
-            $criteriastr .= " OR description.field".$searchStr;
-
-            //Microscopic Description
-            $criteriastr .= " OR slides.microscopicdescr".$searchStr;
-
-            //Disease Type [Neoplastic, non-neoplastic, metastatic]
-            $dql->leftJoin("part.diseaseType", "diseaseType");
-            $criteriastr .= " OR diseaseType.field".$searchStr;
-
-            //Stain Name
-            $dql->innerJoin("slides.stain", "stain");
-            $dql->innerJoin("stain.field", "StainList");
-            $criteriastr .= " OR StainList.name".$searchStr;
-
-            //Special Stain Results (both stain name and the result field)
-            $dql->leftJoin("block.specialStains", "specialStains");
-            $dql->leftJoin("specialStains.staintype", "specialStainsStainList");
-            $criteriastr .= " OR specialStainsStainList.name".$searchStr;
-            $criteriastr .= " OR specialStains.field".$searchStr;
-
-            //Clinical Summary
-            $dql->leftJoin("patient.clinicalHistory", "clinicalHistory");
-            $criteriastr .= " OR clinicalHistory.field".$searchStr;
-
-            $increaseMaxExecTime = true;
-        }
-        //***************** END of Search filetr ***************************//
-
         //***************** User filter ***************************//
         if( $routeName == "my-scan-orders" ) {
 
@@ -469,7 +354,128 @@ class ScanOrderController extends Controller {
             }
         }
 
+
+        //***************** Search filetr ***************************//
+        if( $search && $search != "" ) {
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+
+            $searchStr = " LIKE '%" . $search . "%'";
+
+            $criteriastr .= "orderinfo.oid".$searchStr;
+
+            //educational
+            //$dql->leftJoin("educational.courseTitle", "courseTitle");
+            //$criteriastr .= " OR courseTitle.name".$searchStr;
+            $criteriastr .= " OR educational.courseTitleStr".$searchStr;
+
+            //$dql->leftJoin("educational.lessonTitle", "lessonTitle");
+            //$criteriastr .= " OR lessonTitle.name".$searchStr;
+            $criteriastr .= " OR educational.lessonTitleStr".$searchStr;
+
+            //Course Director
+            $dql->leftJoin("director.director", "directorUser");
+            $criteriastr .= " OR directorUser.username".$searchStr;
+            $criteriastr .= " OR directorUser.displayName".$searchStr;
+
+            //reasearch
+            //$dql->leftJoin("research.projectTitle", "projectTitle");
+            //$criteriastr .= " OR projectTitle.name".$searchStr;
+            $criteriastr .= " OR research.projectTitleStr".$searchStr;
+
+            //$dql->leftJoin("research.setTitle", "setTitle");
+            //$criteriastr .= " OR setTitle.name".$searchStr;
+            $criteriastr .= " OR research.setTitleStr".$searchStr;
+
+            //Principal Investigator
+            $dql->leftJoin("principal.principal", "principalUser");
+            $criteriastr .= " OR principalUser.username".$searchStr;
+            $criteriastr .= " OR principalUser.displayName".$searchStr;
+
+            //Submitter
+            $criteriastr .= " OR provider.username".$searchStr;
+            $criteriastr .= " OR provider.displayName".$searchStr;
+
+            //Ordering Provider
+            $criteriastr .= " OR proxyuser.username".$searchStr;
+            $criteriastr .= " OR proxyuser.displayName".$searchStr;
+
+            //accession
+            $dql->leftJoin("orderinfo.accession", "accessionObj");
+            $dql->leftJoin("accessionObj.accession", "accession");
+            $criteriastr .= " OR accession.field".$searchStr;
+
+            //MRN
+            $dql->leftJoin("orderinfo.patient", "patient");
+            $dql->leftJoin("patient.mrn", "mrn");
+            $criteriastr .= " OR mrn.field".$searchStr;
+
+            //patient name
+            $dql->leftJoin("patient.name", "name");
+            $criteriastr .= " OR name.field".$searchStr;
+
+            //Diagnosis
+            $dql->leftJoin("orderinfo.part", "part");
+            $dql->leftJoin("part.disident", "disident");
+            $criteriastr .= " OR disident.field".$searchStr;
+
+            //Differential Diagnoses
+            $dql->leftJoin("part.diffDisident", "diffDisident");
+            $criteriastr .= " OR diffDisident.field".$searchStr;
+
+            //Reason for Scan/Note
+            $dql->leftJoin("slides.scan", "scan");
+            $criteriastr .= " OR scan.note".$searchStr;
+
+            //Clinical History
+            $dql->innerJoin("orderinfo.procedure", "procedure");
+            $dql->leftJoin("procedure.pathistory", "pathistory");
+            $criteriastr .= " OR pathistory.field".$searchStr;
+
+            //Procedure Type
+            $dql->leftJoin("procedure.name", "procedureName");
+            $dql->leftJoin("procedureName.field", "procedureType");
+            $criteriastr .= " OR procedureType.name".$searchStr;
+
+            //Source Organ
+            $dql->leftJoin("orderinfo.block", "block");
+            $dql->leftJoin("block.sectionsource", "sectionsource");
+            $criteriastr .= " OR sectionsource.field".$searchStr;
+
+            //part Gross Description
+            $dql->leftJoin("part.description", "description");
+            $criteriastr .= " OR description.field".$searchStr;
+
+            //Microscopic Description
+            $criteriastr .= " OR slides.microscopicdescr".$searchStr;
+
+            //Disease Type [Neoplastic, non-neoplastic, metastatic]
+            $dql->leftJoin("part.diseaseType", "diseaseType");
+            $criteriastr .= " OR diseaseType.field".$searchStr;
+
+            //Stain Name
+            $dql->innerJoin("slides.stain", "stain");
+            $dql->leftJoin("stain.field", "StainList");
+            $criteriastr .= " OR StainList.name".$searchStr;
+
+            //Special Stain Results (both stain name and the result field)
+            $dql->leftJoin("block.specialStains", "specialStains");
+            $dql->leftJoin("specialStains.staintype", "specialStainsStainList");
+            $criteriastr .= " OR specialStainsStainList.name".$searchStr;
+            $criteriastr .= " OR specialStains.field".$searchStr;
+
+            //Clinical Summary
+            $dql->leftJoin("patient.clinicalHistory", "clinicalHistory");
+            $criteriastr .= " OR clinicalHistory.field".$searchStr;
+
+            $increaseMaxExecTime = true;
+        }
+        //***************** END of Search filetr ***************************//
+
         //echo "<br>criteriastr=".$criteriastr."<br>";
+
+        $dql2 = clone $dql;
         
         if( $criteriastr != "" ) {
             $dql->where($criteriastr);
@@ -504,6 +510,7 @@ class ScanOrderController extends Controller {
 
 
         $limit = 50;
+
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -519,6 +526,39 @@ class ScanOrderController extends Controller {
         $accessreqs = $this->getActiveAccessReq();
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+
+        //***************** Search filetr: get Matching Header ***************************//
+        if( false && count($pagination) > 0 ) {
+
+            $criteriastr2 = "";
+            if( $search && $search != "" ) {
+                if( $criteriastr != "" ) {
+                    $criteriastr2 = $criteriastr . " AND ";
+                }
+
+                $searchStr = " LIKE '%" . $search . "%'";
+
+                $criteriastr2 .= " OR accession.field".$searchStr;
+
+                if( $criteriastr != "" ) {
+                    $dql2->where($criteriastr2);
+                }
+
+                echo "dql2=".$dql2;
+
+                $query2 = $em->createQuery($dql2);
+                $paginator2  = $this->get('knp_paginator');
+                $pagination2 = $paginator2->paginate(
+                    $query2,
+                    $this->get('request')->query->get('page', 1), /*page number*/
+                    $limit/*limit per page*/
+                );
+
+                echo "<br>pagination2 count=".count($pagination2)."<br>";
+
+            }
+        }
+        //***************** EOF Search filetr ***************************//
 
         if( $increaseMaxExecTime ) {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
