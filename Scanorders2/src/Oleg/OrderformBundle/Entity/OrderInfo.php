@@ -54,7 +54,7 @@ class OrderInfo extends OrderAbstract {
      * oid - id of the original order.
      * When Amend order, switch orders to keep the original id and at newly created order set oid of the original order
      * @var string
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $oid;
     

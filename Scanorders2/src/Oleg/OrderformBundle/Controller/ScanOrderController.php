@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -103,38 +104,10 @@ class ScanOrderController extends Controller {
         $form = $this->createForm(new FilterType( $this->getFilter($routeName), $user, $services ), null);
         $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
-        $dql =  $repository->createQueryBuilder("orderinfo");
-        $dql->select('orderinfo, COUNT(slides) as slidecount');
-
-        $dql->groupBy('orderinfo');
-        $dql->addGroupBy('status.name');
-        $dql->addGroupBy('formtype.name');
-        $dql->addGroupBy('provider.username');
-
-        //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
-        //$dql->having("( COUNT(orderinfo) > 1 )");
-
-        $dql->innerJoin("orderinfo.slide", "slides");
-        $dql->innerJoin("orderinfo.provider", "provider");
-        $dql->innerJoin("orderinfo.type", "formtype");
-
-        $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
-        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
-
-        $dql->leftJoin("orderinfo.educational", "educational");
-        $dql->leftJoin("educational.directorWrappers", "directorWrappers");
-        $dql->leftJoin("directorWrappers.director", "director");
-
-        $dql->leftJoin("orderinfo.research", "research");
-        $dql->leftJoin("research.principalWrappers", "principalWrappers");
-        $dql->leftJoin("principalWrappers.principal", "principal");
-
-        $dql->innerJoin("orderinfo.status", "status");
-
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
         $service = $form->get('service')->getData();
+        $page = $request->get('page');
 
         //service
         //echo "<br>service=".$service."<br>";
@@ -142,357 +115,49 @@ class ScanOrderController extends Controller {
 
         $increaseMaxExecTime = false;
 
-        $criteriastr = "";
-
-        //***************** Pathology Service filetr ***************************//
-        $showprovider = 'false';
-        $showproxyuser = 'false';
-
-        //***************** Status filetr ***************************//
-        //echo "status filter = ".$filter."<br>";
-        if( $filter && is_numeric($filter) && $filter > 0 ) {
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
-            }
-            $criteriastr .= " status.id=" . $filter;
+        if( $search != "" ) {
+            return $this->createComplexSearchPage( $form, $routeName, $service, $filter, $search, $page );
+//            return $this->render('OlegOrderformBundle:ScanOrder:index-search.html.twig', array(
+//                'form' => $form->createView(),
+//                'showprovider' => false,
+//                'showproxyuser' => false,
+//                'pagination' => $pagination,
+//                'accountreqs' => $accountreqs,
+//                'accessreqs' => $accessreqs,
+//                'routename' => $routeName,
+//                'comments' => $processorComments
+//            ));
+            //$increaseMaxExecTime = true;
         }
 
-        //filter special cases
-        if( $filter && is_string($filter) && $filter != "All" ) {
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
-            //echo "filter=".$filter;
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
-            }
+        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context') );
+        $dql = $res['dql'];
+        $criteriastr = $res['criteriastr'];
+        $showprovider = $res['showprovider'];
+        $showproxyuser = $res['showproxyuser'];
 
-            switch( $filter ) {
-
-                case "With New Comments":
-                    $orderUtil = new OrderUtil($em);
-                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($this->get('security.context'),'new_comments',$commentFlag) . " ) ";
-                    $criteriastr .= $newCommentsCriteriaStr;
-                    break;
-                case "With Comments":
-                    $orderUtil = new OrderUtil($em);
-                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($this->get('security.context'),'all_comments',null,$commentFlag) . " ) ";
-                    $criteriastr .= $newCommentsCriteriaStr;
-                    break;
-                case "All Filled":
-                    $criteriastr .= " status.name LIKE '%Filled%'";
-                    break;
-                case "All Filled & Returned":
-                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
-                    break;
-                case "All Filled & Not Returned":
-                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
-                    break;
-                case "All Not Filled":
-                    $criteriastr .= " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'";
-                    break;
-                case "All On Hold":
-                    $criteriastr .= " status.name LIKE '%On Hold%'";
-                    break;
-                case "All Canceled":
-                    $criteriastr .= " status.name = 'Canceled by Submitter' OR status.name = 'Canceled by Processor'";
-                    break;
-                case "All Submitted & Amended":
-                    $criteriastr .= " status.name = 'Submitted' OR status.name = 'Amended'";
-                    break;
-                case "All Stat":
-                    $criteriastr .= " orderinfo.priority = 'Stat'";
-                    break;
-                case "Stat & Not Filled":
-                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name NOT LIKE '%Filled%'";
-                    break;
-                case "Stat & Filled":
-                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
-                    break;
-                case "No Course Director Link":
-//                    $dql->innerJoin("orderinfo.educational", "educational");
-//                    $dql->innerJoin("educational.directorWrappers", "directorWrappers");
-//                    $dql->innerJoin("directorWrappers.director", "director");
-                    $criteriastr .= " director.director IS NULL AND status.name != 'Superseded'";
-                    break;
-                case "No Principal Investigator Link":
-//                    $dql->innerJoin("orderinfo.research", "research");
-//                    $dql->innerJoin("research.principalWrappers", "principalWrappers");
-//                    $dql->innerJoin("principalWrappers.principal", "principal");
-                    $criteriastr .= " principal.principal IS NULL AND status.name != 'Superseded'";
-                    break;
-                default:
-                    ;
-            }
-
-        }
-        //***************** END of Status filetr ***************************//
-
-        //***************** Superseded filter ***************************//
-        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
-            //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
-            }
-            $criteriastr .= " status.name != 'Superseded'";
-        }
-        //***************** END of Superseded filetr ***************************//
-
-        //***************** User filter ***************************//
-        if( $routeName == "my-scan-orders" ) {
-
-            $crituser = "";
-
-            //echo $routeName.": service=".$service."<br>";
-            //select only orders where this user is author or proxy user, except "Where I am the Course Director" and "Where I am the Principal Investigator" cases.
-            if( $service == "" || $service == "My Orders" ) {
-
-                //show only my order and the orders where I'm a proxy
-                //Where I am the Submitter and Where I am the Ordering Provider: $service == "My Orders"
-
-                $crituser .= "( provider.id=".$user->getId();
-
-                //***************** Proxy User Orders *************************//
-                $crituser .= " OR proxyuser.id=".$user->getId();
-                //***************** END of Proxy User Orders *************************//
-
-                $crituser .= " )";
-
-
-                //***************** Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
-                $allservices = $this->allServiceFilter( $service, $routeName, $user, $crituser );
-                if( $allservices != "" ) {
-                    $showprovider = 'true';
-                    $crituser .= $allservices;
-                }
-                //***************** EOF: Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
-            }
-
-            //show all for ROLE_DIVISION_CHIEF: remove all user's restriction
-            if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
-                //echo "ROLE_DIVISION_CHIEF";
-                $crituser = "";
-            }
-
-            if( $service == "Where I am the Submitter" ) {
-                //echo "Where I am the Submitter <br>";
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-                $crituser .= "provider.id=".$user->getId();
-            }
-            if( $service == "Where I am the Ordering Provider" ) {
-                //echo "Where I am the Ordering Provider <br>";
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-                //***************** Proxy User Orders *************************//
-                $crituser .= "proxyuser.id=".$user->getId();
-                //***************** END of Proxy User Orders *************************//
-            }
-            if( $service == "Where I am the Course Director" ) {
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-//                $dql->innerJoin("orderinfo.educational", "educational");
-//                $dql->innerJoin("educational.directorWrappers", "directorWrappers");
-//                $dql->innerJoin("directorWrappers.director", "director");
-                $crituser .= "director.director=".$user->getId();
-            }
-            if( $service == "Where I am the Principal Investigator" ) {
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-//                $dql->innerJoin("orderinfo.research", "research");
-//                $dql->innerJoin("research.principalWrappers", "principalWrappers");
-//                $dql->innerJoin("principalWrappers.principal", "principal");
-                $crituser .= "principal.principal=".$user->getId();
-            }
-            if( $service == "Where I am the Amendment Author" ) {
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-                $crituser .= "history.provider=".$user->getId()." AND history.eventtype='Amended Order Submission'";
-            }
-
-            //"All ".$service->getName()." Orders"; => $service is service's id
-            if( is_int($service) ) {
-                //echo "service=".$service."<br>";
-                $showprovider = 'true';
-                if( $crituser != "" ) {
-                    $crituser .= " AND ";
-                }
-                $crituser .= "orderinfo.pathologyService=".$service;
-            }
-
-            if( $criteriastr != "" && $crituser != "" ) {
-                $criteriastr = $criteriastr." AND ".$crituser;
-            } else {
-                $criteriastr .= $crituser;
-            }
-
-        }
-        //***************** END of User filetr ***************************//
-
-        if( $routeName == "incoming-scan-orders" ) {
-            //echo "admin index filter <br>";
-            //***************** Data Review filter ***************************//
-//            "No Course Director Link" => "No Course Director Link",
-//            "No Principal Investigator Link" => "No Principal Investigator Link"
-            //***************** End of Service filter ***************************//
-
-            //filter by service
-            $critservice = "";
-            if( is_int($service) ) {
-                //echo "service=".$service."<br>";
-                $showproxyuser = 'true';
-                $critservice = "orderinfo.pathologyService=".$service;
-            }
-
-            if( $criteriastr != "" && $critservice != "" ) {
-                $criteriastr = $criteriastr." AND ".$critservice;
-            } else {
-                $criteriastr .= $critservice;
-            }
-        }
-
-
-        //***************** Search filetr ***************************//
-        if( $search && $search != "" ) {
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
-            }
-
-            $searchStr = " LIKE '%" . $search . "%'";
-
-            $criteriastr .= "orderinfo.oid".$searchStr;
-
-            //educational
-            //$dql->leftJoin("educational.courseTitle", "courseTitle");
-            //$criteriastr .= " OR courseTitle.name".$searchStr;
-            $criteriastr .= " OR educational.courseTitleStr".$searchStr;
-
-            //$dql->leftJoin("educational.lessonTitle", "lessonTitle");
-            //$criteriastr .= " OR lessonTitle.name".$searchStr;
-            $criteriastr .= " OR educational.lessonTitleStr".$searchStr;
-
-            //Course Director
-            $dql->leftJoin("director.director", "directorUser");
-            $criteriastr .= " OR directorUser.username".$searchStr;
-            $criteriastr .= " OR directorUser.displayName".$searchStr;
-
-            //reasearch
-            //$dql->leftJoin("research.projectTitle", "projectTitle");
-            //$criteriastr .= " OR projectTitle.name".$searchStr;
-            $criteriastr .= " OR research.projectTitleStr".$searchStr;
-
-            //$dql->leftJoin("research.setTitle", "setTitle");
-            //$criteriastr .= " OR setTitle.name".$searchStr;
-            $criteriastr .= " OR research.setTitleStr".$searchStr;
-
-            //Principal Investigator
-            $dql->leftJoin("principal.principal", "principalUser");
-            $criteriastr .= " OR principalUser.username".$searchStr;
-            $criteriastr .= " OR principalUser.displayName".$searchStr;
-
-            //Submitter
-            $criteriastr .= " OR provider.username".$searchStr;
-            $criteriastr .= " OR provider.displayName".$searchStr;
-
-            //Ordering Provider
-            $criteriastr .= " OR proxyuser.username".$searchStr;
-            $criteriastr .= " OR proxyuser.displayName".$searchStr;
-
-            //accession
-            $dql->leftJoin("orderinfo.accession", "accessionObj");
-            $dql->leftJoin("accessionObj.accession", "accession");
-            $criteriastr .= " OR accession.field".$searchStr;
-
-            //MRN
-            $dql->leftJoin("orderinfo.patient", "patient");
-            $dql->leftJoin("patient.mrn", "mrn");
-            $criteriastr .= " OR mrn.field".$searchStr;
-
-            //patient name
-            $dql->leftJoin("patient.name", "name");
-            $criteriastr .= " OR name.field".$searchStr;
-
-            //Diagnosis
-            $dql->leftJoin("orderinfo.part", "part");
-            $dql->leftJoin("part.disident", "disident");
-            $criteriastr .= " OR disident.field".$searchStr;
-
-            //Differential Diagnoses
-            $dql->leftJoin("part.diffDisident", "diffDisident");
-            $criteriastr .= " OR diffDisident.field".$searchStr;
-
-            //Reason for Scan/Note
-            $dql->leftJoin("slides.scan", "scan");
-            $criteriastr .= " OR scan.note".$searchStr;
-
-            //Clinical History
-            $dql->innerJoin("orderinfo.procedure", "procedure");
-            $dql->leftJoin("procedure.pathistory", "pathistory");
-            $criteriastr .= " OR pathistory.field".$searchStr;
-
-            //Procedure Type
-            $dql->leftJoin("procedure.name", "procedureName");
-            $dql->leftJoin("procedureName.field", "procedureType");
-            $criteriastr .= " OR procedureType.name".$searchStr;
-
-            //Source Organ
-            $dql->leftJoin("orderinfo.block", "block");
-            $dql->leftJoin("block.sectionsource", "sectionsource");
-            $criteriastr .= " OR sectionsource.field".$searchStr;
-
-            //part Gross Description
-            $dql->leftJoin("part.description", "description");
-            $criteriastr .= " OR description.field".$searchStr;
-
-            //Microscopic Description
-            $criteriastr .= " OR slides.microscopicdescr".$searchStr;
-
-            //Disease Type [Neoplastic, non-neoplastic, metastatic]
-            $dql->leftJoin("part.diseaseType", "diseaseType");
-            $criteriastr .= " OR diseaseType.field".$searchStr;
-
-            //Stain Name
-            $dql->innerJoin("slides.stain", "stain");
-            $dql->leftJoin("stain.field", "StainList");
-            $criteriastr .= " OR StainList.name".$searchStr;
-
-            //Special Stain Results (both stain name and the result field)
-            $dql->leftJoin("block.specialStains", "specialStains");
-            $dql->leftJoin("specialStains.staintype", "specialStainsStainList");
-            $criteriastr .= " OR specialStainsStainList.name".$searchStr;
-            $criteriastr .= " OR specialStains.field".$searchStr;
-
-            //Clinical Summary
-            $dql->leftJoin("patient.clinicalHistory", "clinicalHistory");
-            $criteriastr .= " OR clinicalHistory.field".$searchStr;
-
-            $increaseMaxExecTime = true;
-        }
-        //***************** END of Search filetr ***************************//
-
-        //echo "<br>criteriastr=".$criteriastr."<br>";
-
-        $dql2 = clone $dql;
-        
         if( $criteriastr != "" ) {
             $dql->where($criteriastr);
         }
 
         $params = $this->get('request_stack')->getCurrentRequest()->query->all();
         $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
-        
+
+        //echo "sort=".$sort.", page=".$page."<br>";
+
         if( $routeName == "my-scan-orders" ) {
-            if( $params == null || count($params) == 0 ) {
-                $dql->orderBy("orderinfo.orderdate","DESC");
-            }
-            if( $sort != 'orderinfo.oid' ) {
-                $dql->orderBy("orderinfo.orderdate","DESC");
+            if( $sort == '' ) {
+                if( $params == null || count($params) == 0 ) {
+                    $dql->orderBy("orderinfo.orderdate","DESC");
+                }
+                if( $sort != 'orderinfo.oid' ) {
+                    $dql->orderBy("orderinfo.orderdate","DESC");
+                }
             }
         }
-               
+
         if( $routeName == "incoming-scan-orders" ) {
             if( $sort == '' ) {
                 $dql->orderBy("orderinfo.priority","DESC");
@@ -509,7 +174,7 @@ class ScanOrderController extends Controller {
         }
 
 
-        $limit = 50;
+        $limit = 50; //50;
 
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
@@ -526,39 +191,6 @@ class ScanOrderController extends Controller {
         $accessreqs = $this->getActiveAccessReq();
 
         $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
-
-        //***************** Search filetr: get Matching Header ***************************//
-        if( false && count($pagination) > 0 ) {
-
-            $criteriastr2 = "";
-            if( $search && $search != "" ) {
-                if( $criteriastr != "" ) {
-                    $criteriastr2 = $criteriastr . " AND ";
-                }
-
-                $searchStr = " LIKE '%" . $search . "%'";
-
-                $criteriastr2 .= " OR accession.field".$searchStr;
-
-                if( $criteriastr != "" ) {
-                    $dql2->where($criteriastr2);
-                }
-
-                echo "dql2=".$dql2;
-
-                $query2 = $em->createQuery($dql2);
-                $paginator2  = $this->get('knp_paginator');
-                $pagination2 = $paginator2->paginate(
-                    $query2,
-                    $this->get('request')->query->get('page', 1), /*page number*/
-                    $limit/*limit per page*/
-                );
-
-                echo "<br>pagination2 count=".count($pagination2)."<br>";
-
-            }
-        }
-        //***************** EOF Search filetr ***************************//
 
         if( $increaseMaxExecTime ) {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
@@ -901,6 +533,731 @@ class ScanOrderController extends Controller {
             $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
         }
         return $accessreqs;
+    }
+
+
+    public function createComplexSearchPage( $form, $routeName, $service, $filter, $search, $page ) {
+
+        $searchObjects = [
+            'orderinfo.oid',
+            'educational.courseTitleStr',
+            'educational.lessonTitleStr',
+            'research.projectTitleStr',
+            'research.setTitleStr',
+            'provider',
+            'proxyuser',
+            'directorUser',
+            'principalUser',
+            'accession',
+            'patient.mrn',
+            'patient.name',
+            'part.disident',
+            'part.diffDisident',
+            'scan.note',
+            'pathistory.field',
+            'procedureType.name',
+            'sectionsource.field',
+            'description.field',
+            'slides.microscopicdescr',
+            'diseaseType.field',
+            'StainList.name',
+            'specialStains.field',
+            'clinicalHistory.field'
+        ];
+
+        return $this->render('OlegOrderformBundle:ScanOrder:index-search.html.twig', array(
+            'form' => $form->createView(),
+//            'showprovider' => $showprovider,
+//            'showproxyuser' => $showproxyuser,
+//            'pagination' => $pagination,
+//            'accountreqs' => $accountreqs,
+//            'accessreqs' => $accessreqs,
+            'routename' => $routeName,
+//            'comments' => $processorComments
+            'service' => $service,
+            'filter' => $filter,
+            'search' => $search,
+            'page' => $page,
+            'searchObjects' => $searchObjects
+        ));
+    }
+
+    /**
+     * Find accession by #
+     * @Route("/scanorder-complex-search", name="scanorder-complex-search")
+     * @Method("POST")
+     */
+    public function getSearchViewAjaxAction( Request $request ) {
+
+        $routename   = $request->get('routename');
+        $service   = $request->get('service');
+        $filter   = $request->get('filter');
+        $search   = $request->get('search');
+        $searchObject   = $request->get('searchobject');
+        $page   = $request->get('page');
+
+        //echo "routename=".$routename.", search=".$search.", searchObject=".$searchObject."<br>";
+
+        return $this->getSearchViewAction( $routename, $service, $filter, $search, $searchObject, $page );
+    }
+
+    public function getSearchViewAction( $routeName, $service, $filter, $search, $searchObject, $page ) {
+        $viewArr = $this->getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page );
+        return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+    }
+
+    public function getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page ) {
+
+        //***************** Search filetr ***************************//
+        if( $search == "" ) {
+            $viewArr = array(
+                'pagination' => array(),
+            );
+            return $viewArr;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
+
+        $withSearch = false;
+        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context'), $withSearch );
+
+        $dql = $res['dql'];
+        $criteriastrOrig = $res['criteriastr'];
+        $showprovider = $res['showprovider'];
+        $showproxyuser = $res['showproxyuser'];
+
+
+        //Start making a search string
+        $criteriastr = "";
+
+        $searchStr = " LIKE '%" . $search . "%'";
+
+        switch( $searchObject ) {
+            case 'orderinfo.oid':
+                //orderinfo oid
+                //if( is_numeric($search) ) {
+                $criteriastr .= "orderinfo.oid".$searchStr;
+                //}
+                $searchObjectName = "Order ID";
+                break;
+            case 'educational.courseTitleStr':
+                //educational
+                $criteriastr .= "educational.courseTitleStr".$searchStr;
+                $searchObjectName = "Course Title";
+                break;
+            case 'educational.lessonTitleStr':
+                //educational
+                $criteriastr .= "educational.lessonTitleStr".$searchStr;
+                $searchObjectName = "Lesson Title";
+                break;
+            case 'research.projectTitleStr':
+                $criteriastr .= "research.projectTitleStr".$searchStr;
+                $searchObjectName = "Research Project Title";
+                break;
+            case 'research.setTitleStr':
+                //educational
+                $criteriastr .= "research.setTitleStr".$searchStr;
+                $searchObjectName = "Research Set Title";
+                break;
+            case 'provider':
+                $criteriastr .= "provider.username".$searchStr;
+                $criteriastr .= " OR provider.displayName".$searchStr;
+                $searchObjectName = "Submitter";
+                break;
+            case 'proxyuser':
+                $criteriastr .= "proxyuser.username".$searchStr;
+                $criteriastr .= " OR proxyuser.displayName".$searchStr;
+                $searchObjectName = "Ordering Provider";
+                break;
+            case 'directorUser':
+                $dql->leftJoin("director.director", "directorUser");
+                $criteriastr .= "directorUser.username".$searchStr;
+                $criteriastr .= "OR directorUser.displayName".$searchStr;
+                $searchObjectName = "Course Director";
+                break;
+            case 'principalUser':
+                $dql->leftJoin("principal.principal", "principalUser");
+                $criteriastr .= "principalUser.username".$searchStr;
+                $criteriastr .= " OR principalUser.displayName".$searchStr;
+                $searchObjectName = "Principal Investigator";
+                break;
+            case 'accession':
+                $dql->leftJoin("orderinfo.accession", "accessionObj");
+                $dql->leftJoin("accessionObj.accession", "accession");
+                $criteriastr .= "accession.field".$searchStr;
+                $searchObjectName = "Accession Number";
+                break;
+            case 'patient.mrn':
+                $dql->leftJoin("orderinfo.patient", "patient");
+                $dql->leftJoin("patient.mrn", "mrn");
+                $criteriastr .= "mrn.field".$searchStr;
+                $searchObjectName = "MRN";
+                break;
+            case 'patient.name':
+                $dql->leftJoin("orderinfo.patient", "patient");
+                $dql->leftJoin("patient.name", "name");
+                $criteriastr .= "name.field".$searchStr;
+                $searchObjectName = "Patient Name";
+                break;
+            case 'part.disident':
+                $dql->leftJoin("orderinfo.part", "part");
+                $dql->leftJoin("part.disident", "disident");
+                $criteriastr .= "disident.field".$searchStr;
+                $searchObjectName = "Diagnosis";
+                break;
+            case 'part.diffDisident':
+                $dql->leftJoin("orderinfo.part", "part");
+                $dql->leftJoin("part.diffDisident", "diffDisident");
+                $criteriastr .= "diffDisident.field".$searchStr;
+                $searchObjectName = "Differential Diagnoses";
+                break;
+            case 'scan.note':
+                $dql->leftJoin("slides.scan", "scan");
+                $criteriastr .= "scan.note".$searchStr;
+                $searchObjectName = "Reason for Scan/Note";
+                break;
+            case 'pathistory.field':
+                $dql->innerJoin("orderinfo.procedure", "procedure");
+                $dql->leftJoin("procedure.pathistory", "pathistory");
+                $criteriastr .= "pathistory.field".$searchStr;
+                $searchObjectName = "Clinical History";
+                break;
+            case 'procedureType.name':
+                $dql->innerJoin("orderinfo.procedure", "procedure");
+                $dql->leftJoin("procedure.name", "procedureName");
+                $dql->leftJoin("procedureName.field", "procedureType");
+                $criteriastr .= "procedureType.name".$searchStr;
+                $searchObjectName = "Procedure Type";
+                break;
+            case 'sectionsource.field':
+                $dql->leftJoin("orderinfo.block", "block");
+                $dql->leftJoin("block.sectionsource", "sectionsource");
+                $criteriastr .= "sectionsource.field".$searchStr;
+                $searchObjectName = "Source Organ";
+                break;
+            case 'description.field':
+                //part Gross Description
+                $dql->leftJoin("orderinfo.part", "part");
+                $dql->leftJoin("part.description", "description");
+                $criteriastr .= "description.field".$searchStr;
+                $searchObjectName = "Gross Description";
+                break;
+            case 'slides.microscopicdescr':
+                $criteriastr .= "slides.microscopicdescr".$searchStr;
+                $searchObjectName = "Microscopic Description";
+                break;
+            case 'diseaseType.field':
+                $dql->leftJoin("orderinfo.part", "part");
+                $dql->leftJoin("part.diseaseType", "diseaseType");
+                $criteriastr .= "diseaseType.field".$searchStr;
+                $searchObjectName = "Disease Type";
+                break;
+            case 'StainList.name':
+                $dql->innerJoin("slides.stain", "stain");
+                $dql->leftJoin("stain.field", "StainList");
+                $criteriastr .= "StainList.name".$searchStr;
+                $searchObjectName = "Stain Name";
+                break;
+            case 'specialStains.field':
+                //Special Stain Results (both stain name and the result field)
+                $dql->leftJoin("orderinfo.block", "block");
+                $dql->leftJoin("block.specialStains", "specialStains");
+                $dql->leftJoin("specialStains.staintype", "specialStainsStainList");
+                $criteriastr .= "specialStainsStainList.name".$searchStr;
+                $criteriastr .= " OR specialStains.field".$searchStr;
+                $searchObjectName = "Special Stain Results";
+                break;
+            case 'clinicalHistory.field':
+                //Clinical Summary
+                $dql->leftJoin("orderinfo.patient", "patient");
+                $dql->leftJoin("patient.clinicalHistory", "clinicalHistory");
+                $criteriastr .= "clinicalHistory.field".$searchStr;
+                $searchObjectName = "Clinical Summary";
+                break;
+            default:
+                $searchObjectName = "";
+                //echo "searchObject is not found = ".$searchObject."<br>";
+        }
+
+        //$criteriastr .= " ) ";
+
+        $increaseMaxExecTime = true;
+
+        if( $criteriastr != "" ) {
+
+            if( $criteriastrOrig != "" ) {
+                $criteriastrOrig = $criteriastrOrig . " AND ( " . $criteriastr . " ) ";
+            } else {
+                $criteriastrOrig = $criteriastr;
+            }
+
+            $dql->where($criteriastrOrig);
+        }
+
+        $params = $this->get('request_stack')->getCurrentRequest()->query->all();
+        $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
+
+        if( $routeName == "my-scan-orders" ) {
+            if( $params == null || count($params) == 0 ) {
+                $dql->orderBy("orderinfo.orderdate","DESC");
+            }
+            if( $sort != 'orderinfo.oid' ) {
+                $dql->orderBy("orderinfo.orderdate","DESC");
+            }
+        }
+
+        if( $routeName == "incoming-scan-orders" ) {
+            if( $sort == '' ) {
+                $dql->orderBy("orderinfo.priority","DESC");
+                $dql->addOrderBy("orderinfo.scandeadline","ASC");
+                $dql->addOrderBy("orderinfo.orderdate","DESC");
+            }
+        }
+
+        //echo "dql=".$dql;
+
+        if( $increaseMaxExecTime ) {
+            $max_exec_time = ini_get('max_execution_time');
+            ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        }
+
+
+        $limit = 50;
+
+        if( !$page && $page == "" ) {
+            $page = 1;
+        }
+
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', $page), /*page number*/
+            $limit/*limit per page*/
+        );
+
+        //check for active user requests
+        $accountreqs = $this->getActiveAccountReq();
+
+        //check for active access requests
+        $accessreqs = $this->getActiveAccessReq();
+
+        $processorComments = $em->getRepository('OlegOrderformBundle:ProcessorComments')->findAll();
+
+        if( $increaseMaxExecTime ) {
+            ini_set('max_execution_time', $max_exec_time); //set back to the original value
+        }
+
+//        if( $searchObject == "accession" ) {
+//            //echo "dql=".$dql."<br>";
+//
+//        }
+        //echo $searchObjectName.": count=".count($pagination)."<br>";
+
+        $viewArr = array(
+            'showprovider' => $showprovider,
+            'showproxyuser' => $showproxyuser,
+            'pagination' => $pagination,
+            'accountreqs' => $accountreqs,
+            'accessreqs' => $accessreqs,
+            'routename' => $routeName,
+            'comments' => $processorComments,
+            'searchObjectName' => $searchObjectName,
+            'search' => $search
+        );
+
+//        return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', array(
+//            //'form' => $form->createView(),
+//            'showprovider' => $showprovider,
+//            'showproxyuser' => $showproxyuser,
+//            'pagination' => $pagination,
+//            'accountreqs' => $accountreqs,
+//            'accessreqs' => $accessreqs,
+//            'routename' => $routeName,
+//            'comments' => $processorComments,
+//            'searchObjectName' => $searchObjectName,
+//            'search' => $search
+//        ));
+
+        return $viewArr;
+    }
+
+
+    public function getDQL( $repository, $service, $filter, $search, $routeName, $securityContext, $withSearch = true ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $securityContext->getToken()->getUser();
+
+        if( $routeName == "incoming-scan-orders" ) {
+            $commentFlag = 'admin';
+        } else {
+            $commentFlag = null;
+        }
+
+        $dql = $repository->createQueryBuilder("orderinfo");
+
+        $dql->innerJoin("orderinfo.slide", "slides");
+
+        $dql->select('orderinfo, COUNT(slides.id) AS slidecount');
+
+        $dql->groupBy('orderinfo');
+        $dql->addGroupBy('status.name');
+        $dql->addGroupBy('formtype.name');
+        $dql->addGroupBy('provider.username');
+
+        //$dql->having("( (COUNT(orderinfo) > 1) AND (COUNT(status.name) > 1) AND (COUNT(formtype.name) > 1) AND (COUNT(provider.username) > 1) )");
+        //$dql->having("( COUNT(orderinfo) > 1 )");
+
+        $dql->innerJoin("orderinfo.provider", "provider");
+        $dql->innerJoin("orderinfo.type", "formtype");
+
+        $dql->leftJoin("orderinfo.history", "history"); //history might not exist, so use leftJoin
+        $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
+
+        $dql->leftJoin("orderinfo.educational", "educational");
+        $dql->leftJoin("educational.directorWrappers", "directorWrappers");
+        $dql->leftJoin("directorWrappers.director", "director");
+
+        $dql->leftJoin("orderinfo.research", "research");
+        $dql->leftJoin("research.principalWrappers", "principalWrappers");
+        $dql->leftJoin("principalWrappers.principal", "principal");
+
+        $dql->innerJoin("orderinfo.status", "status");
+
+        //$increaseMaxExecTime = false;
+
+        $criteriastr = "";
+
+        //***************** Pathology Service filetr ***************************//
+        $showprovider = 'false';
+        $showproxyuser = 'false';
+
+        //***************** Status filetr ***************************//
+        //echo "status filter = ".$filter."<br>";
+        if( $filter && is_numeric($filter) && $filter > 0 ) {
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+            $criteriastr .= " status.id=" . $filter;
+        }
+
+        //filter special cases
+        if( $filter && is_string($filter) && $filter != "All" ) {
+
+            //echo "filter=".$filter;
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+
+            $criteriastr .= " ( ";
+            switch( $filter ) {
+
+                case "With New Comments":
+                    $orderUtil = new OrderUtil($em);
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($securityContext,'new_comments',$commentFlag) . " ) ";
+                    $criteriastr .= $newCommentsCriteriaStr;
+                    break;
+                case "With Comments":
+                    $orderUtil = new OrderUtil($em);
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($securityContext,'all_comments',null,$commentFlag) . " ) ";
+                    $criteriastr .= $newCommentsCriteriaStr;
+                    break;
+                case "All Filled":
+                    $criteriastr .= " status.name LIKE '%Filled%'";
+                    break;
+                case "All Filled & Returned":
+                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
+                    break;
+                case "All Filled & Not Returned":
+                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
+                    break;
+                case "All Not Filled":
+                    $criteriastr .= " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'";
+                    break;
+                case "All On Hold":
+                    $criteriastr .= " status.name LIKE '%On Hold%'";
+                    break;
+                case "All Canceled":
+                    $criteriastr .= " status.name = 'Canceled by Submitter' OR status.name = 'Canceled by Processor'";
+                    break;
+                case "All Submitted & Amended":
+                    $criteriastr .= " status.name = 'Submitted' OR status.name = 'Amended'";
+                    break;
+                case "All Stat":
+                    $criteriastr .= " orderinfo.priority = 'Stat'";
+                    break;
+                case "Stat & Not Filled":
+                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name NOT LIKE '%Filled%'";
+                    break;
+                case "Stat & Filled":
+                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
+                    break;
+                case "No Course Director Link":
+                    $criteriastr .= " director.director IS NULL AND status.name != 'Superseded'";
+                    break;
+                case "No Principal Investigator Link":
+                    $criteriastr .= " principal.principal IS NULL AND status.name != 'Superseded'";
+                    break;
+                default:
+                    ;
+            }
+
+            $criteriastr .= " ) ";
+
+        }
+        //***************** END of Status filetr ***************************//
+
+        //***************** Superseded filter ***************************//
+        if( false === $securityContext->isGranted('ROLE_PROCESSOR') ) {
+            //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+            $criteriastr .= " status.name != 'Superseded'";
+        }
+        //***************** END of Superseded filetr ***************************//
+
+        //***************** User filter ***************************//
+        if( $routeName == "my-scan-orders" ) {
+
+            $crituser = "";
+
+            //echo $routeName.": service=".$service."<br>";
+            //select only orders where this user is author or proxy user, except "Where I am the Course Director" and "Where I am the Principal Investigator" cases.
+            if( $service == "" || $service == "My Orders" ) {
+
+                //show only my order and the orders where I'm a proxy
+                //Where I am the Submitter and Where I am the Ordering Provider: $service == "My Orders"
+
+                $crituser .= "( provider.id=".$user->getId();
+
+                //***************** Proxy User Orders *************************//
+                $crituser .= " OR proxyuser.id=".$user->getId();
+                //***************** END of Proxy User Orders *************************//
+
+                $crituser .= " )";
+
+
+                //***************** Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
+                $allservices = $this->allServiceFilter( $service, $routeName, $user, $crituser );
+                if( $allservices != "" ) {
+                    $showprovider = 'true';
+                    $crituser .= $allservices;
+                }
+                //***************** EOF: Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
+            }
+
+            //show all for ROLE_DIVISION_CHIEF: remove all user's restriction
+            if( $securityContext->isGranted('ROLE_DIVISION_CHIEF') ) {
+                //echo "ROLE_DIVISION_CHIEF";
+                $crituser = "";
+            }
+
+            if( $service == "Where I am the Submitter" ) {
+                //echo "Where I am the Submitter <br>";
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "provider.id=".$user->getId();
+            }
+            if( $service == "Where I am the Ordering Provider" ) {
+                //echo "Where I am the Ordering Provider <br>";
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                //***************** Proxy User Orders *************************//
+                $crituser .= "proxyuser.id=".$user->getId();
+                //***************** END of Proxy User Orders *************************//
+            }
+            if( $service == "Where I am the Course Director" ) {
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "director.director=".$user->getId();
+            }
+            if( $service == "Where I am the Principal Investigator" ) {
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "principal.principal=".$user->getId();
+            }
+            if( $service == "Where I am the Amendment Author" ) {
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "history.provider=".$user->getId()." AND history.eventtype='Amended Order Submission'";
+            }
+
+            //"All ".$service->getName()." Orders"; => $service is service's id
+            if( is_int($service) ) {
+                //echo "service=".$service."<br>";
+                $showprovider = 'true';
+                if( $crituser != "" ) {
+                    $crituser .= " AND ";
+                }
+                $crituser .= "orderinfo.pathologyService=".$service;
+            }
+
+            if( $criteriastr != "" && $crituser != "" ) {
+                $criteriastr = $criteriastr." AND ".$crituser;
+            } else {
+                $criteriastr .= $crituser;
+            }
+
+        }
+        //***************** END of User filetr ***************************//
+
+        if( $routeName == "incoming-scan-orders" ) {
+            //echo "admin index filter <br>";
+            //***************** Data Review filter ***************************//
+            //            "No Course Director Link" => "No Course Director Link",
+            //            "No Principal Investigator Link" => "No Principal Investigator Link"
+            //***************** End of Service filter ***************************//
+
+            //filter by service
+            $critservice = "";
+            if( is_int($service) ) {
+                //echo "service=".$service."<br>";
+                $showproxyuser = 'true';
+                $critservice = "orderinfo.pathologyService=".$service;
+            }
+
+            if( $criteriastr != "" && $critservice != "" ) {
+                $criteriastr = $criteriastr." AND ".$critservice;
+            } else {
+                $criteriastr .= $critservice;
+            }
+        }
+
+
+        //***************** Search filetr ***************************//
+        if( $withSearch && $search != "" ) {
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ";
+            }
+
+            $criteriastr .= " ( ";
+
+            $searchStr = " LIKE '%" . $search . "%'";
+
+            if( is_numeric($search) ) {
+                $criteriastr .= "orderinfo.oid=".$search;
+                $criteriastr .= " OR ";
+            }
+
+            //educational
+            $criteriastr .= " educational.courseTitleStr".$searchStr;
+            $criteriastr .= " OR educational.lessonTitleStr".$searchStr;
+
+            //Course Director
+            $dql->leftJoin("director.director", "directorUser");
+            $criteriastr .= " OR directorUser.username".$searchStr;
+            $criteriastr .= " OR directorUser.displayName".$searchStr;
+
+            //reasearch
+            $criteriastr .= " OR research.projectTitleStr".$searchStr;
+            $criteriastr .= " OR research.setTitleStr".$searchStr;
+
+            //Principal Investigator
+            $dql->leftJoin("principal.principal", "principalUser");
+            $criteriastr .= " OR principalUser.username".$searchStr;
+            $criteriastr .= " OR principalUser.displayName".$searchStr;
+
+            //Submitter
+            $criteriastr .= " OR provider.username".$searchStr;
+            $criteriastr .= " OR provider.displayName".$searchStr;
+
+            //Ordering Provider
+            $criteriastr .= " OR proxyuser.username".$searchStr;
+            $criteriastr .= " OR proxyuser.displayName".$searchStr;
+
+            //accession
+            $dql->leftJoin("orderinfo.accession", "accessionObj");
+            $dql->leftJoin("accessionObj.accession", "accession");
+            $criteriastr .= " OR accession.field".$searchStr;
+
+            //MRN
+            $dql->leftJoin("orderinfo.patient", "patient");
+            $dql->leftJoin("patient.mrn", "mrn");
+            $criteriastr .= " OR mrn.field".$searchStr;
+
+            //patient name
+            $dql->leftJoin("patient.name", "name");
+            $criteriastr .= " OR name.field".$searchStr;
+
+            //Diagnosis
+            $dql->leftJoin("orderinfo.part", "part");
+            $dql->leftJoin("part.disident", "disident");
+            $criteriastr .= " OR disident.field".$searchStr;
+
+            //Differential Diagnoses
+            $dql->leftJoin("part.diffDisident", "diffDisident");
+            $criteriastr .= " OR diffDisident.field".$searchStr;
+
+            //Reason for Scan/Note
+            $dql->leftJoin("slides.scan", "scan");
+            $criteriastr .= " OR scan.note".$searchStr;
+
+            //Clinical History
+            $dql->innerJoin("orderinfo.procedure", "procedure");
+            $dql->leftJoin("procedure.pathistory", "pathistory");
+            $criteriastr .= " OR pathistory.field".$searchStr;
+
+            //Procedure Type
+            $dql->leftJoin("procedure.name", "procedureName");
+            $dql->leftJoin("procedureName.field", "procedureType");
+            $criteriastr .= " OR procedureType.name".$searchStr;
+
+            //Source Organ
+            $dql->leftJoin("orderinfo.block", "block");
+            $dql->leftJoin("block.sectionsource", "sectionsource");
+            $criteriastr .= " OR sectionsource.field".$searchStr;
+
+            //part Gross Description
+            $dql->leftJoin("part.description", "description");
+            $criteriastr .= " OR description.field".$searchStr;
+
+            //Microscopic Description
+            $criteriastr .= " OR slides.microscopicdescr".$searchStr;
+
+            //Disease Type [Neoplastic, non-neoplastic, metastatic]
+            $dql->leftJoin("part.diseaseType", "diseaseType");
+            $criteriastr .= " OR diseaseType.field".$searchStr;
+
+            //Stain Name
+            $dql->innerJoin("slides.stain", "stain");
+            $dql->leftJoin("stain.field", "StainList");
+            $criteriastr .= " OR StainList.name".$searchStr;
+
+            //Special Stain Results (both stain name and the result field)
+            $dql->leftJoin("block.specialStains", "specialStains");
+            $dql->leftJoin("specialStains.staintype", "specialStainsStainList");
+            $criteriastr .= " OR specialStainsStainList.name".$searchStr;
+            $criteriastr .= " OR specialStains.field".$searchStr;
+
+            //Clinical Summary
+            $dql->leftJoin("patient.clinicalHistory", "clinicalHistory");
+            $criteriastr .= " OR clinicalHistory.field".$searchStr;
+
+            $criteriastr .= " ) ";
+
+            //$increaseMaxExecTime = true;
+        }
+        //***************** END of Search filetr ***************************//
+
+        //echo "<br>criteriastr=".$criteriastr."<br>";
+
+        $res = array();
+        $res['dql'] = $dql;
+        $res['criteriastr'] = $criteriastr;
+        $res['showprovider'] = $showprovider;
+        $res['showproxyuser'] = $showproxyuser;
+
+
+        return $res;
     }
 
 }

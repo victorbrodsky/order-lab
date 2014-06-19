@@ -1,51 +1,9 @@
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% block title %}
-    My Orders
-{% endblock %}
+{% if pagination|length > 0 %}
 
-{% block content %}
-
-    {% if is_granted('ROLE_PROCESSOR') %}
-
-        <p>
-        {% if accountreqs is defined and accountreqs | length > 0 %}
-            <a class="text-danger" href="{{ path('accountrequest') }}">Active Account Requests:{{ accountreqs | length }}</a>
-        {% endif %}
-
-        {% if (accountreqs is defined and accountreqs | length > 0) and (accessreqs is defined and accessreqs | length > 0) %}
-            |
-        {% endif %}
-
-        {% if accessreqs is defined and accessreqs | length > 0 %}
-            <a class="text-danger" href="{{ path('accessrequest_list') }}">Active Access Requests:{{ accessreqs | length }}</a>
-        {% endif %}
-        </p>
-
-    {% endif %}
-
-    <form action="{{ path(routename) }}" method="get" {{ form_enctype(form) }} class="well form-search">
-        <div class="row">
-            <div class="col-xs-3">
-                {{ form_widget(form.service) }}
-            </div>
-            <div class="col-xs-3">
-                {{ form_widget(form.filter) }}
-                {#<button class="btn btn-xs btn-default" type="submit"><i class="icon-filter"></i> Filter by Status</button>#}
-            </div>
-            <div class="col-xs-4">
-                {{ form_widget(form.search) }}
-            </div>
-            <div class="col-xs-2">
-                <div class="btn-group btn-group-justified">
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-sm btn-default order-filter-btn"><i class="icon-search"></i>Filter</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{ form_rest(form) }}
-    </form>
+    {#<div class="well well-sm well-info">Orders with {{ searchObjectName }} containing "{{ search }}". Total items count:{{ pagination.getTotalItemCount }}</div>#}
+    <div class="well well-sm well-info">Orders with {{ searchObjectName }} containing "{{ search }}"</div>
+    {#<h3 class="text-info"> Orders with {{ searchObjectName }} containing {{ search }} </h3>#}
 
     <table class="table table-hover table-condensed text-left">
         <thead>
@@ -53,8 +11,7 @@
                 
                 {% if routename == 'my-scan-orders' %}
                 
-                    {#<th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>#}
-                    <th>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
+                    <th{% if pagination.isSorted('orderinfo.orderdate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Date', 'orderinfo.orderdate') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Status', 'status.name') }}</th>
                     <th>{{ knp_pagination_sortable(pagination, 'ID', 'orderinfo.oid') }}</th>
                     {#<th>Slides</th>#}
@@ -223,4 +180,4 @@
         {{ knp_pagination_render(pagination) }}
     </div>
 
-{% endblock %}
+{% endif %}

@@ -298,11 +298,11 @@ class TableController extends Controller {
         if( $force || $dob && $dob != '' ) {
             $patientdob = new PatientDob($status,$provider,$source);
             if( $dob == "" ) {
-                $dobFormat = null;
+                $dobFormat = NULL;
             } else {
-                $dobFormat = strtotime($dob);
+                $dobFormat = new \DateTime($dob);
             }
-            //echo date('d/M/Y H:i:s', $dobFormat);
+            //echo "dobFormat=".date('d/M/Y', $dobFormat)."<br>";
             $patientdob->setField($dobFormat);
             $patient->addDob($patientdob);
         }
@@ -339,9 +339,9 @@ class TableController extends Controller {
         $encounterDate = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
         if( $force || $encounterDate && $encounterDate != '' ) {
             if( $encounterDate == "" ) {
-                $encounterDateFormat = null;
+                $encounterDateFormat = NULL;
             } else {
-                $encounterDateFormat = strtotime($encounterDate);
+                $encounterDateFormat = new \DateTime($encounterDate);
             }
             $encounterDateObj = new ProcedureEncounterDate($status, $provider, $source);
             $encounterDateObj->setField($encounterDateFormat);
@@ -398,9 +398,9 @@ class TableController extends Controller {
         $accessionDate = $this->getValueByHeaderName('Accession Date',$row,$columnData);
         if( $force || $accessionDate && $accessionDate != '' ) {
             if( $encounterDate == "" ) {
-                $accessionDateFormat = null;
+                $accessionDateFormat = NULL;
             } else {
-                $accessionDateFormat = strtotime($accessionDate);
+                $accessionDateFormat = new \DateTime($accessionDate);
             }
             $accessionDateObj = new AccessionAccessionDate($status,$provider,$source);
             $accessionDateObj->setField($accessionDateFormat);
