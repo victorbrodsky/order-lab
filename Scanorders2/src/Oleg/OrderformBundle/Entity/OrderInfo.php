@@ -10,7 +10,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * OrderInfo might have many slides
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\OrderInfoRepository")
- * @ORM\Table(name="orderinfo")
+ * @ORM\Table(name="orderinfo",
+ *  indexes={
+ *      @ORM\Index( name="oid_idx", columns={"oid"} )
+ *  }
+ * )
  * @ORM\HasLifecycleCallbacks
  */
 class OrderInfo extends OrderAbstract {

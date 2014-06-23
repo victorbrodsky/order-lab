@@ -169,7 +169,7 @@ function addCollectionField( elem, btnpos ) {
 
     //populate the combobox by Ajax
     if( btnpos && btnpos == "bottom" ) {
-        getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,maxId+1),true);
+        getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,maxId+1),true);
     }
 }
 

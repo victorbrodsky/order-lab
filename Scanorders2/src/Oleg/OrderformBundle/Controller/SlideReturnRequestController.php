@@ -163,7 +163,7 @@ class SlideReturnRequestController extends Controller
      */
     public function allRequestedSlidesAction( Request $request ) {
 
-        $filterForm = $this->createForm(new FilterSlideReturnRequestType('all'));
+        $filterForm = $this->createForm(new FilterSlideReturnRequestType());
 
         //$filterForm->handleRequest($request);
         $filterForm->bind($request); //use bind. handleRequest does not work with GET
@@ -229,7 +229,7 @@ class SlideReturnRequestController extends Controller
      */
     public function userRequestedSlidesAction( Request $request ) {
 
-        $filterForm = $this->createForm(new FilterSlideReturnRequestType('all'));
+        $filterForm = $this->createForm(new FilterSlideReturnRequestType());
 
         //$filterForm->handleRequest($request);
         $filterForm->bind($request); //use bind. handleRequest does not work with GET

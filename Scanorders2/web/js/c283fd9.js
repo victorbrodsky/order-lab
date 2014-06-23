@@ -17,6 +17,15 @@ window.onerror=function(msg, url, linenumber){
 
 }
 
+function getCommonBaseUrl(link) {
+    var prefix = "scan";
+    var urlBase = $("#baseurl").val();
+    if( typeof urlBase !== 'undefined' && urlBase != "" ) {
+        urlBase = "http://" + urlBase + "/" + prefix + "/" + link;
+    }
+    console.log("urlBase="+urlBase);
+    return urlBase;
+}
 
 
 /*! jQuery v1.11.0 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */

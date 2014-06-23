@@ -30,6 +30,7 @@
     '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
     '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+    '@OlegOrderformBundle/Resources/public/form/js/form.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -37,6 +38,8 @@
     <script language="Javascript">
 
         $(document).ready(function() {
+
+            setNavBar();
 
             $(".combobox").select2();
 
@@ -101,13 +104,15 @@
 
             {% set sliderequest = sliderequestcomplex|first %}
 
+            {% set returned = "Returned" in sliderequest.status %}
+
             {% if is_granted('ROLE_PROCESSOR') and route == 'incoming-slide-return-requests' %}
                 {% include 'OlegOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
             {% endif %}
 
             {% if sliderequest.status == 'active' %}
                 <tr class="order-urgent-status" >
-            {% elseif sliderequest.status == 'returned' %}
+            {% elseif returned %}
                 <tr class="order-neutral-status" >
             {% else %}
                 <tr>
@@ -136,7 +141,7 @@
                     {% if sliderequest.status == 'cancel' %}
                         {% set statusStr = 'Canceled' %}
                     {% endif %}
-                    {% if sliderequest.status == 'cancel' or sliderequest.status == 'active' or sliderequest.status == 'returned' %}
+                    {% if sliderequest.status == 'cancel' or sliderequest.status == 'active' %}
                         {% set statusStr = sliderequest.status|capitalize %}
                     {% endif %}
 
@@ -156,7 +161,7 @@
                     {% for descr in sliderequest.getSlideDescription(app.security.getToken().getUser()) %}
 
                         <p>
-                            {{ descr }}
+                            {{ descr|raw }}
                         </p>
 
                     {% endfor %}
@@ -181,9 +186,21 @@
 
                             {% if is_granted('ROLE_PROCESSOR') and route == 'incoming-slide-return-requests' %}
 
-                                {% if sliderequest.status != 'returned' %}
-                                    <li><a data-confirm="Are you sure you want to change status to Returned?"
-                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'returned' }) }}">Returned</a>
+                                {% if sliderequest.status != 'All Scanned & All Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to All Scanned & All Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'All Scanned & All Returned' }) }}">All Scanned & All Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Some Scanned & All Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Some Scanned & All Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Some Scanned & All Returned' }) }}">Some Scanned & All Returned</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if sliderequest.status != 'Not Scanned & All Returned' %}
+                                    <li><a data-confirm="Are you sure you want to change status to Not Scanned & All Returned?"
+                                           href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'Not Scanned & All Returned' }) }}">Not Scanned & All Returned</a>
                                     </li>
                                 {% endif %}
 

@@ -1,5 +1,6 @@
 imports:
     - { resource: config.yml }
+    - { resource: "@AcmeDemoBundle/Resources/config/routing.yml" }
 
 framework:
     router:
@@ -11,18 +12,18 @@ web_profiler:
     toolbar: true
     intercept_redirects: false
 
-monolog:
-    handlers:
-        main:
-            type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: debug
-        firephp:
-            type:  firephp
-            level: info
-        chromephp:
-            type:  chromephp
-            level: info
+#monolog:
+#    handlers:
+#        main:
+#            type:  stream
+#            path:  %kernel.logs_dir%/%kernel.environment%.log
+#            level: debug
+#        firephp:
+#            type:  firephp
+#            level: info
+#        chromephp:
+#            type:  chromephp
+#            level: info
 
 assetic:
     use_controller: true

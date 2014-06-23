@@ -767,7 +767,7 @@ function validateCell( row, col, value ) {
 
 function getSlideTypes() {
 
-    var url = urlCommon+"slidetype";
+    var url = getCommonBaseUrl("util/"+"slidetype");    //urlCommon+"slidetype";
 
     if( _slidetypes.length == 0 ) {
         $.ajax({

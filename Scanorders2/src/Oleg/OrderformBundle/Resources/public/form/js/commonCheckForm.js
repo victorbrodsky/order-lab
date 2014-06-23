@@ -1460,7 +1460,7 @@ function setArrayField(element, dataArr, parent) {
 
             if( fieldName == "specialStains" ) {
                 //pre-populate select2 with stains
-                getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,coll),true,id);
+                getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,coll),true,id);
             }
 
         } else {    //show the valid field (with validity=1)
@@ -1791,7 +1791,7 @@ function cleanBlockSpecialStains( element, field, single ) {
     var ident = "block"+"specialStains";
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
     fieldHolder.prepend(newForm);
-    getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,0),true);
+    getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,0),true);
 
 //    //set to the first item
 //    if( field == "specialStains" ) {

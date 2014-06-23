@@ -26,7 +26,7 @@
 
         <div class="container text-center">
 
-            <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+            <input type="hidden" id="baseurl" value="{{app.request.uri}}" />
 
             {% include 'OlegOrderformBundle::Security/login_content.html.twig' %}
 
@@ -46,8 +46,8 @@
 
         <script language="Javascript">
             var _ajaxTimeout = 15000;  //15000 => 15 sec
-            var urlBase = $("#baseurl").val();
-            var url = "http://"+urlBase+"/setloginvisit/";
+            //var urlBase = $("#baseurl").val();
+            var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
             //console.log(screen.height + " " + screen.width);
 
             $(document).ready(function() {

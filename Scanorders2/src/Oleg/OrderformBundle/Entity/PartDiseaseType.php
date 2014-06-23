@@ -6,7 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="partDiseaseType")
+ * @ORM\Table(name="partDiseaseType",
+ *  indexes={
+ *      @ORM\Index( name="part_field_idx", columns={"field"} )
+ *  }
+ * )
  */
 class PartDiseaseType extends PartArrayFieldAbstract
 {

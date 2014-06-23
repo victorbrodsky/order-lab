@@ -38,7 +38,7 @@
 
     <div class="container text-center">
 
-        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+        <input type="hidden" id="baseurl" value="{{app.request.uri}}" />
         <input type="hidden" id="formcicle" value="accountreq" />
         <input type="hidden" id="orderformtype" value="single" />
 
@@ -145,6 +145,7 @@
         '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
         '@OlegOrderformBundle/Resources/public/form/js/form.js'
         '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+        '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

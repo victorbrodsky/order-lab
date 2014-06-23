@@ -10,11 +10,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-//use Oleg\OrderformBundle\Entity\OrderInfo;
-//use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Helper\OrderUtil;
+use Oleg\OrderformBundle\Entity\Logger;
 
 
 //ScanOrder joins OrderInfo + Scan
@@ -24,6 +23,8 @@ use Oleg\OrderformBundle\Helper\OrderUtil;
  * @Route("/")
  */
 class ScanOrderController extends Controller {
+
+    protected $limit = 50;
 
     /**
      * Lists all OrderInfo entities.
@@ -174,7 +175,7 @@ class ScanOrderController extends Controller {
         }
 
 
-        $limit = 50; //50;
+        $limit = $this->limit;
 
         $query = $em->createQuery($dql);
         $paginator  = $this->get('knp_paginator');
@@ -603,6 +604,34 @@ class ScanOrderController extends Controller {
 
     public function getSearchViewAction( $routeName, $service, $filter, $search, $searchObject, $page ) {
         $viewArr = $this->getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page );
+
+        //////// record to EventLog ////////
+        if( !$page || $page == "" ) {
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->get('security.context')->getToken()->getUser();
+            $roles = $user->getRoles();
+            $request = $this->get('request');
+
+            $count = count($viewArr['pagination']);
+            if( $count == $viewArr['limit'] ) {
+                $count = $count . "+";
+            }
+
+            $logger = new Logger();
+            $logger->setUser($user);
+            $logger->setRoles($roles);
+            $logger->setUsername($user."");
+            $logger->setIp($request->getClientIp());
+            $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+            $logger->setWidth($request->get('display_width'));
+            $logger->setHeight($request->get('display_height'));
+            $logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
+
+            $em->persist($logger);
+            $em->flush();
+        }
+        //////// EOF EventLog ////////
+
         return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
     }
 
@@ -824,7 +853,7 @@ class ScanOrderController extends Controller {
         }
 
 
-        $limit = 50;
+        $limit = $this->limit;
 
         if( !$page && $page == "" ) {
             $page = 1;
@@ -865,7 +894,8 @@ class ScanOrderController extends Controller {
             'routename' => $routeName,
             'comments' => $processorComments,
             'searchObjectName' => $searchObjectName,
-            'search' => $search
+            'search' => $search,
+            'limit' => $limit
         );
 
 //        return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', array(

@@ -1,7 +1,22 @@
+main_common_home:
+    path:      /
+    defaults:  { _controller: OlegOrderformBundle:Home:mainCommonHome }
+
 oleg_orderform:
     resource: "@OlegOrderformBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /scan
+
+acme_demo:
+    resource: "@AcmeDemoBundle/Controller/"
+    type:     annotation
+    prefix:   /demo
+
+#main_common_home:
+#    resource: "@OlegOrderformBundle/Controller/ScanOrder"
+#    type:     annotation
+#    prefix:   /
+
 
 #login:
 #    pattern:   login

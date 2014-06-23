@@ -19,28 +19,16 @@ class FilterSlideReturnRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->status == 'all' ) {
-            $choices = array(   'all' => 'All',
-                                'active' => 'Active',
-                                'returned' => 'Returned',
-                                'Checked: Not Received' => 'Checked: Not Received',
-                                'Checked: Previously Returned' =>
-                                'Checked: Previously Returned',
-                                'Checked: Some Returned' => 'Checked: Some Returned',
-                                'cancel' => 'Canceled'
-                            );
-        } else {
-            $choices = array(
-                                'active' => 'Active',
-                                'returned' => 'Returned',
-                                'all' => 'All',
-                                'Checked: Not Received' => 'Checked: Not Received',
-                                'Checked: Previously Returned' =>
-                                'Checked: Previously Returned',
-                                'Checked: Some Returned' => 'Checked: Some Returned',
-                                'cancel' => 'Canceled'
-                            );
-        }
+        $choices = array(   'all' => 'All',
+                            'active' => 'Active',
+                            'All Scanned & All Returned' => 'All Scanned & All Returned',
+                            'Some Scanned & All Returned' => 'Some Scanned & All Returned',
+                            'Not Scanned & All Returned' => 'Not Scanned & All Returned',
+                            'Checked: Not Received' => 'Checked: Not Received',
+                            'Checked: Previously Returned' => 'Checked: Previously Returned',
+                            'Checked: Some Returned' => 'Checked: Some Returned',
+                            'cancel' => 'Canceled'
+                        );
 
         $builder->add('filter', 'choice',
             array(

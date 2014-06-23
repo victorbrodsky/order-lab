@@ -8,7 +8,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="stainlist")
+ * @ORM\Table(name="stainlist",
+ *  indexes={
+ *      @ORM\Index( name="stain_name_idx", columns={"name"} )
+ *  }
+ * )
  */
 class StainList extends ListAbstract
 {

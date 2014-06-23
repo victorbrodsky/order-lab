@@ -9,7 +9,12 @@ use Oleg\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="patientmrn")
+ * @ORM\Table(name="patientmrn",
+ *  indexes={
+ *      @ORM\Index( name="patient_field_idx", columns={"field"} ),
+ *      @ORM\Index( name="patient_keytype_idx", columns={"keytype_id"} )
+ *  }
+ * )
  */
 class PatientMrn extends PatientArrayFieldAbstract
 {

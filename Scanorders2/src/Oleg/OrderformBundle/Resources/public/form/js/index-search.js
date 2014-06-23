@@ -40,7 +40,7 @@ function buildSearchedObjects() {
 
         //http://stackoverflow.com/questions/9516412/load-view-using-ajax-symfony2
         $.ajax({
-            url: "http://"+urlBase+"/scanorder-complex-search",
+            url: getCommonBaseUrl("scanorder-complex-search"),	//urlBase+"scanorder-complex-search",
             type: "POST",
             cache: false,
             dataType: "html",

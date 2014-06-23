@@ -566,15 +566,7 @@ function setNavBar() {
 
     var id = 'scanorderhome';
 
-    if( full.indexOf("scan-order/multi-slide-clinical") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-educational") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-research") !== -1 ) {
+    if( full.indexOf("scan-order/multi-slide") !== -1 ) {
         id = 'placescanorder';
     }
 
@@ -604,6 +596,9 @@ function setNavBar() {
     if( full.indexOf("/incoming-scan-orders") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/incoming-slide-return-requests") !== -1 ) {
+        id = 'admin';
+    }
     if( full.indexOf("/access-requests") !== -1 ) {
         id = 'admin';
     }
@@ -622,8 +617,11 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/user-directory") !== -1 ) {
+        id = 'admin';
+    }
     
-    if( full.indexOf("/users/") !== -1 ) {
+    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
         } else {

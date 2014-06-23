@@ -225,7 +225,7 @@ class SlideReturnRequest extends OrderAbstract {
             }
             $stainDesc = implode(",", $stainArr);
 
-            $str = $accessionkey->getKeytype().": ".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc." ".$stainDesc.
+            $str = $accessionkey->getKeytype().": <b>".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc." ".$stainDesc."</b>".
                     " (".$patientkey->getKeytype().": ".$patientkey->getField().", ".$patient->getName()->first().")";
             $description[] = $str;
 

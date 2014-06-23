@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 //indexes={@Index(name="user_idx", columns={"email"})}
 //,@ORM\@Index(name="lessonTitleStr_idx", columns={"lessonTitleStr"})
 //@ORM\Table(indexes={@ORM\Index(name="email_address_idx", columns={"email_address"})})
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
  * @ORM\Table( name="educational",

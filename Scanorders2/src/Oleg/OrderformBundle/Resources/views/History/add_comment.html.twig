@@ -34,8 +34,8 @@
                         <div class="col-xs-12">
 
                             <p>
-                                {#<textarea  type="textarea" class="textarea form-control">#}
-                                <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+                                {#<textarea  type="textarea" class="textarea form-control">#}                              
+								<input type="hidden" id="baseurl" value="{{app.request.uri}}" />
                                 <textarea id="addcomment_text" name="addcomment" type="textarea" class="textarea form-control" maxlength="5000" required></textarea>
                             </p>
 

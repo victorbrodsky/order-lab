@@ -15209,7 +15209,7 @@ function validateCell( row, col, value ) {
 
 function getSlideTypes() {
 
-    var url = urlCommon+"slidetype";
+    var url = getCommonBaseUrl("util/"+"slidetype");    //urlCommon+"slidetype";
 
     if( _slidetypes.length == 0 ) {
         $.ajax({
@@ -24027,7 +24027,7 @@ function addCollectionField( elem, btnpos ) {
 
     //populate the combobox by Ajax
     if( btnpos && btnpos == "bottom" ) {
-        getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,maxId+1),true);
+        getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,maxId+1),true);
     }
 }
 
@@ -24382,7 +24382,7 @@ var combobox_width = '100%'; //'element'
 //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 //var urlCommon = "http://collage.med.cornell.edu/order/util/";
 var urlBase = $("#baseurl").val();
-var urlCommon = "http://"+urlBase+"/util/";
+//var urlCommon = urlBase+"util/";
 //var type = $("#formtype").val();
 var cicle = $("#formcicle").val();
 var user_name = $("#user_name").val();
@@ -24457,30 +24457,29 @@ function customCombobox() {
     //console.log("cicle="+cicle);
 
     if( cicle && urlBase && cicle != 'edit_user' && cicle != 'accountreq' ) {
-        getComboboxMrnType(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0"),false);
-        getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
-        //getOptionalUserEducational(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxMrnType(new Array("0","0","0","0","0","0"));
+        getComboboxAccessionType(new Array("0","0","0","0","0","0"));
+        getComboboxPartname(new Array("0","0","0","0","0","0"));
+        getComboboxBlockname(new Array("0","0","0","0","0","0"));
+        getComboboxScanregion(new Array("0","0","0","0","0","0"));
+        getComboboxStain(new Array("0","0","0","0","0","0"));
+        getComboboxSpecialStain(new Array("0","0","0","0","0","0"),false);
+        getComboboxProcedure(new Array("0","0","0","0","0","0"));
+        getComboboxOrgan(new Array("0","0","0","0","0","0"));
+        getComboboxDelivery(new Array("0","0","0","0","0","0"));
+        getComboboxReturn(new Array("0","0","0","0","0","0"));
+        getComboboxPathService(new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
-        getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
-        getCourseTitle(urlCommon,new Array("0","0","0","0","0","0"));
+        getProjectTitle(new Array("0","0","0","0","0","0"));
+        getCourseTitle(new Array("0","0","0","0","0","0"));
 
-        getComboboxDepartment(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxInstitution(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxAccount(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxDepartment(new Array("0","0","0","0","0","0"));
+        getComboboxInstitution(new Array("0","0","0","0","0","0"));
+        getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
-        getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxPathService(new Array("0","0","0","0","0","0"));
     }
 }
 
@@ -24525,9 +24524,9 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
 
 
 //#############  stains  ##############//
-function getComboboxStain(urlCommon, ids) {
+function getComboboxStain(ids) {
 
-    var url = urlCommon+"stain";
+    var url = getCommonBaseUrl("util/"+"stain");
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -24561,9 +24560,9 @@ function getComboboxStain(urlCommon, ids) {
 
 }
 
-function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
+function getComboboxSpecialStain(ids, preset, setId) {
 
-    var url = urlCommon+"stain";
+    var url = getCommonBaseUrl("util/"+"stain");    //urlCommon+"stain";
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -24599,9 +24598,9 @@ function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
 }
 
 //#############  scan regions  ##############//
-function getComboboxScanregion(urlCommon,ids) {
+function getComboboxScanregion(ids) {
 
-    var url = urlCommon+"scanregion";
+    var url = getCommonBaseUrl("util/"+"scanregion"); //urlCommon+"scanregion";
     //console.log("scanregion.length="+scanregion.length);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
@@ -24631,10 +24630,10 @@ function getComboboxScanregion(urlCommon,ids) {
 }
 
 //#############  source organs  ##############//
-function getComboboxOrgan(urlCommon,ids) {
+function getComboboxOrgan(ids) {
 //    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];   //+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var url = urlCommon+"organ";
+    var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -24657,10 +24656,10 @@ function getComboboxOrgan(urlCommon,ids) {
 
 
 //#############  procedure types  ##############//
-function getComboboxProcedure(urlCommon,ids) {
+function getComboboxProcedure(ids) {
 //    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1];    //+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var url = urlCommon+"procedure";
+    var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
 //    var targetid = id+"name_0_field";
 
     if( cicle == "new" || cicle == "create" ) {
@@ -24683,9 +24682,9 @@ function getComboboxProcedure(urlCommon,ids) {
 }
 
 //#############  Accession Type  ##############//
-function getComboboxAccessionType(urlCommon,ids) {
+function getComboboxAccessionType(ids) {
 
-    var url = urlCommon+"accessiontype";
+    var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
 
     //console.log("orderformtype="+orderformtype);
 
@@ -24718,9 +24717,9 @@ function getComboboxAccessionType(urlCommon,ids) {
 }
 
 //#############  Mrn Type  ##############//
-function getComboboxMrnType(urlCommon,ids) {
+function getComboboxMrnType(ids) {
 
-    var url = urlCommon+"mrntype";
+    var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
 
     //console.log("orderformtype="+orderformtype);
 
@@ -24753,9 +24752,9 @@ function getComboboxMrnType(urlCommon,ids) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(urlCommon,ids) {
+function getComboboxPartname(ids) {
 
-    var url = urlCommon+"partname";
+    var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
 //    if( cicle == "new" || cicle == "create" ) {
 //        url = url + "?opt=default";
@@ -24781,9 +24780,9 @@ function getComboboxPartname(urlCommon,ids) {
 }
 
 //#############  blockname types  ##############//
-function getComboboxBlockname(urlCommon,ids) {
+function getComboboxBlockname(ids) {
 
-    var url = urlCommon+"blockname";
+    var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
 //    if( cicle == "new" || cicle == "create" ) {
 //        url = url + "?opt=default";
@@ -24808,10 +24807,10 @@ function getComboboxBlockname(urlCommon,ids) {
 }
 
 //#############  slide delivery  ##############//
-function getComboboxDelivery(urlCommon,ids) {
+function getComboboxDelivery(ids) {
     //var uid = "";   //'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_";
-    var url = urlCommon+"delivery";
+    var url = getCommonBaseUrl("util/"+"delivery");    //urlCommon+"delivery";
     var target = ".ajax-combobox-delivery";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
@@ -24841,10 +24840,10 @@ function getComboboxDelivery(urlCommon,ids) {
 }
 
 //#############  return slides to  ##############//
-function getComboboxReturn(urlCommon,ids) {
+function getComboboxReturn(ids) {
     //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     //var id= "#oleg_orderformbundle_orderinfotype_";
-    var url = urlCommon+"return";
+    var url = getCommonBaseUrl("util/"+"return"); //urlCommon+"return";
     //var targetid = id+"returnSlide";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
@@ -24876,13 +24875,13 @@ function getComboboxReturn(urlCommon,ids) {
 }
 
 //#############  pathology service for user and orderinfo  ##############//
-function getComboboxPathService(urlCommon,ids) {
+function getComboboxPathService(ids) {
 
     //******************* order pathology service *************************//
     //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     //var id= "#oleg_orderformbundle_orderinfotype_";
     var targetid = ".ajax-combobox-pathservice";
-    var url = urlCommon+"pathservice";
+    var url = getCommonBaseUrl("util/"+"pathservice");   //urlCommon+"pathservice";
 
     if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" || cicle == "show" ) {
         var optStr = user_id;
@@ -24921,9 +24920,9 @@ function getComboboxPathService(urlCommon,ids) {
 }
 
 //#############  Research Project  ##############//
-function getProjectTitle(urlCommon,ids) {
+function getProjectTitle(ids) {
 
-    var url = urlCommon+"projecttitle";
+    var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -24957,7 +24956,7 @@ function getProjectTitle(urlCommon,ids) {
 function getSetTitle() {
 
     var targetid = ".combobox-research-setTitle";
-    var url = urlCommon+"settitle";
+    var url = getCommonBaseUrl("util/"+"settitle"); //urlCommon+"settitle";
 
     //get ProjectTitle value and process children fields (readonly: true or false)
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
@@ -24989,9 +24988,9 @@ function getSetTitle() {
 
 
 //#############  Educational Course  ##############//
-function getCourseTitle(urlCommon,ids) {
+function getCourseTitle(ids) {
 
-    var url = urlCommon+"coursetitle";
+    var url = getCommonBaseUrl("util/"+"coursetitle"); //urlCommon+"coursetitle";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -25024,7 +25023,7 @@ function getCourseTitle(urlCommon,ids) {
 function getLessonTitle() {
 
     var targetid = ".combobox-educational-lessonTitle";
-    var url = urlCommon+"lessontitle";
+    var url = getCommonBaseUrl("util/"+"lessontitle");  //urlCommon+"lessontitle";
 
     //get CourseTitle value and process children fields (readonly: true or false)
     var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, false );
@@ -25055,7 +25054,7 @@ function getLessonTitle() {
 function getOptionalUserResearch() {
 
     var targetid = ".ajax-combobox-optionaluser-research";
-    var url = urlCommon+"optionaluserresearch";
+    var url = getCommonBaseUrl("util/"+"optionaluserresearch"); //urlCommon+"optionaluserresearch";
 
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
 
@@ -25093,7 +25092,7 @@ function getOptionalUserResearch() {
 function getOptionalUserEducational() {
 
     var targetid = ".ajax-combobox-optionaluser-educational";
-    var url = urlCommon+"optionalusereducational";
+    var url = getCommonBaseUrl("util/"+"optionalusereducational"); //urlCommon+"optionalusereducational";
 
     var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, true );
 
@@ -25160,9 +25159,9 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 
 
 //#############  department  ##############//
-function getComboboxDepartment(urlCommon,ids) {
+function getComboboxDepartment(ids) {
 
-    var url = urlCommon+"department";
+    var url = getCommonBaseUrl("util/"+"department");  //urlCommon+"department";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -25190,9 +25189,9 @@ function getComboboxDepartment(urlCommon,ids) {
 }
 
 //#############  institution  ##############//
-function getComboboxInstitution(urlCommon,ids) {
+function getComboboxInstitution(ids) {
 
-    var url = urlCommon+"institution";
+    var url = getCommonBaseUrl("util/"+"institution"); //urlCommon+"institution";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -25220,9 +25219,9 @@ function getComboboxInstitution(urlCommon,ids) {
 }
 
 //#############  account  ##############//
-function getComboboxAccount(urlCommon,ids) {
+function getComboboxAccount(ids) {
 
-    var url = urlCommon+"account";
+    var url = getCommonBaseUrl("util/"+"account");  //urlCommon+"account";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -25250,9 +25249,9 @@ function getComboboxAccount(urlCommon,ids) {
 }
 
 //#############  return slides to  ##############//
-function getUrgency(urlCommon) {
+function getUrgency() {
 
-    var url = urlCommon+"urgency";
+    var url = getCommonBaseUrl("util/"+"urgency");  //urlCommon+"urgency";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -25288,24 +25287,24 @@ function initComboboxJs(ids) {
 
         cicle = 'new';
 
-        getComboboxMrnType(urlCommon,ids);
-        getComboboxAccessionType(urlCommon,ids);
-        getComboboxPartname(urlCommon,ids);
-        getComboboxBlockname(urlCommon,ids);
-        getComboboxStain(urlCommon,ids);
-        getComboboxSpecialStain(urlCommon,ids,false);
-        getComboboxScanregion(urlCommon,ids);
-        getComboboxProcedure(urlCommon,ids);
-        getComboboxOrgan(urlCommon,ids);
-        getComboboxPathService(urlCommon,ids);
-        //getOptionalUserEducational(urlCommon,ids);
+        getComboboxMrnType(ids);
+        getComboboxAccessionType(ids);
+        getComboboxPartname(ids);
+        getComboboxBlockname(ids);
+        getComboboxStain(ids);
+        getComboboxSpecialStain(ids,false);
+        getComboboxScanregion(ids);
+        getComboboxProcedure(ids);
+        getComboboxOrgan(ids);
+        getComboboxPathService(ids);
+        //getOptionalUserEducational(ids);
         slideType(ids);
-        getProjectTitle(urlCommon,ids);
-        getCourseTitle(urlCommon,ids);
+        getProjectTitle(ids);
+        getCourseTitle(ids);
 
-        getComboboxDepartment(urlCommon,ids);
-        getComboboxInstitution(urlCommon,ids);
-        getComboboxAccount(urlCommon,ids);
+        getComboboxDepartment(ids);
+        getComboboxInstitution(ids);
+        getComboboxAccount(ids);
     }
 }
 
@@ -26825,7 +26824,7 @@ function setArrayField(element, dataArr, parent) {
 
             if( fieldName == "specialStains" ) {
                 //pre-populate select2 with stains
-                getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,coll),true,id);
+                getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,coll),true,id);
             }
 
         } else {    //show the valid field (with validity=1)
@@ -27156,7 +27155,7 @@ function cleanBlockSpecialStains( element, field, single ) {
     var ident = "block"+"specialStains";
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
     fieldHolder.prepend(newForm);
-    getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,0),true);
+    getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,0),true);
 
 //    //set to the first item
 //    if( field == "specialStains" ) {
@@ -27490,8 +27489,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
  */
 
 
-var urlBase = $("#baseurl").val();
-var urlCheck = "http://"+urlBase+"/check/";
+//var urlBase = $("#baseurl").val();
+//var urlCheck = urlBase+"check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");
 
@@ -27917,7 +27916,7 @@ function executeClick( btnObjInit ) {
 
 
             $.ajax({
-                url: urlCheck+urlcasename,
+                url: getCommonBaseUrl(urlcasename),	//urlCheck+urlcasename,
                 type: ajaxType,
                 contentType: 'application/json',
                 dataType: 'json',
@@ -29239,15 +29238,7 @@ function setNavBar() {
 
     var id = 'scanorderhome';
 
-    if( full.indexOf("scan-order/multi-slide-clinical") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-educational") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-research") !== -1 ) {
+    if( full.indexOf("scan-order/multi-slide") !== -1 ) {
         id = 'placescanorder';
     }
 
@@ -29277,6 +29268,9 @@ function setNavBar() {
     if( full.indexOf("/incoming-scan-orders") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/incoming-slide-return-requests") !== -1 ) {
+        id = 'admin';
+    }
     if( full.indexOf("/access-requests") !== -1 ) {
         id = 'admin';
     }
@@ -29295,8 +29289,11 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/user-directory") !== -1 ) {
+        id = 'admin';
+    }
     
-    if( full.indexOf("/users/") !== -1 ) {
+    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
         } else {
@@ -29604,7 +29601,7 @@ $(document).ready(function() {
 function submitNewComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/scan-order/progress-and-comments/create";
+    var urlCommentSubmit = getCommonBaseUrl("scan-order/progress-and-comments/create");	//urlBase+"scan-order/progress-and-comments/create";
 
     var text = $('#addComment_'+id).find('.textarea').val();
 
@@ -29651,7 +29648,7 @@ function submitNewComment(id) {
 function submitNewSlideReturnRequestComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/slide-return-request/comment/create";
+    var urlCommentSubmit = getCommonBaseUrl("slide-return-request/comment/create");	//urlBase+"slide-return-request/comment/create";
 
     var text = $('#addSlideReturnRequestComment_'+id).find('.textarea').val();
 
@@ -29696,7 +29693,7 @@ function submitNewSlideReturnRequestComment(id) {
 function submitNewStatusComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/slide-return-request/comment/create";
+    var urlCommentSubmit = getCommonBaseUrl("slide-return-request/comment/create");	//urlBase+"slide-return-request/comment/create";
 
     var textEl = $('#dataConfirmModal').find('.modal-body').find('.textarea');
     var text = textEl.val();
@@ -30412,7 +30409,7 @@ function idleTimeout() {
 
     //get max idle time from server by ajax
     $.ajax({
-        url: "http://"+urlBase+"/getmaxidletime/",
+        url: getCommonBaseUrl("getmaxidletime/"),	//urlBase+"getmaxidletime/",
         type: 'GET',
         //contentType: 'application/json',
         //dataType: 'json',
@@ -30434,8 +30431,7 @@ function idleTimeout() {
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     var $countdown = $("#dialog-countdown");
 
-    var urlCommonIdleTimeout = "http://"+urlBase+"/keepalive/";
-    //var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
+    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive");	//urlBase+"keepalive/";
 
     //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
     //idleAfter: 1800 sec => 30min*60sec =
@@ -30489,13 +30485,13 @@ function keepWorking() {
 
 function logoff() {
     //console.log("logoff");
-    var urlRegularLogout = "http://"+urlBase+"/logout";
+    var urlRegularLogout = getCommonBaseUrl("logout");	//urlBase+"logout";
     window.location = urlRegularLogout;
 }
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
+    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
     window.location = urlIdleTimeoutLogout;
 }
 

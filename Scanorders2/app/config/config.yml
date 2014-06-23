@@ -40,7 +40,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        ['OlegOrderformBundle']
+    bundles:        ['OlegOrderformBundle','AcmeDemoBundle']
     #java: /usr/bin/java
     filters:
          less:

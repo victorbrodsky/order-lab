@@ -5,8 +5,8 @@
  */
 
 
-var urlBase = $("#baseurl").val();
-var urlCheck = "http://"+urlBase+"/check/";
+//var urlBase = $("#baseurl").val();
+//var urlCheck = urlBase+"check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");
 
@@ -432,7 +432,7 @@ function executeClick( btnObjInit ) {
 
 
             $.ajax({
-                url: urlCheck+urlcasename,
+                url: getCommonBaseUrl(urlcasename),	//urlCheck+urlcasename,
                 type: ajaxType,
                 contentType: 'application/json',
                 dataType: 'json',

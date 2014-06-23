@@ -2,11 +2,11 @@
 
 namespace Oleg\OrderformBundle\Security\Factory;
 
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 
 class AperioFactory implements SecurityFactoryInterface
 {
@@ -22,12 +22,11 @@ class AperioFactory implements SecurityFactoryInterface
         $listener = $container->setDefinition($listenerId, new DefinitionDecorator('aperio.security.authentication.listener'));
 
         return array($providerId, $listenerId, $defaultEntryPoint);
-
     }
 
     public function getPosition()
     {
-        return 'pre_auth';
+        return 'pre_auth';  //must be of type pre_auth, form, http, and remember_me and defines the position at which the provider is called;
     }
 
     public function getKey()
@@ -39,3 +38,5 @@ class AperioFactory implements SecurityFactoryInterface
     {
     }
 }
+
+?>

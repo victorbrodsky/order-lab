@@ -6,7 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="partDiffDisident")
+ * @ORM\Table(name="partDiffDisident",
+ *  indexes={
+ *      @ORM\Index( name="part_field_idx", columns={"field"} )
+ *  }
+ * )
  */
 class PartDiffDisident extends PartArrayFieldAbstract
 {

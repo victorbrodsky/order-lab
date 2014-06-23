@@ -51,7 +51,7 @@ $(document).ready(function() {
 function submitNewComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/scan-order/progress-and-comments/create";
+    var urlCommentSubmit = getCommonBaseUrl("scan-order/progress-and-comments/create");	//urlBase+"scan-order/progress-and-comments/create";
 
     var text = $('#addComment_'+id).find('.textarea').val();
 
@@ -98,7 +98,7 @@ function submitNewComment(id) {
 function submitNewSlideReturnRequestComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/slide-return-request/comment/create";
+    var urlCommentSubmit = getCommonBaseUrl("slide-return-request/comment/create");	//urlBase+"slide-return-request/comment/create";
 
     var text = $('#addSlideReturnRequestComment_'+id).find('.textarea').val();
 
@@ -143,7 +143,7 @@ function submitNewSlideReturnRequestComment(id) {
 function submitNewStatusComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/slide-return-request/comment/create";
+    var urlCommentSubmit = getCommonBaseUrl("slide-return-request/comment/create");	//urlBase+"slide-return-request/comment/create";
 
     var textEl = $('#dataConfirmModal').find('.modal-body').find('.textarea');
     var text = textEl.val();

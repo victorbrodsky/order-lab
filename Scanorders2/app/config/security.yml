@@ -1,11 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
-#        Oleg\OrderformBundle\Security\User\WebserviceUser: sha512
-#        Oleg\OrderformBundle\Security\User\WebserviceUser: plaintext
-#        Daps\LdapBundle\Security\User\LdapUser: plaintext
         FOS\UserBundle\Model\UserInterface: sha512
-#        Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext #Active directory does not support encrypted password yet
 
     role_hierarchy:
 
@@ -43,7 +39,7 @@ security:
 
     firewalls:
 
-        #this firewall name must be the same as in the bundle's service.yml
+        #this firewall name must be the same as in the bundle's service.yml.
         aperio_ldap_firewall:
 
             pattern: ^/
@@ -99,5 +95,4 @@ security:
 
      - { path: ^/slide-return-request, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
      - { path: ^/my-slide-return-requests, role: [ROLE_SUBMITTER, ROLE_EXTERNAL_SUBMITTER, ROLE_ORDERING_PROVIDER, ROLE_EXTERNAL_ORDERING_PROVIDER]}
-
 

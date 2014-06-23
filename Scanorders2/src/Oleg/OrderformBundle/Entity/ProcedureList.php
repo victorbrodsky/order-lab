@@ -8,7 +8,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ProcedureList")
+ * @ORM\Table(name="ProcedureList",
+ *  indexes={
+ *      @ORM\Index( name="procedure_name_idx", columns={"name"} )
+ *  }
+ * )
  */
 class ProcedureList extends ListAbstract
 {

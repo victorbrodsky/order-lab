@@ -36,10 +36,9 @@ class AperioListener {//implements ListenerInterface  {
     public function handle(GetResponseEvent $event)
     {
 
+        //exit("using handle Aperio Listener");
         //use default handle
         return;
-
-        //exit("using handle Aperio Listener");
 
         $request = $event->getRequest();
         $username = $request->get('_username');
