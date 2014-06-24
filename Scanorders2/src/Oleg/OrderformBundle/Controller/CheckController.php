@@ -752,7 +752,7 @@ class CheckController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        if( !$user->hasRole('ROLE_EXTERNAL_SUBMITTER') && !$user->hasRole('ROLE_EXTERNAL_ORDERING_PROVIDER') ) {
+        if( !$user->hasRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER') && !$user->hasRole('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER') ) {
             $external = 'not_external_role';
         }
 

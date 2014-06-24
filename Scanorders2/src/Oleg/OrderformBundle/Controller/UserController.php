@@ -34,7 +34,7 @@ class UserController extends Controller
     public function indexUserAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
@@ -82,7 +82,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
+        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
@@ -108,7 +108,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity);
+        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
 
         $form->handleRequest($request);
 
@@ -139,7 +139,7 @@ class UserController extends Controller
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         //echo "id=".$id."<br>";
@@ -159,7 +159,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array('disabled' => true));
+        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array('disabled' => true));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -186,7 +186,7 @@ class UserController extends Controller
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -199,7 +199,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -224,7 +224,7 @@ class UserController extends Controller
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -237,7 +237,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -323,7 +323,7 @@ class UserController extends Controller
     public function generateUsersAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You do not have permission to visit this page'
@@ -359,7 +359,7 @@ class UserController extends Controller
     public function loadRolesFromAperioAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You do not have permission to visit this page'
@@ -377,7 +377,7 @@ class UserController extends Controller
 
         foreach( $users as $user ) {
 
-            //************** get Aperio group roles and ROLE_ORDERING_PROVIDER for this user **************//
+            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             $aperioUtil = new AperioUtil();
 
             $username = $user->getUsername()."";
@@ -457,7 +457,7 @@ class UserController extends Controller
 //        $servArr = array();
 //        $em = $this->getDoctrine()->getManager();
 //        $services = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
-//        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
 //            foreach( $services as $service ) {
 //                $servArr[$service->getName()] = $service->getAlias();
 //            }

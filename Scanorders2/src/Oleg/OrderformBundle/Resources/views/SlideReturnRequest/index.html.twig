@@ -106,7 +106,7 @@
 
             {% set returned = "Returned" in sliderequest.status %}
 
-            {% if is_granted('ROLE_PROCESSOR') and route == 'incoming-slide-return-requests' %}
+            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and route == 'incoming-slide-return-requests' %}
                 {% include 'OlegOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
             {% endif %}
 
@@ -184,7 +184,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            {% if is_granted('ROLE_PROCESSOR') and route == 'incoming-slide-return-requests' %}
+                            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and route == 'incoming-slide-return-requests' %}
 
                                 {% if sliderequest.status != 'All Scanned & All Returned' %}
                                     <li><a data-confirm="Are you sure you want to change status to All Scanned & All Returned?"

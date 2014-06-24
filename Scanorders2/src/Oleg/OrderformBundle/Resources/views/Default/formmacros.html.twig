@@ -362,24 +362,24 @@
     <div class="{{ classname }}">
     {% for field in fields %}
 
-        {#( field.vars.value.status == 'valid' and is_granted('ROLE_SUBMITTER') ) or#}
+        {#( field.vars.value.status == 'valid' and is_granted('ROLE_SCANORDER_SUBMITTER') ) or#}
         {#get correct field: valid for submitter and all for external submitter (only latest fields are queried by controller for external)#}
-        {% if is_granted('ROLE_SUBMITTER') and field.vars.value.status == 'valid' %}
+        {% if is_granted('ROLE_SCANORDER_SUBMITTER') and field.vars.value.status == 'valid' %}
             {%  set show = 1 %}
-        {% elseif is_granted('ROLE_EXTERNAL_SUBMITTER') and not is_granted('ROLE_ADMIN') %}
+        {% elseif is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') and not is_granted('ROLE_SCANORDER_ADMIN') %}
             {%  set show = 1 %}
         {% else %}
             {%  set show = 0 %}
             {#don't show: {{ form_widget(field) }}#}
         {% endif %}
 
-        {#to see all data: ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST#}
-        {% if is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST') and field.vars.value.status == 'invalid' %}
+        {#to see all data: ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST#}
+        {% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') and field.vars.value.status == 'invalid' %}
             {%  set show = 1 %}
         {% endif %}
 
         {#field.vars.value.status == 'valid' or#}
-        {#( is_granted('ROLE_EXTERNAL_SUBMITTER') and field.vars.value.status == 'invalid' ) or#}
+        {#( is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') and field.vars.value.status == 'invalid' ) or#}
         {% if show == 1 or
               cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'
         %}
@@ -448,9 +448,9 @@
                     {% endif %}
                     {% if field.vars.value.provider is defined %}
                         {% if ( cycle == "show" or cycle == "amend" ) and
-                              not is_granted('ROLE_EXTERNAL_SUBMITTER') or
-                              ( is_granted('ROLE_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
-                              is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST')
+                              not is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or
+                              ( is_granted('ROLE_SCANORDER_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
+                              is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST')
                         %}
                             {% if field.vars.value.creationdate != "" %}
                                 entered on
@@ -459,7 +459,7 @@
                             {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
                                 by
                                 {{field.vars.value.provider}}
-                                {% if field.vars.value.status != 'valid' and ( not is_granted('ROLE_EXTERNAL_SUBMITTER') or is_granted('ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST') ) %}
+                                {% if field.vars.value.status != 'valid' and ( not is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') ) %}
                                     ({{ field.vars.value.status }})
                                 {% endif %}
                             {% endif %}

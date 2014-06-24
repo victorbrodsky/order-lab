@@ -28,7 +28,7 @@ class HistoryController extends Controller
     public function indexAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -275,10 +275,10 @@ class HistoryController extends Controller
     public function showHistoryOrderinfoAction($id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_ORDERING_PROVIDER') &&
-            false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_ORDERING_PROVIDER')
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
         )
         {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
@@ -312,12 +312,12 @@ class HistoryController extends Controller
 
             $viewed = false;
 
-            if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
 
                 //don't mark with view comments placed by PROCESSOR to User and viewed by another PROCESSOR (order->provider does not have role PROCESSOR)
 //                $orderprovider = $entity->getOrderinfo()->getProvider();
 //                echo $orderprovider."<br>";
-//                if( $orderprovider->hasRole('ROLE_ADMIN') || $orderprovider->hasRole('ROLE_PROCESSOR') ) {
+//                if( $orderprovider->hasRole('ROLE_SCANORDER_ADMIN') || $orderprovider->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
 //                    //
 //                } else {
 //                    echo "not viewed! ";
@@ -334,7 +334,7 @@ class HistoryController extends Controller
 
 
                 //processor can see only histories created by user without processor role
-//                if( !$entity->hasProviderRole('ROLE_PROCESSOR') ) {
+//                if( !$entity->hasProviderRole('ROLE_SCANORDER_PROCESSOR') ) {
 //                    $viewed = true;
 //                }
 
@@ -342,13 +342,13 @@ class HistoryController extends Controller
 
             } else {
                 //submitter can see only histories created by user with processor or admin role for history's orders belongs to this user as provider or proxy
-                if( $entity->hasProviderRole('ROLE_PROCESSOR') || $entity->hasProviderRole('ROLE_ADMIN') ) {
+                if( $entity->hasProviderRole('ROLE_SCANORDER_PROCESSOR') || $entity->hasProviderRole('ROLE_SCANORDER_ADMIN') ) {
                     //echo "role admin! <br>";
                     $viewed = true;
                 }
             }
 
-            //echo "admin role=".$entity->hasProviderRole('ROLE_ADMIN')."<br>";
+            //echo "admin role=".$entity->hasProviderRole('ROLE_SCANORDER_ADMIN')."<br>";
             //echo "viewed=".$viewed." <br>";
 
             //if the user the same as author of comment => $viewed = false ( proxy user will make this history as viewed! )

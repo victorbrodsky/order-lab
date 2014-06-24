@@ -48,7 +48,7 @@ class LoggerController extends Controller
         $em = $this->getDoctrine()->getManager();
         $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
         $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
             }

@@ -563,7 +563,7 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
     if( !mrnDB || !mrntypeDB ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");
@@ -616,7 +616,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
 
         if( makeCheck ) {
             $.ajax({
-                url: urlCheck+name+'/check',
+                url: getCommonBaseUrl("check/"+name+'/check'),    //urlCheck+name+'/check',
                 type: 'GET',
                 data: {key: keyvalue, extra: keytypeCorrect},
                 contentType: 'application/json',
@@ -663,39 +663,39 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
 
     }); //promise
 }
-//return id of the keytype by keytype string
-//if keytype does not exists in DB, return keytype string
-function getKeyTypeID( name, keytype ) {
-    return Q.promise(function(resolve, reject) {
-
-        $.ajax({
-            url: urlCheck+name+'/keytype/'+keytype,
-            type: 'GET',
-            //data: {keytype: keytype},
-            contentType: 'application/json',
-            dataType: 'json',
-            timeout: _ajaxTimeout,
-            async: false,
-            success: function (data) {
-                //console.debug("get element ajax ok");
-                if( data && data != '' ) {
-                    //console.log(name+": keytype is found. keytype="+data);
-                    resolve(data);
-                } else {
-                    //console.log(name+": keytype is not found.");
-                    resolve(keytype);
-                }
-            },
-            error: function ( x, t, m ) {
-                //console.debug("keytype id: ajax error "+name);
-                if( t === "timeout" ) {
-                    getAjaxTimeoutMsg();
-                }
-                reject(Error("Check Existing Error"));
-            }
-        });
-    }); //promise
-}
+////return id of the keytype by keytype string
+////if keytype does not exists in DB, return keytype string
+//function getKeyTypeID( name, keytype ) {
+//    return Q.promise(function(resolve, reject) {
+//
+//        $.ajax({
+//            url: getCommonBaseUrl("check/"+name+'/keytype/'+keytype),   //urlCheck+name+'/keytype/'+keytype,
+//            type: 'GET',
+//            //data: {keytype: keytype},
+//            contentType: 'application/json',
+//            dataType: 'json',
+//            timeout: _ajaxTimeout,
+//            async: false,
+//            success: function (data) {
+//                //console.debug("get element ajax ok");
+//                if( data && data != '' ) {
+//                    //console.log(name+": keytype is found. keytype="+data);
+//                    resolve(data);
+//                } else {
+//                    //console.log(name+": keytype is not found.");
+//                    resolve(keytype);
+//                }
+//            },
+//            error: function ( x, t, m ) {
+//                //console.debug("keytype id: ajax error "+name);
+//                if( t === "timeout" ) {
+//                    getAjaxTimeoutMsg();
+//                }
+//                reject(Error("Check Existing Error"));
+//            }
+//        });
+//    }); //promise
+//}
 
 
 function validateEmptyHandsonRow( row ) {

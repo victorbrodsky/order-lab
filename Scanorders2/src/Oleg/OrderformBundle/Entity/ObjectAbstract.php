@@ -305,7 +305,7 @@ abstract class ObjectAbstract
     public function filterArrayFields( $user, $strict = false ) {
 
         //filter only if the user has role external submitter
-        if( !$user->hasRole('ROLE_EXTERNAL_SUBMITTER') ) {
+        if( !$user->hasRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ) {
             return $this;
         }
 

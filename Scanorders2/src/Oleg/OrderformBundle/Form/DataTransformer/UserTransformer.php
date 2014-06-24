@@ -116,14 +116,14 @@ class UserTransformer implements DataTransformerInterface
             $user->setPlainPassword($clearName);
 
             //set Roles: aperio users can submit order by default.
-            $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
+            $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
 
             if( $this->classtype == 'optionalUserEducational' ) {
-                $user->addRole('ROLE_COURSE_DIRECTOR');
+                $user->addRole('ROLE_SCANORDER_COURSE_DIRECTOR');
             }
 
             if( $this->classtype == 'optionalUserResearch' ) {
-                $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
+                $user->addRole('ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR');
             }
 
             return $user;

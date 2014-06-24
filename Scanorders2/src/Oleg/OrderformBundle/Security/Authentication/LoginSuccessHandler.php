@@ -47,27 +47,27 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
         //exit();
 
-        if( $this->security->isGranted('ROLE_BANNED') ) {
+        if( $this->security->isGranted('ROLE_SCANORDER_BANNED') ) {
             $options = array('event'=>'Banned User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
         }
 
-        if( $this->security->isGranted('ROLE_UNAPPROVED_SUBMITTER') ) {
+        if( $this->security->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
             $options = array('event'=>'Unapproved User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
         }
 
-        if( $user->hasRole('ROLE_PROCESSOR') ) {
+        if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
 
             $response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
             $options['event'] = "Successful Login";
 
         }
-        elseif( $this->security->isGranted('ROLE_SUBMITTER') || $this->security->isGranted('ROLE_EXTERNAL_SUBMITTER') || $this->security->isGranted('ROLE_ORDERING_PROVIDER') ) {
+        elseif( $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') || $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') || $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') ) {
 
             //$referer_url1 = $request->headers->get('referer');
             //echo("referer_url1=".$referer_url1."<br>");

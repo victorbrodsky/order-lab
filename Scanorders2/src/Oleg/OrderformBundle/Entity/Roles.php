@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Roles extends ListAbstract {
 
     /**
-     * Alias is a display name for each role, i.e.: ROLE_ADMIN => Administrator
+     * Alias is a display name for each role, i.e.: ROLE_SCANORDER_ADMIN => Administrator
      * @ORM\Column(type="string", nullable=true)
      */
     protected $alias;

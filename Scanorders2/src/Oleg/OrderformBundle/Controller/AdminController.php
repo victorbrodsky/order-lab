@@ -763,35 +763,35 @@ class AdminController extends Controller
             return -1;
         }
 
-        //Note: fos user has role ROLE_SUPER_ADMIN
+        //Note: fos user has role ROLE_SCANORDER_SUPER_ADMIN
 
         $types = array(
-            "ROLE_ADMIN" => "Administrator",
-            "ROLE_PROCESSOR" => "Processor",
+            "ROLE_SCANORDER_ADMIN" => "ScanOrder Administrator",
+            "ROLE_SCANORDER_PROCESSOR" => "ScanOrder Processor",
 
-            "ROLE_DIVISION_CHIEF" => "Division Chief",
-            "ROLE_SERVICE_CHIEF" => "Service Chief",
+            "ROLE_SCANORDER_DIVISION_CHIEF" => "ScanOrder Division Chief",
+            "ROLE_SCANORDER_SERVICE_CHIEF" => "ScanOrder Service Chief",
 
-            "ROLE_DATA_QUALITY_ASSURANCE_SPECIALIST" => "Data Quality Assurance Specialist",
+            "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => "ScanOrder Data Quality Assurance Specialist",
 
             //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.
 
-            "ROLE_SUBMITTER" => "Submitter",
-            "ROLE_ORDERING_PROVIDER" => "Ordering Provider",
+            "ROLE_SCANORDER_SUBMITTER" => "ScanOrder Submitter",
+            "ROLE_SCANORDER_ORDERING_PROVIDER" => "ScanOrder Ordering Provider",
 
-            "ROLE_PATHOLOGY_RESIDENT" => "Pathology Resident",
-            "ROLE_PATHOLOGY_FELLOW" => "Pathology Fellow",
-            "ROLE_PATHOLOGY_FACULTY" => "Pathology Faculty",
+            "ROLE_SCANORDER_PATHOLOGY_RESIDENT" => "ScanOrder Pathology Resident",
+            "ROLE_SCANORDER_PATHOLOGY_FELLOW" => "ScanOrder Pathology Fellow",
+            "ROLE_SCANORDER_PATHOLOGY_FACULTY" => "ScanOrder Pathology Faculty",
 
-            //"ROLE_BANNED_USER" => "Banned User",  //not required since we have locked
-            "ROLE_EXTERNAL_SUBMITTER" => "External Submitter",
-            "ROLE_EXTERNAL_ORDERING_PROVIDER" => "External Ordering Provider",
+            //"ROLE_SCANORDER_BANNED_USER" => "ScanOrder Banned User",  //not required since we have locked
+            "ROLE_SCANORDER_EXTERNAL_SUBMITTER" => "ScanOrder External Submitter",
+            "ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER" => "ScanOrder External Ordering Provider",
 
-            "ROLE_COURSE_DIRECTOR" => "Course Director",
-            "ROLE_PRINCIPAL_INVESTIGATOR" => "Principal Investigator",
+            "ROLE_SCANORDER_COURSE_DIRECTOR" => "ScanOrder Course Director",
+            "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => "ScanOrder Principal Investigator",
 
-            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter",
-            "ROLE_BANNED" => "Banned User"
+            "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => "ScanOrder Unapproved Submitter",
+            "ROLE_SCANORDER_BANNED" => "ScanOrder Banned User"
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

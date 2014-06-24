@@ -75,7 +75,7 @@ class ScanOrderController extends Controller {
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName."<br>";
 
-        if( $routeName == "incoming-scan-orders" && false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if( $routeName == "incoming-scan-orders" && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('my-scan-orders') );
         }
 
@@ -223,7 +223,7 @@ class ScanOrderController extends Controller {
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -262,8 +262,8 @@ class ScanOrderController extends Controller {
      */
     public function statusAction(Request $request, $id, $status) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_EXTERNAL_SUBMITTER')
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
         ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
@@ -327,7 +327,7 @@ class ScanOrderController extends Controller {
     public function getFilter($routeName) {
         $em = $this->getDoctrine()->getManager();
 
-//        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $routeName == "incoming-scan-orders" ) {
             $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
         } else {
@@ -388,7 +388,7 @@ class ScanOrderController extends Controller {
     public function getServiceFilter() {
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             $statuses = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
         } 
 
@@ -417,7 +417,7 @@ class ScanOrderController extends Controller {
         $criteriastr = "";
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
             return $criteriastr;
         }
 
@@ -427,7 +427,7 @@ class ScanOrderController extends Controller {
             $services = array();
             $userServices = $user->getPathologyServices();
 
-            if( $this->get('security.context')->isGranted('ROLE_SERVICE_CHIEF') ) {
+            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $user->getChiefservices();
                 if( $userServices && count($userServices)>0 ) {
                     $services = array_merge($userServices, $chiefServices);
@@ -520,7 +520,7 @@ class ScanOrderController extends Controller {
     public function getActiveAccountReq() {
         $em = $this->getDoctrine()->getManager();
         $accountreqs = array();
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             $accountreqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
         }
         return $accountreqs;
@@ -530,7 +530,7 @@ class ScanOrderController extends Controller {
     public function getActiveAccessReq() {
         $em = $this->getDoctrine()->getManager();
         $accessreqs = array();
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
         }
         return $accessreqs;
@@ -1041,7 +1041,7 @@ class ScanOrderController extends Controller {
         //***************** END of Status filetr ***************************//
 
         //***************** Superseded filter ***************************//
-        if( false === $securityContext->isGranted('ROLE_PROCESSOR') ) {
+        if( false === $securityContext->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
@@ -1080,9 +1080,9 @@ class ScanOrderController extends Controller {
                 //***************** EOF: Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
             }
 
-            //show all for ROLE_DIVISION_CHIEF: remove all user's restriction
-            if( $securityContext->isGranted('ROLE_DIVISION_CHIEF') ) {
-                //echo "ROLE_DIVISION_CHIEF";
+            //show all for ROLE_SCANORDER_DIVISION_CHIEF: remove all user's restriction
+            if( $securityContext->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+                //echo "ROLE_SCANORDER_DIVISION_CHIEF";
                 $crituser = "";
             }
 

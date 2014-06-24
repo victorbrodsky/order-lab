@@ -11,7 +11,7 @@
         
     </form>
         
-    {% if is_granted('ROLE_ADMIN') %}  
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
       <a class="btn btn-small btn-warning" href="{{ path('scanorder_edit', { 'id': entity.id }) }}">Edit</a> 
     {% endif %}   
       

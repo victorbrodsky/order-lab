@@ -22,7 +22,7 @@
         {{ formmacros.field(form.pathologyServices) }}
         {#{{ formmacros.field(form.defaultPathService) }}#}
 
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_SCANORDER_ADMIN') %}
             {{ formmacros.field(form.roles) }}
         {% endif %}
 
@@ -34,7 +34,7 @@
         {{ formmacros.field(form.fax) }}
         {{ formmacros.field(form.office) }}
 
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_SCANORDER_ADMIN') %}
             {% if app.security.getToken().getUser().getId() != entity.id %}
 
                 {#{{ formmacros.field(form.locked) }}#}

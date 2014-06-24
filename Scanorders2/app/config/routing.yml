@@ -12,11 +12,6 @@ acme_demo:
     type:     annotation
     prefix:   /demo
 
-#main_common_home:
-#    resource: "@OlegOrderformBundle/Controller/ScanOrder"
-#    type:     annotation
-#    prefix:   /
-
 
 #login:
 #    pattern:   login

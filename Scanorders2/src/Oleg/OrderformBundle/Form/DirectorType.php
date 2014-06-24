@@ -48,7 +48,7 @@ class DirectorType extends AbstractType
                 ->where('u.locked=:locked AND u.roles LIKE :role')
                 ->setParameters( array(
                     'locked' => '0',
-                    'role' => '%"' . 'ROLE_COURSE_DIRECTOR' . '"%',
+                    'role' => '%"' . 'ROLE_SCANORDER_COURSE_DIRECTOR' . '"%',
                 ));
         },
     ));

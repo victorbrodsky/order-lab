@@ -38,7 +38,7 @@ class SecurityUtil {
             return true;
         }
 
-//        if( $this->session && false === $this->sc->isGranted('ROLE_PROCESSOR') ) {
+//        if( $this->session && false === $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
 //            $this->session->getFlashBag()->add(
 //                'notice',
 //                'You do not have permission to the previously requested page'
@@ -54,7 +54,7 @@ class SecurityUtil {
 
         $allow = false;
 
-        if( $this->sc->isGranted('ROLE_PROCESSOR') || $this->sc->isGranted('ROLE_DIVISION_CHIEF') ) {
+        if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
 
             return true;
 
@@ -65,7 +65,7 @@ class SecurityUtil {
         $entity = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->find($oid);
 
         //check if this order has service of this user
-        if( $this->sc->isGranted('ROLE_SERVICE_CHIEF') ) {
+        if( $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
 
             $services = array();
             $userServices = $user->getPathologyServices();
@@ -73,7 +73,7 @@ class SecurityUtil {
 
             if( $orderpathservice ) {
 
-                if( $this->sc->isGranted('ROLE_SERVICE_CHIEF') ) {
+                if( $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                     $chiefServices = $user->getChiefservices();
                     if( $userServices && count($userServices)>0 ) {
                         $services = array_merge($userServices, $chiefServices);
@@ -90,7 +90,7 @@ class SecurityUtil {
 
             }//if $orderpathservice
 
-        }//if ROLE_SERVICE_CHIEF
+        }//if ROLE_SCANORDER_SERVICE_CHIEF
 
         if( $entity ) {
 

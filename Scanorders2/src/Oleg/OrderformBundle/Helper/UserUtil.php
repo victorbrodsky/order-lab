@@ -42,7 +42,7 @@ class UserUtil {
         $user->setUsernameCanonical('system');
         $user->setPassword("");
         $user->setCreatedby('system');
-        $user->addRole('ROLE_PROCESSOR');
+        $user->addRole('ROLE_SCANORDER_PROCESSOR');
         $user->getPreferences()->setTimezone($default_time_zone);
         $user->setEnabled(true);
         $user->setLocked(true); //system is locked, so no one can logged in with this account
@@ -103,11 +103,9 @@ class UserUtil {
             $user->getPreferences()->setTimezone($default_time_zone);
 
             //add Roles
-            //"ROLE_USER" => "Submitter" is added by default
-            //$user->addRole('ROLE_ORDERING_PROVIDER');
-            $user->addRole('ROLE_SUBMITTER');
+            $user->addRole('ROLE_SCANORDER_SUBMITTER');
 
-            //************** get Aperio group roles and ROLE_ORDERING_PROVIDER for this user **************//
+            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             $aperioUtil = new AperioUtil();
 
             $userid = $aperioUtil->getUserIdByUserName($username);
@@ -126,7 +124,7 @@ class UserUtil {
 
 
             if( $username == "oli2002" || $username == "vib9020" ) {
-                $user->addRole('ROLE_ADMIN');
+                $user->addRole('ROLE_SCANORDER_ADMIN');
             }
 
             foreach( $pathlogyServices as $pathlogyService ) {
@@ -192,22 +190,22 @@ class UserUtil {
         return $choicesServ;
     }
 
-    //user has permission to view other's valid field if he/she is submitter or pathology member and not external submitter and not ROLE_PROCESSOR => S+PRE+PFE+PFA * !ES * !P == !S*!PRE*!PFE*!PFA + ES
+    //user has permission to view other's valid field if he/she is submitter or pathology member and not external submitter and not ROLE_SCANORDER_PROCESSOR => S+PRE+PFE+PFA * !ES * !P == !S*!PRE*!PFE*!PFA + ES
     public function hasPermission( $security_content ) {
 
-        if( true === $security_content->isGranted('ROLE_PROCESSOR') ) {
+        if( true === $security_content->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return true;
         }
 
-        if( true === $security_content->isGranted('ROLE_EXTERNAL_SUBMITTER') ) {
+        if( true === $security_content->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ) {
             return false;
         }
 
         if(
-            true === $security_content->isGranted('ROLE_SUBMITTER') ||
-            true === $security_content->isGranted('ROLE_PATHOLOGY_RESIDENT') ||
-            true === $security_content->isGranted('ROLE_PATHOLOGY_FELLOW') ||
-            true === $security_content->isGranted('ROLE_PATHOLOGY_FACULTY')
+            true === $security_content->isGranted('ROLE_SCANORDER_SUBMITTER') ||
+            true === $security_content->isGranted('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
+            true === $security_content->isGranted('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
+            true === $security_content->isGranted('ROLE_SCANORDER_PATHOLOGY_FACULTY')
         ) {
             return true;
         } else {

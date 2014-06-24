@@ -22,10 +22,22 @@ class PatientName extends PatientArrayFieldAbstract
     protected $patient;
 
     /**
+     * Last Name
      * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
 
+    /**
+     * First Name
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $firstName;
+
+    /**
+     * Middle Name
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $middleName;
 
     /**
      * Link to the object, the source of field data
@@ -49,6 +61,37 @@ class PatientName extends PatientArrayFieldAbstract
         return $this->procedure;
     }
 
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $middleName
+     */
+    public function setMiddleName($middleName)
+    {
+        $this->middleName = $middleName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMiddleName()
+    {
+        return $this->middleName;
+    }
 
 
 }

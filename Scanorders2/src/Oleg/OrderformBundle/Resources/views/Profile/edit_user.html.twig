@@ -25,7 +25,7 @@
     {{ formmacros.field(form.pathologyServices) }}
     {#{{ formmacros.field(form.defaultPathService) }}#}
 
-    {% if cicle == "show_user" or is_granted('ROLE_ADMIN') %}
+    {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
         {{ formmacros.field(form.roles) }}
     {% endif %}
 
@@ -39,7 +39,7 @@
     {{ formmacros.field(form.fax) }}
     {{ formmacros.field(form.office) }}
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         {% if app.security.getToken().getUser().getId() != entity.id %}
 
             {#{{ formmacros.field(form.locked) }}#}
@@ -91,7 +91,7 @@
         <p><a class="btn btn-success" href="{{ path('user_edit',{'id':entity.id}) }}">Edit</a></p>
     {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         <br>
         <p>
             <a href="{{ path('listusers') }}">View the list of all users</a>

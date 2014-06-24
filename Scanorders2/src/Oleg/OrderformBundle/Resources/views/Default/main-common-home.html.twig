@@ -1,23 +1,56 @@
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+<!DOCTYPE html>
 
-{% block title %}
-    ORDER
-{% endblock %}
+<html>
 
-{% block contentleft %}
+<head>
 
-    O R D E R
+    {% stylesheets
+    'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
+    'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
 
-    <br><br>
+    <title>O R D E R</title>
 
-    Welcome to the O R D E R platform!
+    <meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-    <br><br>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
-    The following sites are available:
+</head>
 
-    <br><br>
 
-    <a href="{{ path('scan-order-home') }}">Scan Order - here you can place an order to scan glass slides</a>
+<body>
 
-{% endblock %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+
+<div class="container">
+
+    <div class="text-center">
+
+        <br><br>
+
+        O R D E R
+
+        <br><br>
+
+        Welcome to the O R D E R platform!
+
+        <br><br>
+
+        The following sites are available:
+
+        <br><br>
+
+        <a href="{{ path('scan-order-home') }}">Scan Order - here you can place an order to scan glass slides</a>
+
+        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+
+    </div> <!-- /text-center -->
+
+</div> <!-- /container -->
+
+</body>
+
+</html>

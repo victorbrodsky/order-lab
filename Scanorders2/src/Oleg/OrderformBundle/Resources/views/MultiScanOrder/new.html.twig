@@ -53,7 +53,7 @@
         {% if (type == 'edit' or type == 'show') and (not Superseded and not Canceled ) %}
 
             {###############  USER ACTIONS #################}
-            {% if not Canceled and not Filled or is_granted('ROLE_ADMIN') %}
+            {% if not Canceled and not Filled or is_granted('ROLE_SCANORDER_ADMIN') %}
                 <a class="btn btn-danger" data-confirm="Are you sure you want to cancel order {{ form.vars.value.oid }}?" data-ok="Cancel the order" data-cancel="Do not cancel"
                    href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
             {% endif %}

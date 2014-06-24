@@ -17,7 +17,7 @@
                 {#<form id="addcomment" onsubmit="submitNewComment( {{ orderid }} )">#}
                 <form id="addcomment_form" >
 
-                    {% if is_granted('ROLE_PROCESSOR') %}
+                    {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
 
                         <select id="modal-processor-comment" class="combobox">
                             <option></option>

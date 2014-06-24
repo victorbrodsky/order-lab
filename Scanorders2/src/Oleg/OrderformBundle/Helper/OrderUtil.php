@@ -68,10 +68,10 @@ class OrderUtil {
 
             $fieldStatusStr = "deleted-by-canceled-order";
 
-            if( $entity->getProvider() == $user || $user->hasRole("ROLE_ORDERING_PROVIDER") || $user->hasRole("ROLE_EXTERNAL_ORDERING_PROVIDER") ) {
+            if( $entity->getProvider() == $user || $user->hasRole("ROLE_SCANORDER_ORDERING_PROVIDER") || $user->hasRole("ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             } else
-            if( $user->hasRole("ROLE_ADMIN") || $user->hasRole("ROLE_PROCESSOR") ) {
+            if( $user->hasRole("ROLE_SCANORDER_ADMIN") || $user->hasRole("ROLE_SCANORDER_PROCESSOR") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
             } else {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
@@ -406,10 +406,10 @@ class OrderUtil {
             return "";
         }
 
-        $role = "ROLE_PROCESSOR";
-        $role2 = "ROLE_ADMIN";
+        $role = "ROLE_SCANORDER_PROCESSOR";
+        $role2 = "ROLE_SCANORDER_ADMIN";
 
-//        if( $security_context->isGranted('ROLE_PROCESSOR') ) {
+//        if( $security_context->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $commentFlag && $commentFlag == 'admin' ) {
             //echo "comments to admin only!, userid=".$user->getId()." =>";
             //processor can see all histories created by user without processor role, but not for orders belonging to this processor

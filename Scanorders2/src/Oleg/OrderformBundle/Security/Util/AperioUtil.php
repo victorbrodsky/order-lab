@@ -52,20 +52,20 @@ class AperioUtil {
 
                 //set Roles: aperio users can submit order by default.
                 if( $this->test ) {
-                    $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
+                    $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
                 } else {
-                    $user->addRole('ROLE_SUBMITTER');           //Submitter
+                    $user->addRole('ROLE_SCANORDER_SUBMITTER');           //Submitter
                 }
 
                 //TDODD: Remove: for testing at home;
                 if( !$this->ldap ) {
                     echo "Aperio Auth: Remove it !!!";
                     $user->setUsername("testuser4");
-                    $user->addRole('ROLE_ADMIN');
+                    $user->addRole('ROLE_SCANORDER_ADMIN');
                 }
 
                 if( $token->getUsername() == "oli2002" || $token->getUsername() == "vib9020" ) {
-                    $user->addRole('ROLE_ADMIN');
+                    $user->addRole('ROLE_SCANORDER_ADMIN');
                 }
 
                 $user->setPassword("");
@@ -197,32 +197,32 @@ class AperioUtil {
 
             //echo "Role: Id = ".$role['Id'].", Description=".$role['Description'].", Name=".$role['Name']."<br>";
             if( $role['Name'] == "Faculty" ) {
-                $addedFaculty = !$user->hasRole("ROLE_PATHOLOGY_FACULTY");
-                $user->addRole("ROLE_PATHOLOGY_FACULTY");
+                $addedFaculty = !$user->hasRole("ROLE_SCANORDER_PATHOLOGY_FACULTY");
+                $user->addRole("ROLE_SCANORDER_PATHOLOGY_FACULTY");
                 $addOrderingProviderRole = true;
             }
             if( $role['Name'] == "Fellows" ) {
-                $addedFellow = !$user->hasRole("ROLE_PATHOLOGY_FELLOW");
-                $user->addRole("ROLE_PATHOLOGY_FELLOW");
+                $addedFellow = !$user->hasRole("ROLE_SCANORDER_PATHOLOGY_FELLOW");
+                $user->addRole("ROLE_SCANORDER_PATHOLOGY_FELLOW");
                 $addOrderingProviderRole = true;
             }
             if( $role['Name'] == "Residents" ) {
-                $addedResident = !$user->hasRole("ROLE_PATHOLOGY_RESIDENT");
-                $user->addRole("ROLE_PATHOLOGY_RESIDENT");
+                $addedResident = !$user->hasRole("ROLE_SCANORDER_PATHOLOGY_RESIDENT");
+                $user->addRole("ROLE_SCANORDER_PATHOLOGY_RESIDENT");
                 $addOrderingProviderRole = true;
             }
 
         } //foreach
 
         if( $addOrderingProviderRole ) {
-            $addedOrdering = !$user->hasRole("ROLE_ORDERING_PROVIDER");
-            $user->addRole('ROLE_ORDERING_PROVIDER');   //Ordering Provider
+            $addedOrdering = !$user->hasRole("ROLE_SCANORDER_ORDERING_PROVIDER");
+            $user->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');   //Ordering Provider
 
-            $addedDirector = !$user->hasRole("ROLE_COURSE_DIRECTOR");
-            $user->addRole('ROLE_COURSE_DIRECTOR');
+            $addedDirector = !$user->hasRole("ROLE_SCANORDER_COURSE_DIRECTOR");
+            $user->addRole('ROLE_SCANORDER_COURSE_DIRECTOR');
 
-            $addedPrincipal = !$user->hasRole("ROLE_PRINCIPAL_INVESTIGATOR");
-            $user->addRole('ROLE_PRINCIPAL_INVESTIGATOR');
+            $addedPrincipal = !$user->hasRole("ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR");
+            $user->addRole('ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR');
         }
 
         if( $addedFaculty )

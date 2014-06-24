@@ -28,7 +28,7 @@
     <br><br>
     <a class="btn btn-success" href="{{ path('user_edit',{'id':user.id}) }}">Edit</a>
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         <br><br>
         <p>
             <a href="{{ path('listusers') }}">All Users</a>

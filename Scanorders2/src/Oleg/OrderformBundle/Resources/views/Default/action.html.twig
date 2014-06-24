@@ -47,7 +47,7 @@
                 </li>                  
             {% endif %}
 
-            {#or is_granted('ROLE_ADMIN')#}
+            {#or is_granted('ROLE_SCANORDER_ADMIN')#}
             {% if not Canceled and not Superseded and not Submitted and not Amended and not Filled and not OnHold %}
                 <li><a data-confirm="Are you sure you want to change status to Submit?"
                        href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'submit' }) }}">Submit</a>
@@ -73,7 +73,7 @@
             </li>
 
             {###############  ADMIN ACTIONS #################}
-            {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_PROCESSOR') ) and not Superseded and not Canceled %}
+            {% if ( is_granted('ROLE_SCANORDER_ADMIN') or is_granted('ROLE_SCANORDER_PROCESSOR') ) and not Superseded and not Canceled %}
 
                 <li class="divider"></li>
                 

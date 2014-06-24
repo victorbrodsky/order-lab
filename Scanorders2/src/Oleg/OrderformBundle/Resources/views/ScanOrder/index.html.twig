@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    {% if is_granted('ROLE_PROCESSOR') %}
+    {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
 
         <p>
         {% if accountreqs is defined and accountreqs | length > 0 %}

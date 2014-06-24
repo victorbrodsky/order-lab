@@ -62,7 +62,7 @@ class SlideReturnRequestType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->where('u.roles LIKE :roles OR u=:user')
-                        ->setParameters(array('roles' => '%' . 'ROLE_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                        ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
                 },
         ));
         

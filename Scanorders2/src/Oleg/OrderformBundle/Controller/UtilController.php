@@ -35,8 +35,8 @@ class UtilController extends Controller {
 
         //echo "opt=".$opt."<br>";
 
-//        if( $this->get('security.context')->isGranted('ROLE_DIVISION_CHIEF') ||
-//            $this->get('security.context')->isGranted('ROLE_SERVICE_CHIEF')
+//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
+//            $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
 //        ) {
 //            $addwhere = " OR list.type = 'user-added' ";
 //        }
@@ -916,12 +916,12 @@ class UtilController extends Controller {
         $routeName = $request->get('_route');
 
         if( $routeName == "get-optionalusereducational" ) {
-            $role = "ROLE_COURSE_DIRECTOR";
+            $role = "ROLE_SCANORDER_COURSE_DIRECTOR";
             $className = 'DirectorList';
             $pname = 'courses';
         }
         if( $routeName == "get-optionaluserresearch" ) {
-            $role = "ROLE_PRINCIPAL_INVESTIGATOR";
+            $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
             $className = 'PIList';
             $pname = 'projectTitles';
         }
@@ -953,7 +953,7 @@ class UtilController extends Controller {
 
         //var_dump($output);
 
-        //2) add users with ROLE_COURSE_DIRECTOR and ROLE_PRINCIPAL_INVESTIGATOR
+        //2) add users with ROLE_SCANORDER_COURSE_DIRECTOR and ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:User', 'list')
             //->select("list.id as id, list.username as text")
@@ -1061,7 +1061,7 @@ class UtilController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        if( $this->get('security.context')->isGranted('ROLE_PROCESSOR') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);
         } else {
             $query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);

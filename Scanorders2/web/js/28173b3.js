@@ -23,7 +23,7 @@ function getCommonBaseUrl(link) {
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
         urlBase = "http://" + urlBase + "/" + prefix + "/" + link;
     }
-    console.log("urlBase="+urlBase);
+    //console.log("urlBase="+urlBase);
     return urlBase;
 }
 

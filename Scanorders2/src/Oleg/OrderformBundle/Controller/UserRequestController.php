@@ -29,7 +29,7 @@ class UserRequestController extends Controller
      */
     public function indexAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         
@@ -123,7 +123,7 @@ class UserRequestController extends Controller
      */
     public function showAction($id)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -152,7 +152,7 @@ class UserRequestController extends Controller
      */
     public function editAction($id)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -184,7 +184,7 @@ class UserRequestController extends Controller
     public function updateAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -225,7 +225,7 @@ class UserRequestController extends Controller
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -271,7 +271,7 @@ class UserRequestController extends Controller
     public function statusAction($id, $status)
     {
         
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         
@@ -306,8 +306,8 @@ class UserRequestController extends Controller
     public function accessRequestCreateAction($id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_BANNED')
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_BANNED')
         ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
@@ -362,7 +362,7 @@ class UserRequestController extends Controller
     public function accessRequestAction($id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -421,7 +421,7 @@ class UserRequestController extends Controller
      */
     public function accessRequestIndexAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -431,7 +431,7 @@ class UserRequestController extends Controller
 
         $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
         $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_ADMIN') ) {
+        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
             }
@@ -470,7 +470,7 @@ class UserRequestController extends Controller
     public function accessRequestChangeAction($id, $status, $role)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -485,33 +485,33 @@ class UserRequestController extends Controller
         $entity->setAppliedforaccess($status);
 
         if( $status == "approved" && $role == "external" ) {
-            //$entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            //$entity->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
             $entity->setRoles(array());
-            $entity->addRole('ROLE_EXTERNAL_SUBMITTER');
-            $entity->addRole('ROLE_EXTERNAL_ORDERING_PROVIDER');
+            $entity->addRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER');
+            $entity->addRole('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER');
             //$entity->setLocked(false);
         }
 
         if( $status == "approved" && $role == "submitter" ) {
-            //$entity->removeRole('ROLE_UNAPPROVED_SUBMITTER');
+            //$entity->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
             $entity->setRoles(array());
-            $entity->addRole('ROLE_SUBMITTER');
-            $entity->addRole('ROLE_ORDERING_PROVIDER');
+            $entity->addRole('ROLE_SCANORDER_SUBMITTER');
+            $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
             //$entity->setLocked(false);
         }
 
         if( $status == "declined" ) {
-            //$roles[] = "ROLE_BANNED";
+            //$roles[] = "ROLE_SCANORDER_BANNED";
             //$entity->setRoles($roles);
             $entity->setRoles(array());
-            $entity->addRole('ROLE_BANNED');
+            $entity->addRole('ROLE_SCANORDER_BANNED');
         }
 
         if( $status == "active" ) {
-            //$roles[] = "ROLE_UNAPPROVED_SUBMITTER";
+            //$roles[] = "ROLE_SCANORDER_UNAPPROVED_SUBMITTER";
             //$entity->setRoles($roles);
             $entity->setRoles(array());
-            $entity->addRole('ROLE_UNAPPROVED_SUBMITTER');
+            $entity->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
         $em->persist($entity);

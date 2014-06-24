@@ -48,7 +48,7 @@ class PrincipalType extends AbstractType
                 ->where('u.locked=:locked AND u.roles LIKE :role')
                 ->setParameters( array(
                     'locked' => '0',
-                    'role' => '%"' . 'ROLE_PRINCIPAL_INVESTIGATOR' . '"%',
+                    'role' => '%"' . 'ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR' . '"%',
                 ));
         },
     ));
