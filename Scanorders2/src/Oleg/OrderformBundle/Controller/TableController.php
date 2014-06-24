@@ -348,11 +348,15 @@ class TableController extends Controller {
             $procedure->addEncounterDate($encounterDateObj);
         }
 
-        //Procedure Name
-        $patname = $this->getValueByHeaderName('Patient Name',$row,$columnData);
-        if( $force || $patname && $patname != '' ) {
+        //Procedure Last Name
+        $patname = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
+        $patfirstname = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
+        $patmiddlename = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
+        if( $force || ($patname && $patname != '') || ($patfirstname && $patfirstname != '') || ($patmiddlename && $patmiddlename != '') ) {
             $patnameObj = new ProcedurePatname($status, $provider, $source);
             $patnameObj->setField($patname);
+            $patnameObj->setFirstName($patfirstname);
+            $patnameObj->setMiddleName($patmiddlename);
             $procedure->addPatname($patnameObj);
         }
 

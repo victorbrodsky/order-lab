@@ -205,6 +205,7 @@ class SlideReturnRequest extends OrderAbstract {
 
             $patient =  $slide->obtainPatient()->filterArrayFields($user,true);
             $patientkey =  $patient->obtainValidKeyfield();
+            $patientFullName = $patient->getFullPatientName();    //'<b>'.$patient->getName()->first()->getField().'</b> <i>'.$patient->getName()->first()->getMiddleName().'</i> '.$patient->getName()->first()->getFirstName();
 
             $accession =  $slide->obtainAccession()->filterArrayFields($user,true);
             $accessionkey =  $accession->obtainValidKeyfield();
@@ -226,7 +227,7 @@ class SlideReturnRequest extends OrderAbstract {
             $stainDesc = implode(",", $stainArr);
 
             $str = $accessionkey->getKeytype().": <b>".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc." ".$stainDesc."</b>".
-                    " (".$patientkey->getKeytype().": ".$patientkey->getField().", ".$patient->getName()->first().")";
+                    " (".$patientkey->getKeytype().": ".$patientkey->getField().", ".$patientFullName.")";
             $description[] = $str;
 
         }

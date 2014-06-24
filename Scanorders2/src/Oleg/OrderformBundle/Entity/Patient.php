@@ -516,6 +516,14 @@ class Patient extends ObjectAbstract
         $this->setProcedure($children);
     }
 
+    public function getFullPatientName() {
+        $patientFullName = "";
+        if( $this->getName()->first() ) {
+            $patientFullName = '<b>'.$this->getName()->first()->getField().'</b> <i>'.$this->getName()->first()->getMiddleName().'</i> '.$this->getName()->first()->getFirstName();
+        }
+        return $patientFullName;
+    }
+
     //if simple field already exists. Compare by field name
     public function hasSimpleField( $field, $getMethod ) {
 

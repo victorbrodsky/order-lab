@@ -728,6 +728,8 @@ class ScanOrderController extends Controller {
                 $dql->leftJoin("orderinfo.patient", "patient");
                 $dql->leftJoin("patient.name", "name");
                 $criteriastr .= "name.field".$searchStr;
+                $criteriastr .= "OR name.firstName".$searchStr;
+                $criteriastr .= "OR name.middleName".$searchStr;
                 $searchObjectName = "Patient Name";
                 break;
             case 'part.disident':

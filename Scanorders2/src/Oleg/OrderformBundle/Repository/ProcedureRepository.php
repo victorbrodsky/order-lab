@@ -128,7 +128,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             //echo "pat name count=".count($patient->getName())."<br>";
             //echo "procedure patname=".$procedure->getPatname()->first()."<br>";
             $patientname = new PatientName($status,$user,$source);
-            $patientname->setField($procedure->getPatname()->first());
+            $patientname->setField($procedure->getPatname()->first()->getField());
+            $patientname->setFirstName($procedure->getPatname()->first()->getFirstName());
+            $patientname->setMiddleName($procedure->getPatname()->first()->getMiddleName());
             $patientname->setProcedure($procedure);
             $patient->addName($patientname);
         }

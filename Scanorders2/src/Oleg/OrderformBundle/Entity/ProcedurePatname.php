@@ -19,8 +19,57 @@ class ProcedurePatname extends ProcedureArrayFieldAbstract
     protected $procedure;
 
     /**
+     * Last Name
      * @ORM\Column(type="string", nullable=true)
      */
     protected $field;
+
+    /**
+     * First Name
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $firstName;
+
+    /**
+     * Middle Name
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $middleName;
+
+
+
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $middleName
+     */
+    public function setMiddleName($middleName)
+    {
+        $this->middleName = $middleName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMiddleName()
+    {
+        return $this->middleName;
+    }
+
 
 }

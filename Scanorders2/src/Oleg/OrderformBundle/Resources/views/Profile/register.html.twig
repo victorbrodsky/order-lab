@@ -10,7 +10,7 @@
         <input type="hidden" id="user_id" value="" />
         <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
         <input type="hidden" id="formcicle" value="edit_user" />
-        <input type="hidden" id="baseurl" value="{{app.request.uri}}" />
+        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
         {#{{ form_widget(form) }}#}
         {{ form_errors(form) }}

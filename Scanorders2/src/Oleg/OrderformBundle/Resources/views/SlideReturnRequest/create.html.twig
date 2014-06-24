@@ -88,6 +88,9 @@
                 {% set blockkey =  block.obtainValidKeyfield %}
             {% endif %}
 
+            {#{% set patientName = '<b>'~ patient.getName.first.field ~'</b> <i>'~ patient.getName.first.middleName ~'</i> '~ patient.getName.first.firstName %}#}
+            {% set patientFullName = patient.getFullPatientName %}
+
             <tr>
 
                 <td>
@@ -99,7 +102,7 @@
                 </td>
 
                 <td>
-                    {{ patient.getName.first }}
+                    {{ patientFullName|raw }}
                 </td>
 
                 <td>

@@ -13,7 +13,7 @@
     <input type="hidden" id="user_id" value="{{ user_id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
     <input type="hidden" id="formcicle" value="edit_user" />
-    <input type="hidden" id="baseurl" value="{{app.request.uri}}" />
+    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
     <h3 class="text-info">User Info</h3>
 

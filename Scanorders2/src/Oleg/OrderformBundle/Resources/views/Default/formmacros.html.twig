@@ -23,7 +23,9 @@
             {% if type is defined and type == "input" %}
                 <input class="form-control form-control-modif" type="text" value="{{ value }}" {{ disabled }}>
             {% else %}
-                {{ value }}
+                <div class="well well-sm" style="margin-bottom:0; min-height:35px">
+                    {{ value|raw }}
+                </div>
             {% endif %}
         </div>
     </div>
@@ -400,9 +402,13 @@
                 {% set btntype = 'none' %}
             {% endif %}
 
-            {#<p>#}
+            {% if classname == "procedurepatname" %}
+                {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+                {{ formmacros.inputField(field,cycle,"procedurepatfirstname","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+                {{ formmacros.inputField(field,cycle,"procedurepatmiddlename","","",nobtn,nolabel,classname,withspace,btntype,'norest') }}
+            {% else %}
                 {{ formmacros.inputField(field,cycle,fieldtype,"","",nobtn,nolabel,classname,withspace,btntype) }}
-            {#</p>#}
+            {% endif %}
 
         {% endif %}
         {% set count = count + 1 %}
@@ -412,7 +418,7 @@
 {% endmacro %}
 
 {#input array field with separate label#}
-{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype) %}
+{% macro inputField(field,cycle,fieldtype,prototype,widget,nobtn,nolabel,classname,withspace,btntype,norest) %}
     {% import _self as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -438,7 +444,11 @@
                 {% if nolabel is defined and nolabel != "" %}
                     {#no label#}
                 {% else %}
-                    {% if fieldtype == "paper" and cycle == "show" %}
+                    {% if fieldtype == "procedurepatfirstname" %}
+                        {{form_label(fieldThis.firstName)}}<!--
+                    {% elseif fieldtype == "procedurepatmiddlename" %}
+                        {{form_label(fieldThis.middleName)}}<!--
+                    {% elseif fieldtype == "paper" and cycle == "show" %}
                         {{form_label(fieldThis.name)}}<!--
                     {% elseif fieldtype == "blockspecialStains" %}
                         {{form_label(fieldThis.staintype)}}<br>
@@ -496,11 +506,17 @@
                     {{ formmacros.fieldCollectionInput(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
                 {% elseif fieldtype == "blockspecialStains" %}
                     {{ formmacros.fieldCollectionInputTextarea(fieldThis,cycle,prototype,widget,nobtn,btntype) }}
+                {% elseif fieldtype == "procedurepatfirstname" %}
+                    {{ form_widget(fieldThis.firstName) }}
+                {% elseif fieldtype == "procedurepatmiddlename" %}
+                    {{ form_widget(fieldThis.middleName) }}
                 {% else %}
                     {{ form_widget(fieldThis.field) }}
                 {% endif %}
                 {% if cycle != 'show' %}
-                    {{ form_rest(fieldThis) }}
+                    {% if norest is not defined or norest == "" %}
+                        {{ form_rest(fieldThis) }}
+                    {% endif %}
                 {% endif %}
             </div>
 
@@ -519,6 +535,15 @@
 {% macro fieldSpecialStainsWidget(field) %}
     {{ form_widget(field.vars.prototype.staintype) }}
     {{ form_widget(field.vars.prototype.field) }}
+{% endmacro %}
+
+{% macro fieldProcedurePatnameWidget(field) %}
+    {% import _self as formmacros %}
+                          {# field, cycle, fieldtype,   prototype,   widget, nobtn, nolabel, classname, withspace, btntype, norest       #}
+    {{ formmacros.inputField(field, "new", "",          "prototype", "",     "",    "",      "",        "",        "",      "norest") }}
+    {#{{ formmacros.field(field.vars.prototype.procedurepatnameothers) }}#}
+    {{ formmacros.field(field.vars.prototype.firstName) }}
+    {{ formmacros.field(field.vars.prototype.middleName) }}
 {% endmacro %}
 
 {############# custom array fields #############}
@@ -717,26 +742,31 @@
             <p><div class="patientmrn">{{ mrnHtml }}</div></p>
         {% endif %}
 
-        {% if nameHtml is not defined or nameHtml == "" %}
-            {{ formmacros.inputArrayField(patient.name,cycle,"patientname","","","","",status) }}
+        {#{% if nameHtml is not defined or nameHtml == "" %}#}
+            {#{{ formmacros.inputArrayField(patient.name,cycle,"patientname","","","","",status) }}#}
+        {#{% else  %}#}
+            {#<p><div class="patientname">{{ nameHtml }}</div></p>#}
+        {#{% endif %}#}
+
+        <div class="patientname">
             {#{% for name in patient.name %}#}
-                {#&#123;&#35;id:{{ name.vars.value.id }} | name:{{ name.vars.value }} | status:{{ name.vars.value.status }}&#35;&#125;#}
+                {#&#123;&#35;name.vars.value.status:{{ name.vars.value.status }}&#35;&#125;#}
                 {#{% if name.vars.value.status == 'valid' %}#}
-                    {#<p>{{ formmacros.inputField(name,cycle,"patientname","","","","","","","") }}</p>#}
+                    {#{% set patientName = '<b>'~ name.vars.value.field ~'</b> <i>'~ name.vars.value.middleName ~'</i> '~ name.vars.value.firstName %}#}
+                    {#{% set patientFullName = patient.getFullPatientName %}#}
+                    {#{{ formmacros.simplefield( "Name:", patientFullName, "", "disabled" ) }}#}
                 {#{% endif %}#}
             {#{% endfor %}#}
-        {% else  %}
-            <p><div class="patientname">{{ nameHtml }}</div></p>
-        {% endif %}
-
+            {% if patient.name|length > 0 %}
+                {% set patientFullName = patient.vars.value.getFullPatientName %}
+            {% else %}
+                {% set patientFullName = "" %}
+            {% endif %}
+            {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled" ) }}
+        </div>
 
         {% if sexHtml is not defined or sexHtml == "" %}
             {{ formmacros.inputArrayField(patient.sex,cycle,"patientsex","","","","",status) }}
-            {#{% for sex in patient.sex %}#}
-                {#{% if sex.vars.value.status == 'valid' %}#}
-                    {#<p>{{ formmacros.inputField(sex,cycle,"patientsex","","","","","","","") }}</p>#}
-                {#{% endif %}#}
-            {#{% endfor %}#}
         {% else  %}
             <p><div class="patientsex">{{ sexHtml }}</div></p>
         {% endif %}
@@ -771,7 +801,7 @@
 
 
 
-{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patnameHtml,patageHtml,patsexHtml,patpathistoryHtml ) %}
+{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patnameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}

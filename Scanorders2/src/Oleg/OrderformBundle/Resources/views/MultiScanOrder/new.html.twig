@@ -146,7 +146,10 @@
         {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
         {% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounter,type,"","prototype","","","nolabel") %}
         {% set encounterdateHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounterDate,type,"date","prototype") %}
-        {% set patnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patname,type,"","prototype") %}
+
+        {#{% set patnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patname,type,"","prototype") %}#}
+        {% set patnameHtml = formmacros.fieldProcedurePatnameWidget(form.patient.vars.prototype.procedure.vars.prototype.patname) %}
+
         {% set patageHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patage,type,"","prototype") %}
         {% set patsexHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patsex,type,"","prototype") %}
         {% set patpathistoryHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.pathistory,type,"","prototype") %}
