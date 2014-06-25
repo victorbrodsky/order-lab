@@ -269,6 +269,8 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
+    attachResearchEducationalTooltip();
+
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
         $.fn.bootstrapDP = datepicker;

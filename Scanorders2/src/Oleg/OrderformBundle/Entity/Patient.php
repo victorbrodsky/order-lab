@@ -28,6 +28,17 @@ class Patient extends ObjectAbstract
      */
     protected $name;
 
+    //TODO:
+//    /**
+//     * @ORM\OneToMany(targetEntity="PatientFirstName", mappedBy="patient", cascade={"persist"})
+//     */
+//    protected $firstname;
+//
+//    /**
+//     * @ORM\OneToMany(targetEntity="PatientMiddleName", mappedBy="patient", cascade={"persist"})
+//     */
+//    protected $middlename;
+
     /**
      * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
      */
@@ -519,7 +530,27 @@ class Patient extends ObjectAbstract
     public function getFullPatientName() {
         $patientFullName = "";
         if( $this->getName()->first() ) {
-            $patientFullName = '<b>'.$this->getName()->first()->getField().'</b> <i>'.$this->getName()->first()->getMiddleName().'</i> '.$this->getName()->first()->getFirstName();
+            //$patientFullName = '<b>'.$this->getName()->first()->getField().'</b> <i>'.$this->getName()->first()->getMiddleName().'</i> '.$this->getName()->first()->getFirstName();
+            //$patientFullName = '<b>'.$this->getName()->first()->getField().'</b>, '.$this->getName()->first()->getFirstName().' <i>'.$this->getName()->first()->getMiddleName().'</i>';
+
+            if( $this->getName()->first()->getField() ) {
+                $patientFullName .= '<b>'.$this->getName()->first()->getField().'</b>';
+            }
+
+            if( $this->getName()->first()->getFirstName() ) {
+                if( $patientFullName != '' ) {
+                    $patientFullName .= ', ';
+                }
+                $patientFullName .= $this->getName()->first()->getFirstName();
+            }
+
+            if( $this->getName()->first()->getMiddleName() ) {
+                if( $patientFullName != '' ) {
+                    $patientFullName .= ' ';
+                }
+                $patientFullName .= '<i>'.$this->getName()->first()->getMiddleName().'</i>';
+            }
+
         }
         return $patientFullName;
     }

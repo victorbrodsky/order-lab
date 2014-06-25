@@ -14711,6 +14711,8 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
+    attachResearchEducationalTooltip();
+
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
         $.fn.bootstrapDP = datepicker;
@@ -26467,12 +26469,15 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //don't process constatly locked fields: patient's name,sex,age
         if( elements.eq(i).hasClass('patientname-field') ) {
+            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
         if( elements.eq(i).hasClass('patientsex-field') ) {
+            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
         if( elements.eq(i).hasClass('patientage-field') ) {
+            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
 
@@ -29609,6 +29614,8 @@ $(document).ready(function() {
 
     initAllElements(); //init disable all fields
 
+    attachResearchEducationalTooltip();
+
 });
 
 
@@ -29881,7 +29888,154 @@ function capitaliseFirstLetter(string)
  * To change this template use File | Settings | File Templates.
  */
 
+function attachPatientNameSexAgeLockedTooltip( element ) {
 
+    var userPreferencesTooltip = $("#user-preferences-tooltip").val();
+    if( userPreferencesTooltip == 0 ) {
+        return false;
+    }
+
+    if( element.hasClass('patientsex-field') ) {
+        var title = "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the Accession section.";
+        //printF(element, title);
+
+        element.tooltip({
+            'title': title
+        });
+        highlightProcedureSexElement( element, '.proceduresex-field' );
+    }
+
+    if( element.hasClass('patientage-field') ) {
+        var title = "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section.";
+        //console.log(element.parent());
+
+        element.parent().tooltip({
+            'title': title
+        });
+        highlightProcedureAgeElement( element.parent(), '.procedureage-field' );
+    }
+
+    //patient's name
+    var patname = $('.patientname').find('.well');
+    patname.tooltip({
+        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's Name (at the time of encounter)\" in the Accession section."
+    });
+    highlightProcedureNameElement( patname, '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
+
+}
+
+function highlightProcedureAgeElement( element, parentTarget) {
+    element.on('show.bs.tooltip', function () {
+        $(parentTarget).css("background-color","#d9edf7");
+    });
+    element.on('hide.bs.tooltip', function () {
+        $(parentTarget).css("background-color","");
+    });
+}
+
+function highlightProcedureNameElement( element, parentTarget1, parentTarget2, parentTarget3 ) {
+    element.on('show.bs.tooltip', function () {
+        $(parentTarget1).css("background-color","#d9edf7");
+        $(parentTarget2).css("background-color","#d9edf7");
+        $(parentTarget3).css("background-color","#d9edf7");
+    });
+    element.on('hide.bs.tooltip', function () {
+        $(parentTarget1).css("background-color","");
+        $(parentTarget2).css("background-color","");
+        $(parentTarget3).css("background-color","");
+    });
+}
+
+function highlightProcedureSexElement( element, parentTarget ) {
+    element.on('show.bs.tooltip', function () {
+        var parent = $(parentTarget);
+        parent.addClass("alert-info");
+    });
+    element.on('hide.bs.tooltip', function () {
+        var parent = $(parentTarget);
+        parent.removeClass("alert-info");
+    });
+}
+
+////////////////// tooltip for research and educational //////////////////
+function attachResearchEducationalTooltip() {
+
+    var userPreferencesTooltip = $("#user-preferences-tooltip").val();
+    if( userPreferencesTooltip == 0 ) {
+        return false;
+    }
+
+    //research
+    attachResEduOnMouseEvent(
+                                '.combobox-research-projectTitle',
+                                '.combobox-research-setTitle',
+                                '.ajax-combobox-optionaluser-research',
+                                "Please enter the Research Project Title to access this field"
+                            );
+
+    //educational
+    attachResEduOnMouseEvent(
+                                '.combobox-educational-courseTitle',
+                                '.combobox-educational-lessonTitle',
+                                '.ajax-combobox-optionaluser-educational',
+                                "Please enter the Course Title to access this field"
+    );
+    //attachResEduOnMouseEvent( '.ajax-combobox-optionaluser-educational', '.combobox-educational-courseTitle', "Please enter the Course Title to access this field" );
+
+}
+
+function attachResEduOnMouseEvent( parentTarget, elementTarget1, elementTarget2,  title ) {
+
+    setResEduTooltip( parentTarget, elementTarget1, title );
+    setResEduTooltip( parentTarget, elementTarget2, title );
+
+    $(parentTarget).on("change", function(e) {
+        console.log('on change');
+
+        if( $(elementTarget1).hasClass('select2-container-disabled') ) {
+            setResEduTooltip( parentTarget, elementTarget1, title );
+        } else {
+            $(elementTarget1).parent().tooltip('destroy');
+        }
+
+        if( $(elementTarget2).hasClass('select2-container-disabled') ) {
+            setResEduTooltip( parentTarget, elementTarget2, title );
+        } else {
+            $(elementTarget2).parent().tooltip('destroy');
+        }
+
+    });
+}
+
+function setResEduTooltip( parentTarget, elementTarget, title ) {
+    $(elementTarget).parent().tooltip({
+        'title': title
+    });
+    highlightResEduParentElement( elementTarget, parentTarget );
+}
+
+
+function highlightResEduParentElement( elementTarget, parentTarget ) {
+
+    $(elementTarget).parent().on('show.bs.tooltip', function () {
+        var parent = $(parentTarget).parent();
+        var inputEl = parent.find('.select2-chosen');
+        //inputEl.addClass("highlightSelect");
+        inputEl.addClass("alert-info");
+    });
+
+    $(elementTarget).parent().on('hide.bs.tooltip', function () {
+        var parent = $(parentTarget).parent();
+        var inputEl = parent.find('.select2-chosen');
+        //inputEl.removeClass("highlightSelect");
+        inputEl.removeClass("alert-info");
+    });
+
+}
+////////////////// EOF tooltip for research and educational //////////////////
+
+
+////////////////// tooltip for scan order form //////////////////
 function attachTooltip( element, flag, fieldParentName ) {
 
     var userPreferencesTooltip = $("#user-preferences-tooltip").val();
@@ -30026,7 +30180,7 @@ function setTypeTooltip( keytypeElement ) {
         });
 
     } else {
-
+        //printF(keytypeElement,"destroy tooltip:")
         keytypeElement.tooltip('destroy');
 
     }
@@ -30117,7 +30271,7 @@ function getObjectName( inname ) {
 
     return name;
 }
-
+////////////////// EOF tooltip for scan order form //////////////////
 
 /*
  * jQuery Idle Timeout 1.2

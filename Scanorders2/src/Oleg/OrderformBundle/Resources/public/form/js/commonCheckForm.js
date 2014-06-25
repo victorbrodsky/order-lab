@@ -1097,12 +1097,15 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //don't process constatly locked fields: patient's name,sex,age
         if( elements.eq(i).hasClass('patientname-field') ) {
+            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
         if( elements.eq(i).hasClass('patientsex-field') ) {
+            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
         if( elements.eq(i).hasClass('patientage-field') ) {
+            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
 

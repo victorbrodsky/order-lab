@@ -90,14 +90,32 @@ class ProcedureType extends AbstractType
 //            'prototype' => true,
 //            'prototype_name' => '__procedurepatname__',
 //        ));
-        $builder->add('patname', 'collection', array(
-            'type' => new ProcedurePatnameType($this->params, null),
+        $builder->add('patlastname', 'collection', array(
+            'type' => new ProcedurePatlastnameType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__procedurepatsex__',
+            'prototype_name' => '__procedurepatlastname__',
+        ));
+        $builder->add('patfirstname', 'collection', array(
+            'type' => new ProcedurePatfirstnameType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedurepatfirstname__',
+        ));
+        $builder->add('patmiddlename', 'collection', array(
+            'type' => new ProcedurePatmiddlenameType($this->params, null),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__procedurepatmiddlename__',
         ));
 
         $builder->add('patsex', 'collection', array(

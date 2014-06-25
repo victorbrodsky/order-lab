@@ -801,7 +801,7 @@
 
 
 
-{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patnameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
+{% macro accessionForm( procedure, accession, flag, uid, cycle, status, procedureHtml, encounterHtml, accessionHtml, accessiondateHtml, encounterdateHtml, patlastnameHtml,patfirstnameHtml,patmiddlenameHtml, patageHtml,patsexHtml,patpathistoryHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -854,10 +854,22 @@
         {% endif %}
 
         {#{{ formmacros.field(procedure.patname) }}#}
-        {% if patnameHtml is not defined or patnameHtml == "" %}
-            {{ formmacros.inputArrayField(procedure.patname,cycle,"procedurepatname","","","","",status) }}
+        {% if patlastnameHtml is not defined or patlastnameHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patlastname,cycle,"procedurepatlastname","","","","",status) }}
         {% else  %}
-            <p><div class="procedurepatname">{{ patnameHtml }}</div></p>
+            <p><div class="procedurepatlastname">{{ patlastnameHtml }}</div></p>
+        {% endif %}
+
+        {% if patfirstameHtml is not defined or patfirstnameHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patfirstname,cycle,"procedurepatfirstname","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatfirstname">{{ patfirstnameHtml }}</div></p>
+        {% endif %}
+
+        {% if patmiddlenameHtml is not defined or patmiddlenameHtml == "" %}
+            {{ formmacros.inputArrayField(procedure.patmiddlename,cycle,"procedurepatmiddlename","","","","",status) }}
+        {% else  %}
+            <p><div class="procedurepatmiddlename">{{ patmiddlenameHtml }}</div></p>
         {% endif %}
 
         {#{{ formmacros.field(procedure.patsex) }}#}

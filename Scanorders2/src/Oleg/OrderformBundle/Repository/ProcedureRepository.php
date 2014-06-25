@@ -121,16 +121,18 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $status = self::STATUS_VALID;
 
         //name
-        if( count($procedure->getPatname()) > 0 ) {
+        if( count($procedure->getPatlastname()) > 0 || count($procedure->getPatfirstname()) > 0 || count($procedure->getPatmiddlename()) > 0 ) {
             if( $this->validFieldIsSet( $patient->getName() ) ) {
                 $status = self::STATUS_INVALID;
             }
             //echo "pat name count=".count($patient->getName())."<br>";
             //echo "procedure patname=".$procedure->getPatname()->first()."<br>";
             $patientname = new PatientName($status,$user,$source);
-            $patientname->setField($procedure->getPatname()->first()->getField());
-            $patientname->setFirstName($procedure->getPatname()->first()->getFirstName());
-            $patientname->setMiddleName($procedure->getPatname()->first()->getMiddleName());
+
+            $patientname->setField($procedure->getPatlastname()->first()->getField());
+            $patientname->setFirstName($procedure->getPatfirstname()->first()->getField());
+            $patientname->setMiddleName($procedure->getPatmiddlename()->first()->getField());
+            
             $patientname->setProcedure($procedure);
             $patient->addName($patientname);
         }

@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProcedurePatnameType extends AbstractType
+class ProcedurePatmiddlenameType extends AbstractType
 {
 
     protected $params;
@@ -22,25 +22,13 @@ class ProcedurePatnameType extends AbstractType
     {
 
         $builder->add( 'field', 'text', array(
-            'label'=>"Patient's Last Name (at the time of encounter)",
-            'required' => false,
-            'attr' => array('class' => 'form-control form-control-modif')
-        ));
-
-        $builder->add( 'firstName', 'text', array(
-            'label'=>"Patient's First Name (at the time of encounter)",
-            'required' => false,
-            'attr' => array('class' => 'form-control form-control-modif')
-        ));
-
-        $builder->add( 'middleName', 'text', array(
             'label'=>"Patient's Middle Name (at the time of encounter)",
             'required' => false,
-            'attr' => array('class' => 'form-control form-control-modif')
+            'attr' => array('class' => 'form-control form-control-modif procedure-middleName')
         ));
 
-        $builder->add('procedurepatnameothers', new ArrayFieldType(), array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatname',
+        $builder->add('procedurepatmiddlenameothers', new ArrayFieldType(), array(
+            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatmiddlename',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -50,12 +38,12 @@ class ProcedurePatnameType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatname',
+            'data_class' => 'Oleg\OrderformBundle\Entity\ProcedurePatmiddlename',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_procedurepatname';
+        return 'oleg_orderformbundle_procedurepatmiddlename';
     }
 }

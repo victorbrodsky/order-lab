@@ -147,8 +147,10 @@
         {% set encounterHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounter,type,"","prototype","","","nolabel") %}
         {% set encounterdateHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.encounterDate,type,"date","prototype") %}
 
-        {#{% set patnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patname,type,"","prototype") %}#}
-        {% set patnameHtml = formmacros.fieldProcedurePatnameWidget(form.patient.vars.prototype.procedure.vars.prototype.patname) %}
+        {% set patlastnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patlastname,type,"","prototype") %}
+        {% set patfirstnameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patfirstname,type,"","prototype") %}
+        {% set patmiddlenameHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patmiddlename,type,"","prototype") %}
+        {#{% set patnameHtml = formmacros.fieldProcedurePatnameWidget(form.patient.vars.prototype.procedure.vars.prototype.patfirstname) %}#}
 
         {% set patageHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patage,type,"","prototype") %}
         {% set patsexHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.patsex,type,"","prototype") %}
@@ -202,7 +204,7 @@
          data-prototype-procedure="
          {{ formmacros.accessionForm(
             form.patient.vars.prototype.procedure.vars.prototype,form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype,"check",uid,type,form.vars.value.status,
-            procedureHtml,encounterHtml,accessionHtml,accessiondateHtml,encounterdateHtml,patnameHtml,patageHtml,patsexHtml,patpathistoryHtml
+            procedureHtml,encounterHtml,accessionHtml,accessiondateHtml,encounterdateHtml,patlastnameHtml,patfirstnameHtml,patmiddlenameHtml,patageHtml,patsexHtml,patpathistoryHtml
          )|e }}
          "
          data-prototype-accessionaccession= "{{ accessionHtml|e }}"
@@ -210,7 +212,7 @@
          data-prototype-procedurename= "{{ procedureHtml|e }}"
          data-prototype-procedureencounter= "{{ encounterHtml|e }}"
          data-prototype-procedureencounterdate= "{{ encounterdateHtml|e }}"
-         data-prototype-procedurepatname= "{{ patnameHtml|e }}"
+         data-prototype-procedurepatlastname= "{{ patlastnameHtml|e }}"
          data-prototype-procedurepatage= "{{ patageHtml|e }}"
          data-prototype-procedurepatsex= "{{ patsexHtml|e }}"
          data-prototype-procedurepatpathistory= "{{ patpathistoryHtml|e }}"
