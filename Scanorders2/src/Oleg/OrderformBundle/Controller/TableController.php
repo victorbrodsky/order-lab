@@ -23,7 +23,7 @@ use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientMrn;
-//use Oleg\OrderformBundle\Entity\PatientName;
+//use Oleg\OrderformBundle\Entity\PatientLastName;
 //use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientDob;
 //use Oleg\OrderformBundle\Entity\PatientAge;
@@ -33,7 +33,9 @@ use Oleg\OrderformBundle\Entity\Procedure;
 use Oleg\OrderformBundle\Entity\ProcedureEncounter;
 use Oleg\OrderformBundle\Entity\ProcedureName;
 
-use Oleg\OrderformBundle\Entity\ProcedurePatname;
+use Oleg\OrderformBundle\Entity\ProcedurePatlastname;
+use Oleg\OrderformBundle\Entity\ProcedurePatfirstname;
+use Oleg\OrderformBundle\Entity\ProcedurePatmiddlename;
 use Oleg\OrderformBundle\Entity\ProcedurePatsex;
 use Oleg\OrderformBundle\Entity\ProcedurePatage;
 use Oleg\OrderformBundle\Entity\ProcedurePathistory;
@@ -349,15 +351,27 @@ class TableController extends Controller {
         }
 
         //Procedure Last Name
-        $patname = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
+        $patlastname = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
+        if( $force || $patlastname && $patlastname != '' ) {
+            $patlastnameObj = new ProcedurePatlastname($status, $provider, $source);
+            $patlastnameObj->setField($patlastname);
+            $procedure->addPatlastname($patlastnameObj);
+        }
+
+        //Procedure First Name
         $patfirstname = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
+        if( $force || $patfirstname && $patfirstname != '' ) {
+            $patfirstnameObj = new ProcedurePatfirstname($status, $provider, $source);
+            $patfirstnameObj->setField($patfirstname);
+            $procedure->addPatfirstname($patfirstnameObj);
+        }
+
+        //Procedure Middle Name
         $patmiddlename = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
-        if( $force || ($patname && $patname != '') || ($patfirstname && $patfirstname != '') || ($patmiddlename && $patmiddlename != '') ) {
-            $patnameObj = new ProcedurePatname($status, $provider, $source);
-            $patnameObj->setField($patname);
-            $patnameObj->setFirstName($patfirstname);
-            $patnameObj->setMiddleName($patmiddlename);
-            $procedure->addPatname($patnameObj);
+        if( $force || $patmiddlename && $patmiddlename != '' ) {
+            $patmiddlenameObj = new ProcedurePatmiddlename($status, $provider, $source);
+            $patmiddlenameObj->setField($patmiddlename);
+            $procedure->addPatmiddlename($patmiddlenameObj);
         }
 
         //Procedure Sex

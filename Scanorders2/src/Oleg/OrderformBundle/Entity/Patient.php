@@ -24,20 +24,19 @@ class Patient extends ObjectAbstract
     protected $mrn;
 
     /**
-     * @ORM\OneToMany(targetEntity="PatientName", mappedBy="patient", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PatientLastName", mappedBy="patient", cascade={"persist"})
      */
-    protected $name;
+    protected $lastname;
 
-    //TODO:
-//    /**
-//     * @ORM\OneToMany(targetEntity="PatientFirstName", mappedBy="patient", cascade={"persist"})
-//     */
-//    protected $firstname;
-//
-//    /**
-//     * @ORM\OneToMany(targetEntity="PatientMiddleName", mappedBy="patient", cascade={"persist"})
-//     */
-//    protected $middlename;
+    /**
+     * @ORM\OneToMany(targetEntity="PatientFirstName", mappedBy="patient", cascade={"persist"})
+     */
+    protected $firstname;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PatientMiddleName", mappedBy="patient", cascade={"persist"})
+     */
+    protected $middlename;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
@@ -84,7 +83,9 @@ class Patient extends ObjectAbstract
 
         //fields:
         $this->mrn = new ArrayCollection();
-        $this->name = new ArrayCollection();
+        $this->lastname = new ArrayCollection();
+        $this->firstname = new ArrayCollection();
+        $this->middlename = new ArrayCollection();
         $this->sex = new ArrayCollection();
         $this->dob = new ArrayCollection();
         $this->age = new ArrayCollection();
@@ -94,16 +95,20 @@ class Patient extends ObjectAbstract
             $this->addMrn( new PatientMrn($status,$provider,$source) );
             $this->addDob( new PatientDob($status,$provider,$source) );
             $this->addClinicalHistory( new PatientClinicalHistory($status,$provider,$source) );
-            $this->addName( new PatientName($status,$provider,$source) );
-            $this->addSex( new PatientSex($status,$provider,$source) );
-            $this->addAge( new PatientAge($status,$provider,$source) );
+            //$this->addLastname( new PatientLastname($status,$provider,$source) );
+            //$this->addFirstname( new PatientFirstname($status,$provider,$source) );
+            //$this->addMiddlename( new PatientMiddlename($status,$provider,$source) );
+            //$this->addSex( new PatientSex($status,$provider,$source) );
+            //$this->addAge( new PatientAge($status,$provider,$source) );
         }
 
     }
 
     public function makeDependClone() {
         $this->mrn = $this->cloneDepend($this->mrn,$this);
-        $this->name = $this->cloneDepend($this->name,$this);
+        $this->lastname = $this->cloneDepend($this->lastname,$this);
+        $this->firstname = $this->cloneDepend($this->firstname,$this);
+        $this->middlename = $this->cloneDepend($this->middlename,$this);
         $this->sex = $this->cloneDepend($this->sex,$this);
         $this->dob = $this->cloneDepend($this->dob,$this);
         $this->age = $this->cloneDepend($this->age,$this);
@@ -155,29 +160,6 @@ class Patient extends ObjectAbstract
     public function clearMrn()
     {
         $this->mrn->clear();
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Patient
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -303,9 +285,9 @@ class Patient extends ObjectAbstract
      */
     public function addClinicalHistory($clinicalHistory)
     {
-        if( $clinicalHistory == null ) {
-            $clinicalHistory = new PatientClinicalHistory();
-        }
+//        if( $clinicalHistory == null ) {
+//            $clinicalHistory = new PatientClinicalHistory();
+//        }
 
         if( !$this->clinicalHistory->contains($clinicalHistory) ) {
             $clinicalHistory->setPatient($this);
@@ -336,38 +318,177 @@ class Patient extends ObjectAbstract
         return $this->clinicalHistory;
     }
 
+
     /**
-     * Add name
+     * Add lastname
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientName $name
+     * @param \Oleg\OrderformBundle\Entity\PatientLastname $lastname
      * @return Patient
      */
-    public function addName($name)
+    public function addLastname($lastname)
     {
 
-        //echo "Patient add name: name=".$name."<br>";
+        //echo "Patient add lastname: lastname=".$lastname."<br>";
 
-        if( $name == null ) {
-            $name = new PatientName();
-        }
+//        if( $lastname == null ) {
+//            $lastname = new PatientLastname();
+//        }
 
-        if( !$this->name->contains($name) && !$this->hasSimpleField($name,"getName") ) {
-            $name->setPatient($this);
-            $this->name->add($name);
+        if( !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) {
+            $lastname->setPatient($this);
+            $this->lastname->add($lastname);
         }
     
         return $this;
     }
 
     /**
-     * Remove name
+     * Remove lastname
      *
-     * @param \Oleg\OrderformBundle\Entity\PatientName $name
+     * @param \Oleg\OrderformBundle\Entity\PatientLastname $lastname
      */
-    public function removeName($name)
+    public function removeLastname($lastname)
     {
-        $this->name->removeElement($name);
+        $this->lastname->removeElement($lastname);
     }
+
+    /**
+     * Set lastname
+     *
+     * @param string $lastname
+     * @return Patient
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * Get lastname
+     *
+     * @return string
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+
+    /**
+     * Add firstname
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientFirstname $firstname
+     * @return Patient
+     */
+    public function addFirstname($firstname)
+    {
+
+        //echo "Patient add firstname: firstname=".$firstname."<br>";
+
+//        if( $firstname == null ) {
+//            $firstname = new PatientFirstname();
+//        }
+
+        if( !$this->firstname->contains($firstname) && !$this->hasSimpleField($firstname,"getFirstname") ) {
+            $firstname->setPatient($this);
+            $this->firstname->add($firstname);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove firstname
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientFirstname $firstname
+     */
+    public function removeFirstname($firstname)
+    {
+        $this->firstname->removeElement($firstname);
+    }
+
+    /**
+     * Set firstname
+     *
+     * @param string $firstname
+     * @return Patient
+     */
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    /**
+     * Get firstname
+     *
+     * @return string
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+
+    /**
+     * Add middlename
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientMiddlename $middlename
+     * @return Patient
+     */
+    public function addMiddlename($middlename)
+    {
+
+        //echo "Patient add middlename: middlename=".$middlename."<br>";
+
+//        if( $middlename == null ) {
+//            $middlename = new PatientMiddlename();
+//        }
+
+        if( !$this->middlename->contains($middlename) && !$this->hasSimpleField($middlename,"getMiddlename") ) {
+            $middlename->setPatient($this);
+            $this->middlename->add($middlename);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove middlename
+     *
+     * @param \Oleg\OrderformBundle\Entity\PatientMiddlename $middlename
+     */
+    public function removeMiddlename($middlename)
+    {
+        $this->middlename->removeElement($middlename);
+    }
+
+    /**
+     * Set middlename
+     *
+     * @param string $middlename
+     * @return Patient
+     */
+    public function setMiddlename($middlename)
+    {
+        $this->middlename = $middlename;
+
+        return $this;
+    }
+
+    /**
+     * Get middlename
+     *
+     * @return string
+     */
+    public function getMiddlename()
+    {
+        return $this->middlename;
+    }
+
 
     /**
      * Add age
@@ -377,9 +498,9 @@ class Patient extends ObjectAbstract
      */
     public function addAge($age)
     {
-        if( $age == null ) {
-            $age = new PatientAge();
-        }
+//        if( $age == null ) {
+//            $age = new PatientAge();
+//        }
 
         if( !$this->age->contains($age) && !$this->hasSimpleField($age,"getAge") ) {
             $age->setPatient($this);
@@ -407,9 +528,9 @@ class Patient extends ObjectAbstract
      */
     public function addSex($sex)
     {
-        if( $sex == null ) {
-            $sex = new PatientSex();
-        }
+//        if( $sex == null ) {
+//            $sex = new PatientSex();
+//        }
 
         if( !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex") ) {
             $sex->setPatient($this);
@@ -437,9 +558,9 @@ class Patient extends ObjectAbstract
      */
     public function addDob($dob)
     {
-        if( $dob == null ) {
-            $dob = new PatientDob();
-        }
+//        if( $dob == null ) {
+//            $dob = new PatientDob();
+//        }
 
         if( !$this->dob->contains($dob) ) {
             $dob->setPatient($this);
@@ -471,9 +592,9 @@ class Patient extends ObjectAbstract
             $orders = $orders . "id=".$order->getId().", oid=".$order->getOid();
         }
 
-        $names = ", nameCount=".count($this->name).": ";
-        foreach( $this->name as $name ) {
-            $names = $names . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        $lastnames = ", lastnameCount=".count($this->lastname).": ";
+        foreach( $this->lastname as $lastname ) {
+            $lastnames = $lastnames . $lastname->getField()." (provider=".$lastname->getProvider().", status=".$lastname->getStatus().") ";
         }
 
         $sexs = ", sexCount=".count($this->sex).": ";
@@ -488,8 +609,7 @@ class Patient extends ObjectAbstract
 
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
-        //", name=".$this->name->first().", nameID=".$this->name->first()->getId().
-        ", names=".$names.
+        ", lastnames=".$lastnames.
         ", sexs=".$sexs.
         ", ages=".$ages.
         //", age=".$this->age->first().", nameID=".$this->age->first()->getId().
@@ -529,26 +649,28 @@ class Patient extends ObjectAbstract
 
     public function getFullPatientName() {
         $patientFullName = "";
-        if( $this->getName()->first() ) {
-            //$patientFullName = '<b>'.$this->getName()->first()->getField().'</b> <i>'.$this->getName()->first()->getMiddleName().'</i> '.$this->getName()->first()->getFirstName();
-            //$patientFullName = '<b>'.$this->getName()->first()->getField().'</b>, '.$this->getName()->first()->getFirstName().' <i>'.$this->getName()->first()->getMiddleName().'</i>';
 
-            if( $this->getName()->first()->getField() ) {
-                $patientFullName .= '<b>'.$this->getName()->first()->getField().'</b>';
+        //echo "lastname=".implode(",",$this->getLastname())."<br>";
+
+        if( ($this->getLastname() && $this->getLastname()->first()) || ($this->getFirstname() && $this->getFirstname()->first()) || ($this->getMiddlename() && $this->getMiddlename()->first()) ) {
+        //if( $this->getLastname()->first() || $this->getFirstname()->first() || $this->getMiddlename()->first() ) {
+
+            if( $this->getLastname() && $this->getLastname()->first()->getField() ) {
+                $patientFullName .= '<b>'.$this->getLastname()->first()->getField().'</b>';
             }
 
-            if( $this->getName()->first()->getFirstName() ) {
+            if( $this->getFirstname() && $this->getFirstname()->first()->getField() ) {
                 if( $patientFullName != '' ) {
                     $patientFullName .= ', ';
                 }
-                $patientFullName .= $this->getName()->first()->getFirstName();
+                $patientFullName .= $this->getFirstname()->first()->getField();
             }
 
-            if( $this->getName()->first()->getMiddleName() ) {
+            if( $this->getMiddlename() && $this->getMiddlename()->first()->getField() ) {
                 if( $patientFullName != '' ) {
                     $patientFullName .= ' ';
                 }
-                $patientFullName .= '<i>'.$this->getName()->first()->getMiddleName().'</i>';
+                $patientFullName .= '<i>'.$this->getMiddlename()->first()->getField().'</i>';
             }
 
         }
@@ -605,7 +727,7 @@ class Patient extends ObjectAbstract
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Mrn','Name','Sex','Dob','Age','ClinicalHistory');
+        $fieldsArr = array('Mrn','Lastname','Firstname','Middlename','Sex','Dob','Age','ClinicalHistory');
         return $fieldsArr;
     }
 

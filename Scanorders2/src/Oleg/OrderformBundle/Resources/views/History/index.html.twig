@@ -61,7 +61,7 @@
                     <p>{{ entity.currentstatus }}</p>
                 </td>
                 <td>
-                    {{ entity.provider }}
+                    <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
                 </td>
                 <td>
                     {% for role in entity.roles %}

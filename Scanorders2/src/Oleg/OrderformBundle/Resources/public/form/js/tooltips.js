@@ -6,37 +6,31 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function attachPatientNameSexAgeLockedTooltip( element ) {
+function attachPatientNameSexAgeLockedTooltip() {
 
     var userPreferencesTooltip = $("#user-preferences-tooltip").val();
     if( userPreferencesTooltip == 0 ) {
         return false;
     }
 
-    if( element.hasClass('patientsex-field') ) {
-        var title = "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the Accession section.";
-        //printF(element, title);
+    //patient's sex
+    var patsex = $('.patientsex').find('.well');
+    patsex.tooltip({
+        'title': "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the Accession section."
+    });
+    highlightProcedureSexElement( patsex, '.proceduresex-field' );
 
-        element.tooltip({
-            'title': title
-        });
-        highlightProcedureSexElement( element, '.proceduresex-field' );
-    }
-
-    if( element.hasClass('patientage-field') ) {
-        var title = "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section.";
-        //console.log(element.parent());
-
-        element.parent().tooltip({
-            'title': title
-        });
-        highlightProcedureAgeElement( element.parent(), '.procedureage-field' );
-    }
+    //patient's age
+    var patage = $('.patientage').find('.well');
+    patage.tooltip({
+        'title': "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section."
+    });
+    highlightProcedureAgeElement( patage.parent(), '.procedureage-field' );
 
     //patient's name
     var patname = $('.patientname').find('.well');
     patname.tooltip({
-        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's Name (at the time of encounter)\" in the Accession section."
+        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's [Last, First, Middle] Name (at the time of encounter)\" in the Accession section."
     });
     highlightProcedureNameElement( patname, '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
 

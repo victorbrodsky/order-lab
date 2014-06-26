@@ -123,7 +123,7 @@ class AdminController extends Controller
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
-            'Site Parameters='.$count_siteParameters.' '.
+            'Site Settings='.$count_siteParameters.' '.
             'Departments='.$count_department.' '.
             'Institutions='.$count_institution.' '.
             'Urgency='.$count_urgency.' '.

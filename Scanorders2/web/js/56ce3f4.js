@@ -14619,7 +14619,7 @@ var redRenderer = function (instance, td, row, col, prop, value, cellProperties)
     //capitalizeAccession( row, col, value );
 };
 
-var forceRedRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+var forcegeneral_validator_fn = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
     $(td).addClass('ht-validation-error');
 };
@@ -25729,24 +25729,6 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
-//function getSimpleFieldName( inputEl ) {
-//    if( inputEl.hasClass("proceduredate-field") ) {
-//        return "encounterDate";
-//    }
-//    if( inputEl.hasClass("procedurename-field") ) {
-//        return "patname";
-//    }
-//    if( inputEl.hasClass("proceduresex-field") ) {
-//        return "patsex";
-//    }
-//    if( inputEl.hasClass("procedureage-field") ) {
-//        return "patage";
-//    }
-//    if( inputEl.hasClass("procedurehistory-field") ) {
-//        return "pathistory";
-//    }
-//    return null;
-//}
 
 function calculateAgeByDob( btn ) {
     var accessionBtnObj = new btnObject(btn,'full');
@@ -26395,7 +26377,27 @@ function getUserRole() {
     });
 }
 
+//parent - holder containing all elements for this object
+function setPatientNameSexAgeLockedFields( data, parent ) {
 
+    if( data['fullname'] && data['fullname'] != undefined && data['fullname'] != "" ) {
+        parent.find('.patientname').find('.well').html( data['fullname'] );
+    }
+
+    if( data['sex'] && data['sex'] != undefined && data['sex'] != "" ) {
+        parent.find('.patientsex').find('.well').html( data['sex'][0]['text'] );
+    }
+
+    if( data['age'] && data['age'] != undefined && data['age'] != "" ) {
+        parent.find('.patientage').find('.well').html( data['age'][0]['text'] );
+    }
+
+}
+function cleanPatientNameSexAgeLockedFields( parent ) {
+    parent.find('.patientname').find('.well').html("");
+    parent.find('.patientsex').find('.well').html("");
+    parent.find('.patientage').find('.well').html("");
+}
 
 
 //TODO: functions to rewrite
@@ -26407,6 +26409,9 @@ function getUserRole() {
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
     //console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
+
+    //attach tooltip for not real permanent locked fields: name, age, sex
+    attachPatientNameSexAgeLockedTooltip();
 
     var parentname = ""; //for multi form
     if( element.hasClass('accessionbtn') ) {
@@ -26462,22 +26467,6 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //don't process 0 disident field: part's Diagnosis :
         if( orderformtype == "single" && id && id.indexOf("disident_0_field") != -1 ) {
-            continue;
-        }
-
-        //console.log("proceed before patient's name,sex,age ...");
-
-        //don't process constatly locked fields: patient's name,sex,age
-        if( elements.eq(i).hasClass('patientname-field') ) {
-            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
-            continue;
-        }
-        if( elements.eq(i).hasClass('patientsex-field') ) {
-            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
-            continue;
-        }
-        if( elements.eq(i).hasClass('patientage-field') ) {
-            attachPatientNameSexAgeLockedTooltip(elements.eq(i));
             continue;
         }
 
@@ -26651,6 +26640,8 @@ function setElementBlock( element, data, cleanall, key ) {
 
     var parent = getButtonElementParent( element );
 
+    setPatientNameSexAgeLockedFields(data,parent);
+
     //console.log(parent);
     //console.log("key="+key+", single="+single);
     //printF(parent,"Set Element Parent: ");
@@ -26684,21 +26675,6 @@ function setElementBlock( element, data, cleanall, key ) {
     for( var i = 0; i < elements.length; i++ ) {
 
         //console.log('\n\n'+"Set Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
-
-        /////////////// exception for simple fields /////////////////////////
-//        var simpleField = getSimpleFieldName( elements.eq(i) );
-//        if( simpleField && (simpleField in data) ) {
-//            var simpleValue = data[simpleField];
-//            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
-//            if( simpleField == 'patsex' ) {
-//                var dataArr = {text: simpleValue};
-//                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
-//            } else {
-//                elements.eq(i).val(simpleValue);
-//            }
-//            continue;
-//        }
-        /////////////// EOF exception for simple fields /////////////////////////
 
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
@@ -27434,6 +27410,8 @@ function changeIdtoIndex( element, field, index ) {
 function cleanFieldsInElementBlock( element, all, single ) {
 
     var parent = getButtonElementParent( element );
+
+    cleanPatientNameSexAgeLockedFields(parent);
 
     //console.log("clean single=" + single);
 
@@ -29317,6 +29295,10 @@ function setNavBar() {
         id = 'placescanorder';
     }
 
+    if( full.indexOf("scan/slide-return-request") !== -1 ) {
+        id = 'placescanorder';
+    }
+
     if( full.indexOf("my-scan-orders") !== -1 ) {
         id = 'myscanorders';
     }
@@ -29888,37 +29870,31 @@ function capitaliseFirstLetter(string)
  * To change this template use File | Settings | File Templates.
  */
 
-function attachPatientNameSexAgeLockedTooltip( element ) {
+function attachPatientNameSexAgeLockedTooltip() {
 
     var userPreferencesTooltip = $("#user-preferences-tooltip").val();
     if( userPreferencesTooltip == 0 ) {
         return false;
     }
 
-    if( element.hasClass('patientsex-field') ) {
-        var title = "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the Accession section.";
-        //printF(element, title);
+    //patient's sex
+    var patsex = $('.patientsex').find('.well');
+    patsex.tooltip({
+        'title': "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the Accession section."
+    });
+    highlightProcedureSexElement( patsex, '.proceduresex-field' );
 
-        element.tooltip({
-            'title': title
-        });
-        highlightProcedureSexElement( element, '.proceduresex-field' );
-    }
-
-    if( element.hasClass('patientage-field') ) {
-        var title = "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section.";
-        //console.log(element.parent());
-
-        element.parent().tooltip({
-            'title': title
-        });
-        highlightProcedureAgeElement( element.parent(), '.procedureage-field' );
-    }
+    //patient's age
+    var patage = $('.patientage').find('.well');
+    patage.tooltip({
+        'title': "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section."
+    });
+    highlightProcedureAgeElement( patage.parent(), '.procedureage-field' );
 
     //patient's name
     var patname = $('.patientname').find('.well');
     patname.tooltip({
-        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's Name (at the time of encounter)\" in the Accession section."
+        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's [Last, First, Middle] Name (at the time of encounter)\" in the Accession section."
     });
     highlightProcedureNameElement( patname, '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
 

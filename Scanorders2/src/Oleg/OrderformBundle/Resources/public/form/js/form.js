@@ -578,6 +578,10 @@ function setNavBar() {
         id = 'placescanorder';
     }
 
+    if( full.indexOf("scan/slide-return-request") !== -1 ) {
+        id = 'placescanorder';
+    }
+
     if( full.indexOf("my-scan-orders") !== -1 ) {
         id = 'myscanorders';
     }

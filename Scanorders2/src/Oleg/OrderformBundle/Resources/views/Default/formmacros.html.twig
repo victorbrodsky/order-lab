@@ -725,7 +725,7 @@
 
 {############################ Objects ###########################}
 
-{% macro patientForm( patient, flag, uid, cycle, status, mrnHtml, nameHtml, sexHtml, dobHtml, ageHtml, clinicalhistoryHtml ) %}
+{% macro patientForm( patient, flag, uid, cycle, status, mrnHtml, dobHtml, clinicalhistoryHtml ) %}
     {% import _self as formmacros %}
 
     {% if cycle != 'show' %}
@@ -749,15 +749,7 @@
         {#{% endif %}#}
 
         <div class="patientname">
-            {#{% for name in patient.name %}#}
-                {#&#123;&#35;name.vars.value.status:{{ name.vars.value.status }}&#35;&#125;#}
-                {#{% if name.vars.value.status == 'valid' %}#}
-                    {#{% set patientName = '<b>'~ name.vars.value.field ~'</b> <i>'~ name.vars.value.middleName ~'</i> '~ name.vars.value.firstName %}#}
-                    {#{% set patientFullName = patient.getFullPatientName %}#}
-                    {#{{ formmacros.simplefield( "Name:", patientFullName, "", "disabled" ) }}#}
-                {#{% endif %}#}
-            {#{% endfor %}#}
-            {% if patient.name|length > 0 %}
+            {% if patient.vars.value != NULL %}
                 {% set patientFullName = patient.vars.value.getFullPatientName %}
             {% else %}
                 {% set patientFullName = "" %}
@@ -765,11 +757,19 @@
             {{ formmacros.simplefield( "Name:", patientFullName, "", "disabled" ) }}
         </div>
 
-        {% if sexHtml is not defined or sexHtml == "" %}
-            {{ formmacros.inputArrayField(patient.sex,cycle,"patientsex","","","","",status) }}
-        {% else  %}
-            <p><div class="patientsex">{{ sexHtml }}</div></p>
-        {% endif %}
+        {#{% if sexHtml is not defined or sexHtml == "" %}#}
+            {#{{ formmacros.inputArrayField(patient.sex,cycle,"patientsex","","","","",status) }}#}
+        {#{% else  %}#}
+            {#<p><div class="patientsex">{{ sexHtml }}</div></p>#}
+        {#{% endif %}#}
+        <div class="patientsex">
+            {% if patient.vars.value != NULL %}
+                {% set patientSex = patient.vars.value.obtainValidField('sex',app.security.getToken().getUser()) %}
+            {% else %}
+                {% set patientSex = "" %}
+            {% endif %}
+            {{ formmacros.simplefield( "Sex:", patientSex, "", "disabled" ) }}
+        </div>
 
 
         {% if dobHtml is not defined or dobHtml == "" %}
@@ -778,16 +778,24 @@
             <p><div class="patientdob">{{ dobHtml }}</div></p>
         {% endif %}
 
-        {% if ageHtml is not defined or ageHtml == "" %}
-            {{ formmacros.inputArrayField(patient.age,cycle,"patientage","","","","",status) }}
-            {#{% for age in patient.age %}#}
-                {#{% if age.vars.value.status == 'valid' %}#}
-                    {#<p>{{ formmacros.inputField(age,cycle,"patientage","","","","","","","") }}</p>#}
-                {#{% endif %}#}
-            {#{% endfor %}#}
-        {% else  %}
-            <p><div class="patientage">{{ ageHtml }}</div></p>
-        {% endif %}
+        {#{% if ageHtml is not defined or ageHtml == "" %}#}
+            {#{{ formmacros.inputArrayField(patient.age,cycle,"patientage","","","","",status) }}#}
+            {#&#123;&#35;{% for age in patient.age %}&#35;&#125;#}
+                {#&#123;&#35;{% if age.vars.value.status == 'valid' %}&#35;&#125;#}
+                    {#&#123;&#35;<p>{{ formmacros.inputField(age,cycle,"patientage","","","","","","","") }}</p>&#35;&#125;#}
+                {#&#123;&#35;{% endif %}&#35;&#125;#}
+            {#&#123;&#35;{% endfor %}&#35;&#125;#}
+        {#{% else  %}#}
+            {#<p><div class="patientage">{{ ageHtml }}</div></p>#}
+        {#{% endif %}#}
+        <div class="patientage">
+            {% if patient.vars.value != NULL %}
+                {% set patientAge = patient.vars.value.obtainValidField('age',app.security.getToken().getUser()) %}
+            {% else %}
+                {% set patientAge = "" %}
+            {% endif %}
+            {{ formmacros.simplefield( "Age:", patientAge, "", "disabled" ) }}
+        </div>
 
 
         {% if clinicalhistoryHtml is not defined or clinicalhistoryHtml == "" %}

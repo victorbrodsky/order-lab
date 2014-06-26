@@ -79,11 +79,11 @@ class PatientType extends AbstractType
         ));
 
         //use these fields only for data reviewer and for view
-        if( 1 ) {
+        if( 0 ) {
 
             $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
             $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
-            $builder->add('name', 'collection', array(
+            $builder->add('lastname', 'collection', array(
                 'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
                 'read_only' => $flag,
                 'allow_add' => true,
@@ -92,7 +92,7 @@ class PatientType extends AbstractType
                 'label' => "Name:",
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__patientname__',
+                'prototype_name' => '__patientlastname__',
             ));
 
             $attr = array('class'=>'form-control patientage-field patientage-mask', 'disabled' => 'disabled');

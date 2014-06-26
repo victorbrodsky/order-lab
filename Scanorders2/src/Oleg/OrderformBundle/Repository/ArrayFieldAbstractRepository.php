@@ -571,7 +571,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function validFieldIsSet( $fields ) {
 
-        if( !$fields->first() ) {
+        if( count($fields) == 0 ) {
             return false;
         }
 

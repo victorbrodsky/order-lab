@@ -23,6 +23,29 @@ use Oleg\OrderformBundle\Entity\History;
 class SlideReturnRequestController extends Controller
 {
 
+    /**
+     * Creates a new Request Slide Return with just slide names such as Accession Number
+     *
+     * @Route("/slide-return-request", name="slide-return-request-table")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:SlideReturnRequest:create-table.html.twig")
+     */
+    public function newRequestSlideReturnTableAction(Request $request)
+    {
+        $slideReturnRequest  = new SlideReturnRequest();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $slideReturnRequest->setProvider($user);
+        $slideReturnRequest->setProxyuser($user);
+
+        $params = array('user'=>$user);
+        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+
+        return array(
+            'form' => $form->createView(),
+            'cicle' => 'new'
+        );
+    }
 
     /**
      * Lists all Slides for this order with oid=$id.
@@ -458,7 +481,7 @@ class SlideReturnRequestController extends Controller
             $history->setProvider($user);
             $history->setRoles($user->getRoles());
 
-            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:ia');
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:i');
             $dateStr = $transformer->transform(new \DateTime());
             $commentFull = $user . " on " . $dateStr. ": " . $text_value;
             $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));

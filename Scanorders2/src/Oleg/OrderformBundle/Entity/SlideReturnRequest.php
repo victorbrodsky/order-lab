@@ -191,7 +191,7 @@ class SlideReturnRequest extends OrderAbstract {
     public function addComment( $comment, $user )
     {
         // 06/15/2014 at 11:49pm
-        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:ia');
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:i');
         $dateStr = $transformer->transform(new \DateTime());
         $commentFull = $user . " on " . $dateStr. ": " . $comment;
 

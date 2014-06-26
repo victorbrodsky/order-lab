@@ -116,7 +116,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             //make sure to remove name, sex and age from patient original object from form if id is null.
             //Those fields in Patient are just for displaying existing info.
-            $this->removeDisplayFields($patient);
+            //$this->removeDisplayFields($patient);
 
             //echo "before patient oredreinfo count=".count($patient->getOrderinfo())."<br>";
             $entity->removePatient($patient);
@@ -245,7 +245,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-        //exit('orderinfo repoexit testing');
+//        exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;
@@ -393,13 +393,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
     public function removeDisplayFields($patient) {
 
         //name
-        if( count($patient->getName()) > 1 ) {
-            throw new \Exception('Patient has multiple field name, count='.count($patient->getName()));
+        if( count($patient->getLastname()) > 1 ) {
+            throw new \Exception('Patient has multiple field name, count='.count($patient->getLastname()));
         }
-        $name = $patient->getName()->first();
+        $name = $patient->getLastname()->first();
         if( $name && !$name->getId() ) {
-            $patient->removeName($name);
-        } else {
+            $patient->removeLastname($name);
         }
 
         //age

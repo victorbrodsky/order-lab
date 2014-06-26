@@ -41,6 +41,38 @@
 
         });
 
+        function toggleSelectAllObjects(source) {
+            $("[type=checkbox]").each(function() {
+                $(this).prop('checked', source.checked);
+            });
+        }
+
+        function toggleSelectAllCheckbox(source) {
+            //console.log("source.checked="+source.checked);
+            if( !source.checked ) {
+
+                $('#selectUnselectAll').prop('checked', false);
+
+            } else {
+
+                //check if all checkboxes are checked => check selectUnselectAll
+                var allchecked = true;
+
+                $("[type=checkbox]").each(function() {
+                    //console.log("check="+$(this).prop('checked')+", id="+$(this).attr("id"));
+                    if( $(this).attr('id') != 'selectUnselectAll' && !$(this).prop('checked') ) {
+                        allchecked = false;
+                        return;
+                    }
+                });
+
+                if( allchecked ) {
+                    $('#selectUnselectAll').prop('checked', true);
+                }
+
+            } //else
+        }
+
     </script>
 
 {% endblock %}
@@ -63,7 +95,9 @@
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
             <tr>
-                <th>Checkmark</th>
+                <th>
+                    <input id="selectUnselectAll" type="checkbox" name="checkmark" value="allslides" checked onClick="toggleSelectAllObjects(this)">
+                </th>
                 <th>Patient MRN</th>
                 <th>Patient Name</th>
                 <th>Accession Number</th>
@@ -94,7 +128,7 @@
             <tr>
 
                 <td>
-                    <input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}][id]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}_id" checked />
+                    <input type="checkbox" value="{{ slide.id }}" name="oleg_orderformbundle_slidereturnrequesttype[slide][{{ slide.id }}][id]" id="oleg_orderformbundle_slidereturnrequesttype_slide_{{ slide.id }}_id" checked onClick="toggleSelectAllCheckbox(this)"/>
                 </td>
 
                 <td>

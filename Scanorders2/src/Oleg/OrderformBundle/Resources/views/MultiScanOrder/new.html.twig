@@ -138,9 +138,8 @@
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
         {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"date","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
-        {% set nameHtml = formmacros.inputField(form.patient.vars.prototype.name,type,"","prototype") %}
-        {% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,type,"","prototype") %}
-        {% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"","prototype") %}
+        {#{% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,type,"","prototype") %}#}
+        {#{% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,type,"","prototype") %}#}
 
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
         {% set procedureHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.name,type,"","prototype") %}
@@ -192,13 +191,10 @@
 
           data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,type)|e }}"
 
-         data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type,form.vars.value.status, mrnHtml,nameHtml,sexHtml,dobHtml,ageHtml,clinicalhistoryHtml)|e }}"
+         data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type,form.vars.value.status,mrnHtml,dobHtml,clinicalhistoryHtml)|e }}"
 
           data-prototype-patientmrn=               "{{ mrnHtml|e }}"
-          data-prototype-patientname=              "{{ nameHtml|e }}"
-          data-prototype-patientsex=               "{{ sexHtml|e }}"
           data-prototype-patientdob=               "{{ dobHtml|e }}"
-          data-prototype-patientage=               "{{ ageHtml|e }}"
           data-prototype-patientclinicalhistory=   "{{ clinicalhistoryHtml|e }}"
 
          data-prototype-procedure="

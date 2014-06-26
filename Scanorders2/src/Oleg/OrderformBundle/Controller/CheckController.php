@@ -152,11 +152,12 @@ class CheckController extends Controller {
                 //'inmrn'=>$mrn,
                 'id'=>$entity->getId(),
                 'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('keytype')),
-                'name'=>$this->getArrayFieldJson($entity->getName()),
-                'sex'=>$this->getArrayFieldJson($entity->getSex()),
+                'fullname'=>$entity->getFullPatientName(),
+                'sex'=>$this->getArrayFieldJson( array($entity->obtainValidField('sex',$user)) ),
                 'dob'=>$this->getArrayFieldJson($entity->getDob()),
-                'age'=>$this->getArrayFieldJson($entity->getAge()),
+                'age'=>$this->getArrayFieldJson( array($entity->obtainValidField('age',$user)) ),
                 'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
+                //'clinicalHistory'=>$this->getArrayFieldJson( array($entity->obtainValidField('clinicalHistory',$user)) )
             );
         } 
 
@@ -194,10 +195,10 @@ class CheckController extends Controller {
         $element = array(
             'id'=>$entity->getId(),
             'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('keytype')),
-            'name'=>$this->getArrayFieldJson($entity->getName()),
-            'sex'=>$this->getArrayFieldJson($entity->getSex()),
+            //'lastname'=>$this->getArrayFieldJson($entity->getLastName()),
+            //'sex'=>$this->getArrayFieldJson($entity->getSex()),
             'dob'=>$this->getArrayFieldJson($entity->getDob()),
-            'age'=>$this->getArrayFieldJson($entity->getAge()),
+            //'age'=>$this->getArrayFieldJson($entity->getAge()),
             'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
         );
 

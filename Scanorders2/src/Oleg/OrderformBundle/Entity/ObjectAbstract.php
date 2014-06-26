@@ -380,6 +380,41 @@ abstract class ObjectAbstract
         return $count;
     }
 
+    public function obtainValidField( $fieldname, $user ) {
+
+        $res = null;
+        $externaluser = true;
+        $getMethod = "get".$fieldname;
+
+        //filter only if the user has role external submitter
+        if( !$user->hasRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ) {
+            $externaluser = false;
+        }
+
+        foreach( $this->$getMethod() as $entity ) {
+
+            if( $externaluser ) {
+                //external submitter => get the latest entity belongs to this user
+                if( $entity->getProvider()->getId() == $user->getId() ) {
+                    if( $res == null || $entity->getCreationdate() > $res->getCreationdate() ) {
+                        $res = $entity;
+                    }
+                }
+            } else {
+                //submitter => get valid field
+                if( $entity->getStatus() == 'valid' ) {
+                    $res = $entity;
+                    break;
+                }
+            }
+
+        } //foreach
+
+        //echo "res=".$res."<br>";
+
+        return $res;
+    }
+
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {
 //

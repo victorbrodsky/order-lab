@@ -1,0 +1,161 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    Request Slide Return
+{% endblock %}
+
+
+
+{% block maincss %}
+
+    {% stylesheets
+    'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
+    'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+    'bundles/olegorderform/ladda/ladda-themeless.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/action.css' filter='cssrewrite'
+    'bundles/olegorderform/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css' filter='cssrewrite'
+    'bundles/olegorderform/datepicker/css/datepicker3.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block mainjs %}
+
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegOrderformBundle/Resources/public/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js'
+    '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+    '@OlegOrderformBundle/Resources/public/ladda/spin.min.js'
+    '@OlegOrderformBundle/Resources/public/ladda/ladda.min.js'
+    '@OlegOrderformBundle/Resources/public/datepicker/js/*'
+    '@OlegOrderformBundle/Resources/public/select2/select2.js'
+    '@OlegOrderformBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+    '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
+    '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
+    '@OlegOrderformBundle/Resources/public/form/js/partRadios.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+    '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
+    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegOrderformBundle/Resources/public/form/js/form.js'
+    '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
+    '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+    '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+    '@OlegOrderformBundle/Resources/public/jasny/js/rowlink.js'
+    '@OlegOrderformBundle/Resources/public/q-1/q.js'
+    '@OlegOrderformBundle/Resources/public/form/js/slide-return-request-table.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            getComboboxReturn(new Array("0","0","0","0","0","0"));
+            getUrgency();
+            regularCombobox();
+
+        });
+
+        function toggleSelectAllObjects(source) {
+            $("[type=checkbox]").each(function() {
+                $(this).prop('checked', source.checked);
+            });
+        }
+
+        function toggleSelectAllCheckbox(source) {
+            //console.log("source.checked="+source.checked);
+            if( !source.checked ) {
+
+                $('#selectUnselectAll').prop('checked', false);
+
+            } else {
+
+                //check if all checkboxes are checked => check selectUnselectAll
+                var allchecked = true;
+
+                $("[type=checkbox]").each(function() {
+                    //console.log("check="+$(this).prop('checked')+", id="+$(this).attr("id"));
+                    if( $(this).attr('id') != 'selectUnselectAll' && !$(this).prop('checked') ) {
+                        allchecked = false;
+                        return;
+                    }
+                });
+
+                if( allchecked ) {
+                    $('#selectUnselectAll').prop('checked', true);
+                }
+
+            } //else
+        }
+
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <input type="hidden" id="formcicle" value="{{ cicle }}" />
+
+    <h3 class="text-info">Please enter the information about the slides you would like to be returned</h3>
+
+    <br>
+
+    {############ START FORM ##############}
+    {#<form id="table-scanorderform" action="{{ path('table_create_submit') }}" method="post" {{ form_enctype(form) }}>#}
+    {{ form_start(form) }}
+
+        <!-- handsontable -->
+        <br>
+
+        <p>
+        <div id="multi-dataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+        </p>
+
+        <br>
+
+        <div id="validationerror" style="padding-top: 2%"></div>
+
+
+            <div  class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4 class="panel-title">Slide Return Request</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body collapse in">
+                    {{ formmacros.field(form.provider) }}
+                    {{ formmacros.field(form.proxyuser) }}
+                    {{ formmacros.field(form.returnSlide) }}
+                    {{ formmacros.field(form.urgency) }}
+
+                    {{ form_rest(form) }}
+                </div>
+            </div>
+
+            <p>
+                <button class="btn btn-success" type="submit">Submit</button>
+            </p>
+
+    {#</form>#}
+    {{ form_end(form) }}
+    {############ END FORM ##############}
+
+{% endblock %}
+

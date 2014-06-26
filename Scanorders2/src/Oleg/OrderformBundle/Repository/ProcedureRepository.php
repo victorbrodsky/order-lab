@@ -3,7 +3,9 @@
 namespace Oleg\OrderformBundle\Repository;
 
 
-use Oleg\OrderformBundle\Entity\PatientName;
+use Oleg\OrderformBundle\Entity\PatientLastName;
+use Oleg\OrderformBundle\Entity\PatientFirstName;
+use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientAge;
 
@@ -120,21 +122,37 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $source = "scanorder";
         $status = self::STATUS_VALID;
 
-        //name
-        if( count($procedure->getPatlastname()) > 0 || count($procedure->getPatfirstname()) > 0 || count($procedure->getPatmiddlename()) > 0 ) {
-            if( $this->validFieldIsSet( $patient->getName() ) ) {
+        //lastname
+        if( count($procedure->getPatlastname()) > 0 ) {
+            if( $this->validFieldIsSet( $patient->getLastname() ) ) {
                 $status = self::STATUS_INVALID;
             }
-            //echo "pat name count=".count($patient->getName())."<br>";
-            //echo "procedure patname=".$procedure->getPatname()->first()."<br>";
-            $patientname = new PatientName($status,$user,$source);
+            $patientlastname = new PatientLastName($status,$user,$source);
+            $patientlastname->setField($procedure->getPatlastname()->first()->getField());
+            $patientlastname->setProcedure($procedure);
+            $patient->addLastname($patientlastname);
+        }
 
-            $patientname->setField($procedure->getPatlastname()->first()->getField());
-            $patientname->setFirstName($procedure->getPatfirstname()->first()->getField());
-            $patientname->setMiddleName($procedure->getPatmiddlename()->first()->getField());
-            
-            $patientname->setProcedure($procedure);
-            $patient->addName($patientname);
+        //firstname
+        if( count($procedure->getPatfirstname()) > 0 ) {
+            if( $this->validFieldIsSet( $patient->getFirstname() ) ) {
+                $status = self::STATUS_INVALID;
+            }
+            $patientfirstname = new PatientFirstName($status,$user,$source);
+            $patientfirstname->setField($procedure->getPatfirstname()->first()->getField());
+            $patientfirstname->setProcedure($procedure);
+            $patient->addFirstname($patientfirstname);
+        }
+
+        //middlename
+        if( count($procedure->getPatmiddlename()) > 0 ) {
+            if( $this->validFieldIsSet( $patient->getMiddlename() ) ) {
+                $status = self::STATUS_INVALID;
+            }
+            $patientmiddlename = new PatientMiddleName($status,$user,$source);
+            $patientmiddlename->setField($procedure->getPatmiddlename()->first()->getField());
+            $patientmiddlename->setProcedure($procedure);
+            $patient->addMiddlename($patientmiddlename);
         }
 
         //sex

@@ -177,7 +177,7 @@ var redRenderer = function (instance, td, row, col, prop, value, cellProperties)
     //capitalizeAccession( row, col, value );
 };
 
-var forceRedRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+var forcegeneral_validator_fn = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
     $(td).addClass('ht-validation-error');
 };

@@ -178,9 +178,7 @@
                 <td>{{ entity.type }}</td>
                 {% if showprovider is defined and showprovider == 'true' %}
                     <td>
-                        {% for provider in entity.provider %}
-                            {{ provider.username }}
-                        {% endfor %}
+                        {{ entity.provider }}
                     </td>
                 {% endif %}
                     
@@ -197,7 +195,9 @@
                     <td></td>
                 {% endif %}
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
-                <td>{{ entity.provider }}</td>
+                <td class="rowlink-skip">
+                    <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
+                </td>
                 {% if showproxyuser is defined and showproxyuser == 'true' %}
                     <td>
                         {% for proxyuser in entity.proxyuser %}

@@ -39,14 +39,17 @@
                 </td>
                 <td>{{ entity.width }}</td>
                 <td>{{ entity.height }}</td>
-                <td>
-                    {% if entity.username == 'anon.' %}
-                        {% set username = 'unknown' %}
-                    {% else %}
-                        {% set username = entity.username %}
-                    {% endif %}
-                    {{ username }}
-                </td>
+
+                {% if entity.username == 'anon.' %}
+                    <td>
+                        unknown
+                    </td>
+                {% else %}
+                    <td>
+                        <a href="{{ path('showuser', { 'id': entity.user.id }) }}">{{ entity.username }}</a>
+                    </td>
+                {% endif %}
+
                 <td>
                     {% for role in entity.roles %}
                         {% if role != "ROLE_USER" %}
