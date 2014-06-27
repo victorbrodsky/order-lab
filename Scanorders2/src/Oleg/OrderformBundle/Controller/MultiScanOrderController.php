@@ -662,7 +662,7 @@ class MultiScanOrderController extends Controller {
         foreach( $entity->getPatient()->first()->getProcedure()->first()->getAccession() as $acc ) {
             echo "accacc=".$acc.", status=".$acc->getStatus()."<br>";
             //if( $acc->getStatus() == "invalid" ) {
-            $entity->getPatient()->first()->getProcedure()->first()->removeAccession($acc);
+            //$entity->getPatient()->first()->getProcedure()->first()->removeAccession($acc);
             //}
         }
 
