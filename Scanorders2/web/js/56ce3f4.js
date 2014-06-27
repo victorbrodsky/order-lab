@@ -14753,19 +14753,16 @@ function ajaxFinishedCondition() {
         }
 
         for(var i = 0; i < _mrntype.length; i++) {
-            //console.log('mrntype='+ _mrntype[i].text);
             _mrntypes_simple.push( _mrntype[i].text );
         }
 
         _partname_simple.push('');  //insert first empty value
         for(var i = 0; i < _partname.length; i++) {
-            //console.log('mrntype='+ _mrntype[i].text);
             _partname_simple.push( _partname[i].text );
         }
 
         _blockname_simple.push(''); //insert first empty value
         for(var i = 0; i < _blockname.length; i++) {
-            //console.log('mrntype='+ _mrntype[i].text);
             _blockname_simple.push( _blockname[i].text );
         }
 

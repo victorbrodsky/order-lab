@@ -27,6 +27,8 @@
 
 {% block mainjs %}
 
+    {#'@OlegOrderformBundle/Resources/public/form/js/formReady.js'#}
+
     {% javascripts
     '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
     '@OlegOrderformBundle/Resources/public/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js'
@@ -45,7 +47,6 @@
     '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
     '@OlegOrderformBundle/Resources/public/form/js/masking.js'
     '@OlegOrderformBundle/Resources/public/form/js/form.js'
-    '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
     '@OlegOrderformBundle/Resources/public/form/js/modal.js'
     '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
     '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
@@ -116,8 +117,8 @@
     <br>
 
     {############ START FORM ##############}
-    {#<form id="table-scanorderform" action="{{ path('table_create_submit') }}" method="post" {{ form_enctype(form) }}>#}
-    {{ form_start(form) }}
+    <form id="table-slidereturnrequests" action="{{ path('slide-return-request-table-submit') }}" method="post" {{ form_enctype(form) }}>
+    {#{{ form_start(form) }}#}
 
         <!-- handsontable -->
         <br>
@@ -140,6 +141,8 @@
                     </div>
                 </div>
                 <div class="panel-body collapse in">
+
+                    {{ formmacros.field(form.returnoption) }}
                     {{ formmacros.field(form.provider) }}
                     {{ formmacros.field(form.proxyuser) }}
                     {{ formmacros.field(form.returnSlide) }}
@@ -153,8 +156,8 @@
                 <button class="btn btn-success" type="submit">Submit</button>
             </p>
 
-    {#</form>#}
-    {{ form_end(form) }}
+    </form>
+    {#{{ form_end(form) }}#}
     {############ END FORM ##############}
 
 {% endblock %}

@@ -54,11 +54,24 @@ class SlideReturnRequest extends OrderAbstract {
     private $comment;
 
     /**
+     * Return slide(s) by this date even if not scanned
+     * @ORM\Column(name="returnoption", type="boolean", nullable=true)
+     */
+    private $returnoption;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SlideText", mappedBy="slideReturnRequest", cascade={"persist"})
+     */
+    private $slidetext;
+
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->slide = new ArrayCollection();
+        $this->slidetext = new ArrayCollection();
     }
 
     /**
@@ -198,6 +211,43 @@ class SlideReturnRequest extends OrderAbstract {
         $this->comment = $commentFull . "<br>" . $this->comment;
     }
 
+    /**
+     * @param mixed $returnoption
+     */
+    public function setReturnoption($returnoption)
+    {
+        $this->returnoption = $returnoption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReturnoption()
+    {
+        return $this->returnoption;
+    }
+
+    public function getSlidetext()
+    {
+        return $this->slidetext;
+    }
+
+    public function addSlidetext($slidetext)
+    {
+        if( !$this->slidetext->contains($slidetext) ) {
+            $slidetext->setSlideReturnRequest($this);
+            $this->slidetext->add($slidetext);
+        }
+
+        return $this;
+    }
+    public function removeSlidetext($slidetext)
+    {
+        $this->slidetext->removeElement($slidetext);
+    }
+
+
+
     public function getSlideDescription( $user ) {
 
         $description = array();
@@ -228,6 +278,23 @@ class SlideReturnRequest extends OrderAbstract {
 
             $str = $accessionkey->getKeytype().": <b>".$accessionkey->getField()." ".$partkey->getField()." ".$blockDesc." ".$stainDesc."</b>".
                     " (".$patientkey->getKeytype().": ".$patientkey->getField().", ".$patientFullName.")";
+            $description[] = $str;
+
+        }
+
+        return $description;
+    }
+
+
+    public function getSlideTextDescription( $user ) {
+
+        $description = array();
+        foreach( $this->slidetext as $slide ) {
+
+            $patientFullName = $slide->getFullPatientName();
+
+            $str = $slide->getAccessiontype().": <b>".$slide->getAccession()." ".$slide->getPart()." ".$slide->getBlock()." ".$slide->getStain()."</b>".
+                " (".$slide->getMrntype().": ".$slide->getMrn().", ".$patientFullName.")";
             $description[] = $str;
 
         }

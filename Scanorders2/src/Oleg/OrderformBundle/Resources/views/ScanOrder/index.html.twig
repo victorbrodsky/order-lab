@@ -195,9 +195,18 @@
                     <td></td>
                 {% endif %}
                 <td>{% if entity.orderdate %}{{ entity.orderdate|date('m/d/Y H:i') }}{% endif %}</td>
-                <td class="rowlink-skip">
-                    <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
-                </td>
+
+                {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
+                    {{ entity.provider }}
+                    <td>
+                        {{ entity.provider }}
+                    </td>
+                {% else %}
+                    <td class="rowlink-skip">
+                        <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
+                    </td>
+                {% endif %}
+
                 {% if showproxyuser is defined and showproxyuser == 'true' %}
                     <td>
                         {% for proxyuser in entity.proxyuser %}

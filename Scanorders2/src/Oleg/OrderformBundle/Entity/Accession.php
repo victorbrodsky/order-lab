@@ -19,10 +19,6 @@ class Accession extends ObjectAbstract {
      */
     protected $accession;
 
-//    /**
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    protected $accessionDate;
     /**
      * @ORM\OneToMany(targetEntity="AccessionAccessionDate", mappedBy="accession", cascade={"persist"})
      */

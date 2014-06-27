@@ -128,12 +128,20 @@
 
                 {% if route == 'incoming-slide-return-requests' %}
                     <td>
-                        <a href="{{ path('showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
+                        {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
+                            {{ sliderequest.provider }}
+                        {% else %}
+                            <a href="{{ path('showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
+                        {% endif %}
                     </td>
                 {% endif %}
 
                 <td>
-                    <a href="{{ path('showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
+                    {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
+                        {{ sliderequest.proxyuser }}
+                    {% else %}
+                        <a href="{{ path('showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
+                    {% endif %}
                 </td>
 
                 <td>
@@ -156,6 +164,7 @@
                     {{ sliderequest.urgency }}
                 </td>
 
+                {#slides#}
                 <td>
 
                     {% for descr in sliderequest.getSlideDescription(app.security.getToken().getUser()) %}
@@ -166,10 +175,24 @@
 
                     {% endfor %}
 
+                    {% if sliderequest.returnoption != NULL %}
+                        <b>Return all slides that belong to listed accession numbers:</b><br>
+                    {% endif %}
+
+                    {% for descr in sliderequest.getSlideTextDescription(app.security.getToken().getUser()) %}
+
+                        <p>
+                            {{ descr|raw }}
+                        </p>
+
+                    {% endfor %}
+
                 </td>
 
                 <td>
-                    <a href="{{ path('multy_show', { 'id': sliderequest.orderinfo.oid }) }}">{{ sliderequest.orderinfo.oid }}</a>
+                    {% if sliderequest.orderinfo != NULL %}
+                        <a href="{{ path('multy_show', { 'id': sliderequest.orderinfo.oid }) }}">{{ sliderequest.orderinfo.oid }}</a>
+                    {% endif %}
                 </td>
 
                 <td>

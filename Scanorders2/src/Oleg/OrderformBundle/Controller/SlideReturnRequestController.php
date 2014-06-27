@@ -15,6 +15,7 @@ use Oleg\OrderformBundle\Form\FilterSlideReturnRequestType;
 use Oleg\OrderformBundle\Entity\SlideReturnRequest;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 use Oleg\OrderformBundle\Entity\History;
+use Oleg\OrderformBundle\Entity\SlideText;
 
 
 /**
@@ -38,13 +39,105 @@ class SlideReturnRequestController extends Controller
         $slideReturnRequest->setProvider($user);
         $slideReturnRequest->setProxyuser($user);
 
-        $params = array('user'=>$user);
+        $params = array('user'=>$user,'type'=>'table');
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
             'form' => $form->createView(),
             'cicle' => 'new'
         );
+    }
+
+    /**
+     * @Route("/slide-return-request/submit", name="slide-return-request-table-submit")
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:SlideReturnRequest:create-table.html.twig")
+     */
+    public function submitRequestSlideReturnTableAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
+
+        $slideReturnRequest  = new SlideReturnRequest();
+
+        $slideReturnRequest->setProvider($user);
+
+        $slideReturnRequest->setStatus('active');
+
+        $slideReturnRequest->setType($formtype);
+
+        $params = array('user'=>$user,'type'=>'table');
+        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+
+        $form->handleRequest($request);
+
+        if( $form->isValid() ) {
+            //echo "form is valid !!! <br>";
+
+            //////////////// process handsontable rows ////////////////
+            $datajson = $form->get('datalocker')->getData();
+
+            $data = json_decode($datajson, true);
+            //var_dump($data);
+
+            if( $data == null ) {
+                throw new \Exception( 'Table order data is null.' );
+            }
+
+            $rowCount = 0;
+            $headers = array_shift($data);
+
+            foreach( $data as $row ) {
+                //var_dump($row);
+                //echo "<br>";
+
+                $accValue = $this->getValueByHeaderName('Accession Number',$row,$headers);
+                //echo "accValue=".$accValue."<br>";
+
+                if( !$accValue || $accValue == '' ) {
+                    continue;   //skip row if accession number is empty
+                }
+
+                $slideText = new SlideText();
+                $slideText->setMrntype( $this->getValueByHeaderName('MRN Type',$row,$headers) );
+                $slideText->setMrn( $this->getValueByHeaderName("Patient's MRN",$row,$headers) );
+                $slideText->setPatientlastname( $this->getValueByHeaderName("Patient's Last Name",$row,$headers) );
+                $slideText->setPatientfirstname( $this->getValueByHeaderName("Patient's First Name",$row,$headers) );
+                $slideText->setPatientmiddlename( $this->getValueByHeaderName("Patient's Middle Name",$row,$headers) );
+                $slideText->setAccessiontype( $this->getValueByHeaderName("Accession Type",$row,$headers) );
+                $slideText->setAccession( $this->getValueByHeaderName("Accession Number",$row,$headers) );
+                $slideText->setPart( $this->getValueByHeaderName("Part",$row,$headers) );
+                $slideText->setBlock( $this->getValueByHeaderName("Block",$row,$headers) );
+                $slideText->setStain( $this->getValueByHeaderName("Stain",$row,$headers) );
+
+                $slideReturnRequest->addSlidetext($slideText);
+
+                //echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
+                $rowCount++;
+
+            }//foreach row
+
+            if( $rowCount > 0 ) {
+                $em->persist($slideReturnRequest);
+                $em->flush();
+            }
+
+            //exit();
+
+            return $this->redirect($this->generateUrl('my-slide-return-requests'));
+
+        } else {
+            //exit("form is not valid ??? <br>");
+            //echo "form is not valid ??? <br>";
+            throw new \Exception( 'Form was altered' );
+        }
+
+    }
+
+    public function getValueByHeaderName($header, $row, $headers) {
+        $key = array_search($header, $headers);
+        return $row[$key];
     }
 
     /**
@@ -205,9 +298,9 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
 
-        $dql->innerJoin("list.slide", "slides");
+        $dql->leftJoin("list.slide", "slides");
         $dql->innerJoin('list.provider','provider');
-        $dql->innerJoin('list.orderinfo','orderinfo');
+        $dql->leftJoin('list.orderinfo','orderinfo');
 
         $dql->leftJoin('list.proxyuser','proxyuser');
 
@@ -273,9 +366,9 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
 
-        $dql->innerJoin("list.slide", "slides");
+        $dql->leftJoin("list.slide", "slides");
         $dql->innerJoin('list.provider','provider');
-        $dql->innerJoin('list.orderinfo','orderinfo');
+        $dql->leftJoin('list.orderinfo','orderinfo');
 
         $dql->leftJoin('list.proxyuser','proxyuser');
 

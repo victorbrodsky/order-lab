@@ -65,6 +65,16 @@ class SlideReturnRequestType extends AbstractType
                         ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
                 },
         ));
+
+        if( array_key_exists('type', $this->params) &&  $this->params['type'] == 'table' ) {
+            $builder->add('returnoption', 'checkbox', array(
+                'label'     => 'Return all slides that belong to listed accession numbers:',
+                'required'  => false,
+            ));
+            $builder->add('datalocker','hidden', array(
+                "mapped" => false
+            ));
+        }
         
     }
 

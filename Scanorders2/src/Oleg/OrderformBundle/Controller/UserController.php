@@ -139,7 +139,9 @@ class UserController extends Controller
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') &&
+            ($this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') || $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER'))
+        ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         //echo "id=".$id."<br>";

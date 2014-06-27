@@ -14,6 +14,13 @@ var _stains_simple = new Array();
 
 var _errorValidatorRows = new Array(); //keep rows with validator error
 
+var _rowToProcessArr = new Array();
+var _processedRowCount = 0;
+var _mrnAccessionArr = new Array();
+
+var _mrnAccConflictRowArr = new Array();
+
+var _tableValidated = false;
 
 //renderers
 var redRendererAutocomplete = function (instance, td, row, col, prop, value, cellProperties) {
@@ -38,6 +45,11 @@ var redRenderer = function (instance, td, row, col, prop, value, cellProperties)
     //capitalizeAccession( row, col, value );
 };
 
+var conflictBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).addClass('ht-conflictborder-error');
+};
+
 //25 non zeros characters
 var general_validator = function (value) {
     if( isValueEmpty(value) ) {
@@ -55,6 +67,25 @@ var general_validator = function (value) {
 };
 var general_validator_fn = function (value, callback) {
     callback( general_validator(value) );
+};
+
+//noaccession-provided and nomrn-provided non zeros characters not limited
+var generated_validator = function (value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
+    var notzeros = notAllZeros(value);
+    var res = value.match(/^[a-zA-Z1-9][a-zA-Z0-9-]{1,}$/);
+    //console.log('general validator: res='+res+', notzeros='+notzeros);
+    if( res != null && notzeros ) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+var generated_validator_fn = function (value, callback) {
+    callback( generated_validator(value) );
 };
 
 //accession validator
@@ -80,6 +111,20 @@ var accession_validator_fn = function (value, callback) {
     callback( accession_validator(value) );
 };
 
+var conflictRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    $(td).addClass('ht-conflict-error');
+};
+
+var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    if( !validateCell(row,col,null) ) {
+        $(td).addClass('ht-redwithconflictborder-error');
+    } else {
+        $(td).addClass('ht-conflictborder-error');
+    }
+};
+
 var _columnData_scanorder = [
 
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
@@ -96,13 +141,22 @@ var _columnData_scanorder = [
 
     { header:'Block', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
 
-    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
+    { header:'Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} }
 
 ];
 
 $(document).ready(function() {
 
+    idleTimeout();
+    setNavBar();
+    $(".element-with-tooltip").tooltip();
     attachResearchEducationalTooltip();
+
+    getComboboxMrnType(new Array("0","0","0","0","0","0"));
+    getComboboxAccessionType(new Array("0","0","0","0","0","0"));
+    getComboboxPartname(new Array("0","0","0","0","0","0"));
+    getComboboxBlockname(new Array("0","0","0","0","0","0"));
+    getComboboxStain(new Array("0","0","0","0","0","0"));
 
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
@@ -120,7 +174,7 @@ $(document).ready(function() {
     });
 
     //validation on form submit
-    $("#table-scanorderform").on("submit", function () {
+    $("#table-slidereturnrequests").on("submit", function () {
         return validateHandsonTable();
     });
 
@@ -239,6 +293,47 @@ function handsonTableInit() {
 
 }
 
+function processKeyTypes( row, col, value, oldvalue ) {
+
+    if( value == oldvalue )
+        return;
+
+    var columnHeader = _columnData_scanorder[col].header;
+
+    switch( columnHeader )
+    {
+        case 'MRN Type':
+
+
+            break;
+        case 'Accession Type':
+
+            ////////////// set validator ///////////////
+            if( isValueEmpty(value) ) {
+                break;
+            }
+            var accNum = _sotable.getDataAtCell(row,col+1);
+            if( value == 'NYH CoPath Anatomic Pathology Accession Number' ) {
+                _sotable.getCellMeta(row,col+1).validator = accession_validator_fn;
+                _sotable.getCellMeta(row,col+1).valid = accession_validator(accNum);
+            }
+            else if( value == 'Auto-generated Accession Number' || value == 'Existing Auto-generated Accession Number' ) {
+                _sotable.getCellMeta(row,col+1).validator = generated_validator_fn;
+                _sotable.getCellMeta(row,col+1).valid = generated_validator(accNum);
+            }
+            else {
+                _sotable.getCellMeta(row,col+1).validator = general_validator_fn;
+                _sotable.getCellMeta(row,col+1).valid = general_validator(accNum);
+            }
+            ////////////// EOF set validator ///////////////
+
+            break;
+        default:
+        //
+    }
+    return;
+}
+
 //the cell's value for Types, Acc, MRN, Part, Block should not be empty
 function validateCell( row, col, value ) {
 
@@ -282,32 +377,75 @@ function validateCell( row, col, value ) {
     return valid;
 }
 
+function notAllZeros(value) {
+    if( isValueEmpty(value) ) {
+        return true;
+    }
+
+    var allzeros = value.match(/^[0]+$/);
+    //console.log('allzeros='+allzeros);
+    if( allzeros != null ) {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+
+function cleanErrorTable() {
+    _mrnAccessionArr.length = 0;
+    _processedRowCount = 0;
+    _rowToProcessArr.length = 0;
+    _mrnAccConflictRowArr.length = 0;
+    $('.tablerowerror-added').remove();
+    var rowsCount = _sotable.countRows();
+    for( var row=0; row<rowsCount; row++ ) {  //foreach row
+        setErrorToRow(row,conflictRenderer,false);
+    }
+    _sotable.render();
+}
+
+function setErrorToRow(row,type,setError) {
+    var headers = _sotable.getColHeader();
+    for( var col=0; col< headers.length; col++ ) {  //foreach column
+        if( setError ) {
+            _sotable.getCellMeta(row,col).renderer = type;  //conflictRenderer;
+        } else {
+            _sotable.getCellMeta(row,col).renderer = _columnData_scanorder[col].columns.renderer;
+        }
+    }
+    _sotable.render();
+}
+
 function ajaxFinishedCondition() {
     if(
             _accessiontype.length > 0 &&
             _mrntype.length > 0 &&
-            _stain.length > 0 &&
-            _procedure.length > 0
+            _partname.length > 0 &&
+            _blockname.length > 0 &&
+            _stain.length > 0
     ) {
 
         for(var i = 0; i < _accessiontype.length; i++) {
-            _accessiontypes_simple.push( _accessiontype[i].text );
+            //console.log("acctype="+_accessiontype[i].text);
+            if( _accessiontype[i].text != 'Existing Auto-generated Accession Number' ) {
+                _accessiontypes_simple.push( _accessiontype[i].text );
+            }
         }
 
         for(var i = 0; i < _mrntype.length; i++) {
-            //console.log('mrntype='+ _mrntype[i].text);
-            _mrntypes_simple.push( _mrntype[i].text );
+            if( _mrntype[i].text != 'Existing Auto-generated MRN' ) {
+                _mrntypes_simple.push( _mrntype[i].text );
+            }
         }
 
         _partname_simple.push('');  //insert first empty value
         for(var i = 0; i < _partname.length; i++) {
-            //console.log('mrntype='+ _mrntype[i].text);
             _partname_simple.push( _partname[i].text );
         }
 
         _blockname_simple.push(''); //insert first empty value
         for(var i = 0; i < _blockname.length; i++) {
-            //console.log('mrntype='+ _mrntype[i].text);
             _blockname_simple.push( _blockname[i].text );
         }
 
@@ -364,3 +502,231 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
     callback();
 }
 
+
+//////////////////// validation /////////////////////
+//Validation should only check that each edited line has at least an accession number.
+function validateHandsonTable() {
+
+    if( _tableValidated === true ) {
+        return true;
+    }
+
+    $('#tableview-submit-btn').button('loading');
+
+    //set main indexes for the column such as Acc Type, Acc Number ...
+    _tableMainIndexes = getTableDataIndexes();
+
+    //clean all previous error wells
+    cleanErrorTable();
+
+
+    /////////// 1) Check cell validator ///////////
+    //var errCells = $('.htInvalid').length;
+    var errCells = 0;
+    //console.log('_errorValidatorRows.length='+_errorValidatorRows.length);
+    //console.log(_errorValidatorRows);
+
+    //don't check cell validator if row is empty
+    for( var i=0; i<_errorValidatorRows.length; i++) {
+        var row = _errorValidatorRows[i];
+        if( _sotable.isEmptyRow(row) ) {                        //no error row
+            //console.log(row+": empty row!");
+        } else {                                                //error row
+            //console.log(row+": not empty row");
+            setErrorToRow(row,conflictBorderRenderer,true);
+            errCells++;
+        }
+    }
+
+    //console.log('errCells='+errCells);
+    if( errCells > 0 ) {
+        var errmsg = "Please review the cell(s) marked bright red in the highlighted row(s), and correct the entered values to match the expected format. " +
+            "The expected formats are as follows:<br>"+ "CoPath Accession Number: example of acceptable numbers are S14-1 or SC14-100001 " +
+            "(must have a dash with no leading zeros after the dash such as S14-01; must start with either one or two letters followed by two digits; " +
+            "maximum character string length is 11; must contain only letters or digits)<br>" +
+            "All other Accession and MRN Types: maximum of 25 characters; must not start with one or more consequtive zeros; " +
+            "must be made up of letters, numbers and possibly a dash; the first and last character must be either digits or letters (not a dash). " +
+            "Example of an acceptable character string: DC100000000211";
+        var errorHtml = createTableErrorWell(errmsg);
+        $('#validationerror').append(errorHtml);
+        $('#tableview-submit-btn').button('reset');
+        return false;
+    }
+    /////////// EOF Check cell validation ///////////
+
+
+    /////////// 2) Empty main cells validation ///////////
+    var countRow = _sotable.countRows();
+    var emptyRows = 0;
+    for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
+        if( !validateEmptyHandsonRow(row) ) {
+            setSpecialErrorToRow(row);
+            emptyRows++;
+        }
+    } //for each row
+
+    if( emptyRows > 0 ) {
+        var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
+            "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
+            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
+            "If you have accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
+
+        var errorHtml = createTableErrorWell(errmsg);
+        $('#validationerror').append(errorHtml);
+        $('#tableview-submit-btn').button('reset');
+        return false;
+    }
+
+
+    //console.log("All rows processed!!!!!!!!!!!");
+    $('#tableview-submit-btn').button('reset');
+
+    if( _rowToProcessArr.length == 0 ) {
+        var errorHtml = createTableErrorWell('No data to submit. All rows are empty or in the default state.');
+        $('#validationerror').append(errorHtml);
+        $('#tableview-submit-btn').button('reset');
+        return false;
+    }
+
+    if( $('.tablerowerror-added').length == 0 ) {
+
+        console.log("Submit form!!!!!!!!!!!!!!!");
+
+        //get rows data from _rowToProcessArr
+        assignDataToDatalocker();
+
+        _tableValidated = true;
+
+        //return false; //testing
+        $('#table-slidereturnrequests').submit();
+    }
+
+    return false;
+}
+
+//get rows data from _rowToProcessArr and assign this to datalocker field
+function assignDataToDatalocker() {
+    //get rows data from _rowToProcessArr
+    var data = new Array();
+    data.push(_sotable.getColHeader());
+    for( var i=0; i<_rowToProcessArr.length; i++ ) {
+        console.log("data row="+_rowToProcessArr[i]);
+        data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+    }
+    //console.log(data);
+
+    //provide table data to controller
+    //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
+    var jsonstr = JSON.stringify(data);
+    console.log("jsonstr="+jsonstr);
+    $("#oleg_orderformbundle_slidereturnrequesttype_datalocker").val( jsonstr );
+}
+
+function validateEmptyHandsonRow( row ) {
+    var dataRow = _sotable.getDataAtRow(row);
+    var accType = dataRow[_tableMainIndexes.acctype];
+    var acc = dataRow[_tableMainIndexes.acc];
+    //console.log('row:'+row+': accType='+accType+', acc='+acc+' <= accTypeIndex='+_tableMainIndexes.acctype+', accIndex='+_tableMainIndexes.acc);
+
+    //don't validate the untouched OR is empty rows
+    if( exceptionRow(row) ) {
+        return true;
+    } else {
+        _rowToProcessArr.push(row); //count rows to process. Later we will need it to check if all rows were processed by ajax
+    }
+
+    if( isValueEmpty(accType) || isValueEmpty(acc) ) {
+        return false;
+    }
+
+    return true;
+}
+
+//check if the row is untouched (default) OR is empty
+//return true if row was untouched or empty; return false if row was modified
+function exceptionRow( row ) {
+
+    //if row is empty
+    if( _sotable.isEmptyRow(row) ) {
+        //console.log("empty row!");
+        return true;
+    }
+
+    //if columns have default state
+    var headers = _sotable.getColHeader();
+    for( var col=0; col<headers.length; col++ ) {
+        var val = _sotable.getDataAtCell(row,col);
+        var defVal = null;
+        if( 'default' in _columnData_scanorder[col] ) {
+            var index = _columnData_scanorder[col]['default'];
+            defVal = _columnData_scanorder[col]['columns']['source'][index];
+            //console.log(col+": "+val +"!="+ defVal);
+            if( val != defVal ) {
+                //console.log(col+": "+'no default!!!!!!!!!!!!!!');
+                return false;
+            }
+        } else {
+            //console.log(col+": "+"no default (val should be empty), val="+val);
+            if( !isValueEmpty(val) ) {
+                //console.log(col+": "+'no empty!!!!!!!!!!!!!!');
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+function getTableDataIndexes() {
+    var res = new Array();
+    for( var i=0; i<_columnData_scanorder.length; i++ ) {
+        var columnHeader = _columnData_scanorder[i].header;
+        switch( columnHeader )
+        {
+            case 'MRN Type':
+                res['mrntype'] = i;
+                break;
+            case 'MRN':
+                res['mrn'] = i;
+                break;
+            case 'Accession Type':
+                res['acctype'] = i;
+                break;
+            case 'Accession Number':
+                res['acc'] = i;
+                break;
+            case 'Part Name':
+                res['part'] = i;
+                break;
+            case 'Block Name':
+                res['block'] = i;
+                break;
+            case 'Patient DOB':
+                res['dob'] = i;
+                break;
+            default:
+        }
+    }
+    return res;
+}
+
+function createTableErrorWell(errtext) {
+    if( !errtext || errtext == '') {
+        errtext = 'Please make sure that all fields in the table form are valid';
+    }
+
+    var errorHtml =
+        '<div class="tablerowerror-added alert alert-danger">' +
+            errtext +
+            '</div>';
+
+    return errorHtml;
+}
+
+function setSpecialErrorToRow(row) {
+    var headers = _sotable.getColHeader();
+    for( var col=0; col< headers.length; col++ ) {  //foreach column
+        _sotable.getCellMeta(row,col).renderer = redWithBorderRenderer;
+    }
+    _sotable.render();
+}
