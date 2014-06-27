@@ -38,6 +38,7 @@ class SlideReturnRequestController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $slideReturnRequest->setProvider($user);
         $slideReturnRequest->setProxyuser($user);
+        $slideReturnRequest->setReturnoption(true);
 
         $params = array('user'=>$user,'type'=>'table');
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);

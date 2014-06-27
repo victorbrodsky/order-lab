@@ -255,7 +255,12 @@ class SlideReturnRequest extends OrderAbstract {
 
             $patient =  $slide->obtainPatient()->filterArrayFields($user,true);
             $patientkey =  $patient->obtainValidKeyfield();
-            $patientFullName = $patient->getFullPatientName();    //'<b>'.$patient->getName()->first()->getField().'</b> <i>'.$patient->getName()->first()->getMiddleName().'</i> '.$patient->getName()->first()->getFirstName();
+            $patientFullName = $patient->getFullPatientName();
+            if( !$patientkey->getField() || $patientkey->getField() == "" ) {
+                $patientMrn = "No MRN Provided";
+            } else {
+                $patientMrn = $patientkey->getField();
+            }
 
             $accession =  $slide->obtainAccession()->filterArrayFields($user,true);
             $accessionkey =  $accession->obtainValidKeyfield();
@@ -293,8 +298,14 @@ class SlideReturnRequest extends OrderAbstract {
 
             $patientFullName = $slide->getFullPatientName();
 
+            if( !$slide->getMrn() || $slide->getMrn() == "" ) {
+                $patientMrn = "No MRN Provided";
+            } else {
+                $patientMrn = $slide->getMrn();
+            }
+
             $str = $slide->getAccessiontype().": <b>".$slide->getAccession()." ".$slide->getPart()." ".$slide->getBlock()." ".$slide->getStain()."</b>".
-                " (".$slide->getMrntype().": ".$slide->getMrn().", ".$patientFullName.")";
+                " (".$slide->getMrntype().": ".$patientMrn.", ".$patientFullName.")";
             $description[] = $str;
 
         }

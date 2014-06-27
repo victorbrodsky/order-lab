@@ -127,21 +127,19 @@ var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellP
 
 var _columnData_scanorder = [
 
+    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true, renderer:redRenderer} },
+
+    { header:'Part', default:0, columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Block', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
+    { header:'Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
+
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
     { header:"Patient's MRN", columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn, allowInvalid: true} },
 
     { header:"Patient's Last Name", columns:{} },
     { header:"Patient's First Name", columns:{} },
-    { header:"Patient's Middle Name", columns:{} },
-
-    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
-    { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true, renderer:redRenderer} },
-
-    { header:'Part', default:0, columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
-
-    { header:'Block', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
-
-    { header:'Stain', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} }
+    { header:"Patient's Middle Name", columns:{} }
 
 ];
 

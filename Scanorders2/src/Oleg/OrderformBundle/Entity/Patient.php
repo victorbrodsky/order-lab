@@ -652,28 +652,31 @@ class Patient extends ObjectAbstract
 
         //echo "lastname=".implode(",",$this->getLastname())."<br>";
 
-        if( ($this->getLastname() && $this->getLastname()->first()) || ($this->getFirstname() && $this->getFirstname()->first()) || ($this->getMiddlename() && $this->getMiddlename()->first()) ) {
-        //if( $this->getLastname()->first() || $this->getFirstname()->first() || $this->getMiddlename()->first() ) {
-
-            if( $this->getLastname() && $this->getLastname()->first()->getField() ) {
-                $patientFullName .= '<b>'.$this->getLastname()->first()->getField().'</b>';
-            }
-
-            if( $this->getFirstname() && $this->getFirstname()->first()->getField() ) {
-                if( $patientFullName != '' ) {
-                    $patientFullName .= ', ';
-                }
-                $patientFullName .= $this->getFirstname()->first()->getField();
-            }
-
-            if( $this->getMiddlename() && $this->getMiddlename()->first()->getField() ) {
-                if( $patientFullName != '' ) {
-                    $patientFullName .= ' ';
-                }
-                $patientFullName .= '<i>'.$this->getMiddlename()->first()->getField().'</i>';
-            }
-
+        if( $this->getLastname() && $this->getLastname()->first()->getField() ) {
+            $patientFullName .= '<b>'.$this->getLastname()->first()->getField().'</b>';
+        } else {
+            $patientFullName .= "No Last Name Provided";
         }
+
+        if( $this->getFirstname() && $this->getFirstname()->first()->getField() ) {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ', ';
+            }
+            $patientFullName .= $this->getFirstname()->first()->getField();
+        } else {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ', ';
+            }
+            $patientFullName .= "No First Name Provided";
+        }
+
+        if( $this->getMiddlename() && $this->getMiddlename()->first()->getField() ) {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ' ';
+            }
+            $patientFullName .= '<i>'.$this->getMiddlename()->first()->getField().'</i>';
+        }
+
         return $patientFullName;
     }
 

@@ -261,27 +261,31 @@ class SlideText extends ArrayFieldAbstract
     public function getFullPatientName() {
         $patientFullName = "";
 
-        if( $this->getPatientlastname() || $this->getPatientfirstname() || $this->getPatientmiddlename() ) {
-
-            if( $this->getPatientlastname() && $this->getPatientlastname() != "" ) {
-                $patientFullName .= '<b>'.$this->getPatientlastname().'</b>';
-            }
-
-            if( $this->getPatientfirstname() && $this->getPatientfirstname() != "" ) {
-                if( $patientFullName != '' ) {
-                    $patientFullName .= ', ';
-                }
-                $patientFullName .= $this->getPatientfirstname();
-            }
-
-            if( $this->getPatientmiddlename() && $this->getPatientmiddlename() != "" ) {
-                if( $patientFullName != '' ) {
-                    $patientFullName .= ' ';
-                }
-                $patientFullName .= '<i>'.$this->getPatientmiddlename().'</i>';
-            }
-
+        if( $this->getPatientlastname() && $this->getPatientlastname() != "" ) {
+            $patientFullName .= '<b>'.$this->getPatientlastname().'</b>';
+        } else {
+            $patientFullName .= "No Last Name Provided";
         }
+
+        if( $this->getPatientfirstname() && $this->getPatientfirstname() != "" ) {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ', ';
+            }
+            $patientFullName .= $this->getPatientfirstname();
+        } else {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ', ';
+            }
+            $patientFullName .= "No First Name Provided";
+        }
+
+        if( $this->getPatientmiddlename() && $this->getPatientmiddlename() != "" ) {
+            if( $patientFullName != '' ) {
+                $patientFullName .= ' ';
+            }
+            $patientFullName .= '<i>'.$this->getPatientmiddlename().'</i>';
+        }
+
         return $patientFullName;
     }
 
