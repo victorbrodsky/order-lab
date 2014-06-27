@@ -14665,6 +14665,9 @@ var _columnData_scanorder = [
     { header:'Diagnosis', columns:{} },
     { header:'Reason for Scan/Note', columns:{} },
 
+    //part 1
+    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
+
     //patient: 4
     { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
     { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn, allowInvalid: true} },
@@ -14687,12 +14690,11 @@ var _columnData_scanorder = [
     { header:'Patient Age', columns:{validator: age_validator_fn, allowInvalid: true} },
     { header:'Clinical History', columns:{} },
 
-    //part: 6
-    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
+    //part: 5
     { header:'Gross Description', columns:{} },
     { header:'Differential Diagnoses', columns:{} },
     { header:'Type of Disease', default:0, columns:{type:'dropdown', source:['','Neoplastic','Non-Neoplastic','None','Unspecified'], strict:true} },
-    { header:'Origin of Disease', default:0, columns:{type:'dropdown', source:['','Primary','Metastatic','Unspecified'], strict:true, colWidths:'100px'} },
+    { header:'Origin of Disease', default:0, columns:{type:'dropdown', source:['','Primary','Metastatic','Unspecified'], strict:true} },
     { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false} },
 
     //block: 3
@@ -15833,9 +15835,9 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
-    if( !mrnDB || !mrntypeDB ) {
+    if( !mrnDB || !mrntypeDB || !mrn || !mrnTypeCorrect || !dob ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");
         return true;
     }

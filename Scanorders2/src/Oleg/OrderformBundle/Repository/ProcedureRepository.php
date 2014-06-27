@@ -75,12 +75,11 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
             //procedure were obtained from accession, so it's not persisted.
             $em->persist($found);
-            //$found = $em->getRepository('OlegOrderformBundle:Procedure')->findOneById( $found->getId() );
+
+            //add procedure's name, sex, age to the corresponding patient fields
+            //$this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
 
             return $this->setResult($found, $orderinfo, $entity);
-
-            //$entity->setId( $found->getId() );
-            //return $this->setResult($entity, $orderinfo);
 
         } else
         if( $key == "" ) {
@@ -123,6 +122,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $status = self::STATUS_VALID;
 
         //lastname
+        //echo "proc last name count=".count($procedure->getPatlastname())."<br>";
         if( count($procedure->getPatlastname()) > 0 ) {
             if( $this->validFieldIsSet( $patient->getLastname() ) ) {
                 $status = self::STATUS_INVALID;

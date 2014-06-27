@@ -31171,7 +31171,7 @@ var _columnData_scanorder = [
 
     { header:"Patient's Last Name", columns:{} },
     { header:"Patient's First Name", columns:{} },
-    { header:"Patient's Middle Name", columns:{} }    
+    { header:"Patient's Middle Name", columns:{} }
 
 ];
 

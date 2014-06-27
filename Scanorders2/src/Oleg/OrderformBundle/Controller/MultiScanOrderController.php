@@ -649,6 +649,25 @@ class MultiScanOrderController extends Controller {
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
+        //testing
+        echo $entity;
+        echo "accession=".$entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()."<br>";
+        echo "accacc count=".count($entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getAccession())."<br>";
+//        foreach( $entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getAccession() as $acc ) {
+//            echo "accacc=".$acc.", status=".$acc->getStatus()."<br>";
+//            //if( $acc->getStatus() == "invalid" ) {
+//                $entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->removeAccession($acc);
+//            //}
+//        }
+        foreach( $entity->getPatient()->first()->getProcedure()->first()->getAccession() as $acc ) {
+            echo "accacc=".$acc.", status=".$acc->getStatus()."<br>";
+            //if( $acc->getStatus() == "invalid" ) {
+            $entity->getPatient()->first()->getProcedure()->first()->removeAccession($acc);
+            //}
+        }
+
+        //echo "accacc count=".count($entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getAccession())."<br>";
+
         $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 

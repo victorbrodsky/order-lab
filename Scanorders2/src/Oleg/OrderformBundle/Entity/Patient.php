@@ -338,7 +338,7 @@ class Patient extends ObjectAbstract
             $lastname->setPatient($this);
             $this->lastname->add($lastname);
         }
-    
+
         return $this;
     }
 
@@ -652,13 +652,13 @@ class Patient extends ObjectAbstract
 
         //echo "lastname=".implode(",",$this->getLastname())."<br>";
 
-        if( $this->getLastname() && $this->getLastname()->first()->getField() ) {
+        if( $this->getLastname() && $this->getLastname()->first() && $this->getLastname()->first()->getField() ) {
             $patientFullName .= '<b>'.$this->getLastname()->first()->getField().'</b>';
         } else {
             $patientFullName .= "No Last Name Provided";
         }
 
-        if( $this->getFirstname() && $this->getFirstname()->first()->getField() ) {
+        if( $this->getFirstname() && $this->getFirstname()->first() && $this->getFirstname()->first()->getField() ) {
             if( $patientFullName != '' ) {
                 $patientFullName .= ', ';
             }
@@ -670,7 +670,7 @@ class Patient extends ObjectAbstract
             $patientFullName .= "No First Name Provided";
         }
 
-        if( $this->getMiddlename() && $this->getMiddlename()->first()->getField() ) {
+        if( $this->getMiddlename() && $this->getMiddlename()->first() && $this->getMiddlename()->first()->getField() ) {
             if( $patientFullName != '' ) {
                 $patientFullName .= ' ';
             }
