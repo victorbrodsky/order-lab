@@ -26,11 +26,16 @@
         </p>
     </div>
 
-    {% for conflict in conflicts %}
+    {% if conflicts is defined and conflicts != "" and conflicts != "noconflicts" %}
         <div class="alert alert-danger">
-            {{ conflict }}
+            {{ conflicts }}
         </div>
-    {% endfor %}
+    {% endif %}
+    {#{% for conflict in conflicts %}#}
+        {#<div class="alert alert-danger">#}
+            {#{{ conflict }}#}
+        {#</div>#}
+    {#{% endfor %}#}
       
 {% endblock %}
 {% endblock %}

@@ -62,17 +62,6 @@
                 </div>
             </p>
 
-            {#<p>#}
-                {#<div class="row">#}
-                    {#<div class="col-xs-6" align="right">#}
-                        {#{{ form_label(form.cwid) }}#}
-                    {#</div>#}
-                    {#<div class="col-xs-6" align="left">#}
-                        {#{{ form_widget(form.cwid) }}#}
-                    {#</div>#}
-                {#</div>#}
-            {#</p>#}
-
             {{ myform.field(form.cwid) }}
 
             {{ myform.field(form.name) }}
@@ -132,6 +121,8 @@
 
     </div> <!-- /container -->
 
+    {#'@OlegOrderformBundle/Resources/public/form/js/checkForm.js'#}
+    {#'@OlegOrderformBundle/Resources/public/q-1/q.js'#}
 
     <!-- send width and height info to the server -->
     {% javascripts
@@ -142,11 +133,9 @@
         '@OlegOrderformBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
         '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
         '@OlegOrderformBundle/Resources/public/form/js/masking.js'
-        '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
         '@OlegOrderformBundle/Resources/public/form/js/form.js'
         '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
         '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
-        '@OlegOrderformBundle/Resources/public/q-1/q.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -158,15 +147,6 @@
             customCombobox();
             fieldInputMask();
             expandTextarea();
-
-            $("select.combobox").select2({
-                width: combobox_width,
-                dropdownAutoWidth: true,
-                placeholder: "Choose a similar user",
-                allowClear: true
-            });
-
-            $('.element-with-tooltip').tooltip();
 
             $(".hascwid").find('input:radio').on('change', function(){
                 var checkedValue = $(this).val();

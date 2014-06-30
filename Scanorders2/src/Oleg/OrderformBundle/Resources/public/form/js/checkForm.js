@@ -482,6 +482,7 @@ function executeClick( btnObjInit ) {
 
                     //////////////// check ////////////////
                     if( casetype == 'check' ) {
+                        //console.debug("check casetype="+casetype);
                         if( data == -2 ) {
 
                             //Existing Auto-generated object does not exist in DB

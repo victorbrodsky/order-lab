@@ -60,7 +60,7 @@ security:
 
             anonymous:  true
 
-            access_denied_url: /scan-order/no-permission
+            access_denied_url: /scan/scan-order/no-permission
 
           
     access_control:

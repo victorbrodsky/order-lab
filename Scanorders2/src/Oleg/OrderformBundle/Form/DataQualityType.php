@@ -21,6 +21,20 @@ class DataQualityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+//        $builder->add( 'description', null, array(
+//            'label'=>"MRN-ACCESSION CONFLICT",
+//            'attr'=>array('class'=>'dataquality-description-class textarea form-control')
+//        ));
+
+        $builder->add( 'accession', null, array(
+            'label'=>false
+        ));
+
+        $builder->add( 'newaccession', null, array(
+            'label'=>false
+        ));
+
+if(0) {
         if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' || $this->params['cicle'] == 'amend' ) {
 
             $type = 'hidden';
@@ -58,31 +72,54 @@ class DataQualityType extends AbstractType
             'attr'=>array('class'=>'dataquality-description-class textarea form-control')
         ));
 
+        //accession
         $builder->add( 'accession', $type, array(
             'label'=>$labelAccession,
             'attr'=>array('class'=>'dataquality-accession-class form-control form-control-modif')
         ));
 
-        $builder->add( 'accessiontype', $type, array(
-            'label'=>$labelAccessiontype,
-            'attr'=>array('class'=>'dataquality-accessiontype-class')
-        ));
-
-//        $builder->add( 'newaccession', $type, array(
-//            'label'=>$labelNewaccession,
-//            'attr'=>array('class'=>'dataquality-accession-class form-control form-control-modif')
+        //accession type
+//        $builder->add( 'accessiontype', $type, array(
+//            'label'=>$labelAccessiontype,
+//            'attr'=>array('class'=>'dataquality-accessiontype-class')
 //        ));
+        $attr = array('class' => 'dataquality-accessiontype-class', 'style'=>'display:none;'); //ajax-combobox combobox combobox-width accessiontype-combobox
+        $options = array(
+            'label' => false,
+            'required' => true,
+            'attr' => $attr,
+            'classtype' => 'accessiontype',
+        );
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+            $options['data'] = 1; //new
+        }
+        $builder->add('accessiontype', 'custom_selector', $options);
 
+
+        //mrn
         $builder->add( 'mrn', $type, array(
             'label'=>$labelMrn,
             'attr'=>array('class'=>'dataquality-mrn-class form-control form-control-modif')
         ));
 
-        $builder->add( 'mrntype', $type, array(
-            'label'=>$labelMrntype,
-            'attr'=>array('class'=>'dataquality-mrntype-class')
-        ));
 
+        //mrn types
+//        $builder->add( 'mrntype', $type, array(
+//            'label'=>$labelMrntype,
+//            'attr'=>array('class'=>'dataquality-mrntype-class')
+//        ));
+        $attr = array('class' => 'dataquality-mrntype-class', 'style'=>'display:none;'); //ajax-combobox combobox combobox-width mrntype-combobox
+        $options = array(
+            'label' => false,
+            'required' => true,
+            'attr' => $attr,
+            'classtype' => 'mrntype',
+        );
+        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create') {
+            $options['data'] = 1; //new
+        }
+        $builder->add('mrntype', 'custom_selector', $options);
+}
 
     }
 

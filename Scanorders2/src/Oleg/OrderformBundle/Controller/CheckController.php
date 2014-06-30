@@ -292,7 +292,9 @@ class CheckController extends Controller {
             $entity = null;               
             $element = -2;
         }
-        
+
+        //echo "entity=".$entity."<br>";
+
         if( $entity ) {
 
             $parentKey = null;
@@ -311,6 +313,8 @@ class CheckController extends Controller {
                     $parentKey = $patient->obtainValidKeyfield();
                     $parentDob = $patient->obtainValidDob();
                 }
+
+                //echo "parentKey=".$parentKey."<br>";
 
                 if( $patient && $parentKey ) {
                     $parentKey = $patient->obtainValidKeyfield();
@@ -337,7 +341,7 @@ class CheckController extends Controller {
                 $patAge = $entity->getProcedure()->getPatage();
                 $patHist = $entity->getProcedure()->getPathistory();
 
-            }
+            }//if $entity->getProcedure()
 
             if( !$parentKey ) {
                 $parentKey = null;

@@ -61,13 +61,22 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
         }
 
-        if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
+        //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
+        if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+
+            //echo "ROLE SCANORDER PROCESSOR <br>";
+            //exit();
 
             $response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
             $options['event'] = "Successful Login";
 
         }
-        elseif( $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') || $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') || $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') ) {
+        elseif(
+            $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') ||
+            $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ||
+            $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') ||
+            $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
+        ) {
 
             //$referer_url1 = $request->headers->get('referer');
             //echo("referer_url1=".$referer_url1."<br>");
@@ -79,13 +88,14 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
             $loginpos = strpos($lastRoute, '/login');
             $nopermpos = strpos($lastRoute, '/no-permission');
+            $nocheck = strpos($lastRoute, '/check/');
             //setloginvisit
 
 //            echo "nopermpos=".$nopermpos."<br>";
 //            echo "loginpos=".$loginpos."<br>";
 //            exit();
 
-            if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false ) {
+            if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false && $nocheck === false ) {
                 //$referer_url = $this->router->generate( $lastRoute );
                 $referer_url = $lastRoute;
             } else {

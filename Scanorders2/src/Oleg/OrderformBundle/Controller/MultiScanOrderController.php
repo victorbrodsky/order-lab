@@ -87,8 +87,8 @@ class MultiScanOrderController extends Controller {
     /**
      * Creates a new OrderInfo entity.
      *
-     * @Route("/scan-order/one-slide/new", name="singleorder_create")
-     * @Route("/scan-order/multi-slide/new", name="multi_create")
+     * @Route("/scan-order/one-slide/create", name="singleorder_create")
+     * @Route("/scan-order/multi-slide/create", name="multi_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
@@ -279,12 +279,28 @@ class MultiScanOrderController extends Controller {
                     return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));
                 }
 
-                return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-                    'oid' => $entity->getOid(),
-                    'conflicts' => $conflicts,
-                    'cicle' => $cicle,
-                    'neworder' => $new_order
+                if( count($conflicts) > 0 ) {
+                    $conflictsStr = implode("\r\n", $conflicts);
+                } else {
+                    $conflictsStr = "noconflicts";
+                }
+
+                return $this->redirect($this->generateUrl('scan-order-submitted-get',
+                    array(
+                        'oid' => $entity->getOid(),
+                        'cicle' => $cicle,
+                        'neworder' => $new_order,
+                        'conflicts' => $conflictsStr
+                    )
                 ));
+
+//                return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+//                    'oid' => $entity->getOid(),
+//                    'conflicts' => $conflicts,
+//                    'cicle' => $cicle,
+//                    'neworder' => $new_order
+//                ));
+
             }
 
 
@@ -296,7 +312,22 @@ class MultiScanOrderController extends Controller {
             'type' => 'new',
             'formtype' => $entity->getType()
         );    
-    }    
+    }
+
+    /**
+     * @Route("/scan-order/submitted/{oid}/{cicle}/{neworder}/{conflicts}", name="scan-order-submitted-get")
+     * @Method("GET")
+     */
+    public function thanksScanorderGetAction($oid,$conflicts,$cicle,$neworder) {
+
+        //echo "conflicts=".$conflicts."<br>";
+        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+            'oid' => $oid,
+            'conflicts' => $conflicts,
+            'cicle' => $cicle,
+            'neworder' => $neworder
+        ));
+    }
     
     /**
      * Displays a form to create a new OrderInfo + Scan entities.
@@ -649,25 +680,6 @@ class MultiScanOrderController extends Controller {
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
-        //testing
-        echo $entity;
-        echo "accession=".$entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()."<br>";
-        echo "accacc count=".count($entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getAccession())."<br>";
-//        foreach( $entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getAccession() as $acc ) {
-//            echo "accacc=".$acc.", status=".$acc->getStatus()."<br>";
-//            //if( $acc->getStatus() == "invalid" ) {
-//                $entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->removeAccession($acc);
-//            //}
-//        }
-        foreach( $entity->getPatient()->first()->getProcedure()->first()->getAccession() as $acc ) {
-            echo "accacc=".$acc.", status=".$acc->getStatus()."<br>";
-            //if( $acc->getStatus() == "invalid" ) {
-            //$entity->getPatient()->first()->getProcedure()->first()->removeAccession($acc);
-            //}
-        }
-
-        //echo "accacc count=".count($entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getAccession())."<br>";
-
         $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
@@ -717,6 +729,7 @@ class MultiScanOrderController extends Controller {
         }
 
         return array(
+            'entity' => $entity,
             'form' => $form->createView(),
             'type' => $type,    //form cicle: new, show, amend ...
             'formtype' => $entity->getType(),

@@ -676,51 +676,88 @@
 {% endmacro %}
 
 
-{% macro dataQualityWidget( field, cycle ) %}
-    {% import _self as formmacros %}
-    {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
-
-    {% if cycle == "new" or cycle == "amend" %}
+{% macro dataQualityWidget() %}
         <div class="validationerror-added alert alert-danger" style="height: 210px;">
-    {% else %}
-        <div class="validationerror-added alert alert-danger">
-    {% endif %}
+            <label class="required">MRN-ACCESSION CONFLICT</label>
+            <div>
+                <div class="radio_newline" align="left"><label for="scanorder_dataquality_1" class="required">TEXT1</label>
+                    <input type="radio" id="scanorder_dataquality_1" name="scanorder_dataquality_1" required="required" value="OPTION1" />
+                </div>
+                <div class="radio_newline" align="left"><label for="scanorder_dataquality_2" class="required">TEXT2</label>
+                    <input type="radio" id="scanorder_dataquality_2" name="scanorder_dataquality_2" required="required" value="OPTION2" />
+                </div>
+                <div class="radio_newline" align="left"><label for="scanorder_dataquality_3" class="required">TEXT3</label>
+                    <input type="radio" id="scanorder_dataquality_3" name="scanorder_dataquality_3" required="required" value="OPTION3" />
+                </div>
+            </div>
 
+            <input type="hidden" id="scanorder_dataquality_accession" style="display:none;"/>
+            <input type="hidden" id="scanorder_dataquality_accessiontype" style="display:none;"/>
+            <input type="hidden" id="scanorder_dataquality_mrn" style="display:none;"/>
+            <input type="hidden" id="scanorder_dataquality_mrntype" style="display:none;"/>
+        </div>
+{% endmacro %}
+{% macro dataQualityWidgetExisting( field, cycle ) %}
+    {% import _self as formmacros %}
+    {#{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}#}
+
+    <div class="validationerror-added alert alert-danger">
         {{ form_errors(field) }}
-        {% if cycle == "new" or cycle == "amend" %}
-            {{ form_label(field.btnoption) }}
-            {{ form_widget(field.btnoption) }}
-        {% endif %}
-
-        {% if cycle == "show" %}
-            {{ form_label(field.description) }}
-        {% endif %}
-        {#{{ form_widget(field.description) }}#}
-        {% if field.vars.value.description is defined %}
-            <p>
-                {{ field.vars.value.description }}
-            </p>
-        {% endif %}
-
-
-        {% if cycle == "show" %}
-            <br>
-            Conflict Resolved by Replacement:<br>
-            <b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>
-            <br>
-        {% endif %}
-
-        {% if cycle == "new" or cycle == "amend" %}
-            {{ form_widget(field.accession) }}
-            {{ form_widget(field.accessiontype) }}
-            {{ form_widget(field.mrn) }}
-            {{ form_widget(field.mrntype) }}
-        {% endif %}
-
+        {#{{ form_label(field.description) }}#}
+        <br>
+        Conflict Resolved by Replacement:
+        <br>
+        <b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>
+        <br>
         {#{{ form_rest(field) }}#}
     </div>
-
 {% endmacro %}
+{#{% macro dataQualityWidget_OLD( field, cycle ) %}#}
+
+    {#{% import _self as formmacros %}#}
+    {#{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}#}
+
+    {#{% if cycle == "new" or cycle == "amend" %}#}
+        {#<div class="validationerror-added alert alert-danger" style="height: 210px;">#}
+    {#{% else %}#}
+        {#<div class="validationerror-added alert alert-danger">#}
+    {#{% endif %}#}
+
+        {#{{ form_errors(field) }}#}
+        {#{% if cycle == "new" or cycle == "amend" %}#}
+            {#{{ form_label(field.btnoption) }}#}
+            {#{{ form_widget(field.btnoption) }}#}
+        {#{% endif %}#}
+
+        {#{% if cycle == "show" %}#}
+            {#{{ form_label(field.description) }}#}
+        {#{% endif %}#}
+        {#&#123;&#35;{{ form_widget(field.description) }}&#35;&#125;#}
+        {#{% if field.vars.value.description is defined %}#}
+            {#<p>#}
+                {#{{ field.vars.value.description }}#}
+            {#</p>#}
+        {#{% endif %}#}
+
+
+        {#{% if cycle == "show" %}#}
+            {#<br>#}
+            {#Conflict Resolved by Replacement:<br>#}
+            {#<b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>#}
+            {#<br>#}
+        {#{% endif %}#}
+
+        {#{% if cycle == "new" or cycle == "amend" %}#}
+            {#{{ form_widget(field.accession) }}#}
+            {#{{ form_widget(field.accessiontype) }}#}
+            {#{{ form_widget(field.mrn) }}#}
+            {#{{ form_widget(field.mrntype) }}#}
+        {#{% endif %}#}
+
+        {#&#123;&#35;{{ form_rest(field) }}&#35;&#125;#}
+    {#</div>#}
+
+{#{% endmacro %}#}
 
 
 {############################ Objects ###########################}

@@ -41,26 +41,26 @@ class OrderInfoType extends AbstractType
 
         $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'orderinfo-id')) );
 
-        $builder->add('dataquality', 'collection', array(
-            'type' => new DataQualityType($this->params, null),
-            'label' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__dataquality__',
-        ));
+//        $builder->add('dataquality', 'collection', array(
+//            'type' => new DataQualityType($this->params, null),
+//            'label' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__dataquality__',
+//        ));
 
         //add children
         if( $this->params['type'] != 'Table-View Scan Order' || ($this->params['type'] == 'Table-View Scan Order' && $this->params['cicle'] != 'new') ) {
             //echo "orderinfo type: show patient <br>";
             $builder->add('patient', 'collection', array(
                 'type' => new PatientType($this->params,$this->entity),    //$this->type),
+                'label' => false,
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'label' => false,//" ",
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__patient__',

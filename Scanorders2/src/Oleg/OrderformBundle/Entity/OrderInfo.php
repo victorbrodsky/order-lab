@@ -417,6 +417,14 @@ class OrderInfo extends OrderAbstract {
         return $this->dataquality;
     }
 
+    public function setDataquality($dataqualities)
+    {
+        if( $dataqualities == null ) {
+            $dataqualities = new ArrayCollection();
+        }
+        $this->dataquality = $dataqualities;
+    }
+
     public function addDataquality($dataquality)
     {
         if( !$this->dataquality->contains($dataquality) ) {

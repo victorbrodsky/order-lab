@@ -133,7 +133,8 @@ class ScanOrderController extends Controller {
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
-        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context') );
+        $withSearch = true;
+        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context'), $withSearch );
         $dql = $res['dql'];
         $criteriastr = $res['criteriastr'];
         $showprovider = $res['showprovider'];
@@ -919,7 +920,7 @@ class ScanOrderController extends Controller {
     }
 
 
-    public function getDQL( $repository, $service, $filter, $search, $routeName, $securityContext, $withSearch = true ) {
+    public function getDQL( $repository, $service, $filter, $search, $routeName, $securityContext, $withSearch = false ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1169,6 +1170,7 @@ class ScanOrderController extends Controller {
 
         //***************** Search filetr ***************************//
         if( $withSearch && $search != "" ) {
+
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
