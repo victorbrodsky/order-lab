@@ -30,8 +30,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        //echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
+        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -46,6 +46,9 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         if( count($keys) == 0 ) {
             $entity->createKeyField();  //this can happen for procedure, because key and keytype fields are hidden in the form
+            $keytype = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+            $key = $entity->obtainValidKeyField();
+            $key->setKeytype($keytype);
             //throw new \Exception( 'Key field does not exists for '.$className );
         } elseif( count($keys) > 1 ) {
             //throw new \Exception( 'This Object ' . $className . ' must have only one key field. Number of key field=' . count($keys) );
@@ -55,7 +58,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $key = $entity->obtainValidKeyField();
         //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
-        //change keytype from Existing Auto-generated MRN to Existing Auto-generated MRN
+        //change keytype from Existing Auto-generated to Auto-generated.
         $entity = $this->changeKeytype($entity);
 
         if( $orderinfo->getStatus() == 'Amended' ) {
@@ -66,7 +69,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         if( $found ) {
-            //echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+            echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
             //CopyChildren: copy form's object children to the found one.
             foreach( $entity->getChildren() as $child ) {
                 //echo "adding: ".$child."<br>";
@@ -77,13 +80,13 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $em->persist($found);
 
             //add procedure's name, sex, age to the corresponding patient fields
-            //$this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
+            $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
 
             return $this->setResult($found, $orderinfo, $entity);
 
         } else
         if( $key == "" ) {
-            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
             $key->setKeytype($newkeytypeEntity);
@@ -97,7 +100,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         }
         else {
-            //echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
+            echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
             //throw new \Exception('Invalid logic for Procedure, key='.$key);
         }
 
@@ -114,7 +117,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     }
 
     //add procedure's name, sex, age to the corresponding patient fields
-    public function copyCommonFieldsToPatient($procedure,$user) {
+    public function copyCommonFieldsToPatient( $procedure, $user ) {
 
         $patient = $procedure->getParent();
 
@@ -129,7 +132,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             }
             $patientlastname = new PatientLastName($status,$user,$source);
             $patientlastname->setField($procedure->getPatlastname()->first()->getField());
-            $patientlastname->setProcedure($procedure);
             $patient->addLastname($patientlastname);
         }
 
@@ -140,7 +142,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             }
             $patientfirstname = new PatientFirstName($status,$user,$source);
             $patientfirstname->setField($procedure->getPatfirstname()->first()->getField());
-            $patientfirstname->setProcedure($procedure);
             $patient->addFirstname($patientfirstname);
         }
 
@@ -151,7 +152,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             }
             $patientmiddlename = new PatientMiddleName($status,$user,$source);
             $patientmiddlename->setField($procedure->getPatmiddlename()->first()->getField());
-            $patientmiddlename->setProcedure($procedure);
             $patient->addMiddlename($patientmiddlename);
         }
 
@@ -163,7 +163,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $patientsex = new PatientSex($status,$user,$source);
             //echo "procedure sex=".$procedure->getPatsex()->first()."<br>";
             $patientsex->setField($procedure->getPatsex()->first());
-            $patientsex->setProcedure($procedure);
             $patient->addSex($patientsex);
         }
 
@@ -175,12 +174,10 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $patientage = new PatientAge($status,$user,$source);
             //echo "procedure age=".$procedure->getPatage()->first()->getField()."<br>";
             $patientage->setField($procedure->getPatage()->first()->getField());
-            $patientage->setProcedure($procedure);
             $patient->addAge($patientage);
         }
 
     }
-
 
 
     //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
@@ -208,6 +205,39 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         } else {
             return null;
         }
+    }
+
+    //make sure encounter type is set to "Auto-generated Encounter Number"
+    public function changeKeytype($entity) {
+
+        $key = $entity->obtainValidKeyField();
+
+        if( !$key->getKeytype() || $key->getKeytype() == "" ) {
+            //throw new \Exception( 'Procedure does not have a valid keytype. keytype=' . $key->getKeytype() );
+            $em = $this->_em;
+            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+            $key->setKeytype($newkeytypeEntity);
+        }
+
+        if( $key == "" || $key->getField() != "Auto-generated Encounter Number" ) {
+            $em = $this->_em;
+            $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+            $key->setKeytype($newkeytypeEntity);
+        }
+
+        //strip zeros and record original
+        $originalKey = $key->getField();
+        $key->setOriginal($originalKey);
+        $stripedKey = ltrim($originalKey,'0');
+        $key->setField($stripedKey);
+
+//        echo $entity;
+//        echo "num of keys=".count($entity->obtainKeyField())."<br>";
+//        echo "number=".$entity->obtainValidKeyField()."<br>";
+//        echo "original=".$entity->obtainValidKeyField()->getOriginal()."<br>";
+//        echo "keytype=".$entity->obtainValidKeyField()->getKeytype()."<br>";
+
+        return $entity;
     }
 
     //replace child if duplicated

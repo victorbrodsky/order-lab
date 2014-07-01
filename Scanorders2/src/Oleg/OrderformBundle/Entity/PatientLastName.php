@@ -32,27 +32,27 @@ class PatientLastName extends PatientArrayFieldAbstract
     protected $field;
 
 
-    /**
-     * Link to the object, the source of field data
-     * @ORM\OneToOne(targetEntity="Procedure")
-     */
-    protected $procedure;
-
-    /**
-     * @param mixed $procedure
-     */
-    public function setProcedure($procedure)
-    {
-        $this->procedure = $procedure;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProcedure()
-    {
-        return $this->procedure;
-    }
+//    /**
+//     * Link to the object, the source of field data
+//     * @ORM\OneToOne(targetEntity="Procedure")
+//     */
+//    protected $procedure;
+//
+//    /**
+//     * @param mixed $procedure
+//     */
+//    public function setProcedure($procedure)
+//    {
+//        $this->procedure = $procedure;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getProcedure()
+//    {
+//        return $this->procedure;
+//    }
 
 
 }

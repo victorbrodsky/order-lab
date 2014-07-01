@@ -13,6 +13,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
     public function changeKeytype($entity) {
         $key = $entity->obtainValidKeyField();
+
+        if( !$key->getKeytype() || $key->getKeytype() == "" ) {
+            throw new \Exception( 'Accession does not have a valid keytype. keytype=' . $key->getKeytype() );
+        }
+
         $newkeytypeid = $this->getCorrectKeytypeId($key->getKeytype()->getId());
         if( $key == "" || $newkeytypeid != $key->getKeytype()->getId() ) {
             $em = $this->_em;
@@ -63,13 +68,6 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
-//        if( count($orderinfo->getDataquality()) == 0 ) {
-//            return $accession;
-//        }
-
-        //echo "process Accession: ".$accession;
-        //$this->printTree( $accession->getParent()->getParent() );
-
         $em = $this->_em;
 
         //process data quality
@@ -78,6 +76,15 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
 
         foreach( $orderinfo->getDataquality() as $dataquality) {
+
+            //don't process dataquality if it's already exists in DB
+//            if( !$dataquality->getId() || $dataquality->getId() == "" ) {
+//                continue;
+//            }
+//            $dataqualityDB = $em->getRepository('OlegOrderformBundle:DataQuality')->findOneById($dataquality->getId());
+//            if( $dataqualityDB ) {
+//                continue;
+//            }
 
             $accessionConflict = false;
             $patientConflict = false;

@@ -8806,8 +8806,7 @@ function checkMrnAccessionConflict() {
     //console.log("accessions.length="+accessions.length + ", first id=" + accessions.first().attr('id') + ", class=" + accessions.first().attr('class') );
     //var prototype = $('#form-prototype-data').data('prototype-dataquality');
     //console.log("prototype="+prototype);
-    //var index = 0;
-    var index = $('#validationerror').find('.validationerror-added').length;
+    var index = 0;
 
     //for all accession fields
     accessions.each(function() {
@@ -8983,10 +8982,10 @@ function checkIfMrnAccConflictHandled() {
                 reruncount++;
             }
             if( checkedVal == "OPTION1" ) {
-                setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+                setDataqualityMessage( countErrorBoxes, dataquality_message1[countErrorBoxes] );
             }
             if( checkedVal == "OPTION2" ) {
-                setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
+                setDataqualityMessage( countErrorBoxes, dataquality_message2[countErrorBoxes] );
             }
         } else {
             //alert("Please select one of these options.");
@@ -9088,15 +9087,15 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     setDataqualityData( index, accValueForm, acctypeIDForm, mrnValueForm, mrntypeIDForm );
 }
 
-function setDataquality(index,message) {
-    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+function setDataqualityMessage(index,message) {
+    var partid = "#oleg_orderformbundle_orderinfotype_conflicts_"+index+"_";
     //console.log("message=" + message);
     $(partid+'description').val(message);
 }
 
 
 function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
-    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    var partid = "#oleg_orderformbundle_orderinfotype_conflicts_"+index+"_";
     //console.log("set Dataquality Data: "+accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'accessiontype').val(acctype);

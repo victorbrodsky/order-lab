@@ -102,8 +102,6 @@
     <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcicle" value="{{ type }}" />
 
-    {#{{ formmacros.dataQualityWidget()}}#}
-
     {% if entity is defined and entity.dataquality|length > 0 %}
         <div class="alert alert-danger">
             <p>This order contained an MRN-Accession Number association that conflicted with an already existing MRN-Accession Number association.</p>
@@ -189,8 +187,7 @@
 
       {% if type != 'show' %}
 
-          {#data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,type)|e }}"#}
-          data-prototype-dataquality = "{{ formmacros.dataQualityWidget()|e }}"
+          data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype,type)|e }}"
 
          data-prototype-patient="{{ formmacros.patientForm(form.patient.vars.prototype,"check",uid,type,form.vars.value.status,mrnHtml,dobHtml,clinicalhistoryHtml)|e }}"
 
@@ -442,11 +439,7 @@
         </div>
     {% endif %}
 
-    <div id="validationerror" style="padding-top: 2%">
-        {#{% for dataquality in entity.dataquality %}#}
-            {#{{ formmacros.dataQualityWidgetExisting(dataquality,type) }}#}
-        {#{% endfor %}#}
-    </div>
+    <div id="validationerror" style="padding-top: 2%"></div>
 
     {#{{ form_end(form) }}#}
     </form>

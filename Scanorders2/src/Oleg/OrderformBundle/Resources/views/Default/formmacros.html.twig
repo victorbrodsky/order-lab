@@ -444,39 +444,77 @@
                 {% if nolabel is defined and nolabel != "" %}
                     {#no label#}
                 {% else %}
-                    {% if fieldtype == "procedurepatfirstname" %}
-                        {{form_label(fieldThis.firstName)}}<!--
-                    {% elseif fieldtype == "procedurepatmiddlename" %}
-                        {{form_label(fieldThis.middleName)}}<!--
-                    {% elseif fieldtype == "paper" and cycle == "show" %}
-                        {{form_label(fieldThis.name)}}<!--
-                    {% elseif fieldtype == "blockspecialStains" %}
-                        {{form_label(fieldThis.staintype)}}<br>
-                        {{form_label(fieldThis.field)}}<!--
-                    {% else %}
-                        {{form_label(fieldThis.field)}}<!--
-                    {% endif %}
+
+                    {#show provider and status to dataquality specialist but not external submitter and not to the owner#}
+                    {% set showInfoDate = 0 %}
+                    {% set showInfoProvider = 0 %}
                     {% if field.vars.value.provider is defined %}
-                        {% if ( cycle == "show" or cycle == "amend" ) and
-                              not is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or
-                              ( is_granted('ROLE_SCANORDER_SUBMITTER') and field.vars.value.provider.id != app.security.getToken().getUser().getId() ) or
-                              is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST')
-                        %}
-                            {% if field.vars.value.creationdate != "" %}
-                                entered on
-                                {{field.vars.value.creationdate|date('Y-m-d')}}
-                            {% endif %}
-                            {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                                by
-                                {{field.vars.value.provider}}
-                                {% if field.vars.value.status != 'valid' and ( not is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') ) %}
-                                    ({{ field.vars.value.status }})
+                        {% if cycle == "show" or cycle == "amend" %}
+                            {#{% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') %}dataqualityok#}
+                            {% if not is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') and not is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER') %}
+                                {#{% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}#}
+
+                                {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
+                                    {% set showInfoDate = 1 %}
                                 {% endif %}
+                                {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                                    {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
+                                        {% set showInfoProvider = 1 %}
+                                    {% endif %}
+                                    {% if field.vars.value.status != 'valid' %}
+                                        {% set showInfoDate = 1 %}
+                                        {% set showInfoProvider = 1 %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {#{% endif %}#}
                             {% endif %}
+                            {#{% endif %}#}
                         {% endif %}
                     {% endif %}
-                    --><strong>:</strong>
+
+                    {% if showInfoDate == 0 and showInfoProvider == 0 %}
+                        {% if fieldtype == "procedurepatfirstname" %}
+                            {{form_label(fieldThis.firstName)}}<strong>:</strong>
+                        {% elseif fieldtype == "procedurepatmiddlename" %}
+                            {{form_label(fieldThis.middleName)}}<strong>:</strong>
+                        {% elseif fieldtype == "paper" and cycle == "show" %}
+                            {{form_label(fieldThis.name)}}<strong>:</strong>
+                        {% elseif fieldtype == "blockspecialStains" %}
+                            {{form_label(fieldThis.staintype)}}<br>
+                            {{form_label(fieldThis.field)}}<strong>:</strong>
+                        {% else %}
+                            {{form_label(fieldThis.field)}}<strong>:</strong>
+                        {% endif %}
+                    {% else %}
+                        {% if fieldtype == "procedurepatfirstname" %}
+                            {{form_label(fieldThis.firstName)}}
+                        {% elseif fieldtype == "procedurepatmiddlename" %}
+                            {{form_label(fieldThis.middleName)}}
+                        {% elseif fieldtype == "paper" and cycle == "show" %}
+                            {{form_label(fieldThis.name)}}
+                        {% elseif fieldtype == "blockspecialStains" %}
+                            {{form_label(fieldThis.staintype)}}<br>
+                            {{form_label(fieldThis.field)}}
+                        {% else %}
+                            {{form_label(fieldThis.field)}}
+                        {% endif %}
+                    {% endif %}
+
+                    {% if showInfoDate == 1 %}
+                        entered on
+                        {{field.vars.value.creationdate|date('Y-m-d')}}
+                    {% endif %}
+                    {% if showInfoProvider == 1 %}
+                        by
+                        {{field.vars.value.provider}}
+                        {% if showInfoDate == 1 %}
+                            ({{ field.vars.value.status }})<strong>:</strong>
+                        {% endif %}
+                    {% endif %}
+
                 {% endif %}
+
                 </p>
             </div>
 
@@ -675,28 +713,6 @@
     {% endif %}
 {% endmacro %}
 
-
-{% macro dataQualityWidget() %}
-        <div class="validationerror-added alert alert-danger" style="height: 210px;">
-            <label class="required">MRN-ACCESSION CONFLICT</label>
-            <div>
-                <div class="radio_newline" align="left"><label for="scanorder_dataquality_1" class="required">TEXT1</label>
-                    <input type="radio" id="scanorder_dataquality_1" name="scanorder_dataquality_1" required="required" value="OPTION1" />
-                </div>
-                <div class="radio_newline" align="left"><label for="scanorder_dataquality_2" class="required">TEXT2</label>
-                    <input type="radio" id="scanorder_dataquality_2" name="scanorder_dataquality_2" required="required" value="OPTION2" />
-                </div>
-                <div class="radio_newline" align="left"><label for="scanorder_dataquality_3" class="required">TEXT3</label>
-                    <input type="radio" id="scanorder_dataquality_3" name="scanorder_dataquality_3" required="required" value="OPTION3" />
-                </div>
-            </div>
-
-            <input type="hidden" id="scanorder_dataquality_accession" style="display:none;"/>
-            <input type="hidden" id="scanorder_dataquality_accessiontype" style="display:none;"/>
-            <input type="hidden" id="scanorder_dataquality_mrn" style="display:none;"/>
-            <input type="hidden" id="scanorder_dataquality_mrntype" style="display:none;"/>
-        </div>
-{% endmacro %}
 {% macro dataQualityWidgetExisting( field, cycle ) %}
     {% import _self as formmacros %}
     {#{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}#}
@@ -712,52 +728,29 @@
         {#{{ form_rest(field) }}#}
     </div>
 {% endmacro %}
-{#{% macro dataQualityWidget_OLD( field, cycle ) %}#}
+{% macro dataQualityWidgetNotMapped( field, cycle ) %}
 
-    {#{% import _self as formmacros %}#}
-    {#{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}#}
+    {% import _self as formmacros %}
+    {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}
 
-    {#{% if cycle == "new" or cycle == "amend" %}#}
-        {#<div class="validationerror-added alert alert-danger" style="height: 210px;">#}
-    {#{% else %}#}
-        {#<div class="validationerror-added alert alert-danger">#}
-    {#{% endif %}#}
+    <div class="validationerror-added alert alert-danger" style="height: 210px;">
+    {#<div class="validationerror-added alert alert-danger">#}
 
-        {#{{ form_errors(field) }}#}
-        {#{% if cycle == "new" or cycle == "amend" %}#}
-            {#{{ form_label(field.btnoption) }}#}
-            {#{{ form_widget(field.btnoption) }}#}
-        {#{% endif %}#}
+        {{ form_errors(field) }}
 
-        {#{% if cycle == "show" %}#}
-            {#{{ form_label(field.description) }}#}
-        {#{% endif %}#}
-        {#&#123;&#35;{{ form_widget(field.description) }}&#35;&#125;#}
-        {#{% if field.vars.value.description is defined %}#}
-            {#<p>#}
-                {#{{ field.vars.value.description }}#}
-            {#</p>#}
-        {#{% endif %}#}
+        {{ form_label(field.btnoption) }}
+        {{ form_widget(field.btnoption) }}
 
+        {{ form_widget(field.description) }}
+        {{ form_widget(field.accession) }}
+        {{ form_widget(field.accessiontype) }}
+        {{ form_widget(field.mrn) }}
+        {{ form_widget(field.mrntype) }}
 
-        {#{% if cycle == "show" %}#}
-            {#<br>#}
-            {#Conflict Resolved by Replacement:<br>#}
-            {#<b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>#}
-            {#<br>#}
-        {#{% endif %}#}
+        {#{{ form_rest(field) }}#}
+    </div>
 
-        {#{% if cycle == "new" or cycle == "amend" %}#}
-            {#{{ form_widget(field.accession) }}#}
-            {#{{ form_widget(field.accessiontype) }}#}
-            {#{{ form_widget(field.mrn) }}#}
-            {#{{ form_widget(field.mrntype) }}#}
-        {#{% endif %}#}
-
-        {#&#123;&#35;{{ form_rest(field) }}&#35;&#125;#}
-    {#</div>#}
-
-{#{% endmacro %}#}
+{% endmacro %}
 
 
 {############################ Objects ###########################}
@@ -880,7 +873,7 @@
             {#{{ formmacros.inputArrayField(procedure.encounter,cycle,"procedureencounter","","","nolabel") }}#}
             {#{{ form_widget(procedure.encounter|first) }}#}
             {% for encounter in procedure.encounter %}
-                {#status:{{ encounter.vars.value.status }}#}
+                {#encountertype:{{ encounter.vars.value.keytype }}#}
                 {% if encounter.vars.value.status == 'valid' %}
                     {#{{ form_widget(procedure.encounter) }}#}
                     {{ form_row(encounter, {'label': false}) }}

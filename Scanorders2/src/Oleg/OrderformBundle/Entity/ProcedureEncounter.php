@@ -70,16 +70,21 @@ class ProcedureEncounter extends ProcedureArrayFieldAbstract
 
     public function obtainExtraKey()
     {
-        $extra = array();
+//        $extra = array();
+//
+//        if( !$this->getKeytype() ) {
+//            $keytypeid = '';
+//        } else {
+//            $keytypeid = $this->getKeytype()->getId();
+//        }
+//
+//        $extra['keytype'] = $keytypeid;
+//        return $extra;
 
-        if( !$this->getKeytype() ) {
-            $keytypeid = '';
-        } else {
-            $keytypeid = $this->getKeytype()->getId();
-        }
-        
-        $extra['keytype'] = $keytypeid;
+        $extra = array();
+        $extra['keytype'] = $this->getKeytype()->getId();
         return $extra;
+
     }
 
     public function setExtra($extraEntity)

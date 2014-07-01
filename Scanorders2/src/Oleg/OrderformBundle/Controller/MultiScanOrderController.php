@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,34 +14,19 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
-use Oleg\OrderformBundle\Form\PatientType;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
-use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\Procedure;
-use Oleg\OrderformBundle\Form\ProcedureType;
 use Oleg\OrderformBundle\Entity\Accession;
-use Oleg\OrderformBundle\Form\AccessionType;
 use Oleg\OrderformBundle\Entity\Part;
-//use Oleg\OrderformBundle\Entity\DiffDiagnoses;
-use Oleg\OrderformBundle\Entity\RelevantScans;
-use Oleg\OrderformBundle\Form\PartType;
 use Oleg\OrderformBundle\Entity\Block;
-use Oleg\OrderformBundle\Form\BlockType;
 use Oleg\OrderformBundle\Entity\Slide;
-use Oleg\OrderformBundle\Form\SlideType;
-use Oleg\OrderformBundle\Entity\Scan;
-use Oleg\OrderformBundle\Entity\Stain;
-//use Oleg\OrderformBundle\Entity\PartPaper;
-
 use Oleg\OrderformBundle\Entity\Educational;
-//use Oleg\OrderformBundle\Form\EducationalType;
 use Oleg\OrderformBundle\Entity\Research;
-//use Oleg\OrderformBundle\Form\ResearchType;
 
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Oleg\OrderformBundle\Helper\UserUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
@@ -175,7 +161,6 @@ class MultiScanOrderController extends Controller {
 
         //$dataq = $form["dataquality"][0]["accession"]->getData();
         //echo "dataq=".$dataq."<br>";
-        //exit();
 
         //check if the orderform already exists, so it's edit case
         //TODO: edit id is empty. Why??
@@ -235,10 +220,10 @@ class MultiScanOrderController extends Controller {
                 $entity->setStatus($status);
             }
 
-            //echo "cicle=".$cicle."<br>";
-            //exit();
-
-            //$entity->setCicle($cicle);
+            //add dataqualities to entity
+            $dataqualities = $form->get('conflicts')->getData();
+            $orderUtil = new OrderUtil($em);
+            $orderUtil->setDataQuality($entity,$dataqualities);
 
             /////////////////// process and save form //////////////////////////////
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
@@ -250,14 +235,7 @@ class MultiScanOrderController extends Controller {
                     $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
                 }
 
-                $conflicts = array();
-                foreach( $entity->getDataquality() as $dq ) {
-                    $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
-                }
-
                 //email
-                //$email = $this->get('security.context')->getToken()->getAttribute('email');
-                //$user = $this->get('security.context')->getToken()->getUser();
                 $email = $user->getEmail();
                 $emailUtil = new EmailUtil();
 
@@ -271,16 +249,17 @@ class MultiScanOrderController extends Controller {
 
                 $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
-                //TODO: get siteemail from DB
-
                 $emailUtil->sendEmail( $email, $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {
                     return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));
                 }
 
-                if( count($conflicts) > 0 ) {
-                    $conflictsStr = implode("\r\n", $conflicts);
+                if( count($entity->getDataquality()) > 0 ) {
+                    $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
+                    foreach( $entity->getDataquality() as $dq ) {
+                        $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
+                    }
                 } else {
                     $conflictsStr = "noconflicts";
                 }

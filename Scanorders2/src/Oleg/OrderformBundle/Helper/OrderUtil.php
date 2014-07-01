@@ -16,6 +16,7 @@ namespace Oleg\OrderformBundle\Helper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
+use Oleg\OrderformBundle\Entity\DataQuality;
 
 class OrderUtil {
 
@@ -428,6 +429,46 @@ class OrderUtil {
         //echo "criteriastr=".$criteriastr."<br>";
 
         return $criteriastr;
+    }
+
+    //$dataqualities is a form data: $dataqualities = $form->get('conflicts')->getData();
+    public function setDataQuality( $entity, $dataqualities ) {
+
+        $em = $this->em;
+
+        foreach( $dataqualities as $dataquality ) {
+//            echo "dataquality description= ".$dataquality['description']."<br>";
+//            echo "dataquality accession= ".$dataquality['accession']."<br>";
+//            echo "dataquality accessiontype= ".$dataquality['accessiontype']."<br>";
+//            echo "dataquality mrn= ".$dataquality['mrn']."<br>";
+//            echo "dataquality mrntype= ".$dataquality['mrntype']."<br>";
+
+            //set correct mrntype (convert text keytype to the object)
+            $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $dataquality['mrntype'] );
+
+            //set correct accessiontype
+            $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $dataquality['accessiontype'] );
+
+            $dataqualityObj = new DataQuality();
+            $dataqualityObj->setDescription($dataquality['description']);
+            $dataqualityObj->setMrn($dataquality['mrn']);
+            $dataqualityObj->setMrntype($mrntype);
+            $dataqualityObj->setAccession($dataquality['accession']);
+            $dataqualityObj->setAccessiontype($accessiontype);
+
+            $dataqualityObj->setOrderinfo($entity);
+            $dataqualityObj->setProvider($entity->getProvider());
+            $dataqualityObj->setStatus('active');
+
+//            echo "dataquality: description=".$dataqualityObj->getDescription()."<br>";
+//            echo "dataquality: accession=".$dataqualityObj->getAccession()."<br>";
+//            echo "dataquality: accessionType=".$dataqualityObj->getAccessiontype()."<br>";
+//            echo "dataquality: mrn=".$dataqualityObj->getMrn()."<br>";
+//            echo "dataquality: mrn text=".$dataqualityObj->getMrntype()."<br>";
+
+            $entity->addDataquality($dataqualityObj);
+        }
+
     }
 
 

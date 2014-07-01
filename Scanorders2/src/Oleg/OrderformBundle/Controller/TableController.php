@@ -23,10 +23,7 @@ use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
 use Oleg\OrderformBundle\Entity\ClinicalHistory;
 use Oleg\OrderformBundle\Entity\PatientMrn;
-//use Oleg\OrderformBundle\Entity\PatientLastName;
-//use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientDob;
-//use Oleg\OrderformBundle\Entity\PatientAge;
 use Oleg\OrderformBundle\Entity\PatientClinicalHistory;
 
 use Oleg\OrderformBundle\Entity\Procedure;
@@ -66,11 +63,11 @@ use Oleg\OrderformBundle\Entity\Stain;
 
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Entity\Research;
+use Oleg\OrderformBundle\Helper\OrderUtil;
 
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
-//use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
@@ -242,6 +239,11 @@ class TableController extends Controller {
         $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
         $entity->setStatus($status);
 
+        //add dataqualities to entity
+        $dataqualities = $form->get('conflicts')->getData();
+        $orderUtil = new OrderUtil($em);
+        $orderUtil->setDataQuality($entity,$dataqualities);
+
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
 
 //        $response = new Response();
@@ -254,27 +256,40 @@ class TableController extends Controller {
             $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
         }
 
-        $conflicts = array();
-        foreach( $entity->getDataquality() as $dq ) {
-            $conflicts[] = $dq->getDescription()."\nResolved by replacing:\n".$dq->getAccession()." => ".$dq->getNewaccession();
-        }
-
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
 
         //email
         $emailUtil = new EmailUtil();
         $emailUtil->sendEmail( $user->getEmail(), $em, $entity, $orderurl, null, $conflictStr, null );
 
-        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-            'oid' => $entity->getOid(),
-            'conflicts' => $conflicts,
-            'cicle' => 'new',
-            'neworder' => "table_create"
+        if( count($entity->getDataquality()) > 0 ) {
+            $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
+            foreach( $entity->getDataquality() as $dq ) {
+                $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
+            }
+        } else {
+            $conflictsStr = "noconflicts";
+        }
+
+        return $this->redirect($this->generateUrl('scan-order-submitted-get',
+            array(
+                'oid' => $entity->getOid(),
+                'conflicts' => $conflictsStr,
+                'cicle' => 'new',
+                'neworder' => "table_create"
+            )
         ));
+
+//        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
+//            'oid' => $entity->getOid(),
+//            'conflicts' => $conflicts,
+//            'cicle' => 'new',
+//            'neworder' => "table_create"
+//        ));
 
     }
 
-    public function constractPatientByTableData($row, $columnData) {
+    public function constractPatientByTableData( $row, $columnData ) {
 
         $force = true; //true - create fields even if the value is empty
         $status = "valid";
@@ -325,7 +340,7 @@ class TableController extends Controller {
         if( $force || $ptype && $ptype != '' ) {
             $procedureTransform = new ProcedureTransformer($em,$provider);
             $procedurenameList = $procedureTransform->reverseTransform($ptype); //ProcedureList
-            $procedureName = new ProcedureName($status, $provider, $source);
+            $procedureName = new ProcedureName($status,$provider,$source);
             $procedureName->setField($procedurenameList);
             $procedure->addName($procedureName);
         }
@@ -345,7 +360,7 @@ class TableController extends Controller {
             } else {
                 $encounterDateFormat = new \DateTime($encounterDate);
             }
-            $encounterDateObj = new ProcedureEncounterDate($status, $provider, $source);
+            $encounterDateObj = new ProcedureEncounterDate($status,$provider,$source);
             $encounterDateObj->setField($encounterDateFormat);
             $procedure->addEncounterDate($encounterDateObj);
         }
@@ -353,7 +368,7 @@ class TableController extends Controller {
         //Procedure Last Name
         $patlastname = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
         if( $force || $patlastname && $patlastname != '' ) {
-            $patlastnameObj = new ProcedurePatlastname($status, $provider, $source);
+            $patlastnameObj = new ProcedurePatlastname($status,$provider,$source);
             $patlastnameObj->setField($patlastname);
             $procedure->addPatlastname($patlastnameObj);
         }
@@ -361,7 +376,7 @@ class TableController extends Controller {
         //Procedure First Name
         $patfirstname = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
         if( $force || $patfirstname && $patfirstname != '' ) {
-            $patfirstnameObj = new ProcedurePatfirstname($status, $provider, $source);
+            $patfirstnameObj = new ProcedurePatfirstname($status,$provider,$source);
             $patfirstnameObj->setField($patfirstname);
             $procedure->addPatfirstname($patfirstnameObj);
         }
@@ -369,7 +384,7 @@ class TableController extends Controller {
         //Procedure Middle Name
         $patmiddlename = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
         if( $force || $patmiddlename && $patmiddlename != '' ) {
-            $patmiddlenameObj = new ProcedurePatmiddlename($status, $provider, $source);
+            $patmiddlenameObj = new ProcedurePatmiddlename($status,$provider,$source);
             $patmiddlenameObj->setField($patmiddlename);
             $procedure->addPatmiddlename($patmiddlenameObj);
         }
@@ -377,7 +392,7 @@ class TableController extends Controller {
         //Procedure Sex
         $patsex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
         if( $force || $patsex && $patsex != '' ) {
-            $patsexObj = new ProcedurePatsex($status, $provider, $source);
+            $patsexObj = new ProcedurePatsex($status,$provider,$source);
             $patsexObj->setField($patsex);
             $procedure->addPatsex($patsexObj);
         }
@@ -385,7 +400,7 @@ class TableController extends Controller {
         //Procedure Age
         $patage = $this->getValueByHeaderName('Patient Age',$row,$columnData);
         if( $force || $patage && $patage != '' ) {
-            $patageObj = new ProcedurePatage($status, $provider, $source);
+            $patageObj = new ProcedurePatage($status,$provider,$source);
             $patageObj->setField($patage);
             $procedure->addPatage($patageObj);
         }
@@ -393,7 +408,7 @@ class TableController extends Controller {
         //Clinical History
         $pathistory = $this->getValueByHeaderName('Clinical History',$row,$columnData);
         if( $force || $pathistory && $pathistory != '' ) {
-            $pathistoryObj = new ProcedurePathistory($status, $provider, $source);
+            $pathistoryObj = new ProcedurePathistory($status,$provider,$source);
             $pathistoryObj->setField($pathistory);
             $procedure->addPathistory($pathistoryObj);
         }
@@ -442,7 +457,7 @@ class TableController extends Controller {
         if( $force || $partso && $partso != '' ) {
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
             $sourceOrganList = $sourceOrganTransformer->reverseTransform($partso); //OrganList
-            $partSourceOrgan = new PartSourceOrgan($status, $provider, $source);
+            $partSourceOrgan = new PartSourceOrgan($status,$provider,$source);
             $partSourceOrgan->setField($sourceOrganList);
             $part->addSourceOrgan($partSourceOrgan);
         }
@@ -539,14 +554,14 @@ class TableController extends Controller {
             $stainTransformer = new StainTransformer($em,$provider);
             $stainList = $stainTransformer->reverseTransform($stainValue);
 
-            $stain = new Stain($status, $provider, $source);
+            $stain = new Stain($status,$provider,$source);
             $stain->setField($stainList);
 
             $slide->addStain($stain);
         }
 
         ///// Scan /////
-        $scan = new Scan($status, $provider, $source);
+        $scan = new Scan($status,$provider,$source);
 
         //Scan: Scan Magnificaiton
         $mag = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);

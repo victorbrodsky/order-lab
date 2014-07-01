@@ -76,9 +76,7 @@
         {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
 
         <div id="form-prototype-data"
-            {% if cycle != 'show' %}
-                data-prototype-dataquality = "{{ formmacros.dataQualityWidget(form.dataquality.vars.prototype,cycle)|e }}"
-            {% endif %}
+            data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype,cycle)|e }}"
         ></div>
 
         <!-- handsontable -->

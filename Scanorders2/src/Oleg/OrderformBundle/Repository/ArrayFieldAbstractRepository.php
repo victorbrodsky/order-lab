@@ -64,7 +64,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $key = $entity->obtainValidKeyField();
         //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
-        //change keytype from Existing Auto-generated MRN to Existing Auto-generated MRN
+        //change keytype from Existing Auto-generated keytype to Auto-generated keytype.
         $entity = $this->changeKeytype($entity);
 
         if( $key == ""  ) { //$key == "" is the same as $key->getName().""
@@ -422,6 +422,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 //$this->log->addInfo( "###parent exists=".$parent->getName().", method=".$methodShortName.", id=".$field->getId()."<br>" );
                                 //$this->log->addInfo( "field id=".$field->getId()."<br>" );
 
+                                //assign orderinfo to the field if orderinfo is null
+                                if( !$field->getOrderinfo() ) {
+                                    $field->setOrderinfo($orderinfo);
+                                }
+
                                 //Change status only and continue to the next field
                                 if( $status ) {
                                     //echo "2 change status to (".$status.") <br>";
@@ -591,7 +596,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         foreach( $fields as $thisField ) {
             //echo "field=".$thisField."=>";
-            if( $thisField->getStatus() == self::STATUS_VALID ) {
+            //TODO: added condition: field is not empty. Make sure that the original condition was not correct: if( $thisField->getStatus() == self::STATUS_VALID ) {
+            if( $thisField->getStatus() == self::STATUS_VALID && $thisField != "" ) {
                 //echo "found valid field by field name => don't add field <br>";
                 return $thisField;
             }

@@ -106,7 +106,6 @@ class Procedure extends ObjectAbstract
         //fields:
         $this->name = new ArrayCollection();
         $this->encounter = new ArrayCollection();
-
         $this->encounterDate = new ArrayCollection();
         $this->patlastname = new ArrayCollection();
         $this->patmiddlename = new ArrayCollection();
@@ -118,7 +117,6 @@ class Procedure extends ObjectAbstract
         if( $withfields ) {
             $this->addName( new ProcedureName($status,$provider,$source) );
             $this->addEncounter( new ProcedureEncounter($status,$provider,$source) );
-
             $this->addEncounterDate( new ProcedureEncounterDate($status,$provider,$source) );
             $this->addPatlastname( new ProcedurePatlastname($status,$provider,$source) );
             $this->addPatfirstname( new ProcedurePatfirstname($status,$provider,$source) );
@@ -132,7 +130,6 @@ class Procedure extends ObjectAbstract
     public function makeDependClone() {
         $this->name = $this->cloneDepend($this->name,$this);
         $this->encounter = $this->cloneDepend($this->encounter,$this);
-
         $this->encounterDate = $this->cloneDepend($this->encounterDate,$this);
         $this->patlastname = $this->cloneDepend($this->patlastname,$this);
         $this->patfirstname = $this->cloneDepend($this->patfirstname,$this);
@@ -531,7 +528,7 @@ class Procedure extends ObjectAbstract
             $hist = $hist . " pathist=". $name. " (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
-        return 'Procedure: id=' . $this->id . ", patientName=".$this->getPatient()->getName()->first().
+        return 'Procedure: id=' . $this->id . ", patientFirstName=".$this->getPatient()->getFirstname()->first().
             ", patlastname=" . $patlastname . ", patage=" . $patAge . ", patsex=".$patSex.", Clinical History=".$hist.
             ", procedureNameCount=" . count($this->getName()) . " => Names=".$procNames.
             ", encounterCount=" . count($this->encounter) .

@@ -64,39 +64,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         $patients = $entity->getPatient();
 
-        //process data quality
-        foreach( $entity->getDataquality() as $dataquality) {
-
-            //set correct mrntype
-            $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $dataquality->getMrntype() );
-            $dataquality->setMrntype($mrntype);
-
-            //set correct accessiontype
-            $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $dataquality->getAccessiontype() );
-            $dataquality->setAccessiontype($accessiontype);
-
-            $dataquality->setOrderinfo($entity);
-            $dataquality->setProvider($entity->getProvider());
-            $dataquality->setStatus('active');
-
-//            echo "dataquality: description=".$dataquality->getDescription()."<br>";
-//            echo "dataquality: accession=".$dataquality->getAccession()."<br>";
-//            echo "dataquality: accessionType=".$dataquality->getAccessiontype()."<br>";
-//            echo "dataquality: mrn=".$dataquality->getMrn()."<br>";
-//            echo "dataquality: mrn text=".$dataquality->getMrntype()."<br>";
-
-        } //foreach
-
-        //echo "patients count=".count($patients)."<br>";
-//        echo "dataquality count=".count($entity->getDataquality())."<br>";
-//        if( count($entity->getDataquality()) > 0 ) {
-//            echo "dataquality: description=".$entity->getDataquality()->first()->getDescription()."<br>";
-//            echo "dataquality: accession=".$entity->getDataquality()->first()->getAccession()."<br>";
-//            echo "dataquality: accession type=".$entity->getDataquality()->first()->getAccessiontype()."<br>";
-//            echo "dataquality: mrn=".$entity->getDataquality()->first()->getMrn()."<br>";
-//            echo "dataquality: mrn type=".$entity->getDataquality()->first()->getMrntype()."<br>";
-//        }
-
         //********** take care of educational and research director and principal investigator ***********//
         $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity, $this->user );
         $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity, $this->user );
@@ -245,7 +212,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        }
 
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-//        exit('orderinfo repoexit testing');
+        //exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;

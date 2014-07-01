@@ -1,7 +1,26 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
-{% block content %} 
-{% block body -%}
+{% block mainjs %}
+
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script language="Javascript">
+        $(document).ready(function() {
+            idleTimeout();
+        });
+    </script>
+
+{% endblock %}
+
+{% block content %}
 
     {% if cicle == 'new' %}
         {% set cicleStr = 'Submitted' %}
@@ -28,7 +47,7 @@
 
     {% if conflicts is defined and conflicts != "" and conflicts != "noconflicts" %}
         <div class="alert alert-danger">
-            {{ conflicts }}
+            {{ conflicts|raw }}
         </div>
     {% endif %}
     {#{% for conflict in conflicts %}#}
@@ -36,6 +55,5 @@
             {#{{ conflict }}#}
         {#</div>#}
     {#{% endfor %}#}
-      
-{% endblock %}
+
 {% endblock %}

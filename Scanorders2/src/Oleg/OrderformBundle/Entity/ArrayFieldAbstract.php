@@ -48,6 +48,12 @@ abstract class ArrayFieldAbstract {
      */
     protected $creationdate;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="OrderInfo", cascade={"persist"})
+     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
+     */
+    protected $orderinfo;
+
 
     public function __construct( $status = 'valid', $provider = null, $source = null )
     {
@@ -135,6 +141,22 @@ abstract class ArrayFieldAbstract {
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * @param mixed $orderinfo
+     */
+    public function setOrderinfo($orderinfo)
+    {
+        $this->orderinfo = $orderinfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinfo()
+    {
+        return $this->orderinfo;
     }
 
     public function __toString() {

@@ -15,7 +15,13 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     public function changeKeytype($entity) {
         $key = $entity->obtainValidKeyField();
+
+        if( !$key->getKeytype() || $key->getKeytype() == "" ) {
+            throw new \Exception( 'Patient does not have a valid keytype. keytype=' . $key->getKeytype() );
+        }
+        //echo "keytype=".$key->getKeytype()."<br>";
         $newkeytypeid = $this->getCorrectKeytypeId( $key->getKeytype()->getId() );
+        //echo "newkeytypeid=".$newkeytypeid."<br>";
         if( $key == "" || $newkeytypeid != $key->getKeytype()->getId() ) {  //$key == "" is the same as $key->getName().""
             $em = $this->_em;
             $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
