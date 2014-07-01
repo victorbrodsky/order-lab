@@ -30,8 +30,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        echo $entity;
+        //echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        //echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -69,7 +69,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         if( $found ) {
-            echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+            //echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
             //CopyChildren: copy form's object children to the found one.
             foreach( $entity->getChildren() as $child ) {
                 //echo "adding: ".$child."<br>";
@@ -86,7 +86,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         } else
         if( $key == "" ) {
-            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
             $key->setKeytype($newkeytypeEntity);
@@ -100,7 +100,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         }
         else {
-            echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
+            //echo "Case 3: object does not exist in DB (new key is eneterd) or it's amend <br>";
             //throw new \Exception('Invalid logic for Procedure, key='.$key);
         }
 

@@ -62,6 +62,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         $key = $entity->obtainValidKeyField();
+
+        if( !$key ) {
+            //this can happen for 'deleted-by-amended-order' or 'invalid' keys => don't process this
+            return $entity;
+            //echo 'Key field does not exists for '.$className."<br>";
+            //throw new \Exception( 'Key field does not exists for '.$className );
+        }
+
         //echo "valid key=".$key.", status=".$key->getStatus()."<br>";
 
         //change keytype from Existing Auto-generated keytype to Auto-generated keytype.

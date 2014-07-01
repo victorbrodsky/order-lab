@@ -11,7 +11,10 @@ use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
  */
 class AccessionRepository extends ArrayFieldAbstractRepository {
 
+
+
     public function changeKeytype($entity) {
+
         $key = $entity->obtainValidKeyField();
 
         if( !$key->getKeytype() || $key->getKeytype() == "" ) {
