@@ -61,7 +61,7 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td>{{ entity.event }}</td>
+                <td>{{ entity.event|raw }}</td>
                 <td>
                     <div class="textarea_widget">
                         <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>

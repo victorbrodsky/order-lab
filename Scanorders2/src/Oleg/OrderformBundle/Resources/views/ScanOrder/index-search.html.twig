@@ -71,10 +71,11 @@
 
     <div class="scanorder-search"></div>
 
-    {% for searchObject in searchObjects %}
-        {{ render( controller( 'OlegOrderformBundle:ScanOrder:getSearchView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObject':searchObject, 'page':page } ) ) }}
+    {#{% for searchObject in searchObjects %}#}
+        {#{{ render( controller( 'OlegOrderformBundle:ScanOrder:getSearchView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObject':searchObject, 'page':page } ) ) }}#}
+    {#{% endfor %}#}
 
-    {% endfor %}
+    {{ render( controller( 'OlegOrderformBundle:ScanOrder:getSearchAllView', { 'routeName':routename, 'service':service, 'filter':filter, 'search':search, 'searchObjects':searchObjects, 'page':page } ) ) }}
 
 
 {% endblock %}

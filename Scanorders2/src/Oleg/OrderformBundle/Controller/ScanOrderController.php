@@ -603,6 +603,7 @@ class ScanOrderController extends Controller {
         return $this->getSearchViewAction( $routename, $service, $filter, $search, $searchObject, $page );
     }
 
+    //render the search result a single search objects
     public function getSearchViewAction( $routeName, $service, $filter, $search, $searchObject, $page ) {
         $viewArr = $this->getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page );
 
@@ -634,6 +635,56 @@ class ScanOrderController extends Controller {
         //////// EOF EventLog ////////
 
         return $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+    }
+
+
+    //render the search results for all search objects
+    public function getSearchAllViewAction( $routeName, $service, $filter, $search, $searchObjects, $page ) {
+
+        $renderedViewArr = array();
+
+        $resArr = array();
+
+        foreach( $searchObjects as $searchObject ) {
+            $viewArr = $this->getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page );
+
+            //$renderedView = $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+            $renderedView = $this->renderView('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
+
+            $renderedViewArr[] = $renderedView;
+            $resArr[] = 'Search for "' . $viewArr['search'] . '" in ' . $viewArr['searchObjectName'] . '. ' . count($viewArr['pagination']) . ' results found.';
+        }
+
+
+        //////// record to EventLog ////////
+        if( !$page || $page == "" ) {
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->get('security.context')->getToken()->getUser();
+            $roles = $user->getRoles();
+            $request = $this->get('request');
+
+            $count = count($viewArr['pagination']);
+            if( $count == $viewArr['limit'] ) {
+                $count = $count . "+";
+            }
+
+            $logger = new Logger();
+            $logger->setUser($user);
+            $logger->setRoles($roles);
+            $logger->setUsername($user."");
+            $logger->setIp($request->getClientIp());
+            $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+            $logger->setWidth($request->get('display_width'));
+            $logger->setHeight($request->get('display_height'));
+            //$logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
+            $logger->setEvent( implode("<br>",$resArr) );
+
+            $em->persist($logger);
+            $em->flush();
+        }
+        //////// EOF EventLog ////////
+
+        return $this->render('OlegOrderformBundle:ScanOrder:all-search-result.html.twig', array('views'=>$renderedViewArr));
     }
 
     public function getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page ) {
