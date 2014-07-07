@@ -57,9 +57,9 @@ class AperioUtil {
                     $user->addRole('ROLE_SCANORDER_SUBMITTER');           //Submitter
                 }
 
-                //TDODD: Remove: for testing at home;
+                //TODO: Remove: for testing at home;
                 if( !$this->ldap ) {
-                    echo "Aperio Auth: Remove it !!!";
+                    echo "Aperio Auth Tesing: Remove it !!!";
                     $user->setUsername("testuser4");
                     $user->addRole('ROLE_SCANORDER_ADMIN');
                 }
@@ -72,7 +72,7 @@ class AperioUtil {
 
                 $userManager->updateUser($user);
 
-            } //if user
+            } //if !user
 
 
             //get roles: Faculty, Residents, or Fellows

@@ -14,7 +14,7 @@ function idleTimeout() {
 
     //get max idle time from server by ajax
     $.ajax({
-        url: "http://"+urlBase+"/getmaxidletime/",
+        url: getCommonBaseUrl("getmaxidletime/"),	//urlBase+"getmaxidletime/",
         type: 'GET',
         //contentType: 'application/json',
         //dataType: 'json',
@@ -36,8 +36,7 @@ function idleTimeout() {
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     var $countdown = $("#dialog-countdown");
 
-    var urlCommonIdleTimeout = "http://"+urlBase+"/keepalive/";
-    //var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
+    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive");	//urlBase+"keepalive/";
 
     //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
     //idleAfter: 1800 sec => 30min*60sec =
@@ -91,13 +90,13 @@ function keepWorking() {
 
 function logoff() {
     //console.log("logoff");
-    var urlRegularLogout = "http://"+urlBase+"/logout";
+    var urlRegularLogout = getCommonBaseUrl("logout");	//urlBase+"logout";
     window.location = urlRegularLogout;
 }
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    var urlIdleTimeoutLogout = "http://"+urlBase+"/idlelogout";
+    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
     window.location = urlIdleTimeoutLogout;
 }
 

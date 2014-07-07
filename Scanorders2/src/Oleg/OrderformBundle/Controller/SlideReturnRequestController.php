@@ -168,7 +168,7 @@ class SlideReturnRequestController extends Controller
 
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
-        if (!$orderinfo) {
+        if( !$orderinfo ) {
             throw $this->createNotFoundException('Unable to find OrderInfo entity with id='.$id);
         }
 
@@ -441,20 +441,24 @@ class SlideReturnRequestController extends Controller
 
 
         //record history
-        $user = $this->get('security.context')->getToken()->getUser();
         $orderinfo = $entity->getOrderinfo();
-        $slides = $entity->getSlide();
-        $history = new History();
-        $history->setEventtype('Slide Return Request Status Changed');
-        $history->setOrderinfo($orderinfo);
-        $history->setCurrentid($orderinfo->getOid());
-        $history->setCurrentstatus($orderinfo->getStatus());
-        $history->setProvider($user);
-        $history->setRoles($user->getRoles());
-        $notemsg = 'Status Changed to "'.ucfirst($status).'" for Slide Return Request ' . $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $entity->getSlideDescription($user));
-        $history->setNote($notemsg);
-        $em->persist($history);
-        $em->flush();
+        if( $orderinfo ) {
+
+            $user = $this->get('security.context')->getToken()->getUser();
+            $slides = $entity->getSlide();
+            $history = new History();
+            $history->setEventtype('Slide Return Request Status Changed');
+            $history->setOrderinfo($orderinfo);
+            $history->setCurrentid($orderinfo->getOid());
+            $history->setCurrentstatus($orderinfo->getStatus());
+            $history->setProvider($user);
+            $history->setRoles($user->getRoles());
+            $notemsg = 'Status Changed to "'.ucfirst($status).'" for Slide Return Request ' . $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $entity->getSlideDescription($user));
+            $history->setNote($notemsg);
+            $em->persist($history);
+            $em->flush();
+
+        } //if orderinfo
 
 
         $filter = $request->query->get('filter');
@@ -564,25 +568,29 @@ class SlideReturnRequestController extends Controller
             $em->flush();
 
             //record history
-            $user = $this->get('security.context')->getToken()->getUser();
             $orderinfo = $slideReturnRequest->getOrderinfo();
-            $slides = $slideReturnRequest->getSlide();
-            $history = new History();
-            $history->setEventtype('Slide Return Request Comment Added');
-            $history->setOrderinfo($orderinfo);
-            $history->setCurrentid($orderinfo->getOid());
-            $history->setCurrentstatus($orderinfo->getStatus());
-            $history->setProvider($user);
-            $history->setRoles($user->getRoles());
+            if( $orderinfo ) {
 
-            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:i');
-            $dateStr = $transformer->transform(new \DateTime());
-            $commentFull = $user . " on " . $dateStr. ": " . $text_value;
-            $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
-            $history->setNote($notemsg."<br>".$commentFull);
+                $user = $this->get('security.context')->getToken()->getUser();
+                $slides = $slideReturnRequest->getSlide();
+                $history = new History();
+                $history->setEventtype('Slide Return Request Comment Added');
+                $history->setOrderinfo($orderinfo);
+                $history->setCurrentid($orderinfo->getOid());
+                $history->setCurrentstatus($orderinfo->getStatus());
+                $history->setProvider($user);
+                $history->setRoles($user->getRoles());
 
-            $em->persist($history);
-            $em->flush();
+                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y \a\t G:i');
+                $dateStr = $transformer->transform(new \DateTime());
+                $commentFull = $user . " on " . $dateStr. ": " . $text_value;
+                $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
+                $history->setNote($notemsg."<br>".$commentFull);
+
+                $em->persist($history);
+                $em->flush();
+
+            } //if orderinfo
 
         }
 

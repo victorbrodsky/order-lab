@@ -67,7 +67,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             //echo "ROLE SCANORDER PROCESSOR <br>";
             //exit();
 
-            $response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
+            //$response = new RedirectResponse($this->router->generate('incoming-scan-orders',array('filter_search_box[filter]' => 'All Not Filled')));
+            $response = new RedirectResponse($this->router->generate('scan-order-home'));
             $options['event'] = "Successful Login";
 
         }
@@ -78,36 +79,38 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
         ) {
 
-            //$referer_url1 = $request->headers->get('referer');
-            //echo("referer_url1=".$referer_url1."<br>");
-            //$last = basename(parse_url($referer_url, PHP_URL_PATH));
 
-            $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
-            $lastRoute = $request->getSession()->get($indexLastRoute);
-            //exit("lastRoute=".$lastRoute."<br>");
+            if( 1 ) {
+                //redirect all users to the home page
+                $response = new RedirectResponse($this->router->generate('scan-order-home'));
+                $options['event'] = "Successful Login";
 
-            $loginpos = strpos($lastRoute, '/login');
-            $nopermpos = strpos($lastRoute, '/no-permission');
-            $nocheck = strpos($lastRoute, '/check/');
-            //setloginvisit
-
-//            echo "nopermpos=".$nopermpos."<br>";
-//            echo "loginpos=".$loginpos."<br>";
-//            exit();
-
-            if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false && $nocheck === false ) {
-                //$referer_url = $this->router->generate( $lastRoute );
-                $referer_url = $lastRoute;
             } else {
-                $referer_url = $this->router->generate('scan-order-home');
+                //redirect non-processor users to the previously requested page before authentication
+                $indexLastRoute = '_security.aperio_ldap_firewall.target_path';   //'last_route';
+                $lastRoute = $request->getSession()->get($indexLastRoute);
+                //exit("lastRoute=".$lastRoute."<br>");
+
+                $loginpos = strpos($lastRoute, '/login');
+                $nopermpos = strpos($lastRoute, '/no-permission');
+                $nocheck = strpos($lastRoute, '/check/');
+                //setloginvisit
+
+                if( $lastRoute && $lastRoute != '' && $lastRoute && $loginpos === false && $nopermpos === false && $nocheck === false ) {
+                    //$referer_url = $this->router->generate( $lastRoute );
+                    $referer_url = $lastRoute;
+                } else {
+                    $referer_url = $this->router->generate('scan-order-home');
+                }
+
+                //echo("referer_url=".$referer_url);
+                //exit('<br>not processor');
+
+                $response = new RedirectResponse($referer_url);
+
+                $options['event'] = "Successful Login";
+
             }
-
-            //echo("referer_url=".$referer_url);
-            //exit('<br>not processor');
-
-            $response = new RedirectResponse($referer_url);
-
-            $options['event'] = "Successful Login";
 
         }
         else {
@@ -115,7 +118,6 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             //echo "user role not ok!";
             //exit();
             $response = new RedirectResponse( $this->router->generate('logout') );
-
             $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/external/ordering provider submitter";
             
         }

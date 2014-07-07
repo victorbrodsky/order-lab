@@ -47,10 +47,11 @@ $(document).ready(function() {
 
 });
 
+//comment for scan order in history controller
 function submitNewComment(id) {
 
     var urlBase = $("#baseurl").val();
-    var urlCommentSubmit = "http://"+urlBase+"/scan-order/progress-and-comments/create";
+    var urlCommentSubmit = getCommonBaseUrl("scan-order/progress-and-comments/create");	//urlBase+"scan-order/progress-and-comments/create";
 
     var text = $('#addComment_'+id).find('.textarea').val();
 
@@ -93,6 +94,87 @@ function submitNewComment(id) {
 
 }
 
+//comment for Slide Return Request in SlideReturnRequestController
+function submitNewSlideReturnRequestComment(id) {
+
+    var urlBase = $("#baseurl").val();
+    var urlCommentSubmit = getCommonBaseUrl("slide-return-request/comment/create");	//urlBase+"slide-return-request/comment/create";
+
+    var text = $('#addSlideReturnRequestComment_'+id).find('.textarea').val();
+
+    if( $('#modal-processor-comment').select2('data') ) {
+        var selectednote = $('#modal-processor-comment').select2('data').text;
+    } else {
+        var selectednote = "";
+    }
+
+    //console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text + ", selectednote="+selectednote);
+
+    var comment_modal = $('#addSlideReturnRequestComment_'+id);
+
+    $.ajax({
+        url: urlCommentSubmit,
+        type: 'POST',
+        data: {id: id, text: text},
+        timeout: _ajaxTimeout,
+        success: function (data) {
+            //console.log("OK submit a new comment");
+            comment_modal.modal('hide');
+            cleanModal();
+            window.parent.location.reload();
+        },
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
+            //console.log("Error submit a new comment");
+            var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
+            $('#modal_error_'+id).html(errormsg);
+            return false;
+            //comment_modal.modal('hide');
+        }
+    });
+
+}
+
+//add comment before changing status in SlideReturnRequestController
+function submitNewStatusComment(id) {
+
+    var urlBase = $("#baseurl").val();
+    var urlCommentSubmit = getCommonBaseUrl("slide-return-request/comment/create");	//urlBase+"slide-return-request/comment/create";
+
+    var textEl = $('#dataConfirmModal').find('.modal-body').find('.textarea');
+    var text = textEl.val();
+    //console.log("urlCommentSubmit="+urlCommentSubmit+", text="+text);
+
+    $.ajax({
+        url: urlCommentSubmit,
+        type: 'POST',
+        data: {id: id, text: text},
+        timeout: _ajaxTimeout,
+        success: function (data) {
+            //
+        },
+        error: function ( x, t, m ) {
+
+            if( t === "timeout" ) {
+                getAjaxTimeoutMsg();
+            }
+
+            //console.log("Error submit a new comment");
+            return false;
+        }
+    }).done(function() {
+        $('.data-confirm-ok').show();
+        $('.data-comment-ok').hide();
+        //change status by simulating click on the status change modal's button
+        document.getElementById('dataConfirmOK').click();
+    });
+
+}
+
 function cleanModal() {
     $(".modal_error_div").html('');
     $(".modal-body").find('textarea').val('');
@@ -108,7 +190,9 @@ function confirmAction() {
     $('a[data-confirm]').click(function(ev) {
 
         var href = $(this).attr('href');
+
         if( !$('#dataConfirmModal').length ) {
+
             var modalHtml =
                 '<div id="dataConfirmModal" class="modal fade data-confirm-modal">' +
                     '<div class="modal-dialog">' +
@@ -117,10 +201,12 @@ function confirmAction() {
                                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
                                 '<h3 id="dataConfirmLabel">Confirmation</h3>' +
                             '</div>' +
-                            '<div class="modal-body text-center"></div>' +
+                            '<div class="modal-body text-center">' +
+                            '</div>' +
                             '<div class="modal-footer">' +
                                 '<button class="btn btn-primary data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
                                 '<a class="btn btn-primary data-confirm-ok" id="dataConfirmOK">OK</a>' +
+                                '<button style="display: none;" class="btn btn-primary data-comment-ok" onclick="submitNewStatusComment('+$(this).attr('id')+')">OK</button>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
@@ -130,7 +216,22 @@ function confirmAction() {
         }
 
         $('#dataConfirmModal').find('.modal-body').text( $(this).attr('data-confirm') );
-        $('#dataConfirmOK').attr('href', href);
+        $('#dataConfirmOK').attr('href', href); //testing
+
+        /////////////// add comment /////////////////////
+        if( $(this).hasClass("status-with-comment") ) {
+            //do it by listening .data-confirm-ok
+            //console.log('add comment!');
+            var commentHtml = '<br><br>Please provide a comment:' +
+                              '<p><textarea id="'+$(this).attr('id')+'" name="addcomment" type="textarea" class="textarea form-control addcomment_text" maxlength="5000" required></textarea></p>';
+            $('#dataConfirmModal').find('.modal-body').append(commentHtml);
+            //replace href link <a> with button
+            $('.data-confirm-ok').hide();
+            $('.data-comment-ok').show();
+        } else {
+            //$('#dataConfirmOK').attr('href', href); //do it automatically
+        }
+        /////////////// EOF add comment /////////////////////
 
         ////////// assign correct confirmation text and button's text //////////
         var okText = $(this).attr('data-ok');
@@ -148,14 +249,6 @@ function confirmAction() {
         $('#dataConfirmModal').modal({show:true});
 
         return false;
-    });
-
-    //TODO: to hide modal, make button onclick function firts close modal, then redirect to href
-    $('.data-confirm-ok').click(function() {
-        console.log('ok clicked!');
-        //$('.data-confirm-cancel').trigger('click');
-        //$('.data-confirm-modal').modal({show:false});
-        $('.data-confirm-modal').modal('hide');
     });
 
 }

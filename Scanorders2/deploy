@@ -12,7 +12,6 @@
 PROJECT_NAME='ScanOrder Symfony2 Project'
 
 # The location of the Symfony2 project you want to Deploy.
-#PROJECT_LOCAL_PATH=/home/chris/projects/OTP
 PROJECT_LOCAL_PATH=.
 
 
@@ -37,7 +36,7 @@ function prep()
     echo "********* Prepare development/testing *********"
 
     echo "*** Clear cache ***"
-    php $PROJECT_LOCAL_PATH/app/console cache:clear --no-warmup
+    php $PROJECT_LOCAL_PATH/app/console cache:clear
 
     echo "*** Dump assets ***"
     php $PROJECT_LOCAL_PATH/app/console assetic:dump
@@ -47,7 +46,7 @@ function prep()
     echo "********* Prepare production *********"
 
     echo "*** Clear cache ***"
-    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
+    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
     php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
 
     echo "*** Dump assets for production***"

@@ -50,27 +50,29 @@ function deleteItem(id) {
                 //console.log("rename element="+element.attr('id'));
                 var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
                 //console.log("rename delBtnToReplace="+delBtnToReplace.attr('id'));
-                delBtnToReplace.html('Clear');
+                //delBtnToReplace.html('Clear');
+                delBtnToReplace.remove();
             }
 
         } else {
-            //clear the form and all children
-            var ids = id.split("_");
-            //alert("You can't delete only one left " + ids[0]);
-
-            //console.log("id="+id);
-            //console.log("rename elements.length="+elements.length);
-            addSameForm(ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[7], ids[8]);
-
-            $('#formpanel_'+id).remove();
-
-            //make sure to rename delete button to "Clear" if it is only one element left
-            if( elements.length == 1 ) {
-                //change "delete" to "clear"
-                var element = thisParent.children( ".panel" );
-                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-                delBtnToReplace.html('Clear');
-            }
+//            //clear the form and all children
+//            var ids = id.split("_");
+//            //alert("You can't delete only one left " + ids[0]);
+//
+//            //console.log("id="+id);
+//            //console.log("rename elements.length="+elements.length);
+//            addSameForm(ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[7], ids[8]); //testing???
+//
+//            $('#formpanel_'+id).remove(); //testing
+//
+//            //make sure to rename delete button to "Clear" if it is only one element left
+//            if( elements.length == 1 ) {
+//                //change "delete" to "clear"
+//                var element = thisParent.children( ".panel" );
+//                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
+//                //delBtnToReplace.html('Clear');
+//                delBtnToReplace.remove();
+//            }
         }
     }
 
@@ -81,21 +83,48 @@ function deleteItem(id) {
 }
 
 //main input form from html button: add parent form (always type='multi')
-//TODO: remove add parent and use only addChildForms in loop including adding parent
 function addSameForm( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
     var uid = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid+"_"+slideid+"_"+scanid+"_"+stainid;  //+"_"+diffdiag+"_"+specstain+"_"+image;
-
     //console.log("addSameForm="+name+"_"+uid);
+
+    //get total number of existing similar elements in the holder => get next index
+    if( name == "patient") {
+        var parentClass = "order-content";
+    } else {
+        var parentClass = "panel-body";
+    }
+    var currPanelId = "#formpanel_"+name+"_"+uid;
+    var currHolder = $(currPanelId).closest('.'+parentClass);
+    //var countTotal = currHolder.find('.panel-'+name).length;
+    //console.log("countTotal="+countTotal);
+    //make sure this ids has the higher index, so the same ids does not repeat. It can happened if the first element was deleted.
+
+    //get the higher index from the siblings
+    var maxIndex = 0;
+    currHolder.find('.panel-'+name).each( function(){
+        //id: formpanel_block_0_0_0_0_1_0_0_0
+        var id = $(this).attr('id');
+        var idsArr = id.split("_"+name+"_");
+        var ids = idsArr[1].split("_");
+        var index = parseInt( getIdByName(name,ids) );
+        //console.log("ids="+ids+", index="+index+", maxIndex="+maxIndex);
+        if( index > maxIndex ) {
+            maxIndex = index;
+        }
+    });
+    var countTotal = maxIndex + 1;
+    //console.log("countTotal="+countTotal);
 
     //prepare form ids and pass it as array
     //increment by 1 current object id
-    var btnids = getIds(name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid);
+    var btnids = getIds(name, countTotal, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid);
     var id = btnids['id'];
     var idsorig = btnids['orig'];
     var ids = btnids['ids'];
     var idsm = btnids['idsm'];
     var idsp = btnids['idsp'];
+    var idsNext = btnids['idsNext'];    //index based on the total count of siblings
 
     //place the form in the html page after the last similar element: use parent
     //    var holder = "#formpanel_"+name+"_"+uid;
@@ -106,9 +135,11 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     //console.log( "id="+holder.attr('id') );
 
     //console.log("holder="+holder);
+    //console.log("idsNext="+idsNext);
 
     //attach form
-    $(holder).after( getForm( name, id, idsorig, ids, idsm ) );
+    var withDelBtn = true;
+    $(holder).after( getForm( name, idsNext, withDelBtn ) );
 
     if( name == "slide" ) {
         //addCollFieldFirstTime( "relevantScans", ids );
@@ -117,11 +148,11 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     }
 
     //bind listener to the toggle button
-    bindToggleBtn( name + '_' + ids.join("_") );
-    bindDeleteBtn( name + '_' + ids.join("_") );
+    bindToggleBtn( name + '_' + idsNext.join("_") );
+    bindDeleteBtn( name + '_' + idsNext.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(ids);
+    initComboboxJs(idsNext);
     initAdd();
     addKeyListener();
 
@@ -136,63 +167,75 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         //console.log("=> name="+nameArray[i]);
 
         if( nameArray[i] == 'stain_scan' ) {
-            addChildForms( parentName, 'stain', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
-            addChildForms( parentName, 'scan', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, idsNext, 'stain', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, idsNext, 'scan', nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
         } else {
-            addChildForms( parentName, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+            addChildForms( parentName, idsNext, nameArray[i], nameArray[i-1], patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
         }
 
     }
 
-    //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
-    var thisId = "formpanel_"+name+"_"+ids.join("_");
-    //console.log("thisId="+thisId);
-    var thisParent = $("#"+thisId).parent();
-    var childrens = thisParent.children( ".panel" );
-
-    //var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="testjs add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
-    var addbtn =  getHeaderAddBtn( name, ids );
-
-    for (var i = 0; i < childrens.length; i++) {
-        var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
-        addBtnToReplace.replaceWith( addbtn );
-
-        //rename "clear" to "Delete"
-        if( childrens.length > 1 ) {
-            //console.log("childrens.length="+childrens.length);
-            var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-            delBtnToRename.html('Delete');
-        }
+    //TODO: add Delete button if there are sibling objects
+    var origId = "formpanel_"+name+"_"+idsorig.join("_");
+    //console.log("origId="+origId);
+    var origBtnGroup = $("#"+origId).find('.panel-heading').find('.form-btn-options').first();
+    //var origPanelHeading = $("#"+origId).find('.panel-heading').first();
+    //console.log(origPanelHeading);
+    var origDelLen = origBtnGroup.find('.delete_form_btn').length;
+    //console.log("origDelLen="+origDelLen);
+    if( origDelLen == 0 ) {
+        //console.log("generate delete button for name="+name+", idsorig="+idsorig);
+        var deletebtn = getHeaderDeleteBtn( name, idsorig, "Delete" );
+        //origBtnGroup.find('.add_form_btn').before(deletebtn);
+        origBtnGroup.append( deletebtn );
+        bindDeleteBtn( name + '_' + idsorig.join("_") );
     }
+
+//    //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
+//    var thisId = "formpanel_"+name+"_"+ids.join("_");
+//    console.log("thisId="+thisId);
+//    var thisParent = $("#"+thisId).parent();
+//    var childrens = thisParent.children( ".panel" );
+//
+//    //var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="testjs add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
+//    var addbtn =  getHeaderAddBtn( name, ids );
+//
+//    for (var i = 0; i < childrens.length; i++) {
+//        var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
+//        addBtnToReplace.replaceWith( addbtn );
+//
+//        //rename "clear" to "Delete"
+//        if( childrens.length > 1 ) {
+//            console.log("childrens.length="+childrens.length);
+//            var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
+//            delBtnToRename.html('Delete');
+//        }
+//    }
 
     initAllElements();
 }
 
 //add children forms triggered by parent form
-function addChildForms( parentName, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function addChildForms( parentName, parentIds, name, prevName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
 
-    //idsu: +1 for the parent object (parentName)
-    //attach to previous object (prevName)
-    var btnids = getIds( parentName, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
-    var idsorig = btnids['orig'];
-    var ids = btnids['ids'];
-    var idsm = btnids['idsm'];
-    var id = btnids['id'];
-    id = id - 1;
-    var idsu = ids.join("_");
+//    //attach to previous object (prevName)
+//    var btnids = getIds( parentName, null, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid );
+//    //var idsorig = btnids['orig'];
+//    var ids = btnids['ids'];
+//    var idsm = btnids['idsm'];
+//    var id = btnids['id'];
+//    id = id - 1;
+//    var idsu = ids.join("_");
 
-    var uid = prevName+"_"+idsu;
+    var ids = parentIds;
+
+    var uid = prevName+"_"+parentIds.join("_");
     var holder = "#form_body_"+uid;
-    //console.debug(name+": ADD CHILDS to="+holder+" uid="+idsu);
+    console.debug(name+": ADD CHILDS to="+holder);
 
     //attach children form
-    $(holder).append( getForm( name, id, idsorig, ids, idsm  ) );
-
-    if( name == "slide" ) {
-        //addCollFieldFirstTime( "relevantScans", ids );
-        //addDiffdiagFieldFirstTime( name, ids );
-        //addCollFieldFirstTime( "specialStains", ids );
-    }
+    var withDelBtn = false;
+    $(holder).append( getForm( name, ids, withDelBtn  ) );
     
     bindToggleBtn( name + '_' + ids.join("_") );
     bindDeleteBtn( name + '_' + ids.join("_") );
@@ -204,15 +247,15 @@ function addChildForms( parentName, name, prevName, patientid, procedureid, acce
 }
 
 //input: current form ids
-function getForm( name, id, idsorig, ids, idsm ) {
+function getForm( name, ids, withDelBtn ) {
 
-    var deleteStr = "Clear";
+    var deleteStr = "Delete";
     var idsu = ids.join("_");
-    var idsc = ids.join(",");
+
     //increment by 1 current object id
     var formbody = getFormBody( name, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7] );
 
-    //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm);
+    //console.log("getForm: "+name+"_"+", id="+id+", ids="+ids+', idsm='+idsm+", withDelBtn="+withDelBtn);
 
     if( name == "scan" || name == "stain" ) {
         var addbtn = "";
@@ -221,6 +264,10 @@ function getForm( name, id, idsorig, ids, idsm ) {
     } else {
         var addbtn = getHeaderAddBtn( name, ids );
         var deletebtn = getHeaderDeleteBtn( name, ids, deleteStr );
+    }
+
+    if( !withDelBtn ) {
+        deletebtn = "";
     }
 
     //get itemCount from partialId
@@ -319,7 +366,7 @@ function capitaliseFirstLetter(string)
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getIds( name, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
+function getIds( name, nextIndex, patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid ) {
     var id = 0;
     var nextName = "";
 
@@ -338,8 +385,17 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
     var partidp = partid;
     var blockidp = blockid;
     var slideidp = slideid;
-    var scaniddp = scanid;
+    var scanidp = scanid;
     var stainidp = stainid;
+
+    var patientNext = patientid;
+    var procedureNext = procedureid;
+    var accessionNext = accessionid;
+    var partNext = partid;
+    var blockNext = blockid;
+    var slideNext = slideid;
+    var scanNext = scanid;
+    var stainNext = stainid;
 
     var partialId = "";
 
@@ -354,6 +410,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = patientid;
             nextName = "procedure";
             partialId = "";
+            patientNext = nextIndex;
             break;
         case "procedure":
             procedureidm = procedureid-1;
@@ -362,6 +419,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = procedureid;
             nextName = "accession";
             partialId = patientid;
+            procedureNext = nextIndex;
             break;
         case "accession":
             accessionidm = accessionid-1;
@@ -370,6 +428,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = accessionid;
             nextName = "part";
             partialId = patientid+"_"+procedureid;
+            accessionNext = nextIndex;
             break;
         case "part":
             partidm = partid-1;
@@ -378,6 +437,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = partid;
             nextName = "block";
             partialId = patientid+"_"+procedureid+"_"+accessionid;
+            partNext = nextIndex;
             break;
         case "block":
             blockidm = blockid-1;
@@ -386,6 +446,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = blockid;
             nextName = "slide";
             partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid;
+            blockNext = nextIndex;
             break;
         case "slide":
             slideidm = slideid-1;
@@ -394,14 +455,16 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = slideid;
             nextName = "";
             partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
+            slideNext = nextIndex;
             break;
         case "scan":
             scaniddm = scanid-1;
             scanid++;
-            scaniddp = scanid+1;
+            scanidp = scanid+1;
             id = scanid;
             nextName = "";
             partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
+            scanNext = nextIndex;
             break;
         case "stain":
             stainidm = stainid-1;
@@ -410,6 +473,7 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
             id = stainid;
             nextName = "";
             partialId = patientid+"_"+procedureid+"_"+accessionid+"_"+partid+"_"+blockid;
+            stainNext = nextIndex;
             break;
         default:
             id = 0;
@@ -417,7 +481,8 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
 
     var idsArray = [patientid, procedureid, accessionid, partid, blockid, slideid, scanid, stainid];
     var idsArrayM = [patientidm, procedureidm, accessionidm, partidm, blockidm, slideidm, scaniddm, stainidm];
-    var idsArrayP = [patientidp, procedureidp, accessionidp, partidp, blockidp, slideidp, scaniddp, stainidp];
+    var idsArrayP = [patientidp, procedureidp, accessionidp, partidp, blockidp, slideidp, scanidp, stainidp];
+    var idsArrayNext = [patientNext, procedureNext, accessionNext, partNext, blockNext, slideNext, scanNext, stainidp];
 
     var res_array = {
         'id' : id,
@@ -426,7 +491,8 @@ function getIds( name, patientid, procedureid, accessionid, partid, blockid, sli
         'idsm' : idsArrayM,
         'idsp' : idsArrayP,
         'nextName' : nextName,
-        'partialId' : partialId
+        'partialId' : partialId,
+        'idsNext' : idsArrayNext
     };
 
     return res_array;
@@ -487,7 +553,7 @@ function bindDeleteBtn( uid ) {
     //console.log('delete uid='+uid);
     $('#delete_form_btn_'+uid).on('click', function(e) {
         var id = uid;
-        //alert("clicked delete!");
+        //console.log('click delete uid='+uid);
         deleteItem(id);
     });
 }
@@ -500,15 +566,7 @@ function setNavBar() {
 
     var id = 'scanorderhome';
 
-    if( full.indexOf("scan-order/multi-slide-clinical") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-educational") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-research") !== -1 ) {
+    if( full.indexOf("scan-order/multi-slide") !== -1 ) {
         id = 'placescanorder';
     }
 
@@ -520,8 +578,16 @@ function setNavBar() {
         id = 'placescanorder';
     }
 
+    if( full.indexOf("scan/slide-return-request") !== -1 ) {
+        id = 'placescanorder';
+    }
+
     if( full.indexOf("my-scan-orders") !== -1 ) {
         id = 'myscanorders';
+    }
+
+    if( full.indexOf("my-slide-return-requests") !== -1 ) {
+        id = 'mysliderequests';
     }
 
     //Admin
@@ -532,6 +598,9 @@ function setNavBar() {
         id = 'admin';
     }
     if( full.indexOf("/incoming-scan-orders") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/incoming-slide-return-requests") !== -1 ) {
         id = 'admin';
     }
     if( full.indexOf("/access-requests") !== -1 ) {
@@ -552,8 +621,11 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/user-directory") !== -1 ) {
+        id = 'admin';
+    }
     
-    if( full.indexOf("/users/") !== -1 ) {
+    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
         } else {

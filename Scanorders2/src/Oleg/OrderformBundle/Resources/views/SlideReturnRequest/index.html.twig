@@ -254,13 +254,13 @@
                             {% endif %}
 
                             {% if sliderequest.status != 'active' %}
-                                <li><a data-confirm="Are you sure you want to Revert Status to Active?"
+                                <li><a data-confirm='Are you sure you want to revert the request status to "Active"?'
                                        href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'active' }) }}">Revert Status to Active</a>
                                 </li>
                             {% endif %}
 
                             {% if sliderequest.status != 'cancel' %}
-                                <li><a data-confirm="Are you sure you want to Cancel this Slide Return Request?"
+                                <li><a data-confirm="Are you sure you want to Cancel this Slide Return Request?" data-ok="Cancel this request" data-cancel="Do not cancel this request"
                                        href="{{ path('sliderequest_status', { 'id': sliderequest.id, 'status': 'cancel' }) }}">Cancel</a>
                                 </li>
                             {% endif %}

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
-class AperioListener {//implements ListenerInterface  {
+class AperioListener { //implements ListenerInterface  {
 
     protected $securityContext;
     protected $authenticationManager;
@@ -37,6 +37,7 @@ class AperioListener {//implements ListenerInterface  {
     {
 
         //exit("using handle Aperio Listener");
+
         //use default handle
         return;
 
@@ -46,6 +47,7 @@ class AperioListener {//implements ListenerInterface  {
         //exit( "username=".$username.", password=".$password."<br>" );
 
         if( !$username || $username == "" ) {
+            //exit( "username=".$username.", password=".$password."<br>" );
             return;
         }
 

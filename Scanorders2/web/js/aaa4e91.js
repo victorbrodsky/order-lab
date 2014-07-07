@@ -17,6 +17,15 @@ window.onerror=function(msg, url, linenumber){
 
 }
 
+function getCommonBaseUrl(link) {
+    var prefix = "scan";
+    var urlBase = $("#baseurl").val();
+    if( typeof urlBase !== 'undefined' && urlBase != "" ) {
+        urlBase = "http://" + urlBase + "/" + prefix + "/" + link;
+    }
+    //console.log("urlBase="+urlBase);
+    return urlBase;
+}
 
 
 /*! jQuery v1.11.0 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
@@ -5886,7 +5895,7 @@ var combobox_width = '100%'; //'element'
 //var urlCommon = "http://collage.med.cornell.edu/order/scanorder/Scanorders2/web/app_dev.php/util/";
 //var urlCommon = "http://collage.med.cornell.edu/order/util/";
 var urlBase = $("#baseurl").val();
-var urlCommon = "http://"+urlBase+"/util/";
+//var urlCommon = urlBase+"util/";
 //var type = $("#formtype").val();
 var cicle = $("#formcicle").val();
 var user_name = $("#user_name").val();
@@ -5961,30 +5970,29 @@ function customCombobox() {
     //console.log("cicle="+cicle);
 
     if( cicle && urlBase && cicle != 'edit_user' && cicle != 'accountreq' ) {
-        getComboboxMrnType(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxAccessionType(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxPartname(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxBlockname(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxScanregion(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxStain(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(urlCommon,new Array("0","0","0","0","0","0"),false);
-        getComboboxProcedure(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxOrgan(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxDelivery(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxReturn(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
-        //getOptionalUserEducational(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxMrnType(new Array("0","0","0","0","0","0"));
+        getComboboxAccessionType(new Array("0","0","0","0","0","0"));
+        getComboboxPartname(new Array("0","0","0","0","0","0"));
+        getComboboxBlockname(new Array("0","0","0","0","0","0"));
+        getComboboxScanregion(new Array("0","0","0","0","0","0"));
+        getComboboxStain(new Array("0","0","0","0","0","0"));
+        getComboboxSpecialStain(new Array("0","0","0","0","0","0"),false);
+        getComboboxProcedure(new Array("0","0","0","0","0","0"));
+        getComboboxOrgan(new Array("0","0","0","0","0","0"));
+        getComboboxDelivery(new Array("0","0","0","0","0","0"));
+        getComboboxReturn(new Array("0","0","0","0","0","0"));
+        getComboboxPathService(new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
-        getProjectTitle(urlCommon,new Array("0","0","0","0","0","0"));
-        getCourseTitle(urlCommon,new Array("0","0","0","0","0","0"));
+        getProjectTitle(new Array("0","0","0","0","0","0"));
+        getCourseTitle(new Array("0","0","0","0","0","0"));
 
-        getComboboxDepartment(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxInstitution(urlCommon,new Array("0","0","0","0","0","0"));
-        getComboboxAccount(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxDepartment(new Array("0","0","0","0","0","0"));
+        getComboboxInstitution(new Array("0","0","0","0","0","0"));
+        getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
-        getComboboxPathService(urlCommon,new Array("0","0","0","0","0","0"));
+        getComboboxPathService(new Array("0","0","0","0","0","0"));
     }
 }
 
@@ -6029,9 +6037,9 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
 
 
 //#############  stains  ##############//
-function getComboboxStain(urlCommon, ids) {
+function getComboboxStain(ids) {
 
-    var url = urlCommon+"stain";
+    var url = getCommonBaseUrl("util/"+"stain");
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -6065,9 +6073,9 @@ function getComboboxStain(urlCommon, ids) {
 
 }
 
-function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
+function getComboboxSpecialStain(ids, preset, setId) {
 
-    var url = urlCommon+"stain";
+    var url = getCommonBaseUrl("util/"+"stain");    //urlCommon+"stain";
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -6103,9 +6111,9 @@ function getComboboxSpecialStain(urlCommon, ids, preset, setId) {
 }
 
 //#############  scan regions  ##############//
-function getComboboxScanregion(urlCommon,ids) {
+function getComboboxScanregion(ids) {
 
-    var url = urlCommon+"scanregion";
+    var url = getCommonBaseUrl("util/"+"scanregion"); //urlCommon+"scanregion";
     //console.log("scanregion.length="+scanregion.length);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
@@ -6135,10 +6143,10 @@ function getComboboxScanregion(urlCommon,ids) {
 }
 
 //#############  source organs  ##############//
-function getComboboxOrgan(urlCommon,ids) {
+function getComboboxOrgan(ids) {
 //    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];   //+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var url = urlCommon+"organ";
+    var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -6161,10 +6169,10 @@ function getComboboxOrgan(urlCommon,ids) {
 
 
 //#############  procedure types  ##############//
-function getComboboxProcedure(urlCommon,ids) {
+function getComboboxProcedure(ids) {
 //    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1];    //+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var url = urlCommon+"procedure";
+    var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
 //    var targetid = id+"name_0_field";
 
     if( cicle == "new" || cicle == "create" ) {
@@ -6187,9 +6195,9 @@ function getComboboxProcedure(urlCommon,ids) {
 }
 
 //#############  Accession Type  ##############//
-function getComboboxAccessionType(urlCommon,ids) {
+function getComboboxAccessionType(ids) {
 
-    var url = urlCommon+"accessiontype";
+    var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
 
     //console.log("orderformtype="+orderformtype);
 
@@ -6222,9 +6230,9 @@ function getComboboxAccessionType(urlCommon,ids) {
 }
 
 //#############  Mrn Type  ##############//
-function getComboboxMrnType(urlCommon,ids) {
+function getComboboxMrnType(ids) {
 
-    var url = urlCommon+"mrntype";
+    var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
 
     //console.log("orderformtype="+orderformtype);
 
@@ -6257,9 +6265,9 @@ function getComboboxMrnType(urlCommon,ids) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(urlCommon,ids) {
+function getComboboxPartname(ids) {
 
-    var url = urlCommon+"partname";
+    var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
 //    if( cicle == "new" || cicle == "create" ) {
 //        url = url + "?opt=default";
@@ -6285,9 +6293,9 @@ function getComboboxPartname(urlCommon,ids) {
 }
 
 //#############  blockname types  ##############//
-function getComboboxBlockname(urlCommon,ids) {
+function getComboboxBlockname(ids) {
 
-    var url = urlCommon+"blockname";
+    var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
 //    if( cicle == "new" || cicle == "create" ) {
 //        url = url + "?opt=default";
@@ -6312,10 +6320,10 @@ function getComboboxBlockname(urlCommon,ids) {
 }
 
 //#############  slide delivery  ##############//
-function getComboboxDelivery(urlCommon,ids) {
+function getComboboxDelivery(ids) {
     //var uid = "";   //'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
 //    var id= "#oleg_orderformbundle_orderinfotype_";
-    var url = urlCommon+"delivery";
+    var url = getCommonBaseUrl("util/"+"delivery");    //urlCommon+"delivery";
     var target = ".ajax-combobox-delivery";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
@@ -6345,10 +6353,10 @@ function getComboboxDelivery(urlCommon,ids) {
 }
 
 //#############  return slides to  ##############//
-function getComboboxReturn(urlCommon,ids) {
+function getComboboxReturn(ids) {
     //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     //var id= "#oleg_orderformbundle_orderinfotype_";
-    var url = urlCommon+"return";
+    var url = getCommonBaseUrl("util/"+"return"); //urlCommon+"return";
     //var targetid = id+"returnSlide";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
@@ -6380,13 +6388,13 @@ function getComboboxReturn(urlCommon,ids) {
 }
 
 //#############  pathology service for user and orderinfo  ##############//
-function getComboboxPathService(urlCommon,ids) {
+function getComboboxPathService(ids) {
 
     //******************* order pathology service *************************//
     //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
     //var id= "#oleg_orderformbundle_orderinfotype_";
     var targetid = ".ajax-combobox-pathservice";
-    var url = urlCommon+"pathservice";
+    var url = getCommonBaseUrl("util/"+"pathservice");   //urlCommon+"pathservice";
 
     if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" || cicle == "show" ) {
         var optStr = user_id;
@@ -6425,9 +6433,9 @@ function getComboboxPathService(urlCommon,ids) {
 }
 
 //#############  Research Project  ##############//
-function getProjectTitle(urlCommon,ids) {
+function getProjectTitle(ids) {
 
-    var url = urlCommon+"projecttitle";
+    var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6461,7 +6469,7 @@ function getProjectTitle(urlCommon,ids) {
 function getSetTitle() {
 
     var targetid = ".combobox-research-setTitle";
-    var url = urlCommon+"settitle";
+    var url = getCommonBaseUrl("util/"+"settitle"); //urlCommon+"settitle";
 
     //get ProjectTitle value and process children fields (readonly: true or false)
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, false );
@@ -6493,9 +6501,9 @@ function getSetTitle() {
 
 
 //#############  Educational Course  ##############//
-function getCourseTitle(urlCommon,ids) {
+function getCourseTitle(ids) {
 
-    var url = urlCommon+"coursetitle";
+    var url = getCommonBaseUrl("util/"+"coursetitle"); //urlCommon+"coursetitle";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6528,7 +6536,7 @@ function getCourseTitle(urlCommon,ids) {
 function getLessonTitle() {
 
     var targetid = ".combobox-educational-lessonTitle";
-    var url = urlCommon+"lessontitle";
+    var url = getCommonBaseUrl("util/"+"lessontitle");  //urlCommon+"lessontitle";
 
     //get CourseTitle value and process children fields (readonly: true or false)
     var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, false );
@@ -6559,7 +6567,7 @@ function getLessonTitle() {
 function getOptionalUserResearch() {
 
     var targetid = ".ajax-combobox-optionaluser-research";
-    var url = urlCommon+"optionaluserresearch";
+    var url = getCommonBaseUrl("util/"+"optionaluserresearch"); //urlCommon+"optionaluserresearch";
 
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
 
@@ -6597,7 +6605,7 @@ function getOptionalUserResearch() {
 function getOptionalUserEducational() {
 
     var targetid = ".ajax-combobox-optionaluser-educational";
-    var url = urlCommon+"optionalusereducational";
+    var url = getCommonBaseUrl("util/"+"optionalusereducational"); //urlCommon+"optionalusereducational";
 
     var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, true );
 
@@ -6664,9 +6672,9 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 
 
 //#############  department  ##############//
-function getComboboxDepartment(urlCommon,ids) {
+function getComboboxDepartment(ids) {
 
-    var url = urlCommon+"department";
+    var url = getCommonBaseUrl("util/"+"department");  //urlCommon+"department";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6694,9 +6702,9 @@ function getComboboxDepartment(urlCommon,ids) {
 }
 
 //#############  institution  ##############//
-function getComboboxInstitution(urlCommon,ids) {
+function getComboboxInstitution(ids) {
 
-    var url = urlCommon+"institution";
+    var url = getCommonBaseUrl("util/"+"institution"); //urlCommon+"institution";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6724,9 +6732,9 @@ function getComboboxInstitution(urlCommon,ids) {
 }
 
 //#############  account  ##############//
-function getComboboxAccount(urlCommon,ids) {
+function getComboboxAccount(ids) {
 
-    var url = urlCommon+"account";
+    var url = getCommonBaseUrl("util/"+"account");  //urlCommon+"account";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6754,9 +6762,9 @@ function getComboboxAccount(urlCommon,ids) {
 }
 
 //#############  return slides to  ##############//
-function getUrgency(urlCommon) {
+function getUrgency() {
 
-    var url = urlCommon+"urgency";
+    var url = getCommonBaseUrl("util/"+"urgency");  //urlCommon+"urgency";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6792,24 +6800,24 @@ function initComboboxJs(ids) {
 
         cicle = 'new';
 
-        getComboboxMrnType(urlCommon,ids);
-        getComboboxAccessionType(urlCommon,ids);
-        getComboboxPartname(urlCommon,ids);
-        getComboboxBlockname(urlCommon,ids);
-        getComboboxStain(urlCommon,ids);
-        getComboboxSpecialStain(urlCommon,ids,false);
-        getComboboxScanregion(urlCommon,ids);
-        getComboboxProcedure(urlCommon,ids);
-        getComboboxOrgan(urlCommon,ids);
-        getComboboxPathService(urlCommon,ids);
-        //getOptionalUserEducational(urlCommon,ids);
+        getComboboxMrnType(ids);
+        getComboboxAccessionType(ids);
+        getComboboxPartname(ids);
+        getComboboxBlockname(ids);
+        getComboboxStain(ids);
+        getComboboxSpecialStain(ids,false);
+        getComboboxScanregion(ids);
+        getComboboxProcedure(ids);
+        getComboboxOrgan(ids);
+        getComboboxPathService(ids);
+        //getOptionalUserEducational(ids);
         slideType(ids);
-        getProjectTitle(urlCommon,ids);
-        getCourseTitle(urlCommon,ids);
+        getProjectTitle(ids);
+        getCourseTitle(ids);
 
-        getComboboxDepartment(urlCommon,ids);
-        getComboboxInstitution(urlCommon,ids);
-        getComboboxAccount(urlCommon,ids);
+        getComboboxDepartment(ids);
+        getComboboxInstitution(ids);
+        getComboboxAccount(ids);
     }
 }
 
@@ -7499,8 +7507,8 @@ function getButtonElementParent( btn ) {
  */
 
 
-var urlBase = $("#baseurl").val();
-var urlCheck = "http://"+urlBase+"/check/";
+//var urlBase = $("#baseurl").val();
+//var urlCheck = urlBase+"check/";
 
 var keys = new Array("mrn", "accession", "partname", "blockname");
 
@@ -7518,11 +7526,13 @@ var dataquality_message2 = new Array();
 
 var _external_user = null;
 
-//var _autogenAcc = 8;
-//var _autogenMrn = 13;
+var _auto_generated_mrn_type = null;    //now it should be 13;
+var _auto_generated_accession_type = null;  //now it should be 8
 
 //add disident to a single form array field
 $(document).ready(function() {
+
+    setAutoGeneratedTypes();
 
     if( orderformtype == "single") {
         arrayFieldShow.push("disident")
@@ -7926,7 +7936,7 @@ function executeClick( btnObjInit ) {
 
 
             $.ajax({
-                url: urlCheck+urlcasename,
+                url: getCommonBaseUrl("check/"+urlcasename),	//urlCheck+urlcasename,
                 type: ajaxType,
                 contentType: 'application/json',
                 dataType: 'json',
@@ -7974,6 +7984,7 @@ function executeClick( btnObjInit ) {
 
                     //////////////// check ////////////////
                     if( casetype == 'check' ) {
+                        //console.debug("check casetype="+casetype);
                         if( data == -2 ) {
 
                             //Existing Auto-generated object does not exist in DB
@@ -8623,15 +8634,7 @@ function setNavBar() {
 
     var id = 'scanorderhome';
 
-    if( full.indexOf("scan-order/multi-slide-clinical") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-educational") !== -1 ) {
-        id = 'placescanorder';
-    }
-
-    if ( full.indexOf("scan-order/multi-slide-research") !== -1 ) {
+    if( full.indexOf("scan-order/multi-slide") !== -1 ) {
         id = 'placescanorder';
     }
 
@@ -8640,6 +8643,10 @@ function setNavBar() {
     }
 
     if( full.indexOf("scan-order/multi-slide-table-view") !== -1 ) {
+        id = 'placescanorder';
+    }
+
+    if( full.indexOf("scan/slide-return-request") !== -1 ) {
         id = 'placescanorder';
     }
 
@@ -8661,6 +8668,9 @@ function setNavBar() {
     if( full.indexOf("/incoming-scan-orders") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/incoming-slide-return-requests") !== -1 ) {
+        id = 'admin';
+    }
     if( full.indexOf("/access-requests") !== -1 ) {
         id = 'admin';
     }
@@ -8679,8 +8689,11 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/user-directory") !== -1 ) {
+        id = 'admin';
+    }
     
-    if( full.indexOf("/users/") !== -1 ) {
+    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
            id = 'admin';
         } else {
@@ -8868,6 +8881,59 @@ function printF(element,text) {
  * and open the template in the editor.
  */
 
+//set global auto generated mrn and accession types
+function setAutoGeneratedTypes() {
+    //console.log("set Auto Generated Types");
+    getKeyTypeID('patient','Auto-generated MRN').
+        then(
+        function(response) {
+            _auto_generated_mrn_type = response;    //now it should be 13
+            //console.log("_auto_generated_mrn_type="+_auto_generated_mrn_type);
+        }
+    );
+
+    getKeyTypeID('accession','Auto-generated Accession Number').
+        then(
+        function(response) {
+            _auto_generated_accession_type = response;  //now it should be 8
+            //console.log("_auto_generated_accession_type="+_auto_generated_accession_type);
+        }
+    );
+}
+
+//return id of the keytype by keytype string
+//if keytype does not exists in DB, return keytype string
+function getKeyTypeID( name, keytype ) {
+    return Q.promise(function(resolve, reject) {
+
+        $.ajax({
+            url: getCommonBaseUrl("check/"+name+'/keytype/'+keytype),   //urlCheck+name+'/keytype/'+keytype,
+            type: 'GET',
+            //data: {keytype: keytype},
+            contentType: 'application/json',
+            dataType: 'json',
+            timeout: _ajaxTimeout,
+            async: false,
+            success: function (data) {
+                //console.debug("get element ajax ok");
+                if( data && data != '' ) {
+                    //console.log(name+": keytype is found. keytype="+data);
+                    resolve(data);
+                } else {
+                    //console.log(name+": keytype is not found.");
+                    resolve(keytype);
+                }
+            },
+            error: function ( x, t, m ) {
+                //console.debug("keytype id: ajax error "+name);
+                if( t === "timeout" ) {
+                    getAjaxTimeoutMsg();
+                }
+                reject(Error("Check Existing Error"));
+            }
+        });
+    }); //promise
+}
 
 function cleanValidationAlert() {
     if( cicle == "new" || cicle == "amend" || cicle == "edit" ) {
@@ -9167,24 +9233,6 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
-//function getSimpleFieldName( inputEl ) {
-//    if( inputEl.hasClass("proceduredate-field") ) {
-//        return "encounterDate";
-//    }
-//    if( inputEl.hasClass("procedurename-field") ) {
-//        return "patname";
-//    }
-//    if( inputEl.hasClass("proceduresex-field") ) {
-//        return "patsex";
-//    }
-//    if( inputEl.hasClass("procedureage-field") ) {
-//        return "patage";
-//    }
-//    if( inputEl.hasClass("procedurehistory-field") ) {
-//        return "pathistory";
-//    }
-//    return null;
-//}
 
 function calculateAgeByDob( btn ) {
     var accessionBtnObj = new btnObject(btn,'full');
@@ -9374,7 +9422,7 @@ function checkMrnAccessionConflict() {
             acctypeValue = trimWithCheck(acctypeValue);
 
             $.ajax({
-                url: urlCheck+"accession/check",
+                url: getCommonBaseUrl("check/"+"accession/check"),    //urlCheck+"accession/check",
                 type: 'GET',
                 data: {key: accValue, extra: acctypeValue},
                 contentType: 'application/json',
@@ -9410,8 +9458,10 @@ function checkMrnAccessionConflict() {
                         mrntypeValue = trimWithCheck(mrntypeValue);
 
                         //console.log('mrn='+mrn+', mrntype='+mrntype);
-
-                        if( mrn == mrnValue && ( mrntype == mrntypeValue || 13 == mrntypeValue ) ) {    //13 - Auto-generated MRN. Need it for edit or amend form
+                        if( mrn == "" && mrntype == "" ) {
+                            //console.log("validated successfully !");
+                        } else
+                        if( mrn == mrnValue && ( mrntype == mrntypeValue || _auto_generated_mrn_type == mrntypeValue ) ) {    //_auto_generated_mrn_type - Auto-generated MRN type ID. Need it for edit or amend form
                             //console.log("validated successfully !");
                         } else {
                             //console.log('mrn='+mrn+', mrntype='+mrntype+ " do not match to form's "+" mrnValue="+mrnValue+", mrntypeValue="+mrntypeValue);
@@ -9498,10 +9548,10 @@ function checkIfMrnAccConflictHandled() {
                 reruncount++;
             }
             if( checkedVal == "OPTION1" ) {
-                setDataquality( countErrorBoxes, dataquality_message1[countErrorBoxes] );
+                setDataqualityMessage( countErrorBoxes, dataquality_message1[countErrorBoxes] );
             }
             if( checkedVal == "OPTION2" ) {
-                setDataquality( countErrorBoxes, dataquality_message2[countErrorBoxes] );
+                setDataqualityMessage( countErrorBoxes, dataquality_message2[countErrorBoxes] );
             }
         } else {
             //alert("Please select one of these options.");
@@ -9603,15 +9653,15 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
     setDataqualityData( index, accValueForm, acctypeIDForm, mrnValueForm, mrntypeIDForm );
 }
 
-function setDataquality(index,message) {
-    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+function setDataqualityMessage(index,message) {
+    var partid = "#oleg_orderformbundle_orderinfotype_conflicts_"+index+"_";
     //console.log("message=" + message);
     $(partid+'description').val(message);
 }
 
 
 function setDataqualityData( index, accession, acctype, mrn, mrntype ) {
-    var partid = "#oleg_orderformbundle_orderinfotype_dataquality_"+index+"_";
+    var partid = "#oleg_orderformbundle_orderinfotype_conflicts_"+index+"_";
     //console.log("set Dataquality Data: "+accession + " " + acctype + " " + mrn + " " + mrntype);
     $(partid+'accession').val(accession);
     $(partid+'accessiontype').val(acctype);
@@ -9683,7 +9733,7 @@ function checkExistingKey(name) {
             eltypeValue = trimWithCheck(eltypeValue);
 
             $.ajax({
-                url: urlCheck+name+'/check',
+                url: getCommonBaseUrl("check/"+name+'/check'),   //urlCheck+name+'/check',
                 type: 'GET',
                 data: {key: elValue, extra: eltypeValue},
                 contentType: 'application/json',
@@ -9809,7 +9859,7 @@ function getUserRole() {
     }
 
     $.ajax({
-        url: urlCheck+'userrole',
+        url: getCommonBaseUrl("check/"+'userrole'),   //urlCheck+'userrole',
         type: 'POST',
         data: {userid: user_id},
         contentType: 'application/json',
@@ -9833,7 +9883,27 @@ function getUserRole() {
     });
 }
 
+//parent - holder containing all elements for this object
+function setPatientNameSexAgeLockedFields( data, parent ) {
 
+    if( data['fullname'] && data['fullname'] != undefined && data['fullname'] != "" ) {
+        parent.find('.patientname').find('.well').html( data['fullname'] );
+    }
+
+    if( data['sex'] && data['sex'] != undefined && data['sex'] != "" ) {
+        parent.find('.patientsex').find('.well').html( data['sex'][0]['text'] );
+    }
+
+    if( data['age'] && data['age'] != undefined && data['age'] != "" ) {
+        parent.find('.patientage').find('.well').html( data['age'][0]['text'] );
+    }
+
+}
+function cleanPatientNameSexAgeLockedFields( parent ) {
+    parent.find('.patientname').find('.well').html("");
+    parent.find('.patientsex').find('.well').html("");
+    parent.find('.patientage').find('.well').html("");
+}
 
 
 //TODO: functions to rewrite
@@ -9845,6 +9915,9 @@ function getUserRole() {
 function disableInElementBlock( element, disabled, all, flagKey, flagArrayField ) {
 
     //console.log("disable element.id=" + element.attr('id') + ", class=" + element.attr("class") );
+
+    //attach tooltip for not real permanent locked fields: name, age, sex
+    attachPatientNameSexAgeLockedTooltip();
 
     var parentname = ""; //for multi form
     if( element.hasClass('accessionbtn') ) {
@@ -9900,19 +9973,6 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
 
         //don't process 0 disident field: part's Diagnosis :
         if( orderformtype == "single" && id && id.indexOf("disident_0_field") != -1 ) {
-            continue;
-        }
-
-        //console.log("proceed before patient's name,sex,age ...");
-
-        //don't process constatly locked fields: patient's name,sex,age
-        if( elements.eq(i).hasClass('patientname-field') ) {
-            continue;
-        }
-        if( elements.eq(i).hasClass('patientsex-field') ) {
-            continue;
-        }
-        if( elements.eq(i).hasClass('patientage-field') ) {
             continue;
         }
 
@@ -10086,6 +10146,8 @@ function setElementBlock( element, data, cleanall, key ) {
 
     var parent = getButtonElementParent( element );
 
+    setPatientNameSexAgeLockedFields(data,parent);
+
     //console.log(parent);
     //console.log("key="+key+", single="+single);
     //printF(parent,"Set Element Parent: ");
@@ -10119,21 +10181,6 @@ function setElementBlock( element, data, cleanall, key ) {
     for( var i = 0; i < elements.length; i++ ) {
 
         //console.log('\n\n'+"Set Element.id=" + elements.eq(i).attr("id")+", class="+elements.eq(i).attr("class"));
-
-        /////////////// exception for simple fields /////////////////////////
-//        var simpleField = getSimpleFieldName( elements.eq(i) );
-//        if( simpleField && (simpleField in data) ) {
-//            var simpleValue = data[simpleField];
-//            //console.log("simple field value="+simpleField+", simpleValue="+simpleValue);
-//            if( simpleField == 'patsex' ) {
-//                var dataArr = {text: simpleValue};
-//                processGroup( elements.eq(i), dataArr, "ignoreDisable" );
-//            } else {
-//                elements.eq(i).val(simpleValue);
-//            }
-//            continue;
-//        }
-        /////////////// EOF exception for simple fields /////////////////////////
 
         //  0         1              2           3   4  5
         //oleg_orderformbundle_orderinfotype_patient_0_mrn  //length=6
@@ -10324,7 +10371,7 @@ function setArrayField(element, dataArr, parent) {
 
             if( fieldName == "specialStains" ) {
                 //pre-populate select2 with stains
-                getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,coll),true,id);
+                getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,coll),true,id);
             }
 
         } else {    //show the valid field (with validity=1)
@@ -10655,7 +10702,7 @@ function cleanBlockSpecialStains( element, field, single ) {
     var ident = "block"+"specialStains";
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
     fieldHolder.prepend(newForm);
-    getComboboxSpecialStain(urlCommon,new Array(patient,procedure,accession,part,block,0),true);
+    getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,0),true);
 
 //    //set to the first item
 //    if( field == "specialStains" ) {
@@ -10869,6 +10916,8 @@ function changeIdtoIndex( element, field, index ) {
 function cleanFieldsInElementBlock( element, all, single ) {
 
     var parent = getButtonElementParent( element );
+
+    cleanPatientNameSexAgeLockedFields(parent);
 
     //console.log("clean single=" + single);
 

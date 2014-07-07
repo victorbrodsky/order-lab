@@ -26,6 +26,7 @@ class AperioProvider implements AuthenticationProviderInterface {
         $this->timezone = $timezone;
     }
 
+    //it is called only if the user does not exist in User table
     public function authenticate( TokenInterface $token )
     {
         //exit("using Aperio Authentication Provider!!!");
