@@ -254,6 +254,16 @@ class Block extends ObjectAbstract
 
 
     //parent, children, key field methods
+
+    public function cleanEmptyArrayFields() {
+        //specialStains
+        foreach( $this->specialStains as $field ) {
+            if( $field->getField() == "" && count($this->specialStains) > 1 ) {
+                $this->removeSpecialStain($field);
+            }
+        }
+    }
+
     public function setParent($parent) {
         $this->setPart($parent);
         return $this;

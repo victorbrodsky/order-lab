@@ -304,8 +304,11 @@ class Part extends ObjectAbstract
     }
     public function adddiffDisident($diffDisident)
     {
+        //echo "adding DiffDisident=".$diffDisident."<br>";
         if( $diffDisident == null ) {
-            $diffDisident = new PartDiffDisident();
+            //echo "skip DiffDisident=null<br>";
+            //$diffDisident = new PartDiffDisident();
+            return $this;
         }
         if( !$this->diffDisident->contains($diffDisident) ) {
             $this->diffDisident->add($diffDisident);
@@ -320,6 +323,21 @@ class Part extends ObjectAbstract
     }
     public function getDiffDisident() {
         return $this->diffDisident;
+    }
+
+    public function cleanEmptyArrayFields() {
+        //DiffDisident
+        //echo $this;
+        //echo "DiffDisident count1=".count($this->diffDisident)."<br>";
+        //exit();
+        foreach( $this->diffDisident as $field ) {
+            if( $field->getField() == "" && count($this->diffDisident) > 1 ) {
+                $this->removeDiffDisident($field);
+            } else {
+                //echo "keep diffDisident =".$field."<br>";
+            }
+        }
+        //echo "DiffDisident count2=".count($this->diffDisident)."<br>";
     }
 
     /**

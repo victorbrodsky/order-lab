@@ -383,6 +383,21 @@ class Slide extends ObjectAbstract
     }
 
 
+    public function cleanEmptyArrayFields() {
+        //relevantScans
+        //echo "relevantScans count1=".count($this->relevantScans)."<br>";
+        foreach( $this->relevantScans as $field ) {
+            if( $field->getField() == "" && count($this->relevantScans) > 1 ) {
+                $this->removeRelevantScan($field);
+                //$field->setSlide(NULL);
+            } else {
+                //echo "keep relevantScans =".$field."<br>";
+            }
+        }
+        //echo "relevantScans count2=".count($this->relevantScans)."<br>";
+        //exit();
+    }
+
     public function getChildren() {
         return null;    //new ArrayCollection();
     }

@@ -159,6 +159,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         }
 
+        //Clean empty array fields, which can be added by user dinamically, such as Part's "Differential Diagnoses" (DiffDisident) with empty input field
+        $entity->cleanEmptyArrayFields();
+
         if( !$entity->getId() || $entity->getId() == "" ) {
             //echo "persist ".$className."<br>";
             $em->persist($entity);
@@ -374,6 +377,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity; //override it for patient and accession only
     }
 
+
     //process single array of fields (i.e. ClinicalHistory Array of Fields)
     public function processFieldArrays( $entity, $orderinfo=null, $original=null, $status=null ) {
 
@@ -449,6 +453,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     continue;
                                 }
 
+                                $exceptionArr = array( 'PartDiffDisident', 'RelevantScans', 'BlockSpecialStains');
 
                                 //############# set provider to the fields from submitted form #############//
                                 //echo( $methodShortName.": field provider=".$field->getProvider()." <br>" );
@@ -465,7 +470,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                 if( !$validitySet ) {
                                     //echo( "methodShortName=".$methodShortName."<br>" );
                                     //echo "field count=".count($entity->$methodShortName())."<br>";
-                                    if( !$this->validFieldIsSet($entity->$methodShortName()) ) {  //set valid if none of the filed has valid status already
+                                    $validIsSet = $this->validFieldIsSet($entity->$methodShortName(),$exceptionArr);
+
+                                    if( !$validIsSet ) {  //set valid if none of the filed has valid status already
                                         //echo "Status:".$field->getStatus()."; Set status to ".self::STATUS_VALID." to field=".$field." !!!<br>";
                                         $field->setStatus(self::STATUS_VALID);
                                     } else {
@@ -582,7 +589,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $entity;
     }
 
-    public function validFieldIsSet( $fields ) {
+    public function validFieldIsSet( $fields, $exceptionArr=null ) {
 
         if( count($fields) == 0 ) {
             return false;
@@ -592,12 +599,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($fields->first());
         $className = $class->getShortName();
         //echo "if valid: className=".$className."<br>";
-        if( $className == 'PartDiffDisident' ||
-            //$className == 'PatientClinicalHistory' ||
-            //$className == 'PatientAge' ||
-            $className == 'RelevantScans' ||
-            $className == 'BlockSpecialStains'
-        ) {
+//        if( $className == 'PartDiffDisident' ||
+//            //$className == 'PatientClinicalHistory' ||
+//            //$className == 'PatientAge' ||
+//            $className == 'RelevantScans' ||
+//            $className == 'BlockSpecialStains'
+//        ) {
+        if( $exceptionArr && in_array($className, $exceptionArr) ) {
             //echo "skip!!! <br>";
             return false;
         }

@@ -229,6 +229,10 @@ abstract class ObjectAbstract
 
     //children methods
 
+    public function cleanEmptyArrayFields() {
+        //
+    }
+
     public function obtainValidChild()
     {
         if( !$this->getChildren() ) {

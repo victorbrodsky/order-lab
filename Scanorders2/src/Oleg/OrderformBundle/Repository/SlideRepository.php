@@ -17,6 +17,9 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         //echo $slide;
 
+        //Clean empty array fields
+        $slide->cleanEmptyArrayFields();
+
         $em = $this->_em;
         $em->persist($slide);
 

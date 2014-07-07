@@ -211,6 +211,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            echo "sex=".$el."<br>";
 //        }
 
+        echo "<br>parts=".count($entity->getPart())."<br>";
+        foreach( $entity->getPart()->first()->getDiffDisident() as $field ) {
+            echo "DiffDisident=".$field."<br>";
+        }
+
+//        echo "<br>slides=".count($entity->getSlide())."<br>";
+//        foreach( $entity->getSlide()->first()->getRelevantScans() as $field ) {
+//            echo "relevantScans=".$field."<br>";
+//        }
+
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
         //exit('orderinfo repoexit testing');
 
