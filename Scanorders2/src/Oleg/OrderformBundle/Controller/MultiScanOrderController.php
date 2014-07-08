@@ -194,7 +194,6 @@ class MultiScanOrderController extends Controller {
 //       } else {
 //           echo "form is not valid ??? <br>";
 //       }
-
 //        echo "form errors=".print_r($form->getErrors())."<br>";
 //        exit("controller exit");
 

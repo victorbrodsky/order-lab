@@ -876,7 +876,9 @@
                 {#encountertype:{{ encounter.vars.value.keytype }}#}
                 {% if encounter.vars.value.status == 'valid' %}
                     {#{{ form_widget(procedure.encounter) }}#}
+
                     {{ form_row(encounter, {'label': false}) }}
+
                 {% endif %}
             {% endfor %}
         {% else  %}

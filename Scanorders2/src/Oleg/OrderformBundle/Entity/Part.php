@@ -123,9 +123,14 @@ class Part extends ObjectAbstract
             $partnameStr = $partnameStr . $partname . "(". $partname->getStatus() . ", id=". $partname->getId().") ";
         }
 
+        $partnameId = "N/A";
+        if( $this->partname->first() ) {
+            $partnameId = $this->partname->first()->getId();
+        }
+
         return "Part: id=".$this->id.
         ", accessionId=".$this->getAccession()->getId().
-        ", partnameCount=".count($this->partname).", partnameId=".$this->partname->first()->getId().
+        ", partnameCount=".count($this->partname).", partnameId=".$partnameId.
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
         ", disident=".$this->disident->first().
@@ -331,6 +336,7 @@ class Part extends ObjectAbstract
         //echo "DiffDisident count1=".count($this->diffDisident)."<br>";
         //exit();
         foreach( $this->diffDisident as $field ) {
+            //echo "clean field=".$field."<br>";
             if( $field->getField() == "" && count($this->diffDisident) > 1 ) {
                 $this->removeDiffDisident($field);
             } else {

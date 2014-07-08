@@ -8,10 +8,19 @@
 
     {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
 
+
     <div style="margin-top: 150px;">
         <p>
             Welcome to the Scan Order System!
         </p>
+
+        {% if app.security.getToken().getUser.getEmail == "" %}
+            <p>
+                If you would like to receive email notifications regarding your orders, please take a moment to update
+                <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                by adding your email account.
+            </p>
+        {% endif %}
 
         <p>
 

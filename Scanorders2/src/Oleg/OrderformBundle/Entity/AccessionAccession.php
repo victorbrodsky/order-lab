@@ -77,7 +77,11 @@ class AccessionAccession extends AccessionArrayFieldAbstract
     public function obtainExtraKey()
     {
         $extra = array();
-        $extra['keytype'] = $this->getKeytype()->getId();
+        $keytypeId = 1;
+        if( $this->getKeytype() ) {
+            $keytypeId = $this->getKeytype()->getId();
+        }
+        $extra['keytype'] = $keytypeId;//$this->getKeytype()->getId();
         return $extra;
     }
 

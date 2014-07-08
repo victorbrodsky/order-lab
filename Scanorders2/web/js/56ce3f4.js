@@ -27187,11 +27187,11 @@ function cleanBlockSpecialStains( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    var patient = idsArr[1];
-    var procedure = idsArr[2];
-    var accession = idsArr[3];
-    var part = idsArr[4];
-    var block = idsArr[5];
+    var patient = idsArr[4];
+    var procedure = idsArr[6];
+    var accession = idsArr[8];
+    var part = idsArr[10];
+    var block = idsArr[12];
     var slide = null;
     var ident = "block"+"specialStains";
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
@@ -27224,10 +27224,11 @@ function cleanPartDiffDisident( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    var patient = idsArr[1];
-    var procedure = idsArr[2];
-    var accession = idsArr[3];
-    var part = idsArr[4];
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_1_field
+    var patient = idsArr[4];
+    var procedure = idsArr[6];
+    var accession = idsArr[8];
+    var part = idsArr[10];
     var block = null;
     var slide = null;
     var ident = "part"+"diffDisident";

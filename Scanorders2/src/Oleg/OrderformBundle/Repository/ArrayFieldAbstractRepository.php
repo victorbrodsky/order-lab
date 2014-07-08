@@ -390,6 +390,19 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $className = $class->getShortName();
         //echo "Process Array Fields: className=".$className."<br>";
 
+        //make sure the orderinfo is set for the key element.
+        if( is_subclass_of($entity, 'Oleg\OrderformBundle\Entity\ObjectAbstract') ) {
+            //echo "is_subclass_of: className=".$className."<br>";
+            $key = $entity->obtainValidKeyfield();
+            if( $key && !$key->getOrderinfo() ) {
+                $key->setOrderinfo($orderinfo);
+                //echo "key=".$key.", id=".$key->getId()."<br>";
+                //echo "set field's orderinfo=".$key->getOrderinfo()."<br>";
+            } else {
+                //echo "Don't add orderinfo to field=".$key."!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
+            }
+        }
+
         $class_methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach( $class_methods as $method_name ) {
 
@@ -413,7 +426,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                     //echo ( $methodShortName." is object !!! <br>" );
 
-                    $validitySet = false;   //indicate that validity has not been set in this field array
+                    //$validitySet = false;   //indicate that validity has not been set in this field array
 
                     foreach( $fields as $field ) {  //original fields from submitted form
 
@@ -436,7 +449,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                                 //assign orderinfo to the field if orderinfo is null
                                 if( !$field->getOrderinfo() ) {
+                                    //echo "set orderinfo to field=".$field."<br>";
                                     $field->setOrderinfo($orderinfo);
+                                    //echo "field's orderinfo=".$field->getOrderinfo()."<br>";
+                                } else {
+                                    //echo "Don't add orderinfo to field=".$field."!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>";
                                 }
 
                                 //Change status only and continue to the next field
@@ -467,8 +484,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                                 //############# set validity to the fields from submitted form #############//
                                 //if valid field is found, set invalid all other fields
-                                if( !$validitySet ) {
-                                    //echo( "methodShortName=".$methodShortName."<br>" );
+                                //if( !$validitySet ) {
+                                    //echo( "validity: methodShortName=".$methodShortName."<br>" );
                                     //echo "field count=".count($entity->$methodShortName())."<br>";
                                     $validIsSet = $this->validFieldIsSet($entity->$methodShortName(),$exceptionArr);
 
@@ -483,20 +500,21 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                             //echo "Status:".$field->getStatus()."; Do not change status of field=".$field." !!!<br>";
                                         }
                                     }
-                                    $validitySet = true;    //indicate that status is already has been set in this field array
-                                }
+                                    //$validitySet = true;    //indicate that status is already has been set in this field array
+                                //}
                                 //echo "field status =".$field->getStatus()."<br>";
                                 //############# EOF set validity to the fields from submitted form #############//
 
 
                                 //############# copy processed field from submitted object (original) to found entity in DB #############//
+                                //echo "original=".$original."<br>";
                                 if( $original ) {
                                         //echo "entity:".$entity;
                                         //echo "original:".$original;
                                         //echo "field=".$field."<br>";
                                     //$this->log->addInfo( "original yes: original field=".$field."<br>" );
                                     $methodBaseName = str_replace("get", "", $methodShortName);
-                                    $entity = $this->copyField( $entity, $field, $className, $methodBaseName );
+                                    $entity = $this->copyField( $entity, $field, $className, $methodBaseName, $exceptionArr );
                                 }
                                 //############# EOF copy processed field from submitted object (original) to found entity in DB #############//
                             }
@@ -518,16 +536,17 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //add field entity if not existed from source object to destination object (from origin to entity)
     //field id is null if check button is not pressed, in this case all fields are gray
     //if entity is found in DB, then all fields have ID, if not then this function is not executed, because process FieldArrays has original=null
-    public function copyField( $entity, $field, $className, $methodName ) {
+    public function copyField( $entity, $field, $className, $methodName, $exceptionArr ) {
         $em = $this->_em;
         //echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
+        //echo $entity;
 
         $getMethod = "get".$methodName;
         $fields = $entity->$getMethod();
 
         //echo "this fields count=".count($fields)."<br>";
 
-        $validField = $this->validFieldIsSet( $fields );
+        $validField = $this->validFieldIsSet( $fields, $exceptionArr );
         //echo "?valid field= ".$validField."<br>";
 
         //if similar field is already set and provided field is empty => don't add provided field
@@ -543,11 +562,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //add only if the field array does not already contain this valid field (by field name)
         foreach( $fields as $thisField ) {
 
+            //echo "thisField=".$thisField."<br>";
             //echo "authors field: ".$field->getProvider()."<br>";
             //echo "author thisField: ".$thisField->getProvider()."<br>";
             //echo $methodName.": compare: (".$thisField.") ?= (".$field.") , status=".$thisField->getStatus()." => ";
             //echo "author thisField: ".$thisField->getProvider()->getId() . " ";
             //echo "authors field: ".$field->getProvider()->getId()." => ";
+            //echo "orderinfo field: ".$field->getOrderinfo()."<br>";
+            //echo "author thisField: ".$thisField->getOrderinfo()."<br>";
 
             if(
                 $thisField."" == $field."" &&
@@ -590,6 +612,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     public function validFieldIsSet( $fields, $exceptionArr=null ) {
+
+        //echo "validFieldIsSet fields count=".count($fields)."<br>";
 
         if( count($fields) == 0 ) {
             return false;
@@ -751,9 +775,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         return $removed;
     }
 
+    //It is used only when user generate Patient, Accession, Part or Block by pressing "check" button on the form
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
-    public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true ) {
+    public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = false, $flush=true ) {
 
         //echo "Create Element: className=".$className."<br>";
 
@@ -810,11 +835,24 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             throw new \Exception('Newly created element has more than one key field. Number of key fields='.count($fields));
         }
 
+        if( count($fields) == 0 ) {
+            $entity->createKeyField();
+            //throw new \Exception('Newly created element does not have key field. Number of key fields='.count($fields));
+        }
+
+        $fields = $entity->obtainKeyField();
+
+        if( count($fields) != 1 ) {
+            throw new \Exception('Newly created element must have only one key field. Number of key fields='.count($fields));
+        }
+
         $field = $fields->first();
         $field->setField($fieldValue);
 
         //set keyfield status to valid
         $field->setStatus(self::STATUS_VALID);
+
+        $field->setProvider($provider);
 
         if( $field && method_exists($field,'setExtra') ) {
             //find keytype with provided extra (keytype id) from DB

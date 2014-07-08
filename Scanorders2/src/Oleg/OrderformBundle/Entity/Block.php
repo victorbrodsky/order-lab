@@ -257,11 +257,13 @@ class Block extends ObjectAbstract
 
     public function cleanEmptyArrayFields() {
         //specialStains
+        //echo "specialStains count1=".count($this->specialStains)."<br>";
         foreach( $this->specialStains as $field ) {
             if( $field->getField() == "" && count($this->specialStains) > 1 ) {
                 $this->removeSpecialStain($field);
             }
         }
+        //echo "specialStains count2=".count($this->specialStains)."<br>";
     }
 
     public function setParent($parent) {

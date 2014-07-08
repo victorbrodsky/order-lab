@@ -176,6 +176,8 @@ class PartRepository extends ArrayFieldAbstractRepository
         $extra['keytype'] = $keytype;
         $extra['accession'] = $accessionNumber;
 
+        $withfields = false;
+
         $em = $this->_em;
 
         //1a) Check accession
@@ -189,7 +191,7 @@ class PartRepository extends ArrayFieldAbstractRepository
             //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                         $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$provider,"Accession","accession",null,$accessionNumber,$extra,true);
+            $accession = $em->getRepository('OlegOrderformBundle:Accession')->createElement(null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
         }
 //        else {
 //            $accession = $accessions[0];
@@ -216,7 +218,7 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //echo "create part <br>";
         //4) create part object by partname and link it to the parent
-        $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,$provider,"Part","partname",$accession,$partname,$extra,true);
+        $part = $em->getRepository('OlegOrderformBundle:Part')->createElement(null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
 
         return $part;
     }

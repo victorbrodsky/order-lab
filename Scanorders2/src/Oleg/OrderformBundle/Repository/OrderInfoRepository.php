@@ -197,9 +197,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        foreach( $entity->getBlock() as $child ) {
 //            echo "Res block=".$child."<br>";
 //        }
-//        foreach($entity->getAccession() as $acc) {
-//            echo $acc->getParent()."=>";
+//        foreach( $entity->getAccession() as $acc ) {
 //            echo $acc;
+//            echo "acc orderinfoCount=".count($acc->getOrderinfo())."<br>";
+//            $key = $acc->obtainValidKeyfield();
+//            echo "key=".$key.", id=".$key->getId()."<br>";
+//            echo "key's orderinfoStatus=".$key->getOrderinfo()->getStatus()."<br>";
 //        }
 //        foreach($entity->getPatient()->first()->getName() as $el) {
 //            echo "name=".$el."<br>";
@@ -210,18 +213,22 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //        foreach($entity->getPatient()->first()->getSex() as $el) {
 //            echo "sex=".$el."<br>";
 //        }
-
-        echo "<br>parts=".count($entity->getPart())."<br>";
-        foreach( $entity->getPart()->first()->getDiffDisident() as $field ) {
-            echo "DiffDisident=".$field."<br>";
-        }
-
+//        echo "<br>blocks=".count($entity->getBlock()).", blockkey's orderinfoStatus=".$entity->getBlock()->first()->obtainValidKeyfield()->getOrderinfo()->getStatus()."<br>";
+//        echo "block's specialStainCount=".count($entity->getBlock()->first()->getSpecialStains())."<br>";
+//        foreach( $entity->getBlock()->first()->getSpecialStains() as $field ) {
+//            echo "BlockSpecialStains=".$field.", status=".$field->getStatus().", orderinfoStatus=".$field->getOrderinfo()->getStatus().", provider=".$field->getProvider()."<br>";
+//        }
+//        echo "<br>parts=".count($entity->getPart()).", partkey's orderinfoStatus=".$entity->getPart()->first()->obtainValidKeyfield()->getOrderinfo()->getStatus()."<br>";
+//        foreach( $entity->getPart()->first()->getDiffDisident() as $field ) {
+//            echo "DiffDisident=".$field.", status=".$field->getStatus().", orderinfoStatus=".$field->getOrderinfo()->getStatus().", provider=".$field->getProvider()."<br>";
+//        }
 //        echo "<br>slides=".count($entity->getSlide())."<br>";
 //        foreach( $entity->getSlide()->first()->getRelevantScans() as $field ) {
 //            echo "relevantScans=".$field."<br>";
 //        }
 
         //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+        //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');
 
         //create new orderinfo
@@ -326,7 +333,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         return $entity;
     }
 
-
+    //TODO: check if this method is efficient
     public function addOrderinfoToThisAndAllParents( $entity, $orderinfo ) {
         $className = new \ReflectionClass($entity);
         $shortClassName = $className->getShortName();

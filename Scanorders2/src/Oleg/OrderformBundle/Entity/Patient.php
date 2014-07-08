@@ -285,9 +285,9 @@ class Patient extends ObjectAbstract
      */
     public function addClinicalHistory($clinicalHistory)
     {
-//        if( $clinicalHistory == null ) {
-//            $clinicalHistory = new PatientClinicalHistory();
-//        }
+        if( $clinicalHistory == null ) {
+            $clinicalHistory = new PatientClinicalHistory();
+        }
 
         if( !$this->clinicalHistory->contains($clinicalHistory) ) {
             $clinicalHistory->setPatient($this);
@@ -558,9 +558,9 @@ class Patient extends ObjectAbstract
      */
     public function addDob($dob)
     {
-//        if( $dob == null ) {
-//            $dob = new PatientDob();
-//        }
+        if( $dob == null ) {
+            $dob = new PatientDob();
+        }
 
         if( !$this->dob->contains($dob) ) {
             $dob->setPatient($this);
@@ -607,8 +607,14 @@ class Patient extends ObjectAbstract
             $ages = $ages . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $mrnId = "N/A";
+        if( $this->mrn->first() ) {
+            $mrnId = $this->mrn->first()->getId();
+        }
+
         return "Patient: id=".$this->id.
-        ", mrn=".$this->mrn->first().", mrnID=".$this->mrn->first()->getId().
+        ", mrn=".$this->mrn->first().", mrnID=".$mrnId.
+        ", mrnCount=".count($this->mrn).
         ", lastnames=".$lastnames.
         ", sexs=".$sexs.
         ", ages=".$ages.
