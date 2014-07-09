@@ -28796,6 +28796,10 @@ function windowCloseAlert() {
             modified = checkIfTableWasModified();
         }
 
+        if( $('#table-slidereturnrequests').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
         //console.log("modified="+modified);
         if( modified === true ) {
             return "The changes you have made will not be saved if you navigate away from this page.";

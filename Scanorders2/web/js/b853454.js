@@ -27137,6 +27137,10 @@ function windowCloseAlert() {
             modified = checkIfTableWasModified();
         }
 
+        if( $('#table-slidereturnrequests').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
         //console.log("modified="+modified);
         if( modified === true ) {
             return "The changes you have made will not be saved if you navigate away from this page.";
@@ -31834,4 +31838,27 @@ function setSpecialErrorToRow(row) {
         _sotable.getCellMeta(row,col).renderer = redWithBorderRenderer;
     }
     _sotable.render();
+}
+
+//return true if modified
+function checkIfTableWasModified() {
+
+    var modified = false;
+
+    if( typeof _sotable === 'undefined' ) {
+        return modified;
+    }
+
+    var countRow = _sotable.countRows();
+    //console.log( 'countRow=' + countRow );
+
+    for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
+        if( exceptionRow(row) === false ) {
+            modified = true;
+            break;
+        }
+    }
+
+    //console.log( 'modified=' + modified );
+    return modified;
 }

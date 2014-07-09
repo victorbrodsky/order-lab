@@ -728,3 +728,26 @@ function setSpecialErrorToRow(row) {
     }
     _sotable.render();
 }
+
+//return true if modified
+function checkIfTableWasModified() {
+
+    var modified = false;
+
+    if( typeof _sotable === 'undefined' ) {
+        return modified;
+    }
+
+    var countRow = _sotable.countRows();
+    //console.log( 'countRow=' + countRow );
+
+    for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
+        if( exceptionRow(row) === false ) {
+            modified = true;
+            break;
+        }
+    }
+
+    //console.log( 'modified=' + modified );
+    return modified;
+}
