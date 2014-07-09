@@ -555,15 +555,15 @@ function validateHandsonTable() {
 
     /////////// 2) Empty main cells validation ///////////
     var countRow = _sotable.countRows();
-    var emptyRows = 0;
+    var nonEmptyRows = 0;
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
         if( !validateEmptyHandsonRow(row) ) {
             setSpecialErrorToRow(row);
-            emptyRows++;
+            nonEmptyRows++;
         }
     } //for each row
 
-    if( emptyRows > 0 ) {
+    if( nonEmptyRows > 0 ) {
         var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
             "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +

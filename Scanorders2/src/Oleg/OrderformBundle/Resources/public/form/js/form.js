@@ -5,6 +5,36 @@
  */
 
 
+//prevent exit modified form
+function windowCloseAlert() {
+
+    window.onbeforeunload = confirmModifiedFormExit;
+
+    function confirmModifiedFormExit() {
+
+        var modified = false;
+
+        if( $('#scanorderform').length != 0 ) {
+            modified = checkIfOrderWasModified();
+        }
+
+        if( $('#table-scanorderform').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
+        //console.log("modified="+modified);
+        if( modified === true ) {
+            return "The changes you have made will not be saved if you navigate away from this page.";
+        } else {
+            return;
+        }
+    }
+
+    $('form').submit(function() {
+        window.onbeforeunload = null;
+    });
+}
+
 //add all element to listeners again, the same as in ready
 function initAdd() {
 

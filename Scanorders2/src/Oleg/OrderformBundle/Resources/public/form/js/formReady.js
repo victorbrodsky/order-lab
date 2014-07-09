@@ -74,5 +74,26 @@ $(document).ready(function() {
 
     attachResearchEducationalTooltip();
 
+//    //prevent exit modified form checkIfOrderWasModified()==true
+//    window.onbeforeunload = confirmModifiedFormExit;
+//    function confirmModifiedFormExit() {
+//        var modified = checkIfOrderWasModified();
+//        console.log("modified="+modified);
+//        if( modified === true ) {
+//            console.log("alert");
+//            return "The changes you have made will not be saved if you navigate away from this page.";
+//        } else {
+//            return;
+//        }
+//    }
+//
+//    $('form').submit(function() {
+//        //console.log("on form submit");
+//        window.onbeforeunload = null;
+//    });
+
+    windowCloseAlert();
+
 });
+
 

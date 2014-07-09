@@ -4697,11 +4697,12 @@ function slideType(ids) {
         //console.log("parent: id="+parent.attr('id')+",class="+parent.attr('class'));
         var blockValue = parent.find('.element-title').first();
         //console.log("slidetype-combobox: id="+parent.find('.slidetype-combobox').first().attr('id')+",class="+parent.find('.slidetype-combobox').first().attr('class'));
-        var slideType = parent.find('.slidetype-combobox').first().select2('val');
-        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideType="+slideType);
+        var slideTypeText = parent.find('.slidetype-combobox').first().select2('data').text;
+        //console.log("slideTypeText="+slideTypeText);
+        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideTypeText="+slideTypeText);
         var keyfield = parent.find('#check_btn');
-        if( slideType == 3 ) {   //'Cytopathology'
-            //console.log("Cytopathology is chosen = "+slideType);
+        if( slideTypeText == 'Cytopathology' ) {
+            //console.log("Cytopathology is chosen = "+slideTypeText);
             keyfield.attr('disabled','disabled'); 
             disableInElementBlock(parent.find('#check_btn').first(), true, "all", null, null);
             var htmlDiv = '<div class="element-skipped">Block is not used for cytopathology slide</div>';
@@ -4709,15 +4710,20 @@ function slideType(ids) {
             blockValue.after(htmlDiv);
             blockValue.hide();
             parent.find('.form-btn-options').first().hide();
-            //parent.find('.panel-body').first().css("border-color", "#C0C0C0");
-        } else {    
-            //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
-            disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
-            parent.find('.element-skipped').first().remove();
-            blockValue.show();
-            keyfield.removeAttr('disabled'); 
-            parent.find('.form-btn-options').first().show();
-            //parent.find('.panel-body').first().css("border-color", "#1268B3");
+        } else {
+            if( $('.element-skipped').length != 0 ) {
+                //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
+                var btnEl = parent.find('#check_btn').first();
+                if( btnEl.hasClass('checkbtn') ) {
+                    disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
+                } else {
+                    disableInElementBlock(parent.find('#check_btn').first(), false, null, "notkey", null);
+                }
+                parent.find('.element-skipped').first().remove();
+                blockValue.show();
+                keyfield.removeAttr('disabled');
+                parent.find('.form-btn-options').first().show();
+            }
         }
         
     });   

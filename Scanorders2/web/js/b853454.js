@@ -23700,11 +23700,12 @@ function slideType(ids) {
         //console.log("parent: id="+parent.attr('id')+",class="+parent.attr('class'));
         var blockValue = parent.find('.element-title').first();
         //console.log("slidetype-combobox: id="+parent.find('.slidetype-combobox').first().attr('id')+",class="+parent.find('.slidetype-combobox').first().attr('class'));
-        var slideType = parent.find('.slidetype-combobox').first().select2('val');
-        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideType="+slideType);
+        var slideTypeText = parent.find('.slidetype-combobox').first().select2('data').text;
+        //console.log("slideTypeText="+slideTypeText);
+        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideTypeText="+slideTypeText);
         var keyfield = parent.find('#check_btn');
-        if( slideType == 3 ) {   //'Cytopathology'
-            //console.log("Cytopathology is chosen = "+slideType);
+        if( slideTypeText == 'Cytopathology' ) {
+            //console.log("Cytopathology is chosen = "+slideTypeText);
             keyfield.attr('disabled','disabled'); 
             disableInElementBlock(parent.find('#check_btn').first(), true, "all", null, null);
             var htmlDiv = '<div class="element-skipped">Block is not used for cytopathology slide</div>';
@@ -23712,15 +23713,20 @@ function slideType(ids) {
             blockValue.after(htmlDiv);
             blockValue.hide();
             parent.find('.form-btn-options').first().hide();
-            //parent.find('.panel-body').first().css("border-color", "#C0C0C0");
-        } else {    
-            //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
-            disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
-            parent.find('.element-skipped').first().remove();
-            blockValue.show();
-            keyfield.removeAttr('disabled'); 
-            parent.find('.form-btn-options').first().show();
-            //parent.find('.panel-body').first().css("border-color", "#1268B3");
+        } else {
+            if( $('.element-skipped').length != 0 ) {
+                //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
+                var btnEl = parent.find('#check_btn').first();
+                if( btnEl.hasClass('checkbtn') ) {
+                    disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
+                } else {
+                    disableInElementBlock(parent.find('#check_btn').first(), false, null, "notkey", null);
+                }
+                parent.find('.element-skipped').first().remove();
+                blockValue.show();
+                keyfield.removeAttr('disabled');
+                parent.find('.form-btn-options').first().show();
+            }
         }
         
     });   
@@ -26718,7 +26724,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        console.log("accession type listener!!!");
+        //console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -26753,7 +26759,7 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
     //printF(accField,"Set Accession Mask:")
@@ -26761,11 +26767,11 @@ function setAccessiontypeMask(elem,clean) {
     var value = elem.select2("val");
     //console.log("value=" + value);
     var text = elem.select2("data").text;
-    console.log("text=" + text + ", value=" + value);
+    //console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
-        console.log("clean accession: value=" + value);
+        //console.log("clean accession: value=" + value);
         accField.val('');
         clearErrorField(accField);
     }
@@ -27114,6 +27120,36 @@ function getButtonElementParent( btn ) {
  */
 
 
+//prevent exit modified form
+function windowCloseAlert() {
+
+    window.onbeforeunload = confirmModifiedFormExit;
+
+    function confirmModifiedFormExit() {
+
+        var modified = false;
+
+        if( $('#scanorderform').length != 0 ) {
+            modified = checkIfOrderWasModified();
+        }
+
+        if( $('#table-scanorderform').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
+        //console.log("modified="+modified);
+        if( modified === true ) {
+            return "The changes you have made will not be saved if you navigate away from this page.";
+        } else {
+            return;
+        }
+    }
+
+    $('form').submit(function() {
+        window.onbeforeunload = null;
+    });
+}
+
 //add all element to listeners again, the same as in ready
 function initAdd() {
 
@@ -27288,7 +27324,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
-    //TODO: add Delete button if there are sibling objects
+    //add Delete button if there are sibling objects
     var origId = "formpanel_"+name+"_"+idsorig.join("_");
     //console.log("origId="+origId);
     var origBtnGroup = $("#"+origId).find('.panel-heading').find('.form-btn-options').first();
@@ -27345,7 +27381,7 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
 
     var uid = prevName+"_"+parentIds.join("_");
     var holder = "#form_body_"+uid;
-    console.debug(name+": ADD CHILDS to="+holder);
+    //console.debug(name+": ADD CHILDS to="+holder);
 
     //attach children form
     var withDelBtn = false;
@@ -31626,15 +31662,15 @@ function validateHandsonTable() {
 
     /////////// 2) Empty main cells validation ///////////
     var countRow = _sotable.countRows();
-    var emptyRows = 0;
+    var nonEmptyRows = 0;
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
         if( !validateEmptyHandsonRow(row) ) {
             setSpecialErrorToRow(row);
-            emptyRows++;
+            nonEmptyRows++;
         }
     } //for each row
 
-    if( emptyRows > 0 ) {
+    if( nonEmptyRows > 0 ) {
         var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
             "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +

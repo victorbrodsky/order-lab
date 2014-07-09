@@ -86,14 +86,14 @@ function validateHandsonTable() {
     //console.log( 'countRow=' + countRow );
 
     /////////// 2) Empty main cells validation ///////////
-    var emptyRows = 0;
+    var nonEmptyRows = 0;
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
         if( !validateEmptyHandsonRow(row) ) {
             setSpecialErrorToRow(row);
-            emptyRows++;
+            nonEmptyRows++;
         }
     } //for each row
-    if( emptyRows > 0 ) {
+    if( nonEmptyRows > 0 ) {
 //        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
 //            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
 //            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
@@ -104,7 +104,7 @@ function validateHandsonTable() {
             "If you have accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
 
         var errorHtml = createTableErrorWell(errmsg);
-        //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
+        //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+nonEmptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
         $('#tableview-submit-btn').button('reset');
         return false;
@@ -802,4 +802,27 @@ function getTableDataIndexes() {
         }
     }
     return res;
+}
+
+//return true if modified
+function checkIfTableWasModified() {
+
+    var modified = false;
+
+    if( typeof _sotable === 'undefined' ) {
+        return modified;
+    }
+
+    var countRow = _sotable.countRows();
+    //console.log( 'countRow=' + countRow );
+
+    for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
+        if( exceptionRow(row) === false ) {
+            modified = true;
+            break;
+        }
+    }
+
+    //console.log( 'modified=' + modified );
+    return modified;
 }
