@@ -15,6 +15,8 @@ $(document).ready(function() {
 
     initAdd();
 
+    fieldInputMask();
+
     customCombobox();
 
     //add diseaseType radio listener for new form

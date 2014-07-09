@@ -4124,9 +4124,12 @@ function getComboboxPartname(ids) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var targetid = id+"partname_0_field";
+    //console.log("targetid="+targetid);
+//    var targetid = ".ajax-combobox-partname";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -4139,10 +4142,10 @@ function getComboboxPartname(ids) {
             async: asyncflag
         }).success(function(data) {
             _partname = data;
-            populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+            populateSelectCombobox( targetid, _partname, "Part Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+        populateSelectCombobox( targetid, _partname, "Part Name" );
     }
 
 }
@@ -4152,9 +4155,13 @@ function getComboboxBlockname(ids) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+//    var targetid = ".ajax-combobox-blockname";
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var targetid = id+"blockname_0_field";
+    //console.log("targetid="+targetid);
+
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
@@ -4166,10 +4173,10 @@ function getComboboxBlockname(ids) {
             async: asyncflag
         }).success(function(data) {
                 _blockname = data;
-            populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+            populateSelectCombobox( targetid, _blockname, "Block Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+        populateSelectCombobox( targetid, _blockname, "Block Name" );
     }
 
 }

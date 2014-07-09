@@ -8,18 +8,16 @@
 //add all element to listeners again, the same as in ready
 function initAdd() {
 
+    //console.log("init Add");
+
     expandTextarea();
 
-//    $(".combobox").combobox();
     regularCombobox();
 
     initDatepicker();
 
     //clean validation elements
-    //console.log("clean initAdd");
     cleanValidationAlert();
-
-    fieldInputMask();
 
     setResearch();
 
@@ -156,6 +154,12 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     initAdd();
     addKeyListener();
 
+    //mask init
+    var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
+    fieldInputMask( newHolder ); //setDefaultMask(btnObj);
+
+    //setDefaultMask(btnObj);
+
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
     var nameArray = ['patient', 'procedure', 'part', 'block', 'slide' ];
@@ -175,7 +179,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
-    //TODO: add Delete button if there are sibling objects
+    //add Delete button if there are sibling objects
     var origId = "formpanel_"+name+"_"+idsorig.join("_");
     //console.log("origId="+origId);
     var origBtnGroup = $("#"+origId).find('.panel-heading').find('.form-btn-options').first();
@@ -212,6 +216,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 //        }
 //    }
 
+    //initial disabling
     initAllElements();
 }
 
@@ -231,7 +236,7 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
 
     var uid = prevName+"_"+parentIds.join("_");
     var holder = "#form_body_"+uid;
-    console.debug(name+": ADD CHILDS to="+holder);
+    //console.debug(name+": ADD CHILDS to="+holder);
 
     //attach children form
     var withDelBtn = false;
@@ -244,6 +249,11 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     initComboboxJs(ids);
     initAdd();
     addKeyListener();
+
+    //mask init
+    var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
+    fieldInputMask( newHolder );
+
 }
 
 //input: current form ids

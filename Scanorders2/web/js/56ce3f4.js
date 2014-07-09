@@ -24763,9 +24763,12 @@ function getComboboxPartname(ids) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var targetid = id+"partname_0_field";
+    //console.log("targetid="+targetid);
+//    var targetid = ".ajax-combobox-partname";
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -24778,10 +24781,10 @@ function getComboboxPartname(ids) {
             async: asyncflag
         }).success(function(data) {
             _partname = data;
-            populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+            populateSelectCombobox( targetid, _partname, "Part Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+        populateSelectCombobox( targetid, _partname, "Part Name" );
     }
 
 }
@@ -24791,9 +24794,13 @@ function getComboboxBlockname(ids) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+//    var targetid = ".ajax-combobox-blockname";
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+    var targetid = id+"blockname_0_field";
+    //console.log("targetid="+targetid);
+
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
@@ -24805,10 +24812,10 @@ function getComboboxBlockname(ids) {
             async: asyncflag
         }).success(function(data) {
                 _blockname = data;
-            populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+            populateSelectCombobox( targetid, _blockname, "Block Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+        populateSelectCombobox( targetid, _blockname, "Block Name" );
     }
 
 }
@@ -28141,7 +28148,8 @@ function getAccessionDefaultMask() {
 }
 ///////////////////// END OF DEFAULT MASKS //////////////////////
 
-function fieldInputMask() {
+//holder - element holding all fields to apply masking
+function fieldInputMask( holder ) {
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
@@ -28184,18 +28192,35 @@ function fieldInputMask() {
         clearMaskOnLostFocus: true
     });
 
-    $(":input").inputmask();
+    //if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+        $(":input").inputmask();
+    //} else {
+    //    holder.find(":input").inputmask();
+    //}
 
     if( cicle == "new" || cicle == "create" ) {
 
-        $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
-        $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
-        //$(".patientmrn-mask").inputmask( { "mask": "*", "repeat": 13, "greedy": false } );
-        //$(".patientmrn-mask").inputmask( { "mask": "***" } );
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            //console.log("Set default mask for all");
+            $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        } else {
+            //console.log("Set default mask for holder");
+            //console.log(holder);
+            holder.find(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            holder.find(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        }
 
     } else {
+
         //set mrn for amend
-        var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        } else {
+            var mrnkeytypeField = holder.find('.mrntype-combobox').not("*[id^='s2id_']");
+        }
         mrnkeytypeField.each( function() {
             setMrntypeMask($(this),false);
         });
@@ -28329,7 +28354,7 @@ function setAccessionMask() {
 
 function accessionTypeListener() {
     $('.accessiontype-combobox').on("change", function(e) {
-        //console.log("accession type listener!!!");
+        console.log("accession type listener!!!");
         setAccessiontypeMask($(this),true);
 
         //enable optional_button for single form
@@ -28364,7 +28389,7 @@ function getAccessionAutoGenMask() {
 
 //elem is a keytype element (select box)
 function setAccessiontypeMask(elem,clean) {
-    //console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
+    console.log("Accession type changed = " + elem.attr("id") + ", class=" + elem.attr("class") );
 
     var accField = getKeyGroupParent(elem).find('.accession-mask');
     //printF(accField,"Set Accession Mask:")
@@ -28372,10 +28397,11 @@ function setAccessiontypeMask(elem,clean) {
     var value = elem.select2("val");
     //console.log("value=" + value);
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {
+        console.log("clean accession: value=" + value);
         accField.val('');
         clearErrorField(accField);
     }
@@ -28727,18 +28753,16 @@ function getButtonElementParent( btn ) {
 //add all element to listeners again, the same as in ready
 function initAdd() {
 
+    //console.log("init Add");
+
     expandTextarea();
 
-//    $(".combobox").combobox();
     regularCombobox();
 
     initDatepicker();
 
     //clean validation elements
-    //console.log("clean initAdd");
     cleanValidationAlert();
-
-    fieldInputMask();
 
     setResearch();
 
@@ -28875,6 +28899,12 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     initAdd();
     addKeyListener();
 
+    //mask init
+    var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
+    fieldInputMask( newHolder ); //setDefaultMask(btnObj);
+
+    //setDefaultMask(btnObj);
+
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
     var nameArray = ['patient', 'procedure', 'part', 'block', 'slide' ];
@@ -28931,6 +28961,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 //        }
 //    }
 
+    //initial disabling
     initAllElements();
 }
 
@@ -28963,6 +28994,11 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     initComboboxJs(ids);
     initAdd();
     addKeyListener();
+
+    //mask init
+    var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
+    fieldInputMask( newHolder );
+
 }
 
 //input: current form ids
@@ -29542,6 +29578,8 @@ $(document).ready(function() {
     setNavBar();
 
     initAdd();
+
+    fieldInputMask();
 
     customCombobox();
 
