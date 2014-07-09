@@ -246,7 +246,7 @@ class MultiScanOrderController extends Controller {
                     $submitStatusStr = "is saved but not submitted";
                 }
 
-                $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
+                $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true ); //was $entity->getId()
 
                 $emailUtil->sendEmail( $email, $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
@@ -441,7 +441,7 @@ class MultiScanOrderController extends Controller {
 
 
     /**
-     * Displays a form to view, update, amend an OrderInfo + Scan entities.
+     * Displays a form to view, update, amend an OrderInfo + Scan entities. $id is oid of the orderinfo object
      * @Route("/scan-order/{id}/edit", name="multy_edit", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/amend", name="order_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/{id}/show", name="multy_show", requirements={"id" = "\d+"})

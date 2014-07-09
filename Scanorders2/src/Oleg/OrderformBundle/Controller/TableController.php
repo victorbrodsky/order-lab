@@ -256,7 +256,7 @@ class TableController extends Controller {
             $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
         }
 
-        $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getId()), true );
+        $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true );    //was $entity->getId()
 
         //email
         $emailUtil = new EmailUtil();

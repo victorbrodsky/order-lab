@@ -160,9 +160,15 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //find existing order in db
             $originalOrder = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($originalId);
             $originalOrderdate = $originalOrder->getOrderdate();
+            $originalProvider = $originalOrder->getProvider();
 
             $entity->setId(null);
             $entity->setOid($originalId);
+
+            //set orderdate from original order
+            $entity->setOrderdate($originalOrderdate);
+            //set provider from original order
+            $entity->setProvider($originalProvider);
         }
 
 //        //echo "proxy user=".$entity->getProxyuser()."<br>";
@@ -284,8 +290,10 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //swap oid
             $entity->setOid($originalId);
 
-            //set orderdate from original order
-            $entity->setOrderdate($originalOrderdate);
+//            //set orderdate from original order
+//            $entity->setOrderdate($originalOrderdate);
+//            //set provider from original order
+//            $entity->setProvider($originalProvider);
 
             //$em->persist($entity);
             $em->flush();
@@ -306,7 +314,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         if( $originalStatus == 'Amended' ) {
             $history->setEventtype('Amended Order Submission');
             //get url link
-            $supersedeId = $entity->getId();
+            $supersedeId = $entity->getId(); //use id because superseded order and amended order have swaped ids
             $url = $this->router->generate( 'multy_show', array('id' => $supersedeId) );
             $link = '<a href="'.$url.'">order '.$supersedeId.'</a>';
             //set note with this url link

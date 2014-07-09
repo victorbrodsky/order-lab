@@ -160,7 +160,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //Clean empty array fields, which can be added by user dinamically, such as Part's "Differential Diagnoses" (DiffDisident) with empty input field
-        $entity->cleanEmptyArrayFields();
+        //$entity->cleanEmptyArrayFields();
+        $entity = $this->cleanAndProcessEmptyArrayFields($entity);
 
         if( !$entity->getId() || $entity->getId() == "" ) {
             //echo "persist ".$className."<br>";
@@ -176,6 +177,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "Finish Set Result for entity:".$entity;
         //echo 'mem after set result: ' . (memory_get_usage()/1024/1024) . "<br />\n";
 
+        return $entity;
+    }
+
+    public function cleanAndProcessEmptyArrayFields($entity) {
+        $entity->cleanEmptyArrayFields();
         return $entity;
     }
 

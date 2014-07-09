@@ -288,10 +288,8 @@ class ScanOrderController extends Controller {
 
         $this->get('session')->getFlashBag()->add('status-changed',$res['message']);
 
-
         $referer_url = $request->headers->get('referer');
-        //$referer_url = 'my-scan-orders';
-        //return $this->redirect($this->generateUrl($previouspath));
+
         return new RedirectResponse($referer_url);
     }
 

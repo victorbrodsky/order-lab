@@ -6029,7 +6029,7 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
         data: data,
         createSearchChoice:function(term, data) {
             //if( term.match(/^[0-9]+$/) != null ) {
-            //    console.log("term is digit");
+            //    //console.log("term is digit");
             //}
             return {id:term, text:term};
         }
@@ -6266,16 +6266,19 @@ function getComboboxMrnType(ids) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(ids) {
+function getComboboxPartname(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
-    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
-    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var targetid = id+"partname_0_field";
-    //console.log("targetid="+targetid);
-//    var targetid = ".ajax-combobox-partname";
+    var targetid = ".ajax-combobox-partname";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"partname_0_field";
+        targetid = holder.find(targetid);
+    }
+    console.log("part targetid="+targetid);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6289,24 +6292,44 @@ function getComboboxPartname(ids) {
         }).success(function(data) {
             _partname = data;
             populateSelectCombobox( targetid, _partname, "Part Name" );
+            //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
         });
     } else {
         populateSelectCombobox( targetid, _partname, "Part Name" );
+        //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
     }
 
 }
 
+//function setOnlyNewComboboxes( targetClass, datas, placeholder ) {
+//
+//    //don't repopulate already populated comboboxes. This is a case when typed value will be erased
+//
+//    $(targetClass).each(function() {
+//        var optionLength = $(this).children('option').length;
+//        console.log( "optionLength="+optionLength );
+//        if( optionLength == 0 ) {
+//            console.log( 'data is not set' );
+//            var id = $(this).attr('id');
+//            var targetid = '#'+id;
+//            populateSelectCombobox( targetid, datas, placeholder );
+//        }
+//    });
+//}
+
 //#############  blockname types  ##############//
-function getComboboxBlockname(ids) {
+function getComboboxBlockname(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
-//    var targetid = ".ajax-combobox-blockname";
-    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
-    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
-    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-    var targetid = id+"blockname_0_field";
-    //console.log("targetid="+targetid);
+    var targetid = ".ajax-combobox-blockname";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"blockname_0_field";
+        targetid = holder.find(targetid);
+    }
+    //console.log("block targetid="+targetid);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6801,8 +6824,8 @@ function getUrgency() {
 }
 
 
-
-function initComboboxJs(ids) {
+//flag - optional parameter to force use ids if set to true
+function initComboboxJs(ids, holder) {
 
     if( urlBase ) {
 
@@ -6810,8 +6833,8 @@ function initComboboxJs(ids) {
 
         getComboboxMrnType(ids);
         getComboboxAccessionType(ids);
-        getComboboxPartname(ids);
-        getComboboxBlockname(ids);
+        getComboboxPartname(ids,holder);
+        getComboboxBlockname(ids,holder);
         getComboboxStain(ids);
         getComboboxSpecialStain(ids,false);
         getComboboxScanregion(ids);
@@ -6885,7 +6908,7 @@ function setElementToId( target, dataarr, setId ) {
         var setId = firstObj.id;
     }
 
-    //console.log("setId="+setId);
+    //console.log("setId="+setId+", target="+target);
     $(target).select2('val', setId);
 }
 
@@ -7543,6 +7566,10 @@ function getButtonElementParent( btn ) {
 //prevent exit modified form
 function windowCloseAlert() {
 
+    if( cicle == "show" ) {
+        return;
+    }
+
     window.onbeforeunload = confirmModifiedFormExit;
 
     function confirmModifiedFormExit() {
@@ -7719,13 +7746,14 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindDeleteBtn( name + '_' + idsNext.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(idsNext);
     initAdd();
     addKeyListener();
 
     //mask init
     var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
     fieldInputMask( newHolder ); //setDefaultMask(btnObj);
+    //comboboxes init
+    initComboboxJs(idsNext, newHolder);
 
     //setDefaultMask(btnObj);
 
@@ -7815,13 +7843,14 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     bindDeleteBtn( name + '_' + ids.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(ids);
     initAdd();
     addKeyListener();
 
     //mask init
     var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
     fieldInputMask( newHolder );
+    //comboboxes init
+    initComboboxJs(ids, newHolder);
 
 }
 
@@ -10635,12 +10664,14 @@ function keepWorking() {
 
 function logoff() {
     //console.log("logoff");
+    window.onbeforeunload = null;
     var urlRegularLogout = getCommonBaseUrl("logout");	//urlBase+"logout";
     window.location = urlRegularLogout;
 }
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
+    window.onbeforeunload = null;
     var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
     window.location = urlIdleTimeoutLogout;
 }

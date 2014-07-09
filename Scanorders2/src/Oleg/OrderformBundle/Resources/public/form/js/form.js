@@ -8,6 +8,10 @@
 //prevent exit modified form
 function windowCloseAlert() {
 
+    if( cicle == "show" ) {
+        return;
+    }
+
     window.onbeforeunload = confirmModifiedFormExit;
 
     function confirmModifiedFormExit() {
@@ -184,13 +188,14 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindDeleteBtn( name + '_' + idsNext.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(idsNext);
     initAdd();
     addKeyListener();
 
     //mask init
     var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
     fieldInputMask( newHolder ); //setDefaultMask(btnObj);
+    //comboboxes init
+    initComboboxJs(idsNext, newHolder);
 
     //setDefaultMask(btnObj);
 
@@ -280,13 +285,14 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     bindDeleteBtn( name + '_' + ids.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(ids);
     initAdd();
     addKeyListener();
 
     //mask init
     var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
     fieldInputMask( newHolder );
+    //comboboxes init
+    initComboboxJs(ids, newHolder);
 
 }
 

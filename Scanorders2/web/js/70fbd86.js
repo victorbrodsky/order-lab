@@ -439,12 +439,14 @@ function keepWorking() {
 
 function logoff() {
     //console.log("logoff");
+    window.onbeforeunload = null;
     var urlRegularLogout = getCommonBaseUrl("logout");	//urlBase+"logout";
     window.location = urlRegularLogout;
 }
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
+    window.onbeforeunload = null;
     var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
     window.location = urlIdleTimeoutLogout;
 }

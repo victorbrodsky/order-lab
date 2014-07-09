@@ -255,12 +255,16 @@ class Block extends ObjectAbstract
 
     //parent, children, key field methods
 
-    public function cleanEmptyArrayFields() {
+    public function cleanAndSetDefaultEmptyArrayFields($default_staintype) {
         //specialStains
         //echo "specialStains count1=".count($this->specialStains)."<br>";
         foreach( $this->specialStains as $field ) {
             if( $field->getField() == "" && count($this->specialStains) > 1 ) {
                 $this->removeSpecialStain($field);
+            } else {
+                if( !$field->getStaintype() ) {
+                    $field->setStaintype($default_staintype);
+                }
             }
         }
         //echo "specialStains count2=".count($this->specialStains)."<br>";

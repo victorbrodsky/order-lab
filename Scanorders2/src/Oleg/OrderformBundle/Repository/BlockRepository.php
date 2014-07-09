@@ -15,43 +15,22 @@ namespace Oleg\OrderformBundle\Repository;
 class BlockRepository extends ArrayFieldAbstractRepository
 {
 
-//    //ift this element does not have any slide belonging to this order (with id=null) (empty branch for this orderinfo),
-//    //so remove this element and all its parents from orderinfo
-//    public function attachToOrderinfo( $entity, $orderinfo ) {
-//
-//        $children = $entity->getChildren();
-//
-//        $ret = 0;
-//        $countNotEmptyChildren = 0;
-//
-//        foreach( $children as $child ) {
-//            $childClass = new \ReflectionClass($child);
-//            $childClassName = $childClass->getShortName();
-//            if( $childClassName == "Slide") {
-//                //echo "check if this slide belongs to this orderinfo <br>";
-//                $res = $this->isEntityBelongsToOrderinfo( $child, $orderinfo );
-//                if( $res ) {
-//                    $countNotEmptyChildren++;
-//                }
-//            } else {
-//                throw new \Exception('Block has not valid child of the class ' . $childClassName );
-//            }
-//        }
-//
-//        if( $countNotEmptyChildren == 0 ) {
-//            //echo "block: start removing parents ################################ <br>";
-//            $this->removeThisAndAllParentsFromOrderinfo($entity,$orderinfo);
-//            //echo "block: finished removing parents ############################### <br>";
-//            $ret = -1;
-//        } else {
-//            //echo "added to orderinfo: Block ret=".$ret.", count=".count($entity->getChildren())."<br>";
-//            //echo $entity."<br>";
-//            $orderinfo->addBlock($entity);
-//            $ret = 1;
-//        }
-//
-//        return $ret;
-//    }
+    public function cleanAndProcessEmptyArrayFields($entity) {
+
+        $em = $this->_em;
+        //$staintype = $em->getRepository('OlegOrderformBundle:StainList')->find("Auto-generated Accession Number");
+        $repository = $em->getRepository('OlegOrderformBundle:StainList');
+        $dql =  $repository->createQueryBuilder("stain");
+        $dql->select('MIN(stain.orderinlist) AS default_staintype');
+        $query = $this->getEntityManager()->createQuery($dql);
+        $default_staintype = $query->getSingleResult()['default_staintype'];
+        //$default_staintype = $staintypeResult['default_staintype'];
+
+        //exit('blocks clean and process, default_staintype='.$default_staintype);
+
+        $entity->cleanAndSetDefaultEmptyArrayFields($default_staintype);
+        return $entity;
+    }
 
     public function attachToParent( $block, $slide ) {
 
