@@ -11,6 +11,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+
 use Oleg\OrderformBundle\Entity\OrderInfo;
 use Oleg\OrderformBundle\Form\OrderInfoType;
 use Oleg\OrderformBundle\Entity\Patient;
@@ -670,7 +674,6 @@ class MultiScanOrderController extends Controller {
 
         //History
         $history = null;
-        $forwardhistory = null;
 
         if( $routeName == "multy_show") {
 
@@ -683,37 +686,39 @@ class MultiScanOrderController extends Controller {
             $dql->setParameter('oid',$entity->getOid());
             $history = $dql->getQuery()->getResult();
 
-//            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-//            $dql = $repository->createQueryBuilder("h");
-//            $dql->innerJoin("h.orderinfo", "orderinfo");
-//            $dql->where('orderinfo.oid != :id AND (h.currentid = :id OR orderinfo.oid = :id)');
-//            $dql->orderBy('h.changedate','ASC');
-//            $dql->setParameter('id',$entity->getId());
-//            $forwardhistory = $dql->getQuery()->getResult();
+        }
 
-            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y h:m:s');
-            $dateStr = $transformer->transform($entity->getOrderdate());
+        if( $entity->getType() == "Table-View Scan Order" ) {
 
-//            echo "oid=".$entity->getOid().", created=".$dateStr.", history count = ".count($history)."<br>";
-//            foreach( $history as $hist ) {
-//                echo "oid=".$hist->getOrderinfo()->getOid().", id=".$hist->getOrderinfo()->getId().", curid=".$hist->getCurrentid().", curstatus=".$hist->getCurrentStatus().", event=".$hist->getEventtype()."<br>";
-//            }
-//
-//            echo "forwardhistory count = ".count($forwardhistory)."<br>";
-//            foreach( $forwardhistory as $hist ) {
-//                echo "oid=".$hist->getOrderinfo()->getOid().", id=".$hist->getOrderinfo()->getId().", curid=".$hist->getCurrentid().", event=".$hist->getEventtype()."<br>";
-//            }
+            $jsonData = array(
+                'patient' => array('mrn'=>'5','name'=>'John'),
+                'accession' => array('accession number'=>'S11-5','date'=>'10-10-2013')
+            );
+
+            //$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+            //$jsonData = $serializer->serialize($entity, 'json');
+
+            return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
+                'xdata' => json_encode($jsonData),
+                //'entity' => $entity,
+                'form' => $form->createView(),
+                'type' => $type,    //form cicle: new, show, amend ...
+                'formtype' => $entity->getType(),
+                'history' => $history
+            ));
+
+        } else {
+
+            return array(
+                'entity' => $entity,
+                'form' => $form->createView(),
+                'type' => $type,    //form cicle: new, show, amend ...
+                'formtype' => $entity->getType(),
+                'history' => $history
+            );
 
         }
 
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-            'type' => $type,    //form cicle: new, show, amend ...
-            'formtype' => $entity->getType(),
-            'history' => $history,
-            'forwardhistory' => $forwardhistory
-        );
     }
 
     public function hasOrderInfo( $entity, $id ) {

@@ -14713,6 +14713,9 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
+    //console.log(JSON.stringify(xdata));
+    console.log(xdata);
+
     attachResearchEducationalTooltip();
 
     $(function(){
@@ -24795,6 +24798,7 @@ function getComboboxPartname(ids,holder) {
         targetid = holder.find(targetid);
     }
     //console.log("part targetid="+targetid);
+    //console.log("cicle="+cicle);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -25504,7 +25508,7 @@ function initAllElements(newHolder) {
 //    if( cicle == "new" || cicle == "amend" ) {
     if( cicle == "new" ) {
 
-        if( typeof newHolder === 'undefined' && newHolder.length == 0 ) {
+        if( typeof newHolder === 'undefined' || newHolder.length == 0 ) {
             var check_btns = $("[id=check_btn]");
         } else {
             var check_btns = newHolder.find("[id=check_btn]");

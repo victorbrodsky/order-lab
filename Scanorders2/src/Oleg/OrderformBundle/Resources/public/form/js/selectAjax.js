@@ -394,6 +394,7 @@ function getComboboxPartname(ids,holder) {
         targetid = holder.find(targetid);
     }
     //console.log("part targetid="+targetid);
+    //console.log("cicle="+cicle);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;

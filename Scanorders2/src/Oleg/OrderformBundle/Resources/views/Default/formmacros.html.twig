@@ -256,7 +256,7 @@
 
 
 {#history info#}
-{% macro history_info(histories, forwardhistory, form) %}
+{% macro history_info(histories, form) %}
 
     {% set formstatus = form.vars.value.status.name|lower %}
 
@@ -266,19 +266,25 @@
             {% if histories|first.orderinfo.status == "Amended" %}
                 <p>
                     This order has been originally submitted
-                    by {{ histories|first.orderinfo.provider }} on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
-                    and most recently {{ formstatus }} by {{ histories|first.provider }}
+                    by
+                    <a href="{{ path('showuser', { 'id': histories|first.orderinfo.provider.id }) }}">{{ histories|first.orderinfo.provider }}</a>
+                    on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
+                    and most recently {{ formstatus }} by
+                    <a href="{{ path('showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
             {% else %}
+                histories|length:{{ histories|length }}
                 {% if 'by' in formstatus %}
                     {% set performed = 'performed ' %}
                 {% else %}
                     {% set performed = '' %}
                 {% endif %}
                 <p>
-                    This order has been {{ formstatus }} {{performed}}by {{ histories|first.provider }}
-                    on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
+                    This order has been {{ formstatus }} {{performed}}by
+                    <a href="{{ path('showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
+                    {#on {{ histories|last.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|last.orderinfo.orderdate|date('h:i a') }}#}
+                    on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
             {% endif %}
         {% endif %}
@@ -292,38 +298,23 @@
                     <p class="text-danger">
                         This order is the older archived version of and has been {{ formstatus }} by
                         <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a> via amendment
-                        on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by {{ history.provider }}.
+                        on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
+                        <a href="{{ path('showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
+                        .
                     </p>
                 {% else %}
                     {% if historytatus != 'canceled by submitter' and historytatus != 'submitted' %}
                         <p>
                             Older, superseded version of this order:
                             <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
-                            {{ history.currentstatus.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by {{ history.provider }}
+                            {{ history.currentstatus.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
+                            <a href="{{ path('showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
                         </p>
                     {% endif %}
                 {% endif %}
             {% endif %}
 
         {% endfor %}
-
-        {#currently, below code is not used. use it if we want to get the latest order#}
-        {#{% for history in forwardhistory %}#}
-            {#{% if history.orderinfo.id < history.currentid %}#}
-                {#<p>#}
-                    {#&#123;&#35;This Order is the older archived version of and has been {{ form.vars.value.status.name|lower }} by&#35;&#125;#}
-                    {#The latest version of this order is <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>.#}
-                    {#&#123;&#35;on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}.&#35;&#125;#}
-                {#</p>#}
-            {#{% endif %}#}
-            {#{% if history.orderinfo.id > history.currentid and history.changedate > histories|last.changedate %}#}
-                {#<p>#}
-                    {#Older version of this order:#}
-                    {#<a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>#}
-                    {#{{ form.vars.value.status.name|lower }} on {{ history.changedate|date('Y-m-d @H:i') }} by {{ history.provider }}#}
-                {#</p>#}
-            {#{% endif %}#}
-        {#{% endfor %}#}
 
     </div>
 {% endmacro %}

@@ -271,6 +271,9 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
+    //console.log(JSON.stringify(xdata));
+    console.log(xdata);
+
     attachResearchEducationalTooltip();
 
     $(function(){
