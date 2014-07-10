@@ -24,7 +24,6 @@ class ScanType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $helper = new FormHelper();
 
         //scanregion
         $attr = array('class' => 'ajax-combobox-scanregion', 'type' => 'hidden');
@@ -39,33 +38,63 @@ class ScanType extends AbstractType
         }
         $builder->add('scanregion', 'custom_selector', $options);
 
-        //mag
-        $magArr = array(
-            'label' => 'Magnification:',
-            'choices' => $helper->getMags(),
-            'required' => true,
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
-        );
-        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
-            $magArr['data'] = '20X';    //new
-        }
-        $builder->add( 'field', 'choice', $magArr);
-        
+        //note
         $builder->add('note', 'textarea', array(
                 'max_length'=>5000,
                 'required'=>false,
                 'label'=>'Reason for Scan/Note:',
-                //'data' => 'Interesting case',
                 'attr' => array('class'=>'textarea form-control'),   //form-control
         ));
 
+        //abstract data
         $builder->add('scanothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Scan',
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
+
+
+        //mag
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+            $scan = $event->getData();
+            $form = $event->getForm();
+
+            $helper = new FormHelper();
+
+            $magArr = array(
+                'label' => 'Magnification:',
+                'choices' => $helper->getMags(),
+                'required' => true,
+                'multiple' => false,
+                'expanded' => true,
+                'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
+            );
+
+            // check if the Scan object is "new"
+            if( !$scan || null === $scan->getId() ) {
+                $magArr['data'] = '20X';
+            }
+
+            $form->add( 'field', 'choice', $magArr );
+
+        });
+
+        //        //mag
+//        $helper = new FormHelper();
+//        $magArr = array(
+//            'label' => 'Magnification:',
+//            'choices' => $helper->getMags(),
+//            'required' => true,
+//            'multiple' => false,
+//            'expanded' => true,
+//            'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
+//        );
+//        if($this->params['cicle'] == "" || $this->params['cicle'] == 'new' || $this->params['cicle'] == 'create' ) {
+//            $magArr['data'] = '20X';    //new
+//        }
+//        $builder->add( 'field', 'choice', $magArr );
+
 
     }
 

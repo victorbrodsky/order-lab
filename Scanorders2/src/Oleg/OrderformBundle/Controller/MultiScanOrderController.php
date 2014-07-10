@@ -96,9 +96,6 @@ class MultiScanOrderController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $entity->setProvider($user);
-//        echo "provider1=".$entity->getProvider()."<br>";
-
         $status = 'valid';    //invalid
         $source = 'scanorder';
 
@@ -219,10 +216,13 @@ class MultiScanOrderController extends Controller {
                 $entity->setStatus($status);
             }
 
-            //add dataqualities to entity
+            //Add dataqualities to entity
             $dataqualities = $form->get('conflicts')->getData();
             $orderUtil = new OrderUtil($em);
             $orderUtil->setDataQuality($entity,$dataqualities);
+
+            //Set current user as a provider for this entity. Replace the form's provider with the current user.
+            $entity->setProvider($user);
 
             /////////////////// process and save form //////////////////////////////
             $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );

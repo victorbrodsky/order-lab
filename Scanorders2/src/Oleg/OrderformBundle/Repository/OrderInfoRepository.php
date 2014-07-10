@@ -167,6 +167,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             //set orderdate from original order
             $entity->setOrderdate($originalOrderdate);
+
             //set provider from original order
             $entity->setProvider($originalProvider);
         }
@@ -274,7 +275,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //final step for amend: swap newly created oid with Superseded order oid
         if( $originalStatus == 'Amended' ) {
 
-            //exit('amended orderinfo repoexit');
             $newId = $entity->getId();
 
             $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
@@ -289,11 +289,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             //swap oid
             $entity->setOid($originalId);
-
-//            //set orderdate from original order
-//            $entity->setOrderdate($originalOrderdate);
-//            //set provider from original order
-//            $entity->setProvider($originalProvider);
 
             //$em->persist($entity);
             $em->flush();

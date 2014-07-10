@@ -24794,7 +24794,7 @@ function getComboboxPartname(ids,holder) {
 //        var targetid = id+"partname_0_field";
         targetid = holder.find(targetid);
     }
-    console.log("part targetid="+targetid);
+    //console.log("part targetid="+targetid);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -24823,9 +24823,9 @@ function getComboboxPartname(ids,holder) {
 //
 //    $(targetClass).each(function() {
 //        var optionLength = $(this).children('option').length;
-//        console.log( "optionLength="+optionLength );
+//        //console.log( "optionLength="+optionLength );
 //        if( optionLength == 0 ) {
-//            console.log( 'data is not set' );
+//            //console.log( 'data is not set' );
 //            var id = $(this).attr('id');
 //            var targetid = '#'+id;
 //            populateSelectCombobox( targetid, datas, placeholder );

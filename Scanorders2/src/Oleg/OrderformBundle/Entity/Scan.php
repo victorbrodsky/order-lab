@@ -19,7 +19,7 @@ class Scan extends SlideArrayFieldAbstract
     protected $slide;
 
     /**
-     * @ORM\Column(name="mag", type="string")
+     * @ORM\Column(name="mag", type="string", nullable=true)
      */
     protected $field;
     
