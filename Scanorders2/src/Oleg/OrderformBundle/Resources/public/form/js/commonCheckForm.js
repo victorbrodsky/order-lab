@@ -69,11 +69,17 @@ function cleanValidationAlert() {
     }
 }
 
-function initAllElements() {
+function initAllElements(newHolder) {
 
 //    if( cicle == "new" || cicle == "amend" ) {
     if( cicle == "new" ) {
-        var check_btns = $("[id=check_btn]");
+
+        if( typeof newHolder === 'undefined' && newHolder.length == 0 ) {
+            var check_btns = $("[id=check_btn]");
+        } else {
+            var check_btns = newHolder.find("[id=check_btn]");
+        }
+
         //console.log("check_btns.length="+check_btns.length);
         for (var i = 0; i < check_btns.length; i++) {
             var idArr = check_btns.eq(i).attr("id").split("_");

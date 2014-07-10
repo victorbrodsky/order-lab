@@ -5287,7 +5287,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 //    }
 
     //initial disabling
-    initAllElements();
+    initAllElements(newHolder);
 }
 
 //add children forms triggered by parent form
