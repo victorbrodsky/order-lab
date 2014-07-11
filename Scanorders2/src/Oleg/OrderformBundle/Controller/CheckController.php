@@ -320,7 +320,8 @@ class CheckController extends Controller {
 
                 if( $patient ) {
                     $parentKey = $patient->obtainValidKeyfield();
-                    $parentDob = $patient->obtainValidDob();
+                    //$parentDob = $patient->obtainValidDob();
+                    $parentDob = $patient->obtainValidField('dob',$user);
                 }
 
                 //echo "parentKey=".$parentKey."<br>";

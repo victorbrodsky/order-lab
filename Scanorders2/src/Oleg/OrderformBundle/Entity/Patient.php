@@ -5,7 +5,6 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 //UniqueEntity({"mrn"})
@@ -707,20 +706,37 @@ class Patient extends ObjectAbstract
         return $this->getMrn();
     }
 
-    public function obtainValidDob() {
-        foreach( $this->getDob() as $dob ) {
-            if( $dob->getStatus() == 'valid' ) {
-                return $dob;
-            }
-        }
-        return null;
-    }
+//    public function obtainValidDob() {
+//        foreach( $this->getDob() as $dob ) {
+//            if( $dob->getStatus() == 'valid' ) {
+//                return $dob;
+//            }
+//        }
+//        return null;
+//    }
 
 //    public function obtainExtraKey() {
 //        $extra = array();
 //        $extra['keytype'] = $this->getMrn()->getKeytype()->getId();
 //        return $extra;
 //    }
+
+    public function obtainOneValidObjectPatient($user) {
+        //mrn
+        $mrn = $this->obtainValidField('mrn',$user);
+        $this->mrn->clear();
+        $this->addMrn($mrn);
+
+        //dob
+        $dob = $this->obtainValidField('dob',$user);
+        $this->dob->clear();
+        $this->addDob($dob);
+
+        //clinical history
+        $clinicalHistory = $this->obtainValidField('clinicalHistory',$user);
+        $this->clinicalHistory->clear();
+        $this->addClinicalHistory($clinicalHistory);
+    }
 
     public function obtainKeyFieldName() {
         return "mrn";

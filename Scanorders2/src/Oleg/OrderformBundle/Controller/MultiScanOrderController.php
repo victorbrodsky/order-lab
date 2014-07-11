@@ -526,6 +526,7 @@ class MultiScanOrderController extends Controller {
             }
 
 //            echo "<br>patient has procedure count=".count( $patient->getProcedure() )."<br>";
+            //filter the data according to the user roles
             if( ! $userUtil->hasPermission($this->get('security.context')) ) {
                 $patient->filterArrayFields($user);
 
@@ -535,7 +536,25 @@ class MultiScanOrderController extends Controller {
                 }
             }
 
-            //procdeure
+//            if( $entity->getType() == "Table-View Scan Order" ) {
+//                //$patient->obtainOneValidObjectPatient($user);
+//                //$patient->obtainOneValidObject(array('mrn','dob','clinicalHistory'),$user,false);
+//                //$patientArr['patient'] = $patient->obtainOneValidObject( array( array('mrn','field','keytype'), 'dob', 'clinicalHistory' ), $user, true );
+//                //array_push($jsonData, $patientArr);
+//                //var_dump($patientArr);
+//                //print_r($patientArr);
+//
+////                //now patient's array fields have only one 'valid' field
+////                $jsonData['patient'][$patient->getId()]['mrn'] = $patient->getMrn()->first()->getField();
+////                $jsonData['patient'][$patient->getId()]['mrntype'] = $patient->getMrn()->first()->getKeytype()->getName();
+////                $jsonData['patient'][$patient->getId()]['clinicalHistory'] = $patient->getClinicalHistory()->first()->getField();
+////                //dob
+////                $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+////                $dobStr = $transformer->transform($patient->getDob()->first()->getField());
+////                $jsonData['patient'][$patient->getId()]['dob'] = $dobStr;
+//            }
+
+            //procedure
             foreach( $patient->getProcedure() as $procedure ) {
 
                 if( !$this->hasOrderInfo($procedure,$id) ) {
@@ -556,6 +575,17 @@ class MultiScanOrderController extends Controller {
                         continue;
                     }
                 }
+
+//                if( $entity->getType() == "Table-View Scan Order" ) {
+//                    //$procedureArr = $procedure->obtainOneValidObject(array('name','encounterDate','patlastname','patfirstname','patmiddlename','patage','patsex','pathistory'),$user, true);
+//                    //print_r($procedureArr);
+//                    $procedureArr = array();
+//                    $procedureArr['procedure'] = $procedure->obtainOneValidObject(array('name','encounterDate','patlastname','patfirstname','patmiddlename','patage','patsex','pathistory'),$user, true);
+//                    array_push($patientArr['patient'], $procedureArr);
+//                    //now patient's array fields have only one 'valid' field
+//                    //$jsonData['patient'][$patient->getId()]['procedure'][$procedure->getId()]['name'] = $procedure->getName()->first()->getField();
+//                    //$jsonData['patient'][$patient->getId()]['procedure'][$procedure->getId()]['encounterDate'] = $procedure->getEncounterDate()->first()->getField();
+//                }
 
                 //accession
                 foreach( $procedure->getAccession() as $accession ) {
@@ -592,6 +622,7 @@ class MultiScanOrderController extends Controller {
                         }
 
                         //block
+                        $blockArr = array();
                         foreach( $part->getBlock() as $block ) {
                             if( !$this->hasOrderInfo($block,$id) ) {
                                 $part->removeBlock($block);
@@ -608,6 +639,7 @@ class MultiScanOrderController extends Controller {
                             }
 
                             //slide
+                            $slideArr = array();
                             foreach( $block->getSlide() as $slide ) {
 
                                 //check if this slides can be viewd by this user
@@ -626,7 +658,10 @@ class MultiScanOrderController extends Controller {
                                     $entity->removeSlide($slide);
                                     continue;
                                 }
+
+
                             }//slide
+
                         }//block
                     }//part
                 }//accession
@@ -688,15 +723,37 @@ class MultiScanOrderController extends Controller {
 
         }
 
-        if( $entity->getType() == "Table-View Scan Order" ) {
+        if( false && $entity->getType() == "Table-View Scan Order" ) {
 
-            $jsonData = array(
-                'patient' => array('mrn'=>'5','name'=>'John'),
-                'accession' => array('accession number'=>'S11-5','date'=>'10-10-2013')
-            );
+            $jsonData = array();
+
+            $patients = $entity->getPatient();
+
+            //$patientArr = array();
+            $jsonData['patient'] = array();
+            foreach( $patients as $patient ) {
+                //$patient->obtainOneValidObject(array( 'mrn', 'dob', 'clinicalHistory' ), $user, false);
+                //$jsonData['patient'][$patient->getId()] = $patient->obtainOneValidObject( array( array('mrn','field','keytype'), 'dob', 'clinicalHistory' ), $user, true );
+                //array_push($jsonData['patient'], $patient->obtainOneValidObject( array( array('mrn','field','keytype'), 'dob', 'clinicalHistory' ), $user, true ));
+            }
+
+//            $jsonData = array(
+//                'patient' => array('mrn'=>'5','name'=>'John'),
+//                'accession' => array('accession number'=>'S11-5','date'=>'10-10-2013')
+//            );
 
             //$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-            //$jsonData = $serializer->serialize($entity, 'json');
+
+//            $entityTest = new OrderInfo();
+//            $patientTest = new Patient(true,'valid',$user);
+//            $entityTest->addPatient($patientTest);
+//            $procedureTest = new Procedure(true,'valid',$user);
+//            $patientTest->addProcedure($procedureTest);
+
+            //$serializer = $this->container->get('jms_serializer');
+            //$jsonData = $serializer->serialize($patientTest, 'json');
+
+            print_r($jsonData);
 
             return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
                 'xdata' => json_encode($jsonData),

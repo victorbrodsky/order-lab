@@ -23,5 +23,12 @@ class PartPartname extends PartArrayFieldAbstract
      */
     protected $field;
 
+    /**
+     * @param mixed $field
+     */
+    public function setField($field=null)
+    {
+        $this->field = strtoupper($field);
+    }
 
 }

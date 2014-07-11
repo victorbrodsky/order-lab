@@ -12,6 +12,7 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+
 /**
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
@@ -384,6 +385,9 @@ abstract class ObjectAbstract
         return $count;
     }
 
+    //get only one field:
+    //external user: get the latest entity belongs to this user
+    //not external user: get valid field
     public function obtainValidField( $fieldname, $user ) {
 
         $res = null;
@@ -418,6 +422,45 @@ abstract class ObjectAbstract
 
         return $res;
     }
+
+    //$fields: array of fields that should be filter out
+    public function obtainOneValidObject($fields,$user,$asarray=false) {
+
+        $res = array();
+
+        foreach( $fields as $field ) {
+
+            if( is_array($field) ) {
+                if( $asarray == false ) {
+                    throw new \Exception('This method does not accept complex fields for filtering');
+                }
+                $key = $field[0];
+                unset($field[0]);
+                $oneField = $this->obtainValidField($key,$user);
+                foreach( $field as $simpleField ) {
+                    $getMethod = "get".$simpleField;
+                    $res[$this->getId()][$key][$simpleField] = $oneField->$getMethod()."";
+                    echo "<br>";
+                }
+            } else {
+                $oneField = $this->obtainValidField($field,$user);
+                if( $asarray ) {
+                    $res[$this->getId()][$field] = $oneField."";
+                } else {
+                    $this->$field->clear();
+                    $addMethod = "add".$field;
+                    $this->$addMethod($oneField);
+                }
+            }
+
+
+
+
+        }
+
+        return $res;
+    }
+
 
 //    //replace contains in AddChild
 //    public function childAlreadyExist( $newChild ) {

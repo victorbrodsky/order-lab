@@ -11,6 +11,7 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks

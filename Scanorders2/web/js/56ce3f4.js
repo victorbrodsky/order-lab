@@ -14714,7 +14714,9 @@ var _columnData_scanorder = [
 $(document).ready(function() {
 
     //console.log(JSON.stringify(xdata));
-    console.log(xdata);
+    if( typeof xdata != 'undefined' ) {
+        console.log(xdata);
+    }
 
     attachResearchEducationalTooltip();
 

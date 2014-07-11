@@ -273,8 +273,7 @@
                     <a href="{{ path('showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
-            {% else %}
-                histories|length:{{ histories|length }}
+            {% else %}               
                 {% if 'by' in formstatus %}
                     {% set performed = 'performed ' %}
                 {% else %}

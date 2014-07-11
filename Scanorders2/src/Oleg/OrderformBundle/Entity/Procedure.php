@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+
 /**
  * Procedure (use 'procedures', because 'procedure' causes problems (reserved?))
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\ProcedureRepository")
