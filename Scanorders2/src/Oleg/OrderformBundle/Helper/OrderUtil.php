@@ -322,6 +322,7 @@ class OrderUtil {
             //echo "orderinfo count=".count($child->getOrderinfo()).", order id=".$child->getOrderinfo()->first()->getId()."<br>";
 
             //check if this object is used by any other orderinfo (for cancel and amend only)
+            //TODO: check all parents too(?)
             if( $statusStr != 'valid' ) {
                 foreach( $child->getOrderinfo() as $order ) {
                     //echo "orderinfo id=".$order->getId().", oid=".$order->getOid()."<br>";
