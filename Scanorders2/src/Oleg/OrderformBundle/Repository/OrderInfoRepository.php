@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\OrderformBundle\Entity\Slide;
 use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\OrderformBundle\Entity\History;
 
@@ -24,27 +25,12 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $em = $this->_em;
         //$em->getConnection()->getConfiguration()->setSQLLogger(null);
 
-        //echo "memory limit=".ini_get("memory_limit")."<br>";
-        //echo 'mem: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-        //exit();
-
         $this->user = $user;
         $this->router = $router;
 
         //replace duplicate entities to filter the similar entities.
         //$entity = $em->getRepository('OlegOrderformBundle:Patient')->replaceDuplicateProcedures( $entity, $entity );
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
-
-        //set Status with Type and Group
-        //$status = $em->getRepository('OlegOrderformBundle:Status')->findOneByAction('Submit');
-        //$entity->setStatus($status);
-
-//        $blocks = $entity->getPatient()->first()->getProcedure()->first()->getAccession()->first()->getPart()->first()->getBlock();
-//        echo "<br>############################## Start: blocks=".count($blocks).":<br>";
-//        foreach($blocks as $block ) {
-//            echo $block;
-//        }
-//        echo "##################################<br><br>";
 
         if( $type ) {
             $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName( $type );
@@ -55,19 +41,209 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setScandeadline(NULL);
         }
 
-        return $this->setOrderInfoResult( $entity );
-    }
-    
-    public function setOrderInfoResult( $entity ) {
-
-        $em = $this->_em;
-
-        $patients = $entity->getPatient();
-
         //********** take care of educational and research director and principal investigator ***********//
         $entity = $em->getRepository('OlegOrderformBundle:Educational')->processEntity( $entity, $this->user );
         $entity = $em->getRepository('OlegOrderformBundle:Research')->processEntity( $entity, $this->user );
         //********** end of educational and research processing ***********//
+
+        //return $this->setOrderInfoResultTopToBottom( $entity );
+        return $this->setOrderInfoResultBottomToTop( $entity );
+    }
+
+    //process objects from bottom (slide level) to top (patient level)
+    public function setOrderInfoResultBottomToTop( $entity ) {
+
+        $em = $this->_em;
+        $this->setSlides($entity);
+
+        $slides = $entity->getSlide();
+        echo "slide count=".count($slides)."<br>";
+
+        //now clean orderinfo from patients. Patients and all others objects will be added only via slides.
+        $entity->clearPatient();
+
+        //process all slides
+        foreach( $slides as $slide ) {
+            echo "<br>###################### Process Slide:".$slide;
+
+            //process slide
+            $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $entity );
+
+        }
+
+        $originalStatus = $entity->getStatus();
+
+        if( $originalStatus == 'Not Submitted' ) {
+            $entity->setOid(null);
+        }
+
+        if( $originalStatus == 'Amended' ) {
+
+            $originalId = $entity->getOid();
+
+            //find existing order in db
+            $originalOrder = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($originalId);
+            $originalOrderdate = $originalOrder->getOrderdate();
+            $originalProvider = $originalOrder->getProvider();
+
+            $entity->setId(null);
+            $entity->setOid($originalId);
+
+            //set orderdate from original order
+            $entity->setOrderdate($originalOrderdate);
+
+            //set provider from original order
+            $entity->setProvider($originalProvider);
+        }
+
+        echo "<br>################################## Finish:<br>";
+//        echo $entity->getPatient()->first()."<br>";
+//        echo "final pat name count=".count($entity->getPatient()->first()->getName())."<br>";
+//
+        echo "patients=".count($entity->getPatient())."<br>";
+        echo "procedures=".count($entity->getProcedure())."<br>";
+        echo "accessions=".count($entity->getAccession())."<br>";
+        echo "parts=".count($entity->getPart())."<br>";
+        echo "blocks=".count($entity->getBlock())."<br>";
+        echo "slides=".count($entity->getSlide())."<br>";
+
+//        foreach( $entity->getPatient() as $patient ) {
+//            echo $patient;
+//            echo "pat's orderinfoCount=".count($patient->getOrderinfo())."<br>";
+//            echo "pat's orderinfo=".$patient->getOrderinfo()->first()."<br>";
+//        }
+
+        //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+        //throw new \Exception('TESTING');
+        //exit('orderinfo repoexit testing');
+
+        //create new orderinfo
+        //$em = $this->_em;
+        $em->persist($entity);
+        $em->flush();
+
+        //insert oid to entity
+        if( !$entity->getOid() ) {
+            //echo "insert oid <br>";
+            $entity->setOid($entity->getId());
+
+            //if clear is used above => doctrine error: A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\OrderInfo#patient' that was not configured to cascade persist operations
+            //it is happened because all objects are not persisted anymore.
+            $em->flush();
+        }
+
+        //clean empty blocks
+        $blocks = $entity->getBlock();
+        foreach( $blocks as $block ) {
+            if( count($block->getSlide()) == 0 ) {
+                //echo "final remove block from orderinfo: ".$block;
+                $em->remove($block);
+                $em->persist($block);
+                $em->flush();
+            }
+        }
+        $em->clear();
+        ////////////////////// finished save new orderinfo ///////////////////////////
+
+
+        //final step for amend: swap newly created oid with Superseded order oid
+        if( $originalStatus == 'Amended' ) {
+
+            $newId = $entity->getId();
+
+            $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
+
+            //clone orderinfo object by id
+            $orderUtil = new OrderUtil($em);
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $this->router, $newId);
+
+            //now entity is a cloned order object
+            //echo "rep: provider 3=".$entity->getProvider()."<br>";
+            //$entity->setProvider($this->user);
+
+            //swap oid
+            $entity->setOid($originalId);
+
+            //$em->persist($entity);
+            $em->flush();
+            $em->clear();
+        }
+
+        //*********** record history ***********//
+        $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($entity->getOid());
+        $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
+        $history = new History();
+        $history->setOrderinfo($entity);
+        $history->setCurrentid($entity->getOid());
+        $history->setCurrentstatus($entity->getStatus());
+        $history->setProvider($user);
+        $history->setRoles($user->getRoles());
+        $history->setCurrentstatus($entity->getStatus());
+
+        if( $originalStatus == 'Amended' ) {
+            $history->setEventtype('Amended Order Submission');
+            //get url link
+            $supersedeId = $entity->getId(); //use id because superseded order and amended order have swaped ids
+            $url = $this->router->generate( 'multy_show', array('id' => $supersedeId) );
+            $link = '<a href="'.$url.'">order '.$supersedeId.'</a>';
+            //set note with this url link
+            $history->setNote('Previous order content saved as a Superseded '.$link);
+        } elseif( $originalStatus == 'Not Submitted' ) {
+            $systemUser = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+            $history->setProvider( $systemUser );
+            $history->setNote('Auto-Saved Draft; Submit this order to Process');
+            $history->setEventtype('Auto-saved at the time of auto-logout');
+        } else {
+            $history->setEventtype('Initial Order Submission');
+            $history->setChangedate($entity->getOrderdate());
+        }
+
+        $em->persist($history);
+        $em->flush();
+        //*********** EOF record history ***********//
+
+        $em->clear();
+
+        //exit('end of order processing');
+        //echo 'mem on end of order processing: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+
+        return $entity;
+    }
+
+    public function setSlides($orderinfo) {
+        $patients = $orderinfo->getPatient();
+        foreach( $patients as $patient ) {
+            $this->addSlidesToOrderinfo($orderinfo, $patient);
+        }
+    }
+    public function addSlidesToOrderinfo($orderinfo, $entity) {
+
+        //echo $entity;
+        $children = $entity->getChildren();
+
+        if( !$children || count($children) == 0  ) {
+
+            if( $entity instanceof Slide ) {
+                //echo "Add slide=".$entity."<br>";
+                $orderinfo->addSlide($entity);
+            } else {
+                //echo "not slides<br>";
+            }
+
+            return;
+        }
+
+        foreach( $children as $child ) {
+            $this->addSlidesToOrderinfo($orderinfo, $child);
+        }
+
+    }
+
+    public function setOrderInfoResultTopToBottom( $entity ) {
+
+        $em = $this->_em;
+
+        $patients = $entity->getPatient();
 
         //echo "Count of patients=".count($patients)."<br>";
 
@@ -374,38 +550,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         if( $parent ) {
             $this->addOrderinfoToThisAndAllParents( $parent, $orderinfo );
         }
-    }
-
-
-    public function removeDisplayFields($patient) {
-
-        //name
-        if( count($patient->getLastname()) > 1 ) {
-            throw new \Exception('Patient has multiple field name, count='.count($patient->getLastname()));
-        }
-        $name = $patient->getLastname()->first();
-        if( $name && !$name->getId() ) {
-            $patient->removeLastname($name);
-        }
-
-        //age
-        if( count($patient->getAge()) > 1 ) {
-            throw new \Exception('Patient has multiple field age, count='.count($patient->getAge()));
-        }
-        $age = $patient->getAge()->first();
-        if( $age && !$age->getId() ) {
-            $patient->removeAge($age);
-        }
-
-        //sex
-        if( count($patient->getSex()) > 1 ) {
-            throw new \Exception('Patient has multiple field sex, count='.count($patient->getSex()));
-        }
-        $sex = $patient->getSex()->first();
-        if( $sex && !$sex->getId() ) {
-            $patient->removeSex($sex);
-        }
-
     }
 
 }

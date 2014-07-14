@@ -42,36 +42,36 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
-    /**
-     * Edit: If the form exists, use this function
-     * @Route("/scan-order/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
-     */
-    public function editAction( $id )
-    {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
-        ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
-        if( !$secUtil->isCurrentUserAllow($id) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('OlegOrderformBundle:Slide')->findOneBy($id);
-
-        $em->persist($entity);
-        $em->flush();
-
-        $this->showMultyAction($entity->getId(), "show");
-
-    }
+//    /**
+//     * Edit: If the form exists, use this function
+//     * @Route("/scan-order/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
+//     * @Method("POST")
+//     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
+//     */
+//    public function editAction( $id )
+//    {
+//
+//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+//            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
+//        ) {
+//            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
+//        if( !$secUtil->isCurrentUserAllow($id) ) {
+//            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entity = $em->getRepository('OlegOrderformBundle:Slide')->findOneBy($id);
+//
+//        $em->persist($entity);
+//        $em->flush();
+//
+//        $this->showMultyAction($entity->getId(), "show");
+//
+//    }
 
 
     /**
@@ -100,26 +100,26 @@ class MultiScanOrderController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $status = 'valid';    //invalid
-        $source = 'scanorder';
-
-        $patient = new Patient(true,$status,$user,$source);
-        $entity->addPatient($patient);
-
-        $procedure = new Procedure(true,$status,$user,$source);
-        $patient->addProcedure($procedure);
-
-        $accession = new Accession(true,$status,$user,$source);
-        $procedure->addAccession($accession);
-
-        $part = new Part(true,$status,$user,$source);
-        $accession->addPart($part);
-
-        $block = new Block(true,$status,$user,$source);
-        $part->addBlock($block);
-
-        $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
-        $block->addSlide($slide);
+//        $status = 'valid';    //invalid
+//        $source = 'scanorder';
+//
+//        $patient = new Patient(true,$status,$user,$source);
+//        $entity->addPatient($patient);
+//
+//        $procedure = new Procedure(true,$status,$user,$source);
+//        $patient->addProcedure($procedure);
+//
+//        $accession = new Accession(true,$status,$user,$source);
+//        $procedure->addAccession($accession);
+//
+//        $part = new Part(true,$status,$user,$source);
+//        $accession->addPart($part);
+//
+//        $block = new Block(true,$status,$user,$source);
+//        $part->addBlock($block);
+//
+//        $slide = new Slide(true,'valid',$user,$source); //Slides are always valid by default
+//        $block->addSlide($slide);
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -144,7 +144,6 @@ class MultiScanOrderController extends Controller {
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 
-        //$form->bind($request);
         $form->handleRequest($request);
 
 //        echo "provider2=".$entity->getProvider()."<br>";

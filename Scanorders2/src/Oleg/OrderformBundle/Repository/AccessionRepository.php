@@ -80,7 +80,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //process data quality
         $currentDataquality = null;
 
-        //echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
+        echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
 
         foreach( $orderinfo->getDataquality() as $dataquality) {
 

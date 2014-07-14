@@ -128,8 +128,13 @@ class Part extends ObjectAbstract
             $partnameId = $this->partname->first()->getId();
         }
 
+        $parentId = "N/A";
+        if( $this->getAccession() ) {
+            $parentId = $this->getAccession()->getId();
+        }
+
         return "Part: id=".$this->id.
-        ", accessionId=".$this->getAccession()->getId().
+        ", accessionId=".$parentId.
         ", partnameCount=".count($this->partname).", partnameId=".$partnameId.
         ", sourceOrgan=".$this->sourceOrgan->first().
         ", description=".$this->description->first().
@@ -137,7 +142,6 @@ class Part extends ObjectAbstract
         ", paper=".$this->paper->first().
         ", diffDisident=".$this->diffDisident->first().
         ", blockCount=".count($this->block).
-        ", parentId=".$this->getParent()->getId().
         ", orderinfo=".count($this->orderinfo).
         $partnameStr."<br>";
     }

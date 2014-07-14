@@ -250,6 +250,12 @@ class PartRepository extends ArrayFieldAbstractRepository
     //$partname - Part name (string)
     public function findOnePartByJoinedToField( $accession, $keytype, $partname, $validity=null, $single=true ) {
 
+        //echo "PART find: accession=".$accession.", keytype=".$keytype.", partname=".$partname.", validity=".$validity." \n ";
+
+        if( !$accession || $accession == "" || !$keytype || $keytype == "" || !$partname || $partname == "" ) {
+            return null;
+        }
+
         $onlyValid = "";
         if( $validity ) {
             //echo "Part check validity ";

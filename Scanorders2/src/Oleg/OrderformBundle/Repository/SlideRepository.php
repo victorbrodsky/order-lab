@@ -7,7 +7,7 @@ namespace Oleg\OrderformBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 class SlideRepository extends ArrayFieldAbstractRepository {
-    
+
     //Make new - no requirements for uniqueness.
     public function processEntity( $entity, $orderinfo=null ) {
         return $this->setResult( $entity, $orderinfo, null );
@@ -63,6 +63,13 @@ class SlideRepository extends ArrayFieldAbstractRepository {
             $orderinfo->getResearch()->addSlide($slide);
         }
         //********** end of educational and research processing ***********//
+
+        //process parent
+        $parent = $slide->getParent();
+        $class = new \ReflectionClass($parent);
+        $className = $class->getShortName();
+        $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
+        $slide->setParent($processedParent);
 
         return $slide;
     }

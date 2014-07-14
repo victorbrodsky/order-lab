@@ -93,7 +93,11 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
     public function findOneBlockByJoinedToField( $accession, $keytype, $partname, $blockname, $validity=null, $single=true ) {
 
-        //echo "BLOCK find:".$accession.", ".$keytype.", ".$partname.", ".$blockname.", ".$validity." \n ";
+        //echo "BLOCK find: accession=".$accession.", keytype=".$keytype.", partname=".$partname.", blockname=".$blockname.", validity=".$validity." \n ";
+
+        if( !$accession || $accession == "" || !$keytype || $keytype == "" || !$partname || $partname == "" || !$blockname || $blockname == "" ) {
+            return null;
+        }
 
         $onlyValid = "";
         if( $validity ) {

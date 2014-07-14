@@ -38,8 +38,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
+        echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -76,7 +76,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->changeKeytype($entity);
 
         if( $key == ""  ) { //$key == "" is the same as $key->getName().""
-            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
 
@@ -96,19 +96,20 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+                echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
                 //CopyChildren: copy form's object children to the found one.
-                foreach( $entity->getChildren() as $child ) {
-                    //echo "adding: ".$child."<br>";
-                    $found->addChildren( $child );
-                }
+                //testing:
+//                foreach( $entity->getChildren() as $child ) {
+//                    //echo "adding: ".$child."<br>";
+//                    $found->addChildren( $child );
+//                }
                 return $this->setResult($found, $orderinfo, $entity);
 
                 //$entity->setId( $found->getId() );
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                //echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
+                echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
             }
 
         }
@@ -128,8 +129,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "Set Result for entity:".$entity;
 
-        $children = $entity->getChildren();
-
         //set status 'valid'
         $entity->setStatus(self::STATUS_VALID);
 
@@ -142,29 +141,31 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             gc_collect_cycles();
         }
 
+        //$children = $entity->getChildren();
+
         //echo "After process fields:".$entity;
         //echo $className.": count of children=".count($children)."<br>";
 
-        foreach( $children as $child ) {
-
-            $childClass = new \ReflectionClass($child);
-            $childClassName = $childClass->getShortName();
-            //echo $className.": childClassName=".$childClassName."<br>";
-
-            $entity->removeChildren($child);
-            $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
-
-            //add children
-            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParent( $entity, $child );
-
-        }
+//        foreach( $children as $child ) {
+//
+//            $childClass = new \ReflectionClass($child);
+//            $childClassName = $childClass->getShortName();
+//            //echo $className.": childClassName=".$childClassName."<br>";
+//
+//            $entity->removeChildren($child);
+//            $child = $em->getRepository('OlegOrderformBundle:'.$childClassName)->processEntity( $child, $orderinfo );
+//
+//            //add children
+//            $em->getRepository('OlegOrderformBundle:'.$className)->attachToParent( $entity, $child );
+//
+//        }
 
         //Clean empty array fields, which can be added by user dinamically, such as Part's "Differential Diagnoses" (DiffDisident) with empty input field
         //$entity->cleanEmptyArrayFields();
         $entity = $this->cleanAndProcessEmptyArrayFields($entity);
 
         if( !$entity->getId() || $entity->getId() == "" ) {
-            //echo "persist ".$className."<br>";
+            echo "persist ".$className."<br>";
             $em->persist($entity);
         } else {
             //echo "merge ".$className.", id=".$entity->getId()."<br>";
@@ -174,11 +175,27 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //set provider
         $entity->setProvider($orderinfo->getProvider());
 
-        //echo "Finish Set Result for entity:".$entity;
-        //echo 'mem after set result: ' . (memory_get_usage()/1024/1024) . "<br />\n";
+        //add entity to orderinfo
+        //$this->addEntityToOrderinfo($entity,$orderinfo);
+        $addClassMethod = "add".$className;
+        $orderinfo->$addClassMethod($entity);
+
+        //process parent
+        $parent = $entity->getParent();
+        if( $parent ) {
+            $class = new \ReflectionClass($parent);
+            $className = $class->getShortName();
+            $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
+            $entity->setParent($processedParent);
+            //echo "processed entity:".$entity;
+        }
+
+        echo "Finish Set Result for entity:".$entity;
 
         return $entity;
     }
+
+
 
     public function cleanAndProcessEmptyArrayFields($entity) {
         $entity->cleanEmptyArrayFields();
@@ -285,6 +302,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
     }
 
+    //TODO: not used!
     //if child has orderinfo without id => child belongs to this orderinfo
     public function isEntityBelongsToOrderinfo_NEW( $entity, $orderinfo ) {
 
@@ -314,6 +332,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
 
+    //TODO: not used!
     public function isEntityBelongsToOrderinfo( $entity, $orderinfo ) {
 
         //echo "check if belongs to orderinfo. entity: ".$entity;
@@ -361,6 +380,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     }
 
+    //TODO: not used!
     public function removeThisAndAllParentsFromOrderinfo( $entity, $orderinfo ) {
         $className = new \ReflectionClass($entity);
         $shortClassName = $className->getShortName();
@@ -657,6 +677,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
         //echo " validity=".$validity."<br>";
+
+        if( !$fieldStr || $fieldStr == "" ) {
+            return null;
+        }
 
         $onlyValid = "";
         if( $validity ) {
