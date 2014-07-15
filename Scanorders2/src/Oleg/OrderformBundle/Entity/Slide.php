@@ -19,13 +19,13 @@ class Slide extends ObjectAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide")
-     * @ORM\JoinColumn(name="block_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="block", referencedColumnName="id")
      */
     protected $block;
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide")
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="part", referencedColumnName="id")
      */
     protected $part;
     
@@ -56,7 +56,7 @@ class Slide extends ObjectAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="SlideType", cascade={"persist"})
-     * @ORM\JoinColumn(name="slidetype_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="slidetype", referencedColumnName="id", nullable=true)
      */
     protected $slidetype;
 
@@ -77,13 +77,13 @@ class Slide extends ObjectAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Educational", inversedBy="slides", cascade={"persist"})
-     * @ORM\JoinColumn(name="educational_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="educational", referencedColumnName="id", nullable=true)
      */
     protected $educational;
 
     /**
      * @ORM\ManyToOne(targetEntity="Research", inversedBy="slides", cascade={"persist"})
-     * @ORM\JoinColumn(name="research_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="research", referencedColumnName="id", nullable=true)
      */
     protected $research;
     

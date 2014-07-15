@@ -19,7 +19,7 @@ class Part extends ObjectAbstract
     /**
      * Part belongs to exactly one Accession => Part has only one Accession
      * @ORM\ManyToOne(targetEntity="Accession", inversedBy="part")
-     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="accession", referencedColumnName="id", nullable=true)
      */
     protected $accession;
 

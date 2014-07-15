@@ -24,7 +24,7 @@ class History
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="history", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $orderinfo;
 
@@ -43,13 +43,13 @@ class History
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     private $provider;
 
     /**
      * @ORM\ManyToOne(targetEntity="Status", cascade={"persist"})
-     * @ORM\JoinColumn(name="currentstatus_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="currentstatus", referencedColumnName="id", nullable=true)
      */
     private $currentstatus;
 
@@ -72,7 +72,7 @@ class History
     /**
      * User id
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="viewed_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="viewed", referencedColumnName="id", nullable=true)
      */
     private $viewed;
 

@@ -19,32 +19,35 @@ class UserRequestType extends AbstractType
                 'label'=>'WCMC CWID:',
                 'max_length'=>'10',
                 'required'=> false,
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'attr' => array('class'=>'form-control form-control-modif cwid'),
         ));
 
         //hascwid
         $builder->add( 'hascwid', 'choice', array(
             'label'=>'Do you (the requester) have a CWID username?',
-            //'max_length'=>20,
-            //'required'=>false,
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type hascwid')
         ));
+
+        //password
+        $builder->add( 'password', 'password', array(
+            'mapped' => false,
+            'label'=>'Password:',
+            'attr' => array('class' => 'form-control form-control-modif cwid-password')
+        ));
         
         $builder->add( 'name', 'text', array(
                 'label'=>'Name:',
-                'max_length'=>'500',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'email', 'email', array(
                 'label'=>'* Email:',
-                'max_length'=>'200',
                 'required'=> true,
-                'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'true'),
+                'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'required'),
         ));
         
         $builder->add( 'phone', 'text', array(
@@ -55,34 +58,27 @@ class UserRequestType extends AbstractType
         
         $builder->add( 'job', 'text', array(
                 'label'=>'Job title:',
-                'max_length'=>'200',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
-        $builder->add( 'organization', 'text', array(
-                'label'=>'Organization:',
-                'max_length'=>'200',
+        $builder->add( 'institution', 'entity', array(
+                'class' => 'OlegOrderformBundle:Institution',
+                'property' => 'name',
+                'label'=>'Institution:',
                 'required'=> false,
-                'data'=>'Weill Cornell Medical College',
-                'attr' => array('class'=>'form-control form-control-modif'),
+                'multiple' => true,
+                //'data'=>'Weill Cornell Medical College',
+                'attr' => array('class'=>'combobox combobox-width'),
         ));
         
         $builder->add( 'department', 'text', array(
                 'label'=>'Department:',
-                'max_length'=>'200',
                 'required'=> false,
                 'data'=>'Department of Pathology and Laboratory Medicine',
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
-        
-//        $builder->add( 'pathologyService', 'choice', array(
-//            'label' => 'Service / Division:',
-//            'max_length'=>200,
-//            'choices' => $helper->getPathologyService(),
-//            'required'=>false,
-//            'attr' => array('class' => 'combobox combobox-width', 'style'=>'width: 70%;'),
-//        ));
+
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
         $builder->add('pathologyServices', 'custom_selector', array(
             'label' => 'Departmental Division(s) / Service(s):',

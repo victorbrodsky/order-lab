@@ -27,7 +27,7 @@ class Block extends ObjectAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="part", referencedColumnName="id", nullable=true)
      */
     protected $part;
     

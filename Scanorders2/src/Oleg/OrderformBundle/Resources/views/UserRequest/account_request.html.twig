@@ -46,7 +46,7 @@
 
         <br>
 
-        <form action="{{ path('accountrequest_create') }}" method="post" {{ form_enctype(form) }}>
+        <form id="accountrequestform" action="{{ path('accountrequest_create') }}" method="post" {{ form_enctype(form) }}>
 
             {{ form_errors(form) }}
 
@@ -64,11 +64,17 @@
 
             {{ myform.field(form.cwid) }}
 
+            <div id="password_field" class="collapse">
+                <div class="well" align='center'>
+                    {{ myform.field(form.password) }}
+                </div>
+            </div>
+
             {{ myform.field(form.name) }}
             {{ myform.field(form.email) }}
             {{ myform.field(form.phone) }}
             {{ myform.field(form.job) }}
-            {{ myform.field(form.organization) }}
+            {{ myform.field(form.institution) }}
             {{ myform.field(form.department) }}
             {{ myform.field(form.pathologyServices) }}
             {{ myform.field(form.request) }}
@@ -104,10 +110,9 @@
             {{ form_widget(form._token) }}
 
 
-
             <br>
             <p>
-                <button class="btn btn-info" type="submit">Submit account request</button>
+                <button class="btn btn-info" type="button" onclick="submitRequestForm()">Submit</button>
             </p>
 
             <br>
@@ -115,6 +120,14 @@
                 <a href="{{ path('login') }}">Return to Log In page</a>
             </p>
 
+        </form>
+
+        {#dummy login form with style="display:none"#}
+        <form id="loginform" action="{{ path('login_check') }}" method="post" style="display:none">
+            <input type="hidden" name="display_height" id="display_height" value="" />
+            <input type="hidden" name="display_width" id="display_width" value="" />
+            <input type="text" id="username" name="_username" value="" class="form-control" placeholder="Username" autofocus>
+            <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
         </form>
 
         {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
@@ -144,9 +157,12 @@
 
         $(document).ready(function() {
 
+            regularCombobox();
             customCombobox();
             fieldInputMask();
             expandTextarea();
+
+            $('.cwid').val('');
 
             $(".hascwid").find('input:radio').on('change', function(){
                 var checkedValue = $(this).val();
@@ -154,13 +170,50 @@
 
                 if( checkedValue == "Yes" ) {
                     $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', false);
+                    //disable all fields, except some
+                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password');
+                    allInputs.prop('disabled', true);
+                    $('#password_field').show();
                 } else {
+                    $('.cwid').val('');
+                    $(":input").prop('disabled', false);
                     $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', true);
+                    $('#password_field').hide();
                 }
 
             });
 
         });
+
+        function submitRequestForm() {
+
+            var checkedValue = $("#accountrequestform input[type='radio']:checked").val();
+
+            if( checkedValue == "Yes" ) {
+
+                //copy fields
+                var cwid = $('.cwid').val();
+                $('#username').val(cwid);
+                //console.log('cwid='+cwid);
+                //console.log('username='+$('#username').val());
+
+                var pwd = $('.cwid-password').val();
+                $('#password').val(pwd);
+                //console.log('pwd='+pwd);
+                //console.log('password='+$('#password').val());
+
+                $("#display_height").value = screen.height;
+                $("#display_width").value = screen.width;
+
+                $('#loginform').submit();
+
+            } else {
+
+                $('#accountrequestform').submit();
+
+            }
+
+        }
 
     </script>
 

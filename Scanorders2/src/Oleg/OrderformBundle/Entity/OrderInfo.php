@@ -122,12 +122,6 @@ class OrderInfo extends OrderAbstract {
     protected $department;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="orderinfo", cascade={"persist"})
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
-     */
-    protected $institution;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $purpose;
@@ -577,22 +571,6 @@ class OrderInfo extends OrderAbstract {
     public function getDepartment()
     {
         return $this->department;
-    }
-
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
     }
 
     /**

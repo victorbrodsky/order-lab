@@ -36,15 +36,15 @@ class SlideReturnRequest extends OrderAbstract {
     /**
      * @ORM\ManyToMany(targetEntity="Slide")
      * @ORM\JoinTable(name="returnrequest_slide",
-     *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="slide_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="slide", referencedColumnName="id")}
      * )
      */
     private $slide;
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo")
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", nullable=true)
      */
     protected $orderinfo;
 

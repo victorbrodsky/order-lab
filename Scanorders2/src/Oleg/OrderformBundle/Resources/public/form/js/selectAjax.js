@@ -103,7 +103,7 @@ function customCombobox() {
         getCourseTitle(new Array("0","0","0","0","0","0"));
 
         getComboboxDepartment(new Array("0","0","0","0","0","0"));
-        getComboboxInstitution(new Array("0","0","0","0","0","0"));
+        //getComboboxInstitution(new Array("0","0","0","0","0","0"));
         getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
@@ -963,7 +963,7 @@ function initComboboxJs(ids, holder) {
         getCourseTitle(ids);
 
         getComboboxDepartment(ids);
-        getComboboxInstitution(ids);
+        //getComboboxInstitution(ids);
         getComboboxAccount(ids);
     }
 }

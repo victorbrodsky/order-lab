@@ -51,11 +51,15 @@ class UserRequest
      * @ORM\Column(type="string", nullable=true)
      */
     protected $job;
-    
+
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\JoinTable(name="accountrequest_institution",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     * )
      */
-    protected $organization;
+    protected $institution;
     
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -116,6 +120,7 @@ class UserRequest
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
+        $this->institution = new ArrayCollection();
     }
 
     /**
@@ -190,10 +195,6 @@ class UserRequest
         return $this->job;
     }
 
-    public function getOrganization() {
-        return $this->organization;
-    }
-
     public function getDepartment() {
         return $this->department;
     }
@@ -212,10 +213,6 @@ class UserRequest
 
     public function setJob($job) {
         $this->job = $job;
-    }
-
-    public function setOrganization($organization) {
-        $this->organization = $organization;
     }
 
     public function setDepartment($department) {
@@ -246,7 +243,7 @@ class UserRequest
     public function addPathologyServices(\Oleg\OrderformBundle\Entity\PathServiceList $pathologyServices)
     {
         if( !$this->pathologyServices->contains($pathologyServices) ) {
-            $this->pathologyServices[] = $pathologyServices;
+            $this->pathologyServices->add($pathologyServices);
         }
 
         return $this;
@@ -390,6 +387,28 @@ class UserRequest
     public function getHascwid()
     {
         return $this->hascwid;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    {
+        if( !$this->institution->contains($institution) ) {
+            $this->institution->add($institution);
+        }
+        return $this;
+    }
+
+    public function removeInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    {
+        $this->institution->removeElement($institution);
     }
 
 

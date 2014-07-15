@@ -784,8 +784,6 @@ class AdminController extends Controller
             "ROLE_SCANORDER_PATHOLOGY_FACULTY" => "ScanOrder Pathology Faculty",
 
             //"ROLE_SCANORDER_BANNED_USER" => "ScanOrder Banned User",  //not required since we have locked
-            //"ROLE_SCANORDER_EXTERNAL_SUBMITTER" => "ScanOrder External Submitter",
-            //"ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER" => "ScanOrder External Ordering Provider",
 
             "ROLE_SCANORDER_COURSE_DIRECTOR" => "ScanOrder Course Director",
             "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => "ScanOrder Principal Investigator",

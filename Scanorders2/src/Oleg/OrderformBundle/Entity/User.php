@@ -459,7 +459,7 @@ class User extends BaseUser
     public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
     {
         if( !$this->institution->contains($institution) ) {
-            $this->institution[] = $institution;
+            $this->institution->add($institution);
         }
         return $this;
     }

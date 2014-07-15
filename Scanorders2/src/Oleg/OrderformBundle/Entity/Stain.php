@@ -15,13 +15,13 @@ class Stain extends SlideArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Slide", inversedBy="stain")
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="slide", referencedColumnName="id")
      */
     protected $slide;
 
     /**
      * @ORM\ManyToOne(targetEntity="StainList", inversedBy="stain", cascade={"persist"})
-     * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="stainlist", referencedColumnName="id", nullable=true)
      */
     protected $field;
 

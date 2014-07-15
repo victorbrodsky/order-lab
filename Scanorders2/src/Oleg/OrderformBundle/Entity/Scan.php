@@ -14,7 +14,7 @@ class Scan extends SlideArrayFieldAbstract
 
     /**
      * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="slide", referencedColumnName="id")
      */
     protected $slide;
 

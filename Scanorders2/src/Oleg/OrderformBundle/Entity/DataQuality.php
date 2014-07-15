@@ -24,7 +24,7 @@ class DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo", inversedBy="dataquality", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $orderinfo;
 
@@ -41,7 +41,7 @@ class DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="AccessionType", cascade={"persist"})
-     * @ORM\JoinColumn(name="accessiontype_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="accessiontype", referencedColumnName="id", nullable=true)
      */
     protected $accessiontype;
 
@@ -52,7 +52,7 @@ class DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="AccessionType", cascade={"persist"})
-     * @ORM\JoinColumn(name="newaccessiontype_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="newaccessiontype", referencedColumnName="id", nullable=true)
      */
     protected $newaccessiontype;
 
@@ -63,7 +63,7 @@ class DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="MrnType", cascade={"persist"})
-     * @ORM\JoinColumn(name="mrntype_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="mrntype", referencedColumnName="id", nullable=true)
      */
     protected $mrntype;
 
@@ -86,13 +86,13 @@ class DataQuality
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="resolver_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="resolver", referencedColumnName="id")
      */
     private $resolver;
 

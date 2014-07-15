@@ -180,13 +180,25 @@ class OrderInfoType extends AbstractType
             'classtype' => 'department'
         ));
 
-        $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');
-        $builder->add('institution', 'custom_selector', array(
-            'label' => 'Institution:',
-            'attr' => $attr,
-            'required' => false,
-            'classtype' => 'institution'
+//        $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');
+//        $builder->add('institution', 'custom_selector', array(
+//            'label' => 'Institution:',
+//            'attr' => $attr,
+//            'required' => false,
+//            'classtype' => 'institution'
+//        ));
+        $instArr = array();
+        foreach( $this->params['user']->getInstitution() as $inst ) {
+            $instArr[$inst->getId()] = $inst->getName();
+        }
+        $builder->add( 'institution', 'choice', array(
+            'label'=>'Institution:',
+            'required' => true,
+            'choices' => $instArr,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width')
         ));
+
 
         $builder->add( 'purpose', 'choice', array(
             'label'=>'Purpose:',

@@ -33,27 +33,35 @@ class OrderAbstract {
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
-//     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
+//     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
 //     */
 //    private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
-     * @ORM\JoinColumn(name="formtype_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="formtype", referencedColumnName="id")
      */
     protected $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="proxyuser", referencedColumnName="id")
      */
     protected $proxyuser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
+
+
 
     /**
      * Get id
@@ -128,6 +136,23 @@ class OrderAbstract {
     {
         return $this->proxyuser;
     }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
 
 
 }

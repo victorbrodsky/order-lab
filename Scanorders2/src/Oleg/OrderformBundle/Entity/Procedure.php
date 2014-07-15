@@ -26,7 +26,7 @@ class Procedure extends ObjectAbstract
     /**
      * parent
      * @ORM\ManyToOne(targetEntity="Patient", inversedBy="procedure")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="patient", referencedColumnName="id")
      */
     protected $patient; 
     

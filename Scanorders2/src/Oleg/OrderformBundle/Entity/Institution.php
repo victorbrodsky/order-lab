@@ -23,15 +23,15 @@ class Institution extends ListAbstract
      **/
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="institution")
-     */
-    protected $orderinfo;
+//    /**
+//     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="institution")
+//     */
+//    protected $orderinfo;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
+//        $this->orderinfo = new ArrayCollection();
     }
 
     /**
@@ -90,37 +90,37 @@ class Institution extends ListAbstract
         return $this->original;
     }
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     * @return Institution
-     */
-    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        //echo "Institution addOrderinfo=".$orderinfo."<br>";
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+//    /**
+//     * Add orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     * @return Institution
+//     */
+//    public function addOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        //echo "Institution addOrderinfo=".$orderinfo."<br>";
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
+//        }
+//    }
+//
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\OrderformBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+//
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
 }

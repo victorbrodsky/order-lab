@@ -40,8 +40,8 @@ abstract class ObjectAbstract
     protected $creationdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
 
@@ -50,6 +50,14 @@ abstract class ObjectAbstract
      * @ORM\Column(type="string", nullable=true)
      */
     protected $source;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
+
+
 
     public function __construct( $status='invalid', $provider=null ) {
         $this->status = $status;
@@ -226,6 +234,24 @@ abstract class ObjectAbstract
     {
         return $this->source;
     }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+
 
 
     //children methods

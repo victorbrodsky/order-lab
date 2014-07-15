@@ -72,6 +72,12 @@ class UserRequestController extends Controller
         $form = $this->createForm(new UserRequestType(), $entity);
         $form->handleRequest($request);
 
+//        $password = $form->get('password')->getData();
+//        if( $entity->getHascwid() && $entity->getCwid() && $password && $password != '' ) {
+//            //return $this->forward('AcmeBundle:Forward:new', array('request' => $request));
+//            return $this->forward($this->generateUrl('login_check'), array('request' => $request));
+//        }
+
         if ($form->isValid()) {
             //echo "form valid!";
             $em = $this->getDoctrine()->getManager();

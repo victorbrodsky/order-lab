@@ -27,7 +27,7 @@ abstract class ArrayFieldAbstract {
 
      /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumn(name="provider_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
 
@@ -51,7 +51,7 @@ abstract class ArrayFieldAbstract {
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderInfo", cascade={"persist"})
-     * @ORM\JoinColumn(name="orderinfo_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="orderinfo", referencedColumnName="id", nullable=true)
      */
     protected $orderinfo;
 
