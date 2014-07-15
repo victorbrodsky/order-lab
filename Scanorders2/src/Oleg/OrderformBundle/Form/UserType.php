@@ -86,7 +86,6 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
-
         //timezone
 //        $tzUtil = new TimeZoneUtil();
 //        $builder->add( 'timezone', 'choice', array(
@@ -123,6 +122,15 @@ class UserType extends AbstractType
                 'label' => 'Role(s):',
                 'attr' => $attr,
                 'multiple' => true,
+            ));
+
+            $builder->add('institution', 'entity', array(
+                'class' => 'OlegOrderformBundle:Institution',
+                'label'=>'Institution(s):',
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'property' => 'name'
             ));
 
         }

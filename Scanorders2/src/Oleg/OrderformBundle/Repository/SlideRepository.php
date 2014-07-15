@@ -64,12 +64,27 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         }
         //********** end of educational and research processing ***********//
 
-        //process parent
+        ////////////// process parent //////////////
+        //1) reattach slide to part if it is Cytopathology
+        if( $slide->getSlidetype() == "Cytopathology" ) {
+            //echo "Cytopathology => attach slide to part<br>";
+            $block = $slide->getBlock();
+            $part = $block->getPart();
+            $slide->setParent($part);
+            $part->addSlide($slide);
+            $block->removeSlide($slide);
+            //remove block from part, if block does not have any slides
+            if( count($block->getSlide()) == 0 ) {
+                $part->removeBlock($block);
+            }
+        }
+        //2) process parent
         $parent = $slide->getParent();
         $class = new \ReflectionClass($parent);
         $className = $class->getShortName();
         $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
         $slide->setParent($processedParent);
+        ////////////// EOF process parent //////////////
 
         return $slide;
     }

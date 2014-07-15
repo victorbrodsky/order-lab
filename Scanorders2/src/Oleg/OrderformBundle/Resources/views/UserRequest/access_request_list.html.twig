@@ -84,10 +84,6 @@
                             {% endif %}
 
                             {% if entity.appliedforaccess == 'declined' or entity.appliedforaccess == 'active' %}
-                                {% set href = "href=\"{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}\"" %}
-                                <li>
-                                    <a href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}" data-confirm="Are you sure you want to approve as External Submitter?">Approve as External Submitter</a>
-                                </li>
                                 <li><a data-confirm="Are you sure you want to approve as Submitter?"
                                        href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'submitter' }) }}">Approve as Submitter</a>
                                 </li>

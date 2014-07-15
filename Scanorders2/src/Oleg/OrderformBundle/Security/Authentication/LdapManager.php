@@ -20,12 +20,14 @@ class LdapManager extends BaseLdapManager
 {
 
     private $timezone;
+    private $em;
 
-    public function __construct( LdapDriverInterface $driver, $userManager, array $params, $timezone = null ) {
+    public function __construct( LdapDriverInterface $driver, $userManager, array $params, $timezone = null, $em = null ) {
 
         parent::__construct($driver,$userManager,$params);
 
         $this->timezone = $timezone;
+        $this->em = $em;
     }
 
     protected function hydrate(UserInterface $user, array $entry)
@@ -44,6 +46,19 @@ class LdapManager extends BaseLdapManager
             $user->addRole('ROLE_SCANORDER_ADMIN');
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
             $user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+        }
+
+        //assign Institution
+        if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
+            $params = $this->em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+            if( count($params) != 1 ) {
+                throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+            }
+            $param = $params[0];
+            $institution = $param->getAutoAssignInstitution();
+            if( $institution ) {
+                $user->addInstitution($institution);
+            }
         }
 
     }

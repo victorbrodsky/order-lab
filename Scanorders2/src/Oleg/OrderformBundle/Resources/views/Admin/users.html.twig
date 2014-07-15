@@ -13,6 +13,7 @@
             <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
             <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Phone Number', 'user.phone') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Institution(s)', 'institutions.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.locked') }}</th>
@@ -35,6 +36,11 @@
                 <td>{{ entity.username }}</td>
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.phone }}</td>
+                <td>
+                    {% for institution in entity.institution %}
+                        "{{ institution }}"
+                    {% endfor %}
+                </td>
                 <td>
                     {% for role in entity.roles %}
                         {% if role != "ROLE_USER" %}

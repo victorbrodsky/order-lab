@@ -65,8 +65,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( !$key ) {
             //this can happen for 'deleted-by-amended-order' or 'invalid' keys => don't process this
-            return $entity;
             //echo 'Key field does not exists for '.$className."<br>";
+            return $entity;
             //throw new \Exception( 'Key field does not exists for '.$className );
         }
 
@@ -78,12 +78,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $key == ""  ) { //$key == "" is the same as $key->getName().""
             echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
-            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+            $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);
 
-            //we should have only one key field !!!
+            //we should have only one key field. At this point block and part names might be empty, this can happen if Accession number was empty on the form
             $key->setField($nextKey);
             $key->setStatus(self::STATUS_VALID);
             $key->setProvider($orderinfo->getProvider());
+            echo "nextKey=".$nextKey."<br>";
 
         } else {
 
@@ -115,7 +116,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         return $this->setResult($entity, $orderinfo);
-
     }
 
 
@@ -190,7 +190,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //echo "processed entity:".$entity;
         }
 
-        echo "Finish Set Result for entity:".$entity;
+        //echo "Finish Set Result for entity:".$entity;
 
         return $entity;
     }
@@ -201,6 +201,47 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity->cleanEmptyArrayFields();
         return $entity;
     }
+
+    public function postProcessing($orderinfo) {
+
+        ///////////// post processing part /////////////
+        $parts = $orderinfo->getPart();
+        foreach( $parts as $part ) {
+            $key = $part->obtainValidKeyField();
+            if( !$key || $key == "" ) {
+                //generate auto key
+                $nextKey = $this->getNextNonProvided($part,null,$orderinfo);
+                if( !$nextKey || $nextKey == '' ) {
+                    throw new \Exception( 'Key field was not generated for Part, key='.$nextKey );
+                }
+                $key->setField($nextKey);
+                $key->setStatus(self::STATUS_VALID);
+                $key->setProvider($orderinfo->getProvider());
+                //echo "nextKey=".$nextKey."<br>";
+            }
+        }
+        ///////////// EOF post processing part /////////////
+
+        ///////////// post processing block /////////////
+        $blocks = $orderinfo->getBlock();
+        foreach( $blocks as $block ) {
+            $key = $block->obtainValidKeyField();
+            if( !$key || $key == "" ) {
+                //generate auto key
+                $nextKey = $this->getNextNonProvided($block,null,$orderinfo);
+                if( !$nextKey || $nextKey == '' ) {
+                    throw new \Exception( 'Key field was not generated for Block, key='.$nextKey );
+                }
+                $key->setField($nextKey);
+                $key->setStatus(self::STATUS_VALID);
+                $key->setProvider($orderinfo->getProvider());
+                //echo "nextKey=".$nextKey."<br>";
+            }
+        }
+        ///////////// EOF post processing block /////////////
+
+    }
+
 
     //overrided by block and part repositories
     public function attachToParent( $entity, $child ) {

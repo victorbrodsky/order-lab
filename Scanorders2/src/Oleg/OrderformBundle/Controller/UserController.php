@@ -47,6 +47,7 @@ class UserController extends Controller
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.pathologyServices", "pathologyServices");
+        $dql->leftJoin("user.institution", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
         $dql->orderBy("user.id","ASC");
         //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting

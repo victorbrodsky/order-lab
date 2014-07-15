@@ -484,20 +484,10 @@ class UserRequestController extends Controller
 
         $entity->setAppliedforaccess($status);
 
-        if( $status == "approved" && $role == "external" ) {
-            //$entity->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
-            $entity->setRoles(array());
-            $entity->addRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER');
-            $entity->addRole('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER');
-            //$entity->setLocked(false);
-        }
-
         if( $status == "approved" && $role == "submitter" ) {
-            //$entity->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_SUBMITTER');
             $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
-            //$entity->setLocked(false);
         }
 
         if( $status == "declined" ) {

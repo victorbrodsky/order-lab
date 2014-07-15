@@ -57,17 +57,20 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $this->setSlides($entity);
 
         $slides = $entity->getSlide();
-        echo "slide count=".count($slides)."<br>";
+        //echo "slide count=".count($slides)."<br>";
 
         //now clean orderinfo from patients. Patients and all others objects will be added only via slides.
         $entity->clearPatient();
 
         //process all slides
         foreach( $slides as $slide ) {
-            echo "<br>###################### Process Slide:".$slide;
+            //echo "<br>###################### Process Slide:".$slide;
 
             //process slide
             $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $entity );
+
+            //set block and part names if not set (block and part name auto generation requires accession number to be set)
+            $this->postProcessing($entity);
 
         }
 
@@ -96,24 +99,14 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setProvider($originalProvider);
         }
 
-        echo "<br>################################## Finish:<br>";
-//        echo $entity->getPatient()->first()."<br>";
-//        echo "final pat name count=".count($entity->getPatient()->first()->getName())."<br>";
-//
-        echo "patients=".count($entity->getPatient())."<br>";
-        echo "procedures=".count($entity->getProcedure())."<br>";
-        echo "accessions=".count($entity->getAccession())."<br>";
-        echo "parts=".count($entity->getPart())."<br>";
-        echo "blocks=".count($entity->getBlock())."<br>";
-        echo "slides=".count($entity->getSlide())."<br>";
+//        echo "<br>################################## Finish:<br>";
+//        echo "patients=".count($entity->getPatient())."<br>";
+//        echo "procedures=".count($entity->getProcedure())."<br>";
+//        echo "accessions=".count($entity->getAccession())."<br>";
+//        echo "parts=".count($entity->getPart())."<br>";
+//        echo "blocks=".count($entity->getBlock())."<br>";;
+//        echo "slides=".count($entity->getSlide())."<br>";
 
-//        foreach( $entity->getPatient() as $patient ) {
-//            echo $patient;
-//            echo "pat's orderinfoCount=".count($patient->getOrderinfo())."<br>";
-//            echo "pat's orderinfo=".$patient->getOrderinfo()->first()."<br>";
-//        }
-
-        //echo 'mem on order save: ' . (memory_get_usage()/1024/1024) . "<br />\n";
         //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');
 
@@ -131,18 +124,6 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //it is happened because all objects are not persisted anymore.
             $em->flush();
         }
-
-        //clean empty blocks
-        $blocks = $entity->getBlock();
-        foreach( $blocks as $block ) {
-            if( count($block->getSlide()) == 0 ) {
-                //echo "final remove block from orderinfo: ".$block;
-                $em->remove($block);
-                $em->persist($block);
-                $em->flush();
-            }
-        }
-        $em->clear();
         ////////////////////// finished save new orderinfo ///////////////////////////
 
 
@@ -226,6 +207,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             if( $entity instanceof Slide ) {
                 //echo "Add slide=".$entity."<br>";
                 $orderinfo->addSlide($entity);
+
             } else {
                 //echo "not slides<br>";
             }

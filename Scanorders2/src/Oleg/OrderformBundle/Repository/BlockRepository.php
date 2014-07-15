@@ -206,6 +206,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
     }
 
     public function findNextBlocknameByAccessionPartname( $accessionNumber, $keytype, $partname, $orderinfo=null ) {
+
         if( !$accessionNumber || $accessionNumber == "" ) {
             return null;
         }

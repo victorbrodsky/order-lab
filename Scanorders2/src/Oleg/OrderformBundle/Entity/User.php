@@ -120,10 +120,21 @@ class User extends BaseUser
      */
     protected $chiefservices;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\JoinTable(name="fos_user_institution",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     * )
+     */
+    protected $institution;
+
+
     function __construct()
     {
         $this->pathologyServices = new ArrayCollection();
         $this->chiefservices = new ArrayCollection();
+        $this->institution = new ArrayCollection();
         $this->setPreferences(new UserPreferences());
         parent::__construct();
     }
@@ -435,6 +446,27 @@ class User extends BaseUser
     public function getPreferences()
     {
         return $this->preferences;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    {
+        if( !$this->institution->contains($institution) ) {
+            $this->institution[] = $institution;
+        }
+        return $this;
+    }
+
+    public function removeInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    {
+        $this->institution->removeElement($institution);
     }
 
 

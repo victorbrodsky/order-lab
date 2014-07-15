@@ -70,6 +70,10 @@
         <br><br>
     {% endif %}
 
+        {% if edit_form.autoAssignInstitution is defined %}
+            {{ formmacros.field(edit_form.autoAssignInstitution) }}
+        {% endif %}
+
         {% if edit_form.aDLDAPServerAddress is defined %}
             {{ formmacros.field(edit_form.aDLDAPServerAddress) }}
         {% endif %}

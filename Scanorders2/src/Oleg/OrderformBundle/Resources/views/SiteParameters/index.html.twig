@@ -87,6 +87,12 @@
             </tr>
 
             <tr>
+                <td>Auto-Assign Institution name</td>
+                <td>{{ entity.autoAssignInstitution }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'autoAssignInstitution'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
                 <td>AD/LDAP Server Address</td>
                 <td>{{ entity.aDLDAPServerAddress }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAddress'}) }}">Edit</a></td>

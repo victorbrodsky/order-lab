@@ -411,12 +411,14 @@ class Slide extends ObjectAbstract
         $parentClass = new \ReflectionClass($parent);
         $parentClassName = $parentClass->getShortName();
         if( $parentClassName == "Block" ) {
-            //echo "add  Block <br>";
+            echo "set  Block <br>";
             $this->setBlock($parent);
+            $this->setPart(NULL);
         } else
         if( $parentClassName == "Part") {
-            //echo "add  Slide <br>";
+            echo "set  Part <br>";
             $this->setPart($parent);
+            $this->setBlock(NULL);
         } else {
             throw new \Exception('Parent can not be set of the class ' . $parentClassName );
         }

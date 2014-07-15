@@ -88,6 +88,11 @@ class SiteParameters {
     protected $aDLDAPServerAccountPassword;
 
     /**
+     * @ORM\OneToOne(targetEntity="Institution")
+     */
+    protected $autoAssignInstitution;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected $coPathDBServerAddress;
@@ -528,6 +533,22 @@ class SiteParameters {
     public function getSmtpServerAddress()
     {
         return $this->smtpServerAddress;
+    }
+
+    /**
+     * @param mixed $autoAssignInstitution
+     */
+    public function setAutoAssignInstitution($autoAssignInstitution)
+    {
+        $this->autoAssignInstitution = $autoAssignInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAutoAssignInstitution()
+    {
+        return $this->autoAssignInstitution;
     }
 
 

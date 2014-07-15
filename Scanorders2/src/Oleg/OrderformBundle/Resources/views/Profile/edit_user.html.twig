@@ -21,11 +21,13 @@
     {{ form_errors(form) }}
 
     {{ formmacros.field(form.username) }}
+
     {{ formmacros.field(form.email) }}
     {{ formmacros.field(form.pathologyServices) }}
     {#{{ formmacros.field(form.defaultPathService) }}#}
 
     {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
+        {{ formmacros.field(form.institution) }}
         {{ formmacros.field(form.roles) }}
     {% endif %}
 

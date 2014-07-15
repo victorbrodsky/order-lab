@@ -83,7 +83,8 @@ class AdminController extends Controller
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $count_siteParameters = $this->generateSiteParameters();
+        $count_institution = $this->generateInstitutions();         //must be first
+        $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
         $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
@@ -100,7 +101,6 @@ class AdminController extends Controller
         $count_RegionToScan = $this->generateRegionToScan();
         $count_comments = $this->generateProcessorComments();
         $count_department = $this->generateDepartments();
-        $count_institution = $this->generateInstitutions();
         $count_urgency = $this->generateUrgency();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
@@ -784,8 +784,8 @@ class AdminController extends Controller
             "ROLE_SCANORDER_PATHOLOGY_FACULTY" => "ScanOrder Pathology Faculty",
 
             //"ROLE_SCANORDER_BANNED_USER" => "ScanOrder Banned User",  //not required since we have locked
-            "ROLE_SCANORDER_EXTERNAL_SUBMITTER" => "ScanOrder External Submitter",
-            "ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER" => "ScanOrder External Ordering Provider",
+            //"ROLE_SCANORDER_EXTERNAL_SUBMITTER" => "ScanOrder External Submitter",
+            //"ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER" => "ScanOrder External Ordering Provider",
 
             "ROLE_SCANORDER_COURSE_DIRECTOR" => "ScanOrder Course Director",
             "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => "ScanOrder Principal Investigator",
@@ -957,6 +957,14 @@ class AdminController extends Controller
             $params->$method( $value );
             $count = $count++;
         }
+
+        //assign Institution
+        $institutionName = 'Weill Cornell Medical College';
+        $institution = $em->getRepository('OlegOrderformBundle:Institution')->findOneByName($institutionName);
+        if( !$institution ) {
+            throw new \Exception( 'Institution was not found for name='.$institutionName );
+        }
+        $params->setAutoAssignInstitution($institution);
 
         $em->persist($params);
         $em->flush();

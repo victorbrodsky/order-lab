@@ -51,8 +51,7 @@ class MultiScanOrderController extends Controller {
 //    public function editAction( $id )
 //    {
 //
-//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-//            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
+//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER')
 //        ) {
 //            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
 //        }
@@ -88,8 +87,7 @@ class MultiScanOrderController extends Controller {
         //echo "multi new controller !!!! <br>";
         //exit();
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER')
         ) {
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
@@ -321,10 +319,7 @@ class MultiScanOrderController extends Controller {
     public function newMultyAction()
     {
 
-        //can not use: 'ROLE_SCANORDER_ALL_SUBMITTER'
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
-        ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
@@ -455,9 +450,7 @@ class MultiScanOrderController extends Controller {
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }

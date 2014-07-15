@@ -121,6 +121,12 @@ class SiteParametersType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
+            $builder->add('autoAssignInstitution',null,array(
+                'label'=>'Auto-Assign Institution name:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //Co-Path DB
         if( $this->params['cicle'] == 'show' || $this->params['param'] == 'coPathDBServerAddress' )
         $builder->add('coPathDBServerAddress',null,array(
