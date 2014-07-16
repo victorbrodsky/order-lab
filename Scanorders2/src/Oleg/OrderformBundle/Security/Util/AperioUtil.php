@@ -250,6 +250,8 @@ class AperioUtil {
 
             $addedPrincipal = !$user->hasRole("ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR");
             $user->addRole('ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR');
+
+            //
         }
 
         if( $addedFaculty )

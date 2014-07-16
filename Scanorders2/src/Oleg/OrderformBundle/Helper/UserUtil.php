@@ -155,6 +155,22 @@ class UserUtil {
             $user->setLocked(false);
             $user->setExpired(false);
 
+            ////////// assign default Institution //////////
+            if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
+                $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
+                    if( count($params) != 1 ) {
+                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+                    }
+                    $param = $params[0];
+                    $institution = $param->getAutoAssignInstitution();
+                    if( $institution ) {
+                        $user->addInstitution($institution);
+                    }
+                }
+            }
+            ////////// EOF assign Institution //////////
+
             $found_user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername($username);
             if( $found_user ) {
                 //
