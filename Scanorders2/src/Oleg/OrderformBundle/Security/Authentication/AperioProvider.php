@@ -15,13 +15,15 @@ class AperioProvider implements AuthenticationProviderInterface {
 
     private $userProvider;
     private $serviceContainer;
+    private $em;
     private $providerKey;
     private $timezone;
 
-    public function __construct( UserProviderInterface $userProvider, $serviceContainer, $providerKey = null, $timezone )
+    public function __construct( UserProviderInterface $userProvider, $serviceContainer, $em, $providerKey = null, $timezone )
     {
         $this->userProvider = $userProvider;
         $this->serviceContainer = $serviceContainer;
+        $this->em = $em;
         $this->providerKey = $providerKey;
         $this->timezone = $timezone;
     }
@@ -33,7 +35,7 @@ class AperioProvider implements AuthenticationProviderInterface {
 
         $aperioUtil = new AperioUtil( $this->timezone );
 
-        $user = $aperioUtil->aperioAuthenticateToken( $token, $this->serviceContainer );
+        $user = $aperioUtil->aperioAuthenticateToken( $token, $this->serviceContainer, $this->em );
 
         //echo "token username=".$token->getUsername()."<br>";
 

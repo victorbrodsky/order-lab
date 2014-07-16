@@ -5014,7 +5014,14 @@ function confirmAction() {
             cancelText = 'Cancel';
         }
         $('#dataConfirmModal').find('.data-confirm-cancel').text( cancelText );
-        $('#dataConfirmModal').find('.data-confirm-ok').text( okText );
+
+        //console.log('okText='+okText);
+        if( okText != 'hideOkButton' ) {
+            $('#dataConfirmModal').find('.data-confirm-ok').text( okText );
+            $('.data-confirm-ok').show();
+        } else {
+            $('.data-confirm-ok').hide();
+        }
         ////////// EOF of assigning text //////////
 
         $('#dataConfirmModal').modal({show:true});

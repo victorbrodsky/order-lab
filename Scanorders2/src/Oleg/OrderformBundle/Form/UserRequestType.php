@@ -5,7 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -17,7 +17,6 @@ class UserRequestType extends AbstractType
         
         $builder->add( 'cwid', 'text', array(
                 'label'=>'WCMC CWID:',
-                'max_length'=>'10',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif cwid'),
         ));
@@ -46,8 +45,8 @@ class UserRequestType extends AbstractType
         
         $builder->add( 'email', 'email', array(
                 'label'=>'* Email:',
-                'required'=> true,
-                'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'required'),
+                'required'=> true, //does not work here
+                'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'required'), //'required'=>'required' does not work here
         ));
         
         $builder->add( 'phone', 'text', array(
@@ -149,7 +148,7 @@ class UserRequestType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\UserRequest'
+            'data_class' => 'Oleg\OrderformBundle\Entity\UserRequest',
         ));
     }
 

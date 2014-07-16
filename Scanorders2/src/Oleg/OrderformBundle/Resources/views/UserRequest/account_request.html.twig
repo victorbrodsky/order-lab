@@ -71,7 +71,9 @@
             </div>
 
             {{ myform.field(form.name) }}
+
             {{ myform.field(form.email) }}
+
             {{ myform.field(form.phone) }}
             {{ myform.field(form.job) }}
             {{ myform.field(form.institution) }}
@@ -194,13 +196,8 @@
                 //copy fields
                 var cwid = $('.cwid').val();
                 $('#username').val(cwid);
-                //console.log('cwid='+cwid);
-                //console.log('username='+$('#username').val());
-
                 var pwd = $('.cwid-password').val();
                 $('#password').val(pwd);
-                //console.log('pwd='+pwd);
-                //console.log('password='+$('#password').val());
 
                 $("#display_height").value = screen.height;
                 $("#display_width").value = screen.width;

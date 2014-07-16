@@ -7,12 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\OrderformBundle\Entity\UserRequest;
-use Oleg\OrderformBundle\Form\UserRequestType;
-use Oleg\OrderformBundle\Helper\EmailUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+use Oleg\OrderformBundle\Entity\UserRequest;
+use Oleg\OrderformBundle\Form\UserRequestType;
+use Oleg\OrderformBundle\Form\UserRequestApproveType;
+use Oleg\OrderformBundle\Helper\EmailUtil;
+use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 /**
  * UserRequest controller.
@@ -52,8 +54,19 @@ class UserRequestController extends Controller
             $limit/*limit per page*/
         );
 
+        $forms = array();
+        foreach( $pagination as $req ) {
+            if( $req->getStatus() == 'active') {
+                $disable = false;
+            } else {
+                $disable = true;
+            }
+            $forms[] = $this->createForm(new UserRequestApproveType(), $req, array('disabled' => $disable) )->createView();
+        }
+
         return array(
-            'entities' => $pagination
+            'entities' => $pagination,
+            'forms' => $forms
         );
     }
 
@@ -71,12 +84,6 @@ class UserRequestController extends Controller
         $entity  = new UserRequest();
         $form = $this->createForm(new UserRequestType(), $entity);
         $form->handleRequest($request);
-
-//        $password = $form->get('password')->getData();
-//        if( $entity->getHascwid() && $entity->getCwid() && $password && $password != '' ) {
-//            //return $this->forward('AcmeBundle:Forward:new', array('request' => $request));
-//            return $this->forward($this->generateUrl('login_check'), array('request' => $request));
-//        }
 
         if ($form->isValid()) {
             //echo "form valid!";
@@ -296,6 +303,82 @@ class UserRequestController extends Controller
         
         return $this->redirect($this->generateUrl('accountrequest'));
             
+    }
+
+    /**
+     * Update (Approve) a new UserRequest entity.
+     *
+     * @Route("/account-requests-approve", name="accountrequest_approve")
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
+     */
+    public function approveUserAccountRequestAction(Request $request)
+    {
+        //exit("approve User Account Request");
+
+        //$em = $this->getDoctrine()->getManager();
+        //$entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+        //if (!$entity) {
+        //    throw $this->createNotFoundException('Unable to find UserRequest entity.');
+        //}
+        $entity  = new UserRequest();
+
+        $form = $this->createForm(new UserRequestApproveType(), $entity);
+        $form->handleRequest($request);
+
+//        echo "req id=".$entity->getId()."<br>";
+//        $errorHelper = new ErrorHelper();
+//        $errors = $errorHelper->getErrorMessages($form);
+//        echo "<br>form errors:<br>";
+//        print_r($errors);
+//        $insts = $entity->getInstitution();
+//        $instsCount = count($insts);
+//        echo "instsCount=".$instsCount."<br>";
+
+        //if( $form->isValid() ) {
+        if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getInstitution()) != 0 ) {
+
+            //echo "form valid!";
+            //exit();
+            $em = $this->getDoctrine()->getManager();
+
+            $entityDb = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneById($entity->getId());
+            if (!$entityDb) {
+                throw $this->createNotFoundException('Unable to find UserRequest entity with ID:'.$entity->getId());
+            }
+
+            $entityDb->setStatus('approved');
+            $entityDb->setUsername($entity->getUsername());
+            $entityDb->setInstitution($entity->getInstitution());
+
+            $em->persist($entityDb);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "User with username ".$entityDb->getUsername()." has been successfully approved. You can lock this user or change institutions later on using the user's profile."
+            );
+
+        } else {
+
+            $failedArr = array();
+
+            if( $entity->getUsername() && $entity->getUsername() == "" ) {
+                $failedArr[] = "username is empty";
+            }
+
+            if( count($entity->getInstitution()) == 0 ) {
+                $failedArr[] = "Institution list is empty";
+            }
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Approve user with username ".$entity->getUsername()." failed."." ".implode(",", $failedArr)
+            );
+
+        }
+
+        return $this->redirect($this->generateUrl('accountrequest'));
     }
 
 

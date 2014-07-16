@@ -1,7 +1,84 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %} 
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
+
 {% block title %}
     Account Requests
+{% endblock %}
+
+{% block additionaljs %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            //initial update confirm message
+            $('.username:not(:disabled)').each( function() {
+                updateConfirm( $(this) );
+            });
+
+            //update confirm message after changes
+            $('.username, .combobox').change(function(){
+                updateConfirm( $(this) );
+            });
+
+        });
+
+        //formInputEl: any element inside the form
+        function updateConfirm( formInputEl ) {
+            var formEl = formInputEl.closest('.order-urgent-status');
+            //console.log(formEl);
+
+            var selections = formEl.find(".institution-combobox").select2("data");
+
+            var selectionsStr = "";
+            for( var i = 0; i < selections.length; i++ )  {
+
+                var delimeter = "";
+                if( selectionsStr != "" )
+                    delimeter = ", "
+                selectionsStr = selectionsStr + delimeter + selections[i].text;
+            }
+
+            var username = formEl.find('.username').val();
+
+            var confirmMessage = "Are you sure you want to Approve the user with username: " + username + " with Instituion(s): " + selectionsStr + "?";
+
+            //console.log('confirmMessage='+confirmMessage);
+
+            var approvedLink = formEl.find('.btn-group').find('.approve-action');
+            //console.log(approvedLink);
+
+            /////////////////// validate if username and institutions are not empty ///////////////////
+            var errorMsg = "";
+            if( username == "" ) {
+                errorMsg = "Aperio User Name is empty";
+            }
+            if( selections.length == 0 ) {
+                var separator = "";
+                if( errorMsg != "" ) {
+                    separator = ", ";
+                }
+                errorMsg = errorMsg + separator + "Institution list is empty";
+            }
+            //console.log('errorMsg='+errorMsg);
+            if( errorMsg != "" ) {
+                errorMsg = "This request can not be approved: "+errorMsg;
+                approvedLink.attr("data-confirm", errorMsg);
+                approvedLink.attr("data-ok", "hideOkButton");
+            } else {
+                approvedLink.attr("data-confirm", confirmMessage);
+                approvedLink.attr("data-ok", "OK");
+            }
+
+        }
+
+        function approveUserRequest(index) {
+            $('#userrequestform-'+index).submit();
+        }
+
+    </script>
+
 {% endblock %}
 
 {% block content %} 
@@ -20,19 +97,24 @@
                 <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Organization', 'accreq.organization') }}</th>
+                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Institution(s)', 'accreq.institution') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Phone Number', 'accreq.referencephone') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Aperio User Name', 'accreq.username') }}</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
-            
+
+            <form id="userrequestform-{{ loop.index0 }}" action="{{ path('accountrequest_approve') }}" method="post" {{ form_enctype(forms[loop.index0]) }}>
+
+            {{ form_widget(forms[loop.index0].id) }}
+
             {% if entity.status == 'active' %}
                 <tr class="order-urgent-status" >
             {% elseif entity.status == 'declined' %}
@@ -45,7 +127,9 @@
                 <tr>
             {% endif %}
                 {#<td><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
-                <td>{{ entity.id }}</td>
+                <td>
+                    {{ entity.id }}
+                </td>
                 <td>{{ entity.creationdate|date('m/d/Y H:i') }}</td>
                 <td>{{ entity.status|capitalize }}</td>
                 <td>{{ entity.cwid }}</td>
@@ -54,7 +138,12 @@
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.phone }}</td>
                 <td>{{ entity.job }}</td>
-                <td>{{ entity.organization }}</td>
+
+                <td>
+                    {{ form_widget(forms[loop.index0].institution) }}
+                    {#{{ entity.institution }}#}
+                </td>
+
                 <td>{{ entity.department }}</td>
                 <td>
                     {#{{ entity.pathologyServices }}#}
@@ -71,41 +160,34 @@
                 <td>{{ entity.referencename }}</td>
                 <td>{{ entity.referenceemail }}</td>
                 <td>{{ entity.referencephone }}</td>
+
                 <td>
-{#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                          Action <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right">
+                    {{ form_widget(forms[loop.index0].username) }}
+                </td>
 
-                            {#<li><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">View Details</a></li>#}
-
-                            {#<li class="divider"></li>#}
-
-                            {% if entity.status != 'declined' %}
-                                <li><a data-confirm="Are you sure you want to Decline"
+                <td>
+                    {% if entity.status == 'active' %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                              Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a data-confirm="Are you sure you want to Decline?"
                                        href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'declined' }) }}">Decline</a>
-                                </li>                  
-                            {% endif %}                                                                
-
-                            {% if entity.status != 'active' %}
-                                <li><a data-confirm="Are you sure you want to Revert Status to Active"
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'active' }) }}">Revert Status to Active</a>
-                                </li>                  
-                            {% endif %}
-
-                            {% if entity.status != 'approved' %}
-                                <li><a data-confirm="Are you sure you want to Approve"
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'approved' }) }}">Approve</a>
                                 </li>
-                            {% endif %}
-
-
-                        </ul>
-                   </div>
+                                <li>
+                                    <a
+                                       class="approve-action"
+                                       data-confirm="Are you sure you want to Approve?"
+                                       href="javascript:approveUserRequest( {{loop.index0}} )">Approve
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
                 </td>
             </tr>
+            </form>
         {% endfor %}
         </tbody>
     </table>

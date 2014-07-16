@@ -29,16 +29,27 @@ class UserRequest
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $username;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $hascwid;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $name;
-    
+
     /**
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
+     * @Assert\NotBlank(
+     *     message = "The email value should not be blank."
+     * )
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     protected $email;
     
@@ -102,6 +113,12 @@ class UserRequest
     protected $creationdate;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $actiondate;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $referencename;
@@ -131,6 +148,12 @@ class UserRequest
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $id;
     }
 
     /**
@@ -398,6 +421,15 @@ class UserRequest
         return $this->institution;
     }
 
+    public function setInstitution( $institutions )
+    {
+        $this->institution->clear();
+        foreach( $institutions as $institution ) {
+            $this->addInstitution($institution);
+        }
+        return $this->institution;
+    }
+
     public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
     {
         if( !$this->institution->contains($institution) ) {
@@ -410,6 +442,40 @@ class UserRequest
     {
         $this->institution->removeElement($institution);
     }
+
+    /**
+     * @param \DateTime $actiondate
+     * @ORM\PreUpdate
+     */
+    public function setActiondate()
+    {
+        $this->actiondate = new \DateTime();;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getActiondate()
+    {
+        return $this->actiondate;
+    }
+
+    /**
+     * @param mixed $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
 
 
 }

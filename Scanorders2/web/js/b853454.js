@@ -26637,7 +26637,7 @@ function fieldInputMask( holder ) {
         "mask": "[n]", "repeat": 50, "greedy": false
     });
 
-//    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+    //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
     accessionTypeListener();
     mrnTypeListener();
@@ -28247,7 +28247,14 @@ function confirmAction() {
             cancelText = 'Cancel';
         }
         $('#dataConfirmModal').find('.data-confirm-cancel').text( cancelText );
-        $('#dataConfirmModal').find('.data-confirm-ok').text( okText );
+
+        //console.log('okText='+okText);
+        if( okText != 'hideOkButton' ) {
+            $('#dataConfirmModal').find('.data-confirm-ok').text( okText );
+            $('.data-confirm-ok').show();
+        } else {
+            $('.data-confirm-ok').hide();
+        }
         ////////// EOF of assigning text //////////
 
         $('#dataConfirmModal').modal({show:true});

@@ -469,6 +469,14 @@ class User extends BaseUser
         $this->institution->removeElement($institution);
     }
 
+    public function setInstitution( $institutions )
+    {
+        $this->institution->clear();
+        foreach( $institutions as $institution ) {
+            $this->addInstitution($institution);
+        }
+        return $this->institution;
+    }
 
 }
 

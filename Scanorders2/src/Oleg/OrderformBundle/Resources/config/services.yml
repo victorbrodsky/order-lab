@@ -74,7 +74,7 @@ services:
     #aperio authentication
     aperio.security.authentication.provider:
         class: Oleg\OrderformBundle\Security\Authentication\AperioProvider
-        arguments: ["", @service_container,"aperio_ldap_firewall",%default_time_zone%]
+        arguments: ["", @service_container,@doctrine.orm.entity_manager,"aperio_ldap_firewall",%default_time_zone%]
 
     #aperio listener
     aperio.security.authentication.listener:
