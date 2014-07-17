@@ -414,7 +414,7 @@ class UserRequestController extends Controller
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($user->getAppliedforaccessdate());
 
-            $text = "You have requested access on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing scanorder@med.cornell.edu if you have any questions.";
+            $text = "You have requested access on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
             $this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
@@ -426,7 +426,7 @@ class UserRequestController extends Controller
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($user->getAppliedforaccessdate());
-            $text = 'You have requested access on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing scanorder@med.cornell.edu if you have any questions.';
+            $text = 'You have requested access on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
             $this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();

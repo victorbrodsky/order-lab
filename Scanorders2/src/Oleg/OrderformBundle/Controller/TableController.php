@@ -88,10 +88,24 @@ class TableController extends Controller {
     public function multiTableCreationAction()
     {
 
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if user has at least one institution
+        if( count($user->getInstitution()) == 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email')
+            );
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
-        $user = $this->get('security.context')->getToken()->getUser();
 
         //***************** get ordering provider from most recent order ***************************//
         $lastProxy = null;

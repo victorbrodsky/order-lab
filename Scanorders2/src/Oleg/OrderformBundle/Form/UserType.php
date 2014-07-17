@@ -131,6 +131,7 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'property' => 'name'
+                //'by_reference' => false //force to use setters of User entity
             ));
 
         }

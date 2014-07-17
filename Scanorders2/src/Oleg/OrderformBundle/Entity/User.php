@@ -121,13 +121,18 @@ class User extends BaseUser
     protected $chiefservices;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="users")
      * @ORM\JoinTable(name="fos_user_institution",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      * )
      */
     protected $institution;
+
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="users")
+//     **/
+//    protected $institution;
 
 
     function __construct()
@@ -456,6 +461,7 @@ class User extends BaseUser
         return $this->institution;
     }
 
+
     public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
     {
         if( !$this->institution->contains($institution) ) {
@@ -471,11 +477,11 @@ class User extends BaseUser
 
     public function setInstitution( $institutions )
     {
+        //echo "set institutionsCount=".count($institutions)."<br>";
         $this->institution->clear();
         foreach( $institutions as $institution ) {
             $this->addInstitution($institution);
         }
-        return $this->institution;
     }
 
 }

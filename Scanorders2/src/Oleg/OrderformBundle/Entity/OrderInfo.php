@@ -205,6 +205,12 @@ class OrderInfo extends OrderAbstract {
      * @ORM\JoinTable(name="slide_orderinfo")
      **/
     private $slide;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="orderinfos")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
     
     /**
      * Constructor
@@ -869,6 +875,22 @@ class OrderInfo extends OrderAbstract {
     public function getBlock()
     {
         return $this->block;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
     }
 
 //    public function setBlock($block)

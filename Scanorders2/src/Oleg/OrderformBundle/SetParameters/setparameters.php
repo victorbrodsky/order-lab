@@ -49,6 +49,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $aDLDAPServerAccountPassword = null;
         $baseDn = null;
         $smtpServerAddress = null;
+        $defaultSiteEmail = null;
 
         while( $row = $params->fetch() ) {
             $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
@@ -56,6 +57,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
             $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
             $smtpServerAddress = $row['smtpServerAddress'];
+            $defaultSiteEmail = $row['siteEmail'];
             //echo $aDLDAPServerAddress."<br>";
         }
 
@@ -87,6 +89,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         } else {
             //exit(" aDLDAPServerAddress is empty ");
         }
+
+        $container->setParameter('default_system_email',$defaultSiteEmail);
 
     }//if param
 

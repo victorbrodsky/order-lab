@@ -187,16 +187,32 @@ class OrderInfoType extends AbstractType
 //            'required' => false,
 //            'classtype' => 'institution'
 //        ));
-        $instArr = array();
-        foreach( $this->params['user']->getInstitution() as $inst ) {
-            $instArr[$inst->getId()] = $inst->getName();
-        }
-        $builder->add( 'institution', 'choice', array(
+//        $instArr = array();
+//        foreach( $this->params['user']->getInstitution() as $inst ) {
+//            $instArr[$inst->getId()] = $inst->getName();
+//        }
+//        $builder->add( 'institution', 'choice', array(
+//            'label'=>'Institution:',
+//            'required' => true,
+//            'choices' => $instArr,
+//            'multiple' => false,
+//            'attr' => array('class' => 'combobox combobox-width')
+//        ));
+        $builder->add( 'institution', 'entity', array(
+            'class' => 'OlegOrderformBundle:Institution',
+            'property' => 'name',
             'label'=>'Institution:',
-            'required' => true,
-            'choices' => $instArr,
+            'required'=> true,
             'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width')
+            'attr' => array('class'=>'combobox combobox-width combobox-institution'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('i')
+                    ->innerJoin('i.users', 'user')
+                    ->where('user = :user')
+                    ->setParameters( array(
+                        'user' => $this->params['user'],
+                ));
+            },
         ));
 
 

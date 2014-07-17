@@ -36,11 +36,14 @@
     {% endspaceless %}
 {% endblock widget_attributes %}
 
+
+
+
 {% block form_errors %}
     {% if errors|length > 0 -%}
         {%- for error in errors -%}
             <p class="text-danger">
-                {{ error.message }}
+                {{ error.message|raw }}
             </p>
         {%- endfor -%}
     {%- endif %}

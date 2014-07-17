@@ -99,6 +99,11 @@ class Procedure extends ObjectAbstract
      */
     protected $pathistory;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="procedures")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);

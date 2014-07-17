@@ -51,11 +51,11 @@ abstract class ObjectAbstract
      */
     protected $source;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="patient")
+//     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+//     */
+//    protected $institution;
 
 
 

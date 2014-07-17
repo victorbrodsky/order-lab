@@ -45,6 +45,11 @@ class Accession extends ObjectAbstract {
      **/
     protected $orderinfo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="accessions")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
 
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);

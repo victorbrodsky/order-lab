@@ -80,6 +80,12 @@ class Part extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="part")
      */
     protected $slide;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="parts")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
     
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {
         parent::__construct($status,$provider);

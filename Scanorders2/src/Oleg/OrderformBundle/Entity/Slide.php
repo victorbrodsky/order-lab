@@ -86,6 +86,14 @@ class Slide extends ObjectAbstract
      * @ORM\JoinColumn(name="research", referencedColumnName="id", nullable=true)
      */
     protected $research;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="slides")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+     */
+    protected $institution;
+
+
     
     public function __construct( $withfields=false, $status='valid', $provider=null, $source=null )
     {
@@ -411,12 +419,12 @@ class Slide extends ObjectAbstract
         $parentClass = new \ReflectionClass($parent);
         $parentClassName = $parentClass->getShortName();
         if( $parentClassName == "Block" ) {
-            echo "set  Block <br>";
+            //echo "set  Block <br>";
             $this->setBlock($parent);
             $this->setPart(NULL);
         } else
         if( $parentClassName == "Part") {
-            echo "set  Part <br>";
+            //echo "set  Part <br>";
             $this->setPart($parent);
             $this->setBlock(NULL);
         } else {

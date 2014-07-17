@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 use Oleg\OrderformBundle\Entity\PathService;
@@ -140,9 +141,7 @@ class UserController extends Controller
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') &&
-            ($this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') || $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER'))
-        ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         //echo "id=".$id."<br>";
@@ -248,7 +247,13 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if( count($entity->getInstitution()) == 0 && $entity->getUsername() != 'system' ) {
+            $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
+            $error = new FormError("Please add at least one institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
+            $form->get('institution')->addError($error);
+        }
+
+        if( $form->isValid() ) {
             $em->flush();
             return $this->redirect($this->generateUrl('showuser', array('id' => $id)));
         }
@@ -258,7 +263,6 @@ class UserController extends Controller
             'form'   => $form->createView(),
             'cicle' => 'edit_user',
             'user_id' => $id
-//            'delete_form' => $deleteForm->createView(),
         );
     }
 

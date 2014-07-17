@@ -55,11 +55,11 @@ class OrderAbstract {
      */
     protected $proxyuser;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="orders")
+//     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+//     */
+//    protected $institution;
 
 
 
@@ -137,21 +137,21 @@ class OrderAbstract {
         return $this->proxyuser;
     }
 
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
-    }
+//    /**
+//     * @param mixed $institution
+//     */
+//    public function setInstitution($institution)
+//    {
+//        $this->institution = $institution;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getInstitution()
+//    {
+//        return $this->institution;
+//    }
 
 
 

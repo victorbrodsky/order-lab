@@ -38,8 +38,12 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
-        echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        echo $entity;
+        //add this object to institution from orderinfo.
+        $addClassMethod = "add".$className;
+        $orderinfo->getInstitution()->$addClassMethod($entity);
+
+        //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        //echo $entity;
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -76,7 +80,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->changeKeytype($entity);
 
         if( $key == ""  ) { //$key == "" is the same as $key->getName().""
-            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);
 
@@ -84,7 +88,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $key->setField($nextKey);
             $key->setStatus(self::STATUS_VALID);
             $key->setProvider($orderinfo->getProvider());
-            echo "nextKey=".$nextKey."<br>";
+            //echo "nextKey=".$nextKey."<br>";
 
         } else {
 
@@ -97,7 +101,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+                //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
                 //CopyChildren: copy form's object children to the found one.
                 //testing:
 //                foreach( $entity->getChildren() as $child ) {
@@ -110,7 +114,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 //return $this->setResult($entity, $orderinfo);
 
             } else {
-                echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
+                //echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
             }
 
         }
@@ -165,7 +169,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->cleanAndProcessEmptyArrayFields($entity);
 
         if( !$entity->getId() || $entity->getId() == "" ) {
-            echo "persist ".$className."<br>";
+            //echo "persist ".$className."<br>";
             $em->persist($entity);
         } else {
             //echo "merge ".$className.", id=".$entity->getId()."<br>";
@@ -179,6 +183,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //$this->addEntityToOrderinfo($entity,$orderinfo);
         $addClassMethod = "add".$className;
         $orderinfo->$addClassMethod($entity);
+
+        //add this object to institution from orderinfo.
+        //$orderinfo->getInstitution()->$addClassMethod($entity);
 
         //process parent
         $parent = $entity->getParent();
@@ -714,7 +721,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     //$fieldName: search field name by $fieldStr (i.e.: search for S11-12 in accession)
     //$validity - status of the object specified by $className
-    public function findOneByIdJoinedToField( $fieldStr, $className, $fieldName, $validity=null, $single=true, $extra=null )
+    public function findOneByIdJoinedToField( $institutions, $fieldStr, $className, $fieldName, $validities=null, $single=true, $extra=null )
     {
         //echo "fieldStr=(".$fieldStr.")<br> ";
         //echo " validity=".$validity."<br>";
@@ -723,36 +730,51 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return null;
         }
 
-        $onlyValid = "";
-        if( $validity ) {
-            //echo " check validity ";
-            if( is_array($validity) && count($validity)>0 ) {
-
-                $validityStr = "(";  //"(".implode("OR", $validity).")";
-                $count = 1;
-                foreach( $validity as $val ) {
-                    $validityStr .= "c.status='".$val."'";
-                    if( $count < count($validity) ) {
-                        $validityStr .= " OR ";
-                    }
-                    $count++;
+//        $onlyValid = "";
+//        if( $validity ) {
+//            //echo " check validity ";
+//            if( is_array($validity) && count($validity)>0 ) {
+//
+//                $validityStr = "(";  //"(".implode("OR", $validity).")";
+//                $count = 1;
+//                foreach( $validity as $val ) {
+//                    $validityStr .= "c.status='".$val."'";
+//                    if( $count < count($validity) ) {
+//                        $validityStr .= " OR ";
+//                    }
+//                    $count++;
+//                }
+//                $validityStr .= ")";
+//
+//            } else
+//            if( $validity != "" && $validity !=  1 ) {
+//                //echo "validity == string1 ";
+//                $validityStr = "c.status='".$validity."'";
+//            } else if( $validity ==  1 ) {
+//                //echo "validity == true ";
+//                //$validity = self::STATUS_VALID;
+//                $validityStr = "c.status='".self::STATUS_VALID."'";
+//            } else {
+//                //echo "else-validity == string ";
+//            }
+//            //$onlyValid = " AND c.status='".$validity."' AND cfield.status='".self::STATUS_VALID."'";
+//            $onlyValid = " AND ".$validityStr." AND cfield.status='".self::STATUS_VALID."'";
+//        }
+        //add validity conditions
+        $validityStr = "";
+        if( $validities && is_array($validities) && count($validities)>0 ) {
+            $validityStr = " AND (";
+            $count = 1;
+            foreach( $validities as $validity ) {
+                $validityStr .= "c.status='".$validity."'";
+                if( $count < count($validities) ) {
+                    $validityStr .= " OR ";
                 }
-                $validityStr .= ")";
-
-            } else
-            if( $validity != "" && $validity !=  1 ) {
-                //echo "validity == string1 ";
-                $validityStr = "c.status='".$validity."'";
-            } else if( $validity ==  1 ) {
-                //echo "validity == true ";
-                //$validity = self::STATUS_VALID;
-                $validityStr = "c.status='".self::STATUS_VALID."'";
-            } else {
-                //echo "else-validity == string ";
+                $count++;
             }
-            //$onlyValid = " AND c.status='".$validity."' AND cfield.status='".self::STATUS_VALID."'";
-            $onlyValid = " AND ".$validityStr." AND cfield.status='".self::STATUS_VALID."'";
+            $validityStr .= ")";
         }
+        //echo "validityStr=".$validityStr." <br> ";
 
         $extraStr = "";
         if( $extra && count($extra) > 0 ) {
@@ -763,9 +785,25 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "extraStr=".$extraStr." ,onlyValid=".$onlyValid." <br> ";
 
+        //add institution conditions
+        $instStr = "";
+        if( $institutions && is_array($institutions) && count($institutions)>0 ) {
+            $instStr = " AND (";
+            $count = 1;
+            foreach( $institutions as $inst ) {
+                $instStr .= "c.institution=".$inst."";
+                if( $count < count($institutions) ) {
+                    $instStr .= " OR ";
+                }
+                $count++;
+            }
+            $instStr .= ")";
+        }
+        //echo "instStr=".$instStr." <br> ";
+
         $dql = 'SELECT c FROM OlegOrderformBundle:'.$className.' c
                 JOIN c.'.$fieldName.' cfield
-                WHERE cfield.field = :field'.$onlyValid.$extraStr;
+                WHERE cfield.field = :field'.$validityStr.$extraStr.$instStr;
 
         $query = $this->getEntityManager()
             ->createQuery($dql)->setParameter('field', $fieldStr."");
@@ -810,11 +848,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
     //find and delete all objects where $fieldName = $fieldStr
-    public function deleteIfReserved( $fieldStr, $className, $fieldName, $extra = null ) {
+    public function deleteIfReserved( $institutions, $fieldStr, $className, $fieldName, $extra=null ) {
 
         //echo "fieldStr=(".$fieldStr.") ";
         //echo "keytype=(".$extra['keytype'].") ";
-        $entities = $this->findOneByIdJoinedToField($fieldStr, $className, $fieldName, self::STATUS_RESERVED, false, $extra );
+        $entities = $this->findOneByIdJoinedToField( $institutions, $fieldStr, $className, $fieldName, array(self::STATUS_RESERVED), false, $extra );
         //echo "found entities = ". count($entities). " ";
 
         if( !$entities ) {
@@ -849,12 +887,16 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //It is used only when user generate Patient, Accession, Part or Block by pressing "check" button on the form
     //$className: i.e. Patient
     //$fieldName: i.e. mrn
-    public function createElement( $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = false, $flush=true ) {
+    public function createElement( $institution, $status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = false, $flush=true ) {
 
         //echo "Create Element: className=".$className."<br>";
 
         if( !$provider ) {
             throw new \Exception('Provider is not provided for creation of element '.$className);
+        }
+
+        if( !$institution ) {
+            throw new \Exception('Institution is not provided for creation of element '.$className);
         }
 
         if( !$status ) {
@@ -866,6 +908,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
         $entity = new $entityClass($withfields,'valid',$provider);
 
+        $inst = $em->getRepository('OlegOrderformBundle:Institution')->findOneById($institution);
+        $entity->setInstitution($inst);
+        $institutions = array();
+        $institutions[] = $institution;
+
         if( !$fieldValue ) {
             $fieldValue = $this->getNextNonProvided($entity,$extra,null);
         }
@@ -875,7 +922,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "extra partname=".$extra['partname']."<br>";
 
         //before create: check if entity with key does not exists in DB
-        $entitiesFound = $this->findOneByIdJoinedToField($fieldValue, $className, $fieldName, null, false, $extra );
+        $entitiesFound = $this->findOneByIdJoinedToField( $institutions, $fieldValue, $className, $fieldName, null, false, $extra );
         //echo "Entities Found count=".count($entitiesFound)."<br>";
         
         if( count($entitiesFound) == 1 ) {
@@ -997,6 +1044,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
+        //institution
+        $inst = " AND c.institution=".$entity->getInstitution()->getId();
+
         //echo "name=".$name.", fieldName=".$fieldName.", className=".$className."<br>";
         //echo "extraStr=".$extraStr.",<br>";
 
@@ -1004,7 +1054,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         ->createQuery('
         SELECT MAX(cfield.field) as max'.$fieldName.' FROM OlegOrderformBundle:'.$className.' c
         JOIN c.'.$fieldName.' cfield
-        WHERE '.$extraStr.'cfield.field LIKE :field'
+        WHERE '.$extraStr.'cfield.field LIKE :field'.$inst
         )->setParameter('field', '%'.$name.'%');
         
         $lastField = $query->getSingleResult();
@@ -1112,8 +1162,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         if( $entity->obtainValidKeyfield() ) {
             $em = $this->_em;
-            $validity = false; //accept reserved also
-            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($validKeyField->getField()."",$className,$fieldName,$validity,true, $extra);
+            $validity = array(self::STATUS_VALID,self::STATUS_RESERVED); //false; //accept reserved also
+            $institutions = array($entity->getInstitution());
+            $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($institutions, $validKeyField->getField()."",$className,$fieldName,$validity,true, $extra);
         } else {
             //echo "This entity does not have a valid key field<br>";
             $newEntity = null;

@@ -944,10 +944,10 @@ function checkSpecifyAnotherIssuer( name ) {
 function setObjectInfo(btnObj,flag) {
 
     //check if the user is external submitter
-    getUserRole();
+    //getUserRole();
 
-    if( _external_user === false ) {
-        //console.log("show info");
+//    if( _external_user === false ) {
+//        //console.log("show info");
 
         if( flag === 1 ) {
             var msg = "Existing "+btnObj.name+" information loaded";
@@ -960,9 +960,9 @@ function setObjectInfo(btnObj,flag) {
 
         attachInfoToElement( btnObj.element, msg );
 
-    } else {
-        //console.log("external user: do not show info");
-    }
+//    } else {
+//        //console.log("external user: do not show info");
+//    }
 
 }
 
@@ -981,36 +981,36 @@ function removeInfoFromElement( btnObj ) {
     info.remove();
 }
 
-function getUserRole() {
-
-    if( _external_user !== null ) {
-        return;
-    }
-
-    $.ajax({
-        url: getCommonBaseUrl("check/"+'userrole'),   //urlCheck+'userrole',
-        type: 'POST',
-        data: {userid: user_id},
-        contentType: 'application/json',
-        dataType: 'json',
-        timeout: _ajaxTimeout,
-        async: false,
-        success: function (data) {
-            if( data && data != '' ) {
-                if( data == 'not_external_role' ) {
-                    _external_user = false;
-                } else {
-                    _external_user = true;
-                }
-            }
-        },
-        error: function ( x, t, m ) {
-            if( t === "timeout" ) {
-                getAjaxTimeoutMsg();
-            }
-        }
-    });
-}
+//function getUserRole() {
+//
+//    if( _external_user !== null ) {
+//        return;
+//    }
+//
+//    $.ajax({
+//        url: getCommonBaseUrl("check/"+'userrole'),   //urlCheck+'userrole',
+//        type: 'POST',
+//        data: {userid: user_id},
+//        contentType: 'application/json',
+//        dataType: 'json',
+//        timeout: _ajaxTimeout,
+//        async: false,
+//        success: function (data) {
+//            if( data && data != '' ) {
+//                if( data == 'not_external_role' ) {
+//                    _external_user = false;
+//                } else {
+//                    _external_user = true;
+//                }
+//            }
+//        },
+//        error: function ( x, t, m ) {
+//            if( t === "timeout" ) {
+//                getAjaxTimeoutMsg();
+//            }
+//        }
+//    });
+//}
 
 //parent - holder containing all elements for this object
 function setPatientNameSexAgeLockedFields( data, parent ) {

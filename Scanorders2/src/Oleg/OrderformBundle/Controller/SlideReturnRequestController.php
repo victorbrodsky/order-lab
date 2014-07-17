@@ -33,9 +33,20 @@ class SlideReturnRequestController extends Controller
      */
     public function newRequestSlideReturnTableAction(Request $request)
     {
-        $slideReturnRequest  = new SlideReturnRequest();
 
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if user has at least one institution
+        if( count($user->getInstitution()) == 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').'.'
+            );
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+
+        $slideReturnRequest  = new SlideReturnRequest();
+
         $slideReturnRequest->setProvider($user);
         $slideReturnRequest->setProxyuser($user);
         $slideReturnRequest->setReturnoption(true);
