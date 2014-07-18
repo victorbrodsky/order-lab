@@ -128,20 +128,12 @@
 
                 {% if route == 'incoming-slide-return-requests' %}
                     <td>
-                        {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
-                            {{ sliderequest.provider }}
-                        {% else %}
-                            <a href="{{ path('showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
-                        {% endif %}
+                        <a href="{{ path('showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
                     </td>
                 {% endif %}
 
                 <td>
-                    {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
-                        {{ sliderequest.proxyuser }}
-                    {% else %}
-                        <a href="{{ path('showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
-                    {% endif %}
+                    <a href="{{ path('showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
                 </td>
 
                 <td>

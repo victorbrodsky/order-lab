@@ -119,6 +119,11 @@
                 <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
             {% endfor %}
 
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+            {% endfor %}
+
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
             <input type="hidden" id="user-preferences-tooltip" value="{{ app.security.getToken().getUser().getPreferences().getTooltip() }}" />
 

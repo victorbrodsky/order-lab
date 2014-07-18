@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Form\HistoryType;
 use Oleg\OrderformBundle\Helper\OrderUtil;
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 /**
  * History controller.
@@ -34,7 +35,30 @@ class HistoryController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
+        //$entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+        $dql =  $repository->createQueryBuilder("hist");
+        $dql->innerJoin("hist.orderinfo", "orderinfo");
+
+        /////////// institution ///////////
+        $instStr = "";
+        $user = $this->get('security.context')->getToken()->getUser();
+        foreach( $user->getInstitution() as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        //echo "instStr=".$instStr."<br>";
+        $dql->where($instStr);
+        /////////// EOF institution ///////////
+
+        //echo "dql=".$dql;
+        $query = $em->createQuery($dql);
+        $entities = $query->getResult();
 
         if( count($entities) > 0 ) {
             $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
@@ -132,6 +156,12 @@ class HistoryController extends Controller
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
+        $userUtil = new UserUtil();
+        $user = $this->get('security.context')->getToken()->getUser();
+        if( $entity && !$userUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -155,6 +185,12 @@ class HistoryController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
+        }
+
+        $userUtil = new UserUtil();
+        $user = $this->get('security.context')->getToken()->getUser();
+        if( $entity && !$userUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $editForm = $this->createEditForm($entity);
@@ -200,6 +236,12 @@ class HistoryController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
+        }
+
+        $userUtil = new UserUtil();
+        $user = $this->get('security.context')->getToken()->getUser();
+        if( $entity && !$userUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -276,9 +318,7 @@ class HistoryController extends Controller
     {
 
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')           
         )
         {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
@@ -288,6 +328,12 @@ class HistoryController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
+        //echo "hist count=".count($entities)."<br>";
+
+        $userUtil = new UserUtil();
+        if( count($entities)>0 && !$userUtil->hasUserPermission($entities[0]->getOrderInfo(),$user) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
 
         $viewcount = 0;
 

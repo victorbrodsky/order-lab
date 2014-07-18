@@ -74,6 +74,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         if( $found ) {
             //echo "Case 2 (Procedure): object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+
             //CopyChildren: copy form's object children to the found one.
             //testing:
 //            foreach( $entity->getChildren() as $child ) {
@@ -188,16 +189,11 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
     public function findUniqueByKey( $entity ) {
 
-        //echo "findUniqueByKey: Procedure: ".$entity;
+        //echo "find Unique By Key: Procedure: ".$entity;
 
         if( count($entity->getChildren()) != 1 ) {
             throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
         }
-
-//        $accession = $entity->getChildren()->first();
-//        $class = new \ReflectionClass($accession);
-//        $className = $class->getShortName();
-//        echo "findUniqueByKey: Procedure: className=".$className."<br>";
 
         $em = $this->_em;
         $foundAccession = $em->getRepository('OlegOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
@@ -235,12 +231,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $key->setOriginal($originalKey);
         $stripedKey = ltrim($originalKey,'0');
         $key->setField($stripedKey);
-
-//        echo $entity;
-//        echo "num of keys=".count($entity->obtainKeyField())."<br>";
-//        echo "number=".$entity->obtainValidKeyField()."<br>";
-//        echo "original=".$entity->obtainValidKeyField()->getOriginal()."<br>";
-//        echo "keytype=".$entity->obtainValidKeyField()->getKeytype()."<br>";
 
         return $entity;
     }
@@ -309,10 +299,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     public function processDuplicationKeyField( $procedure, $orderinfo ) {
 
         $accessions = $procedure->getChildren();
-
-//        foreach( $accessions as $acc ) {
-//            echo $acc."<br>";
-//        }
 
         if( count($accessions) != 1 ) {
             throw new \Exception( 'Procedure entity must have only one Accession. Number of Accession found is ' . count($accessions) );

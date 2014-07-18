@@ -333,6 +333,7 @@ abstract class ObjectAbstract
     }
 
     //For external submitter users: filter fields by author and keep only latest created fields
+    //Since we don't remove external user role from logic, then this function will return unfilter object all the time
     public function filterArrayFields( $user, $strict = false ) {
 
         //filter only if the user has role external submitter
@@ -347,7 +348,7 @@ abstract class ObjectAbstract
             $removeMethod = "remove".$field;
             //echo "get Method=".$getMethod." ";
 
-            //don't remove key fields (current external user can not have different key than a regular user)
+            //don't remove key fields
             if( strtolower($this->obtainKeyFieldName()) == strtolower($field) && !$strict ) {  //&& !$strict
                 continue;
             }
@@ -393,7 +394,7 @@ abstract class ObjectAbstract
         foreach( $fields as $field ) {
             $getMethod = "get".$field;
 
-            //don't remove key fields (current external user can not have different key than a regular user)
+            //don't remove key fields
             if( strtolower($this->obtainKeyFieldName()) == strtolower($field) && !$strict ) {
                 //echo $field.": DON'T count key fields <br>";
                 continue;
@@ -412,40 +413,16 @@ abstract class ObjectAbstract
     }
 
     //get only one field:
-    //external user: get the latest entity belongs to this user
-    //not external user: get valid field
     public function obtainValidField( $fieldname, $user ) {
-
         $res = null;
-        $externaluser = true;
         $getMethod = "get".$fieldname;
-
-        //filter only if the user has role external submitter
-        if( !$user->hasRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ) {
-            $externaluser = false;
-        }
-
         foreach( $this->$getMethod() as $entity ) {
-
-            if( $externaluser ) {
-                //external submitter => get the latest entity belongs to this user
-                if( $entity->getProvider()->getId() == $user->getId() ) {
-                    if( $res == null || $entity->getCreationdate() > $res->getCreationdate() ) {
-                        $res = $entity;
-                    }
-                }
-            } else {
-                //submitter => get valid field
-                if( $entity->getStatus() == 'valid' ) {
-                    $res = $entity;
-                    break;
-                }
+            if( $entity->getStatus() == 'valid' ) {
+                $res = $entity;
+                break;
             }
-
         } //foreach
-
         //echo "res=".$res."<br>";
-
         return $res;
     }
 

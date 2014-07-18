@@ -16,6 +16,8 @@ use Oleg\OrderformBundle\Entity\SlideReturnRequest;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\SlideText;
+use Oleg\OrderformBundle\Helper\OrderUtil;
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 
 /**
@@ -38,10 +40,12 @@ class SlideReturnRequestController extends Controller
 
         //check if user has at least one institution
         if( count($user->getInstitution()) == 0 ) {
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').'.'
-            );
+            $em = $this->getDoctrine()->getManager();
+            $orderUtil = new OrderUtil($em);
+            $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
+            $homeUrl = $this->generateUrl('main_common_home',array(),true);
+            $sysEmail = $this->container->getParameter('default_system_email');
+            $orderUtil->setWarningMessageNoInstitution($user,$userUrl,$this->get('session')->getFlashBag(),$sysEmail,$homeUrl);
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
@@ -163,9 +167,7 @@ class SlideReturnRequestController extends Controller
 
         //check if the user has permission to view this order
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
@@ -181,6 +183,11 @@ class SlideReturnRequestController extends Controller
 
         if( !$orderinfo ) {
             throw $this->createNotFoundException('Unable to find OrderInfo entity with id='.$id);
+        }
+
+        $userUtil = new UserUtil();
+        if( $orderinfo && !$userUtil->hasPermission($orderinfo,$this->get('security.context')) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $slideReturnRequest  = new SlideReturnRequest();
@@ -319,12 +326,36 @@ class SlideReturnRequestController extends Controller
         $dql->orderBy('list.orderdate','DESC');
 
         $setParameter = false;
+        $criteriastr = "";
         if( $filter == '' || $filter == 'all' ) {
             //no where filter: show all
         } else {
-            $dql->where("list.status = :status");
+            $criteriastr = "list.status = :status";
             $setParameter = true;
         }
+
+        /////////// institution ///////////
+        $instStr = "";
+        $user = $this->get('security.context')->getToken()->getUser();
+        foreach( $user->getInstitution() as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        if( $criteriastr != "" ) {
+            $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
+        } else {
+            $criteriastr = " (" . $instStr . ") ";
+        }
+        //echo "instStr=".$instStr."<br>";
+        /////////// EOF institution ///////////
+
+        $dql->where($criteriastr);
+        //echo "dql=".$dql;
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -444,6 +475,12 @@ class SlideReturnRequestController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
+        }
+
+        $orderinfo = $entity->getOrderInfo();
+        $userUtil = new UserUtil();
+        if( $orderinfo && !$userUtil->hasPermission($orderinfo,$this->get('security.context')) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $entity->setStatus($status);

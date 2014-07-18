@@ -96,10 +96,12 @@ class TableController extends Controller {
 
         //check if user has at least one institution
         if( count($user->getInstitution()) == 0 ) {
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email')
-            );
+            $em = $this->getDoctrine()->getManager();
+            $orderUtil = new OrderUtil($em);
+            $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
+            $homeUrl = $this->generateUrl('main_common_home',array(),true);
+            $sysEmail = $this->container->getParameter('default_system_email');
+            $orderUtil->setWarningMessageNoInstitution($user,$userUrl,$this->get('session')->getFlashBag(),$sysEmail,$homeUrl);
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
@@ -222,6 +224,8 @@ class TableController extends Controller {
 
         $headers = array_shift($data);
         //var_dump($columnData);
+
+        //echo "entity inst=".$entity->getInstitution()."<br>";
 
         foreach( $data as $row ) {
             //var_dump($row);
@@ -540,7 +544,14 @@ class TableController extends Controller {
         $specialStainValue = $this->getValueByHeaderName('Associated Special Stain Result',$row,$columnData);
         if( $force || $specialStainValue && $specialStainValue != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
+
+            //special stain type might be null in table, so get one from StainList with smallest 'orderinlist'
             $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)); //list
+            if( $specialstainList == null ) {
+                $stainList = $em->getRepository('OlegOrderformBundle:StainList')->findBy(array(), array('orderinlist'=>'ASC'));
+                $specialstainList = $stainList[0];
+            }
+
             $specialstain = new BlockSpecialStains($status,$provider,$source);
             $specialstain->setStaintype($specialstainList); //StainList
             $specialstain->setField($specialStainValue);    //field

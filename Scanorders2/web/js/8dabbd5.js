@@ -11847,7 +11847,8 @@ function executeClick( btnObjInit ) {
         }
 
         var inst = $('.combobox-institution').select2('val');
-        //console.log('inst='+inst);
+        console.log('inst='+inst);
+
         if( !inst || inst.length == 0 || inst == '' ) {
             gocontinue = false;
             reject(Error("Institution is empty"));
@@ -11882,7 +11883,7 @@ function executeClick( btnObjInit ) {
                 grandparentType = grandparentBtnObj.type;
             }
 
-            console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
+            //console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
 
             if( btnObj && btnObj.key == '' && !btnObj.remove ) {
                 //console.log('Case 1: key not exists => generate');

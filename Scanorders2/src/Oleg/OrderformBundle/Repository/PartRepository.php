@@ -57,52 +57,52 @@ class PartRepository extends ArrayFieldAbstractRepository
 //        return $ret;
 //    }
 
-    public function attachToParent( $part, $block ) {
-
-        $childClass = new \ReflectionClass($block);
-        $childClassName = $childClass->getShortName();
-        //echo "childClassName=".$childClassName."<br>";
-
-        if( $childClassName == "Slide" ) {
-            parent::attachToParent( $part, $block );    //call parent method to simple attach slide to part
-            return;
-        }
-
-        if( $block ) {
-
-            //echo "adding block?:  ".$block;
-            //do it, if the block is new. If block has ID then it was found in DB and it was created by someone else.
-            //if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) {
-                //echo "block slides=".count($block->getChildren())."<br>";
-                //add only if this block has slides
-                if( count($block->getChildren()) > 0 ) {   //TODO: testing
-                    //echo "block has slides<br>";
-                    $part->addChildren($block);
-
-//                    //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
-//                    //So, use only one block instead of creating two same entity in DB.
-//                    $sameChild = $this->findSimilarChild($part,$block);
-//                    if( $sameChild ) {
-//                        //attach all sub-children to found similar child
-//                        $children = $block->getChildren();
-//                        foreach( $children as $child ) {
-//                            $sameChild->addChildren($child);
-//                        }
-//                    } else {
-//                        $part->addChildren($block);
-//                    }
-                } else {
-                    //remove block if it does not have any slides
-                    //echo "remove block <br>";
-                    $part->removeBlock($block);
-                    $block->setPart(null);
-                }
-            //}
-            //echo $block;
-
-        }
-
-    }
+//    public function attachToParent( $part, $block ) {
+//
+//        $childClass = new \ReflectionClass($block);
+//        $childClassName = $childClass->getShortName();
+//        //echo "childClassName=".$childClassName."<br>";
+//
+//        if( $childClassName == "Slide" ) {
+//            parent::attachToParent( $part, $block );    //call parent method to simple attach slide to part
+//            return;
+//        }
+//
+//        if( $block ) {
+//
+//            //echo "adding block?:  ".$block;
+//            //do it, if the block is new. If block has ID then it was found in DB and it was created by someone else.
+//            //if( !$block->getId() || $block->getId() == null || $block->getId() == "" ) {
+//                //echo "block slides=".count($block->getChildren())."<br>";
+//                //add only if this block has slides
+//                if( count($block->getChildren()) > 0 ) {   //TODO: testing
+//                    //echo "block has slides<br>";
+//                    $part->addChildren($block);
+//
+////                    //replace similar child. For example, the form can have two blocks: Block 1 and Block 1 attached to the same Part.
+////                    //So, use only one block instead of creating two same entity in DB.
+////                    $sameChild = $this->findSimilarChild($part,$block);
+////                    if( $sameChild ) {
+////                        //attach all sub-children to found similar child
+////                        $children = $block->getChildren();
+////                        foreach( $children as $child ) {
+////                            $sameChild->addChildren($child);
+////                        }
+////                    } else {
+////                        $part->addChildren($block);
+////                    }
+//                } else {
+//                    //remove block if it does not have any slides
+//                    //echo "remove block <br>";
+//                    $part->removeBlock($block);
+//                    $block->setPart(null);
+//                }
+//            //}
+//            //echo $block;
+//
+//        }
+//
+//    }
 
 
     //override parent method to get next key string

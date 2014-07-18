@@ -70,10 +70,11 @@ class StainTransformer implements DataTransformerInterface
     public function reverseTransform($text)
     {
 
-        //echo "data transformer text=".$text."<br>";
+        echo "data transformer text=".$text."<br>";
         //exit();
 
         if (!$text) {
+            echo "return null".$text."<br>";
             return null;
         }
 
@@ -93,6 +94,7 @@ class StainTransformer implements DataTransformerInterface
 
         } else {    //text => most probably it is new name
 
+            //echo "text => most probably it is new name=".$text."<br>";
             return $this->createNewStain($text); //create a new record in db
 
         }
@@ -103,6 +105,7 @@ class StainTransformer implements DataTransformerInterface
 
         //check if it is already exists in db
         $entity = $this->em->getRepository('OlegOrderformBundle:StainList')->findOneByName($name);
+        echo "db entity=".$entity."<br>";
         if( null === $entity ) {
 
             $stain = new StainList();
@@ -121,7 +124,7 @@ class StainTransformer implements DataTransformerInterface
 
             return $stain;
         } else {
-
+            echo "return db entity=".$entity."<br>";
             return $entity;
         }
 

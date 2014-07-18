@@ -61,11 +61,7 @@
                     <p>{{ entity.currentstatus }}</p>
                 </td>
                 <td>
-                    {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
-                        {{ entity.provider }}
-                    {% else %}
-                        <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
-                    {% endif %}
+                    <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
                 </td>
                 <td>
                     {% for role in entity.roles %}

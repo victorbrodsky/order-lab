@@ -19,11 +19,13 @@ class EmailUtil {
         //get admin email
         $userutil = new UserUtil();
         $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
 
-        ini_set( 'sendmail_from', $adminemail );
-        ini_set( "SMTP", $smtp );
+//        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
+//        ini_set( 'sendmail_from', $adminemail );
+//        ini_set( "SMTP", $smtp );
         //ini_set( 'smtp_port', 25 );
+
+        $this->initEmail($em);
 
         if( $text ) {
             $message = $text;
@@ -55,6 +57,15 @@ class EmailUtil {
         mail($email, 'Slide Scan Order #'.$entity->getId().' Confirmation', $message);
 
         return true;
+    }
+
+    public function initEmail($em) {
+        $userutil = new UserUtil();
+        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
+
+        ini_set( 'sendmail_from', $adminemail );
+        ini_set( "SMTP", $smtp );
     }
     
 }

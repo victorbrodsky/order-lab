@@ -116,7 +116,8 @@ class CheckController extends Controller {
 
         $extra = array();
         $extra["keytype"] = $keytype;
-        //echo "key=".$key.", keytype=".$keytype."; ";
+
+        //echo "key=".$key.", keytype=".$keytype.", inst=".$inst." ";
 
         $validity = array();
         $validity[] = "valid";
@@ -130,11 +131,11 @@ class CheckController extends Controller {
         $element = array();
         
         $security_content = $this->get('security.context');
+        $user = $this->get('security.context')->getToken()->getUser();
         $userUtil = new UserUtil();
-        if( $entity && !$userUtil->hasPermission($security_content) ) {
+        if( $entity && !$userUtil->hasPermission($entity,$security_content) ) {
             //echo "no permission ";
-            $user = $this->get('security.context')->getToken()->getUser();
-            $entity->filterArrayFields($user,true);
+            //$entity->filterArrayFields($user,true);
 
             if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                 $entity = null;
@@ -299,16 +300,16 @@ class CheckController extends Controller {
               
         $security_content = $this->get('security.context');
         $userUtil = new UserUtil();
-        $permission = true;
-        if( $entity && !$userUtil->hasPermission($security_content) ) {
+        //$permission = true;
+        if( $entity && !$userUtil->hasPermission($entity,$security_content) ) {
             $user = $this->get('security.context')->getToken()->getUser();
-            $entity->filterArrayFields($user,true);
+            //$entity->filterArrayFields($user,true);
 
             //echo "procedure existing count=".$entity->getParent()->obtainExistingFields(true)."<br>";
             //echo "accession existing count=".$entity->obtainExistingFields(true)."<br>";
             if( $entity->obtainExistingFields(true) == 0 && $entity->getParent()->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                 $entity = null;
-                $permission = true;
+                //$permission = true;
             }
         }
 
@@ -334,9 +335,9 @@ class CheckController extends Controller {
 
                 //find patient mrn
                 $patient = $entity->getProcedure()->getPatient();
-                if( !$permission ) {
-                    $patient->filterArrayFields($user,true);
-                }
+                //if( !$permission ) {
+                //    $patient->filterArrayFields($user,true);
+                //}
 
                 if( $patient ) {
                     $parentKey = $patient->obtainValidKeyfield();
@@ -536,9 +537,9 @@ class CheckController extends Controller {
         
         $userUtil = new UserUtil();
         $security_content = $this->get('security.context');
-        if( !$userUtil->hasPermission($security_content) ) {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $entity->filterArrayFields($user,true);
+        if( !$userUtil->hasPermission($entity,$security_content) ) {
+            //$user = $this->get('security.context')->getToken()->getUser();
+            //$entity->filterArrayFields($user,true);
 
             if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                 $entity = null;
@@ -673,9 +674,9 @@ class CheckController extends Controller {
 
             $security_content = $this->get('security.context');
             $userUtil = new UserUtil();
-            if( !$userUtil->hasPermission($security_content) ) {
-                $user = $this->get('security.context')->getToken()->getUser();
-                $entity->filterArrayFields($user,true);
+            if( !$userUtil->hasPermission($entity,$security_content) ) {
+                //$user = $this->get('security.context')->getToken()->getUser();
+                //$entity->filterArrayFields($user,true);
 
                 if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                     $entity = null;

@@ -169,9 +169,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $mrnKey = $patient->obtainValidKeyField();
         $mrnValue = $mrnKey->getField()."";
         $mrnKeytype = $mrnKey->getKeytype()->getId();
+        $institutions = array($accession->getInstitution()->getId());
         //echo "mrnKeytype Id=".$mrnKeytype."<br>";
 
-        if( $this->isDBConflictByAccession( $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
+        if( $this->isDBConflictByAccession( $institutions, $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
             //echo "DB conflict!<br>";
             $dbconflict = true;
 
@@ -236,7 +237,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     }
 
     //check if there is a conflict in DB
-    public function isDBConflictByAccession( $accValue, $accKeytype, $mrnValue, $mrnKeytype ) {
+    public function isDBConflictByAccession( $institutions, $accValue, $accKeytype, $mrnValue, $mrnKeytype ) {
 
         $extra = array();
         $extra["keytype"] = $accKeytype;
@@ -246,6 +247,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $validity[] = "reserved";
 
         $accessions = $this->_em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(
+            $institutions,
             $accValue,      //$fieldStr
             "Accession",    //$className
             "accession",    //$fieldName

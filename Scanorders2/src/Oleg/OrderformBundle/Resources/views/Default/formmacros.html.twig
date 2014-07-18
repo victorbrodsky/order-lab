@@ -355,10 +355,8 @@
     {% for field in fields %}
 
         {#( field.vars.value.status == 'valid' and is_granted('ROLE_SCANORDER_SUBMITTER') ) or#}
-        {#get correct field: valid for submitter and all for external submitter (only latest fields are queried by controller for external)#}
+        {#get correct field: valid for submitter#}
         {% if is_granted('ROLE_SCANORDER_SUBMITTER') and field.vars.value.status == 'valid' %}
-            {%  set show = 1 %}
-        {% elseif is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') and not is_granted('ROLE_SCANORDER_ADMIN') %}
             {%  set show = 1 %}
         {% else %}
             {%  set show = 0 %}
@@ -370,8 +368,6 @@
             {%  set show = 1 %}
         {% endif %}
 
-        {#field.vars.value.status == 'valid' or#}
-        {#( is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') and field.vars.value.status == 'invalid' ) or#}
         {% if show == 1 or
               cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'
         %}
@@ -435,31 +431,23 @@
                     {#no label#}
                 {% else %}
 
-                    {#show provider and status to dataquality specialist but not external submitter and not to the owner#}
+                    {#show provider and status to dataquality specialist#}
                     {% set showInfoDate = 0 %}
                     {% set showInfoProvider = 0 %}
                     {% if field.vars.value.provider is defined %}
                         {% if cycle == "show" or cycle == "amend" %}
-                            {#{% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') %}dataqualityok#}
-                            {% if not is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') and not is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER') %}
-                                {#{% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}#}
-
-                                {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
-                                    {% set showInfoDate = 1 %}
-                                {% endif %}
-                                {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                                    {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
-                                        {% set showInfoProvider = 1 %}
-                                    {% endif %}
-                                    {% if field.vars.value.status != 'valid' %}
-                                        {% set showInfoDate = 1 %}
-                                        {% set showInfoProvider = 1 %}
-                                    {% endif %}
-                                {% endif %}
-
-                                {#{% endif %}#}
+                            {% if field.vars.value.creationdate != "" and field.vars.value.status != 'valid' %}
+                                {% set showInfoDate = 1 %}
                             {% endif %}
-                            {#{% endif %}#}
+                            {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
+                                {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
+                                    {% set showInfoProvider = 1 %}
+                                {% endif %}
+                                {% if field.vars.value.status != 'valid' %}
+                                    {% set showInfoDate = 1 %}
+                                    {% set showInfoProvider = 1 %}
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
                     {% endif %}
 

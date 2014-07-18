@@ -111,13 +111,13 @@
 
         {% for slide in orderinfo.slide %}
 
-            {% set patient =  slide.obtainPatient.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set patient =  slide.obtainPatient %}
             {% set patientkey =  patient.obtainValidKeyfield %}
-            {% set accession =  slide.obtainAccession.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set accession =  slide.obtainAccession %}
             {% set accessionkey =  accession.obtainValidKeyfield %}
-            {% set part =  slide.obtainPart.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set part =  slide.obtainPart %}
             {% set partkey =  part.obtainValidKeyfield %}
-            {% set block =  slide.obtainBlock.filterArrayFields(app.security.getToken().getUser(),true) %}
+            {% set block =  slide.obtainBlock %}
             {% if block is defined and block != null %}
                 {% set blockkey =  block.obtainValidKeyfield %}
             {% endif %}

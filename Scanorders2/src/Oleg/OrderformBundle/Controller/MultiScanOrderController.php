@@ -323,17 +323,22 @@ class MultiScanOrderController extends Controller {
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
 
         //check if user has at least one institution
         if( count($user->getInstitution()) == 0 ) {
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').'.'
-            );
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').'.'
+//            );
+            $orderUtil = new OrderUtil($em);
+            $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
+            $homeUrl = $this->generateUrl('main_common_home',array(),true);
+            $sysEmail = $this->container->getParameter('default_system_email');
+            $orderUtil->setWarningMessageNoInstitution($user,$userUrl,$this->get('session')->getFlashBag(),$sysEmail,$homeUrl);
+
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
-
-        $em = $this->getDoctrine()->getManager();
 
         $entity = new OrderInfo();
 
@@ -478,14 +483,14 @@ class MultiScanOrderController extends Controller {
         //TODO: is it possible to filter orderinfo by JOINs?
 
         //INNER JOIN orderinfo.block block
+//        INNER JOIN orderinfo.patient patient
+//        INNER JOIN orderinfo.procedure procedure
+//        INNER JOIN orderinfo.accession accession
+//        INNER JOIN orderinfo.part part
+//        INNER JOIN orderinfo.slide slide
         $query = $em->createQuery('
             SELECT orderinfo
             FROM OlegOrderformBundle:OrderInfo orderinfo
-            INNER JOIN orderinfo.patient patient
-            INNER JOIN orderinfo.procedure procedure
-            INNER JOIN orderinfo.accession accession
-            INNER JOIN orderinfo.part part
-            INNER JOIN orderinfo.slide slide
             WHERE orderinfo.oid = :id'
         )->setParameter('id', $id);
 
@@ -494,7 +499,7 @@ class MultiScanOrderController extends Controller {
         //echo "<br>orderinfo count=".count( $entities )."<br>";
 
         if( count( $entities ) == 0 ) {
-            throw $this->createNotFoundException('Unable to find OrderInfo entity.');
+            throw $this->createNotFoundException('Unable to find OrderInfo entity with oid='.$id);
         }
 
         if( count( $entities ) == 0 ) {
@@ -505,6 +510,10 @@ class MultiScanOrderController extends Controller {
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
+
+        if( $entity && !$userUtil->hasPermission($entity,$this->get('security.context')) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
 
         //if show not submitted => change url
         if( $entity->getStatus()."" == "Not Submitted" && $routeName != "multy_edit" ) {
@@ -518,23 +527,15 @@ class MultiScanOrderController extends Controller {
         //patient
         foreach( $entity->getPatient() as $patient ) {
 
-            //echo "<br>patient order info count=".count( $patient->getOrderInfo() )."<br>";
             //check if patient has this orderinfo
             if( !$this->hasOrderInfo($patient,$id) ) {
-                //echo "remove patient!!!! <br>";
                 $entity->removePatient($patient);
                 continue;
             }
 
-//            echo "<br>patient has procedure count=".count( $patient->getProcedure() )."<br>";
-            //filter the data according to the user roles
-            if( ! $userUtil->hasPermission($this->get('security.context')) ) {
-                $patient->filterArrayFields($user);
-
-                if( $patient->obtainExistingFields(true) == 0 ) {
-                    $entity->removePatient($patient);
-                    continue;
-                }
+            if( ! $userUtil->hasPermission($patient, $this->get('security.context')) ) {
+                $entity->removePatient($patient);
+                continue;
             }
 
 //            if( $entity->getType() == "Table-View Scan Order" ) {
@@ -560,21 +561,12 @@ class MultiScanOrderController extends Controller {
 
                 if( !$this->hasOrderInfo($procedure,$id) ) {
                     $patient->removeProcedure($procedure);
-
-//                    foreach( $patient->getName() as $names ) {
-//                        //echo "patient name=".$names."<br>";
-//                    }
                     continue;
                 }
 
-                if( ! $userUtil->hasPermission($this->get('security.context')) ) {
-                    $procedure->filterArrayFields($user);
-
-                    //echo "procedure existing count=".$procedure->obtainExistingFields(true)."<br>";
-                    if( $procedure->obtainExistingFields(true) == 0 ) {
-                        $patient->removeChildren($procedure);
-                        continue;
-                    }
+                if( ! $userUtil->hasPermission($procedure, $this->get('security.context')) ) {
+                    $patient->removeChildren($procedure);
+                    continue;
                 }
 
 //                if( $entity->getType() == "Table-View Scan Order" ) {
@@ -595,14 +587,9 @@ class MultiScanOrderController extends Controller {
                         continue;
                     }
 
-                    if( ! $userUtil->hasPermission($this->get('security.context')) ) {
-                        $accession->filterArrayFields($user);
-
-                        //echo "accession existing count=".$accession->obtainExistingFields(true)."<br>";
-                        if( $accession->obtainExistingFields(true) == 0 ) {
-                            $procedure->removeChildren($accession);
-                            continue;
-                        }
+                    if( ! $userUtil->hasPermission($accession, $this->get('security.context')) ) {
+                        $procedure->removeChildren($accession);
+                        continue;
                     }
 
                     //part
@@ -611,15 +598,10 @@ class MultiScanOrderController extends Controller {
                             $accession->removePart($part);
                             continue;
                         }
-                        //echo "diff diagnoses=".count($part->getDiffDiagnoses())."<br>";
 
-                        if( ! $userUtil->hasPermission($this->get('security.context')) ) {
-                            $part->filterArrayFields($user);
-
-                            if( $part->obtainExistingFields(true) == 0 ) {
-                                $accession->removeChildren($part);
-                                continue;
-                            }
+                        if( ! $userUtil->hasPermission($part, $this->get('security.context')) ) {
+                            $accession->removeChildren($part);
+                            continue;
                         }
 
                         //block
@@ -630,22 +612,18 @@ class MultiScanOrderController extends Controller {
                                 continue;
                             }
 
-                            if( ! $userUtil->hasPermission($this->get('security.context')) ) {
-                                $block->filterArrayFields($user);
-
-                                if( $block->obtainExistingFields(true) == 0 ) {
-                                    $part->removeChildren($block);
-                                    continue;
-                                }
+                            if( ! $userUtil->hasPermission($block, $this->get('security.context')) ) {
+                                $part->removeChildren($block);
+                                continue;
                             }
 
                             //slide
                             $slideArr = array();
                             foreach( $block->getSlide() as $slide ) {
 
-                                //check if this slides can be viewd by this user
+                                //check if this slides can be viewed by this user
                                 $permission = true;
-                                if( !$userUtil->hasPermission($this->get('security.context')) ) {
+                                if( !$userUtil->hasPermission($slide, $this->get('security.context')) ) {
                                     //echo " (".$slide->getProvider()->getId().") ?= (".$user->getId().") => ";
                                     if( $slide->getProvider()->getId() != $user->getId() ) {
                                         $permission = false;
@@ -784,6 +762,7 @@ class MultiScanOrderController extends Controller {
         foreach( $entity->getOrderInfo() as $child ) {
             if( $child->getOid() == $id ) {
                 $has = true;
+                break;
             }
         }
         return $has;

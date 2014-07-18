@@ -14471,6 +14471,8 @@ var _errorValidatorRows = new Array(); //keep rows with validator error
 var _auto_generated_mrn_type = null;    //13;
 var _auto_generated_accession_type = null;  //8;
 
+var _institution = null;
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -14805,6 +14807,10 @@ function ajaxFinishedCondition() {
 
 function handsonTableInit() {
 
+    //set institution
+    _institution = $('.combobox-institution').select2('val');
+    console.log('_institution='+_institution);
+
     var data = new Array();
     var columnsType = new Array();
     var colHeader = new Array();
@@ -14943,8 +14949,9 @@ function processKeyTypes( row, col, value, oldvalue ) {
                     break;
                 }
 
+
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"patient/generate"),   //urlCheck+"patient/generate",
+                    url: getCommonBaseUrl("check/"+"patient/generate"+"?inst="+_institution),   //urlCheck+"patient/generate",
                     timeout: _ajaxTimeout,
                     async: asyncflag
                 }).success( function(data) {
@@ -14976,7 +14983,7 @@ function processKeyTypes( row, col, value, oldvalue ) {
                 }
 
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"accession/generate"),  //urlCheck+"accession/generate",
+                    url: getCommonBaseUrl("check/"+"accession/generate"+"?inst="+_institution),  //urlCheck+"accession/generate",
                     timeout: _ajaxTimeout,
                     async: asyncflag
                 }).success( function(data) {
@@ -15117,7 +15124,7 @@ function cleanHTableCell( row, col, force ) {
             //console.log('delete value='+value);
             if( _sotable.getDataAtCell(row,col-1) == 'Auto-generated MRN' || _sotable.getDataAtCell(row,col-1) == 'Existing Auto-generated MRN' ) {
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"patient/delete/"+value+"?extra="+_auto_generated_mrn_type),    //urlCheck+"patient/delete/"+value+"?extra=13",
+                    url: getCommonBaseUrl("check/"+"patient/delete/"+value+"?extra="+_auto_generated_mrn_type+"&inst="+_institution),
                     type: 'DELETE',
                     timeout: _ajaxTimeout,
                     async: asyncflag
@@ -15139,7 +15146,7 @@ function cleanHTableCell( row, col, force ) {
             //console.log('Accession => value='+value);
             if( _sotable.getDataAtCell(row,col-1) == 'Auto-generated Accession Number' || _sotable.getDataAtCell(row,col-1) == 'Existing Auto-generated Accession Number' ) {
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"accession/delete/"+value+"?extra="+_auto_generated_accession_type), //urlCheck+"accession/delete/"+value+"?extra=8",
+                    url: getCommonBaseUrl("check/"+"accession/delete/"+value+"?extra="+_auto_generated_accession_type+"&inst="+_institution),
                     type: 'DELETE',
                     timeout: _ajaxTimeout,
                     async: asyncflag
@@ -15895,7 +15902,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
             $.ajax({
                 url: getCommonBaseUrl("check/"+name+'/check'),    //urlCheck+name+'/check',
                 type: 'GET',
-                data: {key: keyvalue, extra: keytypeCorrect},
+                data: {key: keyvalue, extra: keytypeCorrect, inst: _institution},
                 contentType: 'application/json',
                 dataType: 'json',
                 timeout: _ajaxTimeout,
@@ -15940,39 +15947,6 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
 
     }); //promise
 }
-////return id of the keytype by keytype string
-////if keytype does not exists in DB, return keytype string
-//function getKeyTypeID( name, keytype ) {
-//    return Q.promise(function(resolve, reject) {
-//
-//        $.ajax({
-//            url: getCommonBaseUrl("check/"+name+'/keytype/'+keytype),   //urlCheck+name+'/keytype/'+keytype,
-//            type: 'GET',
-//            //data: {keytype: keytype},
-//            contentType: 'application/json',
-//            dataType: 'json',
-//            timeout: _ajaxTimeout,
-//            async: false,
-//            success: function (data) {
-//                //console.debug("get element ajax ok");
-//                if( data && data != '' ) {
-//                    //console.log(name+": keytype is found. keytype="+data);
-//                    resolve(data);
-//                } else {
-//                    //console.log(name+": keytype is not found.");
-//                    resolve(keytype);
-//                }
-//            },
-//            error: function ( x, t, m ) {
-//                //console.debug("keytype id: ajax error "+name);
-//                if( t === "timeout" ) {
-//                    getAjaxTimeoutMsg();
-//                }
-//                reject(Error("Check Existing Error"));
-//            }
-//        });
-//    }); //promise
-//}
 
 
 function validateEmptyHandsonRow( row ) {
@@ -27948,7 +27922,8 @@ function executeClick( btnObjInit ) {
         }
 
         var inst = $('.combobox-institution').select2('val');
-        //console.log('inst='+inst);
+        console.log('inst='+inst);
+
         if( !inst || inst.length == 0 || inst == '' ) {
             gocontinue = false;
             reject(Error("Institution is empty"));
@@ -27983,7 +27958,7 @@ function executeClick( btnObjInit ) {
                 grandparentType = grandparentBtnObj.type;
             }
 
-            console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
+            //console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
 
             if( btnObj && btnObj.key == '' && !btnObj.remove ) {
                 //console.log('Case 1: key not exists => generate');

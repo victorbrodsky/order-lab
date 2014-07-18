@@ -206,27 +206,39 @@ class UserUtil {
         return $choicesServ;
     }
 
-    //user has permission to view other's valid field if he/she is submitter or pathology member and not external submitter and not ROLE_SCANORDER_PROCESSOR => S+PRE+PFE+PFA * !ES * !P == !S*!PRE*!PFE*!PFA + ES
-    public function hasPermission( $security_content ) {
+    public function hasUserPermission( $entity, $user ) {
 
-        if( true === $security_content->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return true;
+        $hasInst = false;
+        foreach( $user->getInstitution() as $inst ) {
+            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
+            if( $inst->getId() == $entity->getInstitution()->getId() ) {
+                return true;
+            }
         }
 
-        if( true === $security_content->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ) {
+        if( $hasInst == false ) {
             return false;
         }
 
+        if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
+            return true;
+        }
+
         if(
-            true === $security_content->isGranted('ROLE_SCANORDER_SUBMITTER') ||
-            true === $security_content->isGranted('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
-            true === $security_content->isGranted('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
-            true === $security_content->isGranted('ROLE_SCANORDER_PATHOLOGY_FACULTY')
+            true === $user->hasRole('ROLE_SCANORDER_SUBMITTER') ||
+            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
+            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
+            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FACULTY')
         ) {
             return true;
         } else {
             return false;
         }
+    }
+
+    //user has permission to view other's valid field if he/she is submitter or pathology member and not external submitter and not ROLE_SCANORDER_PROCESSOR => S+PRE+PFE+PFA * !ES * !P == !S*!PRE*!PFE*!PFA + ES
+    public function hasPermission( $entity, $security_content ) {
+        return $this->hasUserPermission($entity,$security_content->getToken()->getUser());
     }
 
 

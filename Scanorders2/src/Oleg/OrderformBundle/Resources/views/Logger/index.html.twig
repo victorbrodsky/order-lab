@@ -46,11 +46,7 @@
                     </td>
                 {% else %}
                     <td>
-                        {% if not is_granted('ROLE_SCANORDER_PROCESSOR') and (is_granted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') or is_granted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')) %}
-                            {{ entity.username }}
-                        {% else %}
-                            <a href="{{ path('showuser', { 'id': entity.user.id }) }}">{{ entity.username }}</a>
-                        {% endif %}
+                        <a href="{{ path('showuser', { 'id': entity.user.id }) }}">{{ entity.username }}</a>
                     </td>
                 {% endif %}
 

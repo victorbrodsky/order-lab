@@ -102,6 +102,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             if( $found ) {
                 //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+
                 //CopyChildren: copy form's object children to the found one.
                 //testing:
 //                foreach( $entity->getChildren() as $child ) {
@@ -125,11 +126,27 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function setResult( $entity, $orderinfo, $original=null ) {
 
-        //echo 'mem before set result: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-
         $em = $this->_em;
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
+
+        //remove original from institution if original is present.
+        //That means that original has been replaced by found entity from DB, but we added original to institution and error will be thrown:
+        //A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Institution#parts
+        if( $original ) {
+            $removeClassMethod = 'remove'.$className;
+            $orderinfo->getInstitution()->$removeClassMethod($original);
+        }
+
+        //Check if institution of orderinfo and entity are match.
+        //Since we set institution of entity from orderinfo on the previous step, the institution of orderinfo and entity must be the same.
+        //However, keep this check just in case we got a wrong entity from DB
+        if( $entity->getInstitution()->getId() != $orderinfo->getInstitution()->getId() ) {
+            //echo "inst are diff!";
+            throw new \Exception( 'Institution of order form and found object are different '.$className );
+        } else {
+            //echo $className.": inst are the same!<br>";
+        }
 
         //echo "Set Result for entity:".$entity;
 
@@ -185,7 +202,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $orderinfo->$addClassMethod($entity);
 
         //add this object to institution from orderinfo.
-        //$orderinfo->getInstitution()->$addClassMethod($entity);
+        $orderinfo->getInstitution()->$addClassMethod($entity);
+
+        //echo "After processing:".$entity;
 
         //process parent
         $parent = $entity->getParent();
@@ -250,13 +269,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     }
 
 
-    //overrided by block and part repositories
-    public function attachToParent( $entity, $child ) {
-        //echo "start adding to orderinfo <br>";
-        if( $child ) {
-            $entity->addChildren($child);
-        }
-    }
+//    //overrided by block and part repositories
+//    public function attachToParent( $entity, $child ) {
+//        //echo "start adding to orderinfo <br>";
+//        if( $child ) {
+//            $entity->addChildren($child);
+//        }
+//    }
 
     //find similar child and return the first one
     //return false if no similar children are found
@@ -1163,7 +1182,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         if( $entity->obtainValidKeyfield() ) {
             $em = $this->_em;
             $validity = array(self::STATUS_VALID,self::STATUS_RESERVED); //false; //accept reserved also
-            $institutions = array($entity->getInstitution());
+            $institutions = array($entity->getInstitution()->getId());
             $newEntity = $em->getRepository('OlegOrderformBundle:'.$className)->findOneByIdJoinedToField($institutions, $validKeyField->getField()."",$className,$fieldName,$validity,true, $extra);
         } else {
             //echo "This entity does not have a valid key field<br>";

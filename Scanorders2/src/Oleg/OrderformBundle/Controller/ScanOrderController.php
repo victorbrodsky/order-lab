@@ -118,17 +118,6 @@ class ScanOrderController extends Controller {
 
         if( $search != "" ) {
             return $this->createComplexSearchPage( $form, $routeName, $service, $filter, $search, $page );
-//            return $this->render('OlegOrderformBundle:ScanOrder:index-search.html.twig', array(
-//                'form' => $form->createView(),
-//                'showprovider' => false,
-//                'showproxyuser' => false,
-//                'pagination' => $pagination,
-//                'accountreqs' => $accountreqs,
-//                'accessreqs' => $accessreqs,
-//                'routename' => $routeName,
-//                'comments' => $processorComments
-//            ));
-            //$increaseMaxExecTime = true;
         }
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
@@ -263,9 +252,7 @@ class ScanOrderController extends Controller {
      */
     public function statusAction(Request $request, $id, $status) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER')
-        ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
         
@@ -483,10 +470,28 @@ class ScanOrderController extends Controller {
         $unprocessed = 0;
         $em = $this->getDoctrine()->getManager();
 
+        /////////// institution ///////////
+        $instStr = "";
+        $user = $this->get('security.context')->getToken()->getUser();
+        foreach( $user->getInstitution() as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        if( $instStr != "" ) {
+            $instStr = " AND (" . $instStr . ") ";
+        }
+        //echo "instStr=".$instStr."<br>";
+        /////////// EOF institution ///////////
+
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
         $dql =  $repository->createQueryBuilder("orderinfo");
         $dql->innerJoin("orderinfo.status", "status");
-        $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'");
+        $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'" . $instStr);
         $query = $em->createQuery($dql);
         $unprocessedOrders = $query->getResult();
 
@@ -506,7 +511,33 @@ class ScanOrderController extends Controller {
         $unprocessed = 0;
         $em = $this->getDoctrine()->getManager();
 
-        $slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->findByStatus('active');
+        //$slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->findByStatus('active');
+
+        /////////// institution ///////////
+        $instStr = "";
+        $user = $this->get('security.context')->getToken()->getUser();
+        foreach( $user->getInstitution() as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        if( $instStr != "" ) {
+            $instStr = " AND (" . $instStr . ") ";
+        }
+        //echo "instStr=".$instStr."<br>";
+        /////////// EOF institution ///////////
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
+        $dql =  $repository->createQueryBuilder("req");
+        $dql->innerJoin("req.orderinfo", "orderinfo");
+        $dql->where("req.status='active'" . $instStr);
+        //echo "dql=".$dql;
+        $query = $em->createQuery($dql);
+        $slideReturnRequest = $query->getResult();
 
         if( $slideReturnRequest && count($slideReturnRequest) > 0 ) {
             $unprocessed = count($slideReturnRequest);
@@ -1336,6 +1367,24 @@ class ScanOrderController extends Controller {
             //$increaseMaxExecTime = true;
         }
         //***************** END of Search filetr ***************************//
+
+        /////////// institution ///////////
+        $instStr = "";
+        foreach( $user->getInstitution() as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        if( $criteriastr != "" ) {
+            $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
+        } else {
+            $criteriastr = $criteriastr . " (" . $instStr . ") ";
+        }
+        /////////// EOF institution ///////////
 
         //echo "<br>criteriastr=".$criteriastr."<br>";
 

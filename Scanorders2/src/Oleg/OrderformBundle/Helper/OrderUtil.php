@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\DataQuality;
+use Oleg\OrderformBundle\Helper\EmailUtil;
 
 class OrderUtil {
 
@@ -34,6 +35,11 @@ class OrderUtil {
 
         if (!$entity) {
             throw new \Exception( 'Unable to find OrderInfo entity by id'.$id );
+        }
+
+        $userUtil = new UserUtil();
+        if( $entity && !$userUtil->hasUserPermission($entity,$user) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         if( $status == 'Un-Cancel' ) {
@@ -69,7 +75,7 @@ class OrderUtil {
 
             $fieldStatusStr = "deleted-by-canceled-order";
 
-            if( $entity->getProvider() == $user || $user->hasRole("ROLE_SCANORDER_ORDERING_PROVIDER") || $user->hasRole("ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER") ) {
+            if( $entity->getProvider() == $user || $user->hasRole("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             } else
             if( $user->hasRole("ROLE_SCANORDER_ADMIN") || $user->hasRole("ROLE_SCANORDER_PROCESSOR") ) {
@@ -159,7 +165,7 @@ class OrderUtil {
                 }
 
                 //echo "accessionKey=".$accessionKey."<br>";
-                $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($accessionKey,"Accession","accession",true, true);
+                $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",true, true);
 
                 $mrn = $patientKey; //mrn
                 $mrnTypeId = $patientKey->getKeytype()->getId();
@@ -369,7 +375,6 @@ class OrderUtil {
 
         $dql->where($criteriastr);
 
-        //$dql->addGroupBy('history.changedate');
         $dql->addOrderBy("history.changedate","DESC");
 
         //echo "<br>".$flag.": dql=".$dql."<br>";
@@ -427,6 +432,26 @@ class OrderUtil {
             $criteriastr = $criteriastr . " AND ( (provider = ".$user->getId()." OR proxyuser = ".$user->getId().") AND history.provider != ".$user->getId()." )";
         }
 
+        /////////// institution ///////////
+        $instStr = "";
+        foreach( $user->getInstitution() as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        if( $instStr != "" ) {
+            if( $criteriastr != "" ) {
+                $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
+            } else {
+                $criteriastr = $criteriastr . " (" . $instStr . ") ";
+            }
+        }
+        /////////// EOF institution ///////////
+
         //echo "criteriastr=".$criteriastr."<br>";
 
         return $criteriastr;
@@ -469,6 +494,47 @@ class OrderUtil {
 
             $entity->addDataquality($dataqualityObj);
         }
+
+    }
+
+
+    public function setWarningMessageNoInstitution( $user, $userUrl, $flashBag, $sysemail, $homeUrl ) {
+
+        //$sysemail = 'oli2002@med.cornell.edu';  //testing
+
+        $emailUtil = new EmailUtil();
+        $emailUtil->initEmail($this->em);
+
+        if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') || $user->hasRole('ROLE_SCANORDER_ADMIN') ) {
+
+            $webUserUrl = "<a href=".$userUrl.">profile</a>";
+            $msg =  "Please add at least one institution to your ".$webUserUrl." in order to be able to place orders.";
+
+        } else {
+
+            $webUserUrl = "<a href=".$userUrl.">profile</a>";
+
+            $msg =  'Please contact the System Administrator by emailing '.$sysemail.' and request to add to your '.$webUserUrl.
+                    ' the name of the Institution that employs you (such as "Weill Cornell Medical College").'.
+                    'You will not be able to place orders until the system administrator completes this step.';
+
+            //send Email
+            $subject = "User ".$user." needs to have an Institution added to their profile";
+
+            $message =  "Please visit the ".$userUrl." of user ".$user.
+                        " and add the name of the institution that employs this user to enable her or him to place orders & and to view patient information known to that institution:\r\n\r\n".
+                        $userUrl."\r\n".
+                        "\r\n\r\n".
+                        "Agent Smith\r\n".
+                        "Virtual Keeper of O R D E R: ".$homeUrl."\r\n".
+                        "Weill Cornell Medical College";
+            mail($sysemail, $subject, $message);
+
+        }
+        $flashBag->add(
+            'warning',
+            $msg
+        );
 
     }
 

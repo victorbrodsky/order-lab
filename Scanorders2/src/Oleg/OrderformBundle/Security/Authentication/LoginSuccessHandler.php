@@ -74,9 +74,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
         elseif(
             $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') ||
-            $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_SUBMITTER') ||
-            $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER') ||
-            $this->security->isGranted('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER')
+            $this->security->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
 
 
@@ -118,7 +116,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             //echo "user role not ok!";
             //exit();
             $response = new RedirectResponse( $this->router->generate('logout') );
-            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/external/ordering provider submitter";
+            $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/ordering provider submitter";
             
         }
 

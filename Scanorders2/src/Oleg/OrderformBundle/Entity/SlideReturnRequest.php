@@ -253,7 +253,7 @@ class SlideReturnRequest extends OrderAbstract {
         $description = array();
         foreach( $this->slide as $slide ) {
 
-            $patient =  $slide->obtainPatient()->filterArrayFields($user,true);
+            $patient =  $slide->obtainPatient();//->filterArrayFields($user,true);
             $patientkey =  $patient->obtainValidKeyfield();
             $patientFullName = $patient->getFullPatientName();
             if( !$patientkey->getField() || $patientkey->getField() == "" ) {
@@ -262,13 +262,13 @@ class SlideReturnRequest extends OrderAbstract {
                 $patientMrn = $patientkey->getField();
             }
 
-            $accession =  $slide->obtainAccession()->filterArrayFields($user,true);
+            $accession =  $slide->obtainAccession();//->filterArrayFields($user,true);
             $accessionkey =  $accession->obtainValidKeyfield();
 
-            $part =  $slide->obtainPart()->filterArrayFields($user,true);
+            $part =  $slide->obtainPart();//->filterArrayFields($user,true);
             $partkey =  $part->obtainValidKeyfield();
 
-            $block =  $slide->obtainBlock()->filterArrayFields($user,true);
+            $block =  $slide->obtainBlock();//->filterArrayFields($user,true);
             $blockDesc = "";
             if( $block ) {
                 $blockkey =  $block->obtainValidKeyfield();
