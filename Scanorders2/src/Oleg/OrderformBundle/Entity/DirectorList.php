@@ -25,7 +25,7 @@ class DirectorList extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
      */
     protected $director;

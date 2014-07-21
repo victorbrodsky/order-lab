@@ -349,7 +349,7 @@ function executeClick( btnObjInit ) {
         }
 
         var inst = $('.combobox-institution').select2('val');
-        console.log('inst='+inst);
+        //console.log('inst='+inst);
 
         if( !inst || inst.length == 0 || inst == '' ) {
             gocontinue = false;

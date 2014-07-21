@@ -27,7 +27,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     }
 
-    public function processEntity( $entity, $orderinfo ) {
+    public function processEntity( $entity, $orderinfo, $original=null ) {
 
         if( !$entity ) {
             throw new \Exception('Provided entity for processing is null');
@@ -38,18 +38,43 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
+        echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo $entity;
+        echo $className.": original:".$original."<br>";
+
+        ///////////// process original /////////////
+//        if( $original ) { //this means $entity-DB entity, $original-form entity
+//
+//            $original->setInstitution($orderinfo->getInstitution());
+//
+//            //check and remove duplication objects such as two Part 'A'.
+//            $original = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $original, $orderinfo );
+//
+////            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+////            if( $className == 'Accession' ) {
+////                $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
+////                return $this->setResult($entity, $orderinfo);
+////            }
+//
+//            //since we got DB $entity from child there is no need to check
+//            return $this->setResult($entity, $orderinfo, $original);
+//
+//        }
+        ///////////// EOF process original /////////////
+
+
         //add this object to institution from orderinfo.
         $addClassMethod = "add".$className;
         $orderinfo->getInstitution()->$addClassMethod($entity);
 
-        //echo "<br>processEntity className=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
-
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
 
-        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
+        //Accession only: process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+//        if( $className == 'Accession' ) {
+//            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
+//        }
+
 
         $keys = $entity->obtainAllKeyfield();
 
@@ -80,7 +105,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->changeKeytype($entity);
 
         if( $key == ""  ) { //$key == "" is the same as $key->getName().""
-            //echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
+            echo "Case 1: Empty form object (all fields are empty): generate next available key and assign to this object <br>";
 
             $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);
 
@@ -101,7 +126,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
 
             if( $found ) {
-                //echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
+                echo "Case 2: object exists in DB (eneterd key is for existing object): Copy Children, Copy Fields <br>";
 
                 //CopyChildren: copy form's object children to the found one.
                 //testing:
@@ -109,18 +134,20 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 //                    //echo "adding: ".$child."<br>";
 //                    $found->addChildren( $child );
 //                }
+
+                if( $original ) {
+                    $entity = $original;
+                }
+
                 return $this->setResult($found, $orderinfo, $entity);
 
-                //$entity->setId( $found->getId() );
-                //return $this->setResult($entity, $orderinfo);
-
             } else {
-                //echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
+                echo "Case 3: object does not exist in DB (new key is eneterd) or it's an amend order <br>";
             }
 
         }
 
-        return $this->setResult($entity, $orderinfo);
+        return $this->setResult($entity, $orderinfo, $original);
     }
 
 
@@ -130,10 +157,26 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
+        //Procedure only: add procedure's name, sex, age to the corresponding patient fields
+        if( $className == 'Procedure' ) {
+            if( $original ) {
+                $formEntity = $original;
+            } else {
+                $formEntity = $entity;
+            }
+            $this->copyCommonFieldsToPatient( $formEntity, $orderinfo->getProvider() );
+        }
+
+        //Accession only: if accession found in DB (original exists) set this procedure from accession
+//        if( $className == 'Accession' && $original ) {
+//
+//        }
+
         //remove original from institution if original is present.
         //That means that original has been replaced by found entity from DB, but we added original to institution and error will be thrown:
         //A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Institution#parts
         if( $original ) {
+            echo "remove original from institution:".$original;
             $removeClassMethod = 'remove'.$className;
             $orderinfo->getInstitution()->$removeClassMethod($original);
         }
@@ -156,11 +199,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //Copy Fields
         $entity = $this->processFieldArrays($entity,$orderinfo,$original);
 
-        if( $original ) {
-            //$em->detach($original);
-            unset($original); //force garbage collector to clean memory
-            gc_collect_cycles();
-        }
+//        if( $original ) {
+//            //$em->detach($original);
+//            unset($original); //force garbage collector to clean memory
+//            gc_collect_cycles();
+//        }
 
         //$children = $entity->getChildren();
 
@@ -186,10 +229,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->cleanAndProcessEmptyArrayFields($entity);
 
         if( !$entity->getId() || $entity->getId() == "" ) {
-            //echo "persist ".$className."<br>";
+            echo "set persist: persist ".$className."<br>";
             $em->persist($entity);
         } else {
-            //echo "merge ".$className.", id=".$entity->getId()."<br>";
+            echo "set persist: merge ".$className.", id=".$entity->getId()."<br>";
             //$em->merge($entity);
         }
 
@@ -204,17 +247,120 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //add this object to institution from orderinfo.
         $orderinfo->getInstitution()->$addClassMethod($entity);
 
-        //echo "After processing:".$entity;
+        echo "After processing:".$entity;
 
-        //process parent
+        ///////////////// process parent /////////////////
+
         $parent = $entity->getParent();
+
         if( $parent ) {
-            $class = new \ReflectionClass($parent);
-            $className = $class->getShortName();
-            $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
+
+            $originalParent = null;
+            if( $original ) {
+                $originalParent = $original->getParent();
+                echo "original parent=".$originalParent;
+            }
+
+            $parentClass = new \ReflectionClass($parent);
+            $parentClassName = $parentClass->getShortName();
+            $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity( $parent, $orderinfo, $originalParent );
+            echo "processed parent:".$processedParent;
+
             $entity->setParent($processedParent);
             //echo "processed entity:".$entity;
         }
+
+//        if( $original ) {   //parent exists in DB: just set Result
+//
+//            $processedParent = null;
+//
+//            if( $className != "Procedure" ) {
+//
+//                $parentDb = $entity->getParent();
+//                if( $parentDb && $parentDb->getId() && $parentDb->getId() != "" ) {
+//                    $parentClass = new \ReflectionClass($parentDb);
+//                    $parentClassName = $parentClass->getShortName();
+//                    echo "parentDb=". $parentDb;
+//
+//                    //Copy Fields only for parent
+//                    $parentDb = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processFieldArrays($parentDb,$orderinfo,$original->getParent());
+//
+//                    //process parent
+//                    $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity($parentDb, $orderinfo, $original->getParent());
+//
+//                    echo "processed parent:".$processedParent;
+//                    $entity->setParent($processedParent);
+//                }
+//
+//            } else {
+//
+//                $parent = $original->getParent();
+//                echo "Exception: Procedure parent=". $parent;
+//                if( $parent ) {
+//                    $parentClass = new \ReflectionClass($parent);
+//                    $parentClassName = $parentClass->getShortName();
+//                    $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity($parent, $orderinfo);
+//                    echo "Exception: processed parent:".$processedParent;
+//
+//                    $entity->setParent($processedParent);
+//
+//                    //echo "processed entity:".$entity;
+//                }
+//            }
+//
+//            //remove original from parent, because original was replaced by found entity from DB
+//            echo "remove original from institution:".$original;
+//            $removeClassMethod = 'remove'.$className;
+//            $orderinfo->getInstitution()->$removeClassMethod($original);
+//
+//            if( $processedParent == null ) {
+//                $parent = $entity->getParent();
+//                if( $parent ) {
+//                    $parentClass = new \ReflectionClass($parent);
+//                    $parentClassName = $parentClass->getShortName();
+//                    $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity($parent, $orderinfo);
+//                    echo "processed parent:".$processedParent;
+//
+//                    $entity->setParent($processedParent);
+//                    //echo "processed entity:".$entity;
+//                }
+//            }
+//
+//            if( $processedParent ) {
+//                $removeClassMethod = "remove".$className;
+//                echo "removeClassMethod=".$removeClassMethod."<br>";
+//                $processedParent->$removeClassMethod($original);
+//            }
+//
+//        } else {    //parent does not exists in DB: full
+//
+//            $parent = $entity->getParent();
+//
+//            if( $parent ) {
+//
+//                $class = new \ReflectionClass($parent);
+//                $className = $class->getShortName();
+//                $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
+//                echo "processed parent:".$processedParent;
+//
+//                $entity->setParent($processedParent);
+//                //echo "processed entity:".$entity;
+//            }
+//
+//        }
+        ///////////////// EOF process parent /////////////////
+
+        //$parent = $entity->getParent();
+//        if( $parent ) {
+//
+//            $class = new \ReflectionClass($parent);
+//            $className = $class->getShortName();
+//            $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
+//            echo "processed parent:".$processedParent;
+//
+//            $entity->setParent($processedParent);
+//            //echo "processed entity:".$entity;
+//        }
 
         //echo "Finish Set Result for entity:".$entity;
 

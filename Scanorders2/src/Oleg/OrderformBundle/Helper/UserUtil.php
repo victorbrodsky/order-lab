@@ -208,6 +208,14 @@ class UserUtil {
 
     public function hasUserPermission( $entity, $user ) {
 
+        if( $entity == null ) {
+            return true;
+        }
+
+        if( $user == null ) {
+            return false;
+        }
+
         $hasInst = false;
         foreach( $user->getInstitution() as $inst ) {
             //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";

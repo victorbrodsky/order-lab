@@ -66,6 +66,9 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         foreach( $slides as $slide ) {
             //echo "<br>###################### Process Slide:".$slide;
 
+            //set correct accession in case of accession-mrn conflict
+            $em->getRepository('OlegOrderformBundle:Accession')->setCorrectAccessionIfConflict( $slide, $entity );
+
             //process slide
             $slide = $em->getRepository('OlegOrderformBundle:Slide')->processEntity( $slide, $entity );
 
@@ -99,13 +102,16 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $entity->setProvider($originalProvider);
         }
 
-//        echo "<br>################################## Finish:<br>";
-//        echo "patients=".count($entity->getPatient())."<br>";
-//        echo "procedures=".count($entity->getProcedure())."<br>";
-//        echo "accessions=".count($entity->getAccession())."<br>";
-//        echo "parts=".count($entity->getPart())."<br>";
-//        echo "blocks=".count($entity->getBlock())."<br>";;
-//        echo "slides=".count($entity->getSlide())."<br>";
+        echo "<br>################################## Finish:<br>";
+        echo "patients=".count($entity->getPatient())."<br>";
+        echo "procedures=".count($entity->getProcedure())."<br>";
+        echo "accessions=".count($entity->getAccession())."<br>";
+        echo "parts=".count($entity->getPart())."<br>";
+        echo "blocks=".count($entity->getBlock())."<br>";;
+        echo "slides=".count($entity->getSlide())."<br>";
+
+        echo "<br>part:".$entity->getPart()->first()."<br>";
+        echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
 
         //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');

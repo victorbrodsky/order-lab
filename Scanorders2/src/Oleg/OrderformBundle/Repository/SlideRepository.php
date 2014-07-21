@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 class SlideRepository extends ArrayFieldAbstractRepository {
 
     //Make new - no requirements for uniqueness.
-    public function processEntity( $entity, $orderinfo=null ) {
+    public function processEntity( $entity, $orderinfo=null, $original=null ) {
         return $this->setResult( $entity, $orderinfo, null );
     }
     
@@ -85,7 +85,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $parent = $slide->getParent();
         $class = new \ReflectionClass($parent);
         $className = $class->getShortName();
-        $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
+        $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo, null);
         $slide->setParent($processedParent);
         ////////////// EOF process parent //////////////
 

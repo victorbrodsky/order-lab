@@ -14809,7 +14809,7 @@ function handsonTableInit() {
 
     //set institution
     _institution = $('.combobox-institution').select2('val');
-    console.log('_institution='+_institution);
+    //console.log('_institution='+_institution);
 
     var data = new Array();
     var columnsType = new Array();
@@ -25959,11 +25959,12 @@ function checkMrnAccessionConflict() {
 
             accValue = trimWithCheck(accValue);
             acctypeValue = trimWithCheck(acctypeValue);
+            var inst = $('.combobox-institution').select2('val');
 
             $.ajax({
                 url: getCommonBaseUrl("check/"+"accession/check"),    //urlCheck+"accession/check",
                 type: 'GET',
-                data: {key: accValue, extra: acctypeValue},
+                data: {key: accValue, extra: acctypeValue, inst: inst},
                 contentType: 'application/json',
                 dataType: 'json',
                 timeout: _ajaxTimeout,
@@ -26270,11 +26271,12 @@ function checkExistingKey(name) {
 
             elValue = trimWithCheck(elValue);
             eltypeValue = trimWithCheck(eltypeValue);
+            var inst = $('.combobox-institution').select2('val');
 
             $.ajax({
                 url: getCommonBaseUrl("check/"+name+'/check'),   //urlCheck+name+'/check',
                 type: 'GET',
-                data: {key: elValue, extra: eltypeValue},
+                data: {key: elValue, extra: eltypeValue, inst: inst},
                 contentType: 'application/json',
                 dataType: 'json',
                 timeout: _ajaxTimeout,
@@ -26390,37 +26392,6 @@ function removeInfoFromElement( btnObj ) {
     var info = inputEl.parent().find('.scanorder-element-info');
     info.remove();
 }
-
-//function getUserRole() {
-//
-//    if( _external_user !== null ) {
-//        return;
-//    }
-//
-//    $.ajax({
-//        url: getCommonBaseUrl("check/"+'userrole'),   //urlCheck+'userrole',
-//        type: 'POST',
-//        data: {userid: user_id},
-//        contentType: 'application/json',
-//        dataType: 'json',
-//        timeout: _ajaxTimeout,
-//        async: false,
-//        success: function (data) {
-//            if( data && data != '' ) {
-//                if( data == 'not_external_role' ) {
-//                    _external_user = false;
-//                } else {
-//                    _external_user = true;
-//                }
-//            }
-//        },
-//        error: function ( x, t, m ) {
-//            if( t === "timeout" ) {
-//                getAjaxTimeoutMsg();
-//            }
-//        }
-//    });
-//}
 
 //parent - holder containing all elements for this object
 function setPatientNameSexAgeLockedFields( data, parent ) {
@@ -27922,7 +27893,7 @@ function executeClick( btnObjInit ) {
         }
 
         var inst = $('.combobox-institution').select2('val');
-        console.log('inst='+inst);
+        //console.log('inst='+inst);
 
         if( !inst || inst.length == 0 || inst == '' ) {
             gocontinue = false;

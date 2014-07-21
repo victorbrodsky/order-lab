@@ -19,7 +19,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 {
 
     //$entity is procedure
-    public function processEntity( $entity, $orderinfo ) {
+    public function processEntity_OLD( $entity, $orderinfo, $original=null ) {
 
         if( !$entity ) {
             throw new \Exception('Provided entity for processing is null');
@@ -34,14 +34,42 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $addClassMethod = "add".$className;
         $orderinfo->getInstitution()->$addClassMethod($entity);
 
-        //echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
-        //echo $entity;
+        echo "<br>processEntity className (overwrited by procedure)=".$className.", keyFieldName=".$entity->obtainKeyFieldName()."<br>";
+        echo $entity;
+        echo $className.": original:".$original."<br>";
 
-        //check and remove duplication objects such as two Part 'A'.
-        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+        ///////////// process original /////////////
+        if( $original ) { //this means $entity-DB entity, $original-form entity
 
-        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
+            $original->setInstitution($orderinfo->getInstitution());
+
+            //check and remove duplication objects such as two Part 'A'.
+            $original = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $original, $orderinfo );
+
+            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+            $original = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
+
+            return $this->setResult($entity, $orderinfo, $original);
+        } else {
+
+            //add this object to institution from orderinfo.
+            $addClassMethod = "add".$className;
+            $orderinfo->getInstitution()->$addClassMethod($entity);
+
+            //check and remove duplication objects such as two Part 'A'.
+            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+
+            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+            $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $entity, $orderinfo );
+
+        }
+        ///////////// EOF process original /////////////
+
+//        //check and remove duplication objects such as two Part 'A'.
+//        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
+//
+//        //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
+//        $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField($entity,$orderinfo);
 
         $keys = $entity->obtainAllKeyfield();
 
@@ -120,6 +148,19 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         return $this->setResult($entity, $orderinfo);
 
+    }
+
+    public function setProcedureKey($key, $entity, $orderinfo) {
+        $em = $this->_em;
+        $newkeytypeEntity = $em->getRepository('OlegOrderformBundle:EncounterType')->findOneByName("Auto-generated Encounter Number");
+        $key->setKeytype($newkeytypeEntity);
+
+        $nextKey = $this->getNextNonProvided($entity,null,$orderinfo);  //"NO".strtoupper($fieldName)."PROVIDED", $className, $fieldName);
+
+        //we should have only one key field !!!
+        $key->setField($nextKey);
+        $key->setStatus(self::STATUS_VALID);
+        $key->setProvider($orderinfo->getProvider());
     }
 
     //add procedure's name, sex, age to the corresponding patient fields

@@ -26,7 +26,7 @@ class PIList extends ListAbstract
 
     /**
      * User object
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
      */
     protected $principal;

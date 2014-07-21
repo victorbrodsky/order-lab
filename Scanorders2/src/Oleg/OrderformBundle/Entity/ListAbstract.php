@@ -40,7 +40,7 @@ abstract class ListAbstract
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -54,7 +54,7 @@ abstract class ListAbstract
     protected $createdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
      */
     protected $updatedby;

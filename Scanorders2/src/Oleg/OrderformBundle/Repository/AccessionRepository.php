@@ -3,6 +3,9 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use Oleg\OrderformBundle\Entity\DataQuality;
+use Oleg\OrderformBundle\Entity\Block;
+use Oleg\OrderformBundle\Entity\Accession;
 
 /**
  * AccessionRepository
@@ -75,23 +78,21 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
     public function processDuplicationKeyField( $accession, $orderinfo ) {
 
+        if( !($accession instanceof Accession) ) {
+            echo 'Provided entity is not Accession, entity:'.$accession;
+            throw new \Exception( 'Provided entity is not Accession, entity:'.$accession );
+        }
+
         $em = $this->_em;
 
         //process data quality
         $currentDataquality = null;
 
-        //echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
+        echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
 
+        //loop through all conflicts to find out if this accession is conflicted
+        //To determine if this accession has geberated conflict: 1) compare accession number/type and mrn number/type of dataquality and form
         foreach( $orderinfo->getDataquality() as $dataquality) {
-
-            //don't process dataquality if it's already exists in DB
-//            if( !$dataquality->getId() || $dataquality->getId() == "" ) {
-//                continue;
-//            }
-//            $dataqualityDB = $em->getRepository('OlegOrderformBundle:DataQuality')->findOneById($dataquality->getId());
-//            if( $dataqualityDB ) {
-//                continue;
-//            }
 
             $accessionConflict = false;
             $patientConflict = false;
@@ -102,10 +103,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $validMrn = $accession->getParent()->getParent()->obtainValidKeyfield();
             $accmrn = $validMrn->getField();
             $accmrntype = $validMrn->getKeytype();
-            //echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
+            echo "compare patient: (".$mrn .")==(". $accmrn .") && (". $mrntype .")==(". $accmrntype.")<br>";
+            echo "acc patient:". $accession->getParent()->getParent();
 
-            if( $mrntype == "" ) {
-                throw new \Exception( 'Conflicting MRN Type is not provided: ' . $mrntype );
+            if( $mrntype == "" || $accmrntype == "" ) {
+                throw new \Exception( 'Conflicting MRN Type is not provided: mrntype=' . $mrntype . ", accmrntype=" .$accmrntype );
             }
 
             if( $mrn && $mrn != '' && $accmrn && $accmrn != '' ) {
@@ -117,9 +119,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             }
 
             if( $mrn == $accmrn && trim($mrntype) == trim($accmrntype) ) {
-                $patientConflict = true;
+                $patientConflict = true;   //was true?
+                //echo "patientConflict=".$patientConflict."<br>";
                 //break;
             }
+            echo "patientConflict=".$patientConflict."<br>";
 
             $conflictAccessionNum = $dataquality->getAccession()."";
             $conflictAccessionType = $dataquality->getAccessiontype()."";
@@ -130,14 +134,16 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 throw new \Exception( 'Conflicting Accession Type is not provided: ' . $conflictAccessionType );
             }
 
-            //echo $currentAccessionNum."?=".$conflictAccessionNum.", newAccession=".$dataquality->getNewaccession()."<br>";
-            //echo $currentAccessionType."?=".$conflictAccessionType."<br>";
+            echo $currentAccessionNum."?=".$conflictAccessionNum.", newAccession=".$dataquality->getNewaccession()."<br>";
+            echo $currentAccessionType."?=".$conflictAccessionType."<br>";
 
             if( $currentAccessionNum == $conflictAccessionNum && $currentAccessionType == $conflictAccessionType ) { //only for match accessions and if this accession was not processed yet
                 if( !$dataquality->getNewaccession() ) {
                     $accessionConflict = true;
                 }
             }
+
+            echo "accessionConflict=".$accessionConflict.", patientConflict=".$patientConflict."<br>";
 
             if( $accessionConflict && $patientConflict ) {
                 $currentDataquality = $dataquality;
@@ -146,58 +152,62 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         }
 
         if( !$currentDataquality ) {
-            //echo "#####this is not conflict accession => return !!!!!! <br>";
+            echo "#####this is not conflict accession => return !!!!!! <br>";
             return $accession;
         }
 
         ///////////////// check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
         $dbconflict = false;
-        $accKey = $accession->obtainValidKeyfield();
-        $accValue = $accKey->getField()."";
-        $accKeytype = $accKey->getKeytype()->getId();
+        if( !$currentDataquality ) {
 
-        $procedure = $accession->getParent();
-        if( !$procedure ) {
-            throw new \Exception( 'Accession does not belong to Procedure' );
-        }
+            echo "check conflict in DB <br>";
+            $accKey = $accession->obtainValidKeyfield();
+            $accValue = $accKey->getField()."";
+            $accKeytype = $accKey->getKeytype()->getId();
 
-        $patient = $procedure->getParent();
-        if( !$patient ) {
-            throw new \Exception( 'Procedure does not belong to Patient' );
-        }
+            $procedure = $accession->getParent();
+            if( !$procedure ) {
+                throw new \Exception( 'Accession does not belong to Procedure' );
+            }
 
-        $mrnKey = $patient->obtainValidKeyField();
-        $mrnValue = $mrnKey->getField()."";
-        $mrnKeytype = $mrnKey->getKeytype()->getId();
-        $institutions = array($accession->getInstitution()->getId());
-        //echo "mrnKeytype Id=".$mrnKeytype."<br>";
+            $patient = $procedure->getParent();
+            if( !$patient ) {
+                throw new \Exception( 'Procedure does not belong to Patient' );
+            }
 
-        if( $this->isDBConflictByAccession( $institutions, $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
-            //echo "DB conflict!<br>";
-            $dbconflict = true;
+            $mrnKey = $patient->obtainValidKeyField();
+            $mrnValue = $mrnKey->getField()."";
+            $mrnKeytype = $mrnKey->getKeytype()->getId();
+            $institutions = array($accession->getInstitution()->getId());
+            //echo "mrnKeytype Id=".$mrnKeytype."<br>";
 
-            $currentDataquality = new DataQuality();
+            if( $this->isDBConflictByAccession( $institutions, $accValue, $accKeytype, $mrnValue, $mrnKeytype  ) ) {
+                echo "DB conflict!<br>";
+                $dbconflict = true;
 
-            //set mrntype
-            $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrnKeytype );
-            $currentDataquality->setMrntype($mrntype);
-            $currentDataquality->setMrn($mrnValue);
+                $currentDataquality = new DataQuality();
 
-            //set accessiontype
-            $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $accKeytype );
-            $currentDataquality->setAccessiontype($accessiontype);
-            $currentDataquality->setAccession($accValue);
+                //set mrntype
+                $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrnKeytype );
+                $currentDataquality->setMrntype($mrntype);
+                $currentDataquality->setMrn($mrnValue);
 
-            $currentDataquality->setOrderinfo($orderinfo);
-            $currentDataquality->setProvider($orderinfo->getProvider());
-            $currentDataquality->setStatus('active');
+                //set accessiontype
+                $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $accKeytype );
+                $currentDataquality->setAccessiontype($accessiontype);
+                $currentDataquality->setAccession($accValue);
 
+                $currentDataquality->setOrderinfo($orderinfo);
+                $currentDataquality->setProvider($orderinfo->getProvider());
+                $currentDataquality->setStatus('active');
+
+            }
         }
         ///////////////// EOF check DB directly for conflict, just in case JS fails to catch conflict and orderinfo's Dataquality is empty ////////////////////
 
 
         //Now we know that this accession has MRN conflict
-        //echo "Now we know that this accession has MRN conflict <br>";
+        echo "Now we know that this accession has MRN conflict <br>";
 
         //1) take care of mrn-accession conflict: replace accession# with ACCESSIONNONPROVIDED:
         $accession->setId(null); //make sure to generate a new accession
@@ -213,6 +223,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         $key->setSource('scanorder');
         $key->setProvider($orderinfo->getProvider());
 
+        if( !$accession->getInstitution() ) {
+            $accession->setInstitution($orderinfo->getInstitution());
+        }
+
         $nextKey = $this->getNextNonProvided($accession,null,$orderinfo);
         $key->setField($nextKey);
 
@@ -227,10 +241,10 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
             $currentDataquality->setDescription($desc);
         }
 
-//        echo "<br>-----------------Original Accession:<br>";
-//        $this->printTree( $accession );
-//        echo "--------------------------<br>";
-//        echo "finish process Accession: ".$accession."<br>";
+        echo "<br>-----------------Original Accession:<br>";
+        $this->printTree( $accession );
+        echo "--------------------------<br>";
+        echo "finish process Accession: ".$accession."<br>";
 
         return $accession;
 
@@ -285,6 +299,27 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         }
 
         return false;
+    }
+
+
+    public function setCorrectAccessionIfConflict( $slide, $orderinfo ) {
+
+        $slideParent = $slide->getParent();
+
+        $class = new \ReflectionClass($slideParent);
+        $className = $class->getShortName();
+
+        if( $slideParent instanceof Block ) {
+                        //    block     part        accession
+            $accession = $slideParent->getParent()->getParent();
+        } else {
+                        //    part      accession
+            $accession = $slideParent->getParent();
+        }
+
+        $accession = $this->processDuplicationKeyField( $accession, $orderinfo );
+
+
     }
 
 }

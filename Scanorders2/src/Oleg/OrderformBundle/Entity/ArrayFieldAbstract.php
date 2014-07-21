@@ -26,7 +26,7 @@ abstract class ArrayFieldAbstract {
     protected $id;
 
      /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;

@@ -85,13 +85,13 @@ class DataQuality
     protected $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="resolver", referencedColumnName="id")
      */
     private $resolver;
