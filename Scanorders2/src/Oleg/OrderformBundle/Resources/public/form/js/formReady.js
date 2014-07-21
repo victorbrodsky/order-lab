@@ -92,6 +92,8 @@ $(document).ready(function() {
 //        window.onbeforeunload = null;
 //    });
 
+    changeInstitution();
+
     windowCloseAlert();
 
 });

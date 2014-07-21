@@ -5044,6 +5044,8 @@ function capitaliseFirstLetter(string)
  */
 
 
+
+
 //prevent exit modified form
 function windowCloseAlert() {
 
@@ -5071,6 +5073,13 @@ function windowCloseAlert() {
 
         //console.log("modified="+modified);
         if( modified === true ) {
+
+            //set back institution
+            var institution_original_id = localStorage.getItem("institution_original_id");
+            if( typeof institution_original_id !== 'undefined' && institution_original_id != "" && institution_original_id != null ) {
+                $('.combobox-institution').select2('val', institution_original_id);
+            }
+
             return "The changes you have made will not be saved if you navigate away from this page.";
         } else {
             return;
@@ -5080,6 +5089,26 @@ function windowCloseAlert() {
     $('form').submit(function() {
         window.onbeforeunload = null;
     });
+}
+
+
+function changeInstitution() {
+
+    var institution_original_id = $('.combobox-institution').select2('val');
+    window.localStorage.setItem("institution_original_id", institution_original_id);
+
+    var institution_changed_id = localStorage.getItem("institution_changed_id");
+    //console.log('institution_changed_id='+institution_changed_id);
+    if( typeof institution_changed_id !== 'undefined' && institution_changed_id != "" && institution_changed_id != null ) {
+        $('.combobox-institution').select2('val', institution_changed_id);
+    }
+
+    $('.combobox-institution').change(function(e) {
+        var inst = $('.combobox-institution').select2('val');
+        window.localStorage.setItem("institution_changed_id", inst);
+        window.location.reload();
+    });
+
 }
 
 //add all element to listeners again, the same as in ready
