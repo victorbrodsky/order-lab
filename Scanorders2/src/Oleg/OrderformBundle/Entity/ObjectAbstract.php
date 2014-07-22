@@ -412,8 +412,8 @@ abstract class ObjectAbstract
         return $count;
     }
 
-    //get only one field:
-    public function obtainValidField( $fieldname, $user ) {
+    //get only one field
+    public function obtainValidField( $fieldname ) {
         $res = null;
         $getMethod = "get".$fieldname;
         foreach( $this->$getMethod() as $entity ) {
@@ -427,7 +427,7 @@ abstract class ObjectAbstract
     }
 
     //$fields: array of fields that should be filter out
-    public function obtainOneValidObject($fields,$user,$asarray=false) {
+    public function obtainOneValidObject($fields,$asarray=false) {
 
         $res = array();
 
@@ -439,14 +439,14 @@ abstract class ObjectAbstract
                 }
                 $key = $field[0];
                 unset($field[0]);
-                $oneField = $this->obtainValidField($key,$user);
+                $oneField = $this->obtainValidField($key);
                 foreach( $field as $simpleField ) {
                     $getMethod = "get".$simpleField;
                     $res[$this->getId()][$key][$simpleField] = $oneField->$getMethod()."";
                     echo "<br>";
                 }
             } else {
-                $oneField = $this->obtainValidField($field,$user);
+                $oneField = $this->obtainValidField($field);
                 if( $asarray ) {
                     $res[$this->getId()][$field] = $oneField."";
                 } else {

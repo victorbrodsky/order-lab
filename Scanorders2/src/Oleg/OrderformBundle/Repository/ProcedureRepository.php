@@ -7,7 +7,7 @@ use Oleg\OrderformBundle\Entity\PatientLastName;
 use Oleg\OrderformBundle\Entity\PatientFirstName;
 use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientSex;
-use Oleg\OrderformBundle\Entity\PatientAge;
+//use Oleg\OrderformBundle\Entity\PatientAge;
 
 /**
  * ProcedureRepository
@@ -113,7 +113,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             //procedure were obtained from accession, so it's not persisted.
             $em->persist($found);
 
-            //add procedure's name, sex, age to the corresponding patient fields
+            //add procedure's name, sex to the corresponding patient fields
             $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
 
             return $this->setResult($found, $orderinfo, $entity);
@@ -143,7 +143,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             throw new \Exception( 'More than one Accession in the Procedure. Number of accession=' . count($accessions) );
         }
 
-        //add procedure's name, sex, age to the corresponding patient fields in case if this is a new procedure (not found in DB)
+        //add procedure's name, sex to the corresponding patient fields in case if this is a new procedure (not found in DB)
         $this->copyCommonFieldsToPatient($entity,$orderinfo->getProvider());
 
         return $this->setResult($entity, $orderinfo);
@@ -163,7 +163,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $key->setProvider($orderinfo->getProvider());
     }
 
-    //add procedure's name, sex, age to the corresponding patient fields
+    //add procedure's name, sex to the corresponding patient fields
     public function copyCommonFieldsToPatient( $procedure, $user ) {
 
         $patient = $procedure->getParent();
@@ -213,16 +213,16 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $patient->addSex($patientsex);
         }
 
-        //age
-        if( count($procedure->getPatage()) > 0 ) {
-            if( $this->validFieldIsSet( $patient->getAge() ) ) {
-                $status = self::STATUS_INVALID;
-            }
-            $patientage = new PatientAge($status,$user,$source);
-            //echo "procedure age=".$procedure->getPatage()->first()->getField()."<br>";
-            $patientage->setField($procedure->getPatage()->first()->getField());
-            $patient->addAge($patientage);
-        }
+//        //age
+//        if( count($procedure->getPatage()) > 0 ) {
+//            if( $this->validFieldIsSet( $patient->getAge() ) ) {
+//                $status = self::STATUS_INVALID;
+//            }
+//            $patientage = new PatientAge($status,$user,$source);
+//            //echo "procedure age=".$procedure->getPatage()->first()->getField()."<br>";
+//            $patientage->setField($procedure->getPatage()->first()->getField());
+//            $patient->addAge($patientage);
+//        }
 
     }
 

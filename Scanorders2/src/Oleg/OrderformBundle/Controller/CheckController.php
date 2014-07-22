@@ -163,11 +163,11 @@ class CheckController extends Controller {
                 'id'=>$entity->getId(),
                 'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('keytype')),
                 'fullname'=>$entity->getFullPatientName(),
-                'sex'=>$this->getArrayFieldJson( array($entity->obtainValidField('sex',$user)) ),
+                'sex'=>$this->getArrayFieldJson( array($entity->obtainValidField('sex')) ),
                 'dob'=>$this->getArrayFieldJson($entity->getDob()),
-                'age'=>$this->getArrayFieldJson( array($entity->obtainValidField('age',$user)) ),
+                'age'=>$entity->calculateAge(),
                 'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
-                //'clinicalHistory'=>$this->getArrayFieldJson( array($entity->obtainValidField('clinicalHistory',$user)) )
+                //'clinicalHistory'=>$this->getArrayFieldJson( array($entity->obtainValidField('clinicalHistory')) )
             );
         } 
 
@@ -342,7 +342,7 @@ class CheckController extends Controller {
                 if( $patient ) {
                     $parentKey = $patient->obtainValidKeyfield();
                     //$parentDob = $patient->obtainValidDob();
-                    $parentDob = $patient->obtainValidField('dob',$user);
+                    $parentDob = $patient->obtainValidField('dob');
                 }
 
                 //echo "parentKey=".$parentKey."<br>";

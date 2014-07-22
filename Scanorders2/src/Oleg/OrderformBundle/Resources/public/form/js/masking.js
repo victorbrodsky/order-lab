@@ -91,11 +91,11 @@ function fieldInputMask( holder ) {
         clearMaskOnLostFocus: true
     });
 
-    //if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+    if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
         $(":input").inputmask();
-    //} else {
-    //    holder.find(":input").inputmask();
-    //}
+    } else {
+        holder.find(":input").inputmask();
+    }
 
     if( cicle == "new" || cicle == "create" ) {
 

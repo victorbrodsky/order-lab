@@ -22,7 +22,7 @@ class PatientMrnType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->params['type'] == 'One Slide Scan Order') {
+        if( $this->params['type'] == 'One-Slide Scan Order') {
             $attr['style'] = 'width:100%';
             $mrnTypeLabel = "MRN Type:";
             //$gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);

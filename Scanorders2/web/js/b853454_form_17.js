@@ -5,25 +5,89 @@
  */
 
 
+
+
+//prevent exit modified form
+function windowCloseAlert() {
+
+    if( cicle == "show" ) {
+        return;
+    }
+
+    window.onbeforeunload = confirmModifiedFormExit;
+
+    function confirmModifiedFormExit() {
+
+        var modified = false;
+
+        if( $('#scanorderform').length != 0 ) {
+            modified = checkIfOrderWasModified();
+        }
+
+        if( $('#table-scanorderform').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
+        if( $('#table-slidereturnrequests').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
+        //console.log("modified="+modified);
+        if( modified === true ) {
+
+            //set back institution
+            var institution_original_id = localStorage.getItem("institution_original_id");
+            if( typeof institution_original_id !== 'undefined' && institution_original_id != "" && institution_original_id != null ) {
+                $('.combobox-institution').select2('val', institution_original_id);
+            }
+
+            return "The changes you have made will not be saved if you navigate away from this page.";
+        } else {
+            return;
+        }
+    }
+
+    $('form').submit(function() {
+        window.onbeforeunload = null;
+    });
+}
+
+
+function changeInstitution() {
+
+    var institution_original_id = $('.combobox-institution').select2('val');
+    window.localStorage.setItem("institution_original_id", institution_original_id);
+
+    var institution_changed_id = localStorage.getItem("institution_changed_id");
+    //console.log('institution_changed_id='+institution_changed_id);
+    if( typeof institution_changed_id !== 'undefined' && institution_changed_id != "" && institution_changed_id != null ) {
+        $('.combobox-institution').select2('val', institution_changed_id);
+    }
+
+    $('.combobox-institution').change(function(e) {
+        var inst = $('.combobox-institution').select2('val');
+        window.localStorage.setItem("institution_changed_id", inst);
+        window.location.reload();
+    });
+
+}
+
 //add all element to listeners again, the same as in ready
 function initAdd() {
 
+    //console.log("init Add");
+
     expandTextarea();
 
-//    $(".combobox").combobox();
     regularCombobox();
 
     initDatepicker();
 
     //clean validation elements
-    //console.log("clean initAdd");
     cleanValidationAlert();
 
-    fieldInputMask();
-
-    setResearch();
-
-    setEducational();
+    //setResearch();
+    //setEducational();
 
 }
 
@@ -54,25 +118,6 @@ function deleteItem(id) {
                 delBtnToReplace.remove();
             }
 
-        } else {
-//            //clear the form and all children
-//            var ids = id.split("_");
-//            //alert("You can't delete only one left " + ids[0]);
-//
-//            //console.log("id="+id);
-//            //console.log("rename elements.length="+elements.length);
-//            addSameForm(ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[7], ids[8]); //testing???
-//
-//            $('#formpanel_'+id).remove(); //testing
-//
-//            //make sure to rename delete button to "Clear" if it is only one element left
-//            if( elements.length == 1 ) {
-//                //change "delete" to "clear"
-//                var element = thisParent.children( ".panel" );
-//                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-//                //delBtnToReplace.html('Clear');
-//                delBtnToReplace.remove();
-//            }
         }
     }
 
@@ -152,9 +197,16 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindDeleteBtn( name + '_' + idsNext.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(idsNext);
     initAdd();
     addKeyListener();
+
+    //mask init
+    var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
+    fieldInputMask( newHolder ); //setDefaultMask(btnObj);
+    //comboboxes init
+    initComboboxJs(idsNext, newHolder);
+
+    //setDefaultMask(btnObj);
 
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -175,7 +227,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
-    //TODO: add Delete button if there are sibling objects
+    //add Delete button if there are sibling objects
     var origId = "formpanel_"+name+"_"+idsorig.join("_");
     //console.log("origId="+origId);
     var origBtnGroup = $("#"+origId).find('.panel-heading').find('.form-btn-options').first();
@@ -191,28 +243,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         bindDeleteBtn( name + '_' + idsorig.join("_") );
     }
 
-//    //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
-//    var thisId = "formpanel_"+name+"_"+ids.join("_");
-//    console.log("thisId="+thisId);
-//    var thisParent = $("#"+thisId).parent();
-//    var childrens = thisParent.children( ".panel" );
-//
-//    //var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="testjs add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
-//    var addbtn =  getHeaderAddBtn( name, ids );
-//
-//    for (var i = 0; i < childrens.length; i++) {
-//        var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
-//        addBtnToReplace.replaceWith( addbtn );
-//
-//        //rename "clear" to "Delete"
-//        if( childrens.length > 1 ) {
-//            console.log("childrens.length="+childrens.length);
-//            var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-//            delBtnToRename.html('Delete');
-//        }
-//    }
-
-    initAllElements();
+    //initial disabling
+    initAllElements(newHolder);
 }
 
 //add children forms triggered by parent form
@@ -231,7 +263,7 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
 
     var uid = prevName+"_"+parentIds.join("_");
     var holder = "#form_body_"+uid;
-    console.debug(name+": ADD CHILDS to="+holder);
+    //console.debug(name+": ADD CHILDS to="+holder);
 
     //attach children form
     var withDelBtn = false;
@@ -241,9 +273,15 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     bindDeleteBtn( name + '_' + ids.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(ids);
     initAdd();
     addKeyListener();
+
+    //mask init
+    var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
+    fieldInputMask( newHolder );
+    //comboboxes init
+    initComboboxJs(ids, newHolder);
+
 }
 
 //input: current form ids
@@ -583,11 +621,11 @@ function setNavBar() {
     }
 
     if( full.indexOf("my-scan-orders") !== -1 ) {
-        id = 'myscanorders';
+        id = 'myrequesthistory';
     }
 
     if( full.indexOf("my-slide-return-requests") !== -1 ) {
-        id = 'mysliderequests';
+        id = 'myrequesthistory';
     }
 
     //Admin

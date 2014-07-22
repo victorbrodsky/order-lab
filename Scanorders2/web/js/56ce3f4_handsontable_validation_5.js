@@ -86,14 +86,14 @@ function validateHandsonTable() {
     //console.log( 'countRow=' + countRow );
 
     /////////// 2) Empty main cells validation ///////////
-    var emptyRows = 0;
+    var nonEmptyRows = 0;
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
         if( !validateEmptyHandsonRow(row) ) {
             setSpecialErrorToRow(row);
-            emptyRows++;
+            nonEmptyRows++;
         }
     } //for each row
-    if( emptyRows > 0 ) {
+    if( nonEmptyRows > 0 ) {
 //        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
 //            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
 //            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
@@ -104,7 +104,7 @@ function validateHandsonTable() {
             "If you have accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
 
         var errorHtml = createTableErrorWell(errmsg);
-        //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+emptyRows+'. Empty cells are marked with red.');
+        //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+nonEmptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
         $('#tableview-submit-btn').button('reset');
         return false;
@@ -618,7 +618,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
             $.ajax({
                 url: getCommonBaseUrl("check/"+name+'/check'),    //urlCheck+name+'/check',
                 type: 'GET',
-                data: {key: keyvalue, extra: keytypeCorrect},
+                data: {key: keyvalue, extra: keytypeCorrect, inst: _institution},
                 contentType: 'application/json',
                 dataType: 'json',
                 timeout: _ajaxTimeout,
@@ -663,39 +663,6 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
 
     }); //promise
 }
-////return id of the keytype by keytype string
-////if keytype does not exists in DB, return keytype string
-//function getKeyTypeID( name, keytype ) {
-//    return Q.promise(function(resolve, reject) {
-//
-//        $.ajax({
-//            url: getCommonBaseUrl("check/"+name+'/keytype/'+keytype),   //urlCheck+name+'/keytype/'+keytype,
-//            type: 'GET',
-//            //data: {keytype: keytype},
-//            contentType: 'application/json',
-//            dataType: 'json',
-//            timeout: _ajaxTimeout,
-//            async: false,
-//            success: function (data) {
-//                //console.debug("get element ajax ok");
-//                if( data && data != '' ) {
-//                    //console.log(name+": keytype is found. keytype="+data);
-//                    resolve(data);
-//                } else {
-//                    //console.log(name+": keytype is not found.");
-//                    resolve(keytype);
-//                }
-//            },
-//            error: function ( x, t, m ) {
-//                //console.debug("keytype id: ajax error "+name);
-//                if( t === "timeout" ) {
-//                    getAjaxTimeoutMsg();
-//                }
-//                reject(Error("Check Existing Error"));
-//            }
-//        });
-//    }); //promise
-//}
 
 
 function validateEmptyHandsonRow( row ) {
@@ -802,4 +769,27 @@ function getTableDataIndexes() {
         }
     }
     return res;
+}
+
+//return true if modified
+function checkIfTableWasModified() {
+
+    var modified = false;
+
+    if( typeof _sotable === 'undefined' ) {
+        return modified;
+    }
+
+    var countRow = _sotable.countRows();
+    //console.log( 'countRow=' + countRow );
+
+    for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
+        if( exceptionRow(row) === false ) {
+            modified = true;
+            break;
+        }
+    }
+
+    //console.log( 'modified=' + modified );
+    return modified;
 }

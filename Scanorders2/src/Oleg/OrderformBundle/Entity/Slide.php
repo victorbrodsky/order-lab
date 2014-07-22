@@ -93,6 +93,12 @@ class Slide extends ObjectAbstract
      */
     protected $institution;
 
+    /**
+     * Sequence in table form scan order
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $sequence;
+
 
     
     public function __construct( $withfields=false, $status='valid', $provider=null, $source=null )
@@ -389,6 +395,24 @@ class Slide extends ObjectAbstract
     {
         return $this->research;
     }
+
+    /**
+     * @param mixed $sequence
+     */
+    public function setSequence($sequence)
+    {
+        $this->sequence = $sequence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSequence()
+    {
+        return $this->sequence;
+    }
+
+
 
 
     public function cleanEmptyArrayFields() {

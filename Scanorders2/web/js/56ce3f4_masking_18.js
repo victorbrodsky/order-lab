@@ -47,7 +47,8 @@ function getAccessionDefaultMask() {
 }
 ///////////////////// END OF DEFAULT MASKS //////////////////////
 
-function fieldInputMask() {
+//holder - element holding all fields to apply masking
+function fieldInputMask( holder ) {
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
@@ -90,18 +91,35 @@ function fieldInputMask() {
         clearMaskOnLostFocus: true
     });
 
-    $(":input").inputmask();
+    if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+        $(":input").inputmask();
+    } else {
+        holder.find(":input").inputmask();
+    }
 
     if( cicle == "new" || cicle == "create" ) {
 
-        $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
-        $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
-        //$(".patientmrn-mask").inputmask( { "mask": "*", "repeat": 13, "greedy": false } );
-        //$(".patientmrn-mask").inputmask( { "mask": "***" } );
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            //console.log("Set default mask for all");
+            $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        } else {
+            //console.log("Set default mask for holder");
+            //console.log(holder);
+            holder.find(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            holder.find(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        }
 
     } else {
+
         //set mrn for amend
-        var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        } else {
+            var mrnkeytypeField = holder.find('.mrntype-combobox').not("*[id^='s2id_']");
+        }
         mrnkeytypeField.each( function() {
             setMrntypeMask($(this),false);
         });
@@ -118,7 +136,7 @@ function fieldInputMask() {
         "mask": "[n]", "repeat": 50, "greedy": false
     });
 
-//    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+    //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
     accessionTypeListener();
     mrnTypeListener();
@@ -282,6 +300,7 @@ function setAccessiontypeMask(elem,clean) {
 
     //clear input field
     if( clean ) {
+        //console.log("clean accession: value=" + value);
         accField.val('');
         clearErrorField(accField);
     }

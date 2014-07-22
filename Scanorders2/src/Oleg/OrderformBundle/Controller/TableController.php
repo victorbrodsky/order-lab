@@ -69,6 +69,8 @@ use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
@@ -80,10 +82,117 @@ use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 
 class TableController extends Controller {
 
+    /**
+     * @Route("/scan-order/multi-slide-table-view/{id}/show", name="table_show", requirements={"id" = "\d+"})
+     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     */
+    public function multiTableShowAction( Request $request, $id ) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
+        if( !$secUtil->isCurrentUserAllow($id) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $userUtil = new UserUtil();
+
+        $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
+
+        if( $orderinfo && !$userUtil->hasPermission($orderinfo,$this->get('security.context')) ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $type = "show";
+        $disable = true;
+        $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'service'=>null, 'user'=>$user);
+        $form   = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
+
+        //$slides = $orderinfo->getSlide();
+        $query = $em->createQuery('
+            SELECT slide
+            FROM OlegOrderformBundle:Slide slide
+            INNER JOIN slide.orderinfo orderinfo
+            WHERE orderinfo.oid = :id
+            ORDER BY slide.sequence DESC'
+        )->setParameter('id', $id);
+
+        $slides = $query->getResult();
+
+        $jsonData = array();
+
+        $count = 0;
+        foreach( $slides as $slide ) {
+
+            $block = $slide->getBlock();
+            $part = $block->getPart();
+            $accession = $part->getAccession();
+            $procedure = $accession->getProcedure();
+            $patient = $procedure->getPatient();
+
+            $rowArr = array();
+
+            //accession: 2
+            $acckey = $accession->obtainValidKeyField();
+            $rowArr['Accession Type'] = $acckey->getKeytype()->getId();
+            $rowArr['Accession Number'] = $acckey->getField();
+
+            //part: 1
+            $rowArr['Part Name'] = $part->obtainValidKeyField()->getField();
+
+            //block: 1
+            $rowArr['Block Name'] = $block->obtainValidKeyField()->getField();
+
+            //procedure: 6
+//            $rowArr['Procedure Type'] = ( $procedure->getName()->first()->getField() ? $procedure->getName()->first()->getField()->getId() : null );
+//            $rowArr['Encounter Date'] = $procedure->obtainValidField('encounterDate')."";
+//            $rowArr["Patient's Last Name"] = $procedure->obtainValidField('patlastname')."";
+//            $rowArr["Patient's First Name"] = $procedure->obtainValidField('patfirstname')."";
+//            $rowArr["Patient's Middle Name"] = $procedure->obtainValidField('patmiddlename')."";
+//            $rowArr['Patient Sex'] = $procedure->obtainValidField('patsex')."";
+//            $rowArr['Patient Age'] = $procedure->obtainValidField('patage')."";
+//            $rowArr['Clinical History'] = $procedure->obtainValidField('pathistory')."";
+
+            //slide
+//            $rowArr['Slide Title'] = $slide->getTitle();
+//            $rowArr['Slide Type'] = $slide->getSlidetype()->getName();
+//            $rowArr['Microscopic Description'] = $slide->getMicroscopicdescr();
+//            $rowArr['Link(s) to related image(s)'] = $slide->getRelevantScans()->first()->getField();
+//            $rowArr['Region to Scan'] = $slide->getScan()->first()->getScanregion();
+
+            //block
+            //$rowArr['Block Section Source'] = $slide->getParent()->getScanregion();
+
+            $jsonData[$count] = $rowArr;
+            $count++;
+        }
+
+        //print_r($jsonData);
+        var_dump($jsonData);
+
+        return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
+            'xdata' => json_encode($jsonData),
+            //'entity' => $entity,
+            'form' => $form->createView(),
+            'type' => $type,    //form cicle: new, show, amend ...
+            'formtype' => $orderinfo->getType(),
+            'history' => null
+        ));
+
+    }
+
 
     /**
      * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("OlegOrderformBundle:MultiScanOrder:multitable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multiTableCreationAction()
     {
@@ -144,6 +253,7 @@ class TableController extends Controller {
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
+        $entity->setProxyuser($user);
 
         $patient = new Patient(true,'invalid',$user,$source);
         $entity->addPatient($patient);
@@ -178,7 +288,7 @@ class TableController extends Controller {
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultiScanOrder:multitable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {
@@ -227,6 +337,7 @@ class TableController extends Controller {
 
         //echo "entity inst=".$entity->getInstitution()."<br>";
 
+        $count = 0;
         foreach( $data as $row ) {
             //var_dump($row);
             //echo "<br>";
@@ -240,11 +351,13 @@ class TableController extends Controller {
             //echo $rowCount.": accType=".$row[0].", acc=".$row[1]." \n ";
             $rowCount++;
 
-            $patient = $this->constractPatientByTableData($row,$headers);
+            $patient = $this->constractPatientByTableData($row,$headers,$count);
 
             $entity->addPatient($patient);
 
             //echo $patient->getProcedure()->first()->getAccession()->first();
+
+            $count++;
 
         }//foreach row
         //////////////// process handsontable rows ////////////////
@@ -307,7 +420,7 @@ class TableController extends Controller {
 
     }
 
-    public function constractPatientByTableData( $row, $columnData ) {
+    public function constractPatientByTableData( $row, $columnData, $count ) {
 
         $force = true; //true - create fields even if the value is empty
         $status = "valid";
@@ -562,6 +675,9 @@ class TableController extends Controller {
 
         ////////////////// Slide /////////////////
         $slide = new Slide(false, $status, $provider, $source);
+
+        //Slide set Sequence
+        $slide->setSequence($count);
 
         //Slide Title
         $slide->setTitle($this->getValueByHeaderName('Slide Title',$row,$columnData));

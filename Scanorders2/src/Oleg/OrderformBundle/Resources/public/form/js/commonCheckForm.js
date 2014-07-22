@@ -996,7 +996,7 @@ function setPatientNameSexAgeLockedFields( data, parent ) {
     }
 
     if( data['age'] && data['age'] != undefined && data['age'] != "" ) {
-        parent.find('.patientage').find('.well').html( data['age'][0]['text'] );
+        parent.find('.patientage').find('.well').html( data['age'] );
     }
 
 }

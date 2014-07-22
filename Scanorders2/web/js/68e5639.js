@@ -3796,17 +3796,13 @@ function regularCombobox() {
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
+}
 
-    //set amd make provider read only
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
-
+function setResearchEducational() {
     //preselect with current user
-    if( proxyuser_id ) {
-//        proxyuser_id = user_id;
-//        proxyuser_name = user_name;
-        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
-    }
+//    if( proxyuser_id ) {
+//        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
+//    }
 
     //research
     populateSelectCombobox( ".combobox-research-setTitle", null, "Choose and Option", false );
@@ -4377,7 +4373,7 @@ function getSetTitle() {
         async: asyncflag
     }).success(function(data) {
         if( data ) {
-            //console.log("id="+data[0].id+", text="+data[0].text);
+            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
             //setElementToId( targetid, data );

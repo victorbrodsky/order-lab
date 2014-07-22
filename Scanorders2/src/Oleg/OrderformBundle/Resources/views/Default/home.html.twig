@@ -23,11 +23,18 @@
         {% endif %}
 
         <p>
+            Please use the menu on the top to place a <a href="{{ path('single_new') }}">One-Slide</a>, <a href="{{ path('multi_new') }}">Multi-Slide</a>, or a <a href="{{ path('table_create') }}">Table-View</a> Scan Order or select <a href="{{ path('my-scan-orders') }}">My Orders</a> to review the status of the orders you have placed.
+        </p>
 
-            {#Please use the menu on the top to place a slide scan order of desired type or select <a href="{{ path('my-scan-orders') }}">"My Orders"</a> to review the status of the orders you have placed.#}
+        <p>
+            You can also
+            <a href="{{ path('slide-return-request-table') }}">request slide return</a>
+            and
+            <a href="{{ path('my-slide-return-requests') }}">view the status of your submitted slide return requests</a>.
+        </p>
 
-            Please use the menu on the top to place a <a href="{{ path('single_new') }}">One-slide</a>, <a href="{{ path('multi_new') }}">Multi-slide</a>, or a <a href="{{ path('table_create') }}">Table-view</a> scan order or select <a href="{{ path('my-scan-orders') }}">My Orders</a> to review the status of the orders you have placed.
-
+        <p>
+            Lastly, please review and update your <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
         </p>
 
 

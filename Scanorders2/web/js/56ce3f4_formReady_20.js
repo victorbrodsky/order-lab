@@ -15,7 +15,15 @@ $(document).ready(function() {
 
     initAdd();
 
+    fieldInputMask();
+
+    setResearchEducational();   //init research and educational
+
     customCombobox();
+
+    setResearch();  //set research listener
+
+    setEducational(); //set educational listener
 
     //add diseaseType radio listener for new form
     diseaseTypeListener();
@@ -37,14 +45,10 @@ $(document).ready(function() {
     //purpose option
     purposeOption();
 
-    //tabs for single form
-    //initOptionalParam();
-
     //multy form toggle button
     $('.form_body_toggle_btn').on('click', function(e) {
         var className = $(this).attr("class");
         var id = this.id;
-//        if( className == 'form_body_toggle_btn glyphicon glyphicon-folder-open') {
         if( $(this).hasClass('glyphicon-folder-open') ) {
             $("#"+id).removeClass('glyphicon-folder-open');
             $("#"+id).addClass('glyphicon-folder-close');
@@ -56,12 +60,7 @@ $(document).ready(function() {
 
     //multy form delete button
     $('.delete_form_btn').on('click', function(e) {
-        //alert("on click");
-        // prevent the link from creating a "#" on the URL
-        //e.preventDefault();
-        //alert( this.id );
         var id = this.id;
-        //$('#formpanel_'+id).remove();
         deleteItem(id);
     });
 
@@ -72,5 +71,10 @@ $(document).ready(function() {
 
     attachResearchEducationalTooltip();
 
+    changeInstitution();
+
+    windowCloseAlert();
+
 });
+
 

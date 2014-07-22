@@ -657,7 +657,7 @@ class AdminController extends Controller
         }
 
         $types = array(
-            'One Slide Scan Order',
+            'One-Slide Scan Order',
             'Multi-Slide Scan Order',
             'Table-View Scan Order',
             'Slide Return Request'

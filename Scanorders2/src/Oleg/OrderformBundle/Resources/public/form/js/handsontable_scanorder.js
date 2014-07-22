@@ -276,6 +276,12 @@ $(document).ready(function() {
     //console.log(JSON.stringify(xdata));
     if( typeof xdata != 'undefined' ) {
         console.log(xdata);
+
+        console.log('xdata len='+xdata.length);
+
+        for( var key in xdata[0] ) {
+            console.log( xdata[0][key] );
+        }
     }
 
     attachResearchEducationalTooltip();
@@ -293,8 +299,10 @@ $(document).ready(function() {
     // Wait until idle (busy must be false)
     var _TIMEOUT = 300; // waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+
         //console.log('The show can resume !');
         handsonTableInit();
+
     });
 
     //validation on form submit
@@ -388,6 +396,21 @@ function handsonTableInit() {
                 rowElement[ii] = null;
             }
 
+            //load data
+            if( typeof xdata != 'undefined' ) {
+                var headerTitle = _columnData_scanorder[ii]['header'];
+                console.log('headerTitle='+headerTitle);
+                //console.log( "acc num="+xdata[0]['Accession Number'] );
+                console.log( xdata );
+                console.log( "row:" );
+                console.log( xdata[0] );
+                var rowObj = xdata[0];
+                console.log(rowObj);
+                if( headerTitle in xdata[i-1] ) {
+                    rowElement[ii] = xdata[i-1][headerTitle];
+                }
+            }
+
         }//foreach column
 
         //console.log(rowElement);
@@ -404,11 +427,12 @@ function handsonTableInit() {
     //console.log(columnsType);
     //$('#multi-dataTable').doubleScroll();
 
-    //console.log(data);
+    console.log(data);
     //console.log(colHeader);
     //console.log(columnsType);
 
-//    Handsontable.renderers.registerRenderer('negativeValueRenderer', negativeValueRenderer); //maps function to lookup string
+
+
 
 
     $(_htableid).handsontable({
@@ -486,6 +510,9 @@ function handsonTableInit() {
 
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
+
+
+
 
 }
 

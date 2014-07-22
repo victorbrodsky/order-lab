@@ -18,6 +18,7 @@ window.onerror=function(msg, url, linenumber){
 }
 
 function getCommonBaseUrl(link) {
+
     var prefix = "scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
@@ -5939,17 +5940,13 @@ function regularCombobox() {
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
+}
 
-    //set amd make provider read only
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
-
+function setResearchEducational() {
     //preselect with current user
-    if( proxyuser_id ) {
-//        proxyuser_id = user_id;
-//        proxyuser_name = user_name;
-        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
-    }
+//    if( proxyuser_id ) {
+//        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
+//    }
 
     //research
     populateSelectCombobox( ".combobox-research-setTitle", null, "Choose and Option", false );
@@ -5987,7 +5984,7 @@ function customCombobox() {
         getCourseTitle(new Array("0","0","0","0","0","0"));
 
         getComboboxDepartment(new Array("0","0","0","0","0","0"));
-        getComboboxInstitution(new Array("0","0","0","0","0","0"));
+        //getComboboxInstitution(new Array("0","0","0","0","0","0"));
         getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
@@ -6028,7 +6025,7 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
         data: data,
         createSearchChoice:function(term, data) {
             //if( term.match(/^[0-9]+$/) != null ) {
-            //    console.log("term is digit");
+            //    //console.log("term is digit");
             //}
             return {id:term, text:term};
         }
@@ -6265,13 +6262,20 @@ function getComboboxMrnType(ids) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(ids) {
+function getComboboxPartname(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+    var targetid = ".ajax-combobox-partname";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"partname_0_field";
+        targetid = holder.find(targetid);
+    }
+    //console.log("part targetid="+targetid);
+    //console.log("cicle="+cicle);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -6284,22 +6288,46 @@ function getComboboxPartname(ids) {
             async: asyncflag
         }).success(function(data) {
             _partname = data;
-            populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+            populateSelectCombobox( targetid, _partname, "Part Name" );
+            //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+        populateSelectCombobox( targetid, _partname, "Part Name" );
+        //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
     }
 
 }
 
+//function setOnlyNewComboboxes( targetClass, datas, placeholder ) {
+//
+//    //don't repopulate already populated comboboxes. This is a case when typed value will be erased
+//
+//    $(targetClass).each(function() {
+//        var optionLength = $(this).children('option').length;
+//        //console.log( "optionLength="+optionLength );
+//        if( optionLength == 0 ) {
+//            //console.log( 'data is not set' );
+//            var id = $(this).attr('id');
+//            var targetid = '#'+id;
+//            populateSelectCombobox( targetid, datas, placeholder );
+//        }
+//    });
+//}
+
 //#############  blockname types  ##############//
-function getComboboxBlockname(ids) {
+function getComboboxBlockname(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+    var targetid = ".ajax-combobox-blockname";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"blockname_0_field";
+        targetid = holder.find(targetid);
+    }
+    //console.log("block targetid="+targetid);
+
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
@@ -6311,10 +6339,10 @@ function getComboboxBlockname(ids) {
             async: asyncflag
         }).success(function(data) {
                 _blockname = data;
-            populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+            populateSelectCombobox( targetid, _blockname, "Block Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+        populateSelectCombobox( targetid, _blockname, "Block Name" );
     }
 
 }
@@ -6489,7 +6517,7 @@ function getSetTitle() {
         async: asyncflag
     }).success(function(data) {
         if( data ) {
-            //console.log("id="+data[0].id+", text="+data[0].text);
+            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
             //setElementToId( targetid, data );
@@ -6793,8 +6821,8 @@ function getUrgency() {
 }
 
 
-
-function initComboboxJs(ids) {
+//flag - optional parameter to force use ids if set to true
+function initComboboxJs(ids, holder) {
 
     if( urlBase ) {
 
@@ -6802,8 +6830,8 @@ function initComboboxJs(ids) {
 
         getComboboxMrnType(ids);
         getComboboxAccessionType(ids);
-        getComboboxPartname(ids);
-        getComboboxBlockname(ids);
+        getComboboxPartname(ids,holder);
+        getComboboxBlockname(ids,holder);
         getComboboxStain(ids);
         getComboboxSpecialStain(ids,false);
         getComboboxScanregion(ids);
@@ -6816,7 +6844,7 @@ function initComboboxJs(ids) {
         getCourseTitle(ids);
 
         getComboboxDepartment(ids);
-        getComboboxInstitution(ids);
+        //getComboboxInstitution(ids);
         getComboboxAccount(ids);
     }
 }
@@ -6835,11 +6863,12 @@ function slideType(ids) {
         //console.log("parent: id="+parent.attr('id')+",class="+parent.attr('class'));
         var blockValue = parent.find('.element-title').first();
         //console.log("slidetype-combobox: id="+parent.find('.slidetype-combobox').first().attr('id')+",class="+parent.find('.slidetype-combobox').first().attr('class'));
-        var slideType = parent.find('.slidetype-combobox').first().select2('val');
-        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideType="+slideType);
+        var slideTypeText = parent.find('.slidetype-combobox').first().select2('data').text;
+        //console.log("slideTypeText="+slideTypeText);
+        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideTypeText="+slideTypeText);
         var keyfield = parent.find('#check_btn');
-        if( slideType == 3 ) {   //'Cytopathology'
-            //console.log("Cytopathology is chosen = "+slideType);
+        if( slideTypeText == 'Cytopathology' ) {
+            //console.log("Cytopathology is chosen = "+slideTypeText);
             keyfield.attr('disabled','disabled'); 
             disableInElementBlock(parent.find('#check_btn').first(), true, "all", null, null);
             var htmlDiv = '<div class="element-skipped">Block is not used for cytopathology slide</div>';
@@ -6847,15 +6876,20 @@ function slideType(ids) {
             blockValue.after(htmlDiv);
             blockValue.hide();
             parent.find('.form-btn-options').first().hide();
-            //parent.find('.panel-body').first().css("border-color", "#C0C0C0");
-        } else {    
-            //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
-            disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
-            parent.find('.element-skipped').first().remove();
-            blockValue.show();
-            keyfield.removeAttr('disabled'); 
-            parent.find('.form-btn-options').first().show();
-            //parent.find('.panel-body').first().css("border-color", "#1268B3");
+        } else {
+            if( $('.element-skipped').length != 0 ) {
+                //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
+                var btnEl = parent.find('#check_btn').first();
+                if( btnEl.hasClass('checkbtn') ) {
+                    disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
+                } else {
+                    disableInElementBlock(parent.find('#check_btn').first(), false, null, "notkey", null);
+                }
+                parent.find('.element-skipped').first().remove();
+                blockValue.show();
+                keyfield.removeAttr('disabled');
+                parent.find('.form-btn-options').first().show();
+            }
         }
         
     });   
@@ -6871,7 +6905,7 @@ function setElementToId( target, dataarr, setId ) {
         var setId = firstObj.id;
     }
 
-    //console.log("setId="+setId);
+    //console.log("setId="+setId+", target="+target);
     $(target).select2('val', setId);
 }
 
@@ -6924,7 +6958,8 @@ function getAccessionDefaultMask() {
 }
 ///////////////////// END OF DEFAULT MASKS //////////////////////
 
-function fieldInputMask() {
+//holder - element holding all fields to apply masking
+function fieldInputMask( holder ) {
 
     $.extend($.inputmask.defaults.definitions, {
         'f': {  //masksymbol
@@ -6967,18 +7002,35 @@ function fieldInputMask() {
         clearMaskOnLostFocus: true
     });
 
-    $(":input").inputmask();
+    if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+        $(":input").inputmask();
+    } else {
+        holder.find(":input").inputmask();
+    }
 
     if( cicle == "new" || cicle == "create" ) {
 
-        $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
-        $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
-        //$(".patientmrn-mask").inputmask( { "mask": "*", "repeat": 13, "greedy": false } );
-        //$(".patientmrn-mask").inputmask( { "mask": "***" } );
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            //console.log("Set default mask for all");
+            $(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            $(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        } else {
+            //console.log("Set default mask for holder");
+            //console.log(holder);
+            holder.find(".accession-mask").inputmask( { "mask": getAccessionDefaultMask() } );
+            holder.find(".patientmrn-mask").inputmask( getMrnDefaultMask() );
+
+        }
 
     } else {
+
         //set mrn for amend
-        var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+            var mrnkeytypeField = $('.mrntype-combobox').not("*[id^='s2id_']");
+        } else {
+            var mrnkeytypeField = holder.find('.mrntype-combobox').not("*[id^='s2id_']");
+        }
         mrnkeytypeField.each( function() {
             setMrntypeMask($(this),false);
         });
@@ -6995,7 +7047,7 @@ function fieldInputMask() {
         "mask": "[n]", "repeat": 50, "greedy": false
     });
 
-//    $('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+    //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
     accessionTypeListener();
     mrnTypeListener();
@@ -7159,6 +7211,7 @@ function setAccessiontypeMask(elem,clean) {
 
     //clear input field
     if( clean ) {
+        //console.log("clean accession: value=" + value);
         accField.val('');
         clearErrorField(accField);
     }
@@ -7524,8 +7577,6 @@ var orderformtype = $("#orderformtype").val();
 var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
 
-var _external_user = null;
-
 var _auto_generated_mrn_type = null;    //now it should be 13;
 var _auto_generated_accession_type = null;  //now it should be 8
 
@@ -7852,6 +7903,14 @@ function executeClick( btnObjInit ) {
             reject(Error("parent key is empty"));
         }
 
+        var inst = $('.combobox-institution').select2('val');
+        //console.log('inst='+inst);
+
+        if( !inst || inst.length == 0 || inst == '' ) {
+            gocontinue = false;
+            reject(Error("Institution is empty"));
+        }
+
         if( gocontinue ) {
 
             var btnObj = new btnObject(btnObjInit.btn);
@@ -7866,6 +7925,20 @@ function executeClick( btnObjInit ) {
             var grandparentKey = null;
             var grandparentType = null;
             var single = false; //temp
+
+            //get parent
+            var parentBtnObj = new btnObject(btnObj.parentbtn);
+            if( parentBtnObj ) {
+                parentKey = parentBtnObj.key;
+                parentType = parentBtnObj.type;
+            }
+
+            //get grand parent
+            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
+            if( grandparentBtnObj ) {
+                grandparentKey = grandparentBtnObj.key;
+                grandparentType = grandparentBtnObj.type;
+            }
 
             //console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
 
@@ -7895,27 +7968,44 @@ function executeClick( btnObjInit ) {
 
                 ajaxType = 'DELETE';
 
-                var extraStr = "";
+                var extraStr = "?inst=" + inst;
+
+                if( parentKey ) {
+                    extraStr = extraStr + "&parentkey="+parentKey;
+                }
+
+                if( parentType ) {
+                    extraStr = extraStr + "&parentextra="+parentType;
+                }
+
+                if( grandparentKey ) {
+                    extraStr = extraStr + "&grandparentkey="+grandparentKey;
+                }
+
+                if( grandparentType ) {
+                    extraStr = extraStr + "&grandparentextra="+grandparentType;
+                }
+
                 if( type ) {
-                    extraStr = "?extra="+type;
+                    extraStr = extraStr + "&extra="+type;
                 }
                 key = trimWithCheck(key);
                 urlcasename = urlcasename + '/' + key + extraStr;
             }
 
-            //get parent
-            var parentBtnObj = new btnObject(btnObj.parentbtn);
-            if( parentBtnObj ) {
-                parentKey = parentBtnObj.key;
-                parentType = parentBtnObj.type;
-            }
-
-            //get grand parent
-            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
-            if( grandparentBtnObj ) {
-                grandparentKey = grandparentBtnObj.key;
-                grandparentType = grandparentBtnObj.type;
-            }
+//            //get parent
+//            var parentBtnObj = new btnObject(btnObj.parentbtn);
+//            if( parentBtnObj ) {
+//                parentKey = parentBtnObj.key;
+//                parentType = parentBtnObj.type;
+//            }
+//
+//            //get grand parent
+//            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
+//            if( grandparentBtnObj ) {
+//                grandparentKey = grandparentBtnObj.key;
+//                grandparentType = grandparentBtnObj.type;
+//            }
 
             //trim values
             key = trimWithCheck(key);
@@ -7942,7 +8032,7 @@ function executeClick( btnObjInit ) {
                 dataType: 'json',
                 timeout: _ajaxTimeout,
                 async: true,    //use synchronous call
-                data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
+                data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType, inst: inst },
                 success: function (data) {
 
                     btn.button('reset');
@@ -7992,7 +8082,7 @@ function executeClick( btnObjInit ) {
                             reject(Error("Existing Auto-generated object does not exist in DB"));
 
                         } else
-                        if( data.id && data.id != '' ) {    //test this condition for external user
+                        if( data.id && data.id != '' ) {
 
                             var gonext = 1;
 
@@ -8073,25 +8163,89 @@ function executeClick( btnObjInit ) {
  */
 
 
+
+
+//prevent exit modified form
+function windowCloseAlert() {
+
+    if( cicle == "show" ) {
+        return;
+    }
+
+    window.onbeforeunload = confirmModifiedFormExit;
+
+    function confirmModifiedFormExit() {
+
+        var modified = false;
+
+        if( $('#scanorderform').length != 0 ) {
+            modified = checkIfOrderWasModified();
+        }
+
+        if( $('#table-scanorderform').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
+        if( $('#table-slidereturnrequests').length != 0 ) {
+            modified = checkIfTableWasModified();
+        }
+
+        //console.log("modified="+modified);
+        if( modified === true ) {
+
+            //set back institution
+            var institution_original_id = localStorage.getItem("institution_original_id");
+            if( typeof institution_original_id !== 'undefined' && institution_original_id != "" && institution_original_id != null ) {
+                $('.combobox-institution').select2('val', institution_original_id);
+            }
+
+            return "The changes you have made will not be saved if you navigate away from this page.";
+        } else {
+            return;
+        }
+    }
+
+    $('form').submit(function() {
+        window.onbeforeunload = null;
+    });
+}
+
+
+function changeInstitution() {
+
+    var institution_original_id = $('.combobox-institution').select2('val');
+    window.localStorage.setItem("institution_original_id", institution_original_id);
+
+    var institution_changed_id = localStorage.getItem("institution_changed_id");
+    //console.log('institution_changed_id='+institution_changed_id);
+    if( typeof institution_changed_id !== 'undefined' && institution_changed_id != "" && institution_changed_id != null ) {
+        $('.combobox-institution').select2('val', institution_changed_id);
+    }
+
+    $('.combobox-institution').change(function(e) {
+        var inst = $('.combobox-institution').select2('val');
+        window.localStorage.setItem("institution_changed_id", inst);
+        window.location.reload();
+    });
+
+}
+
 //add all element to listeners again, the same as in ready
 function initAdd() {
 
+    //console.log("init Add");
+
     expandTextarea();
 
-//    $(".combobox").combobox();
     regularCombobox();
 
     initDatepicker();
 
     //clean validation elements
-    //console.log("clean initAdd");
     cleanValidationAlert();
 
-    fieldInputMask();
-
-    setResearch();
-
-    setEducational();
+    //setResearch();
+    //setEducational();
 
 }
 
@@ -8122,25 +8276,6 @@ function deleteItem(id) {
                 delBtnToReplace.remove();
             }
 
-        } else {
-//            //clear the form and all children
-//            var ids = id.split("_");
-//            //alert("You can't delete only one left " + ids[0]);
-//
-//            //console.log("id="+id);
-//            //console.log("rename elements.length="+elements.length);
-//            addSameForm(ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[7], ids[8]); //testing???
-//
-//            $('#formpanel_'+id).remove(); //testing
-//
-//            //make sure to rename delete button to "Clear" if it is only one element left
-//            if( elements.length == 1 ) {
-//                //change "delete" to "clear"
-//                var element = thisParent.children( ".panel" );
-//                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-//                //delBtnToReplace.html('Clear');
-//                delBtnToReplace.remove();
-//            }
         }
     }
 
@@ -8220,9 +8355,16 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
     bindDeleteBtn( name + '_' + idsNext.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(idsNext);
     initAdd();
     addKeyListener();
+
+    //mask init
+    var newHolder = $('#formpanel_'+name + '_' + idsNext.join("_"));
+    fieldInputMask( newHolder ); //setDefaultMask(btnObj);
+    //comboboxes init
+    initComboboxJs(idsNext, newHolder);
+
+    //setDefaultMask(btnObj);
 
     //create children nested forms
     //var nameArray = ['patient', 'procedure', 'accession', 'part', 'block', 'slide', 'stain_scan' ];
@@ -8243,7 +8385,7 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
 
     }
 
-    //TODO: add Delete button if there are sibling objects
+    //add Delete button if there are sibling objects
     var origId = "formpanel_"+name+"_"+idsorig.join("_");
     //console.log("origId="+origId);
     var origBtnGroup = $("#"+origId).find('.panel-heading').find('.form-btn-options').first();
@@ -8259,28 +8401,8 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         bindDeleteBtn( name + '_' + idsorig.join("_") );
     }
 
-//    //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
-//    var thisId = "formpanel_"+name+"_"+ids.join("_");
-//    console.log("thisId="+thisId);
-//    var thisParent = $("#"+thisId).parent();
-//    var childrens = thisParent.children( ".panel" );
-//
-//    //var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="testjs add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
-//    var addbtn =  getHeaderAddBtn( name, ids );
-//
-//    for (var i = 0; i < childrens.length; i++) {
-//        var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
-//        addBtnToReplace.replaceWith( addbtn );
-//
-//        //rename "clear" to "Delete"
-//        if( childrens.length > 1 ) {
-//            console.log("childrens.length="+childrens.length);
-//            var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-//            delBtnToRename.html('Delete');
-//        }
-//    }
-
-    initAllElements();
+    //initial disabling
+    initAllElements(newHolder);
 }
 
 //add children forms triggered by parent form
@@ -8299,7 +8421,7 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
 
     var uid = prevName+"_"+parentIds.join("_");
     var holder = "#form_body_"+uid;
-    console.debug(name+": ADD CHILDS to="+holder);
+    //console.debug(name+": ADD CHILDS to="+holder);
 
     //attach children form
     var withDelBtn = false;
@@ -8309,9 +8431,15 @@ function addChildForms( parentName, parentIds, name, prevName, patientid, proced
     bindDeleteBtn( name + '_' + ids.join("_") );
     //originOptionMulti(ids);
     diseaseTypeListener();
-    initComboboxJs(ids);
     initAdd();
     addKeyListener();
+
+    //mask init
+    var newHolder = $( '#formpanel_' + name + '_' + ids.join("_") );
+    fieldInputMask( newHolder );
+    //comboboxes init
+    initComboboxJs(ids, newHolder);
+
 }
 
 //input: current form ids
@@ -8651,11 +8779,11 @@ function setNavBar() {
     }
 
     if( full.indexOf("my-scan-orders") !== -1 ) {
-        id = 'myscanorders';
+        id = 'myrequesthistory';
     }
 
     if( full.indexOf("my-slide-return-requests") !== -1 ) {
-        id = 'mysliderequests';
+        id = 'myrequesthistory';
     }
 
     //Admin
@@ -8881,6 +9009,7 @@ function printF(element,text) {
  * and open the template in the editor.
  */
 
+
 //set global auto generated mrn and accession types
 function setAutoGeneratedTypes() {
     //console.log("set Auto Generated Types");
@@ -8946,11 +9075,17 @@ function cleanValidationAlert() {
     }
 }
 
-function initAllElements() {
+function initAllElements(newHolder) {
 
 //    if( cicle == "new" || cicle == "amend" ) {
     if( cicle == "new" ) {
-        var check_btns = $("[id=check_btn]");
+
+        if( typeof newHolder === 'undefined' || newHolder.length == 0 ) {
+            var check_btns = $("[id=check_btn]");
+        } else {
+            var check_btns = newHolder.find("[id=check_btn]");
+        }
+
         //console.log("check_btns.length="+check_btns.length);
         for (var i = 0; i < check_btns.length; i++) {
             var idArr = check_btns.eq(i).attr("id").split("_");
@@ -9420,11 +9555,12 @@ function checkMrnAccessionConflict() {
 
             accValue = trimWithCheck(accValue);
             acctypeValue = trimWithCheck(acctypeValue);
+            var inst = $('.combobox-institution').select2('val');
 
             $.ajax({
                 url: getCommonBaseUrl("check/"+"accession/check"),    //urlCheck+"accession/check",
                 type: 'GET',
-                data: {key: accValue, extra: acctypeValue},
+                data: {key: accValue, extra: acctypeValue, inst: inst},
                 contentType: 'application/json',
                 dataType: 'json',
                 timeout: _ajaxTimeout,
@@ -9731,11 +9867,12 @@ function checkExistingKey(name) {
 
             elValue = trimWithCheck(elValue);
             eltypeValue = trimWithCheck(eltypeValue);
+            var inst = $('.combobox-institution').select2('val');
 
             $.ajax({
                 url: getCommonBaseUrl("check/"+name+'/check'),   //urlCheck+name+'/check',
                 type: 'GET',
-                data: {key: elValue, extra: eltypeValue},
+                data: {key: elValue, extra: eltypeValue, inst: inst},
                 contentType: 'application/json',
                 dataType: 'json',
                 timeout: _ajaxTimeout,
@@ -9815,10 +9952,10 @@ function checkSpecifyAnotherIssuer( name ) {
 function setObjectInfo(btnObj,flag) {
 
     //check if the user is external submitter
-    getUserRole();
+    //getUserRole();
 
-    if( _external_user === false ) {
-        //console.log("show info");
+//    if( _external_user === false ) {
+//        //console.log("show info");
 
         if( flag === 1 ) {
             var msg = "Existing "+btnObj.name+" information loaded";
@@ -9831,9 +9968,9 @@ function setObjectInfo(btnObj,flag) {
 
         attachInfoToElement( btnObj.element, msg );
 
-    } else {
-        //console.log("external user: do not show info");
-    }
+//    } else {
+//        //console.log("external user: do not show info");
+//    }
 
 }
 
@@ -9852,37 +9989,6 @@ function removeInfoFromElement( btnObj ) {
     info.remove();
 }
 
-function getUserRole() {
-
-    if( _external_user !== null ) {
-        return;
-    }
-
-    $.ajax({
-        url: getCommonBaseUrl("check/"+'userrole'),   //urlCheck+'userrole',
-        type: 'POST',
-        data: {userid: user_id},
-        contentType: 'application/json',
-        dataType: 'json',
-        timeout: _ajaxTimeout,
-        async: false,
-        success: function (data) {
-            if( data && data != '' ) {
-                if( data == 'not_external_role' ) {
-                    _external_user = false;
-                } else {
-                    _external_user = true;
-                }
-            }
-        },
-        error: function ( x, t, m ) {
-            if( t === "timeout" ) {
-                getAjaxTimeoutMsg();
-            }
-        }
-    });
-}
-
 //parent - holder containing all elements for this object
 function setPatientNameSexAgeLockedFields( data, parent ) {
 
@@ -9895,7 +10001,7 @@ function setPatientNameSexAgeLockedFields( data, parent ) {
     }
 
     if( data['age'] && data['age'] != undefined && data['age'] != "" ) {
-        parent.find('.patientage').find('.well').html( data['age'][0]['text'] );
+        parent.find('.patientage').find('.well').html( data['age'] );
     }
 
 }
@@ -10693,11 +10799,11 @@ function cleanBlockSpecialStains( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    var patient = idsArr[1];
-    var procedure = idsArr[2];
-    var accession = idsArr[3];
-    var part = idsArr[4];
-    var block = idsArr[5];
+    var patient = idsArr[4];
+    var procedure = idsArr[6];
+    var accession = idsArr[8];
+    var part = idsArr[10];
+    var block = idsArr[12];
     var slide = null;
     var ident = "block"+"specialStains";
     var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, 0 );
@@ -10730,10 +10836,11 @@ function cleanPartDiffDisident( element, field, single ) {
     });
 
     //construct new 0 special stain group
-    var patient = idsArr[1];
-    var procedure = idsArr[2];
-    var accession = idsArr[3];
-    var part = idsArr[4];
+    //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_diffDisident_1_field
+    var patient = idsArr[4];
+    var procedure = idsArr[6];
+    var accession = idsArr[8];
+    var part = idsArr[10];
     var block = null;
     var slide = null;
     var ident = "part"+"diffDisident";

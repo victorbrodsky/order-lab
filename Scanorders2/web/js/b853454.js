@@ -22797,17 +22797,13 @@ function regularCombobox() {
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
+}
 
-    //set amd make provider read only
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
-
+function setResearchEducational() {
     //preselect with current user
-    if( proxyuser_id ) {
-//        proxyuser_id = user_id;
-//        proxyuser_name = user_name;
-        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
-    }
+//    if( proxyuser_id ) {
+//        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
+//    }
 
     //research
     populateSelectCombobox( ".combobox-research-setTitle", null, "Choose and Option", false );
@@ -23378,7 +23374,7 @@ function getSetTitle() {
         async: asyncflag
     }).success(function(data) {
         if( data ) {
-            //console.log("id="+data[0].id+", text="+data[0].text);
+            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
             //setElementToId( targetid, data );
@@ -24768,7 +24764,7 @@ function setPatientNameSexAgeLockedFields( data, parent ) {
     }
 
     if( data['age'] && data['age'] != undefined && data['age'] != "" ) {
-        parent.find('.patientage').find('.well').html( data['age'][0]['text'] );
+        parent.find('.patientage').find('.well').html( data['age'] );
     }
 
 }
@@ -26601,11 +26597,11 @@ function fieldInputMask( holder ) {
         clearMaskOnLostFocus: true
     });
 
-    //if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
+    if( !holder || typeof holder === 'undefined' || holder.length == 0 ) {
         $(":input").inputmask();
-    //} else {
-    //    holder.find(":input").inputmask();
-    //}
+    } else {
+        holder.find(":input").inputmask();
+    }
 
     if( cicle == "new" || cicle == "create" ) {
 
@@ -27240,9 +27236,8 @@ function initAdd() {
     //clean validation elements
     cleanValidationAlert();
 
-    setResearch();
-
-    setEducational();
+    //setResearch();
+    //setEducational();
 
 }
 
@@ -27273,25 +27268,6 @@ function deleteItem(id) {
                 delBtnToReplace.remove();
             }
 
-        } else {
-//            //clear the form and all children
-//            var ids = id.split("_");
-//            //alert("You can't delete only one left " + ids[0]);
-//
-//            //console.log("id="+id);
-//            //console.log("rename elements.length="+elements.length);
-//            addSameForm(ids[0], ids[1], ids[2], ids[3], ids[4], ids[5], ids[6], ids[7], ids[7], ids[8]); //testing???
-//
-//            $('#formpanel_'+id).remove(); //testing
-//
-//            //make sure to rename delete button to "Clear" if it is only one element left
-//            if( elements.length == 1 ) {
-//                //change "delete" to "clear"
-//                var element = thisParent.children( ".panel" );
-//                var delBtnToReplace = element.children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-//                //delBtnToReplace.html('Clear');
-//                delBtnToReplace.remove();
-//            }
         }
     }
 
@@ -27416,27 +27392,6 @@ function addSameForm( name, patientid, procedureid, accessionid, partid, blockid
         origBtnGroup.append( deletebtn );
         bindDeleteBtn( name + '_' + idsorig.join("_") );
     }
-
-//    //replace all "add" buttons of this branch with "add" buttons for the next element. use parent and children
-//    var thisId = "formpanel_"+name+"_"+ids.join("_");
-//    console.log("thisId="+thisId);
-//    var thisParent = $("#"+thisId).parent();
-//    var childrens = thisParent.children( ".panel" );
-//
-//    //var addbtn = '<button id="form_add_btn_' + name + '_' + ids.join("_") + '" type="button" class="testjs add_form_btn btn btn-xs btn_margin" onclick="addSameForm(\'' + name + '\''+ ',' + ids.join(",") + ')">Add</button>';
-//    var addbtn =  getHeaderAddBtn( name, ids );
-//
-//    for (var i = 0; i < childrens.length; i++) {
-//        var addBtnToReplace = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".add_form_btn");
-//        addBtnToReplace.replaceWith( addbtn );
-//
-//        //rename "clear" to "Delete"
-//        if( childrens.length > 1 ) {
-//            console.log("childrens.length="+childrens.length);
-//            var delBtnToRename = childrens.eq(i).children(".panel-heading").children(".form-btn-options").children(".delete_form_btn");
-//            delBtnToRename.html('Delete');
-//        }
-//    }
 
     //initial disabling
     initAllElements(newHolder);
@@ -27816,11 +27771,11 @@ function setNavBar() {
     }
 
     if( full.indexOf("my-scan-orders") !== -1 ) {
-        id = 'myscanorders';
+        id = 'myrequesthistory';
     }
 
     if( full.indexOf("my-slide-return-requests") !== -1 ) {
-        id = 'mysliderequests';
+        id = 'myrequesthistory';
     }
 
     //Admin
@@ -28333,9 +28288,10 @@ function attachPatientNameSexAgeLockedTooltip() {
     //patient's age
     var patage = $('.patientage').find('.well');
     patage.tooltip({
-        'title': "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section."
+        //'title': "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section."
+        'title': "This is the current age of the patient (if known). To enter a new age, use the field \"DOB\"."
     });
-    highlightProcedureAgeElement( patage.parent(), '.procedureage-field' );
+    highlightProcedureAgeElement( patage.parent(), '.patientdob-mask' );
 
     //patient's name
     var patname = $('.patientname').find('.well');

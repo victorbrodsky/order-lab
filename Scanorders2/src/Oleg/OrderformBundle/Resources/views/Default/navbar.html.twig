@@ -36,17 +36,22 @@
                         </ul>
                     </li>
 
-                    <li id="nav-bar-myscanorders" class="divider-vertical">
-                        {% if comments is defined and comments > 0 %}
-                            <a id="incoming-orders-menu-title" href="{{ path('my-scan-orders') }}">My Orders</a><!--
-                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
-                        {% else %}
-                            <a href="{{ path('my-scan-orders') }}" >My Orders</a>
-                        {% endif %}
-                    </li>
 
-                    <li id="nav-bar-mysliderequests" class="divider-vertical">
-                        <a href="{{ path('my-slide-return-requests') }}" >My Slide Return Requests</a>
+                    <li id="nav-bar-myrequesthistory" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Request History<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li id="nav-bar-myscanorders" class="divider-vertical">
+                                {% if comments is defined and comments > 0 %}
+                                    <a id="incoming-orders-menu-title" href="{{ path('my-scan-orders') }}">My Orders</a><!--
+                                    --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('my-scan-orders',{'filter_search_box[filter]': 'With New Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                                {% else %}
+                                    <a href="{{ path('my-scan-orders') }}" >My Orders</a>
+                                {% endif %}
+                            </li>
+                            <li id="nav-bar-mysliderequests" class="divider-vertical">
+                                <a href="{{ path('my-slide-return-requests') }}" >My Slide Return Requests</a>
+                            </li>
+                        </ul>
                     </li>
 
                 </ul>

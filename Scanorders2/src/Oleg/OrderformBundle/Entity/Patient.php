@@ -37,10 +37,10 @@ class Patient extends ObjectAbstract
      */
     protected $middlename;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
-     */
-    protected $age;
+//    /**
+//     * @ORM\OneToMany(targetEntity="PatientAge", mappedBy="patient", cascade={"persist"})
+//     */
+//    protected $age;
 
     /**
      * @ORM\OneToMany(targetEntity="PatientSex", mappedBy="patient", cascade={"persist"})
@@ -93,7 +93,7 @@ class Patient extends ObjectAbstract
         $this->middlename = new ArrayCollection();
         $this->sex = new ArrayCollection();
         $this->dob = new ArrayCollection();
-        $this->age = new ArrayCollection();
+        //$this->age = new ArrayCollection();
         $this->clinicalHistory = new ArrayCollection();
 
         if( $withfields ) {
@@ -116,7 +116,7 @@ class Patient extends ObjectAbstract
         $this->middlename = $this->cloneDepend($this->middlename,$this);
         $this->sex = $this->cloneDepend($this->sex,$this);
         $this->dob = $this->cloneDepend($this->dob,$this);
-        $this->age = $this->cloneDepend($this->age,$this);
+        //$this->age = $this->cloneDepend($this->age,$this);
         $this->clinicalHistory = $this->cloneDepend($this->clinicalHistory,$this);
     }
 
@@ -167,27 +167,73 @@ class Patient extends ObjectAbstract
         $this->mrn->clear();
     }
 
-    /**
-     * Set age
-     *
-     * @param integer $age
-     * @return Patient
-     */
-    public function setAge($age)
-    {
-        $this->age = $age;
-    
-        return $this;
-    }
+//    /**
+//     * Set age
+//     *
+//     * @param integer $age
+//     * @return Patient
+//     */
+//    public function setAge($age)
+//    {
+//        $this->age = $age;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get age
+//     *
+//     * @return integer
+//     */
+//    public function getAge()
+//    {
+//        return $this->age;
+//    }
 
-    /**
-     * Get age
-     *
-     * @return integer 
-     */
-    public function getAge()
-    {
-        return $this->age;
+    //calculate age based on the dob and current date
+    public function calculateAge() {
+        $age = null;
+        $dob = $this->obtainValidField('dob');
+
+        $years = 0;
+        $months = 0;
+        $days = 0;
+        $daysFull = 0;
+
+        if( $dob != null ) {
+            $date = new \DateTime($dob);
+            $now = new \DateTime();
+            $interval = $now->diff($date);
+
+            $years = $interval->format('%y');
+            $months = $interval->format('%m');
+            $days = $interval->format('%d');
+            //$fullMonths = ($years * 12) + $months;
+            $daysFull = $interval->days;
+            //echo "years=".$years.", months=".$months.", days=".$days.", fullMonths=".$fullMonths.", daysFull=".$daysFull."<br>";
+        }
+
+        //If the age is less than 1 day, show the age as "less than 1 day".
+        if( $daysFull > 0 && $years < 1 && $months < 1 && $days < 1 ) {
+            return "less than 1 day";
+        }
+
+        //If the age is less than 1 month, show the age in days and show the word "day(s)"; for example: "16 day(s)"
+        if( $daysFull > 0 && $years < 1 && $months < 1 ) {
+            return $days . " day(s)";
+        }
+
+        //If the age is less than 1 year, give the age in months and show the word "month(s)"; for example: "3 month(s)".
+        if( $daysFull > 0 && $years < 1 ) {
+            return $months . " month(s)";
+        }
+
+        //If the age is less than 1 year, give the age in months and show the word "month(s)"; for example: "3 month(s)".
+        if( $daysFull > 0 && $years > 0 ) {
+            return $years;
+        }
+
+        return "";
     }
 
     /**
@@ -495,35 +541,35 @@ class Patient extends ObjectAbstract
     }
 
 
-    /**
-     * Add age
-     *
-     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
-     * @return Patient
-     */
-    public function addAge($age)
-    {
-//        if( $age == null ) {
-//            $age = new PatientAge();
+//    /**
+//     * Add age
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
+//     * @return Patient
+//     */
+//    public function addAge($age)
+//    {
+////        if( $age == null ) {
+////            $age = new PatientAge();
+////        }
+//
+//        if( !$this->age->contains($age) && !$this->hasSimpleField($age,"getAge") ) {
+//            $age->setPatient($this);
+//            $this->age->add($age);
 //        }
-
-        if( !$this->age->contains($age) && !$this->hasSimpleField($age,"getAge") ) {
-            $age->setPatient($this);
-            $this->age->add($age);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove age
-     *
-     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
-     */
-    public function removeAge($age)
-    {
-        $this->age->removeElement($age);
-    }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove age
+//     *
+//     * @param \Oleg\OrderformBundle\Entity\PatientAge $age
+//     */
+//    public function removeAge($age)
+//    {
+//        $this->age->removeElement($age);
+//    }
 
     /**
      * Add sex
@@ -607,10 +653,10 @@ class Patient extends ObjectAbstract
             $sexs = $sexs . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
-        $ages = ", ageCount=".count($this->age).": ";
-        foreach( $this->age as $name ) {
-            $ages = $ages . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
-        }
+//        $ages = ", ageCount=".count($this->age).": ";
+//        foreach( $this->age as $name ) {
+//            $ages = $ages . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+//        }
 
         $mrnId = "N/A";
         if( $this->mrn->first() ) {
@@ -622,7 +668,7 @@ class Patient extends ObjectAbstract
         ", mrnCount=".count($this->mrn).
         ", lastnames=".$lastnames.
         ", sexs=".$sexs.
-        ", ages=".$ages.
+//        ", ages=".$ages.
         //", age=".$this->age->first().", nameID=".$this->age->first()->getId().
         ", status=".$this->status.
         ", procedureCount=".count($this->procedure).
@@ -727,19 +773,19 @@ class Patient extends ObjectAbstract
 //        return $extra;
 //    }
 
-    public function obtainOneValidObjectPatient($user) {
+    public function obtainOneValidObjectPatient() {
         //mrn
-        $mrn = $this->obtainValidField('mrn',$user);
+        $mrn = $this->obtainValidField('mrn');
         $this->mrn->clear();
         $this->addMrn($mrn);
 
         //dob
-        $dob = $this->obtainValidField('dob',$user);
+        $dob = $this->obtainValidField('dob');
         $this->dob->clear();
         $this->addDob($dob);
 
         //clinical history
-        $clinicalHistory = $this->obtainValidField('clinicalHistory',$user);
+        $clinicalHistory = $this->obtainValidField('clinicalHistory');
         $this->clinicalHistory->clear();
         $this->addClinicalHistory($clinicalHistory);
     }
@@ -754,11 +800,11 @@ class Patient extends ObjectAbstract
     }
 
     public function obtainArrayFieldNames() {
-        return array('Age','ClinicalHistory');
+        return array('ClinicalHistory');
     }
 
     public function getArrayFields() {
-        $fieldsArr = array('Mrn','Lastname','Firstname','Middlename','Sex','Dob','Age','ClinicalHistory');
+        $fieldsArr = array('Mrn','Lastname','Firstname','Middlename','Sex','Dob','ClinicalHistory');
         return $fieldsArr;
     }
 

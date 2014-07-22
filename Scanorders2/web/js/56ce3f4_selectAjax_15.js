@@ -55,17 +55,13 @@ function regularCombobox() {
         //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
+}
 
-    //set amd make provider read only
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2("readonly", true);
-//    $("#s2id_oleg_orderformbundle_orderinfotype_provider").select2('data', {id: user_id, text: user_name});
-
+function setResearchEducational() {
     //preselect with current user
-    if( proxyuser_id ) {
-//        proxyuser_id = user_id;
-//        proxyuser_name = user_name;
-        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
-    }
+//    if( proxyuser_id ) {
+//        $("#s2id_oleg_orderformbundle_orderinfotype_proxyuser").select2('data', {id: proxyuser_id, text: proxyuser_name});
+//    }
 
     //research
     populateSelectCombobox( ".combobox-research-setTitle", null, "Choose and Option", false );
@@ -103,7 +99,7 @@ function customCombobox() {
         getCourseTitle(new Array("0","0","0","0","0","0"));
 
         getComboboxDepartment(new Array("0","0","0","0","0","0"));
-        getComboboxInstitution(new Array("0","0","0","0","0","0"));
+        //getComboboxInstitution(new Array("0","0","0","0","0","0"));
         getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
@@ -144,7 +140,7 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
         data: data,
         createSearchChoice:function(term, data) {
             //if( term.match(/^[0-9]+$/) != null ) {
-            //    console.log("term is digit");
+            //    //console.log("term is digit");
             //}
             return {id:term, text:term};
         }
@@ -381,13 +377,20 @@ function getComboboxMrnType(ids) {
 }
 
 //#############  partname types  ##############//
-function getComboboxPartname(ids) {
+function getComboboxPartname(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"partname");  //urlCommon+"partname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+    var targetid = ".ajax-combobox-partname";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        //oleg_orderformbundle_orderinfotype_patient_0_procedure_0_accession_0_part_0_partname_0_field
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"partname_0_field";
+        targetid = holder.find(targetid);
+    }
+    //console.log("part targetid="+targetid);
+    //console.log("cicle="+cicle);
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -400,22 +403,46 @@ function getComboboxPartname(ids) {
             async: asyncflag
         }).success(function(data) {
             _partname = data;
-            populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+            populateSelectCombobox( targetid, _partname, "Part Name" );
+            //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-partname", _partname, "Part Name" );
+        populateSelectCombobox( targetid, _partname, "Part Name" );
+        //setOnlyNewComboboxes( targetid, _partname, "Part Name" );
     }
 
 }
 
+//function setOnlyNewComboboxes( targetClass, datas, placeholder ) {
+//
+//    //don't repopulate already populated comboboxes. This is a case when typed value will be erased
+//
+//    $(targetClass).each(function() {
+//        var optionLength = $(this).children('option').length;
+//        //console.log( "optionLength="+optionLength );
+//        if( optionLength == 0 ) {
+//            //console.log( 'data is not set' );
+//            var id = $(this).attr('id');
+//            var targetid = '#'+id;
+//            populateSelectCombobox( targetid, datas, placeholder );
+//        }
+//    });
+//}
+
 //#############  blockname types  ##############//
-function getComboboxBlockname(ids) {
+function getComboboxBlockname(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"blockname"); //urlCommon+"blockname";
 
-//    if( cicle == "new" || cicle == "create" ) {
-//        url = url + "?opt=default";
-//    }
+    var targetid = ".ajax-combobox-blockname";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"blockname_0_field";
+        targetid = holder.find(targetid);
+    }
+    //console.log("block targetid="+targetid);
+
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
     }
@@ -427,10 +454,10 @@ function getComboboxBlockname(ids) {
             async: asyncflag
         }).success(function(data) {
                 _blockname = data;
-            populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+            populateSelectCombobox( targetid, _blockname, "Block Name" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-blockname", _blockname, "Block Name" );
+        populateSelectCombobox( targetid, _blockname, "Block Name" );
     }
 
 }
@@ -605,7 +632,7 @@ function getSetTitle() {
         async: asyncflag
     }).success(function(data) {
         if( data ) {
-            //console.log("id="+data[0].id+", text="+data[0].text);
+            //console.log("populate title: id="+data[0].id+", text="+data[0].text);
             populateSelectCombobox( targetid, data, "Choose an option");
             //$(targetid).select2("readonly", false);
             //setElementToId( targetid, data );
@@ -909,8 +936,8 @@ function getUrgency() {
 }
 
 
-
-function initComboboxJs(ids) {
+//flag - optional parameter to force use ids if set to true
+function initComboboxJs(ids, holder) {
 
     if( urlBase ) {
 
@@ -918,8 +945,8 @@ function initComboboxJs(ids) {
 
         getComboboxMrnType(ids);
         getComboboxAccessionType(ids);
-        getComboboxPartname(ids);
-        getComboboxBlockname(ids);
+        getComboboxPartname(ids,holder);
+        getComboboxBlockname(ids,holder);
         getComboboxStain(ids);
         getComboboxSpecialStain(ids,false);
         getComboboxScanregion(ids);
@@ -932,7 +959,7 @@ function initComboboxJs(ids) {
         getCourseTitle(ids);
 
         getComboboxDepartment(ids);
-        getComboboxInstitution(ids);
+        //getComboboxInstitution(ids);
         getComboboxAccount(ids);
     }
 }
@@ -951,11 +978,12 @@ function slideType(ids) {
         //console.log("parent: id="+parent.attr('id')+",class="+parent.attr('class'));
         var blockValue = parent.find('.element-title').first();
         //console.log("slidetype-combobox: id="+parent.find('.slidetype-combobox').first().attr('id')+",class="+parent.find('.slidetype-combobox').first().attr('class'));
-        var slideType = parent.find('.slidetype-combobox').first().select2('val');
-        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideType="+slideType);
+        var slideTypeText = parent.find('.slidetype-combobox').first().select2('data').text;
+        //console.log("slideTypeText="+slideTypeText);
+        //console.log("blockValue: id="+blockValue.attr('id')+",class="+blockValue.attr('class')+",slideTypeText="+slideTypeText);
         var keyfield = parent.find('#check_btn');
-        if( slideType == 3 ) {   //'Cytopathology'
-            //console.log("Cytopathology is chosen = "+slideType);
+        if( slideTypeText == 'Cytopathology' ) {
+            //console.log("Cytopathology is chosen = "+slideTypeText);
             keyfield.attr('disabled','disabled'); 
             disableInElementBlock(parent.find('#check_btn').first(), true, "all", null, null);
             var htmlDiv = '<div class="element-skipped">Block is not used for cytopathology slide</div>';
@@ -963,15 +991,20 @@ function slideType(ids) {
             blockValue.after(htmlDiv);
             blockValue.hide();
             parent.find('.form-btn-options').first().hide();
-            //parent.find('.panel-body').first().css("border-color", "#C0C0C0");
-        } else {    
-            //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
-            disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
-            parent.find('.element-skipped').first().remove();
-            blockValue.show();
-            keyfield.removeAttr('disabled'); 
-            parent.find('.form-btn-options').first().show();
-            //parent.find('.panel-body').first().css("border-color", "#1268B3");
+        } else {
+            if( $('.element-skipped').length != 0 ) {
+                //disableInElementBlock(parent.find('#check_btn').first(), false, "all", null, null);
+                var btnEl = parent.find('#check_btn').first();
+                if( btnEl.hasClass('checkbtn') ) {
+                    disableInElementBlock(parent.find('#check_btn').first(), true, null, "notkey", null);
+                } else {
+                    disableInElementBlock(parent.find('#check_btn').first(), false, null, "notkey", null);
+                }
+                parent.find('.element-skipped').first().remove();
+                blockValue.show();
+                keyfield.removeAttr('disabled');
+                parent.find('.form-btn-options').first().show();
+            }
         }
         
     });   
@@ -987,6 +1020,6 @@ function setElementToId( target, dataarr, setId ) {
         var setId = firstObj.id;
     }
 
-    //console.log("setId="+setId);
+    //console.log("setId="+setId+", target="+target);
     $(target).select2('val', setId);
 }

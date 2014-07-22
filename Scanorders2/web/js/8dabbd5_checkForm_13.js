@@ -22,8 +22,6 @@ var orderformtype = $("#orderformtype").val();
 var dataquality_message1 = new Array();
 var dataquality_message2 = new Array();
 
-var _external_user = null;
-
 var _auto_generated_mrn_type = null;    //now it should be 13;
 var _auto_generated_accession_type = null;  //now it should be 8
 
@@ -350,6 +348,14 @@ function executeClick( btnObjInit ) {
             reject(Error("parent key is empty"));
         }
 
+        var inst = $('.combobox-institution').select2('val');
+        //console.log('inst='+inst);
+
+        if( !inst || inst.length == 0 || inst == '' ) {
+            gocontinue = false;
+            reject(Error("Institution is empty"));
+        }
+
         if( gocontinue ) {
 
             var btnObj = new btnObject(btnObjInit.btn);
@@ -364,6 +370,20 @@ function executeClick( btnObjInit ) {
             var grandparentKey = null;
             var grandparentType = null;
             var single = false; //temp
+
+            //get parent
+            var parentBtnObj = new btnObject(btnObj.parentbtn);
+            if( parentBtnObj ) {
+                parentKey = parentBtnObj.key;
+                parentType = parentBtnObj.type;
+            }
+
+            //get grand parent
+            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
+            if( grandparentBtnObj ) {
+                grandparentKey = grandparentBtnObj.key;
+                grandparentType = grandparentBtnObj.type;
+            }
 
             //console.log('executeClick: name='+btnObj.name+', key='+key+', parentKey='+parentKey+', parentType='+parentType);
 
@@ -393,27 +413,44 @@ function executeClick( btnObjInit ) {
 
                 ajaxType = 'DELETE';
 
-                var extraStr = "";
+                var extraStr = "?inst=" + inst;
+
+                if( parentKey ) {
+                    extraStr = extraStr + "&parentkey="+parentKey;
+                }
+
+                if( parentType ) {
+                    extraStr = extraStr + "&parentextra="+parentType;
+                }
+
+                if( grandparentKey ) {
+                    extraStr = extraStr + "&grandparentkey="+grandparentKey;
+                }
+
+                if( grandparentType ) {
+                    extraStr = extraStr + "&grandparentextra="+grandparentType;
+                }
+
                 if( type ) {
-                    extraStr = "?extra="+type;
+                    extraStr = extraStr + "&extra="+type;
                 }
                 key = trimWithCheck(key);
                 urlcasename = urlcasename + '/' + key + extraStr;
             }
 
-            //get parent
-            var parentBtnObj = new btnObject(btnObj.parentbtn);
-            if( parentBtnObj ) {
-                parentKey = parentBtnObj.key;
-                parentType = parentBtnObj.type;
-            }
-
-            //get grand parent
-            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
-            if( grandparentBtnObj ) {
-                grandparentKey = grandparentBtnObj.key;
-                grandparentType = grandparentBtnObj.type;
-            }
+//            //get parent
+//            var parentBtnObj = new btnObject(btnObj.parentbtn);
+//            if( parentBtnObj ) {
+//                parentKey = parentBtnObj.key;
+//                parentType = parentBtnObj.type;
+//            }
+//
+//            //get grand parent
+//            var grandparentBtnObj = new btnObject(parentBtnObj.parentbtn);
+//            if( grandparentBtnObj ) {
+//                grandparentKey = grandparentBtnObj.key;
+//                grandparentType = grandparentBtnObj.type;
+//            }
 
             //trim values
             key = trimWithCheck(key);
@@ -440,7 +477,7 @@ function executeClick( btnObjInit ) {
                 dataType: 'json',
                 timeout: _ajaxTimeout,
                 async: true,    //use synchronous call
-                data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType },
+                data: {key: key, extra: type, parentkey: parentKey, parentextra: parentType, grandparentkey: grandparentKey, grandparentextra: grandparentType, inst: inst },
                 success: function (data) {
 
                     btn.button('reset');
@@ -490,7 +527,7 @@ function executeClick( btnObjInit ) {
                             reject(Error("Existing Auto-generated object does not exist in DB"));
 
                         } else
-                        if( data.id && data.id != '' ) {    //test this condition for external user
+                        if( data.id && data.id != '' ) {
 
                             var gonext = 1;
 

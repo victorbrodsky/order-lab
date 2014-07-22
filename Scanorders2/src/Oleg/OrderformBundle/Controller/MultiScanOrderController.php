@@ -124,13 +124,13 @@ class MultiScanOrderController extends Controller {
         //echo "routeName=".$routeName;
 
         if( $routeName == "singleorder_create" ) {
-            $type = "One Slide Scan Order";
+            $type = "One-Slide Scan Order";
             $new_order = "single_new";
         } elseif( $routeName == "multi_create") {
             $type = "Multi-Slide Scan Order";
             $new_order = "multi_new";
         } else {
-            $type = "One Slide Scan Order";
+            $type = "One-Slide Scan Order";
             $new_order = "single_new";
         }
 
@@ -377,6 +377,7 @@ class MultiScanOrderController extends Controller {
         $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
 
         $entity->setProvider($user);
+        $entity->setProxyuser($user);
 
         $patient = new Patient(true,$status,$user,$source);
         $entity->addPatient($patient);
@@ -409,9 +410,9 @@ class MultiScanOrderController extends Controller {
         if( $routeName == "multi_new") {
             $type = "Multi-Slide Scan Order";
         } elseif( $routeName == "single_new") {
-            $type = "One Slide Scan Order";
+            $type = "One-Slide Scan Order";
         } else {
-            $type = "One Slide Scan Order";
+            $type = "One-Slide Scan Order";
         }
 
         if( $lastProxy ) {
@@ -515,9 +516,14 @@ class MultiScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        //redirect to show table view controller if form type is "Table-View Scan Order"
+        if( $entity->getType() == "Table-View Scan Order" ) {
+            return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
+        }
+
         //if show not submitted => change url
         if( $entity->getStatus()."" == "Not Submitted" && $routeName != "multy_edit" ) {
-            return $this->redirect($this->generateUrl('multy_edit',array('id'=>$entity->getId())));
+            return $this->redirect($this->generateUrl('multy_edit',array('id'=>$entity->getOid())));
         }
 
         //echo $entity;

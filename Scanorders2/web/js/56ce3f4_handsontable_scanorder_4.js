@@ -29,6 +29,8 @@ var _errorValidatorRows = new Array(); //keep rows with validator error
 var _auto_generated_mrn_type = null;    //13;
 var _auto_generated_accession_type = null;  //8;
 
+var _institution = null;
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -271,6 +273,17 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
+    //console.log(JSON.stringify(xdata));
+    if( typeof xdata != 'undefined' ) {
+        console.log(xdata);
+
+        console.log('xdata len='+xdata.length);
+
+        for( var key in xdata[0] ) {
+            console.log( xdata[0][key] );
+        }
+    }
+
     attachResearchEducationalTooltip();
 
     $(function(){
@@ -286,8 +299,10 @@ $(document).ready(function() {
     // Wait until idle (busy must be false)
     var _TIMEOUT = 300; // waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+
         //console.log('The show can resume !');
         handsonTableInit();
+
     });
 
     //validation on form submit
@@ -358,6 +373,10 @@ function ajaxFinishedCondition() {
 
 function handsonTableInit() {
 
+    //set institution
+    _institution = $('.combobox-institution').select2('val');
+    //console.log('_institution='+_institution);
+
     var data = new Array();
     var columnsType = new Array();
     var colHeader = new Array();
@@ -377,6 +396,21 @@ function handsonTableInit() {
                 rowElement[ii] = null;
             }
 
+            //load data
+            if( typeof xdata != 'undefined' ) {
+                var headerTitle = _columnData_scanorder[ii]['header'];
+                console.log('headerTitle='+headerTitle);
+                //console.log( "acc num="+xdata[0]['Accession Number'] );
+                console.log( xdata );
+                console.log( "row:" );
+                console.log( xdata[0] );
+                var rowObj = xdata[0];
+                console.log(rowObj);
+                if( headerTitle in xdata[i-1] ) {
+                    rowElement[ii] = xdata[i-1][headerTitle];
+                }
+            }
+
         }//foreach column
 
         //console.log(rowElement);
@@ -393,11 +427,12 @@ function handsonTableInit() {
     //console.log(columnsType);
     //$('#multi-dataTable').doubleScroll();
 
-    //console.log(data);
+    console.log(data);
     //console.log(colHeader);
     //console.log(columnsType);
 
-//    Handsontable.renderers.registerRenderer('negativeValueRenderer', negativeValueRenderer); //maps function to lookup string
+
+
 
 
     $(_htableid).handsontable({
@@ -476,6 +511,9 @@ function handsonTableInit() {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
+
+
+
 }
 
 
@@ -496,8 +534,9 @@ function processKeyTypes( row, col, value, oldvalue ) {
                     break;
                 }
 
+
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"patient/generate"),   //urlCheck+"patient/generate",
+                    url: getCommonBaseUrl("check/"+"patient/generate"+"?inst="+_institution),   //urlCheck+"patient/generate",
                     timeout: _ajaxTimeout,
                     async: asyncflag
                 }).success( function(data) {
@@ -529,7 +568,7 @@ function processKeyTypes( row, col, value, oldvalue ) {
                 }
 
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"accession/generate"),  //urlCheck+"accession/generate",
+                    url: getCommonBaseUrl("check/"+"accession/generate"+"?inst="+_institution),  //urlCheck+"accession/generate",
                     timeout: _ajaxTimeout,
                     async: asyncflag
                 }).success( function(data) {
@@ -670,7 +709,7 @@ function cleanHTableCell( row, col, force ) {
             //console.log('delete value='+value);
             if( _sotable.getDataAtCell(row,col-1) == 'Auto-generated MRN' || _sotable.getDataAtCell(row,col-1) == 'Existing Auto-generated MRN' ) {
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"patient/delete/"+value+"?extra="+_auto_generated_mrn_type),    //urlCheck+"patient/delete/"+value+"?extra=13",
+                    url: getCommonBaseUrl("check/"+"patient/delete/"+value+"?extra="+_auto_generated_mrn_type+"&inst="+_institution),
                     type: 'DELETE',
                     timeout: _ajaxTimeout,
                     async: asyncflag
@@ -692,7 +731,7 @@ function cleanHTableCell( row, col, force ) {
             //console.log('Accession => value='+value);
             if( _sotable.getDataAtCell(row,col-1) == 'Auto-generated Accession Number' || _sotable.getDataAtCell(row,col-1) == 'Existing Auto-generated Accession Number' ) {
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"accession/delete/"+value+"?extra="+_auto_generated_accession_type), //urlCheck+"accession/delete/"+value+"?extra=8",
+                    url: getCommonBaseUrl("check/"+"accession/delete/"+value+"?extra="+_auto_generated_accession_type+"&inst="+_institution),
                     type: 'DELETE',
                     timeout: _ajaxTimeout,
                     async: asyncflag
