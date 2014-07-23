@@ -111,10 +111,12 @@ class TableController extends Controller {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+
         $type = "show";
         $disable = true;
         $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'service'=>null, 'user'=>$user);
-        $form   = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
+        $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
 
         //$slides = $orderinfo->getSlide();
         $query = $em->createQuery('
@@ -122,14 +124,13 @@ class TableController extends Controller {
             FROM OlegOrderformBundle:Slide slide
             INNER JOIN slide.orderinfo orderinfo
             WHERE orderinfo.oid = :id
-            ORDER BY slide.sequence DESC'
+            ORDER BY slide.sequence ASC'
         )->setParameter('id', $id);
 
         $slides = $query->getResult();
 
         $jsonData = array();
 
-        $count = 0;
         foreach( $slides as $slide ) {
 
             $block = $slide->getBlock();
@@ -138,11 +139,9 @@ class TableController extends Controller {
             $procedure = $accession->getProcedure();
             $patient = $procedure->getPatient();
 
-            $rowArr = array();
-
             //accession: 2
             $acckey = $accession->obtainValidKeyField();
-            $rowArr['Accession Type'] = $acckey->getKeytype()->getId();
+            $rowArr['Accession Type'] = $acckey->getKeytype()->getName();
             $rowArr['Accession Number'] = $acckey->getField();
 
             //part: 1
@@ -151,36 +150,65 @@ class TableController extends Controller {
             //block: 1
             $rowArr['Block Name'] = $block->obtainValidKeyField()->getField();
 
+            //slide: 4
+            $rowArr['Stain'] = $slide->getStain()->first()->getField()->getName();
+            $rowArr['Scan Magnificaiton'] = $slide->getScan()->first()->getField();
+            $rowArr['Diagnosis'] = $part->obtainValidField('disident',$id)->getField();
+            $rowArr['Reason for Scan/Note'] = $slide->getScan()->first()->getNote();
+
+            //part 1
+            $rowArr['Source Organ'] = ( $part->obtainValidField('sourceOrgan',$id)->getField() ? $part->obtainValidField('sourceOrgan',$id)->getField()->getName() : null );
+
+            //patient: 4
+            $patientkey = $patient->obtainValidKeyField();
+            $rowArr['MRN Type'] = $patientkey->getKeytype()->getName();
+            $rowArr['MRN'] = $patientkey->getField();
+            $rowArr['Patient DOB'] = $transformer->transform($patient->obtainValidField('dob',$id)->getField());
+            $rowArr['Clinical Summary'] = $patient->obtainValidField('clinicalHistory',$id)->getField();
+
+            //accession: 1
+            $rowArr['Accession Date'] = $transformer->transform($accession->obtainValidField('accessionDate',$id)->getField());
+
             //procedure: 6
-//            $rowArr['Procedure Type'] = ( $procedure->getName()->first()->getField() ? $procedure->getName()->first()->getField()->getId() : null );
-//            $rowArr['Encounter Date'] = $procedure->obtainValidField('encounterDate')."";
-//            $rowArr["Patient's Last Name"] = $procedure->obtainValidField('patlastname')."";
-//            $rowArr["Patient's First Name"] = $procedure->obtainValidField('patfirstname')."";
-//            $rowArr["Patient's Middle Name"] = $procedure->obtainValidField('patmiddlename')."";
-//            $rowArr['Patient Sex'] = $procedure->obtainValidField('patsex')."";
-//            $rowArr['Patient Age'] = $procedure->obtainValidField('patage')."";
-//            $rowArr['Clinical History'] = $procedure->obtainValidField('pathistory')."";
+            $rowArr['Procedure Type'] = ( $procedure->getName()->first()->getField() ? $procedure->getName()->first()->getField()->getId() : null );
+            $rowArr['Encounter Date'] = $transformer->transform($procedure->obtainValidField('encounterDate',$id)->getField());
+            $rowArr["Patient's Last Name"] = $procedure->obtainValidField('patlastname',$id)->getField();
+            $rowArr["Patient's First Name"] = $procedure->obtainValidField('patfirstname',$id)->getField();
+            $rowArr["Patient's Middle Name"] = $procedure->obtainValidField('patmiddlename',$id)->getField();
+            $rowArr['Patient Sex'] = $procedure->obtainValidField('patsex',$id)->getField();
+            $rowArr['Patient Age'] = $procedure->obtainValidField('patage',$id)->getField();
+            $rowArr['Clinical History'] = $procedure->obtainValidField('pathistory',$id)->getField();
 
-            //slide
-//            $rowArr['Slide Title'] = $slide->getTitle();
-//            $rowArr['Slide Type'] = $slide->getSlidetype()->getName();
-//            $rowArr['Microscopic Description'] = $slide->getMicroscopicdescr();
-//            $rowArr['Link(s) to related image(s)'] = $slide->getRelevantScans()->first()->getField();
-//            $rowArr['Region to Scan'] = $slide->getScan()->first()->getScanregion();
+            //part: 5
+            $rowArr['Gross Description'] = $part->obtainValidField('description',$id)->getField();
+            $rowArr['Differential Diagnoses'] = $part->obtainValidField('diffDisident',$id)->getField();
+            $rowArr['Type of Disease'] = $part->obtainValidField('diseaseType',$id)->getField();
+            $rowArr['Origin of Disease'] = $part->obtainValidField('diseaseType',$id)->getOrigin();
+            $rowArr['Primary Site of Disease Origin'] = ( $part->obtainValidField('diseaseType',$id)->getPrimaryOrgan() ? $part->obtainValidField('diseaseType',$id)->getPrimaryOrgan()->getName() : null );
 
-            //block
-            //$rowArr['Block Section Source'] = $slide->getParent()->getScanregion();
+            //block: 3
+            $rowArr['Block Section Source'] = $block->obtainValidField('sectionsource',$id)->getField();
+            $rowArr['Associated Special Stain Name'] = $block->obtainValidField('specialStains',$id)->getStaintype()->getName();
+            $rowArr['Associated Special Stain Result'] = $block->obtainValidField('specialStains',$id)->getField();
 
-            $jsonData[$count] = $rowArr;
-            $count++;
+            //slide: 5
+            $rowArr['Slide Title'] = $slide->getTitle();
+            $rowArr['Slide Type'] = $slide->getSlidetype()->getName();
+            $rowArr['Microscopic Description'] = $slide->getMicroscopicdescr();
+            $rowArr['Link(s) to related image(s)'] = $slide->getRelevantScans()->first()->getField();
+            $rowArr['Region to Scan'] = $slide->getScan()->first()->getScanregion();
+
+            $jsonData[] = $rowArr;
+            //array_push($jsonData, $rowArr);
         }
 
         //print_r($jsonData);
-        var_dump($jsonData);
+        //var_dump($jsonData);
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
             'xdata' => json_encode($jsonData),
-            //'entity' => $entity,
+            //'xdata' => $jsonData,
+            'entity' => $orderinfo,
             'form' => $form->createView(),
             'type' => $type,    //form cicle: new, show, amend ...
             'formtype' => $orderinfo->getType(),

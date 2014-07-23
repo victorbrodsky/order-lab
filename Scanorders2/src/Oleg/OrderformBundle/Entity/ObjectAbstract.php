@@ -413,13 +413,26 @@ abstract class ObjectAbstract
     }
 
     //get only one field
-    public function obtainValidField( $fieldname ) {
+    public function obtainValidField( $fieldname, $orderid=null ) {
         $res = null;
         $getMethod = "get".$fieldname;
         foreach( $this->$getMethod() as $entity ) {
             if( $entity->getStatus() == 'valid' ) {
+
                 $res = $entity;
-                break;
+
+                //if orderid is not given, then return the first valid field
+                if( $orderid == null ) {
+                    break;
+                }
+
+                //if orderid is given, then return the first valid field with provided orderid
+                if( $orderid != null ) {
+                    if( $entity->getOrderinfo()->getOid() == $orderid ) {
+                        break;
+                    }
+                }
+
             }
         } //foreach
         //echo "res=".$res."<br>";

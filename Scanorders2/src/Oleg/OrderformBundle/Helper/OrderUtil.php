@@ -150,6 +150,7 @@ class OrderUtil {
             //exit();
 
             //VALIDATION Accession-MRN
+            $validity = array(self::STATUS_VALID);
             $conflict = false;
             foreach( $entity->getAccession() as $accession ) {
                 $patient = $accession->getParent()->getParent();
@@ -165,7 +166,7 @@ class OrderUtil {
                 }
 
                 //echo "accessionKey=".$accessionKey."<br>";
-                $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",true, true);
+                $accessionDb = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",$validity, true); //validity was true
 
                 $mrn = $patientKey; //mrn
                 $mrnTypeId = $patientKey->getKeytype()->getId();

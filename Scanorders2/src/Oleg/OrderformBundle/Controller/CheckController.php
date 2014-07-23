@@ -119,9 +119,7 @@ class CheckController extends Controller {
 
         //echo "key=".$key.", keytype=".$keytype.", inst=".$inst." ";
 
-        $validity = array();
-        $validity[] = "valid";
-        $validity[] = "reserved";
+        $validity = array('valid','reserved');
 
         $institutions = array();
         $institutions[] = $inst;
@@ -287,9 +285,7 @@ class CheckController extends Controller {
         $extra = array();
         $extra["keytype"] = $keytype;
 
-        $validity = array();
-        $validity[] = "valid";
-        $validity[] = "reserved";
+        $validity = array('valid','reserved');
 
         $institutions = array();
         $institutions[] = $inst;
@@ -658,9 +654,10 @@ class CheckController extends Controller {
         $inst = trim( $request->get('inst') );
         $institutions = array();
         $institutions[] = $inst;
+        $validity = array('valid','reserved');
 
         if( $accession != "" && $partname != "" ) {
-            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $institutions, $accession, $keytype, $partname, $key, true );
+            $entity = $this->getDoctrine()->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField( $institutions, $accession, $keytype, $partname, $key, $validity );
 
             //echo "count=".count($entity)."<br>";
             //echo "partname=".$entity->getPartname()->first()."<br>";

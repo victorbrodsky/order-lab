@@ -273,16 +273,15 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
-    //console.log(JSON.stringify(xdata));
-    if( typeof xdata != 'undefined' ) {
-        console.log(xdata);
-
-        console.log('xdata len='+xdata.length);
-
-        for( var key in xdata[0] ) {
-            console.log( xdata[0][key] );
-        }
-    }
+//    //console.log(JSON.stringify(_orderDataArr));
+//    if( typeof _orderDataArr != 'undefined' ) {
+//        //console.log(_orderDataArr);
+//        console.log('_orderDataArr len='+_orderDataArr.length);
+//        for( var n in _orderDataArr ) {
+//            console.log("n="+n);
+//            console.log(_orderDataArr[n]);
+//        }
+//    }
 
     attachResearchEducationalTooltip();
 
@@ -397,17 +396,19 @@ function handsonTableInit() {
             }
 
             //load data
-            if( typeof xdata != 'undefined' ) {
+            //console.log('load data for row='+i);
+            //if( typeof _orderDataArr != 'undefined' ) {
+            if( typeof _orderDataArr != 'undefined' && _orderDataArr.length > 0 ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                console.log('headerTitle='+headerTitle);
-                //console.log( "acc num="+xdata[0]['Accession Number'] );
-                console.log( xdata );
-                console.log( "row:" );
-                console.log( xdata[0] );
-                var rowObj = xdata[0];
-                console.log(rowObj);
-                if( headerTitle in xdata[i-1] ) {
-                    rowElement[ii] = xdata[i-1][headerTitle];
+                //console.log('headerTitle='+headerTitle);
+                //console.log( _orderDataArr[i-1] );
+                if( typeof headerTitle != 'undefined' && headerTitle != '' && (i-1<_orderDataArr.length) && headerTitle in _orderDataArr[i-1] ) {
+                    //console.log('headerTitle='+headerTitle);
+                    var value = _orderDataArr[i-1][headerTitle];
+                    //console.log( "value="+value );
+                    if( value != null && value != "" ) {
+                        rowElement[ii] = value;
+                    }
                 }
             }
 
@@ -427,7 +428,7 @@ function handsonTableInit() {
     //console.log(columnsType);
     //$('#multi-dataTable').doubleScroll();
 
-    console.log(data);
+    //console.log(data);
     //console.log(colHeader);
     //console.log(columnsType);
 
@@ -510,7 +511,6 @@ function handsonTableInit() {
 
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
-
 
 
 

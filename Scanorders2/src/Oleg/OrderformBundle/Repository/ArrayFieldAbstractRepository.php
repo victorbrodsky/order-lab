@@ -229,10 +229,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entity = $this->cleanAndProcessEmptyArrayFields($entity);
 
         if( !$entity->getId() || $entity->getId() == "" ) {
-            echo "set persist: persist ".$className."<br>";
+            //echo "set persist: persist ".$className."<br>";
             $em->persist($entity);
         } else {
-            echo "set persist: merge ".$className.", id=".$entity->getId()."<br>";
+            //echo "set persist: merge ".$className.", id=".$entity->getId()."<br>";
             //$em->merge($entity);
         }
 
@@ -269,100 +269,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $entity->setParent($processedParent);
             //echo "processed entity:".$entity;
         }
-
-//        if( $original ) {   //parent exists in DB: just set Result
-//
-//            $processedParent = null;
-//
-//            if( $className != "Procedure" ) {
-//
-//                $parentDb = $entity->getParent();
-//                if( $parentDb && $parentDb->getId() && $parentDb->getId() != "" ) {
-//                    $parentClass = new \ReflectionClass($parentDb);
-//                    $parentClassName = $parentClass->getShortName();
-//                    echo "parentDb=". $parentDb;
-//
-//                    //Copy Fields only for parent
-//                    $parentDb = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processFieldArrays($parentDb,$orderinfo,$original->getParent());
-//
-//                    //process parent
-//                    $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity($parentDb, $orderinfo, $original->getParent());
-//
-//                    echo "processed parent:".$processedParent;
-//                    $entity->setParent($processedParent);
-//                }
-//
-//            } else {
-//
-//                $parent = $original->getParent();
-//                echo "Exception: Procedure parent=". $parent;
-//                if( $parent ) {
-//                    $parentClass = new \ReflectionClass($parent);
-//                    $parentClassName = $parentClass->getShortName();
-//                    $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity($parent, $orderinfo);
-//                    echo "Exception: processed parent:".$processedParent;
-//
-//                    $entity->setParent($processedParent);
-//
-//                    //echo "processed entity:".$entity;
-//                }
-//            }
-//
-//            //remove original from parent, because original was replaced by found entity from DB
-//            echo "remove original from institution:".$original;
-//            $removeClassMethod = 'remove'.$className;
-//            $orderinfo->getInstitution()->$removeClassMethod($original);
-//
-//            if( $processedParent == null ) {
-//                $parent = $entity->getParent();
-//                if( $parent ) {
-//                    $parentClass = new \ReflectionClass($parent);
-//                    $parentClassName = $parentClass->getShortName();
-//                    $processedParent = $em->getRepository('OlegOrderformBundle:'.$parentClassName)->processEntity($parent, $orderinfo);
-//                    echo "processed parent:".$processedParent;
-//
-//                    $entity->setParent($processedParent);
-//                    //echo "processed entity:".$entity;
-//                }
-//            }
-//
-//            if( $processedParent ) {
-//                $removeClassMethod = "remove".$className;
-//                echo "removeClassMethod=".$removeClassMethod."<br>";
-//                $processedParent->$removeClassMethod($original);
-//            }
-//
-//        } else {    //parent does not exists in DB: full
-//
-//            $parent = $entity->getParent();
-//
-//            if( $parent ) {
-//
-//                $class = new \ReflectionClass($parent);
-//                $className = $class->getShortName();
-//                $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
-//                echo "processed parent:".$processedParent;
-//
-//                $entity->setParent($processedParent);
-//                //echo "processed entity:".$entity;
-//            }
-//
-//        }
         ///////////////// EOF process parent /////////////////
 
-        //$parent = $entity->getParent();
-//        if( $parent ) {
-//
-//            $class = new \ReflectionClass($parent);
-//            $className = $class->getShortName();
-//            $processedParent = $em->getRepository('OlegOrderformBundle:'.$className)->processEntity($parent, $orderinfo);
-//            echo "processed parent:".$processedParent;
-//
-//            $entity->setParent($processedParent);
-//            //echo "processed entity:".$entity;
-//        }
-
-        //echo "Finish Set Result for entity:".$entity;
+        echo "Finish Set Result for entity:".$entity;
 
         return $entity;
     }
@@ -727,6 +636,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     //echo( "validity: methodShortName=".$methodShortName."<br>" );
                                     //echo "field count=".count($entity->$methodShortName())."<br>";
                                     $validIsSet = $this->validFieldIsSet($entity->$methodShortName(),$exceptionArr);
+                                    //echo "validIsSet=".$validIsSet."<br>";
 
                                     if( !$validIsSet ) {  //set valid if none of the filed has valid status already
                                         //echo "Status:".$field->getStatus()."; Set status to ".self::STATUS_VALID." to field=".$field." !!!<br>";
@@ -830,8 +740,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
+        if( $field ) {
+
+        }
+        //echo "find field =".$field."<br>";
         //adding field
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+        //echo "found id=".$found."<br>";
 
         if( !$found ) {
             //echo( "### ".$methodName." not found !!!!!! => add <br>" );
@@ -874,7 +789,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         foreach( $fields as $thisField ) {
-            //echo "field=".$thisField."=>";
+            //echo "field=".$thisField.", fieldId=".$thisField->getId()."<br>";
             //TODO: added condition: field is not empty. Make sure that the original condition was not correct: if( $thisField->getStatus() == self::STATUS_VALID ) {
             if( $thisField->getStatus() == self::STATUS_VALID && $thisField != "" ) {
                 //echo "found valid field by field name => don't add field <br>";
@@ -895,40 +810,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return null;
         }
 
-//        $onlyValid = "";
-//        if( $validity ) {
-//            //echo " check validity ";
-//            if( is_array($validity) && count($validity)>0 ) {
-//
-//                $validityStr = "(";  //"(".implode("OR", $validity).")";
-//                $count = 1;
-//                foreach( $validity as $val ) {
-//                    $validityStr .= "c.status='".$val."'";
-//                    if( $count < count($validity) ) {
-//                        $validityStr .= " OR ";
-//                    }
-//                    $count++;
-//                }
-//                $validityStr .= ")";
-//
-//            } else
-//            if( $validity != "" && $validity !=  1 ) {
-//                //echo "validity == string1 ";
-//                $validityStr = "c.status='".$validity."'";
-//            } else if( $validity ==  1 ) {
-//                //echo "validity == true ";
-//                //$validity = self::STATUS_VALID;
-//                $validityStr = "c.status='".self::STATUS_VALID."'";
-//            } else {
-//                //echo "else-validity == string ";
-//            }
-//            //$onlyValid = " AND c.status='".$validity."' AND cfield.status='".self::STATUS_VALID."'";
-//            $onlyValid = " AND ".$validityStr." AND cfield.status='".self::STATUS_VALID."'";
-//        }
+        if( $validities != null && is_array($validities) == false ) {
+            throw new \Exception( 'Validity is provided, but not as array; validities=' . $validities );
+        }
+
         //add validity conditions
         $validityStr = "";
         if( $validities && is_array($validities) && count($validities)>0 ) {
-            $validityStr = " AND (";
+            $validityStr = " AND cfield.status='".self::STATUS_VALID."' AND (";
             $count = 1;
             foreach( $validities as $validity ) {
                 $validityStr .= "c.status='".$validity."'";
@@ -1078,6 +967,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $institutions = array();
         $institutions[] = $institution;
 
+        $validity = array(self::STATUS_VALID);
+
         if( !$fieldValue ) {
             $fieldValue = $this->getNextNonProvided($entity,$extra,null);
         }
@@ -1086,8 +977,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "extra keytype=".$extra['keytype']."<br>";
         //echo "extra partname=".$extra['partname']."<br>";
 
-        //before create: check if entity with key does not exists in DB
-        $entitiesFound = $this->findOneByIdJoinedToField( $institutions, $fieldValue, $className, $fieldName, null, false, $extra );
+        //before create: check if entity with valid key does not exists in DB
+        //TODO: If someone generated this name already (very low probability), so regenerate key field name (?)
+        $entitiesFound = $this->findOneByIdJoinedToField( $institutions, $fieldValue, $className, $fieldName, $validity, false, $extra );
         //echo "Entities Found count=".count($entitiesFound)."<br>";
         
         if( count($entitiesFound) == 1 ) {

@@ -2,6 +2,8 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+{% import "OlegOrderformBundle::Default/ordercommon.html.twig" as order %}
+
 {% block title %}
     {{ formtype }}
 {% endblock %}
@@ -59,8 +61,10 @@
     {% endjavascripts %}
 
     <script type="text/javascript">
-        var xdata = "{{ xdata|escape('js') }}";
-        console.log("xdata="+xdata);
+        {#//var xdata = "{{ xdata|escape('js') }}";#}
+        {#//var _orderDataArr = {{ xdata|json_encode|raw }};        #}
+        var _orderDataArr= JSON.parse('{{ xdata|escape('js')}}');
+        //console.log("_orderDataArr="+_orderDataArr);
     </script>
 
 {% endblock %}
@@ -68,22 +72,24 @@
 
 {% block content %}
 
-    <h3 class="text-info">{{ formtype }}</h3>
+    {{ order.orderheader(entity,form,formtype,type,history) }}
 
-    {% set cycle = "show-table" %}
+    {#<h3 class="text-info">{{ formtype }}</h3>#}
+    {#{% set cycle = "show-table" %}#}
+    {#<input type="hidden" id="orderformtype" value="multi" />#}
+    {#<input type="hidden" id="formcicle" value="{{ cycle }}" />#}
 
-    <input type="hidden" id="orderformtype" value="multi" />
-    <input type="hidden" id="formcicle" value="{{ cycle }}" />
-
-    <br />
+    {#<br />#}
 
     {############ START FORM ##############}
     <form id="table-scanorderform" action="{{ path('table_create_submit') }}" method="post" {{ form_enctype(form) }}>
 
         {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
 
+        {{ form_widget(form.oid) }}
+
         <div id="form-prototype-data"
-            data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype,cycle)|e }}"
+            data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype)|e }}"
         ></div>
 
         <!-- handsontable -->

@@ -181,12 +181,14 @@ class PartRepository extends ArrayFieldAbstractRepository
         $extra['keytype'] = $keytype;
         $extra['accession'] = $accessionNumber;
 
+        $validity = array(self::STATUS_RESERVED); //false;
+
         $withfields = false;
 
         $em = $this->_em;
 
         //1a) Check accession
-        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions, $accessionNumber,"Accession","accession",array(self::STATUS_RESERVED),true,$extra); //find multi: all accessions with given $accessionNumber
+        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions, $accessionNumber,"Accession","accession",$validity,true,$extra); //find multi: all accessions with given $accessionNumber
 
         if( !$accession ) {
             //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
@@ -199,8 +201,8 @@ class PartRepository extends ArrayFieldAbstractRepository
         $partname = $em->getRepository('OlegOrderformBundle:Part')->findNextPartnameByAccession($institution,$accessionNumber,$keytype);
 
         //3) before part create: check if part with $partname does not exists in DB
-        $partFound = $this->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, false );    //validity=false - it was called by check button
-
+        $partFound = $this->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, null );    //validity=null - it was called by check button
+        //TODO: If someone generated this name already (very low probability), so regenerate key field name (?)
         if( $partFound ) {
             return $partFound;
         }
@@ -250,23 +252,25 @@ class PartRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
-//        $onlyValid = "";
-//        if( $validity ) {
-//            //echo "Part check validity ";
-//            if( $validity != "" && $validity !=  1 ) {
-//                //echo "validity == string1 validity=".$validity." |";
-//            } else if( $validity ==  1 ) {
-//                //echo "validity == true |";
-//                $validity = self::STATUS_VALID;
-//            } else {
-//                //echo "else-validity == string |";
-//            }
-//            $onlyValid = " AND p.status='".$validity."' AND pfield.status='".self::STATUS_VALID."'";
-//        }
+        if( $validities != null && is_array($validities) == false ) {
+            throw new \Exception( 'Validity is provided, but not as array; validities=' . $validities );
+        }
+
+        $parameters = array();
+        $parameters['field'] = $partname."";
+
+        $extraStr = "";
+        if( $accession && $accession != "" ) {
+            $extraStr = ' AND aa.field = :accession AND aa.keytype = :keytype';
+            $parameters['accession'] = $accession."";
+            $parameters['keytype'] = $keytype."";
+        }
+
         //add validity conditions
         $validityStr = "";
         if( $validities && is_array($validities) && count($validities)>0 ) {
-            $validityStr = " AND (";
+            $validityStr = " AND aa.status=:keyfieldstatus AND pfield.status=:keyfieldstatus";
+            $validityStr .= " AND aa.status='".self::STATUS_VALID."' AND (";
             $count = 1;
             foreach( $validities as $validity ) {
                 $validityStr .= "p.status='".$validity."'";
@@ -276,13 +280,11 @@ class PartRepository extends ArrayFieldAbstractRepository
                 $count++;
             }
             $validityStr .= ")";
+            $parameters['keyfieldstatus'] = self::STATUS_VALID;
         }
         //echo "validityStr=".$validityStr." <br> ";
         
-        $extraStr = "";
-        if( $accession && $accession != "" ) {
-            $extraStr = ' AND aa.field = :accession AND aa.keytype = :keytype';
-        }
+
 
         //add institution conditions
         $instStr = "";
@@ -309,13 +311,13 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //echo "dql=".$dql."<br>";
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)->setParameter('field', $partname."");
+        $query = $this->getEntityManager()->createQuery($dql)->setParameters($parameters);
 
-        if( $accession && $accession != "" ) {
-           $query->setParameter('accession', $accession."")                  
-                   ->setParameter('keytype', $keytype."");
-        }
+//        ->createQuery($dql)->setParameter('field', $partname."");
+//        if( $accession && $accession != "" ) {
+//           $query->setParameter('accession', $accession."")
+//                   ->setParameter('keytype', $keytype."");
+//        }
         
         $parts = $query->getResult();
 

@@ -14715,16 +14715,15 @@ var _columnData_scanorder = [
 
 $(document).ready(function() {
 
-    //console.log(JSON.stringify(xdata));
-    if( typeof xdata != 'undefined' ) {
-        console.log(xdata);
-
-        console.log('xdata len='+xdata.length);
-
-        for( var key in xdata[0] ) {
-            console.log( xdata[0][key] );
-        }
-    }
+//    //console.log(JSON.stringify(_orderDataArr));
+//    if( typeof _orderDataArr != 'undefined' ) {
+//        //console.log(_orderDataArr);
+//        console.log('_orderDataArr len='+_orderDataArr.length);
+//        for( var n in _orderDataArr ) {
+//            console.log("n="+n);
+//            console.log(_orderDataArr[n]);
+//        }
+//    }
 
     attachResearchEducationalTooltip();
 
@@ -14839,17 +14838,19 @@ function handsonTableInit() {
             }
 
             //load data
-            if( typeof xdata != 'undefined' ) {
+            //console.log('load data for row='+i);
+            //if( typeof _orderDataArr != 'undefined' ) {
+            if( typeof _orderDataArr != 'undefined' && _orderDataArr.length > 0 ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                console.log('headerTitle='+headerTitle);
-                //console.log( "acc num="+xdata[0]['Accession Number'] );
-                console.log( xdata );
-                console.log( "row:" );
-                console.log( xdata[0] );
-                var rowObj = xdata[0];
-                console.log(rowObj);
-                if( headerTitle in xdata[i-1] ) {
-                    rowElement[ii] = xdata[i-1][headerTitle];
+                //console.log('headerTitle='+headerTitle);
+                //console.log( _orderDataArr[i-1] );
+                if( typeof headerTitle != 'undefined' && headerTitle != '' && (i-1<_orderDataArr.length) && headerTitle in _orderDataArr[i-1] ) {
+                    //console.log('headerTitle='+headerTitle);
+                    var value = _orderDataArr[i-1][headerTitle];
+                    //console.log( "value="+value );
+                    if( value != null && value != "" ) {
+                        rowElement[ii] = value;
+                    }
                 }
             }
 
@@ -14869,7 +14870,7 @@ function handsonTableInit() {
     //console.log(columnsType);
     //$('#multi-dataTable').doubleScroll();
 
-    console.log(data);
+    //console.log(data);
     //console.log(colHeader);
     //console.log(columnsType);
 
@@ -14952,7 +14953,6 @@ function handsonTableInit() {
 
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
-
 
 
 
@@ -26864,6 +26864,7 @@ function setArrayField(element, dataArr, parent) {
 
         //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
 
+        //create an empty input for array fields if populated. Preset id with entity id. Later, set text value as for a normal field
         if( $.inArray(fieldName, arrayFieldShow) != -1 ) { //show all fields from DB
 
             //var name = idsArr[0];
@@ -26874,28 +26875,29 @@ function setArrayField(element, dataArr, parent) {
             var block = idsArr[5];
             var slide = idsArr[6];
 
-            //console.log("Create array empty field, fieldName=" + fieldName + ", patient="+patient+", part="+part );
+            //console.log("Create array empty field, fieldName=" + fieldName + ", patient="+patient+", part="+part + ", id="+id + ", text="+text );
 
             var newForm = getCollField( ident, patient, procedure, accession, part, block, slide, coll );
             //console.log("newForm="+newForm);
 
-            var origId = id;
-            if( fieldName == "specialStains" ) {
-                //special stain has id of the staintipe select box
-                id = dataArr[i]["staintype"];
-            }
+//            if( fieldName == "specialStains" ) {
+//                //special stain has id of the staintype select box
+//                id = dataArr[i]["staintype"];
+//            }
 
             var labelStr = " entered on " + date + " by "+provider + "</label>";
             newForm = newForm.replace("</label>", labelStr);
 
             var idStr = 'type="hidden" value="'+id+'" ';
+            //console.log("idStr="+idStr);
             newForm = newForm.replace('type="hidden"', idStr);
 
             //console.log("newForm="+newForm);
 
             if( fieldName == "disident" && orderformtype == "single" ) {
-                //attachElement
-                attachElement = $('.partdiffdisident');
+                //console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ disident appended @@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                //attachElement = $('.partdiffdisident');
+                attachElement = $('#partdisident_marker'); //TODO: test it!!!
                 //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 $('#partdisident_marker').append(newForm);
             } else {
@@ -26903,9 +26905,11 @@ function setArrayField(element, dataArr, parent) {
                 attachElement.prepend(newForm);
             }
 
+            //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
+
             if( fieldName == "specialStains" ) {
                 //pre-populate select2 with stains
-                getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,coll),true,id);
+                getComboboxSpecialStain(new Array(patient,procedure,accession,part,block,coll),true,dataArr[i]["staintype"]);
             }
 
         } else {    //show the valid field (with validity=1)
@@ -26943,9 +26947,13 @@ function setArrayField(element, dataArr, parent) {
                 }
 
                 //find the last attached element to attachElement
+                var firstAttachedElement = attachElement.find('input,textarea').not(':hidden').first();
 
-                var firstAttachedElement = attachElement.find('input,textarea').first();
-                
+                if( fieldName == "diffDisident" && orderformtype == "single" ) {
+                    firstAttachedElement = $('.partdiffdisident').find('input').not(':hidden').last();
+                    printF(firstAttachedElement,"firstAttachedElement: ");
+                }
+
                 //printF(firstAttachedElement,"firstAttachedElement: ");
 
                 if( fieldName == "partname" || fieldName == "blockname" ) {
@@ -26964,7 +26972,7 @@ function setArrayField(element, dataArr, parent) {
                         firstAttachedElement.select2('data', {id: text, text: text});
                         //firstAttachedElement.select2('val', id);
                     } else {
-                        //console.log("!!!!!!!!!!!! Set Value text="+text);
+                        console.log("!!!!!!!!!!!! Set Value text="+text);
                         firstAttachedElement.val(text);
                     }
                 }

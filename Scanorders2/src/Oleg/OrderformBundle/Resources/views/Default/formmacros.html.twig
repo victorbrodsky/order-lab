@@ -549,18 +549,20 @@
 {% endmacro %}
 
 {% macro fieldSpecialStainsWidget(field) %}
+    {#added other#}
+    {{ form_widget(field.vars.prototype.stainothers) }}
     {{ form_widget(field.vars.prototype.staintype) }}
     {{ form_widget(field.vars.prototype.field) }}
 {% endmacro %}
 
-{% macro fieldProcedurePatnameWidget(field) %}
-    {% import _self as formmacros %}
-                          {# field, cycle, fieldtype,   prototype,   widget, nobtn, nolabel, classname, withspace, btntype, norest       #}
-    {{ formmacros.inputField(field, "new", "",          "prototype", "",     "",    "",      "",        "",        "",      "norest") }}
-    {#{{ formmacros.field(field.vars.prototype.procedurepatnameothers) }}#}
-    {{ formmacros.field(field.vars.prototype.firstName) }}
-    {{ formmacros.field(field.vars.prototype.middleName) }}
-{% endmacro %}
+{#{% macro fieldProcedurePatnameWidget(field) %}#}
+    {#{% import _self as formmacros %}#}
+                          {#&#123;&#35; field, cycle, fieldtype,   prototype,   widget, nobtn, nolabel, classname, withspace, btntype, norest       &#35;&#125;#}
+    {#{{ formmacros.inputField(field, "new", "",          "prototype", "",     "",    "",      "",        "",        "",      "norest") }}#}
+    {#&#123;&#35;{{ formmacros.field(field.vars.prototype.procedurepatnameothers) }}&#35;&#125;#}
+    {#{{ formmacros.field(field.vars.prototype.firstName) }}#}
+    {#{{ formmacros.field(field.vars.prototype.middleName) }}#}
+{#{% endmacro %}#}
 
 {############# custom array fields #############}
 
@@ -691,22 +693,22 @@
     {% endif %}
 {% endmacro %}
 
-{% macro dataQualityWidgetExisting( field, cycle ) %}
-    {% import _self as formmacros %}
-    {#{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}#}
+{#{% macro dataQualityWidgetExisting( field, cycle ) %}#}
+    {#{% import _self as formmacros %}#}
+    {#&#123;&#35;{% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}&#35;&#125;#}
 
-    <div class="validationerror-added alert alert-danger">
-        {{ form_errors(field) }}
-        {#{{ form_label(field.description) }}#}
-        <br>
-        Conflict Resolved by Replacement:
-        <br>
-        <b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>
-        <br>
-        {#{{ form_rest(field) }}#}
-    </div>
-{% endmacro %}
-{% macro dataQualityWidgetNotMapped( field, cycle ) %}
+    {#<div class="validationerror-added alert alert-danger">#}
+        {#{{ form_errors(field) }}#}
+        {#&#123;&#35;{{ form_label(field.description) }}&#35;&#125;#}
+        {#<br>#}
+        {#Conflict Resolved by Replacement:#}
+        {#<br>#}
+        {#<b>{{ field.vars.value.accession }}</b> => <b>{{ field.vars.value.newaccession }}</b>#}
+        {#<br>#}
+        {#&#123;&#35;{{ form_rest(field) }}&#35;&#125;#}
+    {#</div>#}
+{#{% endmacro %}#}
+{% macro dataQualityWidgetNotMapped( field ) %}
 
     {% import _self as formmacros %}
     {% form_theme field 'OlegOrderformBundle::Default/dataquality_widget.html.twig' %}

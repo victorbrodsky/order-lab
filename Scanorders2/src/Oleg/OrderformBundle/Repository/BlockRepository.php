@@ -101,24 +101,26 @@ class BlockRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
-//        $onlyValid = "";
-//        if( $validity ) {
-//            //echo " check Block validity ";
-//            if( $validity != "" && $validity !=  1 ) {
-//                //echo "validity == string1 ";
-//            } else if( $validity ==  1 ) {
-//                //echo "validity == true ";
-//                $validity = self::STATUS_VALID;
-//            } else {
-//                //echo "else-validity == string ";
-//            }
-//            $onlyValid = " AND b.status='".$validity."' AND bfield.status='".self::STATUS_VALID."'";
-//        }
-//        //echo "validity=".$onlyValid."\n";
+        if( $validities != null && is_array($validities) == false ) {
+            throw new \Exception( 'Validity is provided, but not as array; validities=' . $validities );
+        }
+
+        $parameters = array();
+        $parameters['field'] = $blockname."";
+
+        $extraStr = "";
+        if( $accession && $accession != "" && $partname && $partname != "" ) {
+            $extraStr = ' AND aa.field = :accession AND pp.field = :partname AND aa.keytype = :keytype';
+            $parameters['accession'] = $accession;
+            $parameters['keytype'] = $keytype;
+            $parameters['partname'] = $partname;
+        }
+
         //add validity conditions
         $validityStr = "";
         if( $validities && is_array($validities) && count($validities)>0 ) {
-            $validityStr = " AND (";
+            $validityStr = " AND aa.status=:keyfieldstatus AND pp.status=:keyfieldstatus AND bfield.status=:keyfieldstatus";
+            $validityStr .= " AND aa.status='".self::STATUS_VALID."' AND (";
             $count = 1;
             foreach( $validities as $validity ) {
                 $validityStr .= "b.status='".$validity."'";
@@ -128,18 +130,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
                 $count++;
             }
             $validityStr .= ")";
+            $parameters['keyfieldstatus'] = self::STATUS_VALID;
         }
         //echo "validityStr=".$validityStr." <br> ";
 
-        $extraStr = "";
-        $parameters = array();      
-        $parameters['field'] = $blockname."";
-        if( $accession && $accession != "" && $partname && $partname != "" ) {
-            $extraStr = ' AND aa.field = :accession AND pp.field = :partname AND aa.keytype = :keytype';
-            $parameters['accession'] = $accession;
-            $parameters['keytype'] = $keytype;
-            $parameters['partname'] = $partname;                      
-        }
 
         //add institution conditions
         $instStr = "";
@@ -182,7 +176,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
     }
 
-    //create new Block by provided accession number and part name
+    //create new Block by provided accession number and part name. Called only by check controller
     public function createBlockByPartnameAccession( $institution, $accessionNumber, $keytype, $partname, $provider ) {
 
         if( !$accessionNumber || $accessionNumber == "" ) {
@@ -200,12 +194,14 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $extra['accession'] = $accessionNumber;
         $extra['partname'] = $partname;
 
+        $validity = array(self::STATUS_RESERVED); //false;
+
         $withfields = false;
 
         $em = $this->_em;
 
         //1a) Check accession
-        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField( $institutions,$accessionNumber,"Accession","accession", self::STATUS_RESERVED, true, $extra );   //find reserved accession, because this method called only by "check" button
+        $accession = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField( $institutions,$accessionNumber,"Accession","accession", $validity, true, $extra );   //find reserved accession, because this method called only by "check" button
         if( !$accession ) {
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                                      $status, $provider, $className, $fieldName, $parent, $fieldValue
@@ -213,7 +209,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         }
 
         //1b) Check part by partname and accession number
-        $part = $em->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, self::STATUS_RESERVED );    //find reserved part,  because this method called only by "check" button
+        $part = $em->getRepository('OlegOrderformBundle:Part')->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, $validity );    //find reserved part,  because this method called only by "check" button
         if( !$part ) {
             //1) create Part if not existed. We must create parent , because we will create an object which must be linked to its parent
             //                                                               $status, $provider, $className, $fieldName, $parent, $fieldValue
@@ -224,9 +220,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $blockname = $em->getRepository('OlegOrderformBundle:Block')->findNextBlocknameByAccessionPartname($institution,$accessionNumber,$keytype,$partname);
         //echo "next blockname generated=".$blockname."<br>";
         
-        //3) before create: check if element with keys does not exists in DB
+        //3) before create: check if element with keys does not exists in DB. Blockname is a just generated field with status reserved.
+        //TODO: If someone generated this name already (very low probability), so regenerate key field name (?)
         //echo "before create block: ".$accessionNumber." ". $keytype." ". $partname." ". $blockname."<br>\n";
-        $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($institutions,$accessionNumber, $keytype, $partname, $blockname, false);  //validity=true if it was called by submit, false - if it was called by check button
+        $blockFound = $em->getRepository('OlegOrderformBundle:Block')->findOneBlockByJoinedToField($institutions,$accessionNumber, $keytype, $partname, $blockname, null);
 
         if( $blockFound ) {            
             return $blockFound;
