@@ -31,6 +31,8 @@ var _auto_generated_accession_type = null;  //8;
 
 var _institution = null;
 
+var _btnClickedName = null;
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -381,6 +383,10 @@ function handsonTableInit() {
     var colHeader = new Array();
     var rows = 11;//21;//501;
 
+    if( typeof _orderDataArr != 'undefined' && _orderDataArr.length != 0 ) {
+        rows = _orderDataArr.length+1;
+    }
+
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
 
@@ -502,6 +508,11 @@ function handsonTableInit() {
             } else {    //add row to array
                 _errorValidatorRows.push(row);
             }
+        },
+        cells: function(r,c,prop) {
+            var cellProperties = {};
+            if( _tableFormCycle == 'show' ) cellProperties.readOnly = true;
+            return cellProperties;
         }
     });
 

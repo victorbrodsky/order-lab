@@ -255,10 +255,13 @@ function getComboboxScanregion(ids) {
 }
 
 //#############  source organs  ##############//
-function getComboboxOrgan(ids) {
-//    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];   //+'_block_'+ids[4]+'_slide_'+ids[5];
-//    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+function getComboboxOrgan(ids,holder) {
     var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
+
+    var targetid = ".ajax-combobox-organ";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -271,21 +274,23 @@ function getComboboxOrgan(ids) {
             async: asyncflag
         }).success(function(data) {
                 _organ = data;
-            populateSelectCombobox( ".ajax-combobox-organ", _organ, "Source Organ" );
+            populateSelectCombobox( targetid, _organ, "Source Organ" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-organ", _organ, "Source Organ" );
+        populateSelectCombobox( targetid, _organ, "Source Organ" );
     }
 
 }
 
 
 //#############  procedure types  ##############//
-function getComboboxProcedure(ids) {
-//    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1];    //+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-//    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+function getComboboxProcedure(ids,holder) {
     var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
-//    var targetid = id+"name_0_field";
+
+    var targetid = ".ajax-combobox-procedure";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -298,20 +303,23 @@ function getComboboxProcedure(ids) {
             async: asyncflag
         }).success(function(data) {
             _procedure = data;
-            populateSelectCombobox( ".ajax-combobox-procedure", _procedure, "Procedure Type" );
+            populateSelectCombobox( targetid, _procedure, "Procedure Type" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-procedure", _procedure, "Procedure Type" );
+        populateSelectCombobox( targetid, _procedure, "Procedure Type" );
     }
 
 }
 
 //#############  Accession Type  ##############//
-function getComboboxAccessionType(ids) {
+function getComboboxAccessionType(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
 
-    //console.log("orderformtype="+orderformtype);
+    var targetid = ".accessiontype-combobox";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
@@ -324,17 +332,17 @@ function getComboboxAccessionType(ids) {
             async: asyncflag
         }).success(function(data) {
                 _accessiontype = data;
-                populateSelectCombobox( ".accessiontype-combobox", _accessiontype, null );
+                populateSelectCombobox( targetid, _accessiontype, null );
                 setAccessionMask();
             });
     } else {
-        populateSelectCombobox( ".accessiontype-combobox", _accessiontype, null );
+        populateSelectCombobox( targetid, _accessiontype, null );
     }
 
     if( cicle == "new"  ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        var targetid = id+"accession_0_accessiontype";
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
         setElementToId( targetid, _accessiontype );
@@ -342,11 +350,14 @@ function getComboboxAccessionType(ids) {
 }
 
 //#############  Mrn Type  ##############//
-function getComboboxMrnType(ids) {
+function getComboboxMrnType(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
 
-    //console.log("orderformtype="+orderformtype);
+    var targetid = ".mrntype-combobox";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
@@ -359,18 +370,18 @@ function getComboboxMrnType(ids) {
             async: asyncflag
         }).success(function(data) {
                 _mrntype = data;
-                populateSelectCombobox( ".mrntype-combobox", _mrntype, null );
+                populateSelectCombobox( targetid, _mrntype, null );
                 setAccessionMask();
             });
     } else {
-        populateSelectCombobox( ".mrntype-combobox", _mrntype, null );
+        populateSelectCombobox( targetid, _mrntype, null );
     }
 
     if( cicle == "new"  ) {
         //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_keytype
-        var uid = 'patient_'+ids[0];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        var targetid = id+"mrn_0_mrntype";
+//        var uid = 'patient_'+ids[0];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"mrn_0_mrntype";
         //console.log("targetid="+targetid);
         setElementToId( targetid, _mrntype );
     }
@@ -943,23 +954,24 @@ function initComboboxJs(ids, holder) {
 
         cicle = 'new';
 
-        getComboboxMrnType(ids);
-        getComboboxAccessionType(ids);
+        getComboboxMrnType(ids,holder);
+        getComboboxAccessionType(ids,holder);
         getComboboxPartname(ids,holder);
         getComboboxBlockname(ids,holder);
-        getComboboxStain(ids);
+        getComboboxProcedure(ids,holder);
+        getComboboxOrgan(ids,holder);
+
+        //exception field because it can be added dynamically
         getComboboxSpecialStain(ids,false);
-        getComboboxScanregion(ids);
-        getComboboxProcedure(ids);
-        getComboboxOrgan(ids);
+
         getComboboxPathService(ids);
-        //getOptionalUserEducational(ids);
+        getComboboxStain(ids);
+        getComboboxScanregion(ids);
         slideType(ids);
         getProjectTitle(ids);
         getCourseTitle(ids);
 
         getComboboxDepartment(ids);
-        //getComboboxInstitution(ids);
         getComboboxAccount(ids);
     }
 }

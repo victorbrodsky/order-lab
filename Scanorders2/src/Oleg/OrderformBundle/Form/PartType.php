@@ -112,8 +112,9 @@ class PartType extends AbstractType
 
         //diffDiagnoses
         $gen_attr = array('label'=>'Differential Diagnoses','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
+        $attr = array('class'=>'form-control partdiffdisident-field');
         $builder->add('diffDisident', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

@@ -1,8 +1,7 @@
 
 
-{% macro orderheader(entity,form,formtype,type,history) %}
+{% macro orderheader( form, formtype, type, showpath, amendpath ) %}
 
-    form.vars.value.oid:{{ form.vars.value.oid }}
 
     <h3 class="text-info">
         {{ formtype }}
@@ -46,7 +45,7 @@
 
                 {% if Submitted or Amended %}
                     <a class="btn btn-warning" data-confirm="Are you sure you want to amend order {{ form.vars.value.oid }}?" data-ok="Amend the order" data-cancel="Do not amend"
-                       href="{{ path('order_amend', { 'id': form.vars.value.oid }) }}">Amend</a>
+                       href="{{ path(amendpath, { 'id': form.vars.value.oid }) }}">Amend</a>
                 {% endif %}
 
             {% endif %}
@@ -59,11 +58,11 @@
             {% endif %}
 
             {% if type == 'amend' and (Submitted or Amended) %}
-                <a class="btn btn-danger" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel amendment process</a>
+                <a class="btn btn-danger" href="{{ path(showpath, { 'id': form.vars.value.oid }) }}">Cancel amendment process</a>
             {% endif %}
 
             {% if type == 'amend' and Canceled %}
-                <a class="btn btn-info" href="{{ path('multy_show', { 'id': form.vars.value.oid }) }}">Cancel Un-Canceling</a>
+                <a class="btn btn-info" href="{{ path(showpath, { 'id': form.vars.value.oid }) }}">Cancel Un-Canceling</a>
             {% endif %}
 
             <a class="btn btn-info" href="{{ path('slide-return-request', { 'id': form.vars.value.oid }) }}">Request Slide Return</a>
@@ -72,22 +71,6 @@
 
         </div>
 
-    {% endif %}
-
-    {#history#}
-    {% if history is defined and history %}
-        {{ formmacros.history_info(history,form) }}
-    {% endif %}
-
-    {#<input type="hidden" id="formtype" value="multi" />#}
-    <input type="hidden" id="orderformtype" value="multi" />
-    <input type="hidden" id="formcicle" value="{{ type }}" />
-
-    {% if entity is defined and entity.dataquality|length > 0 %}
-        <div class="alert alert-danger">
-            <p>This order contained an MRN-Accession Number association that conflicted with an already existing MRN-Accession Number association.</p>
-            <a href="#existing_validation_error">Please see the note below for details.</a>
-        </div>
     {% endif %}
 
 {% endmacro %}

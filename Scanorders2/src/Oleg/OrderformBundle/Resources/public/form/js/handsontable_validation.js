@@ -35,7 +35,7 @@ function validateHandsonTable() {
         }
     }
 
-    $('#tableview-submit-btn').button('loading');
+    $('.tableview-submit-btn').button('loading');
 
     //set main indexes for the column such as Acc Type, Acc Number ...
     _tableMainIndexes = getTableDataIndexes();
@@ -76,7 +76,7 @@ function validateHandsonTable() {
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
         return false;
     }
     /////////// EOF Check cell validation ///////////
@@ -106,7 +106,7 @@ function validateHandsonTable() {
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+nonEmptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
         return false;
     }
     /////////// EOF Empty main cells validation ///////////
@@ -123,12 +123,12 @@ function validateHandsonTable() {
     waitfor( allRowProcessed, true, _TIMEOUT, 0, 'play->busy false', function() {
 
         //console.log("All rows processed!!!!!!!!!!!");
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
 
         if( _rowToProcessArr.length == 0 ) {
             var errorHtml = createTableErrorWell('No data to submit. All rows are empty or in the default state.');
             $('#validationerror').append(errorHtml);
-            $('#tableview-submit-btn').button('reset');
+            $('.tableview-submit-btn').button('reset');
             return false;
         }
 
@@ -182,11 +182,20 @@ function assignDataToDatalocker() {
     }
     //console.log(data);
 
+    if( _btnClickedName != null ) {
+        $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
+    }
+
     //provide table data to controller
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
     $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+}
+
+function saveClick(btnname) {
+    console.log("btnname="+btnname);
+    _btnClickedName = btnname;
 }
 
 function allRowProcessed() {
@@ -398,7 +407,7 @@ function checkPrevGenAndConflictTable(row) {
             },
             function(error) {
                 //console.error("Failed! error=", error);
-                $('#tableview-submit-btn').button('reset');
+                $('.tableview-submit-btn').button('reset');
             }
         ).
         done(

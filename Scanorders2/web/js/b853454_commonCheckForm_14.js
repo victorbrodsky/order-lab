@@ -1406,11 +1406,6 @@ function setArrayField(element, dataArr, parent) {
 
         //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
-        //if(
-            //(validity == 'invalid' && dataArr.length > 1)
-                //&&
-            //!(validity == 'invalid' && dataArr.length == 1 && provider == user_name )
-        //) {
         if( validity == 'invalid' && dataArr.length > 1 ) {
             continue;
         }
@@ -1462,8 +1457,8 @@ function setArrayField(element, dataArr, parent) {
             //console.log("newForm="+newForm);
 
             if( fieldName == "disident" && orderformtype == "single" ) {
-                //console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ disident appended @@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-                attachElement = $('.partdiffdisident');
+                //attachElement = $('.partdiffdisident');
+                attachElement = $('#partdisident_marker'); //TODO: test it!!!
                 //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
                 $('#partdisident_marker').append(newForm);
             } else {
@@ -1494,7 +1489,22 @@ function setArrayField(element, dataArr, parent) {
                 //console.log("paperLink="+paperLink);
                 element.parent().append(paperLink);
 
-            } else if( type == "text" ) {
+            }
+            else if( classs && classs.indexOf("datepicker") != -1 ) {
+                //console.log("datepicker");
+                var firstAttachedElement = attachElement.find('input').first();
+                if( text && text != "" ) {
+                    //console.log("set date, text"+text);
+                    firstAttachedElement.datepicker( 'setDate', new Date(text) );
+                    firstAttachedElement.datepicker( 'update');
+                } else {
+                    //firstAttachedElement.datepicker({autoclose: true});
+                    initSingleDatepicker(firstAttachedElement);
+                    //firstAttachedElement.val( 'setDate', new Date() );
+                    //firstAttachedElement.datepicker( 'update');
+                }
+            }
+            else if( type == "text" ) {
                 //console.log("type text, text="+text);
 
                 if( fieldName == "accession" || fieldName == "mrn" ) {
@@ -1513,14 +1523,15 @@ function setArrayField(element, dataArr, parent) {
                 }
 
                 //find the last attached element to attachElement
-                var firstAttachedElement = attachElement.find('input,textarea').not(':hidden').first();
+                //var firstAttachedElement = attachElement.find('input,textarea').first();
+                var firstAttachedElement = attachElement.find('input[type=text]').first();
 
+                //override firstAttachedElement, because first element is hidden id, but we need to find input field
                 if( fieldName == "diffDisident" && orderformtype == "single" ) {
-                    firstAttachedElement = $('.partdiffdisident').find('input').last();
-                    printF(firstAttachedElement,"firstAttachedElement: ");
+                    firstAttachedElement = $('.partdiffdisident').find('.partdiffdisident-field').first();
                 }
 
-                //printF(firstAttachedElement,"firstAttachedElement: ");
+                //printF(firstAttachedElement,fieldName+": firstAttachedElement: ");
 
                 if( fieldName == "partname" || fieldName == "blockname" ) {
                     if( orderformtype == "single" ) {
@@ -1538,25 +1549,13 @@ function setArrayField(element, dataArr, parent) {
                         firstAttachedElement.select2('data', {id: text, text: text});
                         //firstAttachedElement.select2('val', id);
                     } else {
-                        console.log("!!!!!!!!!!!! Set Value text="+text);
+                        //console.log("!!!!!!!!!!!! Set Value text="+text);
                         firstAttachedElement.val(text);
                     }
                 }
 
-
-            } else if( classs && classs.indexOf("datepicker") != -1 ) {
-                //console.log("datepicker");
-                var firstAttachedElement = attachElement.find('input').first();
-                if( text && text != "" ) {
-                    firstAttachedElement.datepicker( 'setDate', new Date(text) );
-                    firstAttachedElement.datepicker( 'update');
-                } else {
-                    //firstAttachedElement.datepicker({autoclose: true});
-                    initSingleDatepicker(firstAttachedElement);
-                    //firstAttachedElement.val( 'setDate', new Date() );
-                    //firstAttachedElement.datepicker( 'update');
-                }
             }
+
 
         } else if ( tagName == "TEXTAREA" ) {
 

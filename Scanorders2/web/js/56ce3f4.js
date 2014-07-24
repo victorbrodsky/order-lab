@@ -14473,6 +14473,8 @@ var _auto_generated_accession_type = null;  //8;
 
 var _institution = null;
 
+var _btnClickedName = null;
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -14823,6 +14825,10 @@ function handsonTableInit() {
     var colHeader = new Array();
     var rows = 11;//21;//501;
 
+    if( typeof _orderDataArr != 'undefined' && _orderDataArr.length != 0 ) {
+        rows = _orderDataArr.length+1;
+    }
+
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
 
@@ -14944,6 +14950,11 @@ function handsonTableInit() {
             } else {    //add row to array
                 _errorValidatorRows.push(row);
             }
+        },
+        cells: function(r,c,prop) {
+            var cellProperties = {};
+            if( _tableFormCycle == 'show' ) cellProperties.readOnly = true;
+            return cellProperties;
         }
     });
 
@@ -15346,7 +15357,7 @@ function validateHandsonTable() {
         }
     }
 
-    $('#tableview-submit-btn').button('loading');
+    $('.tableview-submit-btn').button('loading');
 
     //set main indexes for the column such as Acc Type, Acc Number ...
     _tableMainIndexes = getTableDataIndexes();
@@ -15387,7 +15398,7 @@ function validateHandsonTable() {
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
         return false;
     }
     /////////// EOF Check cell validation ///////////
@@ -15417,7 +15428,7 @@ function validateHandsonTable() {
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+nonEmptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
         return false;
     }
     /////////// EOF Empty main cells validation ///////////
@@ -15434,12 +15445,12 @@ function validateHandsonTable() {
     waitfor( allRowProcessed, true, _TIMEOUT, 0, 'play->busy false', function() {
 
         //console.log("All rows processed!!!!!!!!!!!");
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
 
         if( _rowToProcessArr.length == 0 ) {
             var errorHtml = createTableErrorWell('No data to submit. All rows are empty or in the default state.');
             $('#validationerror').append(errorHtml);
-            $('#tableview-submit-btn').button('reset');
+            $('.tableview-submit-btn').button('reset');
             return false;
         }
 
@@ -15493,11 +15504,20 @@ function assignDataToDatalocker() {
     }
     //console.log(data);
 
+    if( _btnClickedName != null ) {
+        $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
+    }
+
     //provide table data to controller
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
     $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+}
+
+function saveClick(btnname) {
+    console.log("btnname="+btnname);
+    _btnClickedName = btnname;
 }
 
 function allRowProcessed() {
@@ -15709,7 +15729,7 @@ function checkPrevGenAndConflictTable(row) {
             },
             function(error) {
                 //console.error("Failed! error=", error);
-                $('#tableview-submit-btn').button('reset');
+                $('.tableview-submit-btn').button('reset');
             }
         ).
         done(
@@ -24662,10 +24682,13 @@ function getComboboxScanregion(ids) {
 }
 
 //#############  source organs  ##############//
-function getComboboxOrgan(ids) {
-//    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3];   //+'_block_'+ids[4]+'_slide_'+ids[5];
-//    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+function getComboboxOrgan(ids,holder) {
     var url = getCommonBaseUrl("util/"+"organ");   //urlCommon+"organ";
+
+    var targetid = ".ajax-combobox-organ";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -24678,21 +24701,23 @@ function getComboboxOrgan(ids) {
             async: asyncflag
         }).success(function(data) {
                 _organ = data;
-            populateSelectCombobox( ".ajax-combobox-organ", _organ, "Source Organ" );
+            populateSelectCombobox( targetid, _organ, "Source Organ" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-organ", _organ, "Source Organ" );
+        populateSelectCombobox( targetid, _organ, "Source Organ" );
     }
 
 }
 
 
 //#############  procedure types  ##############//
-function getComboboxProcedure(ids) {
-//    var uid = 'patient_'+ids[0]+'_procedure_'+ids[1];    //+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-//    var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+function getComboboxProcedure(ids,holder) {
     var url = getCommonBaseUrl("util/"+"procedure"); //urlCommon+"procedure";
-//    var targetid = id+"name_0_field";
+
+    var targetid = ".ajax-combobox-procedure";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
@@ -24705,20 +24730,23 @@ function getComboboxProcedure(ids) {
             async: asyncflag
         }).success(function(data) {
             _procedure = data;
-            populateSelectCombobox( ".ajax-combobox-procedure", _procedure, "Procedure Type" );
+            populateSelectCombobox( targetid, _procedure, "Procedure Type" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-procedure", _procedure, "Procedure Type" );
+        populateSelectCombobox( targetid, _procedure, "Procedure Type" );
     }
 
 }
 
 //#############  Accession Type  ##############//
-function getComboboxAccessionType(ids) {
+function getComboboxAccessionType(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"accessiontype");    //urlCommon+"accessiontype";
 
-    //console.log("orderformtype="+orderformtype);
+    var targetid = ".accessiontype-combobox";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
@@ -24731,17 +24759,17 @@ function getComboboxAccessionType(ids) {
             async: asyncflag
         }).success(function(data) {
                 _accessiontype = data;
-                populateSelectCombobox( ".accessiontype-combobox", _accessiontype, null );
+                populateSelectCombobox( targetid, _accessiontype, null );
                 setAccessionMask();
             });
     } else {
-        populateSelectCombobox( ".accessiontype-combobox", _accessiontype, null );
+        populateSelectCombobox( targetid, _accessiontype, null );
     }
 
     if( cicle == "new"  ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        var targetid = id+"accession_0_accessiontype";
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"accession_0_accessiontype";
         //console.log("targetid="+targetid);
         //$(targetid).select2('val', 1);
         setElementToId( targetid, _accessiontype );
@@ -24749,11 +24777,14 @@ function getComboboxAccessionType(ids) {
 }
 
 //#############  Mrn Type  ##############//
-function getComboboxMrnType(ids) {
+function getComboboxMrnType(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"mrntype");    //urlCommon+"mrntype";
 
-    //console.log("orderformtype="+orderformtype);
+    var targetid = ".mrntype-combobox";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default&type="+orderformtype;
@@ -24766,18 +24797,18 @@ function getComboboxMrnType(ids) {
             async: asyncflag
         }).success(function(data) {
                 _mrntype = data;
-                populateSelectCombobox( ".mrntype-combobox", _mrntype, null );
+                populateSelectCombobox( targetid, _mrntype, null );
                 setAccessionMask();
             });
     } else {
-        populateSelectCombobox( ".mrntype-combobox", _mrntype, null );
+        populateSelectCombobox( targetid, _mrntype, null );
     }
 
     if( cicle == "new"  ) {
         //oleg_orderformbundle_orderinfotype_patient_0_mrn_0_keytype
-        var uid = 'patient_'+ids[0];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        var targetid = id+"mrn_0_mrntype";
+//        var uid = 'patient_'+ids[0];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"mrn_0_mrntype";
         //console.log("targetid="+targetid);
         setElementToId( targetid, _mrntype );
     }
@@ -25350,23 +25381,24 @@ function initComboboxJs(ids, holder) {
 
         cicle = 'new';
 
-        getComboboxMrnType(ids);
-        getComboboxAccessionType(ids);
+        getComboboxMrnType(ids,holder);
+        getComboboxAccessionType(ids,holder);
         getComboboxPartname(ids,holder);
         getComboboxBlockname(ids,holder);
-        getComboboxStain(ids);
+        getComboboxProcedure(ids,holder);
+        getComboboxOrgan(ids,holder);
+
+        //exception field because it can be added dynamically
         getComboboxSpecialStain(ids,false);
-        getComboboxScanregion(ids);
-        getComboboxProcedure(ids);
-        getComboboxOrgan(ids);
+
         getComboboxPathService(ids);
-        //getOptionalUserEducational(ids);
+        getComboboxStain(ids);
+        getComboboxScanregion(ids);
         slideType(ids);
         getProjectTitle(ids);
         getCourseTitle(ids);
 
         getComboboxDepartment(ids);
-        //getComboboxInstitution(ids);
         getComboboxAccount(ids);
     }
 }
@@ -26839,11 +26871,6 @@ function setArrayField(element, dataArr, parent) {
 
         //console.log( "set array field i="+i+", id="+id+", text=" + text + ", provider="+provider+", date="+date + ", validity="+validity );
 
-        //if(
-            //(validity == 'invalid' && dataArr.length > 1)
-                //&&
-            //!(validity == 'invalid' && dataArr.length == 1 && provider == user_name )
-        //) {
         if( validity == 'invalid' && dataArr.length > 1 ) {
             continue;
         }
@@ -26895,7 +26922,6 @@ function setArrayField(element, dataArr, parent) {
             //console.log("newForm="+newForm);
 
             if( fieldName == "disident" && orderformtype == "single" ) {
-                //console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ disident appended @@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
                 //attachElement = $('.partdiffdisident');
                 attachElement = $('#partdisident_marker'); //TODO: test it!!!
                 //console.log("attachElement class="+attachElement.attr("class")+",id="+attachElement.attr("id"));
@@ -26928,7 +26954,22 @@ function setArrayField(element, dataArr, parent) {
                 //console.log("paperLink="+paperLink);
                 element.parent().append(paperLink);
 
-            } else if( type == "text" ) {
+            }
+            else if( classs && classs.indexOf("datepicker") != -1 ) {
+                //console.log("datepicker");
+                var firstAttachedElement = attachElement.find('input').first();
+                if( text && text != "" ) {
+                    //console.log("set date, text"+text);
+                    firstAttachedElement.datepicker( 'setDate', new Date(text) );
+                    firstAttachedElement.datepicker( 'update');
+                } else {
+                    //firstAttachedElement.datepicker({autoclose: true});
+                    initSingleDatepicker(firstAttachedElement);
+                    //firstAttachedElement.val( 'setDate', new Date() );
+                    //firstAttachedElement.datepicker( 'update');
+                }
+            }
+            else if( type == "text" ) {
                 //console.log("type text, text="+text);
 
                 if( fieldName == "accession" || fieldName == "mrn" ) {
@@ -26947,14 +26988,15 @@ function setArrayField(element, dataArr, parent) {
                 }
 
                 //find the last attached element to attachElement
-                var firstAttachedElement = attachElement.find('input,textarea').not(':hidden').first();
+                //var firstAttachedElement = attachElement.find('input,textarea').first();
+                var firstAttachedElement = attachElement.find('input[type=text]').first();
 
+                //override firstAttachedElement, because first element is hidden id, but we need to find input field
                 if( fieldName == "diffDisident" && orderformtype == "single" ) {
-                    firstAttachedElement = $('.partdiffdisident').find('input').not(':hidden').last();
-                    printF(firstAttachedElement,"firstAttachedElement: ");
+                    firstAttachedElement = $('.partdiffdisident').find('.partdiffdisident-field').first();
                 }
 
-                //printF(firstAttachedElement,"firstAttachedElement: ");
+                //printF(firstAttachedElement,fieldName+": firstAttachedElement: ");
 
                 if( fieldName == "partname" || fieldName == "blockname" ) {
                     if( orderformtype == "single" ) {
@@ -26972,25 +27014,13 @@ function setArrayField(element, dataArr, parent) {
                         firstAttachedElement.select2('data', {id: text, text: text});
                         //firstAttachedElement.select2('val', id);
                     } else {
-                        console.log("!!!!!!!!!!!! Set Value text="+text);
+                        //console.log("!!!!!!!!!!!! Set Value text="+text);
                         firstAttachedElement.val(text);
                     }
                 }
 
-
-            } else if( classs && classs.indexOf("datepicker") != -1 ) {
-                //console.log("datepicker");
-                var firstAttachedElement = attachElement.find('input').first();
-                if( text && text != "" ) {
-                    firstAttachedElement.datepicker( 'setDate', new Date(text) );
-                    firstAttachedElement.datepicker( 'update');
-                } else {
-                    //firstAttachedElement.datepicker({autoclose: true});
-                    initSingleDatepicker(firstAttachedElement);
-                    //firstAttachedElement.val( 'setDate', new Date() );
-                    //firstAttachedElement.datepicker( 'update');
-                }
             }
+
 
         } else if ( tagName == "TEXTAREA" ) {
 

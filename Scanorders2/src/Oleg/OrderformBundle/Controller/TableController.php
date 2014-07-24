@@ -83,8 +83,9 @@ use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
 class TableController extends Controller {
 
     /**
+     * @Route("/scan-order/multi-slide-table-view/{id}/amend", name="table_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/multi-slide-table-view/{id}/show", name="table_show", requirements={"id" = "\d+"})
-     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:viewtable.html.twig")
      */
     public function multiTableShowAction( Request $request, $id ) {
 
@@ -93,6 +94,8 @@ class TableController extends Controller {
         ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
+
+        $routeName = $request->get('_route');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -115,6 +118,14 @@ class TableController extends Controller {
 
         $type = "show";
         $disable = true;
+
+        //echo "route name=".$routeName."<br>";
+        if( $routeName == "table_amend") {
+            $disable = false;
+            $type = "amend";
+            //echo "amend! <br>";
+        }
+
         $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'service'=>null, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
 
@@ -206,11 +217,10 @@ class TableController extends Controller {
         //var_dump($jsonData);
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
-            'xdata' => json_encode($jsonData),
-            //'xdata' => $jsonData,
+            'orderdata' => json_encode($jsonData),
             'entity' => $orderinfo,
             'form' => $form->createView(),
-            'type' => $type,    //form cicle: new, show, amend ...
+            'type' => $type,
             'formtype' => $orderinfo->getType(),
             'history' => null
         ));
@@ -220,7 +230,7 @@ class TableController extends Controller {
 
     /**
      * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:viewtable.html.twig")
      */
     public function multiTableCreationAction()
     {
@@ -304,10 +314,12 @@ class TableController extends Controller {
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
-        return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
+        return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
             'form' => $form->createView(),
             'cycle' => 'new',
-            'formtype' => $type
+            'formtype' => $type,
+            'type' => 'new',
+            'orderdata' => null,
         ));
     }
 
@@ -316,7 +328,7 @@ class TableController extends Controller {
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:viewtable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {
@@ -347,6 +359,29 @@ class TableController extends Controller {
 //        } else {
 //            echo "form is not valid! <br>";
 //        }
+
+        $clickedbtn = $form->get('clickedbtn')->getData();
+        //var_dump($clickedbtn);
+        //exit("<br>afterpost");
+
+        if( $clickedbtn == 'btnSubmit' ) {
+            $cicle = 'new';
+            $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
+            $entity->setStatus($status);
+        }
+
+        if( $clickedbtn == 'btnAmend' ) {
+            $cicle = 'amend';
+            $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Amended');
+            $entity->setStatus($status);
+        }
+
+        if( $clickedbtn == 'btnSaveOnIdleTimeout' ) {
+            $cicle = 'edit';
+            $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Not Submitted');
+            $entity->setStatus($status);
+        }
+
 
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();
@@ -395,9 +430,6 @@ class TableController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
         $entity->setProvider($user);
 
-        $status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Submitted');
-        $entity->setStatus($status);
-
         //add dataqualities to entity
         $dataqualities = $form->get('conflicts')->getData();
         $orderUtil = new OrderUtil($em);
@@ -415,11 +447,23 @@ class TableController extends Controller {
             $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
         }
 
+        $submitStatusStr = null;
+        if( isset($_POST['btnAmend']) ) {
+            $submitStatusStr = "has been successfully amended";
+        } else
+            if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
+                $submitStatusStr = "is saved but not submitted";
+            }
+
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true );    //was $entity->getId()
 
         //email
         $emailUtil = new EmailUtil();
-        $emailUtil->sendEmail( $user->getEmail(), $em, $entity, $orderurl, null, $conflictStr, null );
+        $emailUtil->sendEmail( $user->getEmail(), $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
+
+        if( isset($_POST['btnSaveOnIdleTimeout']) ) {
+            return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));
+        }
 
         if( count($entity->getDataquality()) > 0 ) {
             $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
@@ -434,17 +478,10 @@ class TableController extends Controller {
             array(
                 'oid' => $entity->getOid(),
                 'conflicts' => $conflictsStr,
-                'cicle' => 'new',
+                'cicle' => $cicle,
                 'neworder' => "table_create"
             )
         ));
-
-//        return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-//            'oid' => $entity->getOid(),
-//            'conflicts' => $conflicts,
-//            'cicle' => 'new',
-//            'neworder' => "table_create"
-//        ));
 
     }
 

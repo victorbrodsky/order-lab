@@ -78,6 +78,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         }
 
         $originalStatus = $entity->getStatus();
+        echo "originalStatus=".$originalStatus."<br>";
 
         if( $originalStatus == 'Not Submitted' ) {
             $entity->setOid(null);

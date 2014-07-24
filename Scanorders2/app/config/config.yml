@@ -3,7 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
     - { resource: "@OlegOrderformBundle/SetParameters/setparameters.php" }
-    - { resource: assets_version.php }
+#    - { resource: assets_version.php }
 
 framework:
     #esi:             ~
