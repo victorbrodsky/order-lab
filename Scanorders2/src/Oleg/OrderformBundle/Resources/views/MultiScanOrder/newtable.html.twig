@@ -2,6 +2,8 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+{% import "OlegOrderformBundle::Default/ordercommon.html.twig" as order %}
+
 {% block title %}
     {{ formtype }}
 {% endblock %}
@@ -58,22 +60,51 @@
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    <script type="text/javascript">
+        var _tableFormCycle = '{{ type }}';
+        if( '{{ orderdata }}' != '' ) {
+            var _orderDataArr = JSON.parse('{{ orderdata|escape('js') }}');
+        }
+        //console.log("_orderDataArr="+_orderDataArr);
+    </script>
+
 {% endblock %}
 
 
 {% block content %}
 
-    <h3 class="text-info">{{ formtype }}</h3>
+    {% set showpath = 'table_show' %}
+    {% set amendpath = 'table_amend' %}
 
-    <input type="hidden" id="orderformtype" value="single" />
-    <input type="hidden" id="formcicle" value="{{ cycle }}" />
+    {{ order.orderheader( form, formtype, type, showpath, amendpath ) }}
 
-    <br />
+    {#history#}
+    {% if history is defined and history %}
+        {{ formmacros.history_info(history,form) }}
+    {% endif %}
+
+    {#<input type="hidden" id="formtype" value="multi" />#}
+    <input type="hidden" id="orderformtype" value="multi" />
+    <input type="hidden" id="formcicle" value="{{ type }}" />
+
+    {% if entity is defined and entity.dataquality|length > 0 %}
+        <div class="alert alert-danger">
+            <p>This order contained an MRN-Accession Number association that conflicted with an already existing MRN-Accession Number association.</p>
+            <a href="#existing_validation_error">Please see the note below for details.</a>
+        </div>
+    {% endif %}
+
 
     {############ START FORM ##############}
     <form id="table-scanorderform" action="{{ path('table_create_submit') }}" method="post" {{ form_enctype(form) }}>
 
         {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
+
+        {{ form_widget(form.oid) }}
+
+        {% if type == 'show' %}
+            {{ formmacros.orderinfo_panel(form, "Scan Order Info") }}
+        {% endif %}
 
         <div id="form-prototype-data"
             data-prototype-dataquality = "{{ formmacros.dataQualityWidgetNotMapped(form.conflicts.vars.prototype)|e }}"
@@ -88,11 +119,41 @@
 
         <br>
 
-        <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
+        {#<p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>#}
 
-        <p>
-            <button id="tableview-submit-btn" class="btn_margin_top btn btn-primary btn-success tableview-submit-btn" name="btnTableSubmit" data-loading-text="Validating..." type="submit">Submit</button>
-        </p>
+        {% if type == 'new' or type == 'edit' or type == 'amend' %}
+
+            <p>{{ formmacros.orderinfo_panel(form,"Order Info") }}</p>
+
+            <div class="row">
+                {% if type == 'amend' %}
+
+                    <p><button class="btn_margin_top btn btn-primary btn-success tableview-submit-btn" name="btnAmend" data-loading-text="Validating..." type="submit" onClick="saveClick(this.name);">Amend</button></p>
+
+                {% else %}
+
+                    <p><button id="tableview-submit-btn" class="btn_margin_top btn btn-primary btn-success tableview-submit-btn" name="btnSubmit" data-loading-text="Validating..." type="submit" onClick="saveClick(this.name);">Submit</button></p>
+
+                    <p><button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;" onClick="saveClick(this.name);">Save and Continue Later</button></p>
+
+                {% endif %}
+            </div>
+
+        {% endif %}
+
+        {% if entity is defined and entity is not null %}
+            <div id="existing_validation_error" style="padding-top: 2%">
+                {% for dataquality in entity.dataquality %}
+                    <div class="alert alert-danger">
+                        <br>
+                        Conflict Resolved by Replacement:
+                        <br>
+                        <b>{{ dataquality.accession }}</b> => <b>{{ dataquality.newaccession }}</b>
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         <div id="validationerror" style="padding-top: 2%"></div>
 

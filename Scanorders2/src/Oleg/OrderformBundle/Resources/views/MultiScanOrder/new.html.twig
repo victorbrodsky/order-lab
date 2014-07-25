@@ -197,7 +197,7 @@
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
 
             {{ formmacros.orderinfo_panel_header(
-                'patient', type, patientCount, form.patient|length, uid,
+                'patient', type, formtype, patientCount, form.patient|length, uid,
                 patientCount, 0, 0, 0, 0, 0, 0, 0)
             }}
 
@@ -211,7 +211,7 @@
                     {% set uid = patientCount~'_'~procedureCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
                 <div id="formpanel_procedure_{{ uid }}" class="panel panel-procedure panel-multi-form">
                     {{ formmacros.orderinfo_panel_header(
-                    'procedure', type, procedureCount, patient.procedure|length, uid,
+                    'procedure', type, formtype, procedureCount, patient.procedure|length, uid,
                     patientCount, procedureCount, 0, 0, 0, 0, 0, 0)
                     }}
 
@@ -233,7 +233,7 @@
 
                                         <div id="formpanel_part_{{ uid }}" class="panel panel-part panel-multi-form">
                                             {{ formmacros.orderinfo_panel_header(
-                                            'part', type, partCount, accession.part|length, uid,
+                                            'part', type, formtype, partCount, accession.part|length, uid,
                                             patientCount, procedureCount, accessionCount, partCount, 0, 0, 0, 0)
                                             }}
 
@@ -249,7 +249,7 @@
                                                     {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~0~'_'~0~'_'~0 %}
                                                     <div id="formpanel_block_{{ uid }}" class="panel panel-block panel-multi-form">
                                                         {{ formmacros.orderinfo_panel_header(
-                                                        'block', type, blockCount, part.block|length, uid,
+                                                        'block', type, formtype, blockCount, part.block|length, uid,
                                                         patientCount, procedureCount, accessionCount, partCount, blockCount, 0, 0, 0)
                                                         }}
 
@@ -265,7 +265,7 @@
                                                                 {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                                 <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
                                                                     {{ formmacros.orderinfo_panel_header(
-                                                                    'slide', type, slideCount, block.slide|length, uid,
+                                                                    'slide', type, formtype, slideCount, block.slide|length, uid,
                                                                     patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
                                                                     }}
 
@@ -290,7 +290,7 @@
                                                     {% set uid = patientCount~'_'~procedureCount~'_'~accessionCount~'_'~partCount~'_'~blockCount~'_'~slideCount~'_'~0~'_'~0 %}
                                                     <div id="formpanel_slide_{{ uid }}" class="panel panel-slide panel-multi-form">
                                                         {{ formmacros.orderinfo_panel_header(
-                                                        'slide', type, slideCount, part.slide|length, uid,
+                                                        'slide', type, formtype, slideCount, part.slide|length, uid,
                                                         patientCount, procedureCount, accessionCount, partCount, blockCount, slideCount, 0, 0)
                                                         }}
 

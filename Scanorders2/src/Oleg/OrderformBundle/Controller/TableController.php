@@ -85,7 +85,7 @@ class TableController extends Controller {
     /**
      * @Route("/scan-order/multi-slide-table-view/{id}/amend", name="table_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/multi-slide-table-view/{id}/show", name="table_show", requirements={"id" = "\d+"})
-     * @Template("OlegOrderformBundle:MultiScanOrder:viewtable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multiTableShowAction( Request $request, $id ) {
 
@@ -316,7 +316,7 @@ class TableController extends Controller {
 
         }
 
-        return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
+        return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'orderdata' => json_encode($jsonData),
             'entity' => $orderinfo,
             'form' => $form->createView(),
@@ -330,7 +330,7 @@ class TableController extends Controller {
 
     /**
      * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("OlegOrderformBundle:MultiScanOrder:viewtable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multiTableCreationAction()
     {
@@ -414,7 +414,7 @@ class TableController extends Controller {
         $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
-        return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
+        return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
             'cycle' => 'new',
             'formtype' => $type,
@@ -428,7 +428,7 @@ class TableController extends Controller {
 
      * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:MultiScanOrder:viewtable.html.twig")
+     * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multyCreateAction(Request $request)
     {
