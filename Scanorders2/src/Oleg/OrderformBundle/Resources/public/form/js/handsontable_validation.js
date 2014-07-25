@@ -186,19 +186,21 @@ function assignDataToDatalocker() {
 
         var rowArr = new Array();
         //add cell id to datalocker for each field
-        for( var ii=0; i<headers.length; i++ ) {
+        for( var ii=0; ii<headers.length; ii++ ) {
             //var cellid = _sotable.getCellMeta(row,cell).id;
-            //console.log("cellid="+cellid);
+            var cellId = _sotable.getCellMeta(i,ii).id;
+            var cellValue =  _sotable.getDataAtCell (i,ii);
+            //console.log("cellId="+cellId+", cellValue="+cellValue);
             rowArr.push({
-                "id"    : _sotable.getCellMeta(i,ii).id,
-                "value" : _sotable.getDataAtCell (i,ii)
+                "id"    : cellId,
+                "value" : cellValue
             });
         }
 
         data.row.push(rowArr);
 
     }
-    console.log(data);
+    //console.log(data);
 
     if( _btnClickedName != null ) {
         $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
@@ -213,7 +215,7 @@ function assignDataToDatalocker() {
 }
 
 function saveClick(btnname) {
-    console.log("btnname="+btnname);
+    //console.log("btnname="+btnname);
     _btnClickedName = btnname;
 }
 
@@ -591,7 +593,7 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
     if( !mrnDB || !mrntypeDB || !mrn || !mrnTypeCorrect || !dob ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");

@@ -496,7 +496,7 @@ class MultiScanOrderController extends Controller {
 
         //echo $entity;
         //echo $entity->getStatus();
-        //echo "<br>Procedure count=".count( $entity->getProcedure() );
+        //echo "<br>Patient count=".count( $entity->getPatient() );
 
         //patient
         foreach( $entity->getPatient() as $patient ) {
@@ -550,7 +550,6 @@ class MultiScanOrderController extends Controller {
                         }
 
                         //block
-                        $blockArr = array();
                         foreach( $part->getBlock() as $block ) {
                             if( !$this->hasOrderInfo($block,$id) ) {
                                 $part->removeBlock($block);
@@ -563,7 +562,6 @@ class MultiScanOrderController extends Controller {
                             }
 
                             //slide
-                            $slideArr = array();
                             foreach( $block->getSlide() as $slide ) {
 
                                 //check if this slides can be viewed by this user
@@ -593,6 +591,7 @@ class MultiScanOrderController extends Controller {
         }//patient
 
         //echo "<br>Procedure count=".count( $entity->getProcedure() );
+        //echo "<br>Slide count=".count( $entity->getSlide() );
 
         if( count( $entity->getSlide() ) == 0 ) {
             //this orderinfo does not have slides to show or the user don't have permission to view this orderinfo's slides

@@ -414,19 +414,25 @@ abstract class ObjectAbstract
 
     //get only one field
     public function obtainValidField( $fieldname, $orderid=null ) {
+        return $this->obtainStatusField( $fieldname, 'valid', $orderid );
+    }
+
+    //get only one field with $status
+    public function obtainStatusField( $fieldname, $status, $orderid=null ) {
         $res = null;
         $getMethod = "get".$fieldname;
         foreach( $this->$getMethod() as $entity ) {
-            if( $entity->getStatus() == 'valid' ) {
+            //echo $entity->getStatus()."?=".$status."<br>";
+            if( $entity->getStatus() == $status ) {
 
                 $res = $entity;
 
-                //if orderid is not given, then return the first valid field
+                //if orderid is not given, then return the first $status field
                 if( $orderid == null ) {
                     break;
                 }
 
-                //if orderid is given, then return the first valid field with provided orderid
+                //if orderid is given, then return the first $status field with provided orderid
                 if( $orderid != null ) {
                     if( $entity->getOrderinfo()->getOid() == $orderid ) {
                         break;

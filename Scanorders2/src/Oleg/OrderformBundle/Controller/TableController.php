@@ -126,6 +126,12 @@ class TableController extends Controller {
             //echo "amend! <br>";
         }
 
+        if( $orderinfo->getStatus() == "Superseded" ) {
+            $fieldstatus = "deleted-by-amended-order";
+        } else {
+            $fieldstatus = "valid";
+        }
+
         $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'service'=>null, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
 
@@ -152,62 +158,140 @@ class TableController extends Controller {
 
             //accession: 2
             $acckey = $accession->obtainValidKeyField();
-            $rowArr['Accession Type'] = $acckey->getKeytype()->getName();
-            $rowArr['Accession Number'] = $acckey->getField();
+            $rowArr['Accession Type']['id'] = $acckey->getId();
+            $rowArr['Accession Type']['value'] = $acckey->getKeytype()->getName();
+            $rowArr['Accession Number']['id'] = $acckey->getId();
+            $rowArr['Accession Number']['value'] = $acckey->getField();
 
             //part: 1
-            $rowArr['Part Name'] = $part->obtainValidKeyField()->getField();
+            $partname = $part->obtainValidKeyField();
+            $rowArr['Part Name']['id'] = $partname->getId();
+            $rowArr['Part Name']['value'] = $partname->getField();
 
             //block: 1
-            $rowArr['Block Name'] = $block->obtainValidKeyField()->getField();
+            $blockname = $block->obtainValidKeyField();
+            $rowArr['Block Name']['id'] = $blockname->getId();
+            $rowArr['Block Name']['value'] = $blockname->getField();
 
             //slide: 4
-            $rowArr['Stain'] = $slide->getStain()->first()->getField()->getName();
-            $rowArr['Scan Magnificaiton'] = $slide->getScan()->first()->getField();
-            $rowArr['Diagnosis'] = $part->obtainValidField('disident',$id)->getField();
-            $rowArr['Reason for Scan/Note'] = $slide->getScan()->first()->getNote();
+            $stain = $slide->getStain()->first();
+            $rowArr['Stain']['id'] = $stain->getId();
+            $rowArr['Stain']['value'] = $stain->getField()->getName();
+
+            $scan = $slide->getScan()->first();
+            $rowArr['Scan Magnificaiton']['id'] = $scan->getId();
+            $rowArr['Scan Magnificaiton']['value'] = $scan->getField();
+
+            $partdiadnosis = $part->obtainStatusField('disident',$fieldstatus,$id);
+            $rowArr['Diagnosis']['id'] = $partdiadnosis->getId();
+            $rowArr['Diagnosis']['value'] = $partdiadnosis->getField();
+
+            $rowArr['Reason for Scan/Note']['id'] = $scan->getId();
+            $rowArr['Reason for Scan/Note']['value'] = $scan->getNote();
 
             //part 1
-            $rowArr['Source Organ'] = ( $part->obtainValidField('sourceOrgan',$id)->getField() ? $part->obtainValidField('sourceOrgan',$id)->getField()->getName() : null );
+            $sourceorgan = $part->obtainStatusField('sourceOrgan',$fieldstatus,$id);
+            $rowArr['Source Organ']['id'] = $sourceorgan->getId();
+            $rowArr['Source Organ']['value'] = ( $sourceorgan->getField() ? $sourceorgan->getField()->getName() : null );
 
             //patient: 4
             $patientkey = $patient->obtainValidKeyField();
-            $rowArr['MRN Type'] = $patientkey->getKeytype()->getName();
-            $rowArr['MRN'] = $patientkey->getField();
-            $rowArr['Patient DOB'] = $transformer->transform($patient->obtainValidField('dob',$id)->getField());
-            $rowArr['Clinical Summary'] = $patient->obtainValidField('clinicalHistory',$id)->getField();
+            $rowArr['MRN Type']['id'] = $patientkey->getId();
+            $rowArr['MRN Type']['value'] = $patientkey->getKeytype()->getName();
+            $rowArr['MRN']['id'] = $patientkey->getId();
+            $rowArr['MRN']['value'] = $patientkey->getField();
+
+            $dob = $patient->obtainStatusField('dob',$fieldstatus,$id);
+            $rowArr['Patient DOB']['id'] = $dob->getId();
+            $rowArr['Patient DOB']['value'] = $transformer->transform($dob->getField());
+
+            $clinicalHistory = $patient->obtainStatusField('clinicalHistory',$fieldstatus,$id);
+            $rowArr['Clinical Summary']['id'] = $clinicalHistory->getId();
+            $rowArr['Clinical Summary']['value'] = $clinicalHistory->getField();
 
             //accession: 1
-            $rowArr['Accession Date'] = $transformer->transform($accession->obtainValidField('accessionDate',$id)->getField());
+            $accessionDate = $accession->obtainStatusField('accessionDate',$fieldstatus,$id);
+            $rowArr['Accession Date']['id'] = $accessionDate->getId();
+            $rowArr['Accession Date']['value'] = $transformer->transform($accessionDate->getField());
 
             //procedure: 6
-            $rowArr['Procedure Type'] = ( $procedure->getName()->first()->getField() ? $procedure->getName()->first()->getField()->getId() : null );
-            $rowArr['Encounter Date'] = $transformer->transform($procedure->obtainValidField('encounterDate',$id)->getField());
-            $rowArr["Patient's Last Name"] = $procedure->obtainValidField('patlastname',$id)->getField();
-            $rowArr["Patient's First Name"] = $procedure->obtainValidField('patfirstname',$id)->getField();
-            $rowArr["Patient's Middle Name"] = $procedure->obtainValidField('patmiddlename',$id)->getField();
-            $rowArr['Patient Sex'] = $procedure->obtainValidField('patsex',$id)->getField();
-            $rowArr['Patient Age'] = $procedure->obtainValidField('patage',$id)->getField();
-            $rowArr['Clinical History'] = $procedure->obtainValidField('pathistory',$id)->getField();
+            $proceduretype = $procedure->getName()->first();
+            $rowArr['Procedure Type']['id'] = $proceduretype->getId();
+            $rowArr['Procedure Type']['value'] = ( $proceduretype->getField() ? $proceduretype->getField()->getId() : null );
+
+            $encounterdate = $procedure->obtainStatusField('encounterDate',$fieldstatus,$id);
+            $rowArr['Encounter Date']['id'] = $encounterdate->getId();
+            $rowArr['Encounter Date']['value'] = $transformer->transform($encounterdate->getField());
+
+            $patlastname = $procedure->obtainStatusField('patlastname',$fieldstatus,$id);
+            $rowArr["Patient's Last Name"]['id'] = $patlastname->getId();
+            $rowArr["Patient's Last Name"]['value'] = $patlastname->getField();
+
+            $patfirstname = $procedure->obtainStatusField('patfirstname',$fieldstatus,$id);
+            $rowArr["Patient's First Name"]['id'] = $patfirstname->getId();
+            $rowArr["Patient's First Name"]['value'] = $patfirstname->getField();
+
+            $patmiddlename = $procedure->obtainStatusField('patmiddlename',$fieldstatus,$id);
+            $rowArr["Patient's Middle Name"] = $patmiddlename->getId();
+            $rowArr["Patient's Middle Name"] = $patmiddlename->getField();
+
+            $patsex = $procedure->obtainStatusField('patsex',$fieldstatus,$id);
+            $rowArr['Patient Sex']['id'] = $patsex->getId();
+            $rowArr['Patient Sex']['value'] = $patsex->getField();
+
+            $patage = $procedure->obtainStatusField('patage',$fieldstatus,$id);
+            $rowArr['Patient Age']['id'] = $patage->getId();
+            $rowArr['Patient Age']['value'] = $patage->getField();
+
+            $pathistory = $procedure->obtainStatusField('pathistory',$fieldstatus,$id);
+            $rowArr['Clinical History']['id'] = $pathistory->getId();
+            $rowArr['Clinical History']['value'] = $pathistory->getField();
 
             //part: 5
-            $rowArr['Gross Description'] = $part->obtainValidField('description',$id)->getField();
-            $rowArr['Differential Diagnoses'] = $part->obtainValidField('diffDisident',$id)->getField();
-            $rowArr['Type of Disease'] = $part->obtainValidField('diseaseType',$id)->getField();
-            $rowArr['Origin of Disease'] = $part->obtainValidField('diseaseType',$id)->getOrigin();
-            $rowArr['Primary Site of Disease Origin'] = ( $part->obtainValidField('diseaseType',$id)->getPrimaryOrgan() ? $part->obtainValidField('diseaseType',$id)->getPrimaryOrgan()->getName() : null );
+            $description = $part->obtainStatusField('description',$fieldstatus,$id);
+            $rowArr['Gross Description']['id'] = $description->getId();
+            $rowArr['Gross Description']['value'] = $description->getField();
+
+            $diffDisident = $part->obtainStatusField('diffDisident',$fieldstatus,$id);
+            $rowArr['Differential Diagnoses']['id'] = $diffDisident->getId();
+            $rowArr['Differential Diagnoses']['value'] = $diffDisident->getField();
+
+            $diseaseType = $part->obtainStatusField('diseaseType',$fieldstatus,$id);
+            $rowArr['Type of Disease']['id'] = $diseaseType->getId();
+            $rowArr['Type of Disease']['value'] = $diseaseType->getField();
+
+            $rowArr['Origin of Disease']['id'] = $diseaseType->getId();
+            $rowArr['Origin of Disease']['value'] = $diseaseType->getOrigin();
+
+            $rowArr['Primary Site of Disease Origin']['id'] = $diseaseType->getId();
+            $rowArr['Primary Site of Disease Origin']['value'] = ( $diseaseType->getPrimaryOrgan() ? $diseaseType->getPrimaryOrgan()->getName() : null );
 
             //block: 3
-            $rowArr['Block Section Source'] = $block->obtainValidField('sectionsource',$id)->getField();
-            $rowArr['Associated Special Stain Name'] = $block->obtainValidField('specialStains',$id)->getStaintype()->getName();
-            $rowArr['Associated Special Stain Result'] = $block->obtainValidField('specialStains',$id)->getField();
+            $sectionsource = $block->obtainStatusField('sectionsource',$fieldstatus,$id);
+            $rowArr['Block Section Source']['id'] = $sectionsource->getId();
+            $rowArr['Block Section Source']['value'] = $sectionsource->getField();
+
+            $specialStains = $block->obtainStatusField('specialStains',$fieldstatus,$id);
+            $rowArr['Associated Special Stain Name']['id'] = $specialStains->getId();
+            $rowArr['Associated Special Stain Name']['value'] = $specialStains->getStaintype()->getName();
+            $rowArr['Associated Special Stain Result']['id'] = $specialStains->getId();
+            $rowArr['Associated Special Stain Result']['value'] = $specialStains->getField();
 
             //slide: 5
-            $rowArr['Slide Title'] = $slide->getTitle();
-            $rowArr['Slide Type'] = $slide->getSlidetype()->getName();
-            $rowArr['Microscopic Description'] = $slide->getMicroscopicdescr();
-            $rowArr['Link(s) to related image(s)'] = $slide->getRelevantScans()->first()->getField();
-            $rowArr['Region to Scan'] = $slide->getScan()->first()->getScanregion();
+            $rowArr['Slide Title']['id'] = $slide->getId();
+            $rowArr['Slide Title']['value'] = $slide->getTitle();
+
+            $rowArr['Slide Type']['id'] = $slide->getSlidetype()->getId();
+            $rowArr['Slide Type']['id'] = $slide->getSlidetype()->getName();
+
+            $rowArr['Microscopic Description']['id'] = $slide->getId();
+            $rowArr['Microscopic Description']['value'] = $slide->getMicroscopicdescr();
+
+            $rowArr['Link(s) to related image(s)']['id'] = $slide->getRelevantScans()->first()->getId();
+            $rowArr['Link(s) to related image(s)']['value'] = $slide->getRelevantScans()->first()->getField();
+
+            $rowArr['Region to Scan']['id'] = $scan->getId();
+            $rowArr['Region to Scan']['value'] = $scan->getScanregion();
 
             $jsonData[] = $rowArr;
             //array_push($jsonData, $rowArr);
@@ -216,13 +300,29 @@ class TableController extends Controller {
         //print_r($jsonData);
         //var_dump($jsonData);
 
+        //History
+        $history = null;
+
+        if( $routeName == "table_show") {
+
+            //$history = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
+            $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+            $dql = $repository->createQueryBuilder("h");
+            $dql->innerJoin("h.orderinfo", "orderinfo");
+            $dql->where("h.currentid = :oid AND (h.eventtype = 'Initial Order Submission' OR h.eventtype = 'Status Changed' OR h.eventtype = 'Amended Order Submission')");
+            $dql->orderBy('h.changedate','DESC');
+            $dql->setParameter('oid',$orderinfo->getOid());
+            $history = $dql->getQuery()->getResult();
+
+        }
+
         return $this->render('OlegOrderformBundle:MultiScanOrder:viewtable.html.twig', array(
             'orderdata' => json_encode($jsonData),
             'entity' => $orderinfo,
             'form' => $form->createView(),
             'type' => $type,
             'formtype' => $orderinfo->getType(),
-            'history' => null
+            'history' => $history
         ));
 
     }
@@ -395,20 +495,24 @@ class TableController extends Controller {
 
         $rowCount = 0;
 
-        $headers = array_shift($data);
+        //$headers = array_shift($data);
         $headers = $data["header"];
-        //var_dump($columnData);
+        var_dump($headers);
+        echo "<br><br>";
 
         //echo "entity inst=".$entity->getInstitution()."<br>";
         //exit();
 
         $count = 0;
         foreach( $data["row"] as $row ) {
+            echo "<br>row:<br>";
             var_dump($row);
             echo "<br>";
-            exit();
+            //exit();
 
-            $accValue = $this->getValueByHeaderName('Accession Number',$row,$headers);
+            $accArr = $this->getValueByHeaderName('Accession Number',$row,$headers);
+            $accValue = $accArr['val'];
+            echo "accValue=".$accValue." <br> ";
 
             if( !$accValue || $accValue == '' ) {
                 continue;   //skip row if accession number is empty
@@ -421,7 +525,7 @@ class TableController extends Controller {
 
             $entity->addPatient($patient);
 
-            //echo $patient->getProcedure()->first()->getAccession()->first();
+            echo $patient->getProcedure()->first()->getAccession()->first();
 
             $count++;
 
@@ -502,32 +606,36 @@ class TableController extends Controller {
         //mrn
         $patientmrn = new PatientMrn($status,$provider,$source);
         $mrnTransformer = new MrnTypeTransformer($em,$provider);
-        $mrntype = $mrnTransformer->reverseTransform($this->getValueByHeaderName('MRN Type',$row,$columnData));
+        $mrntypeArr = $this->getValueByHeaderName('MRN Type',$row,$columnData);
+        $mrntype = $mrnTransformer->reverseTransform($mrntypeArr['val']);
+        $patientmrn->setId($mrntypeArr['id']);
         $patientmrn->setKeytype($mrntype);
-        $mrnValue = $this->getValueByHeaderName('MRN',$row,$columnData);
-        $patientmrn->setField($mrnValue);
-        $patientmrn->setOriginal($mrnValue);
+        $mrnArr = $this->getValueByHeaderName('MRN',$row,$columnData);
+        $patientmrn->setField($mrnArr['val']);
+        $patientmrn->setOriginal($mrnArr['val']);
         $patient->addMrn($patientmrn);
 
         //dob
-        $dob = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
-        if( $force || $dob && $dob != '' ) {
+        $dobArr = $this->getValueByHeaderName('Patient DOB',$row,$columnData);
+        if( $force || $dobArr['val'] && $dobArr['val'] != '' ) {
             $patientdob = new PatientDob($status,$provider,$source);
-            if( $dob == "" ) {
+            if( $dobArr['val'] == "" ) {
                 $dobFormat = NULL;
             } else {
-                $dobFormat = new \DateTime($dob);
+                $dobFormat = new \DateTime($dobArr['val']);
             }
             //echo "dobFormat=".date('d/M/Y', $dobFormat)."<br>";
             $patientdob->setField($dobFormat);
+            $patientdob->setId($dobArr['id']);
             $patient->addDob($patientdob);
         }
 
         //Clinical History
-        $clsum = $this->getValueByHeaderName('Clinical Summary',$row,$columnData);
-        if( $force || $clsum && $clsum != '' ) {
+        $clsumArr = $this->getValueByHeaderName('Clinical Summary',$row,$columnData);
+        if( $force || $clsumArr['val'] && $clsumArr['val'] != '' ) {
             $patientch = new PatientClinicalHistory($status,$provider,$source);
-            $patientch->setField($clsum);
+            $patientch->setField($clsumArr['val']);
+            $patientch->setId($clsumArr['id']);
             $patient->addClinicalHistory($patientch);
         }
 
@@ -535,12 +643,13 @@ class TableController extends Controller {
         $procedure = new Procedure(false, $status, $provider, $source);
 
         //Procedure name
-        $ptype = $this->getValueByHeaderName('Procedure Type',$row,$columnData);
-        if( $force || $ptype && $ptype != '' ) {
+        $ptypeArr = $this->getValueByHeaderName('Procedure Type',$row,$columnData);
+        if( $force || $ptypeArr['val'] && $ptypeArr['val'] != '' ) {
             $procedureTransform = new ProcedureTransformer($em,$provider);
-            $procedurenameList = $procedureTransform->reverseTransform($ptype); //ProcedureList
+            $procedurenameList = $procedureTransform->reverseTransform($ptypeArr['val']); //ProcedureList
             $procedureName = new ProcedureName($status,$provider,$source);
             $procedureName->setField($procedurenameList);
+            $procedureName->setId($ptypeArr['id']);
             $procedure->addName($procedureName);
         }
 
@@ -552,63 +661,70 @@ class TableController extends Controller {
 
         //add procedure simple fields
         //Encounter Date
-        $encounterDate = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
-        if( $force || $encounterDate && $encounterDate != '' ) {
-            if( $encounterDate == "" ) {
+        $encounterDateArr = $this->getValueByHeaderName('Encounter Date',$row,$columnData);
+        if( $force || $encounterDateArr['val'] && $encounterDateArr['val'] != '' ) {
+            if( $encounterDateArr['val'] == "" ) {
                 $encounterDateFormat = NULL;
             } else {
-                $encounterDateFormat = new \DateTime($encounterDate);
+                $encounterDateFormat = new \DateTime($encounterDateArr['val']);
             }
             $encounterDateObj = new ProcedureEncounterDate($status,$provider,$source);
             $encounterDateObj->setField($encounterDateFormat);
+            $encounterDateObj->setId($encounterDateArr['id']);
             $procedure->addEncounterDate($encounterDateObj);
         }
 
         //Procedure Last Name
-        $patlastname = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
-        if( $force || $patlastname && $patlastname != '' ) {
+        $patlastnameArr = $this->getValueByHeaderName("Patient's Last Name",$row,$columnData);
+        if( $force || $patlastnameArr['val'] && $patlastnameArr['val'] != '' ) {
             $patlastnameObj = new ProcedurePatlastname($status,$provider,$source);
-            $patlastnameObj->setField($patlastname);
+            $patlastnameObj->setField($patlastnameArr['val']);
+            $patlastnameObj->setId($patlastnameArr['id']);
             $procedure->addPatlastname($patlastnameObj);
         }
 
         //Procedure First Name
-        $patfirstname = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
-        if( $force || $patfirstname && $patfirstname != '' ) {
+        $patfirstnameArr = $this->getValueByHeaderName("Patient's First Name",$row,$columnData);
+        if( $force || $patfirstnameArr['val'] && $patfirstnameArr['val'] != '' ) {
             $patfirstnameObj = new ProcedurePatfirstname($status,$provider,$source);
-            $patfirstnameObj->setField($patfirstname);
+            $patfirstnameObj->setField($patfirstnameArr['val']);
+            $patfirstnameObj->setId($patfirstnameArr['id']);
             $procedure->addPatfirstname($patfirstnameObj);
         }
 
         //Procedure Middle Name
-        $patmiddlename = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
-        if( $force || $patmiddlename && $patmiddlename != '' ) {
+        $patmiddlenameArr = $this->getValueByHeaderName("Patient's Middle Name",$row,$columnData);
+        if( $force || $patmiddlenameArr['val'] && $patmiddlenameArr['val'] != '' ) {
             $patmiddlenameObj = new ProcedurePatmiddlename($status,$provider,$source);
-            $patmiddlenameObj->setField($patmiddlename);
+            $patmiddlenameObj->setField($patmiddlenameArr['val']);
+            $patmiddlenameObj->setId($patmiddlenameArr['id']);
             $procedure->addPatmiddlename($patmiddlenameObj);
         }
 
         //Procedure Sex
-        $patsex = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
-        if( $force || $patsex && $patsex != '' ) {
+        $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
+        if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
             $patsexObj = new ProcedurePatsex($status,$provider,$source);
-            $patsexObj->setField($patsex);
+            $patsexObj->setField($patsexArr['val']);
+            $patsexObj->setId($patsexArr['id']);
             $procedure->addPatsex($patsexObj);
         }
 
         //Procedure Age
-        $patage = $this->getValueByHeaderName('Patient Age',$row,$columnData);
-        if( $force || $patage && $patage != '' ) {
+        $patageArr = $this->getValueByHeaderName('Patient Age',$row,$columnData);
+        if( $force || $patageArr['val'] && $patageArr['id'] != '' ) {
             $patageObj = new ProcedurePatage($status,$provider,$source);
-            $patageObj->setField($patage);
+            $patageObj->setField($patageArr['val']);
+            $patageObj->setId($patageArr['id']);
             $procedure->addPatage($patageObj);
         }
 
         //Clinical History
-        $pathistory = $this->getValueByHeaderName('Clinical History',$row,$columnData);
-        if( $force || $pathistory && $pathistory != '' ) {
+        $pathistoryArr = $this->getValueByHeaderName('Clinical History',$row,$columnData);
+        if( $force || $pathistoryArr['val'] && $pathistoryArr['val'] != '' ) {
             $pathistoryObj = new ProcedurePathistory($status,$provider,$source);
-            $pathistoryObj->setField($pathistory);
+            $pathistoryObj->setField($pathistoryArr['val']);
+            $pathistoryObj->setId($pathistoryArr['id']);
             $procedure->addPathistory($pathistoryObj);
         }
 
@@ -617,25 +733,27 @@ class TableController extends Controller {
         $accession = new Accession(false, $status, $provider, $source);
 
         //AccessionAccession
-        $accValue = $this->getValueByHeaderName('Accession Number',$row,$columnData);
+        $accArr = $this->getValueByHeaderName('Accession Number',$row,$columnData);
         $accacc = new AccessionAccession($status,$provider,$source);
-        $accacc->setField($accValue);
-        $accacc->setOriginal($accValue);
+        $accacc->setField($accArr['val']);
+        $accacc->setOriginal($accArr['val']);
+        $accacc->setId($accArr['id']);
         $accTransformer = new AccessionTypeTransformer($em,$provider);
         $acctype = $accTransformer->reverseTransform($this->getValueByHeaderName('Accession Type',$row,$columnData));
         $accacc->setKeytype($acctype);
         $accession->addAccession($accacc);
 
         //Accession Date
-        $accessionDate = $this->getValueByHeaderName('Accession Date',$row,$columnData);
-        if( $force || $accessionDate && $accessionDate != '' ) {
-            if( $encounterDate == "" ) {
+        $accessionDateArr = $this->getValueByHeaderName('Accession Date',$row,$columnData);
+        if( $force || $accessionDateArr['val'] && $accessionDateArr['val'] != '' ) {
+            if( $encounterDateArr['val'] == "" ) {
                 $accessionDateFormat = NULL;
             } else {
-                $accessionDateFormat = new \DateTime($accessionDate);
+                $accessionDateFormat = new \DateTime($accessionDateArr['val']);
             }
             $accessionDateObj = new AccessionAccessionDate($status,$provider,$source);
             $accessionDateObj->setField($accessionDateFormat);
+            $accessionDateObj->setId($accessionDateArr['id']);
             $accession->addAccessionDate($accessionDateObj);
         }
 
@@ -646,55 +764,61 @@ class TableController extends Controller {
 
         //part name
         $partname = new PartPartname($status,$provider,$source);
-        $pname = $this->getValueByHeaderName('Part Name',$row,$columnData);
+        $pnameArr = $this->getValueByHeaderName('Part Name',$row,$columnData);
         //echo "pname=".$pname."<br>";
-        $partname->setField($pname);
+        $partname->setField($pnameArr['val']);
+        $partname->setId($pnameArr['id']);
         $part->addPartname($partname);
 
         //Source Organ
-        $partso = $this->getValueByHeaderName('Source Organ',$row,$columnData);
-        if( $force || $partso && $partso != '' ) {
+        $partsoArr = $this->getValueByHeaderName('Source Organ',$row,$columnData);
+        if( $force || $partsoArr['val'] && $partsoArr['val'] != '' ) {
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
-            $sourceOrganList = $sourceOrganTransformer->reverseTransform($partso); //OrganList
+            $sourceOrganList = $sourceOrganTransformer->reverseTransform($partsoArr['val']); //OrganList
             $partSourceOrgan = new PartSourceOrgan($status,$provider,$source);
             $partSourceOrgan->setField($sourceOrganList);
+            $partSourceOrgan->setId($partsoArr['id']);
             $part->addSourceOrgan($partSourceOrgan);
         }
 
         //Gross Description
-        $partgd = $this->getValueByHeaderName('Gross Description',$row,$columnData);
-        if( $force || $partgd && $partgd != '' ) {
+        $partgdArr = $this->getValueByHeaderName('Gross Description',$row,$columnData);
+        if( $force || $partgdArr['val'] && $partgdArr['val'] != '' ) {
             $partDescription = new PartDescription($status,$provider,$source);
-            $partDescription->setField($partgd);
+            $partDescription->setField($partgdArr['val']);
+            $partDescription->setId($partgdArr['id']);
             $part->addDescription($partDescription);
         }
 
         //Diagnosis
-        $partdiag = $this->getValueByHeaderName('Diagnosis',$row,$columnData);
-        if( $force || $partdiag && $partdiag != '' ) {
+        $partdiagArr = $this->getValueByHeaderName('Diagnosis',$row,$columnData);
+        if( $force || $partdiagArr['val'] && $partdiagArr['val'] != '' ) {
             $partDisident = new PartDisident($status,$provider,$source);
-            $partDisident->setField($partdiag);
+            $partDisident->setField($partdiagArr['val']);
+            $partDisident->setId($partdiagArr['id']);
             $part->addDisident($partDisident);
         }
 
         //Differential Diagnoses
-        $partdiffdiag = $this->getValueByHeaderName('Differential Diagnoses',$row,$columnData);
-        if( $force || $partdiffdiag && $partdiffdiag != '' ) {
+        $partdiffdiagArr = $this->getValueByHeaderName('Differential Diagnoses',$row,$columnData);
+        if( $force || $partdiffdiagArr['val'] && $partdiffdiagArr['val'] != '' ) {
             $partDiffDisident = new PartDiffDisident($status,$provider,$source);
-            $partDiffDisident->setField($partdiffdiag);
+            $partDiffDisident->setField($partdiffdiagArr['val']);
+            $partDiffDisident->setId($partdiffdiagArr['id']);
             $part->addDiffDisident($partDiffDisident);
         }
 
         //Type of Disease
-        $partdistype = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
-        if( $force || $partdistype && $partdistype != '' ) {
+        $partdistypeArr = $this->getValueByHeaderName('Type of Disease',$row,$columnData);
+        if( $force || $partdistypeArr['val'] && $partdistypeArr['val'] != '' ) {
             $partDiseaseType = new PartDiseaseType($status,$provider,$source);
-            $partDiseaseType->setField($partdistype);
+            $partDiseaseType->setField($partdistypeArr['val']);
+            $partDiseaseType->setId($partdistypeArr['id']);
             //Origin of Disease
-            $partDiseaseType->setOrigin($this->getValueByHeaderName('Origin of Disease',$row,$columnData));
+            $partDiseaseType->setOrigin($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
             //Primary Site of Disease Origin
             $sourceOrganTransformer = new SourceOrganTransformer($em,$provider);
-            $primaryOrganList = $sourceOrganTransformer->reverseTransform($this->getValueByHeaderName('Primary Site of Disease Origin',$row,$columnData)); //OrganList
+            $primaryOrganList = $sourceOrganTransformer->reverseTransform($this->getValueByHeaderName('Primary Site of Disease Origin',$row,$columnData)['val']); //OrganList
             $partDiseaseType->setPrimaryOrgan($primaryOrganList);
             $part->addDiseaseType($partDiseaseType);
         }
@@ -710,20 +834,23 @@ class TableController extends Controller {
 
         //block name
         $blockname = new BlockBlockname($status,$provider,$source);
-        $blockname->setField($this->getValueByHeaderName('Block Name',$row,$columnData));
+        $blocknameArr = $this->getValueByHeaderName('Block Name',$row,$columnData);
+        $blockname->setId($blocknameArr['id']);
+        $blockname->setField($blocknameArr['val']);
         $block->addBlockname($blockname);
 
         //Block: Section Source
-        $sections = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
-        if( $force || $sections && $sections != '' ) {
+        $sectionsArr = $this->getValueByHeaderName('Block Section Source',$row,$columnData);
+        if( $force || $sectionsArr['val'] && $sectionsArr['val'] != '' ) {
             $blocksection = new BlockSectionsource($status,$provider,$source);
-            $blocksection->setField($sections);
+            $blocksection->setField($sectionsArr['val']);
+            $blocksection->setId($sectionsArr['id']);
             $block->addSectionsource($blocksection);
         }
 
         //Block: Results of Special Stains: StainList + field
-        $specialStainValue = $this->getValueByHeaderName('Associated Special Stain Result',$row,$columnData);
-        if( $force || $specialStainValue && $specialStainValue != '' ) {
+        $specialStainValueArr = $this->getValueByHeaderName('Associated Special Stain Result',$row,$columnData);
+        if( $force || $specialStainValueArr['val'] && $specialStainValueArr['val'] != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
 
             //special stain type might be null in table, so get one from StainList with smallest 'orderinlist'
@@ -735,7 +862,8 @@ class TableController extends Controller {
 
             $specialstain = new BlockSpecialStains($status,$provider,$source);
             $specialstain->setStaintype($specialstainList); //StainList
-            $specialstain->setField($specialStainValue);    //field
+            $specialstain->setField($specialStainValueArr['val']);    //field
+            $specialstain->setId($specialStainValueArr['id']);
             $block->addSpecialStain($specialstain);
         }
 
@@ -744,27 +872,30 @@ class TableController extends Controller {
         ////////////////// Slide /////////////////
         $slide = new Slide(false, $status, $provider, $source);
 
+        $slide->setId($this->getValueByHeaderName('Slide Title',$row,$columnData)['id']);
+
         //Slide set Sequence
         $slide->setSequence($count);
 
         //Slide Title
-        $slide->setTitle($this->getValueByHeaderName('Slide Title',$row,$columnData));
+        $slide->setTitle($this->getValueByHeaderName('Slide Title',$row,$columnData)['val']);
 
         //Microscopic Description
-        $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData));
+        $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData)['val']);
 
         //Slide Type
-        $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData));
+        $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData)['val']);
         $slide->setSlidetype($slidetype);
 
         //Stain
-        $stainValue = $this->getValueByHeaderName('Stain',$row,$columnData);
-        if( $force || $stainValue && $stainValue != '' ) {
+        $stainArr = $this->getValueByHeaderName('Stain',$row,$columnData);
+        if( $force || $stainArr['val'] && $stainArr['val'] != '' ) {
             $stainTransformer = new StainTransformer($em,$provider);
-            $stainList = $stainTransformer->reverseTransform($stainValue);
+            $stainList = $stainTransformer->reverseTransform($stainArr['val']);
 
             $stain = new Stain($status,$provider,$source);
             $stain->setField($stainList);
+            $stain->setId($stainArr['id']);
 
             $slide->addStain($stain);
         }
@@ -773,18 +904,19 @@ class TableController extends Controller {
         $scan = new Scan($status,$provider,$source);
 
         //Scan: Scan Magnificaiton
-        $mag = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);
+        $magArr = $this->getValueByHeaderName('Scan Magnificaiton',$row,$columnData);
         //echo "<br>mag=".$mag."<br>";
-        $scan->setField($mag);
+        $scan->setField($magArr['val']);
+        $scan->setId($magArr['id']);
 
         //Scan: Region to Scan
         $regTransformer = new StringTransformer($em,$provider);
-        $scanregion = $regTransformer->reverseTransform($this->getValueByHeaderName('Region to Scan',$row,$columnData));
+        $scanregion = $regTransformer->reverseTransform($this->getValueByHeaderName('Region to Scan',$row,$columnData)['val']);
         //echo "scanregion=".$scanregion."<br>";
         $scan->setScanregion($scanregion);
 
         //Scan: Reason for Scan/Note
-        $note = $this->getValueByHeaderName('Reason for Scan/Note',$row,$columnData);
+        $note = $this->getValueByHeaderName('Reason for Scan/Note',$row,$columnData)['val'];
         //echo "note=".$note."<br>";
         $scan->setNote($note);
 
@@ -792,10 +924,11 @@ class TableController extends Controller {
         ///// EOF Scan /////
 
         //Link(s) to related image(s)
-        $relevantScans = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);
-        if( $force || $relevantScans && $relevantScans != '' ) {
+        $relevantScansArr = $this->getValueByHeaderName('Link(s) to related image(s)',$row,$columnData);
+        if( $force || $relevantScansArr['val'] && $relevantScansArr['val'] != '' ) {
             $relScan = new RelevantScans($status,$provider,$source);
-            $relScan->setField($relevantScans);
+            $relScan->setField($relevantScansArr['val']);
+            $relScan->setId($relevantScansArr['id']);
             $slide->addRelevantScan($relScan);
         }
 
@@ -806,8 +939,25 @@ class TableController extends Controller {
     }
 
     public function getValueByHeaderName($header, $row, $headers) {
+
+        $res = array();
+
         $key = array_search($header, $headers);
-        return $row[$key];
+
+        $res['val'] = $row[$key]['value'];
+
+        $id = null;
+
+        if( array_key_exists('id', $row[$key]) ) {
+            $id = $row[$key]['id'];
+            //echo "id=".$id.", val=".$res['val']."<br>";
+        }
+
+        $res['id'] = $id;
+
+        return $res;
+
+        //return $row[$key];
     }
 
 //    public function getClassType($col, $columnData) {

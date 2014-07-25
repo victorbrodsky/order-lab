@@ -57,7 +57,6 @@ class OrderInfoType extends AbstractType
         //add children
         //if( $this->params['type'] != 'Table-View Scan Order' || ($this->params['type'] == 'Table-View Scan Order' && $this->params['cicle'] != 'new') ) {
         if( $this->params['type'] != 'Table-View Scan Order' ) {
-        //if( $this->params['cicle'] == 'new' ) {
 
             //echo "orderinfo type: show patient <br>";
             $builder->add('patient', 'collection', array(
@@ -72,6 +71,18 @@ class OrderInfoType extends AbstractType
             ));
 
         } else {
+
+//            //echo "orderinfo type: show patient <br>";
+//            $builder->add('patient', 'collection', array(
+//                'type' => new PatientType($this->params,$this->entity),    //$this->type),
+//                'label' => false,
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__patient__',
+//            ));
 
             //echo "orderinfo type: show datalocker <br>";
 

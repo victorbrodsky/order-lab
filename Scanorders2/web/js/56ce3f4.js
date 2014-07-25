@@ -14720,7 +14720,7 @@ $(document).ready(function() {
 
 //    //console.log(JSON.stringify(_orderDataArr));
 //    if( typeof _orderDataArr != 'undefined' ) {
-//        //console.log(_orderDataArr);
+//        console.log(_orderDataArr);
 //        console.log('_orderDataArr len='+_orderDataArr.length);
 //        for( var n in _orderDataArr ) {
 //            console.log("n="+n);
@@ -14851,12 +14851,18 @@ function handsonTableInit() {
                 var headerTitle = _columnData_scanorder[ii]['header'];
                 //console.log('headerTitle='+headerTitle);
                 //console.log( _orderDataArr[i-1] );
-                if( typeof headerTitle != 'undefined' && headerTitle != '' && (i-1<_orderDataArr.length) && headerTitle in _orderDataArr[i-1] ) {
-                    //console.log('headerTitle='+headerTitle);
-                    var value = _orderDataArr[i-1][headerTitle];
-                    //console.log( "value="+value );
-                    if( value != null && value != "" ) {
-                        rowElement[ii] = value;
+                if( typeof headerTitle != 'undefined' && typeof _orderDataArr[i-1] != 'undefined' &&
+                    headerTitle != '' && (i-1<_orderDataArr.length) && headerTitle in _orderDataArr[i-1]
+                ) {
+                    if( _orderDataArr[i-1][headerTitle] ) {
+                        var cellValue = _orderDataArr[i-1][headerTitle]["value"];
+                        //var cellId = _orderDataArr[i-1][headerTitle]["id"];
+                        //console.log('cellValue='+cellValue+", cellId="+cellId);
+                        //var value = _orderDataArr[i-1][headerTitle];
+                        //console.log( "value="+value );
+                        if( cellValue != null && cellValue != "" ) {
+                            rowElement[ii] = cellValue;
+                        }
                     }
                 }
             }
@@ -14953,12 +14959,25 @@ function handsonTableInit() {
             }
         },
         cells: function(r,c,prop) {
+
             var cellProperties = {};
+
             if( _tableFormCycle == 'show' ) {
                 cellProperties.readOnly = true;
             }
-            cellProperties.id = 123;
-            console.log(cellProperties);
+
+            var headerTitle = _columnData_scanorder[c]['header'];
+            if( typeof headerTitle != 'undefined' && headerTitle != '' &&
+                typeof _orderDataArr != 'undefined' && typeof _orderDataArr[r] != 'undefined' &&
+                typeof _orderDataArr[r][headerTitle] != 'undefined' &&
+                _orderDataArr[r][headerTitle] != null
+                //_orderDataArr[r] != null && _orderDataArr[r] != "" &&
+                //(r<_orderDataArr.length) && headerTitle in _orderDataArr[r]
+            ) {
+                var cellId = _orderDataArr[r][headerTitle]["id"];
+                cellProperties.id = cellId;
+                //console.log(cellProperties);
+            }
             return cellProperties;
         }
     });
@@ -15513,19 +15532,21 @@ function assignDataToDatalocker() {
 
         var rowArr = new Array();
         //add cell id to datalocker for each field
-        for( var ii=0; i<headers.length; i++ ) {
+        for( var ii=0; ii<headers.length; ii++ ) {
             //var cellid = _sotable.getCellMeta(row,cell).id;
-            //console.log("cellid="+cellid);
+            var cellId = _sotable.getCellMeta(i,ii).id;
+            var cellValue =  _sotable.getDataAtCell (i,ii);
+            //console.log("cellId="+cellId+", cellValue="+cellValue);
             rowArr.push({
-                "id"    : _sotable.getCellMeta(i,ii).id,
-                "value" : _sotable.getDataAtCell (i,ii)
+                "id"    : cellId,
+                "value" : cellValue
             });
         }
 
         data.row.push(rowArr);
 
     }
-    console.log(data);
+    //console.log(data);
 
     if( _btnClickedName != null ) {
         $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
@@ -15540,7 +15561,7 @@ function assignDataToDatalocker() {
 }
 
 function saveClick(btnname) {
-    console.log("btnname="+btnname);
+    //console.log("btnname="+btnname);
     _btnClickedName = btnname;
 }
 
@@ -15918,7 +15939,7 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
     if( !mrnDB || !mrntypeDB || !mrn || !mrnTypeCorrect || !dob ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");
