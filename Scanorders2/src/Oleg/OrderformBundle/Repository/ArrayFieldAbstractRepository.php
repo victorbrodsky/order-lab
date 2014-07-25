@@ -666,7 +666,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     $entity = $this->copyField( $entity, $field, $className, $methodBaseName, $exceptionArr );
                                 }
                                 //############# EOF copy processed field from submitted object (original) to found entity in DB #############//
-                            }
+
+                            } //if parent
 
                         } //if object && is_subclass_of
 

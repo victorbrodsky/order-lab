@@ -10,6 +10,7 @@ var _htableid = "#multi-dataTable";
 
 var _sotable = null;    //scan order table
 var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part Name, Block Name
+var _colHeader = new Array();
 
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
@@ -380,7 +381,7 @@ function handsonTableInit() {
 
     var data = new Array();
     var columnsType = new Array();
-    var colHeader = new Array();
+    //var colHeader = new Array();
     var rows = 11;//21;//501;
 
     if( typeof _orderDataArr != 'undefined' && _orderDataArr.length != 0 ) {
@@ -427,7 +428,7 @@ function handsonTableInit() {
 
     // make header and columns
     for( var i=0; i<_columnData_scanorder.length; i++ ) {
-        colHeader.push( _columnData_scanorder[i]['header'] );
+        _colHeader.push( _columnData_scanorder[i]['header'] );
         columnsType.push( _columnData_scanorder[i]['columns'] );
     }
 
@@ -444,7 +445,7 @@ function handsonTableInit() {
 
     $(_htableid).handsontable({
         data: data,
-        colHeaders: colHeader,
+        colHeaders: _colHeader,
         columns: columnsType,
         minSpareRows: 1,
         contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -511,7 +512,11 @@ function handsonTableInit() {
         },
         cells: function(r,c,prop) {
             var cellProperties = {};
-            if( _tableFormCycle == 'show' ) cellProperties.readOnly = true;
+            if( _tableFormCycle == 'show' ) {
+                cellProperties.readOnly = true;
+            }
+            cellProperties.id = 123;
+            console.log(cellProperties);
             return cellProperties;
         }
     });

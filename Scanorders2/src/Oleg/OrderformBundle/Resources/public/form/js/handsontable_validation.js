@@ -94,10 +94,6 @@ function validateHandsonTable() {
         }
     } //for each row
     if( nonEmptyRows > 0 ) {
-//        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
-//            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
-//            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
-//            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
         var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
             "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
@@ -173,14 +169,36 @@ function validateHandsonTable() {
 
 //get rows data from _rowToProcessArr and assign this to datalocker field
 function assignDataToDatalocker() {
+
+    var headers = _sotable.getColHeader();
+
     //get rows data from _rowToProcessArr
-    var data = new Array();
-    data.push(_sotable.getColHeader());
+    //var data = new Array();
+    var data = {
+        header: headers,
+        row: []
+    };
+    //data.push(headers);
+
     for( var i=0; i<_rowToProcessArr.length; i++ ) {
         //console.log("data row="+_rowToProcessArr[i]);
-        data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+        //data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+
+        var rowArr = new Array();
+        //add cell id to datalocker for each field
+        for( var ii=0; i<headers.length; i++ ) {
+            //var cellid = _sotable.getCellMeta(row,cell).id;
+            //console.log("cellid="+cellid);
+            rowArr.push({
+                "id"    : _sotable.getCellMeta(i,ii).id,
+                "value" : _sotable.getDataAtCell (i,ii)
+            });
+        }
+
+        data.row.push(rowArr);
+
     }
-    //console.log(data);
+    console.log(data);
 
     if( _btnClickedName != null ) {
         $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
@@ -191,6 +209,7 @@ function assignDataToDatalocker() {
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
     $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+
 }
 
 function saveClick(btnname) {

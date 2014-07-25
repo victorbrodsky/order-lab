@@ -396,14 +396,17 @@ class TableController extends Controller {
         $rowCount = 0;
 
         $headers = array_shift($data);
+        $headers = $data["header"];
         //var_dump($columnData);
 
         //echo "entity inst=".$entity->getInstitution()."<br>";
+        //exit();
 
         $count = 0;
-        foreach( $data as $row ) {
-            //var_dump($row);
-            //echo "<br>";
+        foreach( $data["row"] as $row ) {
+            var_dump($row);
+            echo "<br>";
+            exit();
 
             $accValue = $this->getValueByHeaderName('Accession Number',$row,$headers);
 

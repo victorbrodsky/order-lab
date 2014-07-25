@@ -14452,6 +14452,7 @@ var _htableid = "#multi-dataTable";
 
 var _sotable = null;    //scan order table
 var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part Name, Block Name
+var _colHeader = new Array();
 
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
@@ -14822,7 +14823,7 @@ function handsonTableInit() {
 
     var data = new Array();
     var columnsType = new Array();
-    var colHeader = new Array();
+    //var colHeader = new Array();
     var rows = 11;//21;//501;
 
     if( typeof _orderDataArr != 'undefined' && _orderDataArr.length != 0 ) {
@@ -14869,7 +14870,7 @@ function handsonTableInit() {
 
     // make header and columns
     for( var i=0; i<_columnData_scanorder.length; i++ ) {
-        colHeader.push( _columnData_scanorder[i]['header'] );
+        _colHeader.push( _columnData_scanorder[i]['header'] );
         columnsType.push( _columnData_scanorder[i]['columns'] );
     }
 
@@ -14886,7 +14887,7 @@ function handsonTableInit() {
 
     $(_htableid).handsontable({
         data: data,
-        colHeaders: colHeader,
+        colHeaders: _colHeader,
         columns: columnsType,
         minSpareRows: 1,
         contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -14953,7 +14954,11 @@ function handsonTableInit() {
         },
         cells: function(r,c,prop) {
             var cellProperties = {};
-            if( _tableFormCycle == 'show' ) cellProperties.readOnly = true;
+            if( _tableFormCycle == 'show' ) {
+                cellProperties.readOnly = true;
+            }
+            cellProperties.id = 123;
+            console.log(cellProperties);
             return cellProperties;
         }
     });
@@ -15416,10 +15421,6 @@ function validateHandsonTable() {
         }
     } //for each row
     if( nonEmptyRows > 0 ) {
-//        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
-//            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
-//            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
-//            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
         var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
             "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
@@ -15495,14 +15496,36 @@ function validateHandsonTable() {
 
 //get rows data from _rowToProcessArr and assign this to datalocker field
 function assignDataToDatalocker() {
+
+    var headers = _sotable.getColHeader();
+
     //get rows data from _rowToProcessArr
-    var data = new Array();
-    data.push(_sotable.getColHeader());
+    //var data = new Array();
+    var data = {
+        header: headers,
+        row: []
+    };
+    //data.push(headers);
+
     for( var i=0; i<_rowToProcessArr.length; i++ ) {
         //console.log("data row="+_rowToProcessArr[i]);
-        data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+        //data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+
+        var rowArr = new Array();
+        //add cell id to datalocker for each field
+        for( var ii=0; i<headers.length; i++ ) {
+            //var cellid = _sotable.getCellMeta(row,cell).id;
+            //console.log("cellid="+cellid);
+            rowArr.push({
+                "id"    : _sotable.getCellMeta(i,ii).id,
+                "value" : _sotable.getDataAtCell (i,ii)
+            });
+        }
+
+        data.row.push(rowArr);
+
     }
-    //console.log(data);
+    console.log(data);
 
     if( _btnClickedName != null ) {
         $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
@@ -15513,6 +15536,7 @@ function assignDataToDatalocker() {
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
     $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+
 }
 
 function saveClick(btnname) {
