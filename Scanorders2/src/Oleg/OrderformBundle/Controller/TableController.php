@@ -497,8 +497,8 @@ class TableController extends Controller {
 
         //$headers = array_shift($data);
         $headers = $data["header"];
-        var_dump($headers);
-        echo "<br><br>";
+        //var_dump($headers);
+        //echo "<br><br>";
 
         //echo "entity inst=".$entity->getInstitution()."<br>";
         //exit();
@@ -854,7 +854,7 @@ class TableController extends Controller {
             $stainTransformer = new StainTransformer($em,$provider);
 
             //special stain type might be null in table, so get one from StainList with smallest 'orderinlist'
-            $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)); //list
+            $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)['val']); //list
             if( $specialstainList == null ) {
                 $stainList = $em->getRepository('OlegOrderformBundle:StainList')->findBy(array(), array('orderinlist'=>'ASC'));
                 $specialstainList = $stainList[0];

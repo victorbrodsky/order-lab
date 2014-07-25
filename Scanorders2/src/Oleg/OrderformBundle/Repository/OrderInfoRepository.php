@@ -57,7 +57,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         $this->setSlides($entity);
 
         $slides = $entity->getSlide();
-        //echo "slide count=".count($slides)."<br>";
+        echo "slide count=".count($slides)."<br>";
+
+        if( count($slides) == 0 ) {
+            throw new \Exception( 'Order does not have any slides. Slide count='.count($slides) );
+        }
 
         //now clean orderinfo from patients. Patients and all others objects will be added only via slides.
         $entity->clearPatient();
@@ -111,8 +115,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         echo "blocks=".count($entity->getBlock())."<br>";;
         echo "slides=".count($entity->getSlide())."<br>";
 
-        echo "<br>part:".$entity->getPart()->first()."<br>";
-        echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
+        //echo "<br>part:".$entity->getPart()->first()."<br>";
+        //echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
 
         //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');

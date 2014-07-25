@@ -15529,14 +15529,14 @@ function assignDataToDatalocker() {
     for( var i=0; i<_rowToProcessArr.length; i++ ) {
         //console.log("data row="+_rowToProcessArr[i]);
         //data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
-
+        var row = _rowToProcessArr[i];
         var rowArr = new Array();
         //add cell id to datalocker for each field
-        for( var ii=0; ii<headers.length; ii++ ) {
+        for( var col=0; col<headers.length; col++ ) {
             //var cellid = _sotable.getCellMeta(row,cell).id;
-            var cellId = _sotable.getCellMeta(i,ii).id;
-            var cellValue =  _sotable.getDataAtCell (i,ii);
-            //console.log("cellId="+cellId+", cellValue="+cellValue);
+            var cellId = _sotable.getCellMeta(row,col).id;
+            var cellValue =  _sotable.getDataAtCell(row,col);
+            //console.log("("+row+","+col+"): cellId="+cellId+", cellValue="+cellValue);
             rowArr.push({
                 "id"    : cellId,
                 "value" : cellValue
