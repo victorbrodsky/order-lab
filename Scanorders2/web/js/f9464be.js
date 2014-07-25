@@ -7413,8 +7413,12 @@ function createErrorMessage( element, fieldName, appendWell ) {
 
     if( !fieldName ) {
         var fieldName = "field marked in red above";
+        var extraStr = "";
         if( element.hasClass("accession-mask") ) {
             fieldName = "Accession Number";
+            extraStr =  "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956). " +
+                        "The CoPath accession number cannot contain any spaces or non-alphanumeric characters aside from the dash. " +
+                        "To enter a non-CoPath Accession Number, please select the corresponding accession type above.";
         }
         if( element.hasClass("patientmrn-mask") ) {
             fieldName = "MRN";
@@ -7423,7 +7427,7 @@ function createErrorMessage( element, fieldName, appendWell ) {
 
     var errorHtml =
         '<div class="maskerror-added alert alert-danger">' +
-            'Please correct the invalid ' + fieldName + '.' +
+            'Please correct the invalid ' + fieldName + '.' + extraStr +
             '</div>';
 
     //console.log("append to element id="+element.attr("id")+", class="+element.attr("class") + ", appendWell="+appendWell);

@@ -505,14 +505,14 @@ class TableController extends Controller {
 
         $count = 0;
         foreach( $data["row"] as $row ) {
-            echo "<br>row:<br>";
-            var_dump($row);
-            echo "<br>";
+//            echo "<br>row:<br>";
+//            var_dump($row);
+//            echo "<br>";
             //exit();
 
             $accArr = $this->getValueByHeaderName('Accession Number',$row,$headers);
             $accValue = $accArr['val'];
-            echo "accValue=".$accValue." <br> ";
+            //echo "accValue=".$accValue." <br> ";
 
             if( !$accValue || $accValue == '' ) {
                 continue;   //skip row if accession number is empty
@@ -525,7 +525,7 @@ class TableController extends Controller {
 
             $entity->addPatient($patient);
 
-            echo $patient->getProcedure()->first()->getAccession()->first();
+            //echo $patient->getProcedure()->first()->getAccession()->first();
 
             $count++;
 
