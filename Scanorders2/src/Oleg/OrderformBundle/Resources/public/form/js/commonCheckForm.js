@@ -126,6 +126,13 @@ function isKey(element, field) {
 
 
 function trimWithCheck(val) {
+
+    if(typeof String.prototype.trim !== 'function') {
+        String.prototype.trim = function() {
+            return this.replace(/^\s+|\s+$/g, '');
+        }
+    }
+
     if( val && typeof val != 'undefined' && val != "" ) {
         val = val.toString();
         val = val.trim();

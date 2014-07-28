@@ -35,7 +35,7 @@ function validateHandsonTable() {
         }
     }
 
-    $('#tableview-submit-btn').button('loading');
+    $('.tableview-submit-btn').button('loading');
 
     //set main indexes for the column such as Acc Type, Acc Number ...
     _tableMainIndexes = getTableDataIndexes();
@@ -76,7 +76,7 @@ function validateHandsonTable() {
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
         return false;
     }
     /////////// EOF Check cell validation ///////////
@@ -94,10 +94,6 @@ function validateHandsonTable() {
         }
     } //for each row
     if( nonEmptyRows > 0 ) {
-//        var errmsg = "Please review the cells marked light red, in the highlight row(s), and enter the missing information.<br>" +
-//            "For every slide you are submitting, please make sure there are no empty fields marked light red in the row that describes it.<br>" +
-//            "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
-//            "If you accidentally modified the contents of an irrelevant row, please either delete the row via a right-click menu or empty its cells.<br>";
         var errmsg = "Please review the cell(s) marked light red in the highlighted row(s) and enter the missing required information.<br>" +
             "For every slide you are submitting please make sure there are no empty fields marked light red in the row that describes it.<br>" +
             "Your order form must contain at least one row with the filled required fields describing a single slide.<br>" +
@@ -106,7 +102,7 @@ function validateHandsonTable() {
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all fields in the table form are valid. Number of error rows:'+nonEmptyRows+'. Empty cells are marked with red.');
         $('#validationerror').append(errorHtml);
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
         return false;
     }
     /////////// EOF Empty main cells validation ///////////
@@ -123,12 +119,12 @@ function validateHandsonTable() {
     waitfor( allRowProcessed, true, _TIMEOUT, 0, 'play->busy false', function() {
 
         //console.log("All rows processed!!!!!!!!!!!");
-        $('#tableview-submit-btn').button('reset');
+        $('.tableview-submit-btn').button('reset');
 
         if( _rowToProcessArr.length == 0 ) {
             var errorHtml = createTableErrorWell('No data to submit. All rows are empty or in the default state.');
             $('#validationerror').append(errorHtml);
-            $('#tableview-submit-btn').button('reset');
+            $('.tableview-submit-btn').button('reset');
             return false;
         }
 
@@ -173,20 +169,54 @@ function validateHandsonTable() {
 
 //get rows data from _rowToProcessArr and assign this to datalocker field
 function assignDataToDatalocker() {
+
+    var headers = _sotable.getColHeader();
+
     //get rows data from _rowToProcessArr
-    var data = new Array();
-    data.push(_sotable.getColHeader());
+    //var data = new Array();
+    var data = {
+        header: headers,
+        row: []
+    };
+    //data.push(headers);
+
     for( var i=0; i<_rowToProcessArr.length; i++ ) {
         //console.log("data row="+_rowToProcessArr[i]);
-        data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+        //data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
+        var row = _rowToProcessArr[i];
+        var rowArr = new Array();
+        //add cell id to datalocker for each field
+        for( var col=0; col<headers.length; col++ ) {
+            //var cellid = _sotable.getCellMeta(row,cell).id;
+            var cellId = _sotable.getCellMeta(row,col).id;
+            var cellValue =  _sotable.getDataAtCell(row,col);
+            //console.log("("+row+","+col+"): cellId="+cellId+", cellValue="+cellValue);
+            rowArr.push({
+                "id"    : cellId,
+                "value" : cellValue
+            });
+        }
+
+        data.row.push(rowArr);
+
     }
     //console.log(data);
+
+    if( _btnClickedName != null ) {
+        $("#oleg_orderformbundle_orderinfotype_clickedbtn").val( _btnClickedName );
+    }
 
     //provide table data to controller
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
     //console.log("jsonstr="+jsonstr);
     $("#oleg_orderformbundle_orderinfotype_datalocker").val( jsonstr );
+
+}
+
+function saveClick(btnname) {
+    //console.log("btnname="+btnname);
+    _btnClickedName = btnname;
 }
 
 function allRowProcessed() {
@@ -398,7 +428,7 @@ function checkPrevGenAndConflictTable(row) {
             },
             function(error) {
                 //console.error("Failed! error=", error);
-                $('#tableview-submit-btn').button('reset');
+                $('.tableview-submit-btn').button('reset');
             }
         ).
         done(
@@ -563,7 +593,7 @@ function mrnMrnDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect ) {
 
 function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
-    console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
+    //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
     if( !mrnDB || !mrntypeDB || !mrn || !mrnTypeCorrect || !dob ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");

@@ -13,17 +13,21 @@ function attachPatientNameSexAgeLockedTooltip() {
         return false;
     }
 
+    var sexname = "Accession";
+    if( orderformtype == "single") {
+        sexname = "Procedure";
+    }
+
     //patient's sex
     var patsex = $('.patientsex').find('.well');
     patsex.tooltip({
-        'title': "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the Accession section."
+        'title': "This is the current sex of the patient (if known). To enter a new sex, use the field \"Patient's Sex (at the time of encounter)\" in the "+sexname+" section."
     });
     highlightProcedureSexElement( patsex, '.proceduresex-field' );
 
     //patient's age
     var patage = $('.patientage').find('.well');
     patage.tooltip({
-        //'title': "This is the current age of the patient (if known). To enter a new age, use the field \"Patient's Age (at the time of encounter)\" in the Accession section."
         'title': "This is the current age of the patient (if known). To enter a new age, use the field \"DOB\"."
     });
     highlightProcedureAgeElement( patage.parent(), '.patientdob-mask' );
@@ -31,7 +35,7 @@ function attachPatientNameSexAgeLockedTooltip() {
     //patient's name
     var patname = $('.patientname').find('.well');
     patname.tooltip({
-        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's [Last, First, Middle] Name (at the time of encounter)\" in the Accession section."
+        'title': "This is the current name of the patient (if known). To enter a new name, use the field \"Patient's [Last, First, Middle] Name (at the time of encounter)\" in the "+sexname+" section."
     });
     highlightProcedureNameElement( patname, '.procedure-lastName', '.procedure-firstName', '.procedure-middleName' );
 

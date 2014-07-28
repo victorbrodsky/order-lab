@@ -182,6 +182,33 @@
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBName'}) }}">Edit</a></td>
             </tr>
 
+            {#Footer#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h6>Footer:</h6>
+                </td>
+            </tr>
+            <tr>
+                <td>Institution Name</td>
+                <td>{{ entity.institutionname }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'institutionname'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Institution Url</td>
+                <td>{{ entity.institutionurl }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'institutionurl'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Department Namel</td>
+                <td>{{ entity.departmentname }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'departmentname'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Department URL</td>
+                <td>{{ entity.departmenturl }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'departmenturl'}) }}">Edit</a></td>
+            </tr>
+
 
         </tbody>
     </table>

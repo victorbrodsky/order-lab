@@ -685,8 +685,15 @@ function priorityOption() {
     }
 
     $('#oleg_orderformbundle_orderinfotype_priority').change(function(e) {
-        e.preventDefault();
-        $('#priority_option').collapse('toggle');
+        //e.preventDefault();
+        //$('#priority_option').collapse('toggle');
+        var checked = $('#oleg_orderformbundle_orderinfotype_priority').find('input[type=radio]:checked').val();
+        if( checked == 'Stat' ) {
+            var param = 'show';
+        } else {
+            var param = 'hide';
+        }
+        $('#priority_option').collapse(param);
     });
 
     var checked = $('#oleg_orderformbundle_orderinfotype_priority').find('input[type=radio]:checked').val();
@@ -703,8 +710,15 @@ function purposeOption() {
     }
 
     $('#oleg_orderformbundle_orderinfotype_purpose').change(function(e) {
-        e.preventDefault();
-        $('#purpose_option').collapse('toggle');
+        //e.preventDefault();
+        //$('#purpose_option').collapse('toggle');
+        var checked = $('#oleg_orderformbundle_orderinfotype_purpose').find('input[type=radio]:checked').val();
+        if( checked == 'For External Use (Invoice Fund Number)' ) {
+            var param = 'show';
+        } else {
+            var param = 'hide';
+        }
+        $('#purpose_option').collapse(param);
     });
 
     var checked = $('#oleg_orderformbundle_orderinfotype_purpose').find('input[type=radio]:checked').val();
@@ -724,13 +738,28 @@ function expandTextarea() {
 
     for (var i = 0; i < elements.length; ++i) {
         var element = elements[i];
-        element.addEventListener('keyup', function() {
+        //element.addEventListener('keyup', function() {
+        addEvent('keyup', element, function() {
             this.style.overflow = 'hidden';
             this.style.height = 0;
             var newH = this.scrollHeight + 10;
             //console.log("cur h="+this.style.height+", newH="+newH);
             this.style.height = newH + 'px';
         }, false);
+    }
+}
+
+//Internet Explorer (up to version 8) used an alternate attachEvent method.
+// The following should be an attempt to write a cross-browser addEvent function.
+function addEvent(event, elem, func) {
+    if (elem.addEventListener)  // W3C DOM
+        elem.addEventListener(event,func,false);
+    else if (elem.attachEvent) { // IE DOM
+        //elem.attachEvent("on"+event, func);
+        elem.attachEvent("on" + event, function() {return(func.call(elem, window.event));});
+    }
+    else { // No much to do
+        elem[event] = func;
     }
 }
 

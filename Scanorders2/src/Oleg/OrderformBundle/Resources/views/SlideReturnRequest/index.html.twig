@@ -2,8 +2,18 @@
 
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+{% if routename == 'incoming-slide-return-requests' %}
+    {% set title = 'Incoming Slide Return Requests' %}
+{% else %}
+    {% set title = 'My Slide Return Requests' %}
+{% endif %}
+
+
 {% block title %}
-    Slides Requested for Return
+    {{ title }}
 {% endblock %}
 
 
@@ -54,9 +64,10 @@
 
 {% block content %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    <h3 class="text-info">{{ title }}</h3>
+    <br>
 
-    <form action="{{ path(route) }}" method="get" {{ form_enctype(filter) }} class="well form-search">
+    <form action="{{ path(routename) }}" method="get" {{ form_enctype(filter) }} class="well form-search">
 
         <div class="row">
             <div class="col-xs-3">
@@ -83,7 +94,7 @@
             <tr>
                 <th>{{ knp_pagination_sortable(sliderequests, 'ID', 'list.id') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Date', 'list.orderdate') }}</th>
-                {% if route == 'incoming-slide-return-requests' %}
+                {% if routename == 'incoming-slide-return-requests' %}
                     <th>{{ knp_pagination_sortable(sliderequests, 'Submitter', 'provider.username') }}</th>
                 {% endif %}
                 <th>{{ knp_pagination_sortable(sliderequests, 'Ordering Provider', 'proxyuser.username') }}</th>
@@ -106,7 +117,7 @@
 
             {% set returned = "Returned" in sliderequest.status %}
 
-            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and route == 'incoming-slide-return-requests' %}
+            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and routename == 'incoming-slide-return-requests' %}
                 {% include 'OlegOrderformBundle::SlideReturnRequest/add_comment.html.twig' with {'orderid': sliderequest.id}  %}
             {% endif %}
 
@@ -126,7 +137,7 @@
                     {{ sliderequest.orderdate|date('m/d/Y H:i') }}
                 </td>
 
-                {% if route == 'incoming-slide-return-requests' %}
+                {% if routename == 'incoming-slide-return-requests' %}
                     <td>
                         <a href="{{ path('showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
                     </td>
@@ -199,7 +210,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and route == 'incoming-slide-return-requests' %}
+                            {% if is_granted('ROLE_SCANORDER_PROCESSOR') and routename == 'incoming-slide-return-requests' %}
 
                                 {% if sliderequest.status != 'All Scanned & All Returned' %}
                                     <li><a data-confirm="Are you sure you want to change status to All Scanned & All Returned?"

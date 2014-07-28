@@ -73,6 +73,27 @@
     {% block additionalcss %}{% endblock %}
 
 
+    {% block ie8fixjs %}
+
+        {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
+        {#{% javascripts#}
+        {#'@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'#}
+        {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}#}
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        {% javascripts
+        '@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
+        '@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <![endif]-->
+
+    {% endblock %}
+
 
     <title>
         {% block title %}
@@ -139,6 +160,8 @@
             <!-- footer -->
             {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
         </div>
+
+
 
 
         {% block mainjs %}

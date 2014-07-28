@@ -200,7 +200,7 @@ function finalStepCheck() {
     $('#part-single').css( "width", "20%" );
     $('#block-single').css( "width", "20%" );
     $('#maincinglebtn').show();
-    collapseElementFix($('#optional_param'));
+    collapseElementFix($('#optional_param'),'show');
     //console.log("asseccionKeyGlobal="+asseccionKeyGlobal+", asseccionKeytypeGlobal="+asseccionKeytypeGlobal+", partKeyGlobal="+partKeyGlobal+", blockKeyGlobal="+blockKeyGlobal);
 }
 
@@ -208,7 +208,8 @@ function finalStepDelete() {
     $('#part-single').css( "width", "25%" );
     $('#block-single').css( "width", "25%" );
     $('#maincinglebtn').hide();
-    collapseElementFix($('#optional_param'));   //close optional info
+
+    collapseElementFix($('#optional_param'),'hide');   //close optional info
 }
 
 function checkSingleFormOnNext( elem ) {
@@ -224,14 +225,16 @@ function checkSingleFormOnNext( elem ) {
             $("#optional_button").show();
         }
 
-        collapseElementFix($('#orderinfo_param'));
+        collapseElementFix($('#orderinfo_param'),'show');
     }
     return true;
 }
 
-function collapseElementFix(elem) {
+function collapseElementFix(elem,param) {
+    //console.log("collapse Element Fix");
     $(document).ready(function() {
-        elem.collapse('toggle');
+        elem.collapse(param);
+        //elem.collapse('toggle');
     });
 }
 
@@ -248,7 +251,7 @@ function initOptionalParam() {
 
     $('#optional_param_tab a').click(function (e) {
 
-        e.preventDefault();
+        //e.preventDefault();
 
         var elem = $(this);
 

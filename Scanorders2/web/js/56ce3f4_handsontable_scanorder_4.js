@@ -10,6 +10,7 @@ var _htableid = "#multi-dataTable";
 
 var _sotable = null;    //scan order table
 var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, MRN Type, MRN, Part Name, Block Name
+var _colHeader = new Array();
 
 var _accessiontypes_simple = new Array();
 var _mrntypes_simple = new Array();
@@ -30,6 +31,8 @@ var _auto_generated_mrn_type = null;    //13;
 var _auto_generated_accession_type = null;  //8;
 
 var _institution = null;
+
+var _btnClickedName = null;
 
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
@@ -275,7 +278,7 @@ $(document).ready(function() {
 
 //    //console.log(JSON.stringify(_orderDataArr));
 //    if( typeof _orderDataArr != 'undefined' ) {
-//        //console.log(_orderDataArr);
+//        console.log(_orderDataArr);
 //        console.log('_orderDataArr len='+_orderDataArr.length);
 //        for( var n in _orderDataArr ) {
 //            console.log("n="+n);
@@ -378,8 +381,12 @@ function handsonTableInit() {
 
     var data = new Array();
     var columnsType = new Array();
-    var colHeader = new Array();
+    //var colHeader = new Array();
     var rows = 11;//21;//501;
+
+    if( typeof _orderDataArr != 'undefined' && _orderDataArr.length != 0 ) {
+        rows = _orderDataArr.length+1;
+    }
 
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
@@ -402,12 +409,18 @@ function handsonTableInit() {
                 var headerTitle = _columnData_scanorder[ii]['header'];
                 //console.log('headerTitle='+headerTitle);
                 //console.log( _orderDataArr[i-1] );
-                if( typeof headerTitle != 'undefined' && headerTitle != '' && (i-1<_orderDataArr.length) && headerTitle in _orderDataArr[i-1] ) {
-                    //console.log('headerTitle='+headerTitle);
-                    var value = _orderDataArr[i-1][headerTitle];
-                    //console.log( "value="+value );
-                    if( value != null && value != "" ) {
-                        rowElement[ii] = value;
+                if( typeof headerTitle != 'undefined' && typeof _orderDataArr[i-1] != 'undefined' &&
+                    headerTitle != '' && (i-1<_orderDataArr.length) && headerTitle in _orderDataArr[i-1]
+                ) {
+                    if( _orderDataArr[i-1][headerTitle] ) {
+                        var cellValue = _orderDataArr[i-1][headerTitle]["value"];
+                        //var cellId = _orderDataArr[i-1][headerTitle]["id"];
+                        //console.log('cellValue='+cellValue+", cellId="+cellId);
+                        //var value = _orderDataArr[i-1][headerTitle];
+                        //console.log( "value="+value );
+                        if( cellValue != null && cellValue != "" ) {
+                            rowElement[ii] = cellValue;
+                        }
                     }
                 }
             }
@@ -421,7 +434,7 @@ function handsonTableInit() {
 
     // make header and columns
     for( var i=0; i<_columnData_scanorder.length; i++ ) {
-        colHeader.push( _columnData_scanorder[i]['header'] );
+        _colHeader.push( _columnData_scanorder[i]['header'] );
         columnsType.push( _columnData_scanorder[i]['columns'] );
     }
 
@@ -438,7 +451,7 @@ function handsonTableInit() {
 
     $(_htableid).handsontable({
         data: data,
-        colHeaders: colHeader,
+        colHeaders: _colHeader,
         columns: columnsType,
         minSpareRows: 1,
         contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -502,6 +515,28 @@ function handsonTableInit() {
             } else {    //add row to array
                 _errorValidatorRows.push(row);
             }
+        },
+        cells: function(r,c,prop) {
+
+            var cellProperties = {};
+
+            if( _tableFormCycle == 'show' ) {
+                cellProperties.readOnly = true;
+            }
+
+            var headerTitle = _columnData_scanorder[c]['header'];
+            if( typeof headerTitle != 'undefined' && headerTitle != '' &&
+                typeof _orderDataArr != 'undefined' && typeof _orderDataArr[r] != 'undefined' &&
+                typeof _orderDataArr[r][headerTitle] != 'undefined' &&
+                _orderDataArr[r][headerTitle] != null
+                //_orderDataArr[r] != null && _orderDataArr[r] != "" &&
+                //(r<_orderDataArr.length) && headerTitle in _orderDataArr[r]
+            ) {
+                var cellId = _orderDataArr[r][headerTitle]["id"];
+                cellProperties.id = cellId;
+                //console.log(cellProperties);
+            }
+            return cellProperties;
         }
     });
 

@@ -50,6 +50,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $baseDn = null;
         $smtpServerAddress = null;
         $defaultSiteEmail = null;
+        $institution_url = null;
+        $institution_name = null;
+        $department_url = null;
+        $department_name = null;
 
         while( $row = $params->fetch() ) {
             $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
@@ -58,6 +62,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
             $smtpServerAddress = $row['smtpServerAddress'];
             $defaultSiteEmail = $row['siteEmail'];
+            $institution_url = $row['institutionurl'];
+            $institution_name = $row['institutionname'];
+            $department_url = $row['departmenturl'];
+            $department_name = $row['departmentname'];
             //echo $aDLDAPServerAddress."<br>";
         }
 
@@ -91,6 +99,12 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         }
 
         $container->setParameter('default_system_email',$defaultSiteEmail);
+
+        //footer params
+        $container->setParameter('institution_url',$institution_url);
+        $container->setParameter('institution_name',$institution_name);
+        $container->setParameter('department_url',$department_url);
+        $container->setParameter('department_name',$department_name);
 
     }//if param
 

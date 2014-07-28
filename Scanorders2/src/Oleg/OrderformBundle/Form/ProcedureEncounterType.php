@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class ProcedureEncounterType extends AbstractType
 {
@@ -24,6 +25,19 @@ class ProcedureEncounterType extends AbstractType
         $builder->add('field', 'hidden', array('label'=>false));
 
         //$builder->add('keytype', 'hidden', array('label'=>false));
+        $builder->add('keytype', 'entity', array(
+            'class' => 'OlegOrderformBundle:EncounterType',
+            'label'=>false,
+            'required' => true,
+            'data' => 1,
+            'attr' => array('style'=>'display:none;'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setMaxResults(1);
+
+                },
+        ));
 
         $builder->add('procedureencounterothers', new ArrayFieldType(), array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureEncounter',

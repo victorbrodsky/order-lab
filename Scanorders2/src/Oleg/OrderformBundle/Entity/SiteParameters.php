@@ -143,6 +143,30 @@ class SiteParameters {
     protected $aperioeSlideManagerDBName;
 
 
+    //Footer
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $institutionurl;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $institutionname;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $departmenturl;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    protected $departmentname;
+
+
+
+
     /**
      * @param mixed $maxIdleTime
      */
@@ -549,6 +573,70 @@ class SiteParameters {
     public function getAutoAssignInstitution()
     {
         return $this->autoAssignInstitution;
+    }
+
+    /**
+     * @param mixed $departmentname
+     */
+    public function setDepartmentname($departmentname)
+    {
+        $this->departmentname = $departmentname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartmentname()
+    {
+        return $this->departmentname;
+    }
+
+    /**
+     * @param mixed $departmenturl
+     */
+    public function setDepartmenturl($departmenturl)
+    {
+        $this->departmenturl = $departmenturl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartmenturl()
+    {
+        return $this->departmenturl;
+    }
+
+    /**
+     * @param mixed $institutionname
+     */
+    public function setInstitutionname($institutionname)
+    {
+        $this->institutionname = $institutionname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitutionname()
+    {
+        return $this->institutionname;
+    }
+
+    /**
+     * @param mixed $institutionurl
+     */
+    public function setInstitutionurl($institutionurl)
+    {
+        $this->institutionurl = $institutionurl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitutionurl()
+    {
+        return $this->institutionurl;
     }
 
 

@@ -62,6 +62,7 @@
             {{ formmacros.field(edit_form.dbDatabaseName) }}
         {% endif %}
 
+
     {% if cicle == 'show' %}
         <hr>
 
@@ -93,6 +94,31 @@
         {% if edit_form.aDLDAPServerAccountPassword is defined %}
             {{ formmacros.field(edit_form.aDLDAPServerAccountPassword) }}
         {% endif %}
+
+
+    {% if cicle == 'show' %}
+        <hr>
+        <h3 class="text-info">Footer</h3>
+    {% endif %}
+
+    {% if edit_form.institutionname is defined %}
+        {{ formmacros.field(edit_form.institutionname) }}
+    {% endif %}
+
+    {% if edit_form.institutionurl is defined %}
+        {{ formmacros.field(edit_form.institutionurl) }}
+    {% endif %}
+
+    {% if edit_form.departmentname is defined %}
+        {{ formmacros.field(edit_form.departmentname) }}
+    {% endif %}
+
+    {% if edit_form.departmenturl is defined %}
+        {{ formmacros.field(edit_form.departmenturl) }}
+    {% endif %}
+
+
+
 
     {% if cicle == 'show' %}
         <hr>

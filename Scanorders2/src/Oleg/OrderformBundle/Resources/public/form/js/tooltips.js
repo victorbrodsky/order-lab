@@ -107,7 +107,7 @@ function attachResEduOnMouseEvent( parentTarget, elementTarget1, elementTarget2,
     setResEduTooltip( parentTarget, elementTarget2, title );
 
     $(parentTarget).on("change", function(e) {
-        console.log('on change');
+        //console.log('on change');
 
         if( $(elementTarget1).hasClass('select2-container-disabled') ) {
             setResEduTooltip( parentTarget, elementTarget1, title );

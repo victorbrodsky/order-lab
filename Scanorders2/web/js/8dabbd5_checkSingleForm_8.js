@@ -208,6 +208,8 @@ function finalStepDelete() {
     $('#part-single').css( "width", "25%" );
     $('#block-single').css( "width", "25%" );
     $('#maincinglebtn').hide();
+
+    //$('#orderinfo_param').hide();
     collapseElementFix($('#optional_param'));   //close optional info
 }
 
@@ -220,16 +222,20 @@ function checkSingleFormOnNext( elem ) {
         $("#next_button").hide();
 
         var accTypeText = $('.accessiontype-combobox').first().select2('data').text;
+        console.log("accTypeText="+accTypeText);
         if( accTypeText != 'TMA Slide' ) {
+            console.log("show optional_button!");
             $("#optional_button").show();
         }
 
+        //$('#orderinfo_param').show();
         collapseElementFix($('#orderinfo_param'));
     }
     return true;
 }
 
 function collapseElementFix(elem) {
+    console.log("collapse Element Fix");
     $(document).ready(function() {
         elem.collapse('toggle');
     });

@@ -42,27 +42,6 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         echo $entity;
         echo $className.": original:".$original."<br>";
 
-        ///////////// process original /////////////
-//        if( $original ) { //this means $entity-DB entity, $original-form entity
-//
-//            $original->setInstitution($orderinfo->getInstitution());
-//
-//            //check and remove duplication objects such as two Part 'A'.
-//            $original = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $original, $orderinfo );
-//
-////            //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-////            if( $className == 'Accession' ) {
-////                $entity = $em->getRepository('OlegOrderformBundle:'.$className)->processDuplicationKeyField( $original, $orderinfo );
-////                return $this->setResult($entity, $orderinfo);
-////            }
-//
-//            //since we got DB $entity from child there is no need to check
-//            return $this->setResult($entity, $orderinfo, $original);
-//
-//        }
-        ///////////// EOF process original /////////////
-
-
         //add this object to institution from orderinfo.
         $addClassMethod = "add".$className;
         $orderinfo->getInstitution()->$addClassMethod($entity);
@@ -252,6 +231,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         ///////////////// process parent /////////////////
 
         $parent = $entity->getParent();
+        echo "Parent: ".$parent."<br>";
+
+        //TODO: testing
+        if( $parent == null ) {
+            $parent = $original->getParent();
+            echo "originalParent: ".$parent."<br>";
+        }
 
         if( $parent ) {
 
@@ -272,6 +258,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         ///////////////// EOF process parent /////////////////
 
         echo "Finish Set Result for entity:".$entity;
+        echo "children count=".count($entity->getChildren())."<br>";
 
         return $entity;
     }

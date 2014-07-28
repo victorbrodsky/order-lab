@@ -177,22 +177,13 @@
             </div>
         </div>
 
-        <button id="next_button" type="button" class="btn btn-success" onclick="checkSingleFormOnNext(this)" data-toggle="collapse">Next</button>
-
+        <button id="next_button" type="button" class="btn btn-success" data-toggle="collapse" onclick="checkSingleFormOnNext(this)">Next</button>
 
         <div id="orderinfo_param" class="collapse">
 
             {% include 'OlegOrderformBundle::MultiScanOrder/edu_res.html.twig' %}
 
             {{ formmacros.orderinfo_panel(form,"Order Info") }}
-
-            <div class="row">
-                <p>
-                    <button class="btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
-                </p>
-                <p><button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;">Save and Continue Later</button></p>
-            </div>
-
 
             <div id="validationerror" style="padding-top: 2%"></div>
 
@@ -202,35 +193,13 @@
                 {% set imgLoading = asset('bundles/olegorderform/form/img/select2-spinner.gif') %}
                 <p>
 
-                    {#<button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default" data-toggle="collapse" data-loading-text="<img src='{{ imgLoading }}' />">#}
-                        {#Add Optional Info#}
-                    {#</button>#}
-
-                    <button onclick="checkFormSingle(this)" id="optional_button" class="btn btn-default ladda-button singleform-optional-button"
+                    <button id="optional_button" onclick="checkFormSingle(this)" class="btn btn-default ladda-button singleform-optional-button"
                             data-style="expand-right"
                             data-size="l"
                             data-spinner-color="#696969"
                             data-toggle="collapse">
                         <span class="ladda-label">Add Optional Info</span>
                     </button>
-
-                    {#<button id="optional_button" onclick="checkFormSingle(this)" class="btn btn-primary btn-lg ladda-button singleform-optional-button" data-style="expand-right" data-size="l" data-toggle="collapse">#}
-                        {#<span class="ladda-label">Submit form</span>#}
-                    {#</button>#}
-
-                    {#<button id="optional_button" class="btn btn-default has-spinner" >Test#}
-                        {#<span class="spinner"><i class="icon-spin icon-refresh"></i></span>#}
-                    {#</button>#}
-
-                    {#<a id="optional_button" class="btn btn-success has-spinner" style="width:50px">#}
-                        {#Foo#}
-                        {#<span class="spinner"><i class="glyphicon glyphicon-refresh"></i></span>#}
-                    {#</a>#}
-
-                    {#<button onclick="checkFormSingle(this)" id="optional_button" type="button" class="btn btn-default has-spinner" data-toggle="collapse" />">#}
-                        {#Add Optional Info#}
-                        {#<span class="spinner"><i class="icon-spin icon-refresh"></i></span>#}
-                    {#</button>#}
 
                 </p>
             </div>
@@ -383,6 +352,14 @@
             {#{{ form_rest(form_stain) }}#}
             
         </div>  <!-- class="panel panel-primary" -->
+
+
+            <div class="row">
+                <p>
+                    <button class="btn btn-primary btn-success" name="btnSubmit" type="submit">Submit</button>
+                </p>
+                <p><button id="save_order_onidletimeout_btn" class="btn btn-default" name="btnSaveOnIdleTimeout" type="submit" style="display: none;">Save and Continue Later</button></p>
+            </div>
 
 
         </div> <!-- singleorderinfo -->

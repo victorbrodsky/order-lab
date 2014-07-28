@@ -35,7 +35,7 @@ class EmailUtil {
             }
             $slideCount = count($entity->getSlide());
             $thanks_txt =
-                "Thank You For Your Order !\r\n\r\n"
+                "Thank You For Your Order!\r\n\r\n"
                 . "Your order #" . $entity->getId() . " to scan " . $slideCount . " slide(s) " . $submitStatusStr . ".\r\n"
                 . "To check the current status of this order, to amend or cancel it, or to request the submitted glass slides back, visit: \r\n"
                 . $orderurl . "\r\n\r\n"

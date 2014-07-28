@@ -374,7 +374,8 @@ class SlideReturnRequestController extends Controller
         return array(
             'sliderequests' => $sliderequests,
             'filter' => $filterForm->createView(),
-            'route' => $request->get('_route')
+            'route' => $request->get('_route'),
+            'routename' => $request->get('_route')
         );
     }
 
@@ -444,7 +445,7 @@ class SlideReturnRequestController extends Controller
         return array(
             'sliderequests' => $sliderequests,
             'filter' => $filterForm->createView(),
-            'route' => $request->get('_route')
+            'routename' => $request->get('_route')
         );
     }
 

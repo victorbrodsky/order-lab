@@ -49,10 +49,9 @@ function regularCombobox() {
         width: combobox_width,
         dropdownAutoWidth: true,
         placeholder: "Choose an option",
-        allowClear: true
-        //selectOnBlur: true
+        allowClear: true,
+        selectOnBlur: false
         //readonly: true
-        //selectOnBlur: true,
         //containerCssClass: 'combobox-width'
     });
 }
@@ -133,7 +132,7 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
         allowClear: allowClear,
         width: combobox_width,
         dropdownAutoWidth: true,
-        selectOnBlur: true,
+        selectOnBlur: false,
         dataType: 'json',
         quietMillis: 100,
         multiple: multiple,

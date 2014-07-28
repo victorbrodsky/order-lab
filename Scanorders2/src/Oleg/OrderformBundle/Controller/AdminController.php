@@ -945,6 +945,11 @@ class AdminController extends Controller
             "dbServerAccountUserName" => "symfony2",
             "dbServerAccountPassword" => "symfony2",
             "dbDatabaseName" => "ScanOrder",
+
+            "institutionurl" => "http://weill.cornell.edu",
+            "institutionname" => "Weill Cornell Medical College",
+            "departmenturl" => "http://www.cornellpathology.com",
+            "departmentname" => "Pathology and Laboratory Medicine Department"
         );
 
         $params = new SiteParameters();
