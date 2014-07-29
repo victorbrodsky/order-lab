@@ -27637,10 +27637,10 @@ function cleanFieldsInElementBlock( element, all, single ) {
                 if( $.inArray(field, arrayFieldShow) == -1 ) {
                    //console.log("clean not as arrayFieldShow");
 
-                    if( tagName == "DIV" && classs.indexOf("select2") == -1 ) {
+                    if( tagName == "DIV" && !elements.eq(i).hasClass('select2') ) {
                         //console.log("clean as radio");
                         processGroup( elements.eq(i), "", "ignoreDisable" );
-                    } else if( classs.indexOf("select2") != -1 ) {
+                    } else if( elements.eq(i).hasClass('select2') ) {
                         //console.log("clean as regular select (not keyfield types), field="+field);
                         elements.eq(i).select2('data', null);
                     } else {

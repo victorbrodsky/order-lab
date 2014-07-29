@@ -256,6 +256,13 @@ abstract class ObjectAbstract
 
     //children methods
 
+    public function setOneChild($child) {
+
+        $this->getChildren()->clear();
+        $this->addChildren($child);
+        return $this;
+    }
+
     public function cleanEmptyArrayFields() {
         //
     }
