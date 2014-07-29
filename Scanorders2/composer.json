@@ -23,7 +23,7 @@
         "knplabs/knp-paginator-bundle": "2.4.*@dev",
         "fr3d/ldap-bundle": "2.0.*@dev",
         "phpexcel/phpexcel": "dev-master",
-        "jakoch/phantomjs-installer": "dev-master"
+        "phpunit/phpunit": "4.1.*"
 
     },
     "scripts": {

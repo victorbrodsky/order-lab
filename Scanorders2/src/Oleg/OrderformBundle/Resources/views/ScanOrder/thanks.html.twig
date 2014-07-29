@@ -30,17 +30,18 @@
         {% set cicleStr = 'Amended' %}
     {% endif %}
 
+    {% set emailconf = "" %}
+    {% if app.security.getToken().getUser.getEmail != "" %}
+        {% set emailconf = " and a confirmation email was sent to "~app.security.getToken().getUser.getEmail %}
+    {% endif %}
+
     <div class="alert alert-info well-lg">
-{#        <h1>Scan Order Confirmation</h1>#}
-        <p><h1>Thank You For Your Order!</h1></p>
+        <p><h1>Thank you for your order!</h1></p>
         <p><h3>
-            <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a>
-            Successfully {{ cicleStr }}.
+            <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a> has been successfully {{ cicleStr|lower }}{{ emailconf }}.
         </h3></p>
 
-        {% if app.security.getToken().getUser.getEmail != "" %}
-            <p><h3>Confirmation Email was sent to {{ app.security.getToken().getUser.getEmail }}</h3></p>
-        {% else %}
+        {% if app.security.getToken().getUser.getEmail == null or app.security.getToken().getUser.getEmail == "" %}
             <p><h3>
                 If you would like to receive email notifications regarding this and future orders, please update
                 <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>

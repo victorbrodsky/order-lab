@@ -8,7 +8,7 @@ DirectoryIndex app.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 		
-	RewriteRule ^/ORDER$ /order [R=301]	
+	#RewriteRule ^/ORDER/$ /order/ [R=301]	
 		
     #test mod_rewrite
     #RewriteRule ^google.html$ http://www.google.com/ [R=301]

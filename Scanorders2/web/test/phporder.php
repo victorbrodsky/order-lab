@@ -2,9 +2,9 @@
 date_default_timezone_set('America/New_York');
 $date = date('m/d/Y h:i:s a', time());
 $time_start = microtime(true);
-$output = exec("/usr/local/bin/casperjs /Users/emiliomadrigal/ws/cruelbloom/phporder.js");
+$output = exec("C:\Python34\python usr\local\bin\casperjs phporder.js");
     if (strpos($output, 'Fail: 0') === FALSE) {
-		require_once('/Users/emiliomadrigal/ws/cruelbloom/PHPMailer_5.2.4/class.phpmailer.php');
+		require_once('PHPMailer_5.2.4/class.phpmailer.php');
 		$mail             = new PHPMailer();
 		$mail->IsSMTP();     
 		$mail->SMTPDebug  = 1;                   
@@ -39,7 +39,7 @@ $output = exec("/usr/local/bin/casperjs /Users/emiliomadrigal/ws/cruelbloom/phpo
 		//  echo "An error has occured and an email with the fault has been sent.";
 		echo '<span style="color:#FF0000">An error has occured; it was logged and an email notification has been sent.</span>';
 		$userip = $_SERVER['REMOTE_ADDR'];
-		$file = '/Users/emiliomadrigal/ws/cruelbloom/casperjs_error.txt';
+		$file = 'casperjs_error.txt';
 		$oldContents = file_get_contents($file);
 		$fr = fopen($file, 'w');
 		$txt = "ERROR log: $output. Requested by: $userip on $date." . PHP_EOL . PHP_EOL ;
@@ -57,7 +57,7 @@ $output = exec("/usr/local/bin/casperjs /Users/emiliomadrigal/ws/cruelbloom/phpo
 	echo "<br />";
 	echo "<br />";
 	echo "Last test completed in $time seconds\n on $date";
-	$file = '/Users/emiliomadrigal/ws/cruelbloom/casperjs_log.txt';
+	$file = 'casperjs_log.txt';
 	$oldContents = file_get_contents($file);
 	$fr = fopen($file, 'w');
 	$txt = "Log: $output. Test completed in $time seconds\n on $date. Requested by: $userip" . PHP_EOL . PHP_EOL ;

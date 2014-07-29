@@ -1,3 +1,9 @@
+ERROR log: . Requested by: 140.251.212.84 on 07/29/2014 02:58:05 pm.
+
+ERROR log: Fatal: [Errno 2] No such file or directory; did you install phantomjs?. Requested by: 140.251.212.130 on 07/29/2014 02:49:08 pm.
+
+ERROR log: . Requested by: 140.251.212.130 on 07/29/2014 01:50:49 pm.
+
 ERROR log:   /usr/local/Cellar/casperjs/1.1-beta3/libexec/modules/casper.js:[33m399[0m in [36mcheckStep[0m. Requested by: 127.0.0.1 on 07/29/2014 11:48:03 am.
 
 ERROR log:   /usr/local/Cellar/casperjs/1.1-beta3/libexec/modules/casper.js:[33m399[0m in [36mcheckStep[0m. Requested by: 127.0.0.1 on 07/29/2014 11:45:46 am.
