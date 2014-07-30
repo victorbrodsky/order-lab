@@ -62,13 +62,17 @@ class ScanType extends AbstractType
 
             $helper = new FormHelper();
 
+            $tooltip =  "Scanning at 40X magnification is done Friday to Monday.".
+                        "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality.".
+                        "We will do our best to expedite the process.";
+
             $magArr = array(
                 'label' => 'Magnification:',
                 'choices' => $helper->getMags(),
                 'required' => true,
                 'multiple' => false,
                 'expanded' => true,
-                'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>'40X Scan Batch is run Fri-Mon. Some slide may have to be rescanned once or more. We will do our best to expedite the scanning.')
+                'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>$tooltip)
             );
 
             // check if the Scan object is "new"

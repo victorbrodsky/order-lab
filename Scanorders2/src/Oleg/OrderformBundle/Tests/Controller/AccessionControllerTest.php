@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccessionControllerTest extends WebTestCase
 {
-
+    /*
     public function testCompleteScenario()
     {
         // Create a new client to browse the application
@@ -50,6 +50,6 @@ class AccessionControllerTest extends WebTestCase
         // Check the entity has been delete on the list
         $this->assertNotRegExp('/Foo/', $client->getResponse()->getContent());
     }
-
+    */
 
 }

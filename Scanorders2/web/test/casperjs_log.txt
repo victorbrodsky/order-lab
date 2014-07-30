@@ -1,3 +1,77 @@
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2251739502 seconds
+ on 07/30/2014 05:17:42 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 31.0873510838 seconds
+ on 07/30/2014 05:16:42 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.6453528404 seconds
+ on 07/30/2014 05:15:42 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 28.9201030731 seconds
+ on 07/30/2014 05:14:43 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.3976809978 seconds
+ on 07/30/2014 05:13:42 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.3496990204 seconds
+ on 07/30/2014 05:12:42 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 28.9961578846 seconds
+ on 07/30/2014 05:11:42 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 28.901214838 seconds
+ on 07/30/2014 05:10:43 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.3176229 seconds
+ on 07/30/2014 05:09:11 pm. Requested by: 140.251.212.84
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.9936928749 seconds
+ on 07/30/2014 05:08:56 pm. Requested by: 140.251.212.84
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; rv:30.0) Gecko/20100101 Firefox/30.0 from 140.251.212.84 on 07/30/2014 05:09:08 pm
+
+Session terminated: 140.251.212.130 went AWOL on 07/30/2014 04:32:34 pm
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 30.1427111626 seconds
+ on 07/30/2014 04:20:29 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 30.5233418941 seconds
+ on 07/30/2014 03:50:29 pm. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 32.1943380833 seconds
+ on 07/30/2014 03:20:29 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.9837520123 seconds
+ on 07/30/2014 02:50:29 pm. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 34.1635859013 seconds
+ on 07/30/2014 02:20:29 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36 from 140.251.85.43 on 07/30/2014 02:14:27 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 32.2767591476 seconds
+ on 07/30/2014 01:50:29 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 31.5482931137 seconds
+ on 07/30/2014 01:20:29 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 31.6001548767 seconds
+ on 07/30/2014 01:19:29 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 01:19:27 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 32.0785310268 seconds
+ on 07/30/2014 01:03:32 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.244811058 seconds
+ on 07/30/2014 12:33:32 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.4930510521 seconds
+ on 07/30/2014 12:32:32 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.0721628666 seconds
+ on 07/30/2014 12:31:32 pm. Requested by: 140.251.212.130
+
 Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.0712170601 seconds
  on 07/30/2014 12:30:32 pm. Requested by: 140.251.212.130
 

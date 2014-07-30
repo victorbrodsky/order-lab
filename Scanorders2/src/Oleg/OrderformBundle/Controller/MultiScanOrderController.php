@@ -249,15 +249,14 @@ class MultiScanOrderController extends Controller {
 
             } //if submit, amend, timeout
 
-
         }
 
         //form always valid, so this will not be reached anyway
-        return array(           
+        return array(
             'form'   => $form->createView(),
             'type' => 'new',
             'formtype' => $entity->getType()
-        );    
+        );
     }
 
     /**
@@ -265,7 +264,6 @@ class MultiScanOrderController extends Controller {
      * @Method("GET")
      */
     public function thanksScanorderGetAction($oid,$conflicts,$cicle,$neworder) {
-
         //echo "conflicts=".$conflicts."<br>";
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
             'oid' => $oid,

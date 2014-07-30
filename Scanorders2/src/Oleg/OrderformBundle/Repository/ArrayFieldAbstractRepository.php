@@ -4,8 +4,8 @@ namespace Oleg\OrderformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+//use Monolog\Logger;
+//use Monolog\Handler\StreamHandler;
 //use Doctrine\ORM\Mapping\ClassMetadata;
 
 use Oleg\OrderformBundle\Entity\Patient;

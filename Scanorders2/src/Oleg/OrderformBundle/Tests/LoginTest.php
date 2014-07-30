@@ -9,24 +9,27 @@
 namespace Oleg\OrderformBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+//use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
+
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 class LoginTest extends WebTestCase {
 
-    private $client = null;
-
-    public function setUp()
-    {
-        $this->client = static::createClient();
-    }
+//    private $client = null;
+//
+//    public function setUp()
+//    {
+//        $this->client = static::createClient();
+//    }
 
     public function testLoginPage()
     {
+        $client = static::createClient();
+        $client->followRedirects();
 
-
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $client->request('GET', '/login');
 
         $this->assertGreaterThan(
             0,
@@ -35,44 +38,116 @@ class LoginTest extends WebTestCase {
 
     }
 
+
+    //TODO: login failed for Aperio users:
+    //comment out spl_autoload_register(array('LoggerAutoloader', 'autoload')); in E:\Program Files (x86)\Aperio\Spectrum\htdocs\log4php\LoggerAutoloader.php
+    //[2014-07-30 19:14:11] ldap_driver.DEBUG: ldap_bind(testprocessor, ****) [] []
+    //[2014-07-30 19:14:32] ldap_driver.DEBUG: 0x31 (Invalid credentials; 80090308: LdapErr: DSID-0C0903A9, comment: AcceptSecurityContext error, data 52e, v1db1): testprocessor@a.wcmc-ad.net [] []
     public function testLoginProcess()
     {
 
         $client = static::createClient();
+        $client->followRedirects();
+
+        //$cookie = new Cookie('locale2', 'en', time() + 3600 * 24 * 7, '/', null, false, false);
+        //$client->getCookieJar()->set($cookie);
+
+        $_SERVER['HTTP_USER_AGENT'] = 'phpunit test';
+
+        // Visit user login page and login
         $crawler = $client->request('GET', '/login');
 
-        //$this->assertEquals('Hello', 'Hello');
+        //test if login page is opened
+        $this->assertTrue($client->getResponse()->isSuccessful());
 
         // Select based on button value, or id or name for buttons
-        //$form = $crawler->selectButton('Submit')->form();
         $form = $crawler->selectButton('Log In')->form();
 
         // set some values
-        $form['_username'] = 'testprocessor';
-        $form['_password'] = 'testprocessor1';
+        //$form['_username'] = 'testprocessor';
+        //$form['_password'] = 'testprocessor1';
+
+        $form['_username'] = 'svc_aperio_spectrum';
+        $form['_password'] = 'Aperi0,123';
+
+        //$client->insulate();
 
         // submit the form
         $crawler = $client->submit($form);
 
         //$this->assertTrue($client->getResponse()->isSuccessful());
 
-        echo "client response:<br>";
-        var_dump($client->getResponse()->getContent());
-        echo "<br>";
+        //echo "\n\n\nclient response:\n\n\n";
+        //echo $crawler->html();
+        //var_dump($crawler->links());
+        //print_r($client->getResponse()->getContent());
+        //echo "\n\n\n";
+
 
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Welcome to the Scan Order System")')->count()
         );
 
+        $crawler = $client->request('GET', '/scan/my-scan-orders');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
 
         //$this->assertEquals('Hello', 'Hello');
 
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("My Scan Orders")')->count()
-//        );
+//        echo "client response:<br>";
+//        var_dump($client->getResponse()->getContent());
+//        echo "<br>";
 
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("My Scan Orders")')->count()
+        );
+
+
+        //test form submit
+        $crawler = $client->request('GET', '/scan/scan-order/multi-slide/new');
+
+//        echo "client response:<br>";
+//        var_dump($client->getResponse()->getContent());
+//        echo "<br>";
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        //$next = $crawler2->selectButton('Next')->link();
+        //$next = $crawler->filter('button:contains("Next")')->eq(1)->link();
+        //$crawler2 = $client->click($next);
+
+        $form = $crawler->selectButton('btnSubmit')->form();
+
+        $form['oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0][block][0][slide][0][title]'] = 'Slide submitted by phpunit test';
+
+        $form['oleg_orderformbundle_orderinfotype[patient][0][procedure][0][accession][0][part][0][block][0][slide][0][slidetype]'] = 7;
+
+        $form['oleg_orderformbundle_orderinfotype[patient][0][clinicalHistory][0][field]'] = 'clinical history test';
+
+        $form['oleg_orderformbundle_orderinfotype[patient][0][mrn][0][field]'] = '0000000';
+
+
+
+        $_POST['btnSubmit'] = "btnSubmit";
+
+        //sleep(10);
+
+        $crawler = $client->submit($form);
+
+//        echo "client response:<br>";
+//        var_dump($client->getResponse()->getContent());
+//        echo "<br>";
+        //exit();
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Thank you for your order")')->count()
+        );
     }
 
 
@@ -83,23 +158,26 @@ class LoginTest extends WebTestCase {
     
     public function dddtestSecuredMyOrders()
     {
-        $this->logIn();
+        $client = static::createClient();
+        $client->followRedirects();
+
+        $this->logIn($client);
 
         echo "client response:<br>";
-        var_dump($this->client->getResponse());
+        var_dump($client->getResponse());
         //exit();
 
-        $crawler = $this->client->request('GET', '/scan/my-scan-orders');
+        $crawler = $client->request('GET', '/scan/my-scan-orders');
 
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Welcome to the Scan Order System")')->count());
     }
 
 
-    private function logIn()
+    private function logIn($client)
     {
-        $session = $this->client->getContainer()->get('session');
+        $session = $client->getContainer()->get('session');
 
         $firewall = 'aperio_ldap_firewall';
         $token = new UsernamePasswordToken('testprocessor', null, $firewall, array('ROLE_ADMIN'));
@@ -107,7 +185,7 @@ class LoginTest extends WebTestCase {
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        $client->getCookieJar()->set($cookie);
     }
 
 } 

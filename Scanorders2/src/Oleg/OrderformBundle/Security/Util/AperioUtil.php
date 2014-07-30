@@ -12,6 +12,10 @@ namespace Oleg\OrderformBundle\Security\Util;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
+//include_once '..\conf\Spectrum.ini';
+//include_once '\Skeleton.php';
+include_once '\DatabaseRoutines.php';
+
 class AperioUtil {
 
     private $ldap = true;
@@ -137,11 +141,6 @@ class AperioUtil {
         set_error_handler(array($this, 'errorToException'));
 
         if( $this->ldap ) {
-            include_once '\Skeleton.php';
-            include_once '\DatabaseRoutines.php';
-            //include_once '\cDataClient.php';
-            //include_once '\Roles.php';
-            //include_once '\cFilter.php';
             //$DataServerURL = "http://127.0.0.1:86";
 
             if( !function_exists('GetDataServerURL') ) {
@@ -295,9 +294,6 @@ class AperioUtil {
 
         $UserId = null;
 
-        include_once '\Skeleton.php';
-        include_once '\DatabaseRoutines.php';
-
         //echo "user name=".$UserName."<br>";
 
         $Users = ADB_GetFilteredRecordList(
@@ -326,7 +322,8 @@ class AperioUtil {
     }
 
     public function errorToException($code, $message, $file = null, $line = 0) {
-        if( error_reporting() == 0 || $code == E_WARNING || $code == E_NOTICE ) {
+        //return true;
+        if( error_reporting() == 0 || $code == E_WARNING || $code == E_NOTICE || $code == E_USER_NOTICE ) {
             return true;
         }
         //echo "error_reporting=".error_reporting().", code=".$code." ,message=".$message."<br>";
