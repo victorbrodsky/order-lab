@@ -35,3 +35,16 @@ ul.dropdown ul li a					{ border-right: none; width: 100%; display: inline-block
 */
 ul.dropdown ul ul 					{ left: 40%; top: 0; }
 ul.dropdown li:hover > ul 			{ visibility: visible; }
+
+
+body {
+    margin: 0;
+    padding: 0;
+    text-align: center; /* !!! */
+}
+
+.centered {
+    margin: 0 auto;
+    text-align: left;
+    width: 200px;
+}

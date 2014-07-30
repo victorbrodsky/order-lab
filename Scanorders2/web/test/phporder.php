@@ -68,7 +68,3 @@ $output = exec("C:\casperjs\bin\casperjs phporder.js");
 	fwrite($fr, $oldContents);
 	fclose($fr);		
 ?>
-
-
-
-

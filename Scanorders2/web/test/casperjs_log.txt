@@ -1,3 +1,190 @@
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.0712170601 seconds
+ on 07/30/2014 12:30:32 pm. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2274839878 seconds
+ on 07/30/2014 12:29:32 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:29:30 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:28:51 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 32.7306878567 seconds
+ on 07/30/2014 12:28:05 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:27:49 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:26:41 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.657186985 seconds
+ on 07/30/2014 12:25:52 pm. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.6761958599 seconds
+ on 07/30/2014 12:25:38 pm. Requested by: 140.251.212.84
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:25:48 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; rv:30.0) Gecko/20100101 Firefox/30.0 from 140.251.212.84 on 07/30/2014 12:25:33 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.989274025 seconds
+ on 07/30/2014 12:25:00 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:24:57 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:24:56 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 32.3942568302 seconds
+ on 07/30/2014 12:21:41 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:21:35 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.3784711361 seconds
+ on 07/30/2014 12:20:53 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:20:50 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.3836629391 seconds
+ on 07/30/2014 12:18:32 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:18:26 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 33.7284839153 seconds
+ on 07/30/2014 12:16:02 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:14:36 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.3265080452 seconds
+ on 07/30/2014 12:12:35 pm. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 32.260643959 seconds
+ on 07/30/2014 12:12:07 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:12:33 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:12:31 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 33.3749871254 seconds
+ on 07/30/2014 12:11:07 pm. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.6194498539 seconds
+ on 07/30/2014 12:10:07 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:10:04 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:09:55 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:09:46 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:09:23 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:08:19 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:07:48 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:07:36 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:07:35 pm
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.5896940231 seconds
+ on 07/30/2014 12:06:58 pm. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:06:54 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:06:47 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:06:39 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:06:03 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:05:57 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:05:48 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:05:26 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:03:00 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:01:52 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:01:51 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:01:39 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:01:38 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:01:03 pm
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:00:42 pm
+
+Log: Success: 3 ["testsubmitter","testextsubmitter","testadministrator"] Fail: 1 ["testpro66cessor"]. Test completed in 29.9223020077 seconds
+ on 07/30/2014 11:59:56 am. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 12:00:19 pm
+
+Log: Success: 3 ["testsubmitter","testextsubmitter","testadministrator"] Fail: 1 ["testpro66cessor"]. Test completed in 30.1482608318 seconds
+ on 07/30/2014 11:59:17 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.3379352093 seconds
+ on 07/30/2014 11:58:48 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.5419230461 seconds
+ on 07/30/2014 11:57:48 am. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:57:45 am
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2328410149 seconds
+ on 07/30/2014 11:57:03 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.432295084 seconds
+ on 07/30/2014 11:56:03 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2415041924 seconds
+ on 07/30/2014 11:55:03 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.1489560604 seconds
+ on 07/30/2014 11:54:03 am. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 7.8091571331 seconds
+ on 07/30/2014 11:53:03 am. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 7.88089990616 seconds
+ on 07/30/2014 11:52:03 am. Requested by: 140.251.212.130
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 8.15775203705 seconds
+ on 07/30/2014 11:51:03 am. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:51:00 am
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:50:57 am
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:50:18 am
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2944891453 seconds
+ on 07/30/2014 11:49:34 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2512259483 seconds
+ on 07/30/2014 11:48:34 am. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:48:30 am
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 8.29673719406 seconds
+ on 07/30/2014 11:47:37 am. Requested by: 140.251.212.130
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:47:33 am
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:47:30 am
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:46:45 am
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:46:02 am
+
+Session initiated: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0 from 140.251.212.130 on 07/30/2014 11:45:30 am
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.3998959064 seconds
+ on 07/30/2014 11:44:53 am. Requested by: 140.251.212.130
+
+Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.557694912 seconds
+ on 07/30/2014 11:39:53 am. Requested by: 140.251.212.130
+
 Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 30.0984098911 seconds
  on 07/30/2014 11:34:53 am. Requested by: 140.251.212.130
 

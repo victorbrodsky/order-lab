@@ -32,7 +32,7 @@
 <option value="1440">1 day</option>
 </select>
 </p>
-	
+
 <p>
 	<div class="centered">
 	<div style="float:left; margin-right:20px">
@@ -47,7 +47,6 @@
 </p>
 
 	<br>
-	
 	<br>
 	<div id="loading"></div>
 <script type="text/javascript">
@@ -63,7 +62,7 @@
 	        url: "phporder.php",
 			success: function (data) {        
 	                $('#loading').html(data);
-					
+											
 					if( data.indexOf('Fail: 0') !== -1 ) {
 						succcount++;
 					} else {
@@ -162,3 +161,4 @@ timeout = setTimeout(executecasperJS,multi*60000); //1 min == 60000
 </center>
 	</body>
 </html>	
+	
