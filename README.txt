@@ -71,3 +71,9 @@ git pull
 git add -u :/
 git commit -m "message"
 git push -u origin master
+
+#Testing: run phpunit script, located in symfony's 'bin' folder, with the test file as a parameter:
+./bin/phpunit -c app src/Oleg/OrderformBundle/Tests/LoginTest.php
+
+#Testing with casperjs: run http://collage.med.cornell.edu/order/test/index.php
+#The result log and screenshots are in order/test folder
