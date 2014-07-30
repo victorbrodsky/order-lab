@@ -27,7 +27,7 @@ function login(username, password) {
 	}, function timeout() { // step to execute if check has failed
 		tracker.Fail.push(username);
 		//this.echo("Warning: " + username + " could not be logged in.", "WARNING");
-		//this.capture('Fail_'+username+'.png');
+		this.capture('Fail_'+username+'.png');
 	});    
 };
 

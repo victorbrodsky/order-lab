@@ -10,21 +10,20 @@
 	echo "Running PhantomJS version: ";
 	
 	//echo exec('/usr/local/bin/phantomjs.exe --version 2>&1');
-	echo exec('usr\local\bin\phantomjs --version 2>&1');
+	echo exec('C:\casperjs\bin\phantomjs --version 2>&1');
 	
 	echo "<br />";
 	echo "Running CasperJS version: ";
 	
 	//echo exec('/usr/local/bin/casperjs --version 2>&1');
 	//echo exec('C:\Python34\python usr\local\bin\casperjs --version 2>&1');
-	echo exec('usr\local\bin\casperjs --version 2>&1');
+	echo exec('C:\casperjs\bin\casperjs --version 2>&1');
 	
 	echo "<br />";
 	$version = apache_get_version();
 	echo "$version\n";
 	echo " on ";
 	echo PHP_OS;
-	echo " 10.9.3";
 	echo "<br />";
 	$userip = $_SERVER['REMOTE_ADDR'];
 	$browserinfo = $_SERVER['HTTP_USER_AGENT'];
@@ -32,11 +31,7 @@
 	$time = $time_end - $time_start;
 	echo "<br />";
 	echo "Request completed in $time seconds\n on $date";
-//  	$myfile = fopen("/Users/emiliomadrigal/ws/cruelbloom/casperjs_log.txt", "a") or die("Unable to open file!");
-//  	$txt = "Server details: $version on $date" . PHP_EOL ;
-//  	fwrite($myfile, $txt);
-//  	fclose($myfile);
-//$file = '/Users/emiliomadrigal/ws/cruelbloom/casperjs_log.txt';
+
 $file = 'casperjs_log.txt';
 $oldContents = file_get_contents($file);
 $fr = fopen($file, 'w');

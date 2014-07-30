@@ -1,8 +1,11 @@
 <?php
+
+set_time_limit(3600);
+
 date_default_timezone_set('America/New_York');
 $date = date('m/d/Y h:i:s a', time());
 $time_start = microtime(true);
-$output = exec("C:\Python34\python usr\local\bin\casperjs phporder.js");
+$output = exec("C:\casperjs\bin\casperjs phporder.js");
     if (strpos($output, 'Fail: 0') === FALSE) {
 		require_once('PHPMailer_5.2.4/class.phpmailer.php');
 		$mail             = new PHPMailer();

@@ -13,10 +13,26 @@
 <p>Welcome to the CasperJS Automated Testing Unit</p>
 <a href="index.php"><img width="200" height="200" src="weill-med-cornell-clg.png" id="WCMC" title="ORDER"/></a>
 <br>
+
 <br>
   <button id="button_AJAX">Run CasperJS</button>
   <button id="button_STOP" onclick="myStopFunction()" style="display: none">Stop CasperJS</button>
 	</div>
+	
+<p>
+<select id="multi">
+<option value="1">1 min</option>
+<option value="2">2 min</option>
+<option value="5">5 min</option>
+<option value="10">10 min</option>
+<option value="30" selected="selected">30 min</option>
+<option value="60">1 hour</option>
+<option value="360">6 hours</option>
+<option value="720">12 hours</option>
+<option value="1440">1 day</option>
+</select>
+</p>
+	
 	<br>
 	<div id="loading"></div>
 <script type="text/javascript">
@@ -29,8 +45,12 @@
 			success: function (data) {        
 	                $('#loading').html(data);
 	        }	
-	    });	
-timeout = setTimeout(executecasperJS,1800000);	
+	    });
+		
+multi = $( "#multi option:selected" ).val();
+console.log("multi="+multi);		
+
+timeout = setTimeout(executecasperJS,multi*60000); //1 min == 60000	
 });
     $("#button_AJAX").click(function() {$("#button_AJAX").text("CasperJS Executed");});
 	$("#button_STOP").click(function() {$("#button_AJAX").text("Run CasperJS");});
