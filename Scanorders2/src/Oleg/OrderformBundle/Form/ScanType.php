@@ -72,7 +72,7 @@ class ScanType extends AbstractType
                 'required' => true,
                 'multiple' => false,
                 'expanded' => true,
-                'attr' => array('class' => 'horizontal_type', 'required'=>'required', 'title'=>$tooltip)
+                'attr' => array('class' => 'horizontal_type element-with-tooltip', 'required'=>'required', 'title'=>$tooltip)
             );
 
             // check if the Scan object is "new"

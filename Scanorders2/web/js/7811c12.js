@@ -1,4 +1,7 @@
 
+//Currently not used.
+//It might be used if we want to append search results dynamically via ajax
+
 $(document).ready(function() {
 
     //buildSearchedObjects()

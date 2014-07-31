@@ -97,6 +97,7 @@ function btnObject( btn, parent ) {
     this.name = null;
     this.fieldname = null;
     this.remove = false;
+    this.keyerror = false;
 
     var gocontinue = true;
 
@@ -147,6 +148,12 @@ function btnObject( btn, parent ) {
         //if remove
         if( btn.hasClass('removebtn') ) {
             this.remove = true;
+        }
+
+        //check if key input element has validation error class:_maskErrorClass
+        if( this.element.parent().hasClass(_maskErrorClass) ) {
+            //printF(this.element,'input has error:');
+            this.keyerror = true;
         }
 
     }
@@ -252,7 +259,6 @@ function getParentBtn( btn, name ) {
 }
 
 
-
 /////////////// called by button click //////////////////////
 
 //use this one: this function is automatically detect the parent and run chaining according if this button has parent.
@@ -354,6 +360,13 @@ function executeClick( btnObjInit ) {
         if( !inst || inst.length == 0 || inst == '' ) {
             gocontinue = false;
             reject(Error("Institution is empty"));
+        }
+
+        //check if keyfield does not have validation error
+        if(  btnObjInit.keyerror ) {
+            createErrorMessage( btnObjInit.element, false, true );
+            gocontinue = false;
+            reject(Error("Key input has validation error"));
         }
 
         if( gocontinue ) {
@@ -564,7 +577,7 @@ function executeClick( btnObjInit ) {
                             //console.debug("not found");
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
-                            calculateAgeByDob(btn);
+                            //calculateAgeByDob(btn);
                             setObjectInfo(btnObj,0);
                             resolve("data is null");
                         }

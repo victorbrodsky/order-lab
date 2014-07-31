@@ -7,16 +7,6 @@
  */
 
 
-function attachScanMagTooltip() {
-
-    var msg = "Scanning at 40X magnification is done Friday to Monday. " +
-        "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality. " +
-        "We will do our best to expedite the process.";
-
-
-
-}
-
 
 function attachPatientNameSexAgeLockedTooltip() {
 

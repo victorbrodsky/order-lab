@@ -9715,6 +9715,184 @@ function setPatient( btn, keyvalue, extraid, single ) {
 
 }
 
+//calculate patient age (at the time of encounter)
+//listen for dob and encounter date changes, do not override age
+function setPatientAndProcedureAgeListener() {
+
+    //console.log("setPatientAndProcedureAgeListener set!");
+
+    $('.patient-dob-date, .procedure-encounter-date').on("change", function(e) {
+
+        //printF($(this),"listener: ");
+
+        //clear warning message
+        var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+        if( orderformtype == "single") {
+            procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+        }
+        removeAgeCOnflictWarningMessage(procedureAgeEl);
+
+        //patient's dob
+        if( $(this).hasClass('patient-dob-date') ) {
+
+            var patientdobValue = $(this).val();
+            //console.log('patientdobValue='+patientdobValue);
+
+            //set patient's age
+            if( patientdobValue != "" ) {
+                var patientAgeEl = $(this).closest('.form-element-holder').find('.patientage').find('.well');
+                if( orderformtype == "single") {
+                    patientAgeEl = $(this).closest('.singleorderinfo').find('.patientage').find('.well');
+                }
+                var age = getAge(patientdobValue);
+                if( age > 0 ) {
+                    patientAgeEl.html(getAge(patientdobValue));
+
+                    //clean procedure age error
+                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+                    if( orderformtype == "single") {
+                        procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+                    }
+                }
+            }
+
+            //find all children procedure's encounter date
+            var procEncDates = $(this).closest('.panel-patient').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+            if( orderformtype == "single") {
+                procEncDates = $(this).closest('.singleorderinfo').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+            }
+
+            procEncDates.each( function() {
+
+                var encdateValue = $(this).val();
+                //console.log('patdob: patientdobValue='+patientdobValue+', encdateValue='+encdateValue);
+
+                //set procedure's age
+                if( patientdobValue != "" && encdateValue != "" ) {
+
+                    var age = getAgeByDiff(patientdobValue,encdateValue);
+                    //console.log('patientdob: age='+age);
+
+                    //find procedure age element
+                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+                    if( orderformtype == "single") {
+                        procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+                    }
+
+                    if( procedureAgeEl.val() == "" ) {  //don't override age
+                        procedureAgeEl.val(age);
+
+                        checkAgeConflict(procedureAgeEl,age);
+//                        //check for conflict
+//                        var patientage = $(this).closest('.panel-patient').find('.form-element-holder').find('.patientage').find('.well');
+//                        if( orderformtype == "single") {
+//                            patientage = $(this).closest('.singleorderinfo').find('.form-element-holder').find('.patientage').find('.well');
+//                        }
+//                        if( age != patientage.text() ) {
+//                            setAgeConflictWarningMessage(procedureAgeEl)
+//                        }
+                    }
+
+                }
+
+            });
+        }
+
+        //procedure encounter date
+        if( $(this).hasClass('procedure-encounter-date') ) {
+
+            //find patient dob element
+            var patientdob = $(this).closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
+            if( orderformtype == "single") {
+                patientdob = $(this).closest('.singleorderinfo').find('.form-element-holder').find('.patient-dob-date');
+            }
+            //printF(patientdob,"patientdob: ");
+
+            var patientdobValue = patientdob.val();
+            var encdateValue = $(this).val();
+            //console.log('encdate: patientdobValue='+patientdobValue+', encdateValue='+encdateValue);
+
+            //set age
+            if( patientdobValue != "" && encdateValue != "" ) {
+
+                var age = getAgeByDiff(patientdobValue,encdateValue);
+                //console.log('encounterdate: age='+age);
+
+                //find procedure age element
+                var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+                if( orderformtype == "single") {
+                    procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+                }
+
+                if( procedureAgeEl.val() == "" ) {  //don't override age
+                    procedureAgeEl.val(age);
+
+                    checkAgeConflict(procedureAgeEl,age);
+//                    //check for conflict
+//                    var patientage = $(this).closest('.panel-patient').find('.form-element-holder').find('.patientage').find('.well');
+//                    if( orderformtype == "single") {
+//                        patientage = $(this).closest('.singleorderinfo').find('.form-element-holder').find('.patientage').find('.well');
+//                    }
+//                    if( age != patientage.text() ) {
+//                        setAgeConflictWarningMessage(procedureAgeEl)
+//                    }
+                }
+
+            }
+
+        }
+
+    });
+
+    function checkAgeConflict(element,age) {
+        //check for conflict
+        var patientage = element.closest('.panel-patient').find('.form-element-holder').find('.patientage').find('.well');
+        if( orderformtype == "single") {
+            patientage = element.closest('.singleorderinfo').find('.form-element-holder').find('.patientage').find('.well');
+        }
+        if( age != "" && age != patientage.text() ) {
+            var msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB). Verify the DOB, Encounter Date, and Patient's Age (at the time of encounter) fields.";
+            setAgeConflictWarningMessage(element,msg);
+        }
+
+        //check age conflict based on the current date
+        if( age == "" ) {
+            //find patient dob element
+            var patientdob = element.closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
+            if( orderformtype == "single") {
+                patientdob = element.closest('.singleorderinfo').find('.form-element-holder').find('.patient-dob-date');
+            }
+            var agedob = getAge(patientdob.val());
+            if( age != "" && age != agedob ) {
+                var msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB) based on today's date. Verify the DOB and Patient's Age (at the time of encounter) fields.";
+                setAgeConflictWarningMessage(element,msg);
+            }
+        }
+
+    }
+
+
+    function setAgeConflictWarningMessage(procedureAgeEl,msg) {
+        //set if not existed
+        var warningmsg = procedureAgeEl.parent().find('.age-conflict-added');
+        if( warningmsg.length > 0 ) {
+            return;
+        }
+        var errorHtml = '<div class="age-conflict-added alert alert-warning">' + msg + '</div>';
+        procedureAgeEl.after(errorHtml);
+    }
+
+    function removeAgeCOnflictWarningMessage(procedureAgeEl) {
+//        var warningmsg = procedureAgeEl.closest('.form-element-holder').find('.age-conflict-added');
+//        if( orderformtype == "single") {
+//            warningmsg = $('.age-conflict-added');
+//        }
+        var warningmsg = procedureAgeEl.parent().find('.age-conflict-added');
+        warningmsg.remove();
+    }
+
+
+}
 
 function calculateAgeByDob( btn ) {
     var accessionBtnObj = new btnObject(btn,'full');
@@ -9744,9 +9922,20 @@ function calculateAgeByDob( btn ) {
     ageEl.val(curAge);
 }
 
-function getAge(dateString) {
+function getAge(dob) {
     var today = new Date();
-    var birthDate = new Date(dateString);
+    var birthDate = new Date(dob);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+function getAgeByDiff(dob,date) {
+    var today = new Date(date);
+    var birthDate = new Date(dob);
     var age = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
@@ -9768,6 +9957,15 @@ function validateForm() {
 
     var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
     //console.log("saveClick="+ saveClick);
+
+    var checkAgeConflict = checkAgeConflict();
+    console.log( "checkAgeConflict="+checkAgeConflict);
+    if( !checkAgeConflict ) {
+        if( saveClick == 'true' ) {
+            idlelogout();   //we have errors on the form, so logout without saving form
+        }
+        return false;
+    }
 
     var checkExisting = checkExistingKey("accession");
     //console.log( "accession checkExisting="+checkExisting);
@@ -9826,6 +10024,11 @@ function validateForm() {
     }
 
     //return false; //testing
+    return true;
+}
+
+
+function checkAgeConflict() {
     return true;
 }
 
@@ -11426,6 +11629,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
         if( elements.eq(i).hasClass('keyfield') || elements.eq(i).hasClass('accessiontype-combobox') || elements.eq(i).hasClass('mrntype-combobox') ) {
             var btnObj = new btnObject( element );
 
+            //console.log("keyfield: elements.eq(i).attr('id')="+elements.eq(i).attr('id'));
+
             //check type
             if( btnObj.typeelement && btnObj.typeelement.attr('id').replace("s2id_","") == elements.eq(i).attr('id') ) {
                 //console.log( "type length="+btnObj.typeelement.length );
@@ -11444,6 +11649,8 @@ function cleanFieldsInElementBlock( element, all, single ) {
                 //console.log("don't clean this field!");
                 continue;
             }
+        } else {
+            //printF(elements.eq(i),"don't clean key fields belonging to other block button: ");
         }
 
         if( type == "file" ) {
@@ -11453,7 +11660,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
 
         } else if( type == "text" || !type ) {
 
-            //console.log("clean as text");
+            //console.log("clean as text, all="+all);
             var clean = false;
             var idsArr = id.split("_");
             var field = idsArr[idsArr.length-fieldIndex];
@@ -11473,7 +11680,7 @@ function cleanFieldsInElementBlock( element, all, single ) {
                     if( tagName == "DIV" && !elements.eq(i).hasClass('select2') ) {
                         //console.log("clean as radio");
                         processGroup( elements.eq(i), "", "ignoreDisable" );
-                    } else if( elements.eq(i).hasClass('select2') ) {
+                    } else if( elements.eq(i).hasClass('select2') || elements.eq(i).hasClass('ajax-combobox') ) {
                         //console.log("clean as regular select (not keyfield types), field="+field);
                         elements.eq(i).select2('data', null);
                     } else {
@@ -11590,6 +11797,7 @@ function btnObject( btn, parent ) {
     this.name = null;
     this.fieldname = null;
     this.remove = false;
+    this.keyerror = false;
 
     var gocontinue = true;
 
@@ -11640,6 +11848,12 @@ function btnObject( btn, parent ) {
         //if remove
         if( btn.hasClass('removebtn') ) {
             this.remove = true;
+        }
+
+        //check if key input element has validation error class:_maskErrorClass
+        if( this.element.parent().hasClass(_maskErrorClass) ) {
+            //printF(this.element,'input has error:');
+            this.keyerror = true;
         }
 
     }
@@ -11745,7 +11959,6 @@ function getParentBtn( btn, name ) {
 }
 
 
-
 /////////////// called by button click //////////////////////
 
 //use this one: this function is automatically detect the parent and run chaining according if this button has parent.
@@ -11847,6 +12060,13 @@ function executeClick( btnObjInit ) {
         if( !inst || inst.length == 0 || inst == '' ) {
             gocontinue = false;
             reject(Error("Institution is empty"));
+        }
+
+        //check if keyfield does not have validation error
+        if(  btnObjInit.keyerror ) {
+            createErrorMessage( btnObjInit.element, false, true );
+            gocontinue = false;
+            reject(Error("Key input has validation error"));
         }
 
         if( gocontinue ) {
@@ -12057,7 +12277,7 @@ function executeClick( btnObjInit ) {
                             //console.debug("not found");
                             disableInElementBlock(btn, false, null, "notkey", null);
                             invertButton(btn);
-                            calculateAgeByDob(btn);
+                            //calculateAgeByDob(btn);
                             setObjectInfo(btnObj,0);
                             resolve("data is null");
                         }
@@ -12584,9 +12804,10 @@ function createErrorMessage( element, fieldName, appendWell ) {
         return;
     }
 
+    var extraStr = "";
+
     if( !fieldName ) {
         var fieldName = "field marked in red above";
-        var extraStr = "";
         if( element.hasClass("accession-mask") ) {
             fieldName = "Accession Number";
             extraStr =  "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956). " +
@@ -12830,8 +13051,11 @@ function initAdd() {
     //clean validation elements
     cleanValidationAlert();
 
-    //setResearch();
-    //setEducational();
+    //tooltip
+    $(".element-with-tooltip").tooltip();
+
+    //attach dob-encounter date calculation
+    setPatientAndProcedureAgeListener();
 
 }
 
@@ -13974,6 +14198,8 @@ function capitaliseFirstLetter(string)
  * Time: 2:02 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 
 function attachPatientNameSexAgeLockedTooltip() {
 

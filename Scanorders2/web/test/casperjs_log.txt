@@ -1,3 +1,11 @@
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 31.7196969986 seconds
+ on 07/31/2014 03:09:30 pm. Requested by: 140.251.212.84
+
+Log:   C:/casperjs/modules/casper.js:399 in checkStep. Test completed in 33.9235970974 seconds
+ on 07/31/2014 03:08:21 pm. Requested by: 140.251.212.84
+
+Session initiated: Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D201 Safari/9537.53 from 140.251.212.84 on 07/31/2014 03:08:01 pm
+
 Log: Success: 4 ["testsubmitter","testextsubmitter","testprocessor","testadministrator"] Fail: 0 []. Test completed in 29.2251739502 seconds
  on 07/30/2014 05:17:42 pm. Requested by: 140.251.212.84
 

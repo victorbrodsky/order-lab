@@ -86,8 +86,11 @@ function initAdd() {
     //clean validation elements
     cleanValidationAlert();
 
-    //setResearch();
-    //setEducational();
+    //tooltip
+    $(".element-with-tooltip").tooltip();
+
+    //attach dob-encounter date calculation
+    setPatientAndProcedureAgeListener();
 
 }
 

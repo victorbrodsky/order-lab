@@ -488,9 +488,10 @@ function createErrorMessage( element, fieldName, appendWell ) {
         return;
     }
 
+    var extraStr = "";
+
     if( !fieldName ) {
         var fieldName = "field marked in red above";
-        var extraStr = "";
         if( element.hasClass("accession-mask") ) {
             fieldName = "Accession Number";
             extraStr =  "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956). " +
