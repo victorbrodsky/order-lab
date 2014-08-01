@@ -7,7 +7,7 @@ use Oleg\OrderformBundle\Entity\PatientLastName;
 use Oleg\OrderformBundle\Entity\PatientFirstName;
 use Oleg\OrderformBundle\Entity\PatientMiddleName;
 use Oleg\OrderformBundle\Entity\PatientSex;
-//use Oleg\OrderformBundle\Entity\PatientAge;
+use Oleg\OrderformBundle\Entity\DataQualityAge;
 
 /**
  * ProcedureRepository
@@ -226,25 +226,85 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
     }
 
+    //age conflict is based on 3 values: dob, encounter date and encounter age
     public function checkAgeConflict( $orderinfo, $procedure ) {
 
-        $patient = $procedure->getParent();
-        $patientage = $patient->calculateAgeInt();
-        $procedureage = $procedure->getPatage();
+        $dataqualityObj = null;
 
-        if(  $patientage != $procedureage ) {
+        $patient = $procedure->getParent();
+
+        $patientage = $patient->calculateAgeInt();
+        $patientdob = $patient->obtainValidField('dob')->getField();
+        $encounterage = $procedure->obtainValidField('Patage')->getField();
+        $encounterdate = $procedure->obtainValidField('EncounterDate')->getField();
+
+//        if( $encounterdate == NULL )
+//            echo "<br>encdate null<br>";
+//        if( $encounterdate == "" )
+//            echo "<br>encdate empty<br>";
+
+        //Case 1a: if $patientage and $encounterdate are empty => no conflict
+        if( $patientage == 0 && $encounterdate == NULL ) {
+            return $dataqualityObj;
+        }
+
+        //Case 1b: if $encounterage is empty => no conflict
+        if( $encounterage == NULL ) {
+            return $dataqualityObj;
+        }
+
+        //Case 1c: if $patientage is empty => no conflict
+        if( $patientage == 0 ) {
+            return $dataqualityObj;
+        }
+
+        $msg = "";
+
+        //echo "<br>encounterdate=".$encounterdate.", patientage=". $patientage . ", encounterage=".$encounterage."<br>";
+
+        //Case 2: if encounter date is empty, but age and dob are set, verify procedure age with patient age by current date
+        if( $encounterdate == NULL && $patientage > 0 && $encounterage > 0 ) {
+            echo "case 2: ".$encounterage."?=".$patientage."<br>";
+            if( $encounterage != $patientage ) {
+                $msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB) based on today's date. Verify the DOB and Patient's Age (at the time of encounter) fields.";
+            }
+        }
+
+        //Case 3: all 3 parameters are set: patient's dob, encounter date and age at the time of encounter => the sum of enc age and years from enc must be equal to patient's age
+        if( $encounterdate != NULL && $patientage > 0 && $encounterage > 0 ) {
+
+            //calculate age based on encounter date and dob and compare with existing encounter age
+            $interval = $encounterdate->diff($patientdob);
+            $years = $interval->format('%y');
+
+            echo "case 3: ".$years."?=".$encounterage."<br>";
+            if( $years != $encounterage ) {
+                $msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB). Verify the DOB, Encounter Date, and Patient's Age (at the time of encounter) fields.";
+            }
+
+        }
+
+        if(  $msg != "" ) {
 
             $dataqualityObj = new DataQualityAge();
             $dataqualityObj->setOrderinfo($orderinfo);
             $dataqualityObj->setProcedure($procedure);
             $dataqualityObj->setPatient($patient);
-            $dataqualityObj->setPatientage($patientage);
-            $dataqualityObj->setProcedureage($procedureage);
+            $dataqualityObj->setPatientdob($patientdob);
+            $dataqualityObj->setEncounterdate($encounterdate);
+            $dataqualityObj->setEncounterage($encounterage);
             $dataqualityObj->setProvider($orderinfo->getProvider());
+            $dataqualityObj->setDescription($msg);
             $dataqualityObj->setStatus('active');
+
+            $this->_em->persist($dataqualityObj);
 
         }
 
+        echo "age conflict msg=".$msg."<br>";
+
+
+        return $dataqualityObj;
     }
 
 

@@ -31,14 +31,19 @@ class DataQualityAge extends DataQuality
     protected $patient;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    protected $procedureage;
+    protected $encounterage;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $patientage;
+    protected $encounterdate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $patientdob;
 
 
 
@@ -76,22 +81,6 @@ class DataQualityAge extends DataQuality
     }
 
     /**
-     * @param mixed $patientage
-     */
-    public function setPatientage($patientage)
-    {
-        $this->patientage = $patientage;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPatientage()
-    {
-        return $this->patientage;
-    }
-
-    /**
      * @param mixed $procedure
      */
     public function setProcedure($procedure)
@@ -108,20 +97,54 @@ class DataQualityAge extends DataQuality
     }
 
     /**
-     * @param mixed $procedureage
+     * @param mixed $encounterage
      */
-    public function setProcedureage($procedureage)
+    public function setEncounterage($encounterage)
     {
-        $this->procedureage = $procedureage;
+        $this->encounterage = $encounterage;
     }
 
     /**
      * @return mixed
      */
-    public function getProcedureage()
+    public function getEncounterage()
     {
-        return $this->procedureage;
+        return $this->encounterage;
     }
+
+    /**
+     * @param mixed $encounterdate
+     */
+    public function setEncounterdate($encounterdate)
+    {
+        $this->encounterdate = $encounterdate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncounterdate()
+    {
+        return $this->encounterdate;
+    }
+
+    /**
+     * @param mixed $patientdob
+     */
+    public function setPatientdob($patientdob)
+    {
+        $this->patientdob = $patientdob;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientdob()
+    {
+        return $this->patientdob;
+    }
+
+
 
 
 

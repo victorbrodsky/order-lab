@@ -203,6 +203,10 @@ class Patient extends ObjectAbstract
 
             $years = $interval->format('%y');
         }
+
+        if( $years < 0 )
+            $years = 0;
+
         return $years;
     }
 

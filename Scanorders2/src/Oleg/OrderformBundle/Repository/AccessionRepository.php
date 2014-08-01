@@ -88,11 +88,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //process data quality
         $currentDataquality = null;
 
-        echo "dataquality count=".count($orderinfo->getDataqualityAccMrn())."<br>";
+        echo "dataquality count=".count($orderinfo->getDataqualityMrnAcc())."<br>";
 
         //loop through all conflicts to find out if this accession is conflicted
         //To determine if this accession has geberated conflict: 1) compare accession number/type and mrn number/type of dataquality and form
-        foreach( $orderinfo->getDataqualityAccMrn() as $dataquality) {
+        foreach( $orderinfo->getDataqualityMrnAcc() as $dataquality) {
 
             $accessionConflict = false;
             $patientConflict = false;

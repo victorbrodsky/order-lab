@@ -92,7 +92,7 @@ class OrderInfo extends OrderAbstract {
     protected $account;
 
     /**
-     * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the orderinfo (unlike to dataqualityage)
+     * conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the orderinfo (unlike to dataqualityage)
      * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="orderinfo", cascade={"persist"})
      */
     private $dataqualitymrnacc;

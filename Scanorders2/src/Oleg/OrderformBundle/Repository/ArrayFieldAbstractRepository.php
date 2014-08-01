@@ -147,6 +147,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
             $this->copyCommonFieldsToPatient( $formEntity, $orderinfo->getProvider() );
             $this->checkAgeConflict( $orderinfo, $formEntity );
+            //exit();
         }
 
         //Accession only: if accession found in DB (original exists) set this procedure from accession
