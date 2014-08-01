@@ -289,7 +289,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $dataqualityObj = new DataQualityAge();
             $dataqualityObj->setOrderinfo($orderinfo);
             $dataqualityObj->setProcedure($procedure);
-            $dataqualityObj->setPatient($patient);
+            //$dataqualityObj->setPatient($patient);
             $dataqualityObj->setPatientdob($patientdob);
             $dataqualityObj->setEncounterdate($encounterdate);
             $dataqualityObj->setEncounterage($encounterage);

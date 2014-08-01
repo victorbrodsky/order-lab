@@ -26031,7 +26031,7 @@ function setPatientAndProcedureAgeListener() {
         }
         var encageValue = encage.val();
 
-        console.log('check: patientdobValue='+patientdobValue+', encdateValue='+encdateValue+", encageValue="+encageValue);
+        //console.log('check: patientdobValue='+patientdobValue+', encdateValue='+encdateValue+", encageValue="+encageValue);
 
         //Case 1a: if patientdobValue and encdateValue are empty => no conflict
         if( patientdobValue == "" && encdateValue == "" ) {
@@ -26062,7 +26062,7 @@ function setPatientAndProcedureAgeListener() {
             var encounterage = getAge(encdateValue);
             var dobage = getAge(patientdobValue);
             var sumyears = parseInt(encounterage) + parseInt(encageValue);
-            console.log('check: dobage='+dobage+', encounterage='+encounterage+", encageValue="+encageValue+", sumyears="+sumyears);
+            //console.log('check: dobage='+dobage+', encounterage='+encounterage+", encageValue="+encageValue+", sumyears="+sumyears);
             if( parseInt(dobage) != sumyears ) {
                 var msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB). Verify the DOB, Encounter Date, and Patient's Age (at the time of encounter) fields.";
                 setAgeConflictWarningMessage(encage,msg);
