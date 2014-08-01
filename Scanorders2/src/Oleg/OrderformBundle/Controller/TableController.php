@@ -540,7 +540,7 @@ class TableController extends Controller {
         //add dataqualities to entity
         $dataqualities = $form->get('conflicts')->getData();
         $orderUtil = new OrderUtil($em);
-        $orderUtil->setDataQuality($entity,$dataqualities);
+        $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );
 
@@ -550,7 +550,7 @@ class TableController extends Controller {
 //        return $response;
 
         $conflictStr = "";
-        foreach( $entity->getDataquality() as $dq ) {
+        foreach( $entity->getDataqualityAccMrn() as $dq ) {
             $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
         }
 
@@ -572,9 +572,9 @@ class TableController extends Controller {
             return $this->redirect($this->generateUrl('idlelogout-saveorder',array('flag'=>'saveorder')));
         }
 
-        if( count($entity->getDataquality()) > 0 ) {
+        if( count($entity->getDataqualityAccMrn()) > 0 ) {
             $conflictsStr = "MRN-Accession Conflict Resolved by Replacing:";
-            foreach( $entity->getDataquality() as $dq ) {
+            foreach( $entity->getDataqualityAccMrn() as $dq ) {
                 $conflictsStr .= "<br>".$dq->getAccession()." => ".$dq->getNewaccession();
             }
         } else {

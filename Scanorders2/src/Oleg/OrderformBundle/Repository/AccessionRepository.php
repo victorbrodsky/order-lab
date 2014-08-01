@@ -3,7 +3,7 @@
 namespace Oleg\OrderformBundle\Repository;
 
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
-use Oleg\OrderformBundle\Entity\DataQuality;
+use Oleg\OrderformBundle\Entity\DataQualityAccMrn;
 use Oleg\OrderformBundle\Entity\Block;
 use Oleg\OrderformBundle\Entity\Accession;
 
@@ -88,11 +88,11 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //process data quality
         $currentDataquality = null;
 
-        echo "dataquality count=".count($orderinfo->getDataquality())."<br>";
+        echo "dataquality count=".count($orderinfo->getDataqualityAccMrn())."<br>";
 
         //loop through all conflicts to find out if this accession is conflicted
         //To determine if this accession has geberated conflict: 1) compare accession number/type and mrn number/type of dataquality and form
-        foreach( $orderinfo->getDataquality() as $dataquality) {
+        foreach( $orderinfo->getDataqualityAccMrn() as $dataquality) {
 
             $accessionConflict = false;
             $patientConflict = false;
@@ -114,7 +114,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 //valid values are not empty
             } else {
                 //echo "skip!!! <br>";
-                $orderinfo->removeDataquality($dataquality);
+                $orderinfo->removeDataqualityAccMrn($dataquality);
                 continue;   //remove and skip this dataquality
             }
 
@@ -184,7 +184,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 echo "DB conflict!<br>";
                 $dbconflict = true;
 
-                $currentDataquality = new DataQuality();
+                $currentDataquality = new DataQualityMrnAcc();
 
                 //set mrntype
                 $mrntype = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById( $mrnKeytype );
@@ -200,7 +200,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 $currentDataquality->setProvider($orderinfo->getProvider());
                 $currentDataquality->setStatus('active');
 
-                $orderinfo->addDataquality($currentDataquality);
+                $orderinfo->addDataqualityAccMrn($currentDataquality);
 
             }
         }

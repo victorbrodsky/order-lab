@@ -44,14 +44,14 @@ class OrderInfoType extends AbstractType
         //unmapped data quality form to record the MRN-Accession conflicts
         $builder->add('conflicts', 'collection', array(
             'mapped' => false,
-            'type' => new DataQualityType($this->params, null),
+            'type' => new DataQualityMrnAccType($this->params, null),
             'label' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__dataquality__',
+            'prototype_name' => '__dataqualitymrnacc__',
         ));
 
         //add children

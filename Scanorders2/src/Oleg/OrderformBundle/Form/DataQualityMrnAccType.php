@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DataQualityType extends AbstractType
+class DataQualityMrnAccType extends AbstractType
 {
 
     protected $params;
@@ -16,24 +16,6 @@ class DataQualityType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
-    }
-
-    public function buildForm_NEW(FormBuilderInterface $builder, array $options)
-    {
-
-//        $builder->add( 'description', null, array(
-//            'label'=>"MRN-ACCESSION CONFLICT",
-//            'attr'=>array('class'=>'dataquality-description-class textarea form-control')
-//        ));
-
-        $builder->add( 'accession', null, array(
-            'label'=>false
-        ));
-
-        $builder->add( 'newaccession', null, array(
-            'label'=>false
-        ));
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -91,7 +73,7 @@ class DataQualityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
 //        $resolver->setDefaults(array(
-//            'data_class' => 'Oleg\OrderformBundle\Entity\DataQuality',
+//            'data_class' => 'Oleg\OrderformBundle\Entity\DataQualityMrnAcc',
 //        ));
         $resolver->setDefaults(array(
             'csrf_protection' => false,
@@ -100,6 +82,6 @@ class DataQualityType extends AbstractType
 
     public function getName()
     {
-        return 'dataquality';
+        return 'dataqualitymrnacc';
     }
 }

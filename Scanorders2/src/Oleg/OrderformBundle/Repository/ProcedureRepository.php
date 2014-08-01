@@ -226,6 +226,27 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
     }
 
+    public function checkAgeConflict( $orderinfo, $procedure ) {
+
+        $patient = $procedure->getParent();
+        $patientage = $patient->calculateAgeInt();
+        $procedureage = $procedure->getPatage();
+
+        if(  $patientage != $procedureage ) {
+
+            $dataqualityObj = new DataQualityAge();
+            $dataqualityObj->setOrderinfo($orderinfo);
+            $dataqualityObj->setProcedure($procedure);
+            $dataqualityObj->setPatient($patient);
+            $dataqualityObj->setPatientage($patientage);
+            $dataqualityObj->setProcedureage($procedureage);
+            $dataqualityObj->setProvider($orderinfo->getProvider());
+            $dataqualityObj->setStatus('active');
+
+        }
+
+    }
+
 
     //exception for procedure: procedure is linked to a single accession => check if accession is already existed in DB, if existed => don't create procedure, but use existing procedure
     public function findUniqueByKey( $entity ) {

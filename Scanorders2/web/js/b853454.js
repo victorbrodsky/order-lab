@@ -24158,16 +24158,30 @@ function setPatientAndProcedureAgeListener() {
 
     //console.log("setPatientAndProcedureAgeListener set!");
 
-    $('.patient-dob-date, .procedure-encounter-date').on("change", function(e) {
-
-        //printF($(this),"listener: ");
+    $('.procedureage-field').on("change", function(e) {
+        printF($(this),"listener: ");
 
         //clear warning message
         var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
         if( orderformtype == "single") {
             procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
         }
-        removeAgeCOnflictWarningMessage(procedureAgeEl);
+        removeAgeConflictWarningMessage(procedureAgeEl);
+
+        //check for age conflict
+        checkDobEncdateEncageConflict( $(this) );
+    });
+
+    $('.patient-dob-date, .procedure-encounter-date').on("change", function(e) {
+
+        printF($(this),"listener: ");
+
+        //clear warning message
+        var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+        if( orderformtype == "single") {
+            procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+        }
+        removeAgeConflictWarningMessage(procedureAgeEl);
 
         //patient's dob
         if( $(this).hasClass('patient-dob-date') ) {
@@ -24184,55 +24198,46 @@ function setPatientAndProcedureAgeListener() {
                 var age = getAge(patientdobValue);
                 if( age > 0 ) {
                     patientAgeEl.html(getAge(patientdobValue));
-
-                    //clean procedure age error
-                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
-                    if( orderformtype == "single") {
-                        procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
-                    }
-                }
-            }
-
-            //find all children procedure's encounter date
-            var procEncDates = $(this).closest('.panel-patient').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
-            if( orderformtype == "single") {
-                procEncDates = $(this).closest('.singleorderinfo').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
-            }
-
-            procEncDates.each( function() {
-
-                var encdateValue = $(this).val();
-                //console.log('patdob: patientdobValue='+patientdobValue+', encdateValue='+encdateValue);
-
-                //set procedure's age
-                if( patientdobValue != "" && encdateValue != "" ) {
-
-                    var age = getAgeByDiff(patientdobValue,encdateValue);
-                    //console.log('patientdob: age='+age);
-
-                    //find procedure age element
-                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
-                    if( orderformtype == "single") {
-                        procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
-                    }
-
-                    if( procedureAgeEl.val() == "" ) {  //don't override age
-                        procedureAgeEl.val(age);
-
-                        checkAgeConflict(procedureAgeEl,age);
-//                        //check for conflict
-//                        var patientage = $(this).closest('.panel-patient').find('.form-element-holder').find('.patientage').find('.well');
-//                        if( orderformtype == "single") {
-//                            patientage = $(this).closest('.singleorderinfo').find('.form-element-holder').find('.patientage').find('.well');
-//                        }
-//                        if( age != patientage.text() ) {
-//                            setAgeConflictWarningMessage(procedureAgeEl)
-//                        }
-                    }
-
+                } else {
+                    patientAgeEl.html("");
                 }
 
-            });
+            }
+
+            checkDobEncdateEncageConflict( $(this) );
+
+//            //find all children procedure's encounter date
+//            var procEncDates = $(this).closest('.panel-patient').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+//            if( orderformtype == "single") {
+//                procEncDates = $(this).closest('.singleorderinfo').find(".procedure-encounter-date:not([readonly='readonly']):not([disabled='disabled'])");
+//            }
+//
+//            procEncDates.each( function() {
+//
+//                var encdateValue = $(this).val();
+//                //console.log('patdob: patientdobValue='+patientdobValue+', encdateValue='+encdateValue);
+//
+//                //set procedure's age
+//                if( patientdobValue != "" && encdateValue != "" ) {
+//
+//                    var age = getAgeByDiff(patientdobValue,encdateValue);
+//                    //console.log('patientdob: age='+age);
+//
+//                    //find procedure age element
+//                    var procedureAgeEl = $(this).closest('.form-element-holder').find('.procedureage-field');
+//                    if( orderformtype == "single") {
+//                        procedureAgeEl = $(this).closest('.singleorderinfo').find('.procedureage-field');
+//                    }
+//
+//                    if( procedureAgeEl.val() == "" ) {  //don't override age
+//                        procedureAgeEl.val(age);
+//
+//                        //checkAgeConflict(procedureAgeEl,age);
+//                    }
+//
+//                }
+//
+//            });
         }
 
         //procedure encounter date
@@ -24262,17 +24267,9 @@ function setPatientAndProcedureAgeListener() {
                 }
 
                 if( procedureAgeEl.val() == "" ) {  //don't override age
-                    procedureAgeEl.val(age);
-
-                    checkAgeConflict(procedureAgeEl,age);
-//                    //check for conflict
-//                    var patientage = $(this).closest('.panel-patient').find('.form-element-holder').find('.patientage').find('.well');
-//                    if( orderformtype == "single") {
-//                        patientage = $(this).closest('.singleorderinfo').find('.form-element-holder').find('.patientage').find('.well');
-//                    }
-//                    if( age != patientage.text() ) {
-//                        setAgeConflictWarningMessage(procedureAgeEl)
-//                    }
+                    procedureAgeEl.val(age);   //when age is set, then  check DobEncdateEncage Conflict will be triggered by procedure age listener
+                } else {
+                    checkDobEncdateEncageConflict( $(this) );
                 }
 
             }
@@ -24280,6 +24277,60 @@ function setPatientAndProcedureAgeListener() {
         }
 
     });
+
+    function checkDobEncdateEncageConflict( element ) {
+
+        //find patient dob element
+        var patientdob = element.closest('.panel-patient').find('.form-element-holder').find('.patient-dob-date');
+        if( orderformtype == "single") {
+            patientdob = element.closest('.singleorderinfo').find('.form-element-holder').find('.patient-dob-date');
+        }
+        var patientdobValue = patientdob.val();
+
+
+        //find encounter date element
+        var encdate = element.closest('.panel-patient').find('.form-element-holder').find('.procedure-encounter-date');
+        if( orderformtype == "single") {
+            encdate = element.closest('.singleorderinfo').find('.form-element-holder').find('.procedure-encounter-date');
+        }
+        var encdateValue = encdate.val();
+
+        //find encounter age element
+        var encage = element.closest('.panel-patient').find('.form-element-holder').find('.procedureage-field');
+        if( orderformtype == "single") {
+            encage = element.closest('.singleorderinfo').find('.form-element-holder').find('.procedureage-field');
+        }
+        var encageValue = encage.val();
+
+        //console.log('encdate: patientdobValue='+patientdobValue+', encdateValue='+encdateValue);
+
+        //Case 1a: if patientdobValue and encdateValue are empty => no conflict
+        if( patientdobValue == "" && encdateValue == "" ) {
+            return;
+        }
+
+        //Case 1b: if encageValue is empty => no conflict
+        if( encageValue == "" ) {
+            return;
+        }
+
+        //Case 2: if encounter date is empty, verify procedure age with patient age by current date
+        var dobage = getAge(patientdobValue);
+        if( encageValue != dobage ) {
+            var msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB) based on today's date. Verify the DOB and Patient's Age (at the time of encounter) fields.";
+            setAgeConflictWarningMessage(element,msg);
+        }
+
+        //Case 3: all 3 parameters are set: patient's dob, encounter date and age at the time of encounter => current date - encounter date
+        var encounterage = getAge(encdateValue);
+
+        if( dobage != encounterage + encageValue ) {
+            var msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB). Verify the DOB, Encounter Date, and Patient's Age (at the time of encounter) fields.";
+            setAgeConflictWarningMessage(element,msg);
+        }
+
+
+    }
 
     function checkAgeConflict(element,age) {
         //check for conflict
@@ -24319,7 +24370,7 @@ function setPatientAndProcedureAgeListener() {
         procedureAgeEl.after(errorHtml);
     }
 
-    function removeAgeCOnflictWarningMessage(procedureAgeEl) {
+    function removeAgeConflictWarningMessage(procedureAgeEl) {
 //        var warningmsg = procedureAgeEl.closest('.form-element-holder').find('.age-conflict-added');
 //        if( orderformtype == "single") {
 //            warningmsg = $('.age-conflict-added');
@@ -24395,15 +24446,6 @@ function validateForm() {
     var saveClick = $("#save_order_onidletimeout_btn").attr('clicked');
     //console.log("saveClick="+ saveClick);
 
-    var checkAgeConflict = checkAgeConflict();
-    console.log( "checkAgeConflict="+checkAgeConflict);
-    if( !checkAgeConflict ) {
-        if( saveClick == 'true' ) {
-            idlelogout();   //we have errors on the form, so logout without saving form
-        }
-        return false;
-    }
-
     var checkExisting = checkExistingKey("accession");
     //console.log( "accession checkExisting="+checkExisting);
     if( !checkExisting ) {
@@ -24464,10 +24506,6 @@ function validateForm() {
     return true;
 }
 
-
-function checkAgeConflict() {
-    return true;
-}
 
 //accesion-MRN link validation when the user clicks "Submit" on multi-slide form
 function checkMrnAccessionConflict() {
@@ -24754,7 +24792,7 @@ function createDataquality( mrnObj, accObj, orderinfo, index ) {   //mrnValueFor
         return false;
     }
 
-    var newForm = prototype.replace(/__dataquality__/g, index);
+    var newForm = prototype.replace(/__dataqualitymrnacc__/g, index);
 
     newForm = newForm.replace("MRN-ACCESSION CONFLICT", message);
 

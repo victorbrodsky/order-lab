@@ -190,6 +190,22 @@ class Patient extends ObjectAbstract
 //        return $this->age;
 //    }
 
+    public function calculateAgeInt() {
+        $age = null;
+        $dob = $this->obtainValidField('dob');
+
+        $years = 0;
+
+        if( $dob != null ) {
+            $date = new \DateTime($dob);
+            $now = new \DateTime();
+            $interval = $now->diff($date);
+
+            $years = $interval->format('%y');
+        }
+        return $years;
+    }
+
     //calculate age based on the dob and current date
     public function calculateAge() {
         $age = null;

@@ -16,7 +16,7 @@ namespace Oleg\OrderformBundle\Helper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
-use Oleg\OrderformBundle\Entity\DataQuality;
+use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 
 class OrderUtil {
@@ -459,7 +459,7 @@ class OrderUtil {
     }
 
     //$dataqualities is a form data: $dataqualities = $form->get('conflicts')->getData();
-    public function setDataQuality( $entity, $dataqualities ) {
+    public function setDataQualityAccMrn( $entity, $dataqualities ) {
 
         $em = $this->em;
 
@@ -476,7 +476,7 @@ class OrderUtil {
             //set correct accessiontype
             $accessiontype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneById( $dataquality['accessiontype'] );
 
-            $dataqualityObj = new DataQuality();
+            $dataqualityObj = new DataQualityMrnAcc();
             $dataqualityObj->setDescription($dataquality['description']);
             $dataqualityObj->setMrn($dataquality['mrn']);
             $dataqualityObj->setMrntype($mrntype);
@@ -493,7 +493,7 @@ class OrderUtil {
 //            echo "dataquality: mrn=".$dataqualityObj->getMrn()."<br>";
 //            echo "dataquality: mrn text=".$dataqualityObj->getMrntype()."<br>";
 
-            $entity->addDataquality($dataqualityObj);
+            $entity->addDataqualityMrnAcc($dataqualityObj);
         }
 
     }

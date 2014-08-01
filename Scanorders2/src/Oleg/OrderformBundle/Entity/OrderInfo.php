@@ -19,23 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OrderInfo extends OrderAbstract {
 
-//    /**
-//     * @var integer
-//     *
-//     * @ORM\Column(name="id", type="integer")
-//     * @ORM\Id
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    private $id;
-//
-//    /**
-//     * @var \DateTime
-//     *
-//     * @ORM\Column(name="orderdate", type="datetime", nullable=true)
-//     *
-//     */
-//    private $orderdate;
-
     /**
      * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
      * @ORM\JoinColumn(name="pathservicelist_id", referencedColumnName="id", nullable=true)
@@ -47,12 +30,6 @@ class OrderInfo extends OrderAbstract {
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=true)
      */
     private $status;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="FormType", cascade={"persist"})
-//     * @ORM\JoinColumn(name="formtype_id", referencedColumnName="id")
-//     */
-//    private $type;
 
     /**
      * oid - id of the original order.
@@ -97,24 +74,6 @@ class OrderInfo extends OrderAbstract {
      */
     protected $returnSlide;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
-//     * @ORM\JoinTable(name="provider_orderinfo",
-//     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="provider_id", referencedColumnName="id")}
-//     * )
-//     */
-//    private $provider;
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
-//     * @ORM\JoinTable(name="proxyuser_orderinfo",
-//     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="proxyuser_id", referencedColumnName="id")}
-//     * )
-//     */
-//    protected $proxyuser;
-
     /**
      * @ORM\ManyToOne(targetEntity="Department", inversedBy="orderinfo", cascade={"persist"})
      * @ORM\JoinColumn(name="department_id", referencedColumnName="id", nullable=true)
@@ -133,9 +92,10 @@ class OrderInfo extends OrderAbstract {
     protected $account;
 
     /**
-     * @ORM\OneToMany(targetEntity="DataQuality", mappedBy="orderinfo", cascade={"persist"})
+     * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the orderinfo (unlike to dataqualityage)
+     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="orderinfo", cascade={"persist"})
      */
-    private $dataquality;
+    private $dataqualitymrnacc;
 
     /**
      * @ORM\OneToMany(targetEntity="History", mappedBy="orderinfo", cascade={"persist"})
@@ -225,7 +185,7 @@ class OrderInfo extends OrderAbstract {
         $this->slide = new ArrayCollection();
         //$this->provider = new ArrayCollection();
         //$this->proxyuser = new ArrayCollection();
-        $this->dataquality = new ArrayCollection();
+        $this->dataqualitymrnacc = new ArrayCollection();
         $this->history = new ArrayCollection();
     }
 
@@ -251,12 +211,12 @@ class OrderInfo extends OrderAbstract {
             $provider = $this->getProvider();
             $proxyuser = $this->getProxyuser();
             //$proxys = $this->getProxyuser();
-            $dataqualities = $this->getDataquality();
+            $dataqualitiesmrnacc = $this->getDataqualityMrnAcc();
             $histories = $this->getHistory();
 
             //$this->setProvider( new ArrayCollection() );
             //$this->proxyuser = new ArrayCollection();
-            $this->dataquality = new ArrayCollection();
+            $this->dataqualitymrnacc = new ArrayCollection();
             $this->history = new ArrayCollection();
 
             $this->setProvider( $provider );
@@ -269,8 +229,8 @@ class OrderInfo extends OrderAbstract {
 //                $this->addProxyuser($thisproxy);
 //            }
 
-            foreach( $dataqualities as $dataquality ) {
-                $this->addDataquality($dataquality);
+            foreach( $dataqualitiesmrnacc as $dataqualitymrnacc ) {
+                $this->addDataqualityMrnAcc($dataqualitymrnacc);
             }
 
             foreach( $histories as $history ) {
@@ -412,29 +372,29 @@ class OrderInfo extends OrderAbstract {
     }
 
 
-    public function getDataquality()
+    public function getDataqualityMrnAcc()
     {
-        return $this->dataquality;
+        return $this->dataqualitymrnacc;
     }
 
-    public function setDataquality($dataqualities)
+    public function setDataqualityMrnAcc($dataqualitiesmrnacc)
     {
-        if( $dataqualities == null ) {
-            $dataqualities = new ArrayCollection();
+        if( $dataqualitiesmrnacc == null ) {
+            $dataqualitiesmrnacc = new ArrayCollection();
         }
-        $this->dataquality = $dataqualities;
+        $this->dataqualitymrnacc = $dataqualitiesmrnacc;
     }
 
-    public function addDataquality($dataquality)
+    public function addDataqualityMrnAcc($dataqualitymrnacc)
     {
-        if( !$this->dataquality->contains($dataquality) ) {
-            $this->dataquality->add($dataquality);
+        if( !$this->dataqualitymrnacc->contains($dataqualitymrnacc) ) {
+            $this->dataqualitymrnacc->add($dataqualitymrnacc);
         }
     }
 
-    public function removeDataquality($dataquality)
+    public function removeDataqualityMrnAcc($dataqualitymrnacc)
     {
-        $this->dataquality->removeElement($dataquality);
+        $this->dataqualitymrnacc->removeElement($dataqualitymrnacc);
     }
 
     public function getHistory()
@@ -500,44 +460,6 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->returnSlide;
     }
-
-//    /**
-//     * Set provider
-//     *
-//     * @param \stdClass $provider
-//     * @return OrderInfo
-//     */
-//    public function setProvider($provider)
-//    {
-//        if( is_array($provider ) ) {
-//            $this->provider = $provider;
-//        } else {
-//            $this->provider->clear();
-//            $this->provider->add($provider);
-//        }
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get provider
-//     *
-//     * @return \stdClass
-//     */
-//    public function getProvider()
-//    {
-//        return $this->provider;
-//    }
-//
-//
-//    public function getType() {
-//        return $this->type;
-//    }
-//
-//
-//    public function setType($type) {
-//        $this->type = $type;
-//    }
 
     public function getStatus() {
         return $this->status;
@@ -892,66 +814,6 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->institution;
     }
-
-//    public function setBlock($block)
-//    {
-//        $this->block = $block;
-//    }
-
-
-//    public function addProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
-//    {
-//        if( $proxyuser ) {
-//            if( !$this->proxyuser->contains($proxyuser) ) {
-//                $this->proxyuser->add($proxyuser);
-//            }
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeProxyuser(\Oleg\OrderformBundle\Entity\User $proxyuser)
-//    {
-//        $this->proxyuser->removeElement($proxyuser);
-//    }
-//
-//    /**
-//     * @param mixed $proxyuser
-//     */
-//    public function setProxyuser($proxyuser)
-//    {
-//        if( $proxyuser ) {
-//            if( is_array($proxyuser) ) {
-//                $this->proxyuser = $proxyuser;
-//            } else {
-//                $this->proxyuser->clear();
-//                $this->proxyuser->add($proxyuser);
-//            }
-//        }
-//
-//    }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getProxyuser()
-//    {
-//        return $this->proxyuser;
-//    }
-
-//    public function addProvider(\Oleg\OrderformBundle\Entity\User $provider)
-//    {
-//        if( !$this->provider->contains($provider) ) {
-//            $this->provider->add($provider);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeProvider(\Oleg\OrderformBundle\Entity\User $provider)
-//    {
-//        $this->provider->removeElement($provider);
-//    }
 
     //TODO: testing
     public function getChildren() {
