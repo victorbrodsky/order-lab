@@ -91,7 +91,7 @@ function keepWorking() {
 function logoff() {
     //console.log("logoff");
     window.onbeforeunload = null;
-    var urlRegularLogout = getCommonBaseUrl("logout");	//urlBase+"logout";
+    var urlRegularLogout = getCommonBaseUrl("idlelogout");	//urlBase+"logout";
     window.location = urlRegularLogout;
 }
 
@@ -115,7 +115,7 @@ function checkIfOrderWasModified() {
         if( btnObj.key != "" ) {
             //console.log("at least one keyfield is not empty");
             modified = true;
-            return;
+            return true;
         }
     });
 
@@ -126,7 +126,7 @@ function checkIfOrderWasModified() {
     if( btnsRemove.length > 0 ) {
         //console.log("at least one button is checked (was pressed)");
         modified = true;
-        return;
+        return true;
     }
 
     if( modified ) return true;
@@ -162,7 +162,7 @@ function checkIfOrderWasModified() {
             //console.log($(this));
             //console.log("at least one input field (input,textarea,select) is not empty");
             modified = true;
-            return;
+            return true;
         }
 
     });

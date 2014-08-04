@@ -24538,7 +24538,7 @@ function regularCombobox() {
     $("select.combobox").select2({
         width: combobox_width,
         dropdownAutoWidth: true,
-        placeholder: "Choose an option",
+        placeholder: "Select an option or type in a new value",
         allowClear: true,
         selectOnBlur: false
         //readonly: true
@@ -24553,15 +24553,15 @@ function setResearchEducational() {
 //    }
 
     //research
-    populateSelectCombobox( ".combobox-research-setTitle", null, "Choose and Option", false );
+    populateSelectCombobox( ".combobox-research-setTitle", null, "Select an option or type in a new value", false );
     $(".combobox-research-setTitle").select2("readonly", true);
-    populateSelectCombobox( ".ajax-combobox-optionaluser-research", null, "Choose and Option", true );
+    populateSelectCombobox( ".ajax-combobox-optionaluser-research", null, "Select an option or type in a new value", true );
     $(".ajax-combobox-optionaluser-research").select2("readonly", true);
 
     //educational
-    populateSelectCombobox( ".combobox-educational-lessonTitle", null, "Choose and Option", false );
+    populateSelectCombobox( ".combobox-educational-lessonTitle", null, "Select an option or type in a new value", false );
     $(".combobox-educational-lessonTitle").select2("readonly", true);
-    populateSelectCombobox( ".ajax-combobox-optionaluser-educational", null, "Choose and Option", true );
+    populateSelectCombobox( ".ajax-combobox-optionaluser-educational", null, "Select an option or type in a new value", true );
     $(".ajax-combobox-optionaluser-educational").select2("readonly", true);
 
 }
@@ -25133,7 +25133,7 @@ function getSetTitle() {
     }).success(function(data) {
         if( data ) {
             //console.log("populate title: id="+data[0].id+", text="+data[0].text);
-            populateSelectCombobox( targetid, data, "Choose an option");
+            populateSelectCombobox( targetid, data, "Select an option or type in a new value");
             //$(targetid).select2("readonly", false);
             //setElementToId( targetid, data );
         }
@@ -25199,7 +25199,7 @@ function getLessonTitle() {
         async: asyncflag
     }).success(function(data) {
             if( data ) {
-                populateSelectCombobox( targetid, data, "Choose an option");
+                populateSelectCombobox( targetid, data, "Select an option or type in a new value");
             }
     });
 
@@ -25225,7 +25225,7 @@ function getOptionalUserResearch() {
             async: asyncflag
         }).success(function(data) {
                 if( data ) {
-                    populateSelectCombobox( targetid, data, "Choose an option", true );
+                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
                 }
             });
 
@@ -25238,7 +25238,7 @@ function getOptionalUserResearch() {
         async: asyncflag
     }).success(function(data) {
             if( data ) {
-                populateSelectCombobox( targetid, data, "Choose an option", true );
+                populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
             }
     });
 
@@ -25263,7 +25263,7 @@ function getOptionalUserEducational() {
             async: asyncflag
         }).success(function(data) {
                 if( data ) {
-                    populateSelectCombobox( targetid, data, "Choose an option", true );
+                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
                 }
             });
 
@@ -25276,7 +25276,7 @@ function getOptionalUserEducational() {
         async: asyncflag
     }).success(function(data) {
             if( data ) {
-                populateSelectCombobox( targetid, data, "Choose an option", true );
+                populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
             }
     });
 
@@ -25292,7 +25292,7 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 
     if( parentVal == '' ) {
         //console.log('not in array');
-        populateSelectCombobox( target, null, "Choose an option", multiple );
+        populateSelectCombobox( target, null, "Select an option or type in a new value", multiple );
         $(target).select2("readonly", true);
         return -1;
     }
@@ -25302,7 +25302,7 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 
     if( idInArr == -1 ) {
         //console.log('not in array');
-        populateSelectCombobox( target, null, "Choose an option", multiple );
+        populateSelectCombobox( target, null, "Select an option or type in a new value", multiple );
         $(target).select2("readonly", false);
         return -1;
     }
@@ -25330,13 +25330,13 @@ function getComboboxDepartment(ids) {
             async: asyncflag
         }).success(function(data) {
             _department = data;
-            populateSelectCombobox( ".ajax-combobox-department", _department, "Choose an option" );
+            populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
             if( cicle == "new"  ) {
                 setElementToId( ".ajax-combobox-department", _department );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-department", _department, "Choose an option" );
+        populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
         if( cicle == "new"  ) {
             setElementToId( ".ajax-combobox-department", _department );
         }
@@ -25360,13 +25360,13 @@ function getComboboxInstitution(ids) {
             async: asyncflag
         }).success(function(data) {
             _institution = data;
-            populateSelectCombobox( ".ajax-combobox-institution", _institution, "Choose an option" );
+            populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
             if( cicle == "new"  ) {
                 setElementToId( ".ajax-combobox-institution", _institution );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-institution", _institution, "Choose an option" );
+        populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
         if( cicle == "new"  ) {
             setElementToId( ".ajax-combobox-institution", _institution );
         }
@@ -25390,13 +25390,13 @@ function getComboboxAccount(ids) {
             async: asyncflag
         }).success(function(data) {
             _account = data;
-            populateSelectCombobox( ".ajax-combobox-account", _account, "Choose an option" );
+            populateSelectCombobox( ".ajax-combobox-account", _account, "Select an option or type in a new value" );
             if( cicle == "new"  ) {
                 //setElementToId( ".ajax-combobox-account", _account );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-account", _account, "Choose an option" );
+        populateSelectCombobox( ".ajax-combobox-account", _account, "Select an option or type in a new value" );
         if( cicle == "new"  ) {
             //setElementToId( ".ajax-combobox-account", _account );
         }
@@ -31261,7 +31261,7 @@ function keepWorking() {
 function logoff() {
     //console.log("logoff");
     window.onbeforeunload = null;
-    var urlRegularLogout = getCommonBaseUrl("logout");	//urlBase+"logout";
+    var urlRegularLogout = getCommonBaseUrl("idlelogout");	//urlBase+"logout";
     window.location = urlRegularLogout;
 }
 
@@ -31285,7 +31285,7 @@ function checkIfOrderWasModified() {
         if( btnObj.key != "" ) {
             //console.log("at least one keyfield is not empty");
             modified = true;
-            return;
+            return true;
         }
     });
 
@@ -31296,7 +31296,7 @@ function checkIfOrderWasModified() {
     if( btnsRemove.length > 0 ) {
         //console.log("at least one button is checked (was pressed)");
         modified = true;
-        return;
+        return true;
     }
 
     if( modified ) return true;
@@ -31332,7 +31332,7 @@ function checkIfOrderWasModified() {
             //console.log($(this));
             //console.log("at least one input field (input,textarea,select) is not empty");
             modified = true;
-            return;
+            return true;
         }
 
     });

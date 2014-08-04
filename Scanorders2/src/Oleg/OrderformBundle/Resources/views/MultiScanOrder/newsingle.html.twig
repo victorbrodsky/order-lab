@@ -58,12 +58,11 @@
     <input type="hidden" id="orderformtype" value="single" />
     <input type="hidden" id="formcicle" value="{{ cycle }}" />
 
-    {#<br>#}
-    {#<button class="btn btn-primary ladda-button btntest" data-style="expand-right"><span class="ladda-label">expand-right</span></button>#}
-    {#<br>#}
-
     <br />
-    
+
+    {#<p><button onclick="checkIfOrderWasModified()" type="button">Test Form Modified</button></p>#}
+
+    {#################################### START FORM ######################################}
     <form id="scanorderform" action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form) }}>
     {#{{ form_start(form) }}#}
 

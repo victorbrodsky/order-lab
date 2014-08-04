@@ -673,6 +673,11 @@ class Patient extends ObjectAbstract
             $sexs = $sexs . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $clinhists = ", clinicalHistoryCount=".count($this->clinicalHistory).": ";
+        foreach( $this->clinicalHistory as $name ) {
+            $clinhists = $clinhists . "value=".$name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
 //        $ages = ", ageCount=".count($this->age).": ";
 //        foreach( $this->age as $name ) {
 //            $ages = $ages . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
@@ -686,6 +691,7 @@ class Patient extends ObjectAbstract
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$mrnId.
         ", mrnCount=".count($this->mrn).
+        ", clinhists=".$clinhists.
         ", lastnames=".$lastnames.
         ", sexs=".$sexs.
 //        ", ages=".$ages.

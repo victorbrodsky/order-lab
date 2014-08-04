@@ -115,11 +115,11 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         echo "blocks=".count($entity->getBlock())."<br>";;
         echo "slides=".count($entity->getSlide())."<br>";
 
-        //echo "<br>part:".$entity->getPart()->first()."<br>";
+        //echo "<br>patient:".$entity->getPatient()->first()."<br>";
         //echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
 
         //throw new \Exception('TESTING');
-        exit('orderinfo repoexit testing');
+        //exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;

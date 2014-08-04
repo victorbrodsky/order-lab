@@ -701,6 +701,25 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
+        //if valid field exists and it is empty and form field is not empty =>
+        //option1: overwrite the valid field with form field value
+        //option2: make the valid empty existing field as invalid, add a new not empty form field as valid,
+        //echo "valid field=".$validField.", field=".$field."<br>";
+        if( $validField && $validField->getField() == "" && $field->getField() != "" ) {
+
+            //option1
+            //$validField->setField($field->getField());
+
+            //option2
+            $validField->setStatus(self::STATUS_INVALID);
+            $addMethodName = "add".$methodName; //i.e. addMrn
+            $field->setStatus(self::STATUS_VALID);
+            $entity->$addMethodName( $field );
+
+            //echo( "### ".$methodName." add field as new valid field, change valid field to invalid<br>" );
+            return $entity;
+        }
+
         //add only if the field array does not already contain this valid field (by field name)
         foreach( $fields as $thisField ) {
 
@@ -733,10 +752,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             }
         }
 
-        if( $field ) {
-
-        }
-        //echo "find field =".$field."<br>";
+        //echo $className.$methodName.": find field =".$field.", id=".$field->getId()."<br>";
         //adding field
         $found = $em->getRepository('OlegOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
         //echo "found id=".$found."<br>";
@@ -769,13 +785,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //exception for array fields such as Part Differential Diagnosis field. Always added as valid
         $class = new \ReflectionClass($fields->first());
         $className = $class->getShortName();
-        //echo "if valid: className=".$className."<br>";
-//        if( $className == 'PartDiffDisident' ||
-//            //$className == 'PatientClinicalHistory' ||
-//            //$className == 'PatientAge' ||
-//            $className == 'RelevantScans' ||
-//            $className == 'BlockSpecialStains'
-//        ) {
+
         if( $exceptionArr && in_array($className, $exceptionArr) ) {
             //echo "skip!!! <br>";
             return false;
@@ -783,8 +793,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         foreach( $fields as $thisField ) {
             //echo "field=".$thisField.", fieldId=".$thisField->getId()."<br>";
-            //TODO: added condition: field is not empty. Make sure that the original condition was not correct: if( $thisField->getStatus() == self::STATUS_VALID ) {
-            if( $thisField->getStatus() == self::STATUS_VALID && $thisField != "" ) {
+            //TODO: should we check if the field is not empty?
+            //if( $thisField->getStatus() == self::STATUS_VALID && $thisField != "" ) {
+            if( $thisField->getStatus() == self::STATUS_VALID ) {
                 //echo "found valid field by field name => don't add field <br>";
                 return $thisField;
             }
