@@ -132,6 +132,10 @@ function checkFormSingle( elem ) {
         function(response) {
             //console.log("All check single form chaining with parent OK:", response);
             lbtn.stop();
+
+            //scroll page to optional_param
+            var x = $('#optional_param').offset().top;
+            $('html,body').animate( {scrollTop: x}, 400 );
         },
         function(error) {
             console.error("Single form chaining chaining with parent Error", error);
@@ -189,6 +193,12 @@ function removeFormSingle( elem ) {
         function(response) {
             //console.log("Done ", response);
             btn.button('reset');
+//            var docloc = document.location;
+//            console.log("remove docloc="+docloc);
+//            docloc = docloc.replace("#optional_param_tab_body", "");
+//            docloc = docloc.replace("#orderinfo_param", "");
+//            console.log("remove final docloc="+docloc);
+//            document.location = docloc;
         }
     );
 
@@ -227,6 +237,11 @@ function checkSingleFormOnNext( elem ) {
 
         collapseElementFix($('#orderinfo_param'),'show');
     }
+
+    //scroll page to orderinfo_param
+    var x = $('#orderinfo_param').offset().top;
+    $('html,body').animate( {scrollTop: x}, 400 );
+
     return true;
 }
 

@@ -34,11 +34,6 @@ $(document).ready(function() {
     $("#orderinfo").hide();
     $("#optional_button").hide();
 
-    $('#next_button_multi').on('click', function(event) {
-        $("#next_button_multi").hide();
-        $("#optional_button").show();
-    });
-
     //priority option
     priorityOption();
 

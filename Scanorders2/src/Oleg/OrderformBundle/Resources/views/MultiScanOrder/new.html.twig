@@ -190,9 +190,7 @@
     {#patient#}
     {% set patientCount = 0 %}
     {% for patient in form.patient %}
-        {#patient id={{ patient.vars.value.id }}#}
         {% set uid = patientCount~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0~'_'~0 %}
-        {#{% set patientCountNext = patientCount + 1 %}#}
         <div id="formpanel_patient_{{ uid }}" class="panel panel-patient panel-multi-form">
 
             {{ formmacros.orderinfo_panel_header(
@@ -330,7 +328,8 @@
 
     {% if type == 'new' or type == 'edit' or type == 'amend' %}
 
-        <button id="next_button_multi" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#orderinfo_param">Next</button>
+        <button id="next_button_multi" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#orderinfo_param" onclick="checkMultiFormOnNext(this)">Next</button>
+        {#<a id="next_button_multi" href="#orderinfo_param" type="button" name="btnNext" class="btn btn-success" data-toggle="collapse" data-target="#orderinfo_param">Next</a>#}
 
         <div id="orderinfo_param" class="collapse">
 

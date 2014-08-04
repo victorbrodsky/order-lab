@@ -560,6 +560,7 @@ function executeClick( btnObjInit ) {
                                 disableInElementBlock(btn, true, "all", null, "notarrayfield");
                                 invertButton(btn);
                                 setObjectInfo(btnObj,1);
+                                processExceptionalFields(btnObj);
 
                                 //set patient (in accession case)
                                 if( btnObj.name == "accession" && gonext == 1) {

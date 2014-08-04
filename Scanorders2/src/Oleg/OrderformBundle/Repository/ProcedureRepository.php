@@ -266,7 +266,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( $encounterdate == NULL && $patientage > 0 && $encounterage > 0 ) {
             echo "case 2: ".$encounterage."?=".$patientage."<br>";
             if( $encounterage != $patientage ) {
-                $msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB) based on today's date. Verify the DOB and Patient's Age (at the time of encounter) fields.";
+                $msg = "The patient's age at the time of encounter does not correspond to the patient's date of birth (DOB) based on today's date. Please verify and correct the DOB and Patient's Age (at the time of encounter) field values.";
             }
         }
 
@@ -279,7 +279,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
             echo "case 3: ".$years."?=".$encounterage."<br>";
             if( $years != $encounterage ) {
-                $msg = "The patient's age at the time of encounter does not match the patient's date of birth (DOB). Verify the DOB, Encounter Date, and Patient's Age (at the time of encounter) fields.";
+                $msg = "The patient's age at the time of encounter does not correspond the patient's date of birth (DOB). Please verify and correct the DOB, Encounter Date, and Patient's Age (at the time of encounter) field values.";
             }
 
         }
@@ -289,7 +289,6 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             $dataqualityObj = new DataQualityAge();
             $dataqualityObj->setOrderinfo($orderinfo);
             $dataqualityObj->setProcedure($procedure);
-            //$dataqualityObj->setPatient($patient);
             $dataqualityObj->setPatientdob($patientdob);
             $dataqualityObj->setEncounterdate($encounterdate);
             $dataqualityObj->setEncounterage($encounterage);

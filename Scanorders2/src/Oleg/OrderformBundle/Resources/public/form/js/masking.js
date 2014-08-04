@@ -626,23 +626,3 @@ function getButtonParent(elem) {
     return parent;
 }
 
-
-//get a block holder by button; this element should contain all form input fields belonging to this button
-function getButtonElementParent( btn ) {
-
-    if( btn == null ) {
-        return null;
-    }
-
-    var parent = btn.closest('.form-element-holder');
-
-    if( orderformtype == "single") {
-        if( btn.hasClass('patientmrnbtn') ) {
-            var parent = $('#patient_0');
-        } else {
-            var parent = $('.singleorderinfo');
-        }
-    }
-
-    return parent;
-}

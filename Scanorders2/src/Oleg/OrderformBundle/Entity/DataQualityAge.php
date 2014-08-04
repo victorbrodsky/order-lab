@@ -24,12 +24,6 @@ class DataQualityAge extends DataQuality
      */
     protected $procedure;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Patient")
-//     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE")
-//     */
-//    protected $patient;
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -63,22 +57,6 @@ class DataQualityAge extends DataQuality
     {
         return $this->orderinfo;
     }
-
-//    /**
-//     * @param mixed $patient
-//     */
-//    public function setPatient($patient)
-//    {
-//        $this->patient = $patient;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getPatient()
-//    {
-//        return $this->patient;
-//    }
 
     /**
      * @param mixed $procedure
@@ -143,11 +121,6 @@ class DataQualityAge extends DataQuality
     {
         return $this->patientdob;
     }
-
-
-
-
-
 
 
 }

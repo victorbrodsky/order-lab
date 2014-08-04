@@ -54,7 +54,7 @@ security:
 
             logout:
                 path:   /logout
-                target: /login
+                target: /scan/login
 
             anonymous:  true
 

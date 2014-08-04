@@ -30,9 +30,9 @@ function attachPatientNameSexAgeLockedTooltip() {
     //patient's age
     var patage = $('.patientage').find('.well');
     patage.tooltip({
-        'title': "This is the current age of the patient (if known). To enter a new age, use the field \"DOB\"."
+        'title': "This is the current age of the patient (if known). To enter a new age, either supply a date of birth or enter the patient's age at the time of the encounter below."
     });
-    highlightProcedureAgeElement( patage.parent(), '.patientdob-mask' );
+    highlightProcedureAgeElement( patage.parent(), '.patient-dob-date' );
 
     //patient's name
     var patname = $('.patientname').find('.well');

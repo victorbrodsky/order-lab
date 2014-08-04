@@ -119,7 +119,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
 
         //throw new \Exception('TESTING');
-        //exit('orderinfo repoexit testing');
+        exit('orderinfo repoexit testing');
 
         //create new orderinfo
         //$em = $this->_em;
