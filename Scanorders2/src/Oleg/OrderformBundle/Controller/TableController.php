@@ -581,14 +581,20 @@ class TableController extends Controller {
             $conflictsStr = "noconflicts";
         }
 
-        return $this->redirect($this->generateUrl('scan-order-submitted-get',
-            array(
-                'oid' => $entity->getOid(),
-                'conflicts' => $conflictsStr,
-                'cicle' => $cicle,
-                'neworder' => "table_create"
-            )
-        ));
+        unset($_POST);
+
+        $session = $request->getSession();
+        $submittedData = array(
+            'oid' => $entity->getOid(),
+            'cicle' => $cicle,
+            'neworder' => "table_create",
+            'conflicts' => $conflictsStr
+        );
+        $session->set('submittedData', $submittedData);
+
+        unset($_POST);
+
+        return $this->redirect($this->generateUrl('scan-order-submitted-get'));
 
     }
 

@@ -159,7 +159,7 @@ class MultiScanOrderController extends Controller {
             print_r($errors);
         }
         
-        //echo "Before validation main entity:<br>";
+        //exit("Before validation main entity:<br>");
 
 //       if( $form->isValid() ) {
 //           echo "form is valid !!! <br>";
@@ -238,14 +238,18 @@ class MultiScanOrderController extends Controller {
                     $conflictsStr = "noconflicts";
                 }
 
-                return $this->redirect($this->generateUrl('scan-order-submitted-get',
-                    array(
-                        'oid' => $entity->getOid(),
-                        'cicle' => $cicle,
-                        'neworder' => $new_order,
-                        'conflicts' => $conflictsStr
-                    )
-                ));
+                $session = $request->getSession();
+                $submittedData = array(
+                    'oid' => $entity->getOid(),
+                    'cicle' => $cicle,
+                    'neworder' => $new_order,
+                    'conflicts' => $conflictsStr
+                );
+                $session->set('submittedData', $submittedData);
+
+                unset($_POST);
+
+                return $this->redirect($this->generateUrl('scan-order-submitted-get'));
 
             } //if submit, amend, timeout
 
@@ -260,16 +264,20 @@ class MultiScanOrderController extends Controller {
     }
 
     /**
-     * @Route("/scan-order/submitted/{oid}/{cicle}/{neworder}/{conflicts}", name="scan-order-submitted-get")
+     * @Route("/scan-order/submitted/successfully", name="scan-order-submitted-get")
      * @Method("GET")
      */
-    public function thanksScanorderGetAction($oid,$conflicts,$cicle,$neworder) {
-        //echo "conflicts=".$conflicts."<br>";
+    public function thanksScanorderGetAction(Request $request) {
+
+        $session = $request->getSession();
+        $submittedData = $session->get('submittedData');
+
+        //echo "conflicts=".$submittedData['conflicts']."<br>";
         return $this->render('OlegOrderformBundle:ScanOrder:thanks.html.twig', array(
-            'oid' => $oid,
-            'conflicts' => $conflicts,
-            'cicle' => $cicle,
-            'neworder' => $neworder
+            'oid' => $submittedData['oid'],
+            'conflicts' => $submittedData['conflicts'],
+            'cicle' => $submittedData['cicle'],
+            'neworder' => $submittedData['neworder']
         ));
     }
     
