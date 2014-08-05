@@ -65,14 +65,16 @@ function setResearchEducational() {
     //research
     populateSelectCombobox( ".combobox-research-setTitle", null, "Select an option or type in a new value", false );
     $(".combobox-research-setTitle").select2("readonly", true);
-    populateSelectCombobox( ".ajax-combobox-optionaluser-research", null, "Select an option or type in a new value", true );
-    $(".ajax-combobox-optionaluser-research").select2("readonly", true);
+    populateSelectCombobox( ".combobox-optionaluser-research", null, "Select an option or type in a new value", false );
+    $(".combobox-optionaluser-research").select2("readonly", true);
 
     //educational
+    //multiple is set to false to make the width of the field to fit the form; otherwise, the data is not set and the width is too small to fit placeholder
     populateSelectCombobox( ".combobox-educational-lessonTitle", null, "Select an option or type in a new value", false );
     $(".combobox-educational-lessonTitle").select2("readonly", true);
-    populateSelectCombobox( ".ajax-combobox-optionaluser-educational", null, "Select an option or type in a new value", true );
-    $(".ajax-combobox-optionaluser-educational").select2("readonly", true);
+    //multiple is set to false to make the width of the field to fit the form; otherwise, the data is not set and the width is too small to fit placeholder
+    populateSelectCombobox( ".combobox-optionaluser-educational", null, 'Select an option or type in a new value', false );
+    $(".combobox-optionaluser-educational").select2("readonly", true);
 
 }
 
@@ -107,9 +109,12 @@ function customCombobox() {
     }
 }
 
-function populateSelectCombobox( target, data, placeholder, multiple ) {
+function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
     //console.log("target="+target);
+
+    //clear the value
+    $(target).select2('val','');
 
     if( placeholder ) {
         var allowClear = true;
@@ -117,7 +122,7 @@ function populateSelectCombobox( target, data, placeholder, multiple ) {
         var allowClear = false;
     }
 
-    if( multiple ) {
+    if( multipleFlag ) {
         var multiple = true;
     } else {
         var multiple = false;
@@ -719,28 +724,28 @@ function getLessonTitle() {
 //#############  Research Educational Utils  ##############//
 function getOptionalUserResearch() {
 
-    var targetid = ".ajax-combobox-optionaluser-research";
+    var targetid = ".combobox-optionaluser-research";
     var url = getCommonBaseUrl("util/"+"optionaluserresearch"); //urlCommon+"optionaluserresearch";
 
     var idInArr = getParentSelectId( ".combobox-research-projectTitle", _projectTitle, targetid, true );
 
     url = url + "?opt=" + idInArr;
 
-    if( idInArr < 0 ) {
-
-        //new project entered: get default users
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-                if( data ) {
-                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
-                }
-            });
-
-        return;
-    }
+//    if( idInArr < 0 ) {
+//
+//        //new project entered: get default users
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//                if( data ) {
+//                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
+//                }
+//            });
+//
+//        return;
+//    }
 
     $.ajax({
         url: url,
@@ -757,28 +762,28 @@ function getOptionalUserResearch() {
 
 function getOptionalUserEducational() {
 
-    var targetid = ".ajax-combobox-optionaluser-educational";
+    var targetid = ".combobox-optionaluser-educational";
     var url = getCommonBaseUrl("util/"+"optionalusereducational"); //urlCommon+"optionalusereducational";
 
     var idInArr = getParentSelectId( ".combobox-educational-courseTitle", _courseTitle, targetid, true );
 
     url = url + "?opt=" + idInArr;
 
-    if( idInArr < 0 ) {
-
-        //new course entered: get default users
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-                if( data ) {
-                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
-                }
-            });
-
-        return;
-    }
+//    if( idInArr < 0 ) {
+//
+//        //new course entered: get default users
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//                if( data ) {
+//                    populateSelectCombobox( targetid, data, "Select an option or type in a new value", true );
+//                }
+//            });
+//
+//        return;
+//    }
 
     $.ajax({
         url: url,

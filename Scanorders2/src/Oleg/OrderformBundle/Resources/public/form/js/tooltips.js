@@ -88,7 +88,7 @@ function attachResearchEducationalTooltip() {
     attachResEduOnMouseEvent(
                                 '.combobox-research-projectTitle',
                                 '.combobox-research-setTitle',
-                                '.ajax-combobox-optionaluser-research',
+                                '.combobox-optionaluser-research',
                                 "Please enter the Research Project Title to access this field"
                             );
 
@@ -96,10 +96,9 @@ function attachResearchEducationalTooltip() {
     attachResEduOnMouseEvent(
                                 '.combobox-educational-courseTitle',
                                 '.combobox-educational-lessonTitle',
-                                '.ajax-combobox-optionaluser-educational',
+                                '.combobox-optionaluser-educational',
                                 "Please enter the Course Title to access this field"
     );
-    //attachResEduOnMouseEvent( '.ajax-combobox-optionaluser-educational', '.combobox-educational-courseTitle', "Please enter the Course Title to access this field" );
 
 }
 

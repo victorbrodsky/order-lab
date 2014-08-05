@@ -574,7 +574,7 @@ function setPatientAndProcedureAgeListener() {
         }
         var encageValue = encage.val();
 
-        //console.log('check: patientdobValue='+patientdobValue+', encdateValue='+encdateValue+", encageValue="+encageValue);
+        console.log('check: patientdobValue='+patientdobValue+', encdateValue='+encdateValue+", encageValue="+encageValue);
 
         //Case 1a: if patientdobValue and encdateValue are empty => no conflict
         if( patientdobValue == "" && encdateValue == "" ) {
@@ -594,6 +594,7 @@ function setPatientAndProcedureAgeListener() {
         //Case 2: if encounter date is empty, but age and dob are set, verify procedure age with patient age by current date
         if( encdateValue == "" && patientdobValue != "" && encageValue != "" ) {
             var dobage = getAge(patientdobValue);
+            //console.log('check: parseInt(encageValue)='+parseInt(encageValue)+', parseInt(dobage)='+parseInt(dobage));
             if( parseInt(encageValue) != parseInt(dobage) ) {
                 var msg = "The patient's age at the time of encounter does not correspond to the patient's date of birth (DOB) based on today's date. Please verify and correct the DOB and Patient's Age (at the time of encounter) field values.";
                 setAgeConflictWarningMessage(encage,msg,parseInt(dobage));
@@ -606,7 +607,7 @@ function setPatientAndProcedureAgeListener() {
             var dobage = getAge(patientdobValue);
             var expectedAge = getAgeByDiff(patientdobValue,encdateValue);
             //console.log('check: dobage='+dobage+', encounterage='+encounterage+", encageValue="+encageValue+", expectedAge="+expectedAge);
-            if( encounterage != expectedAge ) {
+            if( parseInt(encageValue) != expectedAge ) {
                 var msg = "The patient's age at the time of encounter does not correspond the patient's date of birth (DOB). Please verify and correct the DOB, Encounter Date, and Patient's Age (at the time of encounter) field values.";
                 setAgeConflictWarningMessage(encage,msg,expectedAge);
             }

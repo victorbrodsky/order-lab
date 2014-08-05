@@ -30,32 +30,15 @@ class Educational
     protected $id;
 
 
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-//     * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
-//     */
-//    protected $director;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $directorstr;
-
     /**
      * @ORM\OneToOne(targetEntity="OrderInfo", mappedBy="educational")
      */
     protected $orderinfo;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="Slide", mappedBy="educational")
-//     */
-//    protected $slide;
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="educational")
      */
     protected $slides;
-
 
     //directors
     /**

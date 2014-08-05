@@ -37,7 +37,6 @@ class EducationalType extends AbstractType
             $builder->add( 'courseTitleStr', 'custom_selector', array(
                 'label' => 'Course Title:',
                 'required' => false,
-                //'read_only' => $readonly,
                 'attr' => array('class' => 'combobox combobox-width combobox-educational-courseTitle', 'type' => 'hidden'),
                 'classtype' => 'projectTitle'
             ));
@@ -46,14 +45,12 @@ class EducationalType extends AbstractType
                 'label' => 'Lesson Title:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width combobox-educational-lessonTitle', 'type' => 'hidden'),
-                //'read_only' => $readonly,
                 'classtype' => 'setTitles'
             ));
 
-            //$addlabel = " (as entered by user)";
             $builder->add('directorWrappers', 'custom_selector', array(
                 'label' => 'Course Director(s):',
-                'attr' => array('class' => 'ajax-combobox-optionaluser-educational', 'type' => 'hidden'),
+                'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-educational', 'type' => 'hidden'),
                 'required'=>false,
                 'classtype' => 'optionalUserEducational'
             ));

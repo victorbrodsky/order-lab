@@ -54,7 +54,7 @@ class ResearchType extends AbstractType
             //$addlabel = " (as entered by user)";
             $builder->add('principalWrappers', 'custom_selector', array(
                 'label' => 'Principal Investigator(s):',
-                'attr' => array('class' => 'ajax-combobox-optionaluser-research', 'type' => 'hidden'),
+                'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-research', 'type' => 'hidden'),
                 'required'=>false,
                 'classtype' => 'optionalUserResearch'
             ));
