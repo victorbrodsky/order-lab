@@ -604,18 +604,18 @@ function setPatientAndProcedureAgeListener() {
         if( encdateValue != "" && patientdobValue != "" && encageValue != "" ) {
             var encounterage = getAge(encdateValue);
             var dobage = getAge(patientdobValue);
-            var sumyears = parseInt(encounterage) + parseInt(encageValue);
-            //console.log('check: dobage='+dobage+', encounterage='+encounterage+", encageValue="+encageValue+", sumyears="+sumyears);
-            if( parseInt(dobage) != sumyears ) {
+            var expectedAge = getAgeByDiff(patientdobValue,encdateValue);
+            //console.log('check: dobage='+dobage+', encounterage='+encounterage+", encageValue="+encageValue+", expectedAge="+expectedAge);
+            if( encounterage != expectedAge ) {
                 var msg = "The patient's age at the time of encounter does not correspond the patient's date of birth (DOB). Please verify and correct the DOB, Encounter Date, and Patient's Age (at the time of encounter) field values.";
-                setAgeConflictWarningMessage(encage,msg,parseInt(dobage));
+                setAgeConflictWarningMessage(encage,msg,expectedAge);
             }
         }
 
 
     }
 
-    function setAgeConflictWarningMessage(procedureAgeEl,msg,age) {
+    function setAgeConflictWarningMessage(procedureAgeEl,msg,expectedAge) {
         //set if not existed
         var warningmsg = procedureAgeEl.parent().find('.age-conflict-added');
         if( warningmsg.length > 0 ) {
@@ -623,7 +623,7 @@ function setPatientAndProcedureAgeListener() {
         }
         var errorHtml = '<div class="age-conflict-added alert alert-warning">' +
                         msg +
-                        '<p><button type="button" onclick="autoCorrectProcedureAge(this,'+age+')">Auto-correct the age at the time of the encounter</button></p>' +
+                        '<p><button type="button" onclick="autoCorrectProcedureAge(this,'+expectedAge+')">Auto-correct the age at the time of the encounter</button></p>' +
                         '</div>';
         procedureAgeEl.after(errorHtml);
     }
@@ -636,11 +636,11 @@ function removeAgeConflictWarningMessage(procedureAgeEl) {
     warningmsg.remove();
 }
 
-function autoCorrectProcedureAge(msgEl,age) {
+function autoCorrectProcedureAge(msgEl,expectedAge) {
     var procedureAgeEl = $(msgEl).closest('.procedurepatage').find('.procedureage-field');
-    //printF(procedureAgeEl,"auto correct procedcure age="+age+", :");
+    //printF(procedureAgeEl,"auto correct procedcure expectedAge="+expectedAge+", :");
     removeAgeConflictWarningMessage(procedureAgeEl);
-    procedureAgeEl.val(age);
+    procedureAgeEl.val(expectedAge);
 }
 
 //use this function to set procedure age when clicking accession check button. Currently not used.

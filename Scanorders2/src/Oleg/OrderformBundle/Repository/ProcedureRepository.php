@@ -227,16 +227,22 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
     }
 
     //age conflict is based on 3 values: dob, encounter date and encounter age
-    public function checkAgeConflict( $orderinfo, $procedure ) {
+    public function checkAgeConflict( $procedure, $orderinfo, $original ) {
 
         $dataqualityObj = null;
 
-        $patient = $procedure->getParent();
+        if( $original ) {
+            $formEntity = $original;
+        } else {
+            $formEntity = $procedure;
+        }
+
+        $patient = $formEntity->getParent();
 
         $patientage = $patient->calculateAgeInt();
         $patientdob = $patient->obtainValidField('dob')->getField();
-        $encounterage = $procedure->obtainValidField('Patage')->getField();
-        $encounterdate = $procedure->obtainValidField('EncounterDate')->getField();
+        $encounterage = $formEntity->obtainValidField('Patage')->getField();
+        $encounterdate = $formEntity->obtainValidField('EncounterDate')->getField();
 
 //        if( $encounterdate == NULL )
 //            echo "<br>encdate null<br>";
@@ -266,11 +272,12 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( $encounterdate == NULL && $patientage > 0 && $encounterage > 0 ) {
             echo "case 2: ".$encounterage."?=".$patientage."<br>";
             if( $encounterage != $patientage ) {
-                $msg = "The patient's age at the time of encounter does not correspond to the patient's date of birth (DOB) based on today's date. Please verify and correct the DOB and Patient's Age (at the time of encounter) field values.";
+                $msg = "The patient's age at the time of encounter does not correspond to the patient's date of birth (DOB) based on today's date. Please verify and correct the DOB and Patient's Age (at the time of encounter) field values.".
+                       " Encounter age=".$encounterage.", patient age (based on DOB)=".$patientage;
             }
         }
 
-        //Case 3: all 3 parameters are set: patient's dob, encounter date and age at the time of encounter => the sum of enc age and years from enc must be equal to patient's age
+        //Case 3: all 3 parameters are set: patient's dob, encounter date and age at the time of encounter => years diff between dob and encounter date should be equal to encounter age
         if( $encounterdate != NULL && $patientage > 0 && $encounterage > 0 ) {
 
             //calculate age based on encounter date and dob and compare with existing encounter age
@@ -279,7 +286,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
             echo "case 3: ".$years."?=".$encounterage."<br>";
             if( $years != $encounterage ) {
-                $msg = "The patient's age at the time of encounter does not correspond the patient's date of birth (DOB). Please verify and correct the DOB, Encounter Date, and Patient's Age (at the time of encounter) field values.";
+                $msg = "The patient's age at the time of encounter does not correspond the patient's date of birth (DOB). Please verify and correct the DOB, Encounter Date, and Patient's Age (at the time of encounter) field values.".
+                       " Encounter age=".$encounterage.", expected encounter age (based on years difference bewteen DOB and encounter date)=".$years;
             }
 
         }
@@ -288,13 +296,18 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
             $dataqualityObj = new DataQualityAge();
             $dataqualityObj->setOrderinfo($orderinfo);
-            $dataqualityObj->setProcedure($procedure);
             $dataqualityObj->setPatientdob($patientdob);
             $dataqualityObj->setEncounterdate($encounterdate);
             $dataqualityObj->setEncounterage($encounterage);
             $dataqualityObj->setProvider($orderinfo->getProvider());
             $dataqualityObj->setDescription($msg);
             $dataqualityObj->setStatus('active');
+
+            if( $procedure && $procedure->getId() && $procedure->getId() != "" ) {
+                $dataqualityObj->setProcedure($procedure);
+            } else {
+                $dataqualityObj->setProcedure($original);
+            }
 
             $this->_em->persist($dataqualityObj);
 
