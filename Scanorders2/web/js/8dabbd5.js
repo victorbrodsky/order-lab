@@ -205,8 +205,6 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 				o.multidate = Number(o.multidate) || false;
 				if (o.multidate !== false)
 					o.multidate = Math.max(0, o.multidate);
-				else
-					o.multidate = 1;
 			}
 			o.multidateSeparator = String(o.multidateSeparator);
 
@@ -1030,15 +1028,21 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 			if (!date){
 				this.dates.clear();
 			}
-			else if (ix !== -1){
-				this.dates.remove(ix);
-			}
-			else {
+			else if (this.o.multidate === false) {
+				this.dates.clear();
 				this.dates.push(date);
 			}
-			if (typeof this.o.multidate === 'number')
-				while (this.dates.length > this.o.multidate)
-					this.dates.remove(0);
+			else {
+				if (ix !== -1){
+					this.dates.remove(ix);
+				}
+				else {
+					this.dates.push(date);
+				}
+				if (typeof this.o.multidate === 'number')
+					while (this.dates.length > this.o.multidate)
+						this.dates.remove(0);
+			}
 		},
 
 		_setDate: function(date, which){
@@ -9364,6 +9368,30 @@ function setElementToId( target, dataarr, setId ) {
  * and open the template in the editor.
  */
 
+//convert enter to tab behavior: pressing enter will focus the next input field
+function initConvertEnterToTab() {
+    $('body').on('keydown', 'input, select', function(e) {
+        var self = $(this)
+            , form = self.parents('form:eq(0)')
+            , focusable
+            , next
+            ;
+        if (e.keyCode == 13) {
+            //focusable = form.find('input,a,select,button,textarea').filter(':visible');
+            focusable = form.find('input,select').filter(':visible').not("[readonly]").not("[disabled]");
+            next = focusable.eq(focusable.index(this)+1);
+            //console.log('next.length='+next.length);
+            if( next.length ) {
+                //printF(next,'go next:');
+                next.focus();
+            } else {
+                //form.submit();
+            }
+            return false;
+        }
+    });
+}
+
 
 //get a block holder by button; this element should contain all form input fields belonging to this button
 function getButtonElementParent( btn ) {
@@ -13825,9 +13853,10 @@ function initDatepicker() {
         //make sure the masking is clear when input is cleared by datepicker
         datepickers.datepicker().on("clearDate", function(e){
                 var inputField = $(this).find('input');
-                //printF(inputField,"Clear input:");
+                //printF(inputField,"clearDate input:");
                 clearErrorField( inputField );
         });
+
     }
 
 }
@@ -13996,6 +14025,8 @@ $(document).ready(function() {
     changeInstitution();
 
     windowCloseAlert();
+
+    initConvertEnterToTab();
 
 });
 

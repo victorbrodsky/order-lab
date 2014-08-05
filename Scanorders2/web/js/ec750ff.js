@@ -5823,9 +5823,10 @@ function initDatepicker() {
         //make sure the masking is clear when input is cleared by datepicker
         datepickers.datepicker().on("clearDate", function(e){
                 var inputField = $(this).find('input');
-                //printF(inputField,"Clear input:");
+                //printF(inputField,"clearDate input:");
                 clearErrorField( inputField );
         });
+
     }
 
 }

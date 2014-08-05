@@ -8328,9 +8328,10 @@ function initDatepicker() {
         //make sure the masking is clear when input is cleared by datepicker
         datepickers.datepicker().on("clearDate", function(e){
                 var inputField = $(this).find('input');
-                //printF(inputField,"Clear input:");
+                //printF(inputField,"clearDate input:");
                 clearErrorField( inputField );
         });
+
     }
 
 }
@@ -8433,6 +8434,30 @@ function printF(element,text) {
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+//convert enter to tab behavior: pressing enter will focus the next input field
+function initConvertEnterToTab() {
+    $('body').on('keydown', 'input, select', function(e) {
+        var self = $(this)
+            , form = self.parents('form:eq(0)')
+            , focusable
+            , next
+            ;
+        if (e.keyCode == 13) {
+            //focusable = form.find('input,a,select,button,textarea').filter(':visible');
+            focusable = form.find('input,select').filter(':visible').not("[readonly]").not("[disabled]");
+            next = focusable.eq(focusable.index(this)+1);
+            //console.log('next.length='+next.length);
+            if( next.length ) {
+                //printF(next,'go next:');
+                next.focus();
+            } else {
+                //form.submit();
+            }
+            return false;
+        }
+    });
+}
 
 
 //get a block holder by button; this element should contain all form input fields belonging to this button

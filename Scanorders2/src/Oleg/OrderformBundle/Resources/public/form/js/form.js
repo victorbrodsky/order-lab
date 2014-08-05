@@ -777,9 +777,10 @@ function initDatepicker() {
         //make sure the masking is clear when input is cleared by datepicker
         datepickers.datepicker().on("clearDate", function(e){
                 var inputField = $(this).find('input');
-                //printF(inputField,"Clear input:");
+                //printF(inputField,"clearDate input:");
                 clearErrorField( inputField );
         });
+
     }
 
 }
@@ -820,6 +821,7 @@ function processDatepicker( element, remove ) {
 }
 
 function initSingleDatepicker( datepickerElement ) {
+    //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
     datepickerElement.datepicker({
         autoclose: true,
         clearBtn: true,
