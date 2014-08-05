@@ -68,9 +68,14 @@ git remote update (note: this is the same as git fetch --all)
 git pull
 
 #To update whole tree, even from the subdirectory (including remove of deleted files)
-git add -u :/
+git add -u .
 git commit -m "message"
 git push -u origin master
+
+#To remove already cashed files after changing .gitignore (First commit any outstanding code changes, and then, run this command)
+git rm -r --cached .
+git add .
+git commit -m ".gitignore is now working"
 
 #Testing: run phpunit script, located in symfony's 'bin' folder, with the test file as a parameter:
 ./bin/phpunit -c app src/Oleg/OrderformBundle/Tests/LoginTest.php
