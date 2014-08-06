@@ -78,6 +78,7 @@
 .form-control-modif {
     //display: inline;
     height: 28px; //keep the same as combobox
+    //height: auto;
     //width: 70%;
 }
 

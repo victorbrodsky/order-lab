@@ -52,6 +52,7 @@ class Patient extends ObjectAbstract
      */
     protected $dob;
 
+    //@ORM\OrderBy({"creationdate" = "DESC", "id" = "DESC"})
     /**
      * Patient's Clinical Summary
      * @param \Doctrine\Common\Collections\Collection $property
@@ -678,6 +679,11 @@ class Patient extends ObjectAbstract
             $clinhists = $clinhists . "value=".$name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
         }
 
+        $dobs = ", dob=".count($this->dob).": ";
+        foreach( $this->dob as $name ) {
+            $dobs = $dobs . "value=".$name." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
+        }
+
 //        $ages = ", ageCount=".count($this->age).": ";
 //        foreach( $this->age as $name ) {
 //            $ages = $ages . $name->getField()." (provider=".$name->getProvider().", status=".$name->getStatus().") ";
@@ -691,6 +697,7 @@ class Patient extends ObjectAbstract
         return "Patient: id=".$this->id.
         ", mrn=".$this->mrn->first().", mrnID=".$mrnId.
         ", mrnCount=".count($this->mrn).
+        ", dobs=".$dobs.
         ", clinhists=".$clinhists.
         ", lastnames=".$lastnames.
         ", sexs=".$sexs.
@@ -732,6 +739,10 @@ class Patient extends ObjectAbstract
 
     public function getFullPatientName() {
         $patientFullName = "";
+
+        if( !$this->getId() || $this->getId() == "" ) {
+            return $patientFullName;
+        }
 
         //echo "lastname=".implode(",",$this->getLastname())."<br>";
 

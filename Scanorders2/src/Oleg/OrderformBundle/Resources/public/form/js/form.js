@@ -800,7 +800,6 @@ function processDatepicker( element, remove ) {
             element = element.closest('.input-group.date');
         }
 
-        //var btn = element.parent().find('.input-group-addon');
         //printF(element,"Datepicker Btn:");
 
         if( remove == "remove" ) {
@@ -811,10 +810,12 @@ function processDatepicker( element, remove ) {
             var inputField = element.find('input');
             clearErrorField( inputField );
 
-            //btn.attr( "disabled", true );
+            //hide lock-icon group
+            var lockGroup = element.parent().find('.lock-icon-button');
+            lockGroup.hide();
+
         } else {
             initSingleDatepicker(element);
-            //btn.attr( "disabled", false );
         }
 
     }

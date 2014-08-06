@@ -136,7 +136,6 @@ class MultiScanOrderController extends Controller {
         //echo "dataq=".$dataq."<br>";
 
         //check if the orderform already exists, so it's edit case
-        //TODO: edit id is empty. Why??
 //        echo "id=".$entity->getId()."<br>";
 //        echo "entity count=".count($entity)."<br>";
 //        echo "patient count=".count($entity->getPatient())." patient=".$entity->getPatient()[0]."<br>";
@@ -454,8 +453,6 @@ class MultiScanOrderController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         $userUtil = new UserUtil();
-
-        //TODO: is it possible to filter orderinfo by JOINs?
 
         //INNER JOIN orderinfo.block block
 //        INNER JOIN orderinfo.patient patient

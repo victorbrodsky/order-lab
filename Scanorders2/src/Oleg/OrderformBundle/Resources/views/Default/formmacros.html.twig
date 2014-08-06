@@ -14,6 +14,7 @@
 {% endmacro %}
 
 {% macro simplefield( label, value, type, disabled ) %}
+    value|raw:{{ value|raw }}
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
@@ -23,9 +24,10 @@
             {% if type is defined and type == "input" %}
                 <input class="form-control form-control-modif" type="text" value="{{ value }}" {{ disabled }}>
             {% else %}
-                <div class="well well-sm" style="margin-bottom:0; min-height:35px">
-                    {{ value|raw }}
-                </div>
+                {#<div class="well well-sm" style="margin-bottom:0; min-height:40px">#}
+                    {#{{ value|raw }}#}
+                {#</div>#}
+                <input class="form-control form-control-modif" type="text" value="{{ value|raw }}" {{ disabled }}>
             {% endif %}
         </div>
     </div>
@@ -72,18 +74,9 @@
                 {% else %}
                     {{ form_widget(field) }}
                 {% endif %}
-                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                {#<span class="input-group-addon btn" data-toggle="datepicker" type="button">#}
-                    {#<i class="glyphicon glyphicon-calendar"></i>#}
-                {#</span>#}
+                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+
             </div>
-
-
-            {#<div class="input-group date">#}
-                {#&#123;&#35;<input type="text" class="form-control">&#35;&#125;#}
-                {#{{ form_widget(field) }}#}
-                {#<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>#}
-            {#</div>#}
 
         </div>
         {{ form_rest(field) }}
@@ -98,7 +91,8 @@
                 {% else %}
                     {{ form_widget(field) }}
                 {% endif %}
-                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                <span class="input-group-addon lock-icon-button" style="display: none;" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>
             </div>
 
 {% endmacro %}
@@ -232,14 +226,14 @@
                             class="btn btn-default btn-xs add_form_btn pull-right"
                             onclick="addSameForm(
                                 '{{ name }}',
-                                {{ patientCount }},
-                                {{ procedureCount }},
-                                {{ accessionCount }},
-                                {{ partCount }},
-                                {{ blockCount }},
-                                {{ slideCount }},
-                                {{ scanCount }},
-                                {{ stainCount }}
+                                '{{ patientCount }}',
+                                '{{ procedureCount }}',
+                                '{{ accessionCount }}',
+                                '{{ partCount }}',
+                                '{{ blockCount }}',
+                                '{{ slideCount }}',
+                                '{{ scanCount }}',
+                                '{{ stainCount }}'
                             )">Add</button>
                     {#<button id="{{ name }}_{{ uid }}" type="button" class="delete_form_btn btn btn-danger btn_margin btn-xs">Delete</button>#}
                     {#<button id="delete_form_btn_{{ name }}_{{ uid }}" type="button" style="margin-right:1%;" class="btn btn-danger btn-xs delete_form_btn pull-right">Delete</button>#}
@@ -352,7 +346,7 @@
 
     <p>
     <div class="{{ classname }}">
-    {% for field in fields %}
+    {% for field in fields|reverse %}
 
         {#( field.vars.value.status == 'valid' and is_granted('ROLE_SCANORDER_SUBMITTER') ) or#}
         {#get correct field: valid for submitter#}
@@ -367,6 +361,7 @@
         {% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') and field.vars.value.status == 'invalid' %}
             {%  set show = 1 %}
         {% endif %}
+
 
         {% if show == 1 or
               cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'

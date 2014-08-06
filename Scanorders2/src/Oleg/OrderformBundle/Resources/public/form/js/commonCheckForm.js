@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+
 //convert enter to tab behavior: pressing enter will focus the next input field
 function initConvertEnterToTab() {
     $('body').on('keydown', 'input, select', function(e) {
@@ -161,22 +162,6 @@ function isKey(element, field) {
         return false;
     }
 
-//    var idsArr = element.attr("id").split("_");
-//    if( $.inArray(field, keys) == -1 ) {
-//        return false;
-//    } else {
-//        if( field == "name" ) {
-//            var holder = idsArr[idsArr.length-holderIndex];
-//            console.log("is key: holder="+holder);
-//            if( holder == "part" || holder == "block" ) {
-//                return true
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return true;
-//        }
-//    }
 }
 
 
@@ -574,7 +559,7 @@ function setPatientAndProcedureAgeListener() {
         }
         var encageValue = encage.val();
 
-        console.log('check: patientdobValue='+patientdobValue+', encdateValue='+encdateValue+", encageValue="+encageValue);
+        //console.log('check: patientdobValue='+patientdobValue+', encdateValue='+encdateValue+", encageValue="+encageValue);
 
         //Case 1a: if patientdobValue and encdateValue are empty => no conflict
         if( patientdobValue == "" && encdateValue == "" ) {
@@ -1250,15 +1235,61 @@ function processExceptionalFields(btnObj) {
             dobEl.attr("readonly", false);
             dobEl.removeAttr( "readonly" );
             processDatepicker(dobEl);
+        } else {
+            //if field has a value, then replace calendar icon with lock icon
+            var inputGroup = parentEl.find('.input-group');
+
+            //show lock icon
+            var lockGroup = parentEl.find('.lock-icon-button');
+            lockGroup.show();
+
+            //create lock icon
+            //var lockGroup = '<span class="input-group-addon lock-icon-button" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>';
+            //add lockGroup to inputGroup
+			//inputGroup.append(lockGroup);
+			//remove calendarGroup
+			//inputGroup.find('.calendar-icon-button').remove();
+
+            //hide calendarGroup
+            //var calendarGroup = parentEl.find('.calendar-icon-button');
+            //calendarGroup.hide();
         }
 
-        var clinhistEl = parentEl.find('.patient-clinicalhistory-field');
-        //console.log('clinhistEl val='+clinhistEl.val());
-        if( clinhistEl.val() == '' ) {
-            clinhistEl.attr("readonly", false);
-            clinhistEl.removeAttr( "readonly" );
-        }
+//        var clinhistEl = parentEl.find('.patient-clinicalhistory-field');
+//        //console.log('clinhistEl val='+clinhistEl.val());
+//        if( clinhistEl.val() == '' ) {
+//            clinhistEl.attr("readonly", false);
+//            clinhistEl.removeAttr( "readonly" );
+//        }
 
+    }
+
+}
+
+function unlockField( lockBtn ) {
+
+    var lockBtnEl = $(lockBtn);
+    //printF(lockBtnEl,"unlock btn:");
+
+    var unlock = confirm("Are you sure you would like to correct the date of birth?");
+
+    if( unlock == true ){
+        var field = lockBtnEl.parent().find('input');
+        field.attr("readonly", false);
+        field.removeAttr( "readonly" );
+        processDatepicker(field);
+        	
+		lockBtnEl.hide();
+
+		//get inputGroup
+		//var inputGroup = lockBtnEl.parent();
+		//add calendarGroup
+		//var calendarGroup = '<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>';
+		//inputGroup.append(calendarGroup);
+		//lockBtn.remove();
+		
+    } else {
+        return false;
     }
 
 }
@@ -1388,7 +1419,7 @@ function disableInElementBlock( element, disabled, all, flagKey, flagArrayField 
             continue;
         }
 
-//        console.log("proceed before submitted by single form ...");
+//      //console.log("proceed before submitted by single form ...");
         //don't process patient fields if the form was submitted by single form: click on accession,part,block delete button
 //        if( orderformtype == "single" && id && id.indexOf("_procedure_") == -1 ) {
 //            continue;
@@ -1555,17 +1586,7 @@ function disableElement(parentname,element, flag) {
 //key: set only key field
 function setElementBlock( element, data, cleanall, key ) {
 
-//    //console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
-//    var parent = element.parent().parent().parent().parent().parent().parent();
-//    //console.log("set parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
-//
-//    //var single = false;
-//    if( orderformtype == "single" ) {
-//    //if( !parent.attr('id') ) {
-//        //var single = true;
-//        var parent = element.parent().parent().parent().parent().parent().parent().parent();
-//        console.log("Single set! parent.id=" + parent.attr('id') + ", class=" + parent.attr('class') + ", key="+key);
-//    }
+    //console.debug( "element.id=" + element.attr('id') + ", class=" + element.attr('class') );
 
     var parent = getButtonElementParent( element );
 
@@ -2194,6 +2215,21 @@ function cleanPartDisident( element, field, single ) {
     });
 }
 
+//this function clean a provided single element
+function cleanPatientClinicalHistory( element, field, single ) {
+
+    //console.log( "\nClean Patient ClinicalHistory elements id=" + element.attr("id") + ", field=" + field );
+
+    //just clean text from 0 field
+    if( element.attr('id').indexOf("clinicalHistory_0_field") != -1 ) {
+        element.val(null);
+        return;
+    }
+
+    var rowElement = element.closest('.row');
+    rowElement.remove();
+}
+
 //element - input field element
 function cleanArrayField( element, field, single ) {
 
@@ -2211,6 +2247,11 @@ function cleanArrayField( element, field, single ) {
 
     if( field == "disident" && orderformtype == "single" ) {
         cleanPartDisident(element, field, single);
+        return;
+    }
+
+    if( field == "clinicalHistory" ) {
+        cleanPatientClinicalHistory(element, field, single);
         return;
     }
 

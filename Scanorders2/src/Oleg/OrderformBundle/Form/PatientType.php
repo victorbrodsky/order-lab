@@ -43,7 +43,7 @@ class PatientType extends AbstractType
 
         $builder->add('dob', 'collection', array(
             'type' => new PatientDobType($this->params, null),
-            'read_only' => $flag,
+            //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
