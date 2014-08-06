@@ -826,8 +826,9 @@ function initSingleDatepicker( datepickerElement ) {
     datepickerElement.datepicker({
         autoclose: true,
         clearBtn: true,
-        //todayBtn: "linked",
-        todayHighlight: true
+        todayBtn: "linked",
+        todayHighlight: true,
+        endDate: new Date()
     });
 }
 

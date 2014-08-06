@@ -237,7 +237,6 @@
                                         {{ formmacros.inputArrayField(form_procedure.name,'new',"procedurename") }}
 
                                         {#patient's data: single simple fields#}
-                                        {#{{ formmacros.fieldDateLabel(form_procedure.encounterDate) }}#}
                                         {{ formmacros.inputArrayField(form_procedure.encounterDate,'new',"procedureencounterdate","date") }}
 
                                         {#{{ formmacros.field(form_procedure.patname) }}#}
@@ -262,7 +261,6 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Accession</h3></div>
                                     <div class="panel-body">
-                                        {#{{ formmacros.fieldDateLabel(form_accession.accessionDate) }}#}
                                         {{ formmacros.inputArrayField(form_accession.accessionDate,'new',"accessionaccessiondate","date") }}
                                     </div>
                                 </div>

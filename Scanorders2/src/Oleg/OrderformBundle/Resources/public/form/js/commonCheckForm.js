@@ -449,9 +449,9 @@ function setPatientAndProcedureAgeListener() {
 
             //set patient's age
             if( patientdobValue != "" ) {
-                var patientAgeEl = $(this).closest('.form-element-holder').find('.patientage').find('.well');
+                var patientAgeEl = $(this).closest('.form-element-holder').find('.patientage').find('.not-mapped-simplefield');
                 if( orderformtype == "single") {
-                    patientAgeEl = $('.singleorderinfo').find('.patientage').find('.well');
+                    patientAgeEl = $('.singleorderinfo').find('.patientage').find('.not-mapped-simplefield');
                 }
                 var age = getAge(patientdobValue);
                 if( age > 0 ) {
@@ -1341,22 +1341,23 @@ function removeInfoFromElement( btnObj ) {
 function setPatientNameSexAgeLockedFields( data, parent ) {
 
     if( data['fullname'] && data['fullname'] != undefined && data['fullname'] != "" ) {
-        parent.find('.patientname').find('.well').html( data['fullname'] );
+        //parent.find('.patientname').find('.not-mapped-simplefield').html( data['fullname'] );
+        parent.find('.patientname').find('.not-mapped-simplefield').val( data['fullname'] );
     }
 
     if( data['sex'] && data['sex'] != undefined && data['sex'] != "" ) {
-        parent.find('.patientsex').find('.well').html( data['sex'][0]['text'] );
+        parent.find('.patientsex').find('.not-mapped-simplefield').val( data['sex'][0]['text'] );
     }
 
     if( data['age'] && data['age'] != undefined && data['age'] != "" ) {
-        parent.find('.patientage').find('.well').html( data['age'] );
+        parent.find('.patientage').find('.not-mapped-simplefield').val( data['age'] );
     }
 
 }
 function cleanPatientNameSexAgeLockedFields( parent ) {
-    parent.find('.patientname').find('.well').html("");
-    parent.find('.patientsex').find('.well').html("");
-    parent.find('.patientage').find('.well').html("");
+    parent.find('.patientname').find('.not-mapped-simplefield').val("");
+    parent.find('.patientsex').find('.not-mapped-simplefield').val("");
+    parent.find('.patientage').find('.not-mapped-simplefield').val("");
 }
 
 

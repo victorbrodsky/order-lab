@@ -89,7 +89,7 @@ function customCombobox() {
         getComboboxBlockname(new Array("0","0","0","0","0","0"));
         getComboboxScanregion(new Array("0","0","0","0","0","0"));
         getComboboxStain(new Array("0","0","0","0","0","0"));
-        getComboboxSpecialStain(new Array("0","0","0","0","0","0"),false);
+        getComboboxSpecialStain(new Array("0","0","0","0","0","0"),true);
         getComboboxProcedure(new Array("0","0","0","0","0","0"));
         getComboboxOrgan(new Array("0","0","0","0","0","0"));
         getComboboxDelivery(new Array("0","0","0","0","0","0"));
@@ -153,12 +153,17 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
 
 //#############  stains  ##############//
-function getComboboxStain(ids) {
+function getComboboxStain(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"stain");
 
     if( cicle == "new" || cicle == "create" ) {
         url = url + "?opt=default";
+    }
+
+    var targetid = ".ajax-combobox-stain";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
     }
 
     //console.log("_stain.length="+_stain.length);
@@ -170,20 +175,19 @@ function getComboboxStain(ids) {
             timeout: _ajaxTimeout
         }).success(function(data) {
                 _stain = data;
-            populateSelectCombobox( ".ajax-combobox-stain", _stain, null );
-            populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
+            populateSelectCombobox( targetid, _stain, null );
+            //populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
         });
     } else {
         //console.log("stain exists");
-        populateSelectCombobox( ".ajax-combobox-stain", _stain, null );
-        populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
+        populateSelectCombobox( targetid, _stain, null );
+        //populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
     }
 
     if( cicle == "new"  ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        var targetid = id+"stain_0_field";
-        //$(targetid).select2('val', '1');
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"stain_0_field";
         setElementToId( targetid, _stain );
     }
 
@@ -202,11 +206,11 @@ function getComboboxSpecialStain(ids, preset, setId) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         targetid = id+"specialStains_"+ids[5]+"_staintype";
-        //console.log("targetid="+targetid);
+        console.log("targetid="+targetid);
     }
 
     if( _stain.length == 0 ) {
-        //console.log("_stain.length is zero");
+        console.log("_stain.length is zero");
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
@@ -216,21 +220,26 @@ function getComboboxSpecialStain(ids, preset, setId) {
                 populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
             });
     } else {
-        //console.log("populate _stain.length="+_stain.length);
+        console.log("populate _stain.length="+_stain.length);
         populateSelectCombobox( targetid, _stain, null );
     }
 
-    //console.log("special stain preset="+preset);
+    console.log("special stain preset="+preset);
     if( targetid != "" ) {
         setElementToId( targetid, _stain, setId );
     }
 }
 
 //#############  scan regions  ##############//
-function getComboboxScanregion(ids) {
+function getComboboxScanregion(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"scanregion"); //urlCommon+"scanregion";
     //console.log("scanregion.length="+scanregion.length);
+
+    var targetid = ".ajax-combobox-scanregion";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -243,16 +252,16 @@ function getComboboxScanregion(ids) {
             async: asyncflag
         }).success(function(data) {
             _scanregion = data;
-            populateSelectCombobox( ".ajax-combobox-scanregion", _scanregion, null );
+            populateSelectCombobox( targetid, _scanregion, null );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-scanregion", _scanregion, null );
+        populateSelectCombobox( targetid, _scanregion, null );
     }
 
     if( cicle == "new"  ) {
-        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
-        var targetid = id+"scan_0_scanregion";
+//        var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
+//        var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
+//        var targetid = id+"scan_0_scanregion";
         //$(targetid).select2('data', {id: 'Entire Slide', text: 'Entire Slide'});
         setElementToId( targetid, _scanregion );
     }
@@ -965,16 +974,19 @@ function initComboboxJs(ids, holder) {
         getComboboxProcedure(ids,holder);
         getComboboxOrgan(ids,holder);
 
-        //exception field because it can be added dynamically
-        getComboboxSpecialStain(ids,false);
-
-        getComboboxPathService(ids);
-        getComboboxStain(ids);
-        getComboboxScanregion(ids);
+        //slide
+        getComboboxStain(ids,holder);
+        getComboboxScanregion(ids,holder);
+        
         slideType(ids);
+
+        //exception field because it can be added dynamically, so we use ids
+        getComboboxSpecialStain(ids,true);
+
+        //order
+        getComboboxPathService(ids);
         getProjectTitle(ids);
         getCourseTitle(ids);
-
         getComboboxDepartment(ids);
         getComboboxAccount(ids);
     }
