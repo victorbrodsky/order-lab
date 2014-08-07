@@ -21,6 +21,7 @@ class AperioProvider implements AuthenticationProviderInterface {
 
     public function __construct( UserProviderInterface $userProvider, $serviceContainer, $em, $providerKey = null, $timezone )
     {
+        //echo("constractor Aperio Authentication Provider <br>");
         $this->userProvider = $userProvider;
         $this->serviceContainer = $serviceContainer;
         $this->em = $em;

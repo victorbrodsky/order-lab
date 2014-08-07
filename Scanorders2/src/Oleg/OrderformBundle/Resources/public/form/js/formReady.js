@@ -72,6 +72,8 @@ $(document).ready(function() {
 
     initConvertEnterToTab();
 
+    initDatetimepicker();
+
 });
 
 

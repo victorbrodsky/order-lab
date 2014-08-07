@@ -55,17 +55,31 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $department_url = null;
         $department_name = null;
 
+        //maintenance
+        $maintenance = null;
+        $maintenanceenddate = null;
+        $maintenanceloginmsg = null;
+        $maintenancelogoutmsg = null;
+
         while( $row = $params->fetch() ) {
+
             $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
             $aDLDAPServerOu = $row['aDLDAPServerOu'];
             $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
             $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
             $smtpServerAddress = $row['smtpServerAddress'];
+
             $defaultSiteEmail = $row['siteEmail'];
+
             $institution_url = $row['institutionurl'];
             $institution_name = $row['institutionname'];
             $department_url = $row['departmenturl'];
             $department_name = $row['departmentname'];
+
+            $maintenance = $row['maintenance'];
+            $maintenanceenddate = $row['maintenanceenddate'];
+            $maintenanceloginmsg = $row['maintenanceloginmsg'];
+            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
             //echo $aDLDAPServerAddress."<br>";
         }
 
@@ -105,6 +119,12 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('institution_name',$institution_name);
         $container->setParameter('department_url',$department_url);
         $container->setParameter('department_name',$department_name);
+
+        //maintenance
+        $container->setParameter('maintenance',$maintenance);
+        $container->setParameter('maintenanceenddate',$maintenanceenddate);
+        $container->setParameter('maintenanceloginmsg',$maintenanceloginmsg);
+        $container->setParameter('maintenancelogoutmsg',$maintenancelogoutmsg);
 
     }//if param
 

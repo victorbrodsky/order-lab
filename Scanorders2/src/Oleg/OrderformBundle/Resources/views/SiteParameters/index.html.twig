@@ -44,7 +44,7 @@
             {#ScanOrder DB#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h6>ScanOrder DB (Parameters are stored in {{ link }}):</h6>
+                    <h3>ScanOrder DB (Parameters are stored in {{ link }}):</h3>
                 </td>
             </tr>
 
@@ -82,7 +82,7 @@
             {#AD/LDAP#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h6>AD/LDAP:</h6>
+                    <h3>AD/LDAP:</h3>
                 </td>
             </tr>
 
@@ -121,7 +121,7 @@
             {#CoPath#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h6>CoPath DB:</h6>
+                    <h3>CoPath DB:</h3>
                 </td>
             </tr>
             <tr>
@@ -153,7 +153,7 @@
             {#Aperio#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h6>Aperio eSlide Manager DB:</h6>
+                    <h3>Aperio eSlide Manager DB:</h3>
                 </td>
             </tr>
             <tr>
@@ -185,7 +185,7 @@
             {#Footer#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h6>Footer:</h6>
+                    <h3>Footer:</h3>
                 </td>
             </tr>
             <tr>
@@ -207,6 +207,34 @@
                 <td>Department URL</td>
                 <td>{{ entity.departmenturl }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'departmenturl'}) }}">Edit</a></td>
+            </tr>
+
+
+            {#Maintnance#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Maintanence Mode:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Maintanence</td>
+                <td>{{ entity.maintenance }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintnance Until</td>
+                <td>{{ entity.maintenanceenddate }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintnance Message on Logout</td>
+                <td>{{ entity.maintenancelogoutmsg }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenancelogoutmsg'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintnance Message on Login</td>
+                <td>{{ entity.maintenanceloginmsg }}</td>
+                <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
             </tr>
 
 

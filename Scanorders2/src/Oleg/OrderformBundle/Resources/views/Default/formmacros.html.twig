@@ -83,17 +83,16 @@
     </p>
 {% endmacro %}
 {% macro fielddate( field, attr ) %}
-            <div class="input-group date">
-                {% if attr == "disabled" %}
-                    {#value of disabled field will be ignored, but readonly does not work#}
-                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
-                {% else %}
-                    {{ form_widget(field) }}
-                {% endif %}
-                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
-                <span class="input-group-addon lock-icon-button" style="display: none;" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>
-            </div>
-
+        <div class="input-group date">
+            {% if attr == "disabled" %}
+                {#value of disabled field will be ignored, but readonly does not work#}
+                {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% else %}
+                {{ form_widget(field) }}
+            {% endif %}
+            <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+            <span class="input-group-addon lock-icon-button" style="display: none;" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>
+        </div>
 {% endmacro %}
 
 {% macro fieldicon( field, extra, classname ) %}

@@ -214,6 +214,33 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        //maintenance
+        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenance' )
+            $builder->add('maintenance',null,array(
+                'label'=>'Maintenance:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenanceenddate' )
+            $builder->add('maintenanceenddate',null,array(
+                'label'=>'Maintenance Until:',
+                'widget' => 'single_text',
+                'format' => 'MM-dd-yyyy hh:mm:ss',
+                'attr' => array('class'=>'form-control datetimepicker', 'style'=>'width:30%')
+            ));
+
+        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenanceloginmsg' )
+            $builder->add('maintenanceloginmsg',null,array(
+                'label'=>'Maintenance Login Message:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenancelogoutmsg' )
+            $builder->add('maintenancelogoutmsg',null,array(
+                'label'=>'Maintenance Logout Message:',
+                'attr' => array('class'=>'form-control')
+            ));
+
     }
     
     /**

@@ -7,6 +7,10 @@ parameters:
   department_url:
   department_name:
 
+  maintenance:
+  maintenanceenddate:
+  maintenanceloginmsg:
+  maintenancelogoutmsg:
 
 
 #framework:
@@ -16,12 +20,16 @@ parameters:
 
 fr3d_ldap:
     driver:
-       host:          ldap_host                       #a.wcmc-ad.net                            # Required
-       username:      ldap_username                   #svc_aperio_spectrum@a.wcmc-ad.net        # Optional
-       password:      ldap_password                   #Aperi0,123                               # Optional
-       accountDomainName: ldap_accountDomainName      #a.wcmc-ad.net                            # Required
+       host:
+       username:
+       password:
+       accountDomainName:
+#       host:              a.wcmc-ad.net                            # Required
+#       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional
+#       password:          Aperi0,123                               # Optional
+#       accountDomainName: a.wcmc-ad.net                            # Required
     user:
-        baseDn: dc=x,dc=y,dc=z                       #dc=a,dc=wcmc-ad,dc=net                    # Required
+        baseDn: dc=x,dc=y,dc=z                       #dc=a,dc=wcmc-ad,dc=net # Required
         filter: (&(ObjectClass=user))
         attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
                 - { ldap_attr: cn,   user_method: setUsername }

@@ -165,6 +165,26 @@ class SiteParameters {
     protected $departmentname;
 
 
+    //Maintanence mode
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    protected $maintenance;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    protected $maintenanceenddate;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    protected $maintenancelogoutmsg;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    protected $maintenanceloginmsg;
 
 
     /**
@@ -638,6 +658,71 @@ class SiteParameters {
     {
         return $this->institutionurl;
     }
+
+    /**
+     * @param mixed $maintenance
+     */
+    public function setMaintenance($maintenance)
+    {
+        $this->maintenance = $maintenance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaintenance()
+    {
+        return $this->maintenance;
+    }
+
+    /**
+     * @param mixed $maintenanceenddate
+     */
+    public function setMaintenanceenddate($maintenanceenddate)
+    {
+        $this->maintenanceenddate = $maintenanceenddate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaintenanceenddate()
+    {
+        return $this->maintenanceenddate;
+    }
+
+    /**
+     * @param mixed $maintenanceloginmsg
+     */
+    public function setMaintenanceloginmsg($maintenanceloginmsg)
+    {
+        $this->maintenanceloginmsg = $maintenanceloginmsg;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaintenanceloginmsg()
+    {
+        return $this->maintenanceloginmsg;
+    }
+
+    /**
+     * @param mixed $maintenancelogoutmsg
+     */
+    public function setMaintenancelogoutmsg($maintenancelogoutmsg)
+    {
+        $this->maintenancelogoutmsg = $maintenancelogoutmsg;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaintenancelogoutmsg()
+    {
+        return $this->maintenancelogoutmsg;
+    }
+
 
 
 

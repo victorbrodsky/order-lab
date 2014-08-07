@@ -2,6 +2,22 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+{% block additionalcss %}
+    {% stylesheets
+        'bundles/olegorderform/datetimepicker/css/*' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+        '@OlegOrderformBundle/Resources/public/datetimepicker/js/*'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% block content %}
 
     <h3 class="text-info">Update Site Parameter: {{ param }}</h3>
@@ -117,6 +133,39 @@
         {{ formmacros.field(edit_form.departmenturl) }}
     {% endif %}
 
+
+    {% if cicle == 'show' %}
+        <hr>
+        <h3 class="text-info">Maintanence Mode</h3>
+    {% endif %}
+
+    {% if edit_form.maintenance is defined %}
+        {{ formmacros.field(edit_form.maintenance) }}
+    {% endif %}
+
+    {% if edit_form.maintenanceenddate is defined %}
+        {#{{ formmacros.field(edit_form.maintenanceenddate) }}#}
+        {#{{ formmacros.fielddate(edit_form.maintenanceenddate) }}#}
+        <div id="maintenanceenddate" class="input-append date">
+            {#<input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>#}
+            {{ form_widget(edit_form.maintenanceenddate) }}
+            <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+        </div>
+        {#<div class="input-group date">#}
+            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+            {#<span class="input-group-addon lock-icon-button" style="display: none;" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>#}
+        {#</div>#}
+    {% endif %}
+
+    {% if edit_form.maintenanceloginmsg is defined %}
+        {{ formmacros.field(edit_form.maintenanceloginmsg) }}
+    {% endif %}
+
+    {% if edit_form.maintenancelogoutmsg is defined %}
+        {{ formmacros.field(edit_form.maintenancelogoutmsg) }}
+    {% endif %}
 
 
 

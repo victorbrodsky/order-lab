@@ -766,6 +766,13 @@ function addEvent(event, elem, func) {
     }
 }
 
+function initDatetimepicker() {
+    var datetimepicker = $('#maintenanceenddate');
+    console.log('initDatetimepicker');
+    if( datetimepicker.length ) {
+        datetimepicker.datetimepicker();
+    }
+}
 
 function initDatepicker() {
 
