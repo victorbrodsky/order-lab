@@ -185,11 +185,6 @@ class User extends BaseUser
             }
         }
 
-//        foreach( $resArr as $res ) {
-//            echo $res."|";
-//        }
-//        echo "<br>count=".count($resArr)."<br>";
-
         return $resArr;
     }
 

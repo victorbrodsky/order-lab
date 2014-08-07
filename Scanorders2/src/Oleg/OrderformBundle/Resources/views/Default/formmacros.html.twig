@@ -57,7 +57,7 @@
     </p>
 {% endmacro %}
 
-{% macro fieldDateLabel( field, attr ) %}
+{% macro fieldDateLabel( field, classname, attr ) %}
     <p>
     <div class="row">
         {{ form_errors(field) }}
@@ -66,7 +66,7 @@
         </div>
         <div class="col-xs-6" align="left" class="form_body_toggle_btn">
 
-            <div class="input-group date">
+            <div class="input-group date {{ classname }}">
                 {% if attr == "disabled" %}
                     {#value of disabled field will be ignored, but readonly does not work#}
                     {{ form_widget(field,{ 'disabled':'disabled' }) }}
@@ -155,7 +155,7 @@
     <div id="priority_option" class="collapse">
         <div class="well" align='center'>
 
-            {{ formmacros.fieldDateLabel(form.scandeadline) }}
+            {{ formmacros.fieldDateLabel(form.scandeadline,'orderinfo-scandeadline-field') }}
             {{ formmacros.field(form.returnoption) }}
 
         </div>

@@ -588,7 +588,7 @@ function validateHandsonTable() {
 
     if( $('.tablerowerror-added').length == 0 ) {
 
-        console.log("Submit form!!!!!!!!!!!!!!!");
+        //console.log("Submit form!!!!!!!!!!!!!!!");
 
         //get rows data from _rowToProcessArr
         assignDataToDatalocker();
@@ -608,7 +608,7 @@ function assignDataToDatalocker() {
     var data = new Array();
     data.push(_sotable.getColHeader());
     for( var i=0; i<_rowToProcessArr.length; i++ ) {
-        console.log("data row="+_rowToProcessArr[i]);
+        //console.log("data row="+_rowToProcessArr[i]);
         data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
     }
     //console.log(data);
@@ -616,7 +616,7 @@ function assignDataToDatalocker() {
     //provide table data to controller
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
-    console.log("jsonstr="+jsonstr);
+    //console.log("jsonstr="+jsonstr);
     $("#oleg_orderformbundle_slidereturnrequesttype_datalocker").val( jsonstr );
 }
 

@@ -769,8 +769,8 @@ class AdminController extends Controller
             "ROLE_SCANORDER_ADMIN" => "ScanOrder Administrator",
             "ROLE_SCANORDER_PROCESSOR" => "ScanOrder Processor",
 
-            "ROLE_SCANORDER_DIVISION_CHIEF" => "ScanOrder Division Chief",
-            "ROLE_SCANORDER_SERVICE_CHIEF" => "ScanOrder Service Chief",
+            "ROLE_SCANORDER_DIVISION_CHIEF" => "ScanOrder Division Chief",  //view or modify all orders of the same institution
+            "ROLE_SCANORDER_SERVICE_CHIEF" => "ScanOrder Service Chief",    //view or modify all orders of the same service
 
             "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => "ScanOrder Data Quality Assurance Specialist",
 

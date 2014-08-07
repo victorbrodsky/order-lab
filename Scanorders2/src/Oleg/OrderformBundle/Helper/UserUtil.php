@@ -206,6 +206,7 @@ class UserUtil {
         return $choicesServ;
     }
 
+    //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
     public function hasUserPermission( $entity, $user ) {
 
         if( $entity == null ) {
@@ -216,37 +217,129 @@ class UserUtil {
             return false;
         }
 
+
+        ///////////////// 1) check if the user belongs to the same institution /////////////////
         $hasInst = false;
         foreach( $user->getInstitution() as $inst ) {
             //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
             if( $inst->getId() == $entity->getInstitution()->getId() ) {
-                return true;
+                $hasInst = true;
             }
         }
 
         if( $hasInst == false ) {
             return false;
         }
+        ///////////////// EOF 1) /////////////////
 
-        if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
-            return true;
-        }
 
+        ///////////////// 2) check if the user is processor or service, division chief /////////////////
         if(
-            true === $user->hasRole('ROLE_SCANORDER_SUBMITTER') ||
-            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
-            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
-            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FACULTY')
-        ) {
+            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
+            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
+            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF') ||
+            $user->hasRole('ROLE_SCANORDER_SERVICE_CHIEF')
+        ){
             return true;
-        } else {
-            return false;
         }
+        ///////////////// EOF 2) /////////////////
+
+        ///////////////// 3) submitters  /////////////////
+        if( $user->hasRole('ROLE_SCANORDER_SUBMITTER') ) {
+            return true;
+        }
+        ///////////////// EOF 3) /////////////////
+
+        ///////////////// 4) pathology members  /////////////////
+//        if(
+//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
+//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
+//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FACULTY')
+//        ) {
+//            return true;
+//        }
+        ///////////////// EOF 4) /////////////////
+
+        return false;
+
     }
 
-    //user has permission to view other's valid field if he/she is submitter or pathology member and not external submitter and not ROLE_SCANORDER_PROCESSOR => S+PRE+PFE+PFA * !ES * !P == !S*!PRE*!PFE*!PFA + ES
+    //wrapper for hasUserPermission
     public function hasPermission( $entity, $security_content ) {
         return $this->hasUserPermission($entity,$security_content->getToken()->getUser());
+    }
+
+    //check if the given user can perform given actions on the content of the given order
+    public function isUserAllowOrderActions( $order, $user, $actions=null ) {
+
+        if( !$this->hasUserPermission( $order, $user ) ) {
+            return false;
+        }
+
+        //if actions are not specified => allow all actions
+        if( $actions == null ) {
+            return true;
+        }
+
+        //if actions is not array => return false
+        if( !is_array($actions) ) {
+            throw new \Exception('Actions must be an array');
+            //return false;
+        }
+
+        //at this point, actions array has list of actions to performed by this user
+
+        //processor and division chief can perform any actions
+        if(
+            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
+            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
+            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF')
+        ) {
+            return true;
+        }
+
+        //submitter(owner) and ordering provider can perform any actions
+        //echo $order->getProvider()->getId() . " ?= " . $user->getId() . "<br>";
+        if( $order->getProvider()->getId() === $user->getId() || $order->getProxyuser()->getId() === $user->getId() ) {
+            return true;
+        }
+
+        //order's service
+        $service = $order->getPathologyService();
+
+        //service chief can perform any actions
+        $userChiefServices = $user->getChiefservices();
+        if( $userChiefServices->contains($service) ) {
+            return true;
+        }
+
+        //for each action
+        foreach( $actions as $action ) {
+
+            //echo "action=".$action."<br>";
+
+            //status change can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
+            if( $action == 'changestatus' ) {
+                return false;
+            }
+
+            //amend can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
+            if( $action == 'amend' ) {
+                return false;
+            }
+
+            //show is allowed if the user belongs to the same service
+            if( $action == 'show' ) {
+                //echo "action: show <br>";
+                $userServices = $user->getPathologyServices();
+                if( $userServices->contains($service) ) {
+                    return true;
+                }
+            }
+        }
+
+        //exit('is User Allow Order Actions: no permission');
+        return false;
     }
 
 

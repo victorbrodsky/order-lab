@@ -273,6 +273,10 @@ class ScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl( 'order_amend', array('id' => $res['oid']) ) );
         }
 
+        if( $res['result'] == 'nopermission' ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         $this->get('session')->getFlashBag()->add('status-changed',$res['message']);
 
         $referer_url = $request->headers->get('referer');

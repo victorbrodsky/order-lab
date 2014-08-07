@@ -769,13 +769,16 @@ function addEvent(event, elem, func) {
 
 function initDatepicker() {
 
-    var datepickers = $('.input-group.date');
-
     if( cicle != "show" ) {
-        initSingleDatepicker( datepickers );
+
+        var regularDatepickers = $('.input-group.date').not('.orderinfo-scandeadline-field');
+        initSingleDatepicker( regularDatepickers );
+
+        var scandateDatepickers = $('.input-group.date.orderinfo-scandeadline-field');
+        initSingleDatepicker( scandateDatepickers );
     
         //make sure the masking is clear when input is cleared by datepicker
-        datepickers.datepicker().on("clearDate", function(e){
+        regularDatepickers.datepicker().on("clearDate", function(e){
                 var inputField = $(this).find('input');
                 //printF(inputField,"clearDate input:");
                 clearErrorField( inputField );
@@ -822,13 +825,23 @@ function processDatepicker( element, remove ) {
 }
 
 function initSingleDatepicker( datepickerElement ) {
+
+    //printF(datepickerElement,'datepicker element:');
+
+    var endDate = new Date(); //use current date as default
+
+    if( datepickerElement.hasClass('orderinfo-scandeadline-field') ) {
+        endDate = false;//'End of time';
+    }
+    //console.log('endDate='+endDate);
+
     //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
     datepickerElement.datepicker({
         autoclose: true,
         clearBtn: true,
         todayBtn: "linked",
         todayHighlight: true,
-        endDate: new Date()
+        endDate: endDate
     });
 }
 

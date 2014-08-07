@@ -28,7 +28,15 @@
     {% set showpath = 'multy_show' %}
     {% set amendpath = 'order_amend' %}
 
-    {{ order.orderheader( form, formtype, type, showpath, amendpath ) }}
+    {% if amendable is not defined %}
+        {% set amendable = false %}
+    {% endif %}
+
+    {% if changestatus is not defined %}
+        {% set changestatus = false %}
+    {% endif %}
+
+    {{ order.orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) }}
 
     {#history#}
     {% if history is defined and history %}

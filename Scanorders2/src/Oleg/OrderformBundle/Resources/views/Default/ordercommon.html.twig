@@ -1,6 +1,6 @@
 
 
-{% macro orderheader( form, formtype, type, showpath, amendpath ) %}
+{% macro orderheader( form, formtype, type, showpath, amendpath, amendable, changestatus ) %}
 
 
     <h3 class="text-info">
@@ -33,31 +33,31 @@
             {% if (type == 'edit' or type == 'show') and (not Superseded and not Canceled ) %}
 
                 {###############  USER ACTIONS #################}
-                {% if not Canceled and not Filled or is_granted('ROLE_SCANORDER_ADMIN') %}
+                {% if changestatus and not Canceled and not Filled %}
                     <a class="btn btn-danger" data-confirm="Are you sure you want to cancel order {{ form.vars.value.oid }}?" data-ok="Cancel the order" data-cancel="Do not cancel"
                        href="{{ path('scanorder_status', { 'id': form.vars.value.oid , 'status': 'Cancel' }) }}">Cancel</a>
                 {% endif %}
 
-                {% if not Submitted and not Canceled and not Amended and not Filled and not OnHold %}
+                {% if changestatus and not Submitted and not Canceled and not Amended and not Filled and not OnHold %}
                     <a class="btn btn-info" data-confirm="Are you sure you want to Submit?"
                        href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Submit</a>
                 {% endif %}
 
-                {% if Submitted or Amended %}
+                {% if amendable and (Submitted or Amended) %}
                     <a class="btn btn-warning" data-confirm="Are you sure you want to amend order {{ form.vars.value.oid }}?" data-ok="Amend the order" data-cancel="Do not amend"
                        href="{{ path(amendpath, { 'id': form.vars.value.oid }) }}">Amend</a>
                 {% endif %}
 
             {% endif %}
 
-            {% if (type == 'edit' or type == 'show') and Canceled %}
+            {% if changestatus and (type == 'edit' or type == 'show') and Canceled %}
                 {#{% if not Submitted and not Amended and not Filled and not OnHold %}#}
                 <a class="btn btn-info" data-confirm="Are you sure you want to un-cancel order {{ form.vars.value.oid }}?" data-ok="Un-cancel the order" data-cancel="Do not un-cancel"
                    href="{{ path('scanorder_status', { 'id': form.vars.value.oid, 'status': 'Submit' }) }}">Un-Cancel</a>
                 {#{% endif %}#}
             {% endif %}
 
-            {% if type == 'amend' and (Submitted or Amended) %}
+            {% if changestatus and type == 'amend' and (Submitted or Amended) %}
                 <a class="btn btn-danger" href="{{ path(showpath, { 'id': form.vars.value.oid }) }}">Cancel amendment process</a>
             {% endif %}
 

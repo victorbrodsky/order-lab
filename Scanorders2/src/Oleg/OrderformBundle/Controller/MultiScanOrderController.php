@@ -42,36 +42,6 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
  */
 class MultiScanOrderController extends Controller {
 
-//    /**
-//     * Edit: If the form exists, use this function
-//     * @Route("/scan-order/edit/{id}", name="exist_edit", requirements={"id" = "\d+"})
-//     * @Method("POST")
-//     * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
-//     */
-//    public function editAction( $id )
-//    {
-//
-//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER')
-//        ) {
-//            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
-//        if( !$secUtil->isCurrentUserAllow($id) ) {
-//            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entity = $em->getRepository('OlegOrderformBundle:Slide')->findOneBy($id);
-//
-//        $em->persist($entity);
-//        $em->flush();
-//
-//        $this->showMultyAction($entity->getId(), "show");
-//
-//    }
-
 
     /**
      * Creates a new OrderInfo entity.
@@ -445,14 +415,7 @@ class MultiScanOrderController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
-        if( !$secUtil->isCurrentUserAllow($id) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
         $user = $this->get('security.context')->getToken()->getUser();
-
-        $userUtil = new UserUtil();
 
         //INNER JOIN orderinfo.block block
 //        INNER JOIN orderinfo.patient patient
@@ -480,10 +443,17 @@ class MultiScanOrderController extends Controller {
             $entity = $entities[0];
         }
 
-        $request = $this->container->get('request');
         $routeName = $request->get('_route');
 
-        if( $entity && !$userUtil->hasPermission($entity,$this->get('security.context')) ) {
+        if( $routeName == "multy_show") {
+            $actions = array('show');
+        }
+        if( $routeName == "order_amend") {
+            $actions = array('amend');
+        }
+
+        $userUtil = new UserUtil();
+        if( $entity && !$userUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -509,8 +479,8 @@ class MultiScanOrderController extends Controller {
                 $entity->removePatient($patient);
                 continue;
             }
-
-            if( ! $userUtil->hasPermission($patient, $this->get('security.context')) ) {
+            
+            if( !$userUtil->hasPermission($patient, $this->get('security.context')) ) {
                 $entity->removePatient($patient);
                 continue;
             }
@@ -654,7 +624,9 @@ class MultiScanOrderController extends Controller {
             'form' => $form->createView(),
             'type' => $type,    //form cicle: new, show, amend ...
             'formtype' => $entity->getType(),
-            'history' => $history
+            'history' => $history,
+            'amendable' => $userUtil->isUserAllowOrderActions($entity, $user, array('amend')),
+            'changestatus' => $userUtil->isUserAllowOrderActions($entity, $user, array('changestatus'))
         );
 
 

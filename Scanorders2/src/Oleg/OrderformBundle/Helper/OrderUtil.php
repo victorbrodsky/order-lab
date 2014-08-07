@@ -10,14 +10,11 @@
 namespace Oleg\OrderformBundle\Helper;
 
 
-//use Oleg\OrderformBundle\Entity\OrderInfo;
-//use Doctrine\Common\Collections\ArrayCollection;
-//use Oleg\OrderformBundle\Controller\MultiScanOrderController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
-use Oleg\OrderformBundle\Helper\EmailUtil;
+
 
 class OrderUtil {
 
@@ -38,8 +35,10 @@ class OrderUtil {
         }
 
         $userUtil = new UserUtil();
-        if( $entity && !$userUtil->hasUserPermission($entity,$user) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        if( !$userUtil->isUserAllowOrderActions($entity, $user, array('changestatus')) ) {
+            $res = array();
+            $res['result'] = 'nopermission';
+            return $res;
         }
 
         if( $status == 'Un-Cancel' ) {
@@ -150,7 +149,7 @@ class OrderUtil {
             //exit();
 
             //VALIDATION Accession-MRN
-            $validity = array(self::STATUS_VALID);
+            $validity = array('valid');
             $conflict = false;
             foreach( $entity->getAccession() as $accession ) {
                 $patient = $accession->getParent()->getParent();

@@ -99,18 +99,19 @@ class TableController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
-        if( !$secUtil->isCurrentUserAllow($id) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
         $user = $this->get('security.context')->getToken()->getUser();
-
-        $userUtil = new UserUtil();
 
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
-        if( $orderinfo && !$userUtil->hasPermission($orderinfo,$this->get('security.context')) ) {
+        if( $routeName == "table_show") {
+            $actions = array('show');
+        }
+        if( $routeName == "table_amend") {
+            $actions = array('amend');
+        }
+
+        $userUtil = new UserUtil();
+        if( $orderinfo && !$userUtil->isUserAllowOrderActions($orderinfo, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -322,7 +323,9 @@ class TableController extends Controller {
             'form' => $form->createView(),
             'type' => $type,
             'formtype' => $orderinfo->getType(),
-            'history' => $history
+            'history' => $history,
+            'amendable' => $userUtil->isUserAllowOrderActions($orderinfo, $user, array('amend')),
+            'changestatus' => $userUtil->isUserAllowOrderActions($orderinfo, $user, array('changestatus'))
         ));
 
     }

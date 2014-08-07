@@ -174,25 +174,21 @@ class SlideReturnRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session') );
-        if( !$secUtil->isCurrentUserAllow($id) ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
         if( !$orderinfo ) {
             throw $this->createNotFoundException('Unable to find OrderInfo entity with id='.$id);
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $userUtil = new UserUtil();
-        if( $orderinfo && !$userUtil->hasPermission($orderinfo,$this->get('security.context')) ) {
+        if( $orderinfo && !$userUtil->isUserAllowOrderActions($orderinfo, $user, array('show')) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
         $slideReturnRequest  = new SlideReturnRequest();
 
-        $user = $this->get('security.context')->getToken()->getUser();
         $slideReturnRequest->setProvider($user);
         $slideReturnRequest->setProxyuser($user);
 

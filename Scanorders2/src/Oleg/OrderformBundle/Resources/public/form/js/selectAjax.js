@@ -206,11 +206,11 @@ function getComboboxSpecialStain(ids, preset, setId) {
         var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4];
         var id= "#oleg_orderformbundle_orderinfotype_"+uid+"_";
         targetid = id+"specialStains_"+ids[5]+"_staintype";
-        console.log("targetid="+targetid);
+        //console.log("targetid="+targetid);
     }
 
     if( _stain.length == 0 ) {
-        console.log("_stain.length is zero");
+        //console.log("_stain.length is zero");
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
@@ -220,11 +220,11 @@ function getComboboxSpecialStain(ids, preset, setId) {
                 populateSelectCombobox( ".ajax-combobox-staintype", _stain, null );
             });
     } else {
-        console.log("populate _stain.length="+_stain.length);
+        //console.log("populate _stain.length="+_stain.length);
         populateSelectCombobox( targetid, _stain, null );
     }
 
-    console.log("special stain preset="+preset);
+    //console.log("special stain preset="+preset);
     if( targetid != "" ) {
         setElementToId( targetid, _stain, setId );
     }
@@ -977,7 +977,7 @@ function initComboboxJs(ids, holder) {
         //slide
         getComboboxStain(ids,holder);
         getComboboxScanregion(ids,holder);
-        
+
         slideType(ids);
 
         //exception field because it can be added dynamically, so we use ids
