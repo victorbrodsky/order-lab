@@ -102,6 +102,7 @@ class AdminController extends Controller
         $count_comments = $this->generateProcessorComments();
         $count_department = $this->generateDepartments();
         $count_urgency = $this->generateUrgency();
+        $count_scanners = $this->generateScanners();
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
@@ -127,6 +128,7 @@ class AdminController extends Controller
             'Departments='.$count_department.' '.
             'Institutions='.$count_institution.' '.
             'Urgency='.$count_urgency.' '.
+            'Scanners='.$count_scanners.' '.
             'Users='.$count_users.
             ' (Note: -1 means that this table is already exists)'
         );
@@ -861,7 +863,7 @@ class AdminController extends Controller
         $types = array(
             "I'll give slides to Melody - ST1015E (212) 746-2993",
             "I have given slides to Melody already",
-            "I will drop the slides off at F540 (212) 746-6406",
+            "I will drop the slides off at C-458A (212) 746-6406",
             "I have handed the slides to Liza already",
             "I will write S on the slide & submit as a consult",
             "I will write S4 on the slide & submit as a consult",
@@ -1082,6 +1084,36 @@ class AdminController extends Controller
 
         $types = array(
             'As soon as possible', 'Urgently (the patient is waiting in my office)'
+        );
+
+        $count = 1;
+        foreach( $types as $type ) {
+
+            $listEntity = new Urgency();
+            $this->setDefaultList($listEntity,$count,$username,$type);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return $count;
+    }
+
+    public function generateScanners() {
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegOrderformBundle:ScannerList')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $types = array(
+            'Aperio ScanScope AT'
         );
 
         $count = 1;

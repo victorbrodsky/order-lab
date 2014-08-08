@@ -231,6 +231,19 @@ class OrderInfoType extends AbstractType
             },
         ));
 
+        $builder->add( 'scanner', 'entity', array(
+            'class' => 'OlegOrderformBundle:ScannerList',
+            'property' => 'name',
+            'label'=>'Scanner:',
+            'required'=> true,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width combobox-scanner'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->where('i.type != :type')
+                        ->setParameters( array('type' => 'disabled') );
+                },
+        ));
 
         $builder->add( 'purpose', 'choice', array(
             'label'=>'Purpose:',

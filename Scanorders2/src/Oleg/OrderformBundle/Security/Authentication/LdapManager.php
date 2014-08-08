@@ -24,6 +24,7 @@ class LdapManager extends BaseLdapManager
 
     public function __construct( LdapDriverInterface $driver, $userManager, array $params, $timezone = null, $em = null ) {
 
+        //print_r($params);
         //exit("constractor ldap <br>");
 
         parent::__construct($driver,$userManager,$params);

@@ -225,8 +225,8 @@ class SiteParametersType extends AbstractType
             $builder->add('maintenanceenddate',null,array(
                 'label'=>'Maintenance Until:',
                 'widget' => 'single_text',
-                'format' => 'MM-dd-yyyy hh:mm:ss',
-                'attr' => array('class'=>'form-control datetimepicker', 'style'=>'width:30%')
+                'format' => 'MM-dd-yyyy H:m',
+                'attr' => array('class'=>'form-control datetimepicker')
             ));
 
         if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenanceloginmsg' )

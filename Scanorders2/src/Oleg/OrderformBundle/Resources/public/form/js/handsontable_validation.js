@@ -63,16 +63,15 @@ function validateHandsonTable() {
 
     //console.log('errCells='+errCells);
     if( errCells > 0 ) {
-//        var errmsg = "Please review the cells marked bright red, in the highlight row(s), and correct the entered values to match the expected format. The expected formats are as follows:<br>"+
-//            "CoPath Accession Number Example: S14-1 or SC14-1 (no leading zeros after the dash such as S14-01)<br>" +
-//            "All other Accession and MRN Types: max of 25 characters; non leading zero and special characters; non all zeros; non last special character. Example: SC100000000211";
-        var errmsg = "Please review the cell(s) marked bright red in the highlighted row(s), and correct the entered values to match the expected format. " +
-            "The expected formats are as follows:<br>"+ "CoPath Accession Number: example of acceptable numbers are S14-1 or SC14-100001 " +
-            "(must have a dash with no leading zeros after the dash such as S14-01; must start with either one or two letters followed by two digits; " +
-            "maximum character string length is 11; must contain only letters or digits)<br>" +
-            "All other Accession and MRN Types: maximum of 25 characters; must not start with one or more consequtive zeros; " +
-            "must be made up of letters, numbers and possibly a dash; the first and last character must be either digits or letters (not a dash). " +
-            "Example of an acceptable character string: DC100000000211";
+        var errmsg =    "Please review the cell(s) marked bright red in the highlighted row(s), and correct the entered values to match the expected format. " +
+                        "For CoPath Accession Numbers the acceptable examples are S14-1 or SC14-100001 " +
+                        "(must have a dash with no leading zeros after the dash such as S14-01; must start " +
+                        "with either one or two letters followed by two digits; maximum number of characters is 11; " +
+                        "must contain only letters or digits and one dash). All other Accession and MRN Types must have the " +
+                        "maximum of 25 characters; must not start with one or more consequtive zeros; must be made up of letters, " +
+                        "numbers and possibly a dash; the first and last character must be either digits or letters (not a dash). " +
+                        "Example of an acceptable character string: DC-100000000211";
+
         var errorHtml = createTableErrorWell(errmsg);
         //var errorHtml = createTableErrorWell('Please make sure that all cells in the table form are valid. Number of error cells:'+errCells +'. Error cells are marked with red.');
         $('#validationerror').append(errorHtml);

@@ -223,7 +223,8 @@
             </tr>
             <tr>
                 <td>Maintnance Until</td>
-                <td>{{ entity.maintenanceenddate }}</td>
+                {#<td>{{ entity.maintenanceenddate|date('m/d/Y H:i') }}</td>#}
+                <td>{{ entity.getMaintenanceenddateString }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
             </tr>
             <tr>

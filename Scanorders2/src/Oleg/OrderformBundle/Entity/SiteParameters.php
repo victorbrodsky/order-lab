@@ -4,6 +4,8 @@ namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="siteParameters")
@@ -689,6 +691,11 @@ class SiteParameters {
     public function getMaintenanceenddate()
     {
         return $this->maintenanceenddate;
+    }
+
+    public function getMaintenanceenddateString() {
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y H:i');
+        return $transformer->transform($this->maintenanceenddate);
     }
 
     /**

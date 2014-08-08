@@ -1835,13 +1835,14 @@ function setArrayField(element, dataArr, parent) {
 
             }
             else if( classs && classs.indexOf("datepicker") != -1 ) {
-                //console.log("datepicker");
+                console.log("set array: datepicker");
                 var firstAttachedElement = attachElement.find('input').first();
                 if( text && text != "" ) {
-                    //console.log("set date, text"+text);
+                    console.log("set date, text"+text);
                     firstAttachedElement.datepicker( 'setDate', new Date(text) );
                     firstAttachedElement.datepicker( 'update');
                 } else {
+                    console.log("set array: init datepicker");
                     initSingleDatepicker(firstAttachedElement);
                 }
             }

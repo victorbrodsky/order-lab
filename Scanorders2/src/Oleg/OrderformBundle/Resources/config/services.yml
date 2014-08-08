@@ -20,16 +20,16 @@ parameters:
 
 fr3d_ldap:
     driver:
-       host:
-       username:
-       password:
-       accountDomainName:
+        host:
+        username:
+        password:
+        accountDomainName:
 #       host:              a.wcmc-ad.net                            # Required
 #       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional
 #       password:          Aperi0,123                               # Optional
 #       accountDomainName: a.wcmc-ad.net                            # Required
     user:
-        baseDn: dc=x,dc=y,dc=z                       #dc=a,dc=wcmc-ad,dc=net # Required
+        baseDn:
         filter: (&(ObjectClass=user))
         attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
                 - { ldap_attr: cn,   user_method: setUsername }
@@ -101,6 +101,13 @@ services:
         tags:
               - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    scanorder.listener.maintenance:
+        class: Oleg\OrderformBundle\Services\MaintenanceListener
+        arguments:
+            container: "@service_container"
+#        arguments: ["@service_container","@security.context"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
 #    #set scan order parameters src/Oleg/OrderformBundle/Helper/Parameters.php
 #    scanorder.setparameters:

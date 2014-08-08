@@ -171,6 +171,12 @@ class OrderInfo extends OrderAbstract {
      * @ORM\JoinColumn(name="institution", referencedColumnName="id")
      */
     protected $institution;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ScannerList")
+     * @ORM\JoinColumn(name="scanner", referencedColumnName="id")
+     */
+    private $scanner;
     
     /**
      * Constructor
@@ -814,6 +820,23 @@ class OrderInfo extends OrderAbstract {
     {
         return $this->institution;
     }
+
+    /**
+     * @param mixed $scanner
+     */
+    public function setScanner($scanner)
+    {
+        $this->scanner = $scanner;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScanner()
+    {
+        return $this->scanner;
+    }
+
 
     //TODO: testing
     public function getChildren() {

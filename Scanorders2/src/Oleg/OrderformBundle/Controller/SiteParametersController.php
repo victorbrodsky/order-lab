@@ -74,7 +74,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}/edit", name="siteparameters_edit")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegOrderformBundle:SiteParameters:edit.html.twig")
      */
     public function editAction($id)
     {

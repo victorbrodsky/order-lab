@@ -1,24 +1,37 @@
 {% extends "OlegOrderformBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    Update Site Parameter: {{ param }}
+{% endblock %}
+
 
 {% block additionalcss %}
+
     {% stylesheets
-        'bundles/olegorderform/datetimepicker/css/*' filter='cssrewrite'
+        'bundles/olegorderform/datetimepicker/css/bootstrap-datetimepicker.min.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+
+    {#<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">#}
+
 {% endblock %}
 
 {% block additionaljs %}
+
     {% javascripts
-        '@OlegOrderformBundle/Resources/public/datetimepicker/js/*'
+        '@OlegOrderformBundle/Resources/public/datetimepicker/js/bootstrap-datetimepicker.min.js'
     %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
+    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
 {% endblock %}
 
+
 {% block content %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
     <h3 class="text-info">Update Site Parameter: {{ param }}</h3>
 
@@ -144,19 +157,15 @@
     {% endif %}
 
     {% if edit_form.maintenanceenddate is defined %}
-        {#{{ formmacros.field(edit_form.maintenanceenddate) }}#}
-        {#{{ formmacros.fielddate(edit_form.maintenanceenddate) }}#}
-        <div id="maintenanceenddate" class="input-append date">
-            {#<input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>#}
-            {{ form_widget(edit_form.maintenanceenddate) }}
-            <span class="add-on">
-                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-            </span>
+        {#{{ formmacros.fielddate(edit_form.maintenanceenddate, "maintenanceenddate") }}#}
+        <p>
+        <div class="col-xs-12" align="center">
+            <div class="input-group date form_datetime" style="width:30%">
+                {{ form_widget(edit_form.maintenanceenddate) }}
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
         </div>
-        {#<div class="input-group date">#}
-            {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
-            {#<span class="input-group-addon lock-icon-button" style="display: none;" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>#}
-        {#</div>#}
+        </p>
     {% endif %}
 
     {% if edit_form.maintenanceloginmsg is defined %}
@@ -183,7 +192,9 @@
 
         {% endif %}
 
+    <p>
         {{ form_rest(edit_form) }}
+    </p>
 
         {#{{ form(edit_form) }}#}
 

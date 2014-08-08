@@ -767,10 +767,28 @@ function addEvent(event, elem, func) {
 }
 
 function initDatetimepicker() {
-    var datetimepicker = $('#maintenanceenddate');
+
+//    $('#datetimepicker1').datetimepicker({
+//        //language: 'pt-BR'
+//    });
+
+//    $('#datetimepicker').datetimepicker({
+//        format: 'MM-dd-yyyy hh:mm:ss'
+//    });
+
+//    $(function(){
+//        var datetimepicker = $.fn.datepicker.noConflict;
+//        $.fn.bootstrapDP = datetimepicker;
+//        $('.datetimepicker').bootstrapDP();
+//    });
+
+    var datetimepicker = $('.form_datetime');
     console.log('initDatetimepicker');
     if( datetimepicker.length ) {
-        datetimepicker.datetimepicker();
+        printF(datetimepicker,"init:");
+        datetimepicker.datetimepicker({
+            format: 'mm-dd-yyyy hh:i'
+        });
     }
 }
 
@@ -778,17 +796,19 @@ function initDatepicker() {
 
     if( cicle != "show" ) {
 
-        var regularDatepickers = $('.input-group.date').not('.orderinfo-scandeadline-field');
+        console.log("init Datepicker");
+
+        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.orderinfo-scandeadline-field');
         initSingleDatepicker( regularDatepickers );
 
         var scandateDatepickers = $('.input-group.date.orderinfo-scandeadline-field');
         initSingleDatepicker( scandateDatepickers );
-    
+
         //make sure the masking is clear when input is cleared by datepicker
         regularDatepickers.datepicker().on("clearDate", function(e){
-                var inputField = $(this).find('input');
-                //printF(inputField,"clearDate input:");
-                clearErrorField( inputField );
+            var inputField = $(this).find('input');
+            //printF(inputField,"clearDate input:");
+            clearErrorField( inputField );
         });
 
     }
@@ -810,7 +830,7 @@ function processDatepicker( element, remove ) {
             element = element.closest('.input-group.date');
         }
 
-        //printF(element,"Datepicker Btn:");
+        //printF(element,"process Datepicker: Datepicker Btn:");
 
         if( remove == "remove" ) {
             //printF(element,"Remove datepicker:");
@@ -831,6 +851,7 @@ function processDatepicker( element, remove ) {
     }
 }
 
+
 function initSingleDatepicker( datepickerElement ) {
 
     //printF(datepickerElement,'datepicker element:');
@@ -841,6 +862,9 @@ function initSingleDatepicker( datepickerElement ) {
         endDate = false;//'End of time';
     }
     //console.log('endDate='+endDate);
+
+    //datepickerElement = datepickerElement.find('.datepicker');
+    //console.log(datepickerElement);
 
     //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
     datepickerElement.datepicker({
