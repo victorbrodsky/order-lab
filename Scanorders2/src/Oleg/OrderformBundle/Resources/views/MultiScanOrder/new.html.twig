@@ -72,7 +72,7 @@
 
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
-        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"lockdate","prototype") %}
+        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"date","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
 
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
@@ -106,7 +106,7 @@
         {% set sectionsourceHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.sectionsource,type,"","prototype") %}
 
         {% set relevantScansField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.slide.vars.prototype.relevantScans %}
-        {% set relevantScansWidget = formmacros.fieldWidget(relevantScansField) %}
+        {% set relevantScansWidget = formmacros.fieldWidgetNoOther(relevantScansField) %}
         {% set relevantScansHtml = formmacros.inputField(relevantScansField,type,"sliderelevantScans","prototype",relevantScansWidget,"") %}
 
         {% set specialStainsField = form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.part.vars.prototype.block.vars.prototype.specialStains %}

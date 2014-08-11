@@ -26,7 +26,7 @@ class ProviderType extends AbstractType
             'required' => true,
             'label' => false,
             'read_only' => true,
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'height:27px')
         ));
 
     }

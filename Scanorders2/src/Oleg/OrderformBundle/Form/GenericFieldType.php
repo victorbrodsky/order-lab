@@ -26,7 +26,7 @@ class GenericFieldType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( !$this->attr ) {
+        if( $this->attr == null ) {
             $attr = array('class'=>'form-control');
         } else {
             $attr = $this->attr;

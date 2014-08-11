@@ -1238,32 +1238,15 @@ function processExceptionalFields(btnObj) {
         } else {
             //if field has a value, then replace calendar icon with lock icon
             var inputGroup = parentEl.find('.input-group');
-
-            //show lock icon
-            //var lockGroup = parentEl.find('.lock-icon-button');
-            //lockGroup.show();
-
-            //hide calendarGroup
-            //var calendarGroup = parentEl.find('.calendar-icon-button');
-            //calendarGroup.hide();
-
             //create lock icon
             if( inputGroup.find('.lock-icon-button').length == 0 ) {
                 var lockGroup = '<span class="input-group-addon lock-icon-button" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>';
                 //add lockGroup to inputGroup
                 inputGroup.append(lockGroup);
                 //remove calendarGroup
-                inputGroup.find('.calendar-icon-button').remove();
+                inputGroup.find('.calendar-icon-button').hide();
             }
-
         }
-
-//        var clinhistEl = parentEl.find('.patient-clinicalhistory-field');
-//        //console.log('clinhistEl val='+clinhistEl.val());
-//        if( clinhistEl.val() == '' ) {
-//            clinhistEl.attr("readonly", false);
-//            clinhistEl.removeAttr( "readonly" );
-//        }
 
     }
 
@@ -1281,20 +1264,11 @@ function unlockField( lockBtn ) {
         field.attr("readonly", false);
         field.removeAttr( "readonly" );
         processDatepicker(field);
-        	
-		//lockBtnEl.hide();
-        //show calendarGroup
-        //var calendarGroup = lockBtnEl.parent().find('.calendar-icon-button');
-        //calendarGroup.show();
 
 		//get inputGroup
 		var inputGroup = lockBtnEl.parent();
-        if( inputGroup.find('.calendar-icon-button').length == 0 ) {
-            //add calendarGroup
-            var calendarGroup = '<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>';
-            inputGroup.append(calendarGroup);
-            lockBtn.remove();
-        }
+        inputGroup.find('.calendar-icon-button').show();
+        inputGroup.find('.lock-icon-button').remove();
 		
     } else {
         return false;
@@ -1843,14 +1817,14 @@ function setArrayField(element, dataArr, parent) {
 
             }
             else if( classs && classs.indexOf("datepicker") != -1 ) {
-                console.log("set array: datepicker");
+                //console.log("set array: datepicker");
                 var firstAttachedElement = attachElement.find('input').first();
                 if( text && text != "" ) {
-                    console.log("set date, text"+text);
+                    //console.log("set date, text"+text);
                     firstAttachedElement.datepicker( 'setDate', new Date(text) );
                     firstAttachedElement.datepicker( 'update');
                 } else {
-                    console.log("set array: init datepicker");
+                    //console.log("set array: init datepicker");
                     initSingleDatepicker(firstAttachedElement);
                 }
             }

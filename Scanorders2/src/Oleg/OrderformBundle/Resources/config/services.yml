@@ -103,9 +103,7 @@ services:
 
     scanorder.listener.maintenance:
         class: Oleg\OrderformBundle\Services\MaintenanceListener
-        arguments:
-            container: "@service_container"
-#        arguments: ["@service_container","@security.context"]
+        arguments: ["@service_container"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

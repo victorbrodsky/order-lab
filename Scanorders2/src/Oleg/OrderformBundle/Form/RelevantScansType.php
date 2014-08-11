@@ -1,27 +1,38 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: oli2002
+ * Date: 8/11/14
+ * Time: 3:56 PM
+ */
+
 
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
-
-use Oleg\OrderformBundle\Helper\FormHelper;
 
 class RelevantScansType extends AbstractType
 {
 
+    protected $params;
+
+    public function __construct( $params=null )
+    {
+        $this->params = $params;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('field', 'text', array(
-            'label' => 'Link(s) to related image(s):',
+        $builder->add('field', null, array(
+            'label' => 'Link(s) to related image(s)',
             'required' => false,
-            //'attr' => array('class' => 'combobox combobox-width')
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'height: 34px;')
+            'attr' => array('class'=>'form-control', 'style'=>'height: 35px;')
+            //'attr' => array('class'=>'form-control')
         ));
+
 
     }
 

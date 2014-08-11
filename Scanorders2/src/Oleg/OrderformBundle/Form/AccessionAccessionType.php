@@ -29,7 +29,7 @@ class AccessionAccessionType extends AbstractType
         );
 
         if( $this->params['type'] == 'One-Slide Scan Order') {
-            $attr['style'] = 'width:100%';
+            $attr['style'] = 'width:100%; height:27px';
             $accTypeLabel = "Accession Type:";
             //$gen_attr = array('label'=>false,'class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         } else {

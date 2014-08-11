@@ -52,18 +52,18 @@
 .form-signin .checkbox {
     font-weight: normal;
 }
-.form-signin .form-control {
-    position: relative;
-    font-size: 16px;
-    height: auto;
-    padding: 10px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.form-signin .form-control:focus {
-    z-index: 2;
-}
+/*.form-signin .form-control {*/
+    /*position: relative;*/
+    /*font-size: 16px;*/
+    /*//height: auto;*/
+    /*padding: 10px;*/
+    /*-webkit-box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    /*box-sizing: border-box;*/
+/*}*/
+/*.form-signin .form-control:focus {*/
+    /*z-index: 2;*/
+/*}*/
 .form-signin input[type="text"] {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
@@ -75,12 +75,32 @@
     border-top-right-radius: 0;
 }
 /*end of sign in*/
-.form-control-modif {
-    //display: inline;
-    height: 28px; //keep the same as combobox
-    //height: auto;
-    //width: 70%;
+
+/*.form-control-modif {*/
+    /*display: inline;*/
+    /*height: 36px; //keep the same as combobox*/
+/*}*/
+
+/*input-group-reg to make input and button aligned horizontally*/
+/*http://stackoverflow.com/questions/18077945/twitter-bootstrap-input-group-addon-and-btn-group-not-aligning-nicely*/
+.input-group-reg > .form-control {
+    height: 38px;       /*38px*/
+    /*padding: 8px 13px;*/
+    /*font-size: 14px;*/
+    /*line-height: 1.44;*/
+    /*border-radius: 4px;*/
+    /*border-top-left-radius: 0;*/
+    /*border-bottom-left-radius: 0;*/
 }
+/* Sizing the button */
+.input-group-reg > .input-group-btn > .btn, .input-group-btn > .input-group-addon, .input-group-reg > .input-group-btn:last-child > .dropdown-toggle{
+    height: 38px;
+    /*padding: 8px 13px;*/
+    /*font-size: 14px;*/
+    /*line-height: 1.44;*/
+    /*border-radius: 6px;*/
+}
+/*EOF input-group-reg to make input and button aligned horizontally*/
 
 
 .header {

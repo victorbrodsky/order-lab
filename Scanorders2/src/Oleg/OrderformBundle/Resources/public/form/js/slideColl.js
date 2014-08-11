@@ -126,7 +126,6 @@ function addCollectionField( elem, btnpos ) {
         }
 
         //apend new form to the end of input-group-oleg
-        //var lastcollHolder = elementHolder.find('.input-group-oleg').last();
         var lastcollHolder = collHolders.last();
         //console.log("lastcollHolder=");
         //console.log(lastcollHolder);
@@ -230,7 +229,7 @@ function getDiffdiagField( name, type, patient, procedure, accession, part, bloc
     var inputGroupId = 'inputGroupId_patient_'+patient+'_procedure_'+procedure+'_accession_'+accession+'_part_'+part+'_block_'+block+'_slide_'+slide+ending;
     //console.log("inputGroupId="+inputGroupId);
 
-    var header = '<div class="input-group" id="'+inputGroupId+'">';
+    var header = '<div class="input-group input-group-reg" id="'+inputGroupId+'">';
 
     var btnAdd = getAddBtn();
 

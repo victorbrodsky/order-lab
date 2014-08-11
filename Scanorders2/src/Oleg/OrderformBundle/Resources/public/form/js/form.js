@@ -783,7 +783,7 @@ function initDatetimepicker() {
 //    });
 
     var datetimepicker = $('.form_datetime');
-    console.log('initDatetimepicker');
+    //console.log('initDatetimepicker');
     if( datetimepicker.length ) {
         printF(datetimepicker,"init:");
         datetimepicker.datetimepicker({
@@ -796,7 +796,7 @@ function initDatepicker() {
 
     if( cicle != "show" ) {
 
-        console.log("init Datepicker");
+        //console.log("init Datepicker");
 
         var regularDatepickers = $('.input-group.date.regular-datepicker').not('.orderinfo-scandeadline-field');
         initSingleDatepicker( regularDatepickers );
@@ -840,9 +840,12 @@ function processDatepicker( element, remove ) {
             var inputField = element.find('input');
             clearErrorField( inputField );
 
-            //hide lock-icon group
-            //var lockGroup = element.parent().find('.lock-icon-button');
-            //lockGroup.hide();
+            //remove lock-icon-button
+            var inputGroup = element.parent().find('.input-group');
+            if( inputGroup.find('input').hasClass('patient-dob-date') ) {
+                inputGroup.find('.calendar-icon-button').show();
+                inputGroup.find('.lock-icon-button').remove();
+            }
 
         } else {
             initSingleDatepicker(element);

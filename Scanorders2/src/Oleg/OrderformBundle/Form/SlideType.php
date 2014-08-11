@@ -30,7 +30,7 @@ class SlideType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-            'label' => false,//" ",
+            'label' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__slidestain__',
@@ -66,9 +66,8 @@ class SlideType extends AbstractType
 //        ));
 
         //relevantScans
-        $gen_attr = array('label'=>'Link(s) to related image(s)','class'=>'Oleg\OrderformBundle\Entity\RelevantScans','type'=>null);    //type=null => auto type
         $builder->add('relevantScans', 'collection', array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'type' => new RelevantScansType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

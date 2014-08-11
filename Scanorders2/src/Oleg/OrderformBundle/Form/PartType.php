@@ -86,6 +86,7 @@ class PartType extends AbstractType
         ));
 
         //diagnosis
+        //$attr = array('class'=>'textarea form-control', 'style'=>'height:35px');
         $gen_attr = array('label'=>'Diagnosis','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
         $builder->add('disident', 'collection', array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
