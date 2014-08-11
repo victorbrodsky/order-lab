@@ -72,7 +72,7 @@
 
     {% if type != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,type,"key","prototype","","","","patientmrn","") %}
-        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"date","prototype") %}
+        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,type,"lockdate","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,type,"","prototype") %}
 
         {% set accessionHtml = formmacros.inputField(form.patient.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}

@@ -451,6 +451,9 @@ class MultiScanOrderController extends Controller {
         if( $routeName == "order_amend") {
             $actions = array('amend');
         }
+        if( $routeName == "multy_edit") {
+            $actions = array('edit');
+        }
 
         $userUtil = new UserUtil();
         if( $entity && !$userUtil->isUserAllowOrderActions($entity, $user, $actions) ) {

@@ -328,6 +328,19 @@ class ScanOrderController extends Controller {
             $statuses = $dql->getQuery()->getResult();
         }
 
+        $filterType = array();
+
+        //add at the top
+        if( $routeName == "incoming-scan-orders" ) {
+            $dataReviews = array(
+                "All Statuses (except Not Submitted)" => "All Statuses (except Not Submitted)",
+            );
+
+            foreach( $dataReviews as $key => $value ) {
+                $filterType[$key] = $value;
+            }
+        }
+
         //add special cases statuses
         $specials = array(
             "All" => "All Statuses",
@@ -345,7 +358,6 @@ class ScanOrderController extends Controller {
             "Stat & Filled" => "Stat & Filled"
         );
 
-        $filterType = array();
         foreach( $specials as $key => $value ) {
             $filterType[$key] = $value;
             if( $value == "All Stat" ) {
@@ -1057,6 +1069,8 @@ class ScanOrderController extends Controller {
         //***************** Status filetr ***************************//
         //echo "status filter = ".$filter."<br>";
         if( $filter && is_numeric($filter) && $filter > 0 ) {
+
+            //echo "numeric filter=".$filter;
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
             }
@@ -1064,67 +1078,82 @@ class ScanOrderController extends Controller {
         }
 
         //filter special cases
-        if( $filter && is_string($filter) && $filter != "All" ) {
+        if( is_string($filter) || $filter == "" ) {
 
-            //echo "filter=".$filter;
-            if( $criteriastr != "" ) {
-                $criteriastr .= " AND ";
-            }
+            //echo "string filter=".$filter;
 
-            $criteriastr .= " ( ";
+            $filterStr = "";
             switch( $filter ) {
 
                 case "With New Comments":
                     $orderUtil = new OrderUtil($em);
                     $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($securityContext,'new_comments',$commentFlag) . " ) ";
-                    $criteriastr .= $newCommentsCriteriaStr;
+                    $filterStr = $newCommentsCriteriaStr;
                     break;
                 case "With Comments":
                     $orderUtil = new OrderUtil($em);
                     $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($securityContext,'all_comments',null,$commentFlag) . " ) ";
-                    $criteriastr .= $newCommentsCriteriaStr;
+                    $filterStr = $newCommentsCriteriaStr;
+                    break;
+                case "All":
+                    break;
+                case "":
+                    if( $routeName == "incoming-scan-orders" ) {
+                        $filterStr = " status.name != 'Not Submitted'";
+                    }
+                    break;
+                case "All Statuses (except Not Submitted)":
+                    $filterStr = " status.name != 'Not Submitted'";
                     break;
                 case "All Filled":
-                    $criteriastr .= " status.name LIKE '%Filled%'";
+                    $filterStr = " status.name LIKE '%Filled%'";
                     break;
                 case "All Filled & Returned":
-                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
+                    $filterStr = " status.name LIKE '%Filled%' AND status.name LIKE '%Returned%'";
                     break;
                 case "All Filled & Not Returned":
-                    $criteriastr .= " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
+                    $filterStr = " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
                     break;
                 case "All Not Filled":
-                    $criteriastr .= " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'";
+                    $filterStr = " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'";
                     break;
                 case "All On Hold":
-                    $criteriastr .= " status.name LIKE '%On Hold%'";
+                    $filterStr = " status.name LIKE '%On Hold%'";
                     break;
                 case "All Canceled":
-                    $criteriastr .= " status.name = 'Canceled by Submitter' OR status.name = 'Canceled by Processor'";
+                    $filterStr = " status.name = 'Canceled by Submitter' OR status.name = 'Canceled by Processor'";
                     break;
                 case "All Submitted & Amended":
-                    $criteriastr .= " status.name = 'Submitted' OR status.name = 'Amended'";
+                    $filterStr = " status.name = 'Submitted' OR status.name = 'Amended'";
                     break;
                 case "All Stat":
-                    $criteriastr .= " orderinfo.priority = 'Stat'";
+                    $filterStr = " orderinfo.priority = 'Stat'";
                     break;
                 case "Stat & Not Filled":
-                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name NOT LIKE '%Filled%'";
+                    $filterStr = " orderinfo.priority = 'Stat' AND status.name NOT LIKE '%Filled%'";
                     break;
                 case "Stat & Filled":
-                    $criteriastr .= " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
+                    $filterStr = " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
                     break;
                 case "No Course Director Link":
-                    $criteriastr .= " director.director IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " director.director IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
-                    $criteriastr .= " principal.principal IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " principal.principal IS NULL AND status.name != 'Superseded'";
                     break;
                 default:
                     ;
             }
 
-            $criteriastr .= " ) ";
+            if( $filterStr != "" ) {
+                $filterStr = " (". $filterStr .") ";
+            }
+
+            if( $criteriastr != "" ) {
+                $criteriastr .= " AND ". $filterStr ." ";
+            } else {
+                $criteriastr .= $filterStr;
+            }
 
         }
         //***************** END of Status filetr ***************************//

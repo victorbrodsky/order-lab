@@ -313,6 +313,8 @@ class UserUtil {
             return true;
         }
 
+        //At this point we have only regular users
+
         //for each action
         foreach( $actions as $action ) {
 
@@ -325,6 +327,11 @@ class UserUtil {
 
             //amend can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
             if( $action == 'amend' ) {
+                return false;
+            }
+
+            //edit can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
+            if( $action == 'edit' ) {
                 return false;
             }
 

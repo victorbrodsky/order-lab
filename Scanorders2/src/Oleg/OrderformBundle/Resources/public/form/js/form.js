@@ -104,7 +104,7 @@ function deleteItem(id) {
     var elements = thisParent.children( ".panel" );
     //console.log("replace elements.length="+elements.length);
 
-    if( confirm("This auction will affect this element and all its children. Are you sure?") ) {
+    if( confirm("This action will affect this element and all its child elements. Are you sure?") ) {
 
         if( elements.length > 1 ) {
 
@@ -841,8 +841,8 @@ function processDatepicker( element, remove ) {
             clearErrorField( inputField );
 
             //hide lock-icon group
-            var lockGroup = element.parent().find('.lock-icon-button');
-            lockGroup.hide();
+            //var lockGroup = element.parent().find('.lock-icon-button');
+            //lockGroup.hide();
 
         } else {
             initSingleDatepicker(element);

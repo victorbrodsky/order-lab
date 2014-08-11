@@ -1240,19 +1240,22 @@ function processExceptionalFields(btnObj) {
             var inputGroup = parentEl.find('.input-group');
 
             //show lock icon
-            var lockGroup = parentEl.find('.lock-icon-button');
-            lockGroup.show();
-
-            //create lock icon
-            //var lockGroup = '<span class="input-group-addon lock-icon-button" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>';
-            //add lockGroup to inputGroup
-			//inputGroup.append(lockGroup);
-			//remove calendarGroup
-			//inputGroup.find('.calendar-icon-button').remove();
+            //var lockGroup = parentEl.find('.lock-icon-button');
+            //lockGroup.show();
 
             //hide calendarGroup
             //var calendarGroup = parentEl.find('.calendar-icon-button');
             //calendarGroup.hide();
+
+            //create lock icon
+            if( inputGroup.find('.lock-icon-button').length == 0 ) {
+                var lockGroup = '<span class="input-group-addon lock-icon-button" onclick="unlockField(this)"><i class="glyphicon glyphicon-lock"></i></span>';
+                //add lockGroup to inputGroup
+                inputGroup.append(lockGroup);
+                //remove calendarGroup
+                inputGroup.find('.calendar-icon-button').remove();
+            }
+
         }
 
 //        var clinhistEl = parentEl.find('.patient-clinicalhistory-field');
@@ -1279,14 +1282,19 @@ function unlockField( lockBtn ) {
         field.removeAttr( "readonly" );
         processDatepicker(field);
         	
-		lockBtnEl.hide();
+		//lockBtnEl.hide();
+        //show calendarGroup
+        //var calendarGroup = lockBtnEl.parent().find('.calendar-icon-button');
+        //calendarGroup.show();
 
 		//get inputGroup
-		//var inputGroup = lockBtnEl.parent();
-		//add calendarGroup
-		//var calendarGroup = '<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>';
-		//inputGroup.append(calendarGroup);
-		//lockBtn.remove();
+		var inputGroup = lockBtnEl.parent();
+        if( inputGroup.find('.calendar-icon-button').length == 0 ) {
+            //add calendarGroup
+            var calendarGroup = '<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>';
+            inputGroup.append(calendarGroup);
+            lockBtn.remove();
+        }
 		
     } else {
         return false;

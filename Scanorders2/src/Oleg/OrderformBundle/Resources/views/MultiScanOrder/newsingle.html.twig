@@ -14,7 +14,7 @@
 
     {% if cycle != 'show' %}
         {% set mrnHtml = formmacros.inputField(form.patient.vars.prototype.mrn,cycle,"key","prototype") %}
-        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,cycle,"","prototype") %}
+        {% set dobHtml = formmacros.inputField(form.patient.vars.prototype.dob,cycle,"lockdate","prototype") %}
         {% set clinicalhistoryHtml = formmacros.inputField(form.patient.vars.prototype.clinicalHistory,cycle,"","prototype") %}
         {#{% set sexHtml = formmacros.inputField(form.patient.vars.prototype.sex,cycle,"","prototype") %}#}
         {#{% set ageHtml = formmacros.inputField(form.patient.vars.prototype.age,cycle,"","prototype") %}#}
