@@ -218,7 +218,13 @@
             </tr>
             <tr>
                 <td>Maintenance</td>
-                <td>{{ entity.maintenance }}</td>
+                <td>
+                    {% set maintenanceStr = 'No' %}
+                    {% if entity.maintenance == true %}
+                        {% set maintenanceStr = 'Yes' %}
+                    {% endif %}
+                    {{ maintenanceStr }}
+                </td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
             </tr>
             <tr>

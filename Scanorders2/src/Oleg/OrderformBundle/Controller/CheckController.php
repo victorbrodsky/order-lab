@@ -153,9 +153,6 @@ class CheckController extends Controller {
         
         if( $entity ) {
 
-            //TODO: get one 'valid' MRN for this user?
-            //TODO: get one 'valid' DOB for this user?
-
             $element = array(
                 //'inmrn'=>$mrn,
                 'id'=>$entity->getId(),
@@ -164,7 +161,7 @@ class CheckController extends Controller {
                 'sex'=>$this->getArrayFieldJson( array($entity->obtainValidField('sex')) ),
                 'dob'=>$this->getArrayFieldJson($entity->getDob()),
                 'age'=>$entity->calculateAge(),
-                'clinicalHistory'=>$this->getArrayFieldJson($entity->getClinicalHistory())
+                'clinicalHistory'=>$this->getArrayFieldJson($entity->getAllValidNotEmptyClinicalHistories())
                 //'clinicalHistory'=>$this->getArrayFieldJson( array($entity->obtainValidField('clinicalHistory')) )
             );
         } 

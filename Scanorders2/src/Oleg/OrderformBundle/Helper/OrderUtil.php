@@ -20,8 +20,53 @@ class OrderUtil {
 
     private $em;
 
-    public function __construct( $em ) {
+    public function __construct( $em=null ) {
         $this->em = $em;
+    }
+
+    public function redirectOrderByStatus($order,$routeName,$router) {
+
+        if( $order->getType() == "Table-View Scan Order" ) {
+            $edit = "table_edit";
+            $amend = "table_amend";
+            $show = "table_show";
+        } else {
+            $edit = "multy_edit";
+            $amend = "order_amend";
+            $show = "multy_show";
+        }
+        //echo "show=".$show." <br>";
+
+        //if order is not submitted with edit url => change url to edit
+        if( $order->getStatus()."" == "Not Submitted" && $routeName != $edit ) {
+            return new RedirectResponse( $router->generate($edit,array('id'=>$order->getOid())) );
+        }
+
+        //if order is submitted with edit url => change url to show
+        if( $order->getStatus()."" != "Not Submitted" && $routeName == $edit ) {
+            return new RedirectResponse( $router->generate($show,array('id'=>$order->getOid())) );
+        }
+
+        //if order is not submitted with amend url => change url to edit
+        if( $order->getStatus()."" == "Not Submitted" && $routeName == $amend ) {
+            return new RedirectResponse( $router->generate($edit,array('id'=>$order->getOid())) );
+        }
+
+        //if order Filled or Canceled by Processor or Canceled by Submitter or Superseded with amend url => change url to show
+        if(
+            $routeName == $amend && (
+                strpos($order->getStatus()."",'Filled') !== false ||
+                strpos($order->getStatus()."",'Canceled') !== false ||
+                $order->getStatus()."" == "Superseded"
+            )
+        ) {
+            return new RedirectResponse( $router->generate($show,array('id'=>$order->getOid())) );
+        }
+
+        //echo "no redirect <br>";
+        
+        return null;
+
     }
 
     public function changeStatus( $id, $status, $user, $router=null, $swapId=null ) {

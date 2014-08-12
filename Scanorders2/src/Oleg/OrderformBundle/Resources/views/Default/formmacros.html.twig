@@ -361,6 +361,10 @@
             {%  set show = 1 %}
         {% endif %}
 
+        {#do not show empty patient clinical history#}
+        {% if classname == "patientclinicalhistory" and show == 1 and field.vars.value == "" %}
+            {%  set show = 0 %}
+        {% endif %}
 
         {% if show == 1 or
               cycle == "new" or status == 'Amended' or status == 'Canceled by Submitter' or status == 'Canceled by Processor' or status == 'Superseded'

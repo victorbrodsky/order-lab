@@ -465,9 +465,11 @@ class MultiScanOrderController extends Controller {
             return $this->redirect($this->generateUrl('table_show',array('id'=>$entity->getOid())));
         }
 
-        //if show not submitted => change url
-        if( $entity->getStatus()."" == "Not Submitted" && $routeName != "multy_edit" ) {
-            return $this->redirect($this->generateUrl('multy_edit',array('id'=>$entity->getOid())));
+        //redirect by status
+        $orderUtil = new OrderUtil();
+        $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName,$this->get('router'));
+        if( $redirect != null ) {
+            return $redirect;
         }
 
         //echo $entity;

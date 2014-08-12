@@ -85,6 +85,7 @@ class TableController extends Controller {
     /**
      * @Route("/scan-order/multi-slide-table-view/{id}/amend", name="table_amend", requirements={"id" = "\d+"})
      * @Route("/scan-order/multi-slide-table-view/{id}/show", name="table_show", requirements={"id" = "\d+"})
+     * @Route("/scan-order/multi-slide-table-view/{id}/edit", name="table_edit", requirements={"id" = "\d+"})
      * @Template("OlegOrderformBundle:MultiScanOrder:newtable.html.twig")
      */
     public function multiTableShowAction( Request $request, $id ) {
@@ -109,10 +110,20 @@ class TableController extends Controller {
         if( $routeName == "table_amend") {
             $actions = array('amend');
         }
+        if( $routeName == "table_edit") {
+            $actions = array('edit');
+        }
 
         $userUtil = new UserUtil();
         if( $orderinfo && !$userUtil->isUserAllowOrderActions($orderinfo, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        //redirect by status
+        $orderUtil = new OrderUtil();
+        $redirect = $orderUtil->redirectOrderByStatus($orderinfo,$routeName,$this->get('router'));
+        if( $redirect ) {
+            return $redirect;
         }
 
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
@@ -124,6 +135,12 @@ class TableController extends Controller {
         if( $routeName == "table_amend") {
             $disable = false;
             $type = "amend";
+            //echo "amend! <br>";
+        }
+
+        if( $routeName == "table_edit") {
+            $disable = false;
+            $type = "edit";
             //echo "amend! <br>";
         }
 
