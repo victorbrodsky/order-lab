@@ -218,7 +218,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenance' )
             $builder->add('maintenance',null,array(
                 'label'=>'Maintenance:',
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
         if( $this->params['cicle'] == 'show' || $this->params['param'] == 'maintenanceenddate' )

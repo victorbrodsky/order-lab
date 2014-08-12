@@ -50,7 +50,7 @@ class UserPreferencesType extends AbstractType
         $builder->add('tooltip', 'checkbox', array(
             'required' => false,
             'label' => 'Show tool tips for locked fields:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
 

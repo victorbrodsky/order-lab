@@ -210,30 +210,30 @@
             </tr>
 
 
-            {#Maintnance#}
+            {#Maintenance#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Maintanence Mode:</h3>
+                    <h3>Maintenance Mode:</h3>
                 </td>
             </tr>
             <tr>
-                <td>Maintanence</td>
+                <td>Maintenance</td>
                 <td>{{ entity.maintenance }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Maintnance Until</td>
+                <td>Maintenance Until</td>
                 {#<td>{{ entity.maintenanceenddate|date('m/d/Y H:i') }}</td>#}
                 <td>{{ entity.getMaintenanceenddateString }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Maintnance Message on Logout</td>
+                <td>Maintenance Message on Logout</td>
                 <td>{{ entity.maintenancelogoutmsg }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenancelogoutmsg'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Maintnance Message on Login</td>
+                <td>Maintenance Message on Login</td>
                 <td>{{ entity.maintenanceloginmsg }}</td>
                 <td><a href="{{ path('siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
             </tr>
