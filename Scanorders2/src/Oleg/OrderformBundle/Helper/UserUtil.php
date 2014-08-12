@@ -417,6 +417,35 @@ class UserUtil {
         return $maxIdleTime;
     }
 
+    public function getMaxIdleTimeAndMaintenance($em) {
+
+        $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+
+        if( !$params ) {
+            //new DB does not have SiteParameters object
+            return 1800; //30 min
+            //throw new \Exception( 'Parameter object is not found' );
+        }
+
+        if( count($params) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+        }
+
+        $param = $params[0];
+        $maxIdleTime = $param->getMaxIdleTime();
+        $maintenance = $param->getMaintenance();
+
+        //return time in seconds
+        $maxIdleTime = $maxIdleTime * 60;
+
+        $res = array(
+            'maxIdleTime' => $maxIdleTime,
+            'maintenance' => $maintenance
+        );
+
+        return $res;
+    }
+
     public function getSiteSetting($em,$setting) {
 
         $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();

@@ -22,9 +22,7 @@ class HomeController extends Controller {
      */
     public function maintanenceModeAction() {
 
-        //return $this->render('OlegOrderformBundle:Default:maintenance.html.twig');
-
-        $maintenanceUntil = "";
+        //exit('maint controller');
 
         $em = $this->getDoctrine()->getManager();
         $params = $roles = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
@@ -33,12 +31,11 @@ class HomeController extends Controller {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
         }
 
-        if( count($params) == 1 ) {
-            $param = $params[0];
-            $maintenanceLoginMsg = $param->getMaintenanceloginmsg();
-        }
+        $param = $params[0];
 
-
+        //$maintenanceLoginMsg = $param->getMaintenanceloginmsg();
+        //$maintenance = $param->getMaintenance();
+        //echo "maintenance=".$maintenance."<br>";
 
         return $this->render('OlegOrderformBundle:Default:maintenance.html.twig',
             array(

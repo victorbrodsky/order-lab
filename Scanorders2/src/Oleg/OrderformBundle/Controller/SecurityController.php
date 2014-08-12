@@ -70,7 +70,16 @@ class SecurityController extends Controller
         $response = new Response();
 
         $userUtil = new UserUtil();
-        $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager());
+        $maxIdleTime = $res['maxIdleTime'];
+        $maintenance = $res['maintenance'];
+
+        /////////////////// check if maintenance is on ////////////////////
+        if( $maintenance ) {
+            $maxIdleTime = 0;
+        }
+        //echo '$maxIdleTime='.$maxIdleTime."<br>";
+        ////////////////////////////////////////////////////////////////////
 
         if( $maxIdleTime > 0 ) {
 
@@ -78,7 +87,7 @@ class SecurityController extends Controller
             //$this->session->start();
             $lapse = time() - $session->getMetadataBag()->getLastUsed();
 
-            $msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
+            //$msg = "'lapse=".$lapse.", max idle time=".$maxIdleTime."'";
             //echo "console.log(".$msg.")";
             //echo $msg;
             //$this->logoutUser($event);
@@ -107,18 +116,32 @@ class SecurityController extends Controller
         //echo "logout Action! <br>";
         //exit();
 
+        //$userUtil = new UserUtil();
+        //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+
         $userUtil = new UserUtil();
-        $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager());
+        $maxIdleTime = $res['maxIdleTime'];
+        $maintenance = $res['maintenance'];
+
 
 //        if( !$flag || $flag == '' ) {
 //            //$request = $this->get('request');
 //            $flag = trim( $request->get('opt') );
 //        }
 
-        if( $flag && $flag == 'saveorder' ) {
-            $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+        if( $maintenance ) {
+
+            $msg = $userUtil->getSiteSetting($this->getDoctrine()->getManager(),'maintenancelogoutmsg');
+
         } else {
-            $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
+
+            if( $flag && $flag == 'saveorder' ) {
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+            } else {
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
+            }
+
         }
 
         $this->get('session')->getFlashBag()->add(
@@ -138,11 +161,26 @@ class SecurityController extends Controller
     public function getmaxidletimeAction( Request $request )
     {
 
+        //$userUtil = new UserUtil();
+        //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+
         $userUtil = new UserUtil();
-        $maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager());
+        $maxIdleTime = $res['maxIdleTime'];
+        $maintenance = $res['maintenance'];
+
+        if( $maintenance ) {
+            $maxIdleTime = 0; //2min
+        }
+
+        $output = array(
+            'maxIdleTime' => $maxIdleTime,
+            'maintenance' => $maintenance
+        );
 
         $response = new Response();
-        $response->setContent($maxIdleTime);
+        //$response->setContent($res);
+        $response->setContent(json_encode($output));
 
         return $response;
     }

@@ -43,7 +43,7 @@ class SessionIdleHandler
     public function onKernelRequest(GetResponseEvent $event)
     {
 
-        if (HttpKernelInterface::MASTER_REQUEST != $event->getRequestType()) {
+        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
             return;
         }
 

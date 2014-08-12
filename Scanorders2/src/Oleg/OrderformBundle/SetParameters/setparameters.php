@@ -14,8 +14,6 @@ $password = $container->getParameter('database_password');
 
 //setLDAPParametersFromDB_ScanOrder($container,$host,$driver,$dbname,$user,$password);
 
-
-
 $config = new \Doctrine\DBAL\Configuration();
 
 $connectionParams = array(
@@ -56,10 +54,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $department_name = null;
 
         //maintenance
-        $maintenance = null;
-        $maintenanceenddate = null;
-        $maintenanceloginmsg = null;
-        $maintenancelogoutmsg = null;
+//        $maintenance = null;
+//        $maintenanceenddate = null;
+//        $maintenanceloginmsg = null;
+//        $maintenancelogoutmsg = null;
 
         while( $row = $params->fetch() ) {
 
@@ -76,10 +74,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $department_url = $row['departmenturl'];
             $department_name = $row['departmentname'];
 
-            $maintenance = $row['maintenance'];
-            $maintenanceenddate = $row['maintenanceenddate'];
-            $maintenanceloginmsg = $row['maintenanceloginmsg'];
-            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
+//            $maintenance = $row['maintenance'];
+//            $maintenanceenddate = $row['maintenanceenddate'];
+//            $maintenanceloginmsg = $row['maintenanceloginmsg'];
+//            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
             //echo $aDLDAPServerAddress."<br>";
         }
 
@@ -121,10 +119,12 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('department_name',$department_name);
 
         //maintenance
-        $container->setParameter('maintenance',$maintenance);
-        $container->setParameter('maintenanceenddate',$maintenanceenddate);
-        $container->setParameter('maintenanceloginmsg',$maintenanceloginmsg);
-        $container->setParameter('maintenancelogoutmsg',$maintenancelogoutmsg);
+//        $container->setParameter('maintenance',$maintenance);
+//        $container->setParameter('maintenanceenddate',$maintenanceenddate);
+//        $container->setParameter('maintenanceloginmsg',$maintenanceloginmsg);
+//        $container->setParameter('maintenancelogoutmsg',$maintenancelogoutmsg);
+        //echo "maint=".$this->container->getParameter('maintenance')."<br>";
+
 
     }//if param
 
@@ -133,5 +133,3 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //exit("table false<br>");
     //echo("table false<br>");
 }
-
-

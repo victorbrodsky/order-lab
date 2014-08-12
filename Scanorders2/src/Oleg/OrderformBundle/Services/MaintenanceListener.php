@@ -13,81 +13,94 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Oleg\OrderformBundle\Helper\UserUtil;
 
 class MaintenanceListener {
 
     private $container;
-    //private $sc;
+    private $em;
+    private $sc;
 
-//    public function __construct( ContainerInterface $container, SecurityContext $sc )
-//    {
-//        $this->container = $container;
-//        $this->sc = $sc;
-//    }
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $em, SecurityContext $sc)
     {
         $this->container = $container;
-        //$this->sc = $sc;
+        $this->em = $em;
+        $this->sc = $sc;
     }
+
 
     public function onKernelRequest(GetResponseEvent $event)
     {
 
-        //return;
+        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
+            return;
+        }
 
-        //$user = $this->sc->getToken()->getUser();
-        //echo "user=".$user."<br>";
+        $controller = $event->getRequest()->attributes->get('_controller');
+        //echo "controller=".$controller."<br>";
+        if( strpos($controller,'Oleg\OrderformBundle') !== false ) {
+            // fire custom event e.g. My.db.lookup
+            //echo "OlegOrderformBundle controller! <br>";
+        } else {
+            //echo "other controller! <br>";
+            return;
+        }
 
-        //$maintenanceUntil = $this->container->hasParameter('maintenanceenddate') ? $this->container->getParameter('maintenanceenddate') : false;
-        $maintenance = $this->container->hasParameter('maintenance') ? $this->container->getParameter('maintenance') : false;
-
-        //$maintenanceLoginMsg = $this->container->hasParameter('maintenanceloginmsg') ? $this->container->getParameter('maintenanceloginmsg') : false;
-        //$maintenanceLogoutMsg = $this->container->hasParameter('maintenancelogoutmsg') ? $this->container->getParameter('maintenancelogoutmsg') : false;
-
-        //echo "maintenance=".$maintenance."<br>";
-        //echo "maintenanceUntil=".$maintenanceUntil."<br>";
-        //echo "maintenanceLoginMsg=".$maintenanceLoginMsg."<br>";
-        //echo "maintenancelogoutmsg=".$maintenanceLogoutMsg."<br>";
+        $maintenanceRoute = 'maintenance_scanorder';
+        $scanRoute = 'main_common_home';
 
         $debug = in_array($this->container->get('kernel')->getEnvironment(), array('test', 'dev'));
 
         //echo "route=".$event->getRequest()->get('_route')."<b>";
 
+        /////////////// maintanance from DB. Container parameter will be updated only after cleaning the cache //////////////
+        $userUtil = new UserUtil();
+        $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
+        //echo "maintenanceDb=".$maintenanceDb."<br>";
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        if( !$maintenance ) {
+            if( $maintenanceRoute === $event->getRequest()->get('_route') ) {
+                $url = $this->container->get('router')->generate('logout');
+                $response = new RedirectResponse($url);
+                $event->setResponse($response);
+            }
+        }
+
         //if( 0 ) {
+        //if( $maintenance && !$debug && $maintenanceDb ) {
         if( $maintenance && !$debug ) {
         //if( $maintenance ) {
-
-            $route = 'maintenance_scanorder';
 
             //echo "route=".$event->getRequest()->get('_route')."<br>";
             //echo "url=".$url."<br>";
             //echo "route=".$route."<br>";
 
-            if( $route === $event->getRequest()->get('_route') ) {
+            if( $this->sc->isGranted('IS_AUTHENTICATED_FULLY') ){
+                //don't kick out already logged in users
+//                $maintenanceMsg = $userUtil->getSiteSetting($this->em,'maintenance');
+//                $this->container->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    'Maintanance!'
+//                );
+                return;
+            }
+
+            if( $maintenanceRoute === $event->getRequest()->get('_route') || $scanRoute === $event->getRequest()->get('_route') ) {
                 return;
             } else {
-                //$url = $this->router->generate("main_common_home");
-                $url = $this->container->get('router')->generate('maintenance_scanorder');
+                $url = $this->container->get('router')->generate($maintenanceRoute);
                 $response = new RedirectResponse($url);
                 $event->setResponse($response);
             }
 
 //            $engine = $this->container->get('templating');
-//
-//            //return $engine->render( 'OlegOrderformBundle:Maintenance:maintenance.html.twig', array('maintenanceUntil'=>$maintenanceUntil) );
-//            //return $engine->render( 'OlegOrderformBundle:Maintenance:maintenance.html.twig', array('maintenanceUntil'=>$maintenanceUntil) );
-            //$content = $engine->render( '::maintenance.html.twig', array('maintenanceloginmsg'=>$maintenanceLoginMsg) );
-//            //$content = $engine->render('OlegOrderformBundle:Maintenance:maintenance.html.twig', array('maintenanceUntil'=>$maintenanceUntil));
-//
-//            $url = $this->router->generate($route);
-//            $response = new RedirectResponse($url);
-//            $event->setResponse($response);
-//
+//            $content = $engine->render('OlegOrderformBundle:Default:maintenance.html.twig', array('param'=>null));
 //            $event->setResponse(new Response($content, 503));
-//            //$event->setResponse(new Response($content));
 //            $event->stopPropagation();
         }
 

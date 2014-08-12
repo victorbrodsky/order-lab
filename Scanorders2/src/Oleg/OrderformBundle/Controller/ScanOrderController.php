@@ -1103,7 +1103,7 @@ class ScanOrderController extends Controller {
                     }
                     break;
                 case "All Statuses (except Not Submitted)":
-                    $filterStr = " status.name != 'Not Submitted'";
+                    $filterStr = " status.name != 'Not Submitted' AND status.name != 'Superseded'";
                     break;
                 case "All Filled":
                     $filterStr = " status.name LIKE '%Filled%'";
@@ -1115,7 +1115,7 @@ class ScanOrderController extends Controller {
                     $filterStr = " status.name LIKE '%Filled%' AND status.name NOT LIKE '%Returned%'";
                     break;
                 case "All Not Filled":
-                    $filterStr = " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'";
+                    $filterStr = " status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Canceled%' AND status.name != 'Not Submitted' AND status.name != 'Superseded' ";
                     break;
                 case "All On Hold":
                     $filterStr = " status.name LIKE '%On Hold%'";

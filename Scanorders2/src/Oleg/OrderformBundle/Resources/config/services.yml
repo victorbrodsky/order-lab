@@ -7,10 +7,10 @@ parameters:
   department_url:
   department_name:
 
-  maintenance:
-  maintenanceenddate:
-  maintenanceloginmsg:
-  maintenancelogoutmsg:
+#  maintenance:
+#  maintenanceenddate:
+#  maintenanceloginmsg:
+#  maintenancelogoutmsg:
 
 
 #framework:
@@ -103,7 +103,7 @@ services:
 
     scanorder.listener.maintenance:
         class: Oleg\OrderformBundle\Services\MaintenanceListener
-        arguments: ["@service_container"]
+        arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

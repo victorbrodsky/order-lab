@@ -17,18 +17,20 @@ function idleTimeout() {
         url: getCommonBaseUrl("getmaxidletime/"),	//urlBase+"getmaxidletime/",
         type: 'GET',
         //contentType: 'application/json',
-        //dataType: 'json',
+        dataType: 'json',
         async: false,
         timeout: _ajaxTimeout,
         success: function (data) {
             //console.debug("data="+data);
-            _idleAfter = data;
+            //console.debug("idletime="+data.maxIdleTime);
+            //console.debug("maint="+data.maintenance);
+            _idleAfter = data.maxIdleTime;
         },
         error: function ( x, t, m ) {
             if( t === "timeout" ) {
                 getAjaxTimeoutMsg();
             }
-            console.debug("error data="+data);
+            console.debug("get max idletime: error data="+data);
             _idleAfter = 0;
         }
     });
@@ -36,7 +38,7 @@ function idleTimeout() {
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     var $countdown = $("#dialog-countdown");
 
-    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive");	//urlBase+"keepalive/";
+    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive");
 
     //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
     //idleAfter: 1800 sec => 30min*60sec =
@@ -52,22 +54,9 @@ function idleTimeout() {
         keepAliveURL: urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
         onTimeout: function(){
-            //$('#next_button_multi').trigger('click');
+            //console.log("onTimeout: logout");
             keepWorking();
-            $('#save_order_onidletimeout_btn').show();
-            //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
-
-            if( $('#save_order_onidletimeout_btn').length > 0 &&
-                ( cicle == "new" || cicle == "edit" ) &&
-                checkIfOrderWasModified()
-            ) {
-                //console.log("save!!!!!!!!!!!");
-                //save if all fields are not empty; don't validate
-                $('#save_order_onidletimeout_btn').trigger('click');
-            } else {
-                //console.log("logout");
-                idlelogout();
-            }
+            tryToSubmitForm();
         },
         onIdle: function(){
             //console.log("on idle");
@@ -78,9 +67,27 @@ function idleTimeout() {
             $countdown.html(counter); // update the counter
         },
         onAbort: function(){
+            //console.log("onAbort: logout");
+            tryToSubmitForm();
             idlelogout();
         }
     });
+}
+
+function tryToSubmitForm() {
+    $('#save_order_onidletimeout_btn').show();
+    //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
+
+    if( $('#save_order_onidletimeout_btn').length > 0 &&
+        ( cicle == "new" || cicle == "edit" ) &&
+        checkIfOrderWasModified()
+        ) {
+        //console.log("save!!!!!!!!!!!");
+        //save if all fields are not empty; don't validate
+        $('#save_order_onidletimeout_btn').trigger('click');
+    } else {
+        idlelogout();
+    }
 }
 
 function keepWorking() {
@@ -97,6 +104,7 @@ function logoff() {
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
+    //console.log("idlelogout");
     window.onbeforeunload = null;
     var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
     window.location = urlIdleTimeoutLogout;
