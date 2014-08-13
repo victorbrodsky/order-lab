@@ -6,9 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//indexes={@Index(name="user_idx", columns={"email"})}
-//,@ORM\@Index(name="lessonTitleStr_idx", columns={"lessonTitleStr"})
-//@ORM\Table(indexes={@ORM\Index(name="email_address_idx", columns={"email_address"})})
 
 /**
  * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\EducationalRepository")
@@ -65,12 +62,6 @@ class Educational
      * @ORM\Column(type="string", nullable=true)
      */
     protected $lessonTitleStr;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="LessonTitleList", cascade={"persist"})
-     * @ORM\JoinColumn(name="lessonTitle_id", referencedColumnName="id", nullable=true)
-     */
-    protected $lessonTitle;
 
     /**
      * primarySet - name of the primary Director. Indicates if the primaryDirector was set by this order
@@ -190,22 +181,6 @@ class Educational
     public function getCourseTitleStr()
     {
         return $this->courseTitleStr;
-    }
-
-    /**
-     * @param mixed $lessonTitle
-     */
-    public function setLessonTitle($lessonTitle)
-    {
-        $this->lessonTitle = $lessonTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLessonTitle()
-    {
-        return $this->lessonTitle;
     }
 
     /**

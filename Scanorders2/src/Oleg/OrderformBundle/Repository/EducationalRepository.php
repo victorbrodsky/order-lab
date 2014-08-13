@@ -25,7 +25,6 @@ class EducationalRepository extends ListAbstractRepository {
 
         //process Set Title
         $lessonTitle = $this->convertStrToObject( $educational->getLessonTitleStr(), 'LessonTitleList', $user, 'courseTitle', $courseTitle->getId() );
-        $educational->setLessonTitle($lessonTitle);
 
         //process principals and primary principal
         $this->processDirectors( $educational, $courseTitle );
@@ -69,71 +68,5 @@ class EducationalRepository extends ListAbstractRepository {
         }//foreach
 
     }
-
-//    public function processEntity( $orderinfo ) {
-//
-//        $entity = $orderinfo->getEducational();
-//
-//        if( $entity->isEmpty() ) {
-//            $orderinfo->setEducational(NULL);
-//            return $orderinfo;
-//        }
-//
-//        $cwid = null;
-//        $user = null;
-//        $em = $this->_em;
-//
-//        $courseTitleName = $entity->getCourseTitle()->getName()."";
-//        $foundCourseTitle = $em->getRepository('OlegOrderformBundle:CourseTitleList')->findOneByName($courseTitleName);
-//
-//        if( $foundCourseTitle ) {
-//
-//            $originalCourseTitle = $entity->getCourseTitle();
-//            $originalLessonTitles = $originalCourseTitle->getLessonTitles();
-//
-//            foreach( $originalLessonTitles as $lessontitle ) {
-//                $foundCourseTitle->addLessonTitles($lessontitle);
-//                $lessontitle->setCourseTitle($foundCourseTitle);
-//            }
-//
-//            $this->processDirectors( $originalCourseTitle, $foundCourseTitle ); //source, dest
-//
-//            //set primary principal
-//            $foundCourseTitle->setPrimaryDirector( $originalCourseTitle->getPrimaryDirector() );
-//
-//            $entity->setCourseTitle( $foundCourseTitle );
-//
-//            $orderinfo->setEducational($entity);
-//
-//
-//            return $orderinfo;
-//
-//        } else {
-//            throw new \Exception( 'Object was not found with name '.$courseTitleName );
-//        }
-//
-//        //exit('educ rep');
-//        return $orderinfo;
-//    }
-
-//    public function processDirectors( $source, $dest ) {
-//
-//
-//        $directors = $source->getDirectors();
-//
-//        foreach( $directors as $director ) {
-//            $directorstr = $director->getName();
-//            //echo "str=".$directorstr."<br>";
-//
-//            $foundDirector = $this->_em->getRepository('OlegOrderformBundle:DirectorList')->findOneByName($directorstr);
-//
-//            if( $foundDirector ) {
-//                $dest->addDirectors($foundDirector);
-//                $foundDirector->addCourse($dest);
-//            }
-//
-//        }
-//
-//    }
 
 }

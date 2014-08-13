@@ -24,6 +24,16 @@ class Institution extends ListAbstract
     protected $original;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $abbreviation;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Department", mappedBy="institution", cascade={"persist"})
+     */
+    protected $departments;
+
+    /**
      * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="institution")
      */
     protected $orderinfos;
@@ -66,6 +76,7 @@ class Institution extends ListAbstract
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
+        $this->departments = new ArrayCollection();
         $this->orderinfos = new ArrayCollection();
         $this->patients = new ArrayCollection();
         $this->procedures = new ArrayCollection();
@@ -169,11 +180,11 @@ class Institution extends ListAbstract
 
 
     /**
- * Add patient
- *
- * @param \Oleg\OrderformBundle\Entity\Patient $patient
- * @return Institution
- */
+     * Add patient
+     *
+     * @param \Oleg\OrderformBundle\Entity\Patient $patient
+     * @return Institution
+     */
     public function addPatient(\Oleg\OrderformBundle\Entity\Patient $patient)
     {
         //echo "Institution addOrderinfo=".$orderinfo."<br>";
@@ -400,4 +411,59 @@ class Institution extends ListAbstract
     {
         return $this->users;
     }
+
+
+
+    /**
+     * Add department
+     *
+     * @param \Oleg\OrderformBundle\Entity\Department $department
+     * @return Institution
+     */
+    public function addDepartment(\Oleg\OrderformBundle\Entity\Department $department)
+    {
+        if( !$this->departments->contains($department) ) {
+            $department->setInstitution($this);
+            $this->departments->add($department);
+        }
+    }
+    /**
+     * Remove department
+     *
+     * @param \Oleg\OrderformBundle\Entity\Department $department
+     */
+    public function removeDepartment(\Oleg\OrderformBundle\Entity\Department $department)
+    {
+        $this->departments->removeElement($department);
+    }
+    /**
+     * Get order
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDepartments()
+    {
+        return $this->departments;
+    }
+
+
+
+    /**
+     * @param mixed $abbreviation
+     */
+    public function setAbbreviation($abbreviation)
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAbbreviation()
+    {
+        return $this->abbreviation;
+    }
+
+
+
 }

@@ -28,10 +28,22 @@ class Department extends ListAbstract
      */
     protected $orderinfo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="departments")
+     * @ORM\JoinColumn(name="institution", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $institution;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Division", mappedBy="department", cascade={"persist"})
+     */
+    protected $divisions;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
+        $this->divisions = new ArrayCollection();
     }
 
     /**
@@ -91,6 +103,24 @@ class Department extends ListAbstract
     }
 
     /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+
+
+    /**
      * Add orderinfo
      *
      * @param \Oleg\OrderformBundle\Entity\OrderInfo $orderinfo
@@ -123,4 +153,45 @@ class Department extends ListAbstract
     {
         return $this->orderinfo;
     }
+
+
+
+    /**
+     * Add division
+     *
+     * @param \Oleg\OrderformBundle\Entity\Division $division
+     * @return Department
+     */
+    public function addDivision(\Oleg\OrderformBundle\Entity\Division $division)
+    {
+        if( !$this->divisions->contains($division) ) {
+            $division->setDepartment($this);
+            $this->divisions->add($division);
+        }
+    }
+
+    /**
+     * Remove division
+     *
+     * @param \Oleg\OrderformBundle\Entity\Division $division
+     */
+    public function removeDivision(\Oleg\OrderformBundle\Entity\Division $division)
+    {
+        $this->divisions->removeElement($division);
+    }
+
+    /**
+     * Get division
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDivisions()
+    {
+        return $this->divisions;
+    }
+
+
+
+
+
 }

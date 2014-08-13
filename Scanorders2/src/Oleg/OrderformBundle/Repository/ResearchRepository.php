@@ -25,7 +25,6 @@ class ResearchRepository extends ListAbstractRepository {
 
         //process Set Title
         $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), 'SetTitleList', $user, 'projectTitle', $projectTitle->getId() );
-        $research->setSetTitle($setTitle);
 
         //process principals and primary principal
         $this->processPrincipals( $research, $projectTitle );

@@ -207,6 +207,7 @@ class UserUtil {
     }
 
     //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
+    //$entity is object: orderinfo or patient, accession, part ...
     public function hasUserPermission( $entity, $user ) {
 
         if( $entity == null ) {
@@ -217,6 +218,9 @@ class UserUtil {
             return false;
         }
 
+        if( !$entity->getInstitution() ) {
+            throw new \Exception( 'Entity is not linked to any Institution. Entity:'.$entity );
+        }
 
         ///////////////// 1) check if the user belongs to the same institution /////////////////
         $hasInst = false;

@@ -73,12 +73,6 @@ class Research
     protected $setTitleStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SetTitleList", cascade={"persist"})
-     * @ORM\JoinColumn(name="setTitle_id", referencedColumnName="id", nullable=true)
-     */
-    protected $setTitle;
-
-    /**
      * primarySet - name of the primary PI. Indicates if the primaryPrincipal was set by this order
      * @ORM\Column(type="string", nullable=true)
      */
@@ -249,22 +243,6 @@ class Research
     public function getProjectTitleStr()
     {
         return $this->projectTitleStr."";
-    }
-
-    /**
-     * @param mixed $setTitle
-     */
-    public function setSetTitle($setTitle)
-    {
-        $this->setTitle = $setTitle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSetTitle()
-    {
-        return $this->setTitle;
     }
 
     /**

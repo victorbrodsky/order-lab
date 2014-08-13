@@ -32,6 +32,7 @@ class User extends BaseUser
      */
     protected $id;
 
+    //TODO: rename it to $divisions? Remove it or keep reference for bidirectional relationship???
     /**
      * @ORM\ManyToMany(targetEntity="PathServiceList")
      * @ORM\JoinTable(name="fos_user_pathservice",
@@ -41,6 +42,7 @@ class User extends BaseUser
      */
     protected $pathologyServices;
 
+    //TODO: rename it to $primaryDivision?
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -107,6 +109,7 @@ class User extends BaseUser
      */
     protected $preferences;
 
+    //TODO: rename it to $chiefDivisions?
     /**
      * @ORM\ManyToMany(targetEntity="PathServiceList")
      * @ORM\JoinTable(name="fos_user_chiefservice",
@@ -117,6 +120,10 @@ class User extends BaseUser
     protected $chiefservices;
 
     /**
+     * Each user must be linked with one or many Institutions. We can link a user with Division and then get Institution by looping trhough all users's divisions:
+     * User->getDivisions() => foreach division: institution=division->getDepartment->getInstitution => institutions[] = institution
+     * However, keep reference to institution for performance gain.
+     *
      * @ORM\ManyToMany(targetEntity="Institution", inversedBy="users")
      * @ORM\JoinTable(name="fos_user_institution",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -125,10 +132,6 @@ class User extends BaseUser
      */
     protected $institution;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="users")
-//     **/
-//    protected $institution;
 
 
     function __construct()

@@ -487,8 +487,8 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         /////////// institution ///////////
-        $instStr = "";
         $user = $this->get('security.context')->getToken()->getUser();
+        $instStr = "";
         foreach( $user->getInstitution() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
@@ -530,8 +530,8 @@ class ScanOrderController extends Controller {
         //$slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->findByStatus('active');
 
         /////////// institution ///////////
-        $instStr = "";
         $user = $this->get('security.context')->getToken()->getUser();
+        $instStr = "";
         foreach( $user->getInstitution() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
