@@ -144,10 +144,16 @@ class TableController extends Controller {
             //echo "amend! <br>";
         }
 
+        if( $orderinfo->getStatus() == "Submitted" || $orderinfo->getStatus() == "Amended" || $orderinfo->getStatus() == "Not Submitted" ) {
+            $fieldstatus = "valid";
+        } else
         if( $orderinfo->getStatus() == "Superseded" ) {
+            //status for superseded, canceled can be "deleted-by-amended-order" or "canceled-by-amended-order" or "valid". By setting status to null, we saying that we do not know the status, so the first
             $fieldstatus = "deleted-by-amended-order";
         } else {
-            $fieldstatus = "valid";
+            //status for all other types including canceled can be "canceled-by-amended-order" or "valid".
+            //By setting status to null, we saying that we do not know the status, so we will use the first field belonging to this order id (obtainStatusField will return the first field with provided order id)
+            $fieldstatus = null;
         }
 
         $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'service'=>null, 'user'=>$user);
@@ -200,17 +206,22 @@ class TableController extends Controller {
             $rowArr['Scan Magnificaiton']['id'] = $scan->getId();
             $rowArr['Scan Magnificaiton']['value'] = $scan->getField();
 
+            //echo "part:".$part;
             $partdiadnosis = $part->obtainStatusField('disident',$fieldstatus,$id);
-            $rowArr['Diagnosis']['id'] = $partdiadnosis->getId();
-            $rowArr['Diagnosis']['value'] = $partdiadnosis->getField();
+            if( $partdiadnosis ) {
+                $rowArr['Diagnosis']['id'] = $partdiadnosis->getId();
+                $rowArr['Diagnosis']['value'] = $partdiadnosis->getField();
+            }
 
             $rowArr['Reason for Scan/Note']['id'] = $scan->getId();
             $rowArr['Reason for Scan/Note']['value'] = $scan->getNote();
 
             //part 1
             $sourceorgan = $part->obtainStatusField('sourceOrgan',$fieldstatus,$id);
-            $rowArr['Source Organ']['id'] = $sourceorgan->getId();
-            $rowArr['Source Organ']['value'] = ( $sourceorgan->getField() ? $sourceorgan->getField()->getName() : null );
+            if( $sourceorgan ) {
+                $rowArr['Source Organ']['id'] = $sourceorgan->getId();
+                $rowArr['Source Organ']['value'] = ( $sourceorgan->getField() ? $sourceorgan->getField()->getName() : null );
+            }
 
             //patient: 4
             $patientkey = $patient->obtainValidKeyField();
@@ -220,17 +231,23 @@ class TableController extends Controller {
             $rowArr['MRN']['value'] = $patientkey->getField();
 
             $dob = $patient->obtainStatusField('dob',$fieldstatus,$id);
-            $rowArr['Patient DOB']['id'] = $dob->getId();
-            $rowArr['Patient DOB']['value'] = $transformer->transform($dob->getField());
+            if( $dob ) {
+                $rowArr['Patient DOB']['id'] = $dob->getId();
+                $rowArr['Patient DOB']['value'] = $transformer->transform($dob->getField());
+            }
 
             $clinicalHistory = $patient->obtainStatusField('clinicalHistory',$fieldstatus,$id);
-            $rowArr['Clinical Summary']['id'] = $clinicalHistory->getId();
-            $rowArr['Clinical Summary']['value'] = $clinicalHistory->getField();
+            if( $clinicalHistory ) {
+                $rowArr['Clinical Summary']['id'] = $clinicalHistory->getId();
+                $rowArr['Clinical Summary']['value'] = $clinicalHistory->getField();
+            }
 
             //accession: 1
             $accessionDate = $accession->obtainStatusField('accessionDate',$fieldstatus,$id);
-            $rowArr['Accession Date']['id'] = $accessionDate->getId();
-            $rowArr['Accession Date']['value'] = $transformer->transform($accessionDate->getField());
+            if( $accessionDate ) {
+                $rowArr['Accession Date']['id'] = $accessionDate->getId();
+                $rowArr['Accession Date']['value'] = $transformer->transform($accessionDate->getField());
+            }
 
             //procedure: 6
             $proceduretype = $procedure->getName()->first();
@@ -238,62 +255,86 @@ class TableController extends Controller {
             $rowArr['Procedure Type']['value'] = ( $proceduretype->getField() ? $proceduretype->getField()->getId() : null );
 
             $encounterdate = $procedure->obtainStatusField('encounterDate',$fieldstatus,$id);
-            $rowArr['Encounter Date']['id'] = $encounterdate->getId();
-            $rowArr['Encounter Date']['value'] = $transformer->transform($encounterdate->getField());
+            if( $encounterdate ) {
+                $rowArr['Encounter Date']['id'] = $encounterdate->getId();
+                $rowArr['Encounter Date']['value'] = $transformer->transform($encounterdate->getField());
+            }
 
             $patlastname = $procedure->obtainStatusField('patlastname',$fieldstatus,$id);
-            $rowArr["Patient's Last Name"]['id'] = $patlastname->getId();
-            $rowArr["Patient's Last Name"]['value'] = $patlastname->getField();
+            if( $patlastname ) {
+                $rowArr["Patient's Last Name"]['id'] = $patlastname->getId();
+                $rowArr["Patient's Last Name"]['value'] = $patlastname->getField();
+            }
 
             $patfirstname = $procedure->obtainStatusField('patfirstname',$fieldstatus,$id);
-            $rowArr["Patient's First Name"]['id'] = $patfirstname->getId();
-            $rowArr["Patient's First Name"]['value'] = $patfirstname->getField();
+            if( $patfirstname ) {
+                $rowArr["Patient's First Name"]['id'] = $patfirstname->getId();
+                $rowArr["Patient's First Name"]['value'] = $patfirstname->getField();
+            }
 
             $patmiddlename = $procedure->obtainStatusField('patmiddlename',$fieldstatus,$id);
-            $rowArr["Patient's Middle Name"] = $patmiddlename->getId();
-            $rowArr["Patient's Middle Name"] = $patmiddlename->getField();
+            if( $patmiddlename ) {
+                $rowArr["Patient's Middle Name"] = $patmiddlename->getId();
+                $rowArr["Patient's Middle Name"] = $patmiddlename->getField();
+            }
 
             $patsex = $procedure->obtainStatusField('patsex',$fieldstatus,$id);
-            $rowArr['Patient Sex']['id'] = $patsex->getId();
-            $rowArr['Patient Sex']['value'] = $patsex->getField();
+            if( $patsex ) {
+                $rowArr['Patient Sex']['id'] = $patsex->getId();
+                $rowArr['Patient Sex']['value'] = $patsex->getField();
+            }
 
             $patage = $procedure->obtainStatusField('patage',$fieldstatus,$id);
-            $rowArr['Patient Age']['id'] = $patage->getId();
-            $rowArr['Patient Age']['value'] = $patage->getField();
+            if( $patage ) {
+                $rowArr['Patient Age']['id'] = $patage->getId();
+                $rowArr['Patient Age']['value'] = $patage->getField();
+            }
 
             $pathistory = $procedure->obtainStatusField('pathistory',$fieldstatus,$id);
-            $rowArr['Clinical History']['id'] = $pathistory->getId();
-            $rowArr['Clinical History']['value'] = $pathistory->getField();
+            if( $pathistory ) {
+                $rowArr['Clinical History']['id'] = $pathistory->getId();
+                $rowArr['Clinical History']['value'] = $pathistory->getField();
+            }
 
             //part: 5
             $description = $part->obtainStatusField('description',$fieldstatus,$id);
-            $rowArr['Gross Description']['id'] = $description->getId();
-            $rowArr['Gross Description']['value'] = $description->getField();
+            if( $description ) {
+                $rowArr['Gross Description']['id'] = $description->getId();
+                $rowArr['Gross Description']['value'] = $description->getField();
+            }
 
             $diffDisident = $part->obtainStatusField('diffDisident',$fieldstatus,$id);
-            $rowArr['Differential Diagnoses']['id'] = $diffDisident->getId();
-            $rowArr['Differential Diagnoses']['value'] = $diffDisident->getField();
+            if( $diffDisident ) {
+                $rowArr['Differential Diagnoses']['id'] = $diffDisident->getId();
+                $rowArr['Differential Diagnoses']['value'] = $diffDisident->getField();
+            }
 
             $diseaseType = $part->obtainStatusField('diseaseType',$fieldstatus,$id);
-            $rowArr['Type of Disease']['id'] = $diseaseType->getId();
-            $rowArr['Type of Disease']['value'] = $diseaseType->getField();
+            if( $diseaseType ) {
+                $rowArr['Type of Disease']['id'] = $diseaseType->getId();
+                $rowArr['Type of Disease']['value'] = $diseaseType->getField();
 
-            $rowArr['Origin of Disease']['id'] = $diseaseType->getId();
-            $rowArr['Origin of Disease']['value'] = $diseaseType->getOrigin();
+                $rowArr['Origin of Disease']['id'] = $diseaseType->getId();
+                $rowArr['Origin of Disease']['value'] = $diseaseType->getOrigin();
 
-            $rowArr['Primary Site of Disease Origin']['id'] = $diseaseType->getId();
-            $rowArr['Primary Site of Disease Origin']['value'] = ( $diseaseType->getPrimaryOrgan() ? $diseaseType->getPrimaryOrgan()->getName() : null );
+                $rowArr['Primary Site of Disease Origin']['id'] = $diseaseType->getId();
+                $rowArr['Primary Site of Disease Origin']['value'] = ( $diseaseType->getPrimaryOrgan() ? $diseaseType->getPrimaryOrgan()->getName() : null );
+            }
 
             //block: 3
             $sectionsource = $block->obtainStatusField('sectionsource',$fieldstatus,$id);
-            $rowArr['Block Section Source']['id'] = $sectionsource->getId();
-            $rowArr['Block Section Source']['value'] = $sectionsource->getField();
+            if( $sectionsource ) {
+                $rowArr['Block Section Source']['id'] = $sectionsource->getId();
+                $rowArr['Block Section Source']['value'] = $sectionsource->getField();
+            }
 
             $specialStains = $block->obtainStatusField('specialStains',$fieldstatus,$id);
-            $rowArr['Associated Special Stain Name']['id'] = $specialStains->getId();
-            $rowArr['Associated Special Stain Name']['value'] = $specialStains->getStaintype()->getName();
-            $rowArr['Associated Special Stain Result']['id'] = $specialStains->getId();
-            $rowArr['Associated Special Stain Result']['value'] = $specialStains->getField();
+            if( $specialStains ) {
+                $rowArr['Associated Special Stain Name']['id'] = $specialStains->getId();
+                $rowArr['Associated Special Stain Name']['value'] = $specialStains->getStaintype()->getName();
+                $rowArr['Associated Special Stain Result']['id'] = $specialStains->getId();
+                $rowArr['Associated Special Stain Result']['value'] = $specialStains->getField();
+            }
 
             //slide: 5
             $rowArr['Slide Title']['id'] = $slide->getId();

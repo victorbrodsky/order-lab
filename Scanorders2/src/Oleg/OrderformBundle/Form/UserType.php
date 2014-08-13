@@ -57,6 +57,10 @@ class UserType extends AbstractType
             'label' => 'First Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
+        $builder->add('middleName', null, array(
+            'label' => 'Middle Name:',
+            'attr' => array('class'=>'form-control form-control-modif')
+        ));
         $builder->add('lastName', null, array(
             'label' => 'Last Name:',
             'attr' => array('class'=>'form-control form-control-modif')
@@ -70,11 +74,11 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('title', null, array(
-            'label' => 'Title:',
+            'label' => 'Primary Job Title:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('phone', null, array(
-            'label' => 'Phone Number:',
+            'label' => 'Preferred Phone Number:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('fax', null, array(
@@ -82,7 +86,7 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('office', null, array(
-            'label' => 'Office Location:',
+            'label' => 'Main Office Room Number:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 

@@ -79,7 +79,7 @@ function tryToSubmitForm() {
     //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
 
     if( $('#save_order_onidletimeout_btn').length > 0 &&
-        ( cicle == "new" || cicle == "edit" ) &&
+        ( cicle == "new" || cicle == "edit" || cicle == "amend" ) &&
         checkIfOrderWasModified()
         ) {
         //console.log("save!!!!!!!!!!!");

@@ -424,30 +424,50 @@ abstract class ObjectAbstract
         return $this->obtainStatusField( $fieldname, 'valid', $orderid );
     }
 
-    //get only one field with $status
+    //get only one field with $status belongs to order with id $orderid
+    //if status is null, get the first field belongs to the given order id
     public function obtainStatusField( $fieldname, $status, $orderid=null ) {
+
         $res = null;
         $getMethod = "get".$fieldname;
+
         foreach( $this->$getMethod() as $entity ) {
-            //echo $entity->getStatus()."?=".$status."<br>";
-            if( $entity->getStatus() == $status ) {
 
-                $res = $entity;
+            if( $status == null ) {
 
-                //if orderid is not given, then return the first $status field
-                if( $orderid == null ) {
-                    break;
-                }
-
-                //if orderid is given, then return the first $status field with provided orderid
                 if( $orderid != null ) {
+                    //echo "field order id=".$entity->getOrderinfo()->getOid()." =? ".$orderid."<br>";
                     if( $entity->getOrderinfo()->getOid() == $orderid ) {
+                        $res = $entity;
                         break;
                     }
                 }
 
-            }
+            } else {
+
+                //echo $entity->getStatus()."?=".$status."<br>";
+                if( $entity->getStatus() == $status ) {
+
+                    $res = $entity;
+
+                    //if orderid is not given, then return the first $status field
+                    if( $orderid == null ) {
+                        break;
+                    }
+
+                    //if orderid is given, then return the first $status field with provided orderid
+                    if( $orderid != null ) {
+                        if( $entity->getOrderinfo()->getOid() == $orderid ) {
+                            break;
+                        }
+                    }
+
+                }//if
+
+            } //else
+
         } //foreach
+
         //echo "res=".$res."<br>";
         return $res;
     }

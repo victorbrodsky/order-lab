@@ -231,15 +231,12 @@ class Educational
     {
         //entity is DirectorWrapper class => order will show the same order as entered by a user
         return $this->directorWrappers;
-
-        //entity is DirectorList class => we can shows Primary Director as the first Director
-        //return $this->getCourseTitle()->getDirectors(); //to keep order according to Primary Director
     }
 
     /**
      * Add DirectorWrappers
      *
-     * @param \Oleg\OrderformBundle\Entity\DirectorList $Director
+     * @param \Oleg\OrderformBundle\Entity\DirectorList $director
      * @return Educational
      */
     public function addDirectorWrapper($director)
@@ -259,7 +256,7 @@ class Educational
     /**
      * Remove directorWrappers
      *
-     * @param \Oleg\OrderformBundle\Entity\DirectorWrappers $directorWrappers
+     * @param \Oleg\OrderformBundle\Entity\DirectorWrapper $directorWrappers
      */
     public function removeDirectorWrapper(\Oleg\OrderformBundle\Entity\DirectorWrapper $directorWrapper)
     {

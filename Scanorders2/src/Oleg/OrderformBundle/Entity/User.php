@@ -32,15 +32,6 @@ class User extends BaseUser
      */
     protected $id;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Group")
-//     * @ORM\JoinTable(name="fos_user_user_group",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-//     * )
-//     */
-//    protected $groups;
-
     /**
      * @ORM\ManyToMany(targetEntity="PathServiceList")
      * @ORM\JoinTable(name="fos_user_pathservice",
@@ -64,6 +55,11 @@ class User extends BaseUser
      * @ORM\Column(name="firstName", type="string", nullable=true)
      */
     protected $firstName;
+
+    /**
+     * @ORM\Column(name="middleName", type="string", nullable=true)
+     */
+    protected $middleName;
 
     /**
      * @ORM\Column(name="lastName", type="string", nullable=true)
@@ -218,6 +214,22 @@ class User extends BaseUser
     public function getFirstName()
     {
         return $this->firstName;
+    }
+
+    /**
+     * @param mixed $middleName
+     */
+    public function setMiddleName($middleName)
+    {
+        $this->middleName = $middleName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMiddleName()
+    {
+        return $this->middleName;
     }
 
     /**
