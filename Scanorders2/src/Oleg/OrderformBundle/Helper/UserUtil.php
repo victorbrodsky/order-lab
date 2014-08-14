@@ -9,9 +9,10 @@
 
 namespace Oleg\OrderformBundle\Helper;
 
+use Oleg\OrderformBundle\Entity\Location;
 use Oleg\OrderformBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Entity\PathServiceList;
+use Oleg\OrderformBundle\Entity\Division;
 use Oleg\OrderformBundle\Entity\Logger;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
@@ -80,10 +81,10 @@ class UserUtil {
             $lastName = $rowData[0][5];
             $title = $rowData[0][7];
             $office = $rowData[0][10];
-            $pathlogyServices = explode("/",$rowData[0][2]);
+            $divisions = explode("/",$rowData[0][2]);
 
-            //echo "<br>pathservices=".$rowData[0][2]." == ";
-            //print_r($pathlogyServices);
+            //echo "<br>divisions=".$rowData[0][2]." == ";
+            //print_r($divisions);
 
             //create system user
             $user = new User();
@@ -94,13 +95,24 @@ class UserUtil {
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
             $user->setDisplayName($firstName." ".$lastName);
-            $user->setPhone($phone);
-            $user->setFax($fax);
-            $user->setTitle($title);
-            $user->setOffice($office);
+            //$user->setPhone($phone);
+            //$user->setFax($fax);
+            //$user->setTitle($title);
+            //$user->setOffice($office);
             $user->setPassword("");
             $user->setCreatedby('excel');
             $user->getPreferences()->setTimezone($default_time_zone);
+
+            //phone, fax, office are stored in Location object
+            //$mainLocation  = $em->getRepository('OlegOrderformBundle:Location')->findOneByName('Main Office');
+            $mainLocation  = $user->getMainLocation();
+            $mainLocation->setPhone($phone);
+            $mainLocation->setFax($fax);
+            $mainLocation->setRoom($office);
+
+            //title is stored in Admnistrative Title
+            $admnistrativeTitle = $user->getAdmnistrativeTitles()->first();
+            $admnistrativeTitle->setName($title);
 
             //add Roles
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
@@ -127,26 +139,26 @@ class UserUtil {
                 $user->addRole('ROLE_SCANORDER_ADMIN');
             }
 
-            foreach( $pathlogyServices as $pathlogyService ) {
+            foreach( $divisions as $division ) {
 
-                $pathlogyService = trim($pathlogyService);
+                $division = trim($division);
 
-                if( $pathlogyService != "" ) {
-                    //echo " (".$pathlogyService.") ";
-                    $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
+                if( $division != "" ) {
+                    //echo " (".$division.") ";
+                    $divisionEntity  = $em->getRepository('OlegOrderformBundle:Division')->findOneByName($division);
 
-                    if( $pathlogyServiceEntity ) {
-                        //$pathlogyServiceEntities[] = $pathlogyServiceEntity;
+                    if( $divisionEntity ) {
+                        //
                     } else {
-                        $pathlogyServiceEntity = new PathServiceList();
-                        $pathlogyServiceEntity->setCreator( $username );
-                        $pathlogyServiceEntity->setCreatedate( new \DateTime() );
-                        $pathlogyServiceEntity->setName( $pathlogyService );
-                        $pathlogyServiceEntity->setType('default');
-                        $em->persist($pathlogyServiceEntity);
+                        $divisionEntity = new Division();
+                        $divisionEntity->setCreator( $username );
+                        $divisionEntity->setCreatedate( new \DateTime() );
+                        $divisionEntity->setName( $division );
+                        $divisionEntity->setType('default');
+                        $em->persist($divisionEntity);
                         $em->flush();
                     }
-                    $user->addPathologyServices($pathlogyServiceEntity);
+                    $user->addDivision($divisionEntity);
                 } //if
 
             } //foreach
@@ -197,7 +209,7 @@ class UserUtil {
             "Where I am the Amendment Author"=>"Where I am the Amendment Author"
         );
         if( is_object($user) && $user instanceof User ) {
-            $services = $user->getPathologyServices();
+            $services = $user->getDivision();
             foreach( $services as $service ) {
                 $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
             }
@@ -342,7 +354,7 @@ class UserUtil {
             //show is allowed if the user belongs to the same service
             if( $action == 'show' ) {
                 //echo "action: show <br>";
-                $userServices = $user->getPathologyServices();
+                $userServices = $user->getDivision();
                 if( $userServices->contains($service) ) {
                     return true;
                 }
@@ -427,7 +439,11 @@ class UserUtil {
 
         if( !$params ) {
             //new DB does not have SiteParameters object
-            return 1800; //30 min
+            $res = array(
+                'maxIdleTime' => 1800,
+                'maintenance' => false
+            );
+            return $res; //30 min
             //throw new \Exception( 'Parameter object is not found' );
         }
 
@@ -450,15 +466,20 @@ class UserUtil {
         return $res;
     }
 
+    //return parameter specified by $setting. If the first time login when site parameter does not exist yet, return -1.
     public function getSiteSetting($em,$setting) {
 
         $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
 
-        if( !$params ) {
-            //throw new \Exception( 'Parameter object is not found' );
+//        if( !$params ) {
+//            //throw new \Exception( 'Parameter object is not found' );
+//        }
+
+        if( count($params) == 0 ) {
+            return -1;
         }
 
-        if( count($params) != 1 ) {
+        if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
         }
 

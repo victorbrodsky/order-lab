@@ -73,22 +73,6 @@ class UserType extends AbstractType
             'label' => 'Display Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
-        $builder->add('title', null, array(
-            'label' => 'Primary Job Title:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('phone', null, array(
-            'label' => 'Preferred Phone Number:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('fax', null, array(
-            'label' => 'Fax:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
-        $builder->add('office', null, array(
-            'label' => 'Main Office Room Number:',
-            'attr' => array('class'=>'form-control form-control-modif')
-        ));
 
         //timezone
 //        $tzUtil = new TimeZoneUtil();
@@ -108,8 +92,8 @@ class UserType extends AbstractType
 
 
         $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-        $builder->add('pathologyServices', 'custom_selector', array(
-            'label' => 'Service(s):',
+        $builder->add('division', 'custom_selector', array(
+            'label' => 'Departmental Division(s)/Service(s):',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'userPathologyServices'
@@ -171,6 +155,37 @@ class UserType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'required'=>'required')
             ));
         }
+
+
+        //Admnistrative Titles
+//        $builder->add('title', null, array(
+//            'label' => 'Primary Job Title:',
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
+        $builder->add('admnistrativeTitles', 'collection', array(
+            'type' => new AdministrativeTitleType(),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__admnistrativeTitles__',
+        ));
+
+        //Main Office Location
+//        $builder->add('phone', null, array(
+//            'label' => 'Preferred Phone Number:',
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
+//        $builder->add('fax', null, array(
+//            'label' => 'Fax:',
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
+//        $builder->add('office', null, array(
+//            'label' => 'Main Office Room Number:',
+//            'attr' => array('class'=>'form-control form-control-modif')
+//        ));
 
     }
 

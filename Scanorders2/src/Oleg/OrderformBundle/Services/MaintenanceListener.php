@@ -60,6 +60,9 @@ class MaintenanceListener {
         /////////////// maintanance from DB. Container parameter will be updated only after cleaning the cache //////////////
         $userUtil = new UserUtil();
         $maintenance = $userUtil->getSiteSetting($this->em,'maintenance');
+        if( $maintenance == -1 ) {
+            return;
+        }
         //echo "maintenanceDb=".$maintenanceDb."<br>";
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

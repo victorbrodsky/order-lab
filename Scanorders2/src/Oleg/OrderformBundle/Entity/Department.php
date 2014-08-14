@@ -39,11 +39,17 @@ class Department extends ListAbstract
      */
     protected $divisions;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="department")
+     **/
+    protected $users;
+
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->orderinfo = new ArrayCollection();
         $this->divisions = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -190,7 +196,36 @@ class Department extends ListAbstract
         return $this->divisions;
     }
 
-
+    /**
+     * Add user
+     *
+     * @param \Oleg\OrderformBundle\Entity\User $user
+     * @return Department
+     */
+    public function addUser(\Oleg\OrderformBundle\Entity\User $user)
+    {
+        if( !$this->users->contains($user) ) {
+            $this->users->add($user);
+        }
+    }
+    /**
+     * Remove user
+     *
+     * @param \Oleg\OrderformBundle\Entity\User $user
+     */
+    public function removeUser(\Oleg\OrderformBundle\Entity\User $user)
+    {
+        $this->users->removeElement($user);
+    }
+    /**
+     * Get order
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
 
 
 

@@ -37,10 +37,17 @@
     {{ formmacros.field(form.firstName) }}
     {{ formmacros.field(form.middleName) }}
     {{ formmacros.field(form.lastName) }}
-    {{ formmacros.field(form.title) }}
-    {{ formmacros.field(form.phone) }}
-    {{ formmacros.field(form.fax) }}
-    {{ formmacros.field(form.office) }}
+
+    len:{{ form.admnistrativeTitles|length }}
+    {% for admnistrativeTitle in form.admnistrativeTitles %}
+        {{ formmacros.field(admnistrativeTitle.name) }}
+        {{ formmacros.field(admnistrativeTitle.startDate) }}
+        {{ formmacros.field(admnistrativeTitle.endDate) }}
+    {% endfor %}
+
+    {#{{ formmacros.field(form.phone) }}#}
+    {#{{ formmacros.field(form.fax) }}#}
+    {#{{ formmacros.field(form.office) }}#}
 
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         {% if app.security.getToken().getUser().getId() != entity.id %}

@@ -30,12 +30,8 @@ class Division extends ListAbstract
     protected $department;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="fos_user_division",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="division_id", referencedColumnName="id")}
-     *      )
-     */
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="division")
+     **/
     protected $users;
 
 

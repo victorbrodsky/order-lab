@@ -47,11 +47,10 @@ class UserController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
-        $dql->leftJoin("user.pathologyServices", "pathologyServices");
+        $dql->leftJoin("user.division", "division");
         $dql->leftJoin("user.institution", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
         $dql->orderBy("user.id","ASC");
-        //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
 
         $limit = 1000;
         $em = $this->getDoctrine()->getManager();
@@ -155,8 +154,6 @@ class UserController extends Controller
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
-        //$ps = new PathService();
-        //$entity->addPathologyServices($ps);
 
         //Roles
         $rolesArr = $this->getUserRoles();

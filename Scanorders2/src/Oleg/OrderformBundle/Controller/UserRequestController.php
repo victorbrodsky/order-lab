@@ -42,7 +42,7 @@ class UserRequestController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:UserRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
+        $dql->leftJoin("accreq.division", "division");
         $dql->orderBy("accreq.creationdate","DESC");
 
         $limit = 30;
@@ -529,10 +529,9 @@ class UserRequestController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        $dql->leftJoin("accreq.pathologyServices", "pathologyServices");
+        $dql->leftJoin("accreq.division", "division");
         $dql->where("accreq.appliedforaccess = 'active' OR accreq.appliedforaccess = 'declined' OR accreq.appliedforaccess = 'approved'");
         $dql->orderBy("accreq.appliedforaccess","DESC");
-        //$dql->orderBy("pathologyServices.name","DESC");   //test many-to-many sorting
 
         $limit = 30;
         $query = $em->createQuery($dql);

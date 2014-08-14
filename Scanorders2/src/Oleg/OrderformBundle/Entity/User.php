@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping\AttributeOverride;
  * )
  * @ORM\AttributeOverrides({ @ORM\AttributeOverride( name="email", column=@ORM\Column(type="string", name="email", unique=false, nullable=true) ), @ORM\AttributeOverride( name="emailCanonical", column=@ORM\Column(type="string", name="email_canonical", unique=false, nullable=true) )
  * })
+ * )
+ *
  */
 class User extends BaseUser
 {
@@ -32,92 +34,62 @@ class User extends BaseUser
      */
     protected $id;
 
-    //TODO: rename it to $divisions? Remove it or keep reference for bidirectional relationship???
-    /**
-     * @ORM\ManyToMany(targetEntity="PathServiceList")
-     * @ORM\JoinTable(name="fos_user_pathservice",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathservice_id", referencedColumnName="id")}
-     * )
-     */
-    protected $pathologyServices;
-
-    //TODO: rename it to $primaryDivision?
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $primaryPathologyService;
-
-    /**
-     * @ORM\Column(name="phone", type="string", nullable=true)
-     */
-    protected $phone;
-
     /**
      * @ORM\Column(name="firstName", type="string", nullable=true)
      */
-    protected $firstName;
+    private $firstName;
 
     /**
      * @ORM\Column(name="middleName", type="string", nullable=true)
      */
-    protected $middleName;
+    private $middleName;
 
     /**
      * @ORM\Column(name="lastName", type="string", nullable=true)
      */
-    protected $lastName;
-
-    /**
-     * @ORM\Column(name="title", type="string", nullable=true)
-     */
-    protected $title;
+    private $lastName;
 
     /**
      * @ORM\Column(name="displayName", type="string", nullable=true)
      */
-    protected $displayName;
-
-    /**
-     * @ORM\Column(name="fax", type="string", nullable=true)
-     */
-    protected $fax;
-
-    /**
-     * @ORM\Column(name="office", type="string", nullable=true)
-     */
-    protected $office;
+    private $displayName;
 
     /**
      * @ORM\Column(name="createdby", type="string", nullable=true)
      */
-    protected $createdby;
+    private $createdby;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $appliedforaccess;
+    private $appliedforaccess;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $appliedforaccessdate;
+    private $appliedforaccessdate;
 
     /**
      * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist"})
      */
-    protected $preferences;
+    private $preferences;
 
-    //TODO: rename it to $chiefDivisions?
     /**
-     * @ORM\ManyToMany(targetEntity="PathServiceList")
-     * @ORM\JoinTable(name="fos_user_chiefservice",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathservice_id", referencedColumnName="id")}
-     * )
+     * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
      */
-    protected $chiefservices;
+    private $locations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AdmnistrativeTitle", mappedBy="user", cascade={"persist"})
+     */
+    private $admnistrativeTitles;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist"})
+     */
+    private $appointmentTitles;
+
 
     /**
      * Each user must be linked with one or many Institutions. We can link a user with Division and then get Institution by looping trhough all users's divisions:
@@ -130,49 +102,133 @@ class User extends BaseUser
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      * )
      */
-    protected $institution;
+    private $institution;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Department", inversedBy="users")
+     * @ORM\JoinTable(name="fos_user_department",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="department_id", referencedColumnName="id")}
+     * )
+     */
+    private $department;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Division")
+     * @ORM\JoinTable(name="fos_user_division",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="division_id", referencedColumnName="id")}
+     * )
+     */
+    private $division;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $primaryDivision;   //$primaryPathologyService;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Division")
+     * @ORM\JoinTable(name="fos_user_chiefdivision",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="pathservice_id", referencedColumnName="id")}
+     * )
+     */
+    private $chiefDivisions;
+
+
+//    //TODO: below fields are moved to location and admnistrativeTitles/appointmentTitles. How to assign them?
+//    /**
+//     * set by excel
+//     *
+//     * @ORM\Column(name="fax", type="string", nullable=true)
+//     */
+//    private $fax;
+//
+//    /**
+//     * set by excel
+//     *
+//     * @ORM\Column(name="phone", type="string", nullable=true)
+//     */
+//    private $phone;
+//
+//    /**
+//     * set by excel
+//     *
+//     * @ORM\Column(name="office", type="string", nullable=true)
+//     */
+//    private $office;
+//
+//    /**
+//     * set by ldap and by excel
+//     *
+//     * @ORM\Column(name="title", type="string", nullable=true)
+//     */
+//    private $title;
 
 
 
     function __construct()
     {
-        $this->pathologyServices = new ArrayCollection();
-        $this->chiefservices = new ArrayCollection();
+        $this->locations = new ArrayCollection();
+        $this->admnistrativeTitles = new ArrayCollection();
+        $this->appointmentTitles = new ArrayCollection();
+
         $this->institution = new ArrayCollection();
+        $this->department = new ArrayCollection();
+
+        $this->division = new ArrayCollection();
+        $this->chiefDivisions = new ArrayCollection();
+
         $this->setPreferences(new UserPreferences());
+
+        //two default locations: "main office" and "home"
+        $mainLocation = new Location();
+        $homeLocation = new Location();
+        $mainLocation->setName('Main Office');
+        $homeLocation->setName('Home');
+        $this->locations->set(0,$mainLocation);  //main has index 0
+        $mainLocation->setUser($this);
+        $this->locations->set(1,$homeLocation);  //home hsa index 1
+        $homeLocation->setUser($this);
+
+        //one default Admnistrative Title
+        $AdmnistrativeTitle = new AdmnistrativeTitle();
+        $this->addAdmnistrativeTitle($AdmnistrativeTitle);
+
         parent::__construct();
     }
 
     /**
-     * @param mixed $pathologyServices
+     * @param mixed $division
      */
-    public function setPathologyServices($pathologyServices)
+    public function setDivision($division)
     {
-        if( $pathologyServices->first() ) {
-            $this->primaryPathologyService = $pathologyServices->first()->getId();
+        if( $division->first() ) {
+            $this->primaryDivision = $division->first()->getId();
         } else {
-            $this->primaryPathologyService = NULL;
+            $this->primaryDivision = NULL;
         }
-        $this->pathologyServices = $pathologyServices;
+        $this->division = $division;
     }
 
 
     /**
      * @return mixed
      */
-    public function getPathologyServices()
+    public function getDivision()
     {
-        //return $this->pathologyServices;
+        //return $this->division;
 
         $resArr = new ArrayCollection();
-        foreach( $this->pathologyServices as $service ) {
+        foreach( $this->division as $service ) {
             //echo "service=".$service."<br>";
-            if( $service->getId()."" == $this->getPrimaryPathologyService()."" ) {  //this service is a primary path service => put as the first element
+            if( $service->getId()."" == $this->getPrimaryDivision()."" ) {  //this service is a primary path service => put as the first element
                 //$resArr->removeElement($service);
                 //$resArr->first();
                 //$firstEl = $resArr->get(0);
                 $firstEl = $resArr->first();
-                if( count($this->pathologyServices) > 1 && $firstEl ) {
+                if( count($this->division) > 1 && $firstEl ) {
                     //echo "firstEl=".$firstEl."<br>";
                     $resArr->set(0,$service); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
                     $resArr->add($firstEl);
@@ -187,21 +243,21 @@ class User extends BaseUser
         return $resArr;
     }
 
-    /**
-     * @param mixed $phone
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
+//    /**
+//     * @param mixed $phone
+//     */
+//    public function setPhone($phone)
+//    {
+//        $this->phone = $phone;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getPhone()
+//    {
+//        return $this->phone;
+//    }
 
     /**
      * @param mixed $firstName
@@ -256,16 +312,16 @@ class User extends BaseUser
      */
     public function setTitle($title)
     {
-        $this->title = $title;
+        $this->getAdmnistrativeTitles()->first()->setName($title);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTitle()
+//    {
+//        return $this->title;
+//    }
 
     /**
      * @param mixed $displayName
@@ -283,50 +339,50 @@ class User extends BaseUser
         return $this->displayName;
     }
 
-    /**
-     * @param mixed $fax
-     */
-    public function setFax($fax)
-    {
-        $this->fax = $fax;
-    }
+//    /**
+//     * @param mixed $fax
+//     */
+//    public function setFax($fax)
+//    {
+//        $this->fax = $fax;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getFax()
+//    {
+//        return $this->fax;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getFax()
-    {
-        return $this->fax;
-    }
+//    /**
+//     * @param mixed $office
+//     */
+//    public function setOffice($office)
+//    {
+//        $this->office = $office;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getOffice()
+//    {
+//        return $this->office;
+//    }
 
-    /**
-     * @param mixed $office
-     */
-    public function setOffice($office)
+    public function addDivision(\Oleg\OrderformBundle\Entity\Division $division)
     {
-        $this->office = $office;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOffice()
-    {
-        return $this->office;
-    }
-
-    public function addPathologyServices(\Oleg\OrderformBundle\Entity\PathServiceList $pathologyServices)
-    {
-        if( !$this->pathologyServices->contains($pathologyServices) ) {
-            $this->pathologyServices[] = $pathologyServices;
+        if( !$this->division->contains($division) ) {
+            $this->division->add($division);
         }
 
         return $this;
     }
 
-    public function removePathologyServices(\Oleg\OrderformBundle\Entity\PathServiceList $pathologyServices)
+    public function removeDivision(\Oleg\OrderformBundle\Entity\Division $division)
     {
-        $this->pathologyServices->removeElement($pathologyServices);
+        $this->division->removeElement($division);
     }
 
     /**
@@ -346,12 +402,20 @@ class User extends BaseUser
     }
 
     public function __toString() {
-//        return "User: ".$this->username.", email=".$this->email.", PathServiceList count=".count($this->pathologyServices)."<br>";
+//        return "User: ".$this->username.", email=".$this->email.", PathServiceList count=".count($this->division)."<br>";
         if( $this->displayName && $this->displayName != "" ) {
             return $this->username." - ".$this->displayName;
         } else {
             return $this->username;
         }
+    }
+
+    public function getMainLocation() {
+        return $this->getLocations()->get(0);
+    }
+
+    public function getHomeLocation() {
+        return $this->getLocations()->get(1);
     }
 
     public function hasRole($role)
@@ -392,32 +456,34 @@ class User extends BaseUser
     }
 
     /**
-     * @param mixed $primaryPathologyService
+     * @param mixed $primaryDivision
      */
-    public function setPrimaryPathologyService($primaryPathologyService)
+    public function setPrimaryDivision($primaryDivision)
     {
-        $this->primaryPathologyService = $primaryPathologyService;
+        $this->primaryDivision = $primaryDivision;
     }
 
     /**
      * @return mixed
      */
-    public function getPrimaryPathologyService()
+    public function getPrimaryDivision()
     {
-        return $this->primaryPathologyService;
+        return $this->primaryDivision;
     }
+
+
 
     //chief services
     /**
-     * @param mixed $chiefservices
+     * @param mixed $chiefDivisions
      */
-    public function setChiefservices($chiefservices)
+    public function setChiefDivisions($chiefDivisions)
     {
-        $this->chiefservices = $chiefservices;
+        $this->chiefDivisions = $chiefDivisions;
 
         //add service chiefs to services
-        foreach( $chiefservices as $service ) {
-            $this->addPathologyServices($service);
+        foreach( $chiefDivisions as $division ) {
+            $this->addDivision($division);
         }
 
     }
@@ -425,26 +491,26 @@ class User extends BaseUser
     /**
      * @return mixed
      */
-    public function getChiefservices()
+    public function getChiefDivisions()
     {
-        return $this->chiefservices;
+        return $this->chiefDivisions;
     }
 
-    public function addChiefservices(\Oleg\OrderformBundle\Entity\PathServiceList $chiefservice)
+    public function addChiefDivisions(\Oleg\OrderformBundle\Entity\Divisions $chiefDivisions)
     {
-        if( !$this->chiefservices->contains($chiefservice) ) {
-            $this->chiefservices[] = $chiefservice;
+        if( !$this->chiefDivisions->contains($chiefDivisions) ) {
+            $this->chiefDivisions[] = $chiefDivisions;
         }
 
         //add service chiefs to services
-        $this->addPathologyServices($chiefservice);
+        $this->addDivision($chiefDivisions);
 
         return $this;
     }
 
-    public function removeChiefservices(\Oleg\OrderformBundle\Entity\PathServiceList $chiefservices)
+    public function removeChiefDivisions(\Oleg\OrderformBundle\Entity\Divisions $chiefDivisions)
     {
-        $this->chiefservices->removeElement($chiefservices);
+        $this->chiefDivisions->removeElement($chiefDivisions);
     }
 
     /**
@@ -494,6 +560,154 @@ class User extends BaseUser
         }
     }
 
-}
 
-?>
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Add locations
+     *
+     * @param \Oleg\OrderformBundle\Entity\Location $locations
+     * @return User
+     */
+    public function addLocation(\Oleg\OrderformBundle\Entity\Location $location)
+    {
+        //$this->locations[] = $location;
+        if( !$this->locations->contains($location) ) {
+            $this->locations->add($location);
+            $location->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove locations
+     *
+     * @param \Oleg\OrderformBundle\Entity\Location $locations
+     */
+    public function removeLocation(\Oleg\OrderformBundle\Entity\Location $locations)
+    {
+        $this->locations->removeElement($locations);
+    }
+
+    /**
+     * Get locations
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    /**
+     * Add admnistrativeTitles
+     *
+     * @param \Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitle
+     * @return User
+     */
+    public function addAdmnistrativeTitle(\Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitle)
+    {
+        if( !$this->admnistrativeTitles->contains($admnistrativeTitle) ) {
+            $this->admnistrativeTitles->add($admnistrativeTitle);
+            $admnistrativeTitle->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove admnistrativeTitles
+     *
+     * @param \Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitles
+     */
+    public function removeAdmnistrativeTitle(\Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitles)
+    {
+        $this->admnistrativeTitles->removeElement($admnistrativeTitles);
+    }
+
+    /**
+     * Get admnistrativeTitles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAdmnistrativeTitles()
+    {
+        return $this->admnistrativeTitles;
+    }
+
+    /**
+     * Add appointmentTitles
+     *
+     * @param \Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles
+     * @return User
+     */
+    public function addAppointmentTitle(\Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles)
+    {
+        $this->appointmentTitles[] = $appointmentTitles;
+    
+        return $this;
+    }
+
+    /**
+     * Remove appointmentTitles
+     *
+     * @param \Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles
+     */
+    public function removeAppointmentTitle(\Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles)
+    {
+        $this->appointmentTitles->removeElement($appointmentTitles);
+    }
+
+    /**
+     * Get appointmentTitles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAppointmentTitles()
+    {
+        return $this->appointmentTitles;
+    }
+
+    /**
+     * Add department
+     *
+     * @param \Oleg\OrderformBundle\Entity\Department $department
+     * @return User
+     */
+    public function addDepartment(\Oleg\OrderformBundle\Entity\Department $department)
+    {
+        $this->department[] = $department;
+    
+        return $this;
+    }
+
+    /**
+     * Remove department
+     *
+     * @param \Oleg\OrderformBundle\Entity\Department $department
+     */
+    public function removeDepartment(\Oleg\OrderformBundle\Entity\Department $department)
+    {
+        $this->department->removeElement($department);
+    }
+
+    /**
+     * Get department
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDepartment()
+    {
+        return $this->department;
+    }
+
+}

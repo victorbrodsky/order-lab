@@ -37,7 +37,7 @@ class UserPathServicesTransformer extends PathServiceTransformer
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    if( $entity->getId()."" == $this->user->getPrimaryPathologyService()."" ) {
+                    if( $entity->getId()."" == $this->user->getPrimaryDivision()."" ) {
                         array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
                     } else {
                         $idArr[] = $entity->getId();
@@ -45,7 +45,7 @@ class UserPathServicesTransformer extends PathServiceTransformer
                 }
             }
             
-            //return array with primaryPathologyService as the first element
+            //return array with primaryDivision as the first element
             return implode(",", $idArr);
         }
 

@@ -7,7 +7,7 @@
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Departmental Division(s)/Service(s)', 'division.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Title', 'user.title') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
@@ -27,8 +27,8 @@
             <tr>
                 <td><a href="{{ path('showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>
-                    {% for pathologyServices in entity.pathologyServices %}
-                        "{{ pathologyServices }}"<br>
+                    {% for division in entity.division %}
+                        "{{ division }}"<br>
                     {% endfor %}
                 </td>
                 <td>{{ entity.displayName }}</td>

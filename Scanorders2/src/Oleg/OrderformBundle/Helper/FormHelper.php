@@ -588,7 +588,7 @@ Wrist	");
             
     }
     
-    public function getPathologyService() {              
+    public function getPathDivisions() {
         $arr = array(
             "Accessioning","
 Autopsy","
