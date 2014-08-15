@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
     - { resource: "@OlegOrderformBundle/SetParameters/setparameters.php" }
+#    - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
 #    - { resource: assets_version.php }
 
 framework:
@@ -45,7 +46,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        ['OlegOrderformBundle','AcmeDemoBundle']
+    bundles:        ['OlegOrderformBundle','OlegUserdirectoryBundle','AcmeDemoBundle']
     #java: /usr/bin/java
     filters:
 #         less:

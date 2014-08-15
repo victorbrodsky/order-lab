@@ -7,14 +7,14 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Security\Authentication;
+namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 use FR3D\LdapBundle\Ldap\LdapManager as BaseLdapManager;
 use FR3D\LdapBundle\Model\LdapUserInterface;
 use FR3D\LdapBundle\Driver\LdapDriverInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-use Oleg\OrderformBundle\Helper\Parameters;
+//use Oleg\OrderformBundle\Helper\Parameters;
 
 class LdapManager extends BaseLdapManager
 {
@@ -36,13 +36,13 @@ class LdapManager extends BaseLdapManager
     protected function hydrate(UserInterface $user, array $entry)
     {
 
-        //exit("using ldap! <br>");
-        //echo "user name=".$user->getUsername()."<br>";
+        exit("UserdirectoryBundle using ldap! <br>");
+        //echo "UserdirectoryBundle user name=".$user->getUsername()."<br>";
 
         parent::hydrate($user, $entry);
 
-        //echo "user name=".$user->getUsername()."<br>";
-        //exit("using ldap! <br>");
+        //echo "UserdirectoryBundle user name=".$user->getUsername()."<br>";
+        //exit("UserdirectoryBundle using ldap! <br>");
 
         $user->setCreatedby('ldap');
         $user->getPreferences()->setTimezone($this->timezone);
@@ -55,25 +55,24 @@ class LdapManager extends BaseLdapManager
             $user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
-        //assign Institution
-        if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
-            $params = $this->em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-            //echo "param count=".count($params)."<br>";
-            //exit();
-            if( count($params) == 0 ) {
-                //it is not initialized yet
-                echo "Warning: Site parameters are not initialized.<br>";
-                return;
-            }
-            if( count($params) != 1 ) {
-                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-            }
-            $param = $params[0];
-            $institution = $param->getAutoAssignInstitution();
-            if( $institution ) {
-                $user->addInstitution($institution);
-            }
-        }
+
+//        //assign Institution
+//        if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
+//            $params = $this->em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+//            if( count($params) == 0 && $user->hasRole('ROLE_SCANORDER_ADMIN') ) {
+//                //it is not initialized yet
+//                //echo "Warning: Site parameters are not initialized.<br>";
+//                return;
+//            }
+//            if( count($params) != 1 ) {
+//                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//            }
+//            $param = $params[0];
+//            $institution = $param->getAutoAssignInstitution();
+//            if( $institution ) {
+//                $user->addInstitution($institution);
+//            }
+//        }
 
     }
 

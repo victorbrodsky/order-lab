@@ -1,3 +1,4 @@
+
 main_common_home:
     path:      /
     defaults:  { _controller: OlegOrderformBundle:Home:mainCommonHome }
@@ -6,6 +7,11 @@ oleg_orderform:
     resource: "@OlegOrderformBundle/Controller/"
     type:     annotation
     prefix:   /scan
+
+oleg_userdirectory:
+    resource: "@OlegUserdirectoryBundle/Controller/"
+    type:     annotation
+    prefix:   /employees
 
 acme_demo:
     resource: "@AcmeDemoBundle/Controller/"
@@ -21,9 +27,11 @@ login_check:
 logout:
     path:   /scan/logout
 #    defaults:  { _controller: OlegOrderformBundle:Security:logout }
-    
-#imag_ldap:
-#    resource: "@IMAGLdapBundle/Resources/config/routing.yml"
+
+employees_login_check:
+    path:   /employees/login_check
+employees_logout:
+    path:   /employees/logout
 
 #fos user bundle
 fos_user_security:

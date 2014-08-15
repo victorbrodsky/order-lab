@@ -25,8 +25,8 @@ fr3d_ldap:
         password: Aperi0,123
         accountDomainName: a.wcmc-ad.net
 #       host:              a.wcmc-ad.net                            # Required
-#       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional  Required?
-#       password:          Aperi0,123                               # Optional  Required?
+#       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional
+#       password:          Aperi0,123                               # Optional
 #       accountDomainName: a.wcmc-ad.net                            # Required
     user:
         baseDn: dc=a,dc=wcmc-ad,dc=net
@@ -46,7 +46,7 @@ fr3d_ldap:
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: Oleg\OrderformBundle\Entity\User
+    user_class: Oleg\UserdirectoryBundle\Entity\User
 
 services:
 
@@ -64,14 +64,9 @@ services:
         tags:
             - { name: form.type, alias: custom_data_selector }
 
-    #Redirect admin to index
-    authentication_handler:
-        class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
-        arguments:  [@router, @security.context, @doctrine.orm.entity_manager]
-
     #Override Ldap Manager
     oleg.security.ldap_manager:
-        class: Oleg\OrderformBundle\Security\Authentication\LdapManager
+        class: Oleg\UserdirectoryBundle\Security\Authentication\LdapManager
         arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, %default_time_zone%, @doctrine.orm.entity_manager ]
 
     #idle time out handler (can pass %session_max_idle_time%. Now use DB)
@@ -80,17 +75,6 @@ services:
         arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-
-    #aperio authentication
-    aperio.security.authentication.provider:
-        class: Oleg\OrderformBundle\Security\Authentication\AperioProvider
-        arguments: ["", @service_container,@doctrine.orm.entity_manager,"aperio_ldap_firewall",%default_time_zone%]
-
-    #aperio listener
-    aperio.security.authentication.listener:
-        class: Oleg\OrderformBundle\Security\Firewall\AperioListener
-        arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
 
     #twig listener
     twigdate.listener.request:

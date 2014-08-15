@@ -21,7 +21,8 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new FR3D\LdapBundle\FR3DLdapBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
-            new Acme\DemoBundle\AcmeDemoBundle()
+            new Acme\DemoBundle\AcmeDemoBundle(),
+            new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -351,7 +351,7 @@ class User extends BaseUser
 //        return $this->office;
 //    }
 
-    public function addDivision(\Oleg\OrderformBundle\Entity\Division $division)
+    public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
     {
         if( !$this->division->contains($division) ) {
             $this->division->add($division);
@@ -360,7 +360,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeDivision(\Oleg\OrderformBundle\Entity\Division $division)
+    public function removeDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
     {
         $this->division->removeElement($division);
     }
@@ -476,7 +476,7 @@ class User extends BaseUser
         return $this->chiefDivisions;
     }
 
-    public function addChiefDivisions(\Oleg\OrderformBundle\Entity\Division $chiefDivisions)
+    public function addChiefDivisions(\Oleg\UserdirectoryBundle\Entity\Division $chiefDivisions)
     {
         if( !$this->chiefDivisions->contains($chiefDivisions) ) {
             $this->chiefDivisions[] = $chiefDivisions;
@@ -488,7 +488,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeChiefDivisions(\Oleg\OrderformBundle\Entity\Division $chiefDivisions)
+    public function removeChiefDivisions(\Oleg\UserdirectoryBundle\Entity\Division $chiefDivisions)
     {
         $this->chiefDivisions->removeElement($chiefDivisions);
     }
@@ -518,7 +518,7 @@ class User extends BaseUser
     }
 
 
-    public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
         if( !$this->institution->contains($institution) ) {
             $this->institution->add($institution);
@@ -526,7 +526,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
         $this->institution->removeElement($institution);
     }
@@ -550,7 +550,7 @@ class User extends BaseUser
     }
 
 
-    public function addService(\Oleg\OrderformBundle\Entity\Service $service)
+    public function addService(\Oleg\UserdirectoryBundle\Entity\Service $service)
     {
         if( !$this->service->contains($service) ) {
             $this->service->add($service);
@@ -558,7 +558,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeService(\Oleg\OrderformBundle\Entity\Service $service)
+    public function removeService(\Oleg\UserdirectoryBundle\Entity\Service $service)
     {
         $this->service->removeElement($service);
     }
@@ -577,10 +577,10 @@ class User extends BaseUser
     /**
      * Add locations
      *
-     * @param \Oleg\OrderformBundle\Entity\Location $locations
+     * @param \Oleg\UserdirectoryBundle\Entity\Location $locations
      * @return User
      */
-    public function addLocation(\Oleg\OrderformBundle\Entity\Location $location)
+    public function addLocation(\Oleg\UserdirectoryBundle\Entity\Location $location)
     {
         //$this->locations[] = $location;
         if( !$this->locations->contains($location) ) {
@@ -594,9 +594,9 @@ class User extends BaseUser
     /**
      * Remove locations
      *
-     * @param \Oleg\OrderformBundle\Entity\Location $locations
+     * @param \Oleg\UserdirectoryBundle\Entity\Location $locations
      */
-    public function removeLocation(\Oleg\OrderformBundle\Entity\Location $locations)
+    public function removeLocation(\Oleg\UserdirectoryBundle\Entity\Location $locations)
     {
         $this->locations->removeElement($locations);
     }
@@ -614,10 +614,10 @@ class User extends BaseUser
     /**
      * Add admnistrativeTitles
      *
-     * @param \Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitle
+     * @param \Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitle
      * @return User
      */
-    public function addAdmnistrativeTitle(\Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitle)
+    public function addAdmnistrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitle)
     {
         if( !$this->admnistrativeTitles->contains($admnistrativeTitle) ) {
             $this->admnistrativeTitles->add($admnistrativeTitle);
@@ -630,9 +630,9 @@ class User extends BaseUser
     /**
      * Remove admnistrativeTitles
      *
-     * @param \Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitles
+     * @param \Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitles
      */
-    public function removeAdmnistrativeTitle(\Oleg\OrderformBundle\Entity\AdmnistrativeTitle $admnistrativeTitles)
+    public function removeAdmnistrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitles)
     {
         $this->admnistrativeTitles->removeElement($admnistrativeTitles);
     }
@@ -650,10 +650,10 @@ class User extends BaseUser
     /**
      * Add appointmentTitles
      *
-     * @param \Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles
+     * @param \Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles
      * @return User
      */
-    public function addAppointmentTitle(\Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles)
+    public function addAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles)
     {
         $this->appointmentTitles[] = $appointmentTitles;
     
@@ -663,9 +663,9 @@ class User extends BaseUser
     /**
      * Remove appointmentTitles
      *
-     * @param \Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles
+     * @param \Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles
      */
-    public function removeAppointmentTitle(\Oleg\OrderformBundle\Entity\AppointmentTitle $appointmentTitles)
+    public function removeAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles)
     {
         $this->appointmentTitles->removeElement($appointmentTitles);
     }
@@ -683,10 +683,10 @@ class User extends BaseUser
     /**
      * Add department
      *
-     * @param \Oleg\OrderformBundle\Entity\Department $department
+     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
      * @return User
      */
-    public function addDepartment(\Oleg\OrderformBundle\Entity\Department $department)
+    public function addDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
     {
         $this->department[] = $department;
     
@@ -696,9 +696,9 @@ class User extends BaseUser
     /**
      * Remove department
      *
-     * @param \Oleg\OrderformBundle\Entity\Department $department
+     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
      */
-    public function removeDepartment(\Oleg\OrderformBundle\Entity\Department $department)
+    public function removeDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
     {
         $this->department->removeElement($department);
     }

@@ -15,6 +15,8 @@ security:
         ROLE_SCANORDER_ADMIN:       [ROLE_ADMIN, ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
         ROLE_SCANORDER_SUPER_ADMIN: [ROLE_SUPER_ADMIN, ROLE_USER, ROLE_SCANORDER_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
+        ROLE_USERDIRECTORY_ADMIN:   [ROLE_USER, ROLE_ADMIN]
+
 
     providers:
 
@@ -28,7 +30,6 @@ security:
         fr3d_ldapbundle:
             id: fr3d_ldap.security.user.provider
 
-
     #        in_memory:
     #            memory:
     #                users:
@@ -36,10 +37,6 @@ security:
     #                    admin: { password: adminpass123, roles: [ 'ROLE_SCANORDER_ADMIN' ] }
 
     firewalls:
-
-#        not_secured_area:
-#            pattern:    ^/
-#            form_login: ~
 
         #this firewall name must be the same as in the bundle's service.yml.
         aperio_ldap_firewall:
@@ -50,12 +47,15 @@ security:
 
             fr3d_ldap:  ~
 
+            context: scan_auth
+
             form_login:
                  always_use_default_target_path: false
                  use_referer: true
                  success_handler: authentication_handler
                  failure_handler: authentication_handler
                  check_path: /scan/login_check
+                 login_path: /scan/login
 
             logout:
                 path:   /scan/logout
@@ -65,8 +65,29 @@ security:
 
             access_denied_url: /scan/scan-order/no-permission
 
+
+        ldap_employees_firewall:
+            pattern: ^/employees
+            aperio: true
+            context: employees_auth
+            form_login:
+                check_path: /employees/login_check
+                login_path: /employees/login
+                # login success redirecting options (read further below)
+                always_use_default_target_path: false
+                default_target_path:            /employees/admin
+                target_path_parameter:          _target_path
+                use_referer:                    false
+            logout:
+                path:   /employees/logout
+                target: /employees/login
+            anonymous:  true
+
           
     access_control:
+
+     - { path: ^/employees/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/employees/admin, role: ROLE_USERDIRECTORY_ADMIN }
 
      - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/access-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
