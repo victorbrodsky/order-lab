@@ -37,10 +37,14 @@ security:
 
     firewalls:
 
+#        not_secured_area:
+#            pattern:    ^/
+#            form_login: ~
+
         #this firewall name must be the same as in the bundle's service.yml.
         aperio_ldap_firewall:
 
-            pattern: ^/
+            pattern: ^/scan
 
             aperio: true
 
@@ -51,9 +55,10 @@ security:
                  use_referer: true
                  success_handler: authentication_handler
                  failure_handler: authentication_handler
+                 check_path: /scan/login_check
 
             logout:
-                path:   /logout
+                path:   /scan/logout
                 target: /scan/login
 
             anonymous:  true
@@ -63,7 +68,7 @@ security:
           
     access_control:
 
-     - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/access-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 

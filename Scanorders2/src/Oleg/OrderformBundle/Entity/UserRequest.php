@@ -449,7 +449,7 @@ class UserRequest
      */
     public function setActiondate()
     {
-        $this->actiondate = new \DateTime();;
+        $this->actiondate = new \DateTime();
     }
 
     /**

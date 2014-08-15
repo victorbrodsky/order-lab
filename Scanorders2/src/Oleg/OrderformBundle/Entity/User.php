@@ -123,6 +123,15 @@ class User extends BaseUser
     private $division;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Service")
+     * @ORM\JoinTable(name="fos_user_service",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+     * )
+     */
+    private $service;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $primaryDivision;   //$primaryPathologyService;
@@ -137,36 +146,6 @@ class User extends BaseUser
     private $chiefDivisions;
 
 
-//    //TODO: below fields are moved to location and admnistrativeTitles/appointmentTitles. How to assign them?
-//    /**
-//     * set by excel
-//     *
-//     * @ORM\Column(name="fax", type="string", nullable=true)
-//     */
-//    private $fax;
-//
-//    /**
-//     * set by excel
-//     *
-//     * @ORM\Column(name="phone", type="string", nullable=true)
-//     */
-//    private $phone;
-//
-//    /**
-//     * set by excel
-//     *
-//     * @ORM\Column(name="office", type="string", nullable=true)
-//     */
-//    private $office;
-//
-//    /**
-//     * set by ldap and by excel
-//     *
-//     * @ORM\Column(name="title", type="string", nullable=true)
-//     */
-//    private $title;
-
-
 
     function __construct()
     {
@@ -176,8 +155,9 @@ class User extends BaseUser
 
         $this->institution = new ArrayCollection();
         $this->department = new ArrayCollection();
-
         $this->division = new ArrayCollection();
+        $this->service = new ArrayCollection();
+
         $this->chiefDivisions = new ArrayCollection();
 
         $this->setPreferences(new UserPreferences());
@@ -496,7 +476,7 @@ class User extends BaseUser
         return $this->chiefDivisions;
     }
 
-    public function addChiefDivisions(\Oleg\OrderformBundle\Entity\Divisions $chiefDivisions)
+    public function addChiefDivisions(\Oleg\OrderformBundle\Entity\Division $chiefDivisions)
     {
         if( !$this->chiefDivisions->contains($chiefDivisions) ) {
             $this->chiefDivisions[] = $chiefDivisions;
@@ -508,7 +488,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeChiefDivisions(\Oleg\OrderformBundle\Entity\Divisions $chiefDivisions)
+    public function removeChiefDivisions(\Oleg\OrderformBundle\Entity\Division $chiefDivisions)
     {
         $this->chiefDivisions->removeElement($chiefDivisions);
     }
@@ -558,6 +538,29 @@ class User extends BaseUser
         foreach( $institutions as $institution ) {
             $this->addInstitution($institution);
         }
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+
+    public function addService(\Oleg\OrderformBundle\Entity\Service $service)
+    {
+        if( !$this->service->contains($service) ) {
+            $this->service->add($service);
+        }
+        return $this;
+    }
+
+    public function removeService(\Oleg\OrderformBundle\Entity\Service $service)
+    {
+        $this->service->removeElement($service);
     }
 
 

@@ -17,9 +17,9 @@ acme_demo:
 #    pattern:   login
 #    defaults:  { _controller: OlegOrderformBundle:Security:login }
 login_check:
-    path:   /login_check
+    path:   /scan/login_check
 logout:
-    path:   /logout
+    path:   /scan/logout
 #    defaults:  { _controller: OlegOrderformBundle:Security:logout }
     
 #imag_ldap:

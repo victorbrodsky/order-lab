@@ -8,9 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="division")
+ * @ORM\Table(name="service")
  */
-class Division extends ListAbstract
+class Service extends ListAbstract
 {
     /**
      * @ORM\OneToMany(targetEntity="Division", mappedBy="original")
@@ -25,29 +25,21 @@ class Division extends ListAbstract
 
     /**
      * Parent
-     * @ORM\ManyToOne(targetEntity="Department", inversedBy="divisions")
-     * @ORM\JoinColumn(name="department", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Division", inversedBy="services")
+     * @ORM\JoinColumn(name="division", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $department;
+    protected $division;
 
     /**
-     * Children
-     * @ORM\OneToMany(targetEntity="Service", mappedBy="division", cascade={"persist"})
-     */
-    protected $services;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="division")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="service")
      **/
     protected $users;
-
 
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->services = new ArrayCollection();
     }
 
     /**
@@ -105,23 +97,6 @@ class Division extends ListAbstract
         return $this->original;
     }
 
-    /**
-     * @param mixed $department
-     */
-    public function setDepartment($department)
-    {
-        $this->department = $department;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartment()
-    {
-        return $this->department;
-    }
-
-
 
     /**
      * Add user
@@ -156,40 +131,22 @@ class Division extends ListAbstract
         return $this->users;
     }
 
-
     /**
-     * Add service
-     *
-     * @param \Oleg\OrderformBundle\Entity\Service $service
-     * @return
+     * @param mixed $division
      */
-    public function addService(\Oleg\OrderformBundle\Entity\Service $service)
+    public function setDivision($division)
     {
-        if( !$this->services->contains($service) ) {
-            $service->setDivision($this);
-            $this->services->add($service);
-        }
+        $this->division = $division;
     }
 
     /**
-     * Remove service
-     *
-     * @param \Oleg\OrderformBundle\Entity\Service $service
+     * @return mixed
      */
-    public function removeService(\Oleg\OrderformBundle\Entity\Service $service)
+    public function getDivision()
     {
-        $this->services->removeElement($service);
+        return $this->division;
     }
 
-    /**
-     * Get services
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getServices()
-    {
-        return $this->services;
-    }
 
 
 }
