@@ -62,7 +62,7 @@ class UserRequestType extends AbstractType
         ));
         
         $builder->add( 'institution', 'entity', array(
-                'class' => 'OlegOrderformBundle:Institution',
+                'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',
                 'label'=>'Institution:',
                 'required'=> false,
@@ -94,7 +94,7 @@ class UserRequestType extends AbstractType
 
 //        $attr = array('class' => 'combobox combobox-width ');
 //        $builder->add('similaruser', 'entity', array(
-//            'class' => 'OlegOrderformBundle:User',
+//            'class' => 'OlegUserdirectoryBundle:User',
 //            'label'=>'Access permissions similar to:',
 //            'required' => false,
 //            //'multiple' => true,

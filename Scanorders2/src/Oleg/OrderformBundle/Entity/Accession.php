@@ -45,11 +45,11 @@ class Accession extends ObjectAbstract {
      **/
     protected $orderinfo;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="accessions")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="accessions")
+//     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+//     */
+//    protected $institution;
 
 
 

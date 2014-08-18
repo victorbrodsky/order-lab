@@ -1,11 +1,11 @@
 parameters:
 
-  default_time_zone: America/New_York
-  default_system_email:
-  institution_url:
-  institution_name:
-  department_url:
-  department_name:
+#  default_time_zone: America/New_York
+#  default_system_email:
+#  institution_url:
+#  institution_name:
+#  department_url:
+#  department_name:
 
 #  maintenance:
 #  maintenanceenddate:
@@ -50,44 +50,60 @@ fos_user:
 
 services:
 
-    #Custom selector fields
-    order_form.type.stain_selector:
-        class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
-        tags:
-            - { name: form.type, alias: custom_selector }
-
-    #Custom selector fields with data
-    order_form.type.custom_data_selector:
-        class: Oleg\OrderformBundle\Form\CustomType\CustomDataSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
-        tags:
-            - { name: form.type, alias: custom_data_selector }
+#    #Custom selector fields
+#    order_form.type.stain_selector:
+#        class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
+#        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
+#        tags:
+#            - { name: form.type, alias: custom_selector }
+#
+#    #Custom selector fields with data
+#    order_form.type.custom_data_selector:
+#        class: Oleg\OrderformBundle\Form\CustomType\CustomDataSelectorType
+#        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
+#        tags:
+#            - { name: form.type, alias: custom_data_selector }
+#
+#    #Redirect admin to index
+#    authentication_handler:
+#        class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
+#        arguments:  [@router, @security.context, @doctrine.orm.entity_manager]
 
     #Override Ldap Manager
     oleg.security.ldap_manager:
         class: Oleg\UserdirectoryBundle\Security\Authentication\LdapManager
         arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, %default_time_zone%, @doctrine.orm.entity_manager ]
 
-    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
-    oleg.handler.session_idle:
-        class: Oleg\OrderformBundle\Helper\SessionIdleHandler
-        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
+#    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
+#    oleg.handler.session_idle:
+#        class: Oleg\OrderformBundle\Helper\SessionIdleHandler
+#        arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#
+#
+#    #aperio authentication
+#    aperio.security.authentication.provider:
+#        class: Oleg\OrderformBundle\Security\Authentication\AperioProvider
+#        arguments: ["", @service_container,@doctrine.orm.entity_manager,"aperio_ldap_firewall",%default_time_zone%]
+#
+#    #aperio listener
+#    aperio.security.authentication.listener:
+#        class: Oleg\OrderformBundle\Security\Firewall\AperioListener
+#        arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
+#
     #twig listener
     twigdate.listener.request:
-        class: Oleg\OrderformBundle\Services\TwigDateRequestListener
+        class: Oleg\UserdirectoryBundle\Services\TwigDateRequestListener
         arguments: ["@twig", "@security.context", %default_time_zone%]
         tags:
               - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-    scanorder.listener.maintenance:
-        class: Oleg\OrderformBundle\Services\MaintenanceListener
-        arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#    scanorder.listener.maintenance:
+#        class: Oleg\OrderformBundle\Services\MaintenanceListener
+#        arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
 #    #set scan order parameters src/Oleg/OrderformBundle/Helper/Parameters.php
 #    scanorder.setparameters:

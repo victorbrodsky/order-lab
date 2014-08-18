@@ -90,7 +90,7 @@ class SiteParameters {
     protected $aDLDAPServerAccountPassword;
 
     /**
-     * @ORM\OneToOne(targetEntity="Institution")
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */
     protected $autoAssignInstitution;
 

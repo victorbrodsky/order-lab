@@ -14,7 +14,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 //use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Oleg\OrderformBundle\Helper\SessionIdleHandler;
-use Oleg\OrderformBundle\Helper\UserUtil;
+
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class SecurityController extends Controller
 {

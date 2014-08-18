@@ -1,7 +1,7 @@
 <?php
 namespace Oleg\OrderformBundle\Helper;
 
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * Description of EmailUtil

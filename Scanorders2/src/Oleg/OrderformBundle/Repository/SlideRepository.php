@@ -65,7 +65,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         //********** end of educational and research processing ***********//
 
         //add this slide to institution from orderinfo.
-        $orderinfo->getInstitution()->addSlide($slide);
+        //$orderinfo->getInstitution()->addSlide($slide);
+        $slide->setInstitution($orderinfo->getInstitution());
 
         ////////////// process parent //////////////
         //1) reattach slide to part if it is Cytopathology

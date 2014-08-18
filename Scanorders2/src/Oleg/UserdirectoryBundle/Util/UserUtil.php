@@ -7,19 +7,20 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Helper;
+namespace Oleg\UserdirectoryBundle\Util;
 
-use Oleg\OrderformBundle\Entity\Location;
-use Oleg\OrderformBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Entity\Division;
-use Oleg\OrderformBundle\Entity\Logger;
+
+use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Entity\Division;
+use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 class UserUtil {
 
     public function generateUsersExcel( $em, $default_time_zone ) {
-        $inputFileName = __DIR__ . '/../Helper/users.xlsx';
+        $inputFileName = __DIR__ . '/../Util/users.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
@@ -33,26 +34,29 @@ class UserUtil {
         //var_dump($sheetData);
 
         $count = 0;
+        $serviceCount = 0;
 
         ////////////// add system user /////////////////
         $adminemail = $this->getSiteSetting($em,'siteEmail');
-        $user = new User();
-        $user->setEmail($adminemail);
-        $user->setEmailCanonical($adminemail);
-        $user->setUsername('system');
-        $user->setUsernameCanonical('system');
-        $user->setPassword("");
-        $user->setCreatedby('system');
-        $user->addRole('ROLE_SCANORDER_PROCESSOR');
-        $user->getPreferences()->setTimezone($default_time_zone);
-        $user->setEnabled(true);
-        $user->setLocked(true); //system is locked, so no one can logged in with this account
-        $user->setExpired(false);
-        $found_user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+        $systemuser = new User();
+        $systemuser->setEmail($adminemail);
+        $systemuser->setEmailCanonical($adminemail);
+        $systemuser->setUsername('system');
+        $systemuser->setUsernameCanonical('system');
+        $systemuser->setPassword("");
+        $systemuser->setCreatedby('system');
+        $systemuser->addRole('ROLE_SCANORDER_PROCESSOR');
+        $systemuser->getPreferences()->setTimezone($default_time_zone);
+        $systemuser->setEnabled(true);
+        $systemuser->setLocked(true); //system is locked, so no one can logged in with this account
+        $systemuser->setExpired(false);
+        $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
         if( !$found_user ) {
-            $em->persist($user);
+            $em->persist($systemuser);
             $em->flush();
             $count++;
+        } else {
+            $systemuser = $found_user;
         }
         ////////////// end of add system user /////////////////
 
@@ -81,10 +85,10 @@ class UserUtil {
             $lastName = $rowData[0][5];
             $title = $rowData[0][7];
             $office = $rowData[0][10];
-            $divisions = explode("/",$rowData[0][2]);
+            $services = explode("/",$rowData[0][2]);
 
             //echo "<br>divisions=".$rowData[0][2]." == ";
-            //print_r($divisions);
+            //print_r($services);
 
             //create system user
             $user = new User();
@@ -104,15 +108,15 @@ class UserUtil {
             $user->getPreferences()->setTimezone($default_time_zone);
 
             //phone, fax, office are stored in Location object
-            //$mainLocation  = $em->getRepository('OlegOrderformBundle:Location')->findOneByName('Main Office');
+            //$mainLocation  = $em->getRepository('OlegUserdirectoryBundle:Location')->findOneByName('Main Office');
             $mainLocation  = $user->getMainLocation();
             $mainLocation->setPhone($phone);
             $mainLocation->setFax($fax);
             $mainLocation->setRoom($office);
 
-            //title is stored in Admnistrative Title
-            $admnistrativeTitle = $user->getAdmnistrativeTitles()->first();
-            $admnistrativeTitle->setName($title);
+            //title is stored in Administrative Title
+            $administrativeTitle = $user->getAdministrativeTitles()->first();
+            $administrativeTitle->setName($title);
 
             //add Roles
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
@@ -139,26 +143,28 @@ class UserUtil {
                 $user->addRole('ROLE_SCANORDER_ADMIN');
             }
 
-            foreach( $divisions as $division ) {
+            foreach( $services as $service ) {
 
-                $division = trim($division);
+                $service = trim($service);
 
-                if( $division != "" ) {
-                    //echo " (".$division.") ";
-                    $divisionEntity  = $em->getRepository('OlegOrderformBundle:Division')->findOneByName($division);
+                if( $service != "" ) {
+                    //echo " (".$service.") ";
+                    $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Service')->findOneByName($service);
 
-                    if( $divisionEntity ) {
+                    if( $serviceEntity ) {
                         //
                     } else {
-                        $divisionEntity = new Division();
-                        $divisionEntity->setCreator( $username );
-                        $divisionEntity->setCreatedate( new \DateTime() );
-                        $divisionEntity->setName( $division );
-                        $divisionEntity->setType('default');
-                        $em->persist($divisionEntity);
+                        $serviceEntity = new \Oleg\UserdirectoryBundle\Entity\Service();
+                        $serviceEntity->setOrderinlist( $serviceCount );
+                        $serviceEntity->setCreator( $systemuser );
+                        $serviceEntity->setCreatedate( new \DateTime() );
+                        $serviceEntity->setName( trim($service) );
+                        $serviceEntity->setType('default');
+                        $em->persist($serviceEntity);
                         $em->flush();
+                        $serviceCount = $serviceCount + 10;
                     }
-                    $user->addDivision($divisionEntity);
+                    $user->addService($serviceEntity);
                 } //if
 
             } //foreach
@@ -183,7 +189,7 @@ class UserUtil {
             }
             ////////// EOF assign Institution //////////
 
-            $found_user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername($username);
+            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
             if( $found_user ) {
                 //
             } else {

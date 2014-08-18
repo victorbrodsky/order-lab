@@ -174,7 +174,7 @@ class UtilController extends Controller {
             }
         } else {
             //find user's pathservices to include them in the list
-            $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($opt);
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($opt);
             $getDivisions = $user->getDivision();
 
             foreach( $getDivisions as $divisionId ) {
@@ -507,10 +507,10 @@ class UtilController extends Controller {
         $username   = $request->get('username');
         //echo "username=".$username."<br>";
 
-        $user = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername(trim($username));
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername(trim($username));
         //echo $user;
 
-        //$user = $em->getRepository('OlegOrderformBundle:User')->find(15);
+        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find(15);
         if( $user ) {
             //echo "user found!";
             $services = $user->getDivision();
@@ -955,7 +955,7 @@ class UtilController extends Controller {
 
         //2) add users with ROLE_SCANORDER_COURSE_DIRECTOR and ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:User', 'list')
+            ->from('OlegUserdirectoryBundle:User', 'list')
             //->select("list.id as id, list.username as text")
             ->select("list")
             ->where("list.roles LIKE :role")
@@ -1024,7 +1024,7 @@ class UtilController extends Controller {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:Institution', 'list')
+            ->from('OlegUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 

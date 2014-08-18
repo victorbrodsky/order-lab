@@ -72,12 +72,6 @@ class Patient extends ObjectAbstract
      * @ORM\OneToMany(targetEntity="Procedure", mappedBy="patient")
      */
     protected $procedure;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="patients")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
     
     /**
      * Constructor

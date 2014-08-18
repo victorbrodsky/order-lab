@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\OrderformBundle\Entity\Logger;
+use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\OrderformBundle\Form\LoggerType;
 
 /**
@@ -46,7 +46,7 @@ class LoggerController extends Controller
         );
 
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $roles = $em->getRepository('UserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {

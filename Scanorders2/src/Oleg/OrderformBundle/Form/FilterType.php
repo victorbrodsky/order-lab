@@ -5,7 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class FilterType extends AbstractType
 {

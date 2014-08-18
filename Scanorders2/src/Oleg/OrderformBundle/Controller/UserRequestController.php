@@ -13,7 +13,7 @@ use Oleg\OrderformBundle\Entity\UserRequest;
 use Oleg\OrderformBundle\Form\UserRequestType;
 use Oleg\OrderformBundle\Form\UserRequestApproveType;
 use Oleg\OrderformBundle\Helper\EmailUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 /**
@@ -403,7 +403,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegOrderformBundle:User')->find($id);
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User.');
@@ -457,7 +457,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('OlegOrderformBundle:User')->find($id);
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User.');
@@ -516,9 +516,9 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
+        //$entities = $em->getRepository('OlegUserdirectoryBundle:User')->findByAppliedforaccess('active');
 
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
@@ -526,7 +526,7 @@ class UserRequestController extends Controller
             }
         }
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->leftJoin("accreq.division", "division");
@@ -564,7 +564,7 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');

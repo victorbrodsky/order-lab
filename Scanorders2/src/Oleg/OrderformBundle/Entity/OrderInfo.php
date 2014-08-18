@@ -75,12 +75,6 @@ class OrderInfo extends OrderAbstract {
     protected $returnSlide;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Department", inversedBy="orderinfo", cascade={"persist"})
-     * @ORM\JoinColumn(name="department_id", referencedColumnName="id", nullable=true)
-     */
-    protected $department;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $purpose;
@@ -165,12 +159,6 @@ class OrderInfo extends OrderAbstract {
      * @ORM\JoinTable(name="slide_orderinfo")
      **/
     private $slide;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="orderinfos")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
 
     /**
      * @ORM\ManyToOne(targetEntity="ScannerList")
@@ -492,22 +480,6 @@ class OrderInfo extends OrderAbstract {
     }
 
     /**
-     * @param mixed $department
-     */
-    public function setDepartment($department)
-    {
-        $this->department = $department;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartment()
-    {
-        return $this->department;
-    }
-
-    /**
      * @param mixed $purpose
      */
     public function setPurpose($purpose)
@@ -803,22 +775,6 @@ class OrderInfo extends OrderAbstract {
     public function getBlock()
     {
         return $this->block;
-    }
-
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
     }
 
     /**

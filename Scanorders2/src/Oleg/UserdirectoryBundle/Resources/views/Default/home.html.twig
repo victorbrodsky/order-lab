@@ -1,0 +1,33 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% block title %}
+    Employee Directory
+{% endblock %}
+
+{% block contentleft %}
+
+
+
+    <div style="margin-top: 150px;">
+        <p>
+            Welcome to the Employee Directory!
+        </p>
+
+        {% if app.security.getToken().getUser.getEmail == "" %}
+            <p>
+                If you would like to receive email notifications regarding your orders, please take a moment to update
+                <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                by adding your email account.
+            </p>
+        {% endif %}
+
+
+        <p>
+            Please review and update your <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+        </p>
+
+
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{#   navigation menu   #}
+
+{% block navbar %}
+
+    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand visible-xs" href="{{ path('scan-order-home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+            {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+
+                <ul class="nav navbar-nav">
+
+                    <li id="nav-bar-scanorderhome" class="hidden-xs divider-vertical"><a href="{{ path('scan-order-home') }}">Home</a></li>
+
+                </ul>
+
+            {% endif %}
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
+
+                    {#admincomments - comments addressed to this processor only#}
+                    {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
+
+                            {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+                                <li class="divider"></li>
+                                <li><a href="{{ path('listusers') }}">Users</a></li>
+                                <li><a href="{{ path('admin_index') }}">List Manager</a></li>
+                                <li><a href="{{ path('logger') }}">Event Log</a></li>
+                                <li><a href="{{ path('siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {#<li> Logged in as {{ app.security.getToken().getUser().getUsername() }} </li>#}
+                            <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUsername() }})</a></li>
+                            <li><a href="{{ path('logout') }}">Log Out</a></li>
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+

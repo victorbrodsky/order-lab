@@ -40,7 +40,7 @@ abstract class ObjectAbstract
     protected $creationdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;
@@ -51,11 +51,11 @@ abstract class ObjectAbstract
      */
     protected $source;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="patient")
-//     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-//     */
-//    protected $institution;
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+     */
+    protected $institution;
 
 
 

@@ -143,7 +143,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
             $newId = $entity->getId();
 
-            $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
 
             //clone orderinfo object by id
             $orderUtil = new OrderUtil($em);
@@ -163,7 +163,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 
         //*********** record history ***********//
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($entity->getOid());
-        $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
         $history = new History();
         $history->setOrderinfo($entity);
         $history->setCurrentid($entity->getOid());
@@ -181,7 +181,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             //set note with this url link
             $history->setNote('Previous order content saved as a Superseded '.$link);
         } elseif( $originalStatus == 'Not Submitted' ) {
-            $systemUser = $em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+            $systemUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
             $history->setEventtype('Auto-saved at the time of auto-logout');

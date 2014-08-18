@@ -50,11 +50,11 @@ class Block extends ObjectAbstract
      */
     protected $specialStains;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="blocks")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="blocks")
+//     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
+//     */
+//    protected $institution;
 
     
     public function __construct( $withfields=false, $status='invalid', $provider=null, $source=null ) {

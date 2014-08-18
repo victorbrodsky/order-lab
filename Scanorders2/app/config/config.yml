@@ -3,7 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@OlegOrderformBundle/Resources/config/services.yml" }
     - { resource: "@OlegOrderformBundle/SetParameters/setparameters.php" }
-#    - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
+    - { resource: "@OlegUserdirectoryBundle/Resources/config/services.yml" }
 #    - { resource: assets_version.php }
 
 framework:
@@ -89,13 +89,14 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-#        auto_mapping: true
+        auto_mapping: true
         default_entity_manager: default
-        entity_managers:
-            default:
-                connection: default
-                mappings:
-                    OlegOrderformBundle: ~
+#        entity_managers:
+#            default:
+#                connection: default
+#                mappings:
+#                    OlegOrderformBundle: ~
+#                    OlegUserdirectoryBundle: ~
 #            aperio:
 #                connection: aperio
 #                mappings:

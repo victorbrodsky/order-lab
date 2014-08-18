@@ -10,8 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Form\SiteParametersType;
-use Oleg\OrderformBundle\Helper\UserUtil;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
+
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * SiteParameters controller.

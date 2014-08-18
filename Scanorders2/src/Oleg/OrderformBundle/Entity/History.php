@@ -42,7 +42,7 @@ class History
     private $changedate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     private $provider;
@@ -71,7 +71,7 @@ class History
 
     /**
      * User id
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="viewed", referencedColumnName="id", nullable=true)
      */
     private $viewed;

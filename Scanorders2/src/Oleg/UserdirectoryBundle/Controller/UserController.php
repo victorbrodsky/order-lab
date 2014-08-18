@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\UserdirectoryBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -8,20 +8,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-
-use Oleg\OrderformBundle\Entity\PathService;
-use Oleg\OrderformBundle\Form\UserType;
-use Oleg\OrderformBundle\Helper\UserUtil;
 use Symfony\Component\HttpFoundation\Session\Session;
-
-use Oleg\OrderformBundle\Entity\User;
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
-use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\UserEvent;
+
+use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Form\UserType;
+
+use Oleg\OrderformBundle\Security\Util\SecurityUtil;
+use Oleg\OrderformBundle\Security\Util\AperioUtil;
+use Oleg\OrderformBundle\Entity\PathService;
+
 
 
 class UserController extends Controller
@@ -30,7 +32,7 @@ class UserController extends Controller
     /**
      * @Route("/user-directory", name="listusers")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:users.html.twig")
+     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
     public function indexUserAction()
     {
@@ -44,7 +46,7 @@ class UserController extends Controller
 
         $rolesArr = $this->getUserRoles();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:User');
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.division", "division");
@@ -71,7 +73,7 @@ class UserController extends Controller
     /**
      * @Route("/users/new", name="new_user")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Profile:register.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
      */
     public function newUserAction()
     {
@@ -97,7 +99,7 @@ class UserController extends Controller
     /**
      * @Route("/users/new", name="create_user")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Profile:register.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
      */
     public function createUserAction( Request $request )
     {
@@ -131,7 +133,7 @@ class UserController extends Controller
     /**
      * @Route("/users/{id}", name="showuser", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function showUserAction($id)
     {
@@ -148,7 +150,7 @@ class UserController extends Controller
         if( $id == 0 || $id == '' || $id == '' ) {
             $entity = new User();
         } else {
-            $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+            $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
         }
 
         if( !$entity ) {
@@ -176,7 +178,7 @@ class UserController extends Controller
     /**
      * @Route("/edit-user-profile/{id}", name="user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function editUserAction($id)
     {
@@ -189,10 +191,17 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        if( count($entity->getPerSiteSettings()) == 0 ) {
+            $perSiteSettings = new \Oleg\UserdirectoryBundle\Entity\PerSiteSettings();
+            $perSiteSettings->setSiteName('scanorder');
+            $perSiteSettings->setAuthor($this->getUser());
+            $entity->addPerSiteSettings($perSiteSettings);
         }
 
         //Roles
@@ -215,7 +224,7 @@ class UserController extends Controller
     /**
      * @Route("/users/{id}", name="user_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
     {
@@ -227,7 +236,7 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        $entity = $em->getRepository('OlegOrderformBundle:User')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -267,7 +276,7 @@ class UserController extends Controller
 //    /**
 //     * @Route("/new_user1", name="new_user1")
 //     * @Method("GET")
-//     * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
+//     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
 //     */
 //    public function registerAction(Request $request)
 //    {
@@ -311,7 +320,7 @@ class UserController extends Controller
 //            }
 //        }
 //
-//        return $this->container->get('templating')->renderResponse('OlegOrderformBundle:Profile:register.html.twig', array(
+//        return $this->container->get('templating')->renderResponse('OlegUserdirectoryBundle:Profile:register.html.twig', array(
 //            'form' => $form->createView(),
 //        ));
 //    }
@@ -322,7 +331,7 @@ class UserController extends Controller
     /**
      * @Route("/users/generate", name="generate_users")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:users.html.twig")
+     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
     public function generateUsersAction()
     {
@@ -347,7 +356,7 @@ class UserController extends Controller
     public function getUserRoles() {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         foreach( $roles as $role ) {
             $rolesArr[$role->getName()] = $role->getAlias();
         }
@@ -358,7 +367,7 @@ class UserController extends Controller
     /**
      * @Route("/admin/load-roles-from-aperio", name="load-roles-from-aperio")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Admin:load-roles-from-aperio.html.twig")
+     * @Template("OlegUserdirectoryBundle:Admin:load-roles-from-aperio.html.twig")
      */
     public function loadRolesFromAperioAction()
     {
@@ -375,7 +384,7 @@ class UserController extends Controller
         $results = array();
         $em = $this->getDoctrine()->getManager();
 
-        $users = $em->getRepository('OlegOrderformBundle:User')->findAll();
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
 
         //echo "count=".count($users)."<br>";
 
@@ -460,7 +469,7 @@ class UserController extends Controller
 //    public function getUserChiefServices() {
 //        $servArr = array();
 //        $em = $this->getDoctrine()->getManager();
-//        $services = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+//        $services = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
 //        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
 //            foreach( $services as $service ) {
 //                $servArr[$service->getName()] = $service->getAlias();

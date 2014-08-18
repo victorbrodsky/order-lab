@@ -1,8 +1,10 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -59,11 +61,19 @@ class PerSiteSettings extends BaseUserAttributes
      **/
     private $defaultService;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="perSiteSettings")
+     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $author;
+
 
     public function __construct() {
+        parent::__construct();
         $this->permittedInstitutionalPHIScope = new ArrayCollection();
         $this->scanOrdersServicesScope = new ArrayCollection();
         $this->chiefServices = new ArrayCollection();
+        $this->setType(self::TYPE_RESTRICTED);
     }
 
 
@@ -161,18 +171,19 @@ class PerSiteSettings extends BaseUserAttributes
         return $this->chiefServices;
     }
 
-    public function addChiefServices( $chiefServices )
+    public function addChiefService( $chiefService )
     {
-        if( !$this->chiefServices->contains($chiefServices) ) {
-            $this->chiefServices->add($chiefServices);
+        if( !$this->chiefServices->contains($chiefService) ) {
+            $this->chiefServices->add($chiefService);
         }
 
     }
 
-    public function removeChiefServices($chiefServices)
+    public function removeChiefService($chiefService)
     {
-        $this->chiefServices->removeElement($chiefServices);
+        $this->chiefServices->removeElement($chiefService);
     }
+
 
 
 

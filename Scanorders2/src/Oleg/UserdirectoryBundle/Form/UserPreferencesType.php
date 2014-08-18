@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Oleg\OrderformBundle\Helper\TimeZoneUtil;
+use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 
 class UserPreferencesType extends AbstractType
 {
@@ -62,7 +62,7 @@ class UserPreferencesType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\UserPreferences'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences'
         ));
     }
 
@@ -71,7 +71,7 @@ class UserPreferencesType extends AbstractType
      */
     public function getName()
     {
-        return 'oleg_orderformbundle_userpreferences';
+        return 'oleg_userdirectorybundle_userpreferences';
     }
 
 }

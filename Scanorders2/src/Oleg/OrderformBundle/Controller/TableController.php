@@ -70,7 +70,7 @@ use Oleg\OrderformBundle\Form\SlideMultiType;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;

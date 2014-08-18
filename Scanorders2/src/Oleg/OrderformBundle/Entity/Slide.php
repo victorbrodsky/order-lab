@@ -88,12 +88,6 @@ class Slide extends ObjectAbstract
     protected $research;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="slides")
-     * @ORM\JoinColumn(name="institution", referencedColumnName="id")
-     */
-    protected $institution;
-
-    /**
      * Sequence in table form scan order
      * @ORM\Column(type="integer", nullable=true)
      */

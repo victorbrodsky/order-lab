@@ -29,7 +29,7 @@ class SecurityUtil {
 
         $user = $this->sc->getToken()->getUser();
 
-        $entity = $this->em->getRepository('OlegOrderformBundle:User')->find($id);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
         if( $entity && $entity->getId() === $user->getId() ) {
             return true;

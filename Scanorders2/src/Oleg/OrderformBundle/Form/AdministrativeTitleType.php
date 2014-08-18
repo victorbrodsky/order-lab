@@ -44,12 +44,12 @@ class AdministrativeTitleType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\AdmnistrativeTitle',
+            'data_class' => 'Oleg\OrderformBundle\Entity\AdministrativeTitle',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_admnistrativetitletype';
+        return 'oleg_orderformbundle_administrativetitletype';
     }
 }

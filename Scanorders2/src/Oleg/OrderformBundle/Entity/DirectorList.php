@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="DirectorList")
@@ -25,7 +27,7 @@ class DirectorList extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
      */
     protected $director;
@@ -97,10 +99,10 @@ class DirectorList extends ListAbstract
     /**
      * Set director
      *
-     * @param \Oleg\OrderformBundle\Entity\User $director
+     * @param \Oleg\UserdirectoryBundle\Entity\User $director
      * @return DirectorList
      */
-    public function setDirector(\Oleg\OrderformBundle\Entity\User $director = null)
+    public function setDirector(\Oleg\UserdirectoryBundle\Entity\User $director = null)
     {
         $this->director = $director;
     
@@ -110,7 +112,7 @@ class DirectorList extends ListAbstract
     /**
      * Get director
      *
-     * @return \Oleg\OrderformBundle\Entity\User 
+     * @return \Oleg\UserdirectoryBundle\Entity\User
      */
     public function getDirector()
     {

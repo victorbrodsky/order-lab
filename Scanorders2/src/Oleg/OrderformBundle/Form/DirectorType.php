@@ -37,7 +37,7 @@ class DirectorType extends AbstractType
         ));
 
         $builder->add('director', 'entity', array(
-        'class' => 'OlegOrderformBundle:User',
+        'class' => 'OlegUserdirectoryBundle:User',
         'label'=>'Course Director:',
         'required' => false,
         //'read_only' => true,    //not working => disable by twig

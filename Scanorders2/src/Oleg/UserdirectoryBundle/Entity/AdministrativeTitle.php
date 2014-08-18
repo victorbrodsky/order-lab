@@ -1,18 +1,18 @@
 <?php
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="appointmentTitle")
+ * @ORM\Table(name="administrativeTitle")
  */
-class AppointmentTitle extends BaseTitle
+class AdministrativeTitle extends BaseTitle
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="appointmentTitles")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="administrativeTitles")
      * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $user;
@@ -32,6 +32,7 @@ class AppointmentTitle extends BaseTitle
     {
         return $this->user;
     }
+
 
 
 

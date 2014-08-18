@@ -30,7 +30,7 @@ function idleTimeout() {
             if( t === "timeout" ) {
                 getAjaxTimeoutMsg();
             }
-            console.debug("get max idletime: error data="+data);
+            //console.debug("get max idletime: error data="+data);
             _idleAfter = 0;
         }
     });

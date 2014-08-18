@@ -55,6 +55,11 @@ class User extends BaseUser
     private $displayName;
 
     /**
+     * @ORM\Column(name="preferredPhone", type="string", nullable=true)
+     */
+    private $preferredPhone;
+
+    /**
      * @ORM\Column(name="createdby", type="string", nullable=true)
      */
     private $createdby;
@@ -76,14 +81,19 @@ class User extends BaseUser
     private $preferences;
 
     /**
+     * @ORM\OneToMany(targetEntity="PerSiteSettings", mappedBy="author", cascade={"persist"})
+     */
+    private $perSiteSettings;
+
+    /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
      */
     private $locations;
 
     /**
-     * @ORM\OneToMany(targetEntity="AdmnistrativeTitle", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist"})
      */
-    private $admnistrativeTitles;
+    private $administrativeTitles;
 
     /**
      * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist"})
@@ -131,34 +141,23 @@ class User extends BaseUser
      */
     private $service;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $primaryDivision;   //$primaryPathologyService;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Division")
-     * @ORM\JoinTable(name="fos_user_chiefdivision",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathservice_id", referencedColumnName="id")}
-     * )
-     */
-    private $chiefDivisions;
-
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $primaryDivision;   //$primaryPathologyService;
 
 
     function __construct()
     {
+        $this->perSiteSettings = new ArrayCollection();
         $this->locations = new ArrayCollection();
-        $this->admnistrativeTitles = new ArrayCollection();
+        $this->administrativeTitles = new ArrayCollection();
         $this->appointmentTitles = new ArrayCollection();
 
         $this->institution = new ArrayCollection();
         $this->department = new ArrayCollection();
         $this->division = new ArrayCollection();
         $this->service = new ArrayCollection();
-
-        $this->chiefDivisions = new ArrayCollection();
 
         $this->setPreferences(new UserPreferences());
 
@@ -173,70 +172,54 @@ class User extends BaseUser
         $homeLocation->setUser($this);
 
         //one default Admnistrative Title
-        $AdmnistrativeTitle = new AdmnistrativeTitle();
-        $this->addAdmnistrativeTitle($AdmnistrativeTitle);
+        $AdministrativeTitle = new AdministrativeTitle();
+        $this->addAdministrativeTitle($AdministrativeTitle);
 
         parent::__construct();
     }
 
-    /**
-     * @param mixed $division
-     */
-    public function setDivision($division)
-    {
-        if( $division->first() ) {
-            $this->primaryDivision = $division->first()->getId();
-        } else {
-            $this->primaryDivision = NULL;
-        }
-        $this->division = $division;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getDivision()
-    {
-        //return $this->division;
-
-        $resArr = new ArrayCollection();
-        foreach( $this->division as $service ) {
-            //echo "service=".$service."<br>";
-            if( $service->getId()."" == $this->getPrimaryDivision()."" ) {  //this service is a primary path service => put as the first element
-                //$resArr->removeElement($service);
-                //$resArr->first();
-                //$firstEl = $resArr->get(0);
-                $firstEl = $resArr->first();
-                if( count($this->division) > 1 && $firstEl ) {
-                    //echo "firstEl=".$firstEl."<br>";
-                    $resArr->set(0,$service); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
-                    $resArr->add($firstEl);
-                } else {
-                    $resArr->add($service);
-                }
-            } else {    //this service is not a primary path service
-                $resArr->add($service);
-            }
-        }
-
-        return $resArr;
-    }
-
 //    /**
-//     * @param mixed $phone
+//     * @param mixed $division
 //     */
-//    public function setPhone($phone)
+//    public function setDivision($division)
 //    {
-//        $this->phone = $phone;
+//        if( $division->first() ) {
+//            $this->primaryDivision = $division->first()->getId();
+//        } else {
+//            $this->primaryDivision = NULL;
+//        }
+//        $this->division = $division;
 //    }
+//
 //
 //    /**
 //     * @return mixed
 //     */
-//    public function getPhone()
+//    public function getDivision()
 //    {
-//        return $this->phone;
+//        //return $this->division;
+//
+//        $resArr = new ArrayCollection();
+//        foreach( $this->division as $service ) {
+//            //echo "service=".$service."<br>";
+//            if( $service->getId()."" == $this->getPrimaryDivision()."" ) {  //this service is a primary path service => put as the first element
+//                //$resArr->removeElement($service);
+//                //$resArr->first();
+//                //$firstEl = $resArr->get(0);
+//                $firstEl = $resArr->first();
+//                if( count($this->division) > 1 && $firstEl ) {
+//                    //echo "firstEl=".$firstEl."<br>";
+//                    $resArr->set(0,$service); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
+//                    $resArr->add($firstEl);
+//                } else {
+//                    $resArr->add($service);
+//                }
+//            } else {    //this service is not a primary path service
+//                $resArr->add($service);
+//            }
+//        }
+//
+//        return $resArr;
 //    }
 
     /**
@@ -292,7 +275,7 @@ class User extends BaseUser
      */
     public function setTitle($title)
     {
-        $this->getAdmnistrativeTitles()->first()->setName($title);
+        $this->getAdministrativeTitles()->first()->setName($title);
     }
 
 //    /**
@@ -319,37 +302,27 @@ class User extends BaseUser
         return $this->displayName;
     }
 
-//    /**
-//     * @param mixed $fax
-//     */
-//    public function setFax($fax)
-//    {
-//        $this->fax = $fax;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getFax()
-//    {
-//        return $this->fax;
-//    }
+    /**
+     * @param mixed $preferredPhone
+     */
+    public function setPreferredPhone($preferredPhone)
+    {
+        $this->preferredPhone = $preferredPhone;
+    }
 
-//    /**
-//     * @param mixed $office
-//     */
-//    public function setOffice($office)
-//    {
-//        $this->office = $office;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getOffice()
-//    {
-//        return $this->office;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getPreferredPhone()
+    {
+        return $this->preferredPhone;
+    }
+
+
+    public function getDivision()
+    {
+        return $this->division;
+    }
 
     public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
     {
@@ -435,63 +408,22 @@ class User extends BaseUser
         return $this->appliedforaccess;
     }
 
-    /**
-     * @param mixed $primaryDivision
-     */
-    public function setPrimaryDivision($primaryDivision)
-    {
-        $this->primaryDivision = $primaryDivision;
-    }
+//    /**
+//     * @param mixed $primaryDivision
+//     */
+//    public function setPrimaryDivision($primaryDivision)
+//    {
+//        $this->primaryDivision = $primaryDivision;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getPrimaryDivision()
+//    {
+//        return $this->primaryDivision;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getPrimaryDivision()
-    {
-        return $this->primaryDivision;
-    }
-
-
-
-    //chief services
-    /**
-     * @param mixed $chiefDivisions
-     */
-    public function setChiefDivisions($chiefDivisions)
-    {
-        $this->chiefDivisions = $chiefDivisions;
-
-        //add service chiefs to services
-        foreach( $chiefDivisions as $division ) {
-            $this->addDivision($division);
-        }
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getChiefDivisions()
-    {
-        return $this->chiefDivisions;
-    }
-
-    public function addChiefDivisions(\Oleg\UserdirectoryBundle\Entity\Division $chiefDivisions)
-    {
-        if( !$this->chiefDivisions->contains($chiefDivisions) ) {
-            $this->chiefDivisions[] = $chiefDivisions;
-        }
-
-        //add service chiefs to services
-        $this->addDivision($chiefDivisions);
-
-        return $this;
-    }
-
-    public function removeChiefDivisions(\Oleg\UserdirectoryBundle\Entity\Division $chiefDivisions)
-    {
-        $this->chiefDivisions->removeElement($chiefDivisions);
-    }
 
     /**
      * @param mixed $preferences
@@ -541,6 +473,38 @@ class User extends BaseUser
     }
 
 
+//    /**
+//     * @return mixed
+//     */
+//    public function getDivision()
+//    {
+//        return $this->division;
+//    }
+//
+//
+//    public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
+//    {
+//        if( !$this->division->contains($division) ) {
+//            $this->division->add($division);
+//        }
+//        return $this;
+//    }
+//
+//    public function removeDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
+//    {
+//        $this->division->removeElement($division);
+//    }
+//
+//    public function setDivision( $division )
+//    {
+//        //echo "set institutionsCount=".count($institutions)."<br>";
+//        $this->division->clear();
+//        foreach( $division as $singledivision ) {
+//            $this->addDivision($singledivision);
+//        }
+//    }
+
+
     /**
      * @return mixed
      */
@@ -573,6 +537,45 @@ class User extends BaseUser
     {
         return $this->id;
     }
+
+
+    /**
+     * Add perSiteSettings
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\perSiteSettings $perSiteSettings
+     * @return User
+     */
+    public function addPerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSetting)
+    {
+        //$this->locations[] = $location;
+        if( !$this->perSiteSettings->contains($perSiteSetting) ) {
+            $this->perSiteSettings->add($perSiteSetting);
+            $perSiteSetting->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove locations
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\PerSiteSettings $locations
+     */
+    public function removePerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSetting)
+    {
+        $this->perSiteSettings->removeElement($perSiteSetting);
+    }
+
+    /**
+     * Get locations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPerSiteSettings()
+    {
+        return $this->perSiteSettings;
+    }
+
 
     /**
      * Add locations
@@ -612,39 +615,39 @@ class User extends BaseUser
     }
 
     /**
-     * Add admnistrativeTitles
+     * Add administrativeTitles
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitle
+     * @param \Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle
      * @return User
      */
-    public function addAdmnistrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitle)
+    public function addAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitle)
     {
-        if( !$this->admnistrativeTitles->contains($admnistrativeTitle) ) {
-            $this->admnistrativeTitles->add($admnistrativeTitle);
-            $admnistrativeTitle->setUser($this);
+        if( !$this->administrativeTitles->contains($administrativeTitle) ) {
+            $this->administrativeTitles->add($administrativeTitle);
+            $administrativeTitle->setUser($this);
         }
     
         return $this;
     }
 
     /**
-     * Remove admnistrativeTitles
+     * Remove administrativeTitles
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitles
+     * @param \Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitles
      */
-    public function removeAdmnistrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdmnistrativeTitle $admnistrativeTitles)
+    public function removeAdministrativeTitle(\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle $administrativeTitles)
     {
-        $this->admnistrativeTitles->removeElement($admnistrativeTitles);
+        $this->administrativeTitles->removeElement($administrativeTitles);
     }
 
     /**
-     * Get admnistrativeTitles
+     * Get administrativeTitles
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getAdmnistrativeTitles()
+    public function getAdministrativeTitles()
     {
-        return $this->admnistrativeTitles;
+        return $this->administrativeTitles;
     }
 
     /**

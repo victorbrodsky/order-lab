@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\OrderformBundle\Entity\ListAbstract;
 
 /**
  * @ORM\Entity
@@ -37,10 +36,10 @@ class Specialty extends ListAbstract
     /**
      * Add synonyms
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\CourseTitleList $synonyms
-     * @return CourseTitleList
+     * @param \Oleg\UserdirectoryBundle\Entity\Specialty $synonyms
+     * @return Specialty
      */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\CourseTitleList $synonyms)
+    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\Specialty $synonyms)
     {
         $this->synonyms->add($synonyms);
 
@@ -50,9 +49,9 @@ class Specialty extends ListAbstract
     /**
      * Remove synonyms
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\CourseTitleList $synonyms
+     * @param \Oleg\UserdirectoryBundle\Entity\Specialty $synonyms
      */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\CourseTitleList $synonyms)
+    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\Specialty $synonyms)
     {
         $this->synonyms->removeElement($synonyms);
     }

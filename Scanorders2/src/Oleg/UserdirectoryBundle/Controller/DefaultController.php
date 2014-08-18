@@ -11,14 +11,21 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="employees_home")
-     * @Template()
+     * @Template("OlegUserdirectoryBundle:Default:home.html.twig")
      */
     public function indexAction()
     {
-        $name = "This is an Employee Directory";
 
-        return array('name' => $name);
+        if(
+            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+        ){
+            return $this->redirect( $this->generateUrl('login') );
+        }
+
+        return array();
     }
+
 
     /**
      * @Route("/admin", name="employees_admin")
@@ -39,4 +46,7 @@ class DefaultController extends Controller
     {
         return array('name' => $name);
     }
+
+
+
 }

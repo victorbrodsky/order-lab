@@ -6,8 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Oleg\OrderformBundle\Entity\ListAbstract;
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="department")
@@ -25,10 +23,10 @@ class Department extends ListAbstract
      **/
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="department")
-     */
-    protected $orderinfo;
+//    /**
+//     * @ORM\OneToMany(targetEntity="OrderInfo", mappedBy="department")
+//     */
+//    protected $orderinfo;
 
     /**
      * @ORM\ManyToOne(targetEntity="Institution", inversedBy="departments")
@@ -49,7 +47,7 @@ class Department extends ListAbstract
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->orderinfo = new ArrayCollection();
+//        $this->orderinfo = new ArrayCollection();
         $this->divisions = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
@@ -128,39 +126,39 @@ class Department extends ListAbstract
 
 
 
-    /**
-     * Add orderinfo
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo
-     * @return Department
-     */
-    public function addOrderinfo(\Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo)
-    {
-        //echo "Department addOrderinfo=".$orderinfo."<br>";
-        if( !$this->orderinfo->contains($orderinfo) ) {
-            $this->orderinfo->add($orderinfo);
-        }
-    }
-
-    /**
-     * Remove orderinfo
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo
-     */
-    public function removeOrderinfo(\Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo)
-    {
-        $this->orderinfo->removeElement($orderinfo);
-    }
-
-    /**
-     * Get orderinfo
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderinfo()
-    {
-        return $this->orderinfo;
-    }
+//    /**
+//     * Add orderinfo
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo
+//     * @return Department
+//     */
+//    public function addOrderinfo(\Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        //echo "Department addOrderinfo=".$orderinfo."<br>";
+//        if( !$this->orderinfo->contains($orderinfo) ) {
+//            $this->orderinfo->add($orderinfo);
+//        }
+//    }
+//
+//    /**
+//     * Remove orderinfo
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo
+//     */
+//    public function removeOrderinfo(\Oleg\UserdirectoryBundle\Entity\OrderInfo $orderinfo)
+//    {
+//        $this->orderinfo->removeElement($orderinfo);
+//    }
+//
+//    /**
+//     * Get orderinfo
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getOrderinfo()
+//    {
+//        return $this->orderinfo;
+//    }
 
 
 

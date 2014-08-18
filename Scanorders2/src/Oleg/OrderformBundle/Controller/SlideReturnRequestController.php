@@ -17,7 +17,7 @@ use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\SlideText;
 use Oleg\OrderformBundle\Helper\OrderUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 
 /**

@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use Oleg\OrderformBundle\Entity\AccessionType;
 use Oleg\OrderformBundle\Entity\EncounterType;
@@ -20,18 +21,20 @@ use Oleg\OrderformBundle\Entity\Status;
 use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Entity\MrnType;
 use Oleg\OrderformBundle\Helper\FormHelper;
-use Oleg\OrderformBundle\Helper\UserUtil;
-use Oleg\OrderformBundle\Entity\Roles;
 use Oleg\OrderformBundle\Entity\ReturnSlideTo;
 use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
-use Oleg\OrderformBundle\Entity\Department;
-use Oleg\OrderformBundle\Entity\Institution;
 use Oleg\OrderformBundle\Entity\Urgency;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+//TODO: make different admin controller for user site to generate default user fields
+use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\UserdirectoryBundle\Entity\Roles;
+use Oleg\UserdirectoryBundle\Entity\Department;
+use Oleg\UserdirectoryBundle\Entity\Institution;
+
+
 //use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
@@ -84,6 +87,9 @@ class AdminController extends Controller
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
         $count_institution = $this->generateInstitutions();         //must be first
+        $count_department = $this->generateDepartments();
+        //$count_division = $this->generateDivisions();
+        //$count_service = $this->generateServices();
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
         $count_roles = $this->generateRoles();
         $count_acctype = $this->generateAccessionType();
@@ -100,7 +106,6 @@ class AdminController extends Controller
         $count_SlideDelivery = $this->generateSlideDelivery();
         $count_RegionToScan = $this->generateRegionToScan();
         $count_comments = $this->generateProcessorComments();
-        $count_department = $this->generateDepartments();
         $count_urgency = $this->generateUrgency();
         $count_scanners = $this->generateScanners();
         $userutil = new UserUtil();
@@ -759,7 +764,7 @@ class AdminController extends Controller
     public function generateRoles() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
 
         if( $entities ) {
             return -1;
@@ -975,7 +980,7 @@ class AdminController extends Controller
 
         //assign Institution
         $institutionName = 'Weill Cornell Medical College';
-        $institution = $em->getRepository('OlegOrderformBundle:Institution')->findOneByName($institutionName);
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
         if( !$institution ) {
             throw new \Exception( 'Institution was not found for name='.$institutionName );
         }
@@ -1026,7 +1031,7 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:Department')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:Department')->findAll();
 
         if( $entities ) {
             return -1;
@@ -1057,20 +1062,25 @@ class AdminController extends Controller
         $username = $this->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:Institution')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
 
         if( $entities ) {
             return -1;
         }
 
         $types = array(
-            'Weill Cornell Medical College',
+            'Weill Cornell Medical College'=>'WCMC',
+            "New York Hospital"=>'NYH',
+            "Weill Cornell Medical College Qatar"=>'WCMCQ',
+            "Memorial Sloan Kettering Cancer Center"=>'MSK',
+            "Hospital for Special Surgery"=>'HSS'
         );
 
         $count = 1;
-        foreach( $types as $type ) {
+        foreach( $types as $type=>$abbr ) {
             $formType = new Institution();
             $this->setDefaultList($formType,$count,$username,$type);
+            $formType->setAbbreviation( trim($abbr) );
 
             $em->persist($formType);
             $em->flush();

@@ -26,7 +26,7 @@ abstract class ArrayFieldAbstract {
     protected $id;
 
      /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="provider", referencedColumnName="id")
      */
     protected $provider;

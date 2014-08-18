@@ -43,8 +43,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         echo $className.": original:".$original."<br>";
 
         //add this object to institution from orderinfo.
-        $addClassMethod = "add".$className;
-        $orderinfo->getInstitution()->$addClassMethod($entity);
+        //$addClassMethod = "add".$className;
+        //$orderinfo->getInstitution()->$addClassMethod($entity);
+        $entity->setInstitution($orderinfo->getInstitution());
 
         //check and remove duplication objects such as two Part 'A'.
         $entity = $em->getRepository('OlegOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $orderinfo );
@@ -226,7 +227,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $orderinfo->$addClassMethod($entity);
 
         //add this object to institution from orderinfo.
-        $orderinfo->getInstitution()->$addClassMethod($entity);
+        //$orderinfo->getInstitution()->$addClassMethod($entity);
+        $entity->setInstitution($orderinfo->getInstitution());
 
         echo "After processing:".$entity;
 

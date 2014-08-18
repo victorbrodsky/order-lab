@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="PIList")
@@ -26,7 +28,7 @@ class PIList extends ListAbstract
 
     /**
      * User object
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="principal_id", referencedColumnName="id")
      */
     protected $principal;
@@ -98,10 +100,10 @@ class PIList extends ListAbstract
     /**
      * Set principal
      *
-     * @param \Oleg\OrderformBundle\Entity\User $principal
+     * @param \Oleg\UserdirectoryBundle\Entity\User $principal
      * @return PIList
      */
-    public function setPrincipal(\Oleg\OrderformBundle\Entity\User $principal = null)
+    public function setPrincipal(\Oleg\UserdirectoryBundle\Entity\User $principal = null)
     {
         $this->principal = $principal;
     
@@ -111,14 +113,14 @@ class PIList extends ListAbstract
     /**
      * Get principal
      *
-     * @return \Oleg\OrderformBundle\Entity\User 
+     * @return \Oleg\UserdirectoryBundle\Entity\User
      */
     public function getPrincipal()
     {
         return $this->principal;
     }
 
-    public function setUserObjectLink($user) {
+    public function setUserObjectLink(\Oleg\UserdirectoryBundle\Entity\User $user) {
         $this->setPrincipal($user);
     }
     public function getUserObjectLink() {

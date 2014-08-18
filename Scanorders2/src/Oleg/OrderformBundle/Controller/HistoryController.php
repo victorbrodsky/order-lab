@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Form\HistoryType;
 use Oleg\OrderformBundle\Helper\OrderUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * History controller.
@@ -61,7 +61,7 @@ class HistoryController extends Controller
         $entities = $query->getResult();
 
         if( count($entities) > 0 ) {
-            $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+            $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
             $rolesArr = array();
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
@@ -447,7 +447,7 @@ class HistoryController extends Controller
         }
 
         if( count($entities) > 0 ) {
-            $roles = $em->getRepository('OlegOrderformBundle:Roles')->findAll();
+            $roles = $em->getRepository('UserdirectoryBundle:Roles')->findAll();
             $rolesArr = array();
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();

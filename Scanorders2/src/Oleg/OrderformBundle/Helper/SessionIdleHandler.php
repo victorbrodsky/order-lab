@@ -16,7 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 //This handle will (independently from JS) verify if max idle time out is reached and logout user on the first page redirect or reload
 

@@ -69,13 +69,13 @@ security:
         ldap_employees_firewall:
             pattern: ^/employees
             aperio: true
-            context: employees_auth
+            context: scan_auth
             form_login:
                 check_path: /employees/login_check
                 login_path: /employees/login
                 # login success redirecting options (read further below)
                 always_use_default_target_path: false
-                default_target_path:            /employees/admin
+                default_target_path:            /employees/home
                 target_path_parameter:          _target_path
                 use_referer:                    false
             logout:
@@ -87,7 +87,7 @@ security:
     access_control:
 
      - { path: ^/employees/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/employees/admin, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/employees/admin, role: [ROLE_USER, ROLE_USERDIRECTORY_ADMIN] }
 
      - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/access-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }

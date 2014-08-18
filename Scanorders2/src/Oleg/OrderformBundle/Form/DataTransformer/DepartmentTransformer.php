@@ -9,11 +9,11 @@
 
 namespace Oleg\OrderformBundle\Form\DataTransformer;
 
-use Oleg\OrderformBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\Department;
+use Oleg\UserdirectoryBundle\Entity\Department;
 
 class DepartmentTransformer implements DataTransformerInterface
 {
@@ -72,7 +72,7 @@ class DepartmentTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:Department')->findOneById($text);
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -95,7 +95,7 @@ class DepartmentTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:Department')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -103,7 +103,7 @@ class DepartmentTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $this->user = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername('system');
+                $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             }
 
             $newEntity = new Department();
@@ -113,7 +113,7 @@ class DepartmentTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:Department c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:Department c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
             

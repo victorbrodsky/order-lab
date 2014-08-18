@@ -64,7 +64,7 @@ class UserRequest
     protected $job;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="accountrequest_institution",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
@@ -430,7 +430,7 @@ class UserRequest
         return $this->institution;
     }
 
-    public function addInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
         if( !$this->institution->contains($institution) ) {
             $this->institution->add($institution);
@@ -438,7 +438,7 @@ class UserRequest
         return $this;
     }
 
-    public function removeInstitution(\Oleg\OrderformBundle\Entity\Institution $institution)
+    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
     {
         $this->institution->removeElement($institution);
     }

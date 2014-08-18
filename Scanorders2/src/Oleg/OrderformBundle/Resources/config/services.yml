@@ -18,35 +18,6 @@ parameters:
 #        cookie_lifetime: 20
 #        gc_maxlifetime: 10
 
-fr3d_ldap:
-    driver:
-        host: a.wcmc-ad.net
-        username: svc_aperio_spectrum@a.wcmc-ad.net
-        password: Aperi0,123
-        accountDomainName: a.wcmc-ad.net
-#       host:              a.wcmc-ad.net                            # Required
-#       username:          svc_aperio_spectrum@a.wcmc-ad.net        # Optional  Required?
-#       password:          Aperi0,123                               # Optional  Required?
-#       accountDomainName: a.wcmc-ad.net                            # Required
-    user:
-        baseDn: dc=a,dc=wcmc-ad,dc=net
-        filter: (&(ObjectClass=user))
-        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-                - { ldap_attr: cn,   user_method: setUsername }
-                - { ldap_attr: mail,   user_method: setEmail }
-                - { ldap_attr: sn,   user_method: setLastName }
-                - { ldap_attr: title,   user_method: setTitle }
-                - { ldap_attr: givenname,   user_method: setFirstName }
-                - { ldap_attr: displayname,   user_method: setDisplayName }
-    service:
-        ldap_manager:  oleg.security.ldap_manager
-
-
-#fos user bundle
-fos_user:
-    db_driver: orm
-    firewall_name: main
-    user_class: Oleg\OrderformBundle\Entity\User
 
 services:
 
@@ -69,18 +40,12 @@ services:
         class: Oleg\OrderformBundle\Security\Authentication\LoginSuccessHandler
         arguments:  [@router, @security.context, @doctrine.orm.entity_manager]
 
-    #Override Ldap Manager
-    oleg.security.ldap_manager:
-        class: Oleg\OrderformBundle\Security\Authentication\LdapManager
-        arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, %default_time_zone%, @doctrine.orm.entity_manager ]
-
     #idle time out handler (can pass %session_max_idle_time%. Now use DB)
     oleg.handler.session_idle:
         class: Oleg\OrderformBundle\Helper\SessionIdleHandler
         arguments: ["@session", "@security.context", "@router", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
 
     #aperio authentication
     aperio.security.authentication.provider:
@@ -92,12 +57,12 @@ services:
         class: Oleg\OrderformBundle\Security\Firewall\AperioListener
         arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
 
-    #twig listener
-    twigdate.listener.request:
-        class: Oleg\OrderformBundle\Services\TwigDateRequestListener
-        arguments: ["@twig", "@security.context", %default_time_zone%]
-        tags:
-              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#    #twig listener
+#    twigdate.listener.request:
+#        class: Oleg\OrderformBundle\Services\TwigDateRequestListener
+#        arguments: ["@twig", "@security.context", %default_time_zone%]
+#        tags:
+#              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     scanorder.listener.maintenance:
         class: Oleg\OrderformBundle\Services\MaintenanceListener

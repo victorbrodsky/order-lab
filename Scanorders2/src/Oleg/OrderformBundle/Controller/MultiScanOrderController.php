@@ -32,7 +32,7 @@ use Oleg\OrderformBundle\Form\SlideMultiType;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\OrderformBundle\Helper\EmailUtil;
-use Oleg\OrderformBundle\Helper\UserUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
 

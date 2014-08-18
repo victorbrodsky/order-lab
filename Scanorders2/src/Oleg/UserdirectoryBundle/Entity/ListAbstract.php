@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,7 +40,7 @@ abstract class ListAbstract
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
      * @Assert\NotBlank
      */
@@ -54,7 +54,7 @@ abstract class ListAbstract
     protected $createdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
      */
     protected $updatedby;
@@ -154,10 +154,10 @@ abstract class ListAbstract
     /**
      * Set creator
      *
-     * @param string $creator
+     * @param \Oleg\UserdirectoryBundle\Entity\User $creator
      * @return List
      */
-    public function setCreator($creator)
+    public function setCreator(\Oleg\UserdirectoryBundle\Entity\User $creator)
     {
         $this->creator = $creator;
 

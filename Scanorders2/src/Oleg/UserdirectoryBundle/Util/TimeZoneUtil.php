@@ -7,10 +7,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\OrderformBundle\Helper;
+namespace Oleg\UserdirectoryBundle\Util;
 
 
-//Note: Timezone for twig is set in Oleg\OrderformBundle\Services/TwigDateRequestListener
+//Note: Timezone for twig is set in Oleg\UserdirectoryBundle\Services/TwigDateRequestListener
 
 class TimeZoneUtil {
 

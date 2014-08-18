@@ -37,7 +37,7 @@ class PrincipalType extends AbstractType
         ));
 
         $builder->add('principal', 'entity', array(
-        'class' => 'OlegOrderformBundle:User',
+        'class' => 'OlegUserdirectoryBundle:User',
         'label'=>'Principal Investigator:',
         'required' => false,
         //'read_only' => true,    //not working => disable by twig

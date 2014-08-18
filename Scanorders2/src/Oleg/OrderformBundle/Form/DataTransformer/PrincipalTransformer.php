@@ -193,13 +193,13 @@ class PrincipalTransformer implements DataTransformerInterface
         //echo "create: name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneByName($name);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name);
 
         if( null === $entity ) {
 
             $user = $this->getUserByUserstr( $name );
 
-            $entityClass = "Oleg\\OrderformBundle\\Entity\\".$this->className;
+            $entityClass = "Oleg\\UserdirectoryBundle\\Entity\\".$this->className;
 
             $newEntity = new $entityClass();
             $newEntity->setName($name);
@@ -209,7 +209,7 @@ class PrincipalTransformer implements DataTransformerInterface
             $newEntity->setUserObjectLink($user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:'.$this->className.' c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$this->className.' c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;
             $newEntity->setOrderinlist($nextorder);
 
@@ -247,7 +247,7 @@ class PrincipalTransformer implements DataTransformerInterface
 
         if( $cwid ) {
             //echo "cwid=".$cwid."<br>";
-            $user = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername($cwid);
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($cwid);
         } else {
             $user = NULL;
         }

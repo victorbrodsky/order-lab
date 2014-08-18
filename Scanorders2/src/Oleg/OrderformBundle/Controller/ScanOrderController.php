@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
 use Oleg\OrderformBundle\Helper\OrderUtil;
-use Oleg\OrderformBundle\Entity\Logger;
+use Oleg\UserdirectoryBundle\Entity\Logger;
 
 
 //ScanOrder joins OrderInfo + Scan
@@ -577,7 +577,7 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $accessreqs = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $accessreqs = $em->getRepository('OlegOrderformBundle:User')->findByAppliedforaccess('active');
+            $accessreqs = $em->getRepository('OlegUserdirectoryBundle:User')->findByAppliedforaccess('active');
         }
         return $accessreqs;
     }

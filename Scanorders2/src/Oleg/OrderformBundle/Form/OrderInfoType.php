@@ -7,9 +7,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
-use Doctrine\ORM\EntityRepository;
+
 
 class OrderInfoType extends AbstractType
 {
@@ -72,18 +73,6 @@ class OrderInfoType extends AbstractType
 
         } else {
 
-//            //echo "orderinfo type: show patient <br>";
-//            $builder->add('patient', 'collection', array(
-//                'type' => new PatientType($this->params,$this->entity),    //$this->type),
-//                'label' => false,
-//                'required' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__patient__',
-//            ));
-
             //echo "orderinfo type: show datalocker <br>";
 
             $builder->add('datalocker','hidden', array(
@@ -127,7 +116,7 @@ class OrderInfoType extends AbstractType
         //slideDelivery
         $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
         $builder->add('slideDelivery', 'custom_selector', array(
-            'label' => '* Slide Delivery:',           
+            'label' => '* Slide Delivery:',
             'attr' => $attr,
             'required'=>true,
             'classtype' => 'slideDelivery'
@@ -135,7 +124,7 @@ class OrderInfoType extends AbstractType
 
         $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');
         $builder->add('returnSlide', 'custom_selector', array(
-            'label' => '* Return Slides to:',           
+            'label' => '* Return Slides to:',
             'attr' => $attr,
             'required'=>true,
             'classtype' => 'returnSlide'
@@ -160,21 +149,17 @@ class OrderInfoType extends AbstractType
             'data' => $scandeadline,
             'label'=>'Scan Deadline:',
         ));
-        
+
         $builder->add('returnoption', 'checkbox', array(
             'label'     => 'Return slide(s) by this date even if not scanned:',
             'required'  => false,
         ));
 
-//        $builder->add('provider', null, array(
-//            'label'=>'* Submitter:',
-//            'required' => true,
-//            'attr' => array('class' => 'form-control')
-//        ));
+
         $builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
 
         $builder->add('proxyuser', 'entity', array(
-            'class' => 'OlegOrderformBundle:User',
+            'class' => 'OlegUserdirectoryBundle:User',
             'label'=>'Ordering Provider:',
             'required' => false,
             //'multiple' => true,
@@ -188,34 +173,16 @@ class OrderInfoType extends AbstractType
 
 
         //new fields
-        $attr = array('class' => 'ajax-combobox-department', 'type' => 'hidden');
-        $builder->add('department', 'custom_selector', array(
-            'label' => 'Department:',
-            'attr' => $attr,
-            'required' => false,
-            'classtype' => 'department'
-        ));
-
-//        $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');
-//        $builder->add('institution', 'custom_selector', array(
-//            'label' => 'Institution:',
+//        $attr = array('class' => 'ajax-combobox-department', 'type' => 'hidden');
+//        $builder->add('department', 'custom_selector', array(
+//            'label' => 'Department:',
 //            'attr' => $attr,
 //            'required' => false,
-//            'classtype' => 'institution'
+//            'classtype' => 'department'
 //        ));
-//        $instArr = array();
-//        foreach( $this->params['user']->getInstitution() as $inst ) {
-//            $instArr[$inst->getId()] = $inst->getName();
-//        }
-//        $builder->add( 'institution', 'choice', array(
-//            'label'=>'Institution:',
-//            'required' => true,
-//            'choices' => $instArr,
-//            'multiple' => false,
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
+
         $builder->add( 'institution', 'entity', array(
-            'class' => 'OlegOrderformBundle:Institution',
+            'class' => 'OlegUserdirectoryBundle:Institution',
             'property' => 'name',
             'label'=>'Institution:',
             'required'=> true,

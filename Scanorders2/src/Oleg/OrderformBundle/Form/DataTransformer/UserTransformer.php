@@ -12,7 +12,7 @@ namespace Oleg\OrderformBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Entity\User;
 
 class UserTransformer implements DataTransformerInterface
 {
@@ -51,7 +51,7 @@ class UserTransformer implements DataTransformerInterface
         //echo "data transformer user=".$user."<br>";
 
         if( is_int($user) ) {
-            $user = $this->em->getRepository('OlegOrderformBundle:User')->findOneById($user);
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneById($user);
             //echo "findOneById user=".$user."<br>";
         }
 
@@ -74,7 +74,7 @@ class UserTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:User')->findOneById($text);
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -99,7 +99,7 @@ class UserTransformer implements DataTransformerInterface
         $name = trim($name);
 
         //record name as a string to separate field. Later on, admin will create and link this new user to the object
-        $entity = $this->em->getRepository('OlegOrderformBundle:User')->findOneByUsername($name);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($name);
         if( null === $entity ) {
 
             $userManager = $this->serviceContainer->get('fos_user.user_manager');

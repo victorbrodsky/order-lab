@@ -54,7 +54,7 @@ class SlideReturnRequestType extends AbstractType
         $builder->add( 'provider', new ProviderType(), array('label'=>'Submitter:') );
 
         $builder->add('proxyuser', 'entity', array(
-            'class' => 'OlegOrderformBundle:User',
+            'class' => 'OlegUserdirectoryBundle:User',
             'label'=>'Ordering Provider:',
             'required' => false,
             //'multiple' => true,

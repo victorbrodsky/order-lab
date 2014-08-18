@@ -36,7 +36,7 @@ class LdapManager extends BaseLdapManager
     protected function hydrate(UserInterface $user, array $entry)
     {
 
-        exit("UserdirectoryBundle using ldap! <br>");
+        //exit("UserdirectoryBundle using ldap! <br>");
         //echo "UserdirectoryBundle user name=".$user->getUsername()."<br>";
 
         parent::hydrate($user, $entry);

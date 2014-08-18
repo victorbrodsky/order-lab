@@ -3,8 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Oleg\OrderformBundle\Entity\ListAbstract;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
