@@ -447,7 +447,7 @@ class HistoryController extends Controller
         }
 
         if( count($entities) > 0 ) {
-            $roles = $em->getRepository('UserdirectoryBundle:Roles')->findAll();
+            $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
             $rolesArr = array();
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
