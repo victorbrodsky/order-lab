@@ -120,6 +120,7 @@ class UserType extends AbstractType
 
         $builder->add('perSiteSettings', 'collection', array(
             'type' => new PerSiteSettingsType(),
+            'label' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

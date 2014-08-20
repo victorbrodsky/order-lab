@@ -30,7 +30,7 @@ class DirectorWrapper {
     protected $directorStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DirectorList")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\DirectorList")
      * @ORM\JoinColumn(name="director_id", referencedColumnName="id", nullable=true)
      */
     protected $director;

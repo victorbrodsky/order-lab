@@ -40,6 +40,20 @@
     {{ formmacros.field(form.middleName) }}
     {{ formmacros.field(form.lastName) }}
 
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+        {% if app.security.getToken().getUser().getId() != entity.id %}
+            {{ formmacros.checkbox(form.locked) }}
+        {% else %}
+            {% do form.locked.setRendered %}
+        {% endif %}
+    {% endif %}
+
+    <hr>
+    <h3 class="text-info">User Preferences</h3>
+    {{ formmacros.field(form.preferences.timezone) }}
+    {{ formmacros.checkbox(form.preferences.tooltip) }}
+    <hr>
+
     <hr>
     <h3 class="text-info">Administrative Titles</h3>
     {% for administrativeTitle in form.administrativeTitles %}
@@ -52,8 +66,8 @@
         {#{{ formmacros.field(administrativeTitle.division) }}#}
         {#{{ formmacros.field(administrativeTitle.service) }}#}
 
-        <hr>
     {% endfor %}
+    <hr>
 
     <hr>
     <h3 class="text-info">Per Site Settings</h3>
@@ -63,29 +77,12 @@
         {{ formmacros.field(perSiteSetting.scanOrdersServicesScope) }}
         {{ formmacros.field(perSiteSetting.chiefServices) }}
         {{ formmacros.field(perSiteSetting.defaultService) }}
-        <hr>
     {% endfor %}
+    <hr>
 
     {#{{ formmacros.field(form.phone) }}#}
     {#{{ formmacros.field(form.fax) }}#}
     {#{{ formmacros.field(form.office) }}#}
-
-    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
-        {% if app.security.getToken().getUser().getId() != entity.id %}
-
-
-            {{ formmacros.checkbox(form.locked) }}
-
-        {% else %}
-            {% do form.locked.setRendered %}
-        {% endif %}
-    {% endif %}
-
-    <hr>
-    <h3 class="text-info">User Preferences</h3>
-    {{ formmacros.field(form.preferences.timezone) }}
-    {{ formmacros.checkbox(form.preferences.tooltip) }}
-    <hr>
 
     <br>
     {#{{ form_rest(form) }}#}

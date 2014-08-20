@@ -154,7 +154,7 @@ class PrincipalTransformer implements DataTransformerInterface
 
             //echo "principal=".$service." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:'.$this->className)->findOneById($service);
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($service);
 
             if( null === $entity ) {
 

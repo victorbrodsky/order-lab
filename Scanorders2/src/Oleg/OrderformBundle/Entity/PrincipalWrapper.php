@@ -30,7 +30,7 @@ class PrincipalWrapper {
     protected $principalStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PIList")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\PIList")
      * @ORM\JoinColumn(name="principal_id", referencedColumnName="id", nullable=true)
      */
     protected $principal;

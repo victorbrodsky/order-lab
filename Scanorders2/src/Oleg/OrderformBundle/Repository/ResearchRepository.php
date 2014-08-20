@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Repository;
 
 //use Doctrine\ORM\EntityRepository;
 
+use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class ResearchRepository extends ListAbstractRepository {
 
@@ -17,14 +18,24 @@ class ResearchRepository extends ListAbstractRepository {
         }
 
         //process Project Title
-        $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), 'ProjectTitleList', $user );
+        $objectParams = array(
+            'className' => 'ProjectTitleList',
+            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."ProjectTitleList",
+            'fullBundleName' => 'OlegUserdirectoryBundle'
+        );
+        $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), $objectParams, $user );
         $research->setProjectTitle($projectTitle);
         //echo "projectTitle name=".$projectTitle->getName()."<br>";
 
         //echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
 
         //process Set Title
-        $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), 'SetTitleList', $user, 'projectTitle', $projectTitle->getId() );
+        $objectParams = array(
+            'className' => 'SetTitleList',
+            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."SetTitleList",
+            'fullBundleName' => 'OlegUserdirectoryBundle'
+        );
+        $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), $objectParams, $user, 'projectTitle', $projectTitle->getId() );
 
         //process principals and primary principal
         $this->processPrincipals( $research, $projectTitle );
@@ -53,7 +64,7 @@ class ResearchRepository extends ListAbstractRepository {
 
             $principalstr = $principalWrapper->getPrincipalStr();
             //echo "principalstr=".$principalstr."<br>";
-            $foundPrincipal = $this->_em->getRepository('OlegOrderformBundle:PIList')->findOneByName($principalstr);
+            $foundPrincipal = $this->_em->getRepository('OlegUserdirectoryBundle:PIList')->findOneByName($principalstr);
 
             if( !$foundPrincipal ) {
                 throw new \Exception( 'Principal was not found with name '.$principalstr );

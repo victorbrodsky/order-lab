@@ -4,6 +4,7 @@ namespace Oleg\OrderformBundle\Repository;
 
 //use Doctrine\ORM\EntityRepository;
 
+use Oleg\UserdirectoryBundle\Repository\ListAbstractRepository;
 
 class EducationalRepository extends ListAbstractRepository {
 
@@ -17,14 +18,24 @@ class EducationalRepository extends ListAbstractRepository {
         }
 
         //process Course Title
-        $courseTitle = $this->convertStrToObject( $educational->getCourseTitleStr(), 'CourseTitleList', $user );
+        $objectParams = array(
+            'className' => 'CourseTitleList',
+            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."CourseTitleList",
+            'fullBundleName' => 'OlegUserdirectoryBundle'
+        );
+        $courseTitle = $this->convertStrToObject( $educational->getCourseTitleStr(), $objectParams, $user );
         $educational->setCourseTitle($courseTitle);
         //echo "CourseTitle name=".$courseTitle->getName()."<br>";
 
         //echo "LessonTitleStr=".$educational->getLessonTitleStr()."<br>";
 
         //process Set Title
-        $lessonTitle = $this->convertStrToObject( $educational->getLessonTitleStr(), 'LessonTitleList', $user, 'courseTitle', $courseTitle->getId() );
+        $objectParams = array(
+            'className' => 'LessonTitleList',
+            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."LessonTitleList",
+            'fullBundleName' => 'OlegUserdirectoryBundle'
+        );
+        $lessonTitle = $this->convertStrToObject( $educational->getLessonTitleStr(), $objectParams, $user, 'courseTitle', $courseTitle->getId() );
 
         //process principals and primary principal
         $this->processDirectors( $educational, $courseTitle );
@@ -46,7 +57,7 @@ class EducationalRepository extends ListAbstractRepository {
 
             $directorstr = $directorWrapper->getDirectorStr();
             //echo "directorstr=".$directorstr."<br>";
-            $foundDirector = $this->_em->getRepository('OlegOrderformBundle:DirectorList')->findOneByName($directorstr);
+            $foundDirector = $this->_em->getRepository('OlegUserdirectoryBundle:DirectorList')->findOneByName($directorstr);
 
             if( !$foundDirector ) {
                 throw new \Exception( 'Director was not found with name '.$directorstr );

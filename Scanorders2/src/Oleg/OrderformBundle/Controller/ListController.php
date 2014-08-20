@@ -33,19 +33,10 @@ class ListController extends Controller
      * @Route("/slide-types/", name="slidetype-list")
      * @Route("/form-types/", name="formtype-list")
      * @Route("/statuses/", name="status-list")
-     * @Route("/roles/", name="role-list")
      * @Route("/return-slide-to-options/", name="returnslideto-list")
      * @Route("/slide-delivery-options/", name="slidedelivery-list")
      * @Route("/region-to-scan-options/", name="regiontoscan-list")
      * @Route("/scan-order-processor-comments/", name="processorcomment-list")
-     * @Route("/research-project-titles/", name="researchprojecttitles-list")
-     * @Route("/research-set-titles/", name="researchsettitles-list")
-     * @Route("/educational-course-titles/", name="educationalcoursetitles-list")
-     * @Route("/educational-lesson-titles/", name="educationallessontitles-list")
-     * @Route("/principal-investigators/", name="principalinvestigators-list")
-     * @Route("/course-directors/", name="coursedirectors-list")
-     * @Route("/departments/", name="departments-list")
-     * @Route("/institutions/", name="institutions-list")
      * @Route("/accounts/", name="accounts-list")
      * @Route("/urgency/", name="urgency-list")
      * @Route("/scanners/", name="scanners-list")
@@ -54,58 +45,8 @@ class ListController extends Controller
      */
     public function indexAction()
     {
-
         $request = $this->container->get('request');
-        $type = $request->get('_route');
-
-        $em = $this->getDoctrine()->getManager();
-
-        //get object name: stain-list => stain
-        $pieces = explode("-", $type);
-        $pathbase = $pieces[0];
-
-        $mapper= $this->classListMapper($pathbase);
-
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:'.$mapper['className']);
-        $dql =  $repository->createQueryBuilder("ent");
-        $dql->select('ent');
-        $dql->groupBy('ent');
-
-        $dql->innerJoin("ent.creator", "creator");
-        $dql->leftJoin("ent.updatedby", "updatedby");
-
-        $dql->addGroupBy('creator.username');
-        $dql->addGroupBy('updatedby.username');
-
-        $entityClass = "Oleg\\OrderformBundle\\Entity\\".$mapper['className'];
-
-        if( method_exists($entityClass,'getSynonyms') ) {
-            //echo "synonyms exists! <br>";
-            $dql->leftJoin("ent.synonyms", "synonyms");
-            $dql->addGroupBy('synonyms.name');
-            $dql->leftJoin("ent.original", "original");
-            $dql->addGroupBy('original.name');
-        } else {
-            //echo "no synonyms! <br>";
-        }
-        //$dql->orderBy("ent.createdate","DESC");
-
-        //echo "dql=".$dql."<br>";
-
-        $limit = 30;
-        $query = $em->createQuery($dql);
-        $paginator  = $this->get('knp_paginator');
-        $entities = $paginator->paginate(
-            $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
-        );
-
-        return array(
-            'entities' => $entities,
-            'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
-        );
+        return getList($request);
     }
 
     /**
@@ -121,19 +62,10 @@ class ListController extends Controller
      * @Route("/slide-types/", name="slidetype_create")
      * @Route("/form-types/", name="formtype_create")
      * @Route("/statuses/", name="status_create")
-     * @Route("/roles/", name="role_create")
      * @Route("/return-slide-to-options/", name="returnslideto_create")
      * @Route("/slide-delivery-options/", name="slidedelivery_create")
      * @Route("/region-to-scan-options/", name="regiontoscan_create")
      * @Route("/scan-order-processor-comments/", name="processorcomment_create")
-     * @Route("/research-project-titles/", name="researchprojecttitles_create")
-     * @Route("/research-set-titles/", name="researchsettitles_create")
-     * @Route("/educational-course-titles/", name="educationalcoursetitles_create")
-     * @Route("/educational-lesson-titles/", name="educationallessontitles_create")
-     * @Route("/principal-investigators/", name="principalinvestigators_create")
-     * @Route("/course-directors/", name="coursedirectors_create")
-     * @Route("/departments/", name="departments_create")
-     * @Route("/institutions/", name="institutions_create")
      * @Route("/accounts/", name="accounts_create")
      * @Route("/urgency/", name="urgency_create")
      * @Route("/scanners/", name="scanners_create")
@@ -247,19 +179,10 @@ class ListController extends Controller
      * @Route("/slide-types/new", name="slidetype_new")
      * @Route("/form-types/new", name="formtype_new")
      * @Route("/statuses/new", name="status_new")
-     * @Route("/roles/new", name="role_new")
      * @Route("/return-slide-to-options/new", name="returnslideto_new")
      * @Route("/slide-delivery-options/new", name="slidedelivery_new")
      * @Route("/region-to-scan-options/new", name="regiontoscan_new")
      * @Route("/scan-order-processor-comments/new", name="processorcomment_new")
-     * @Route("/research-project-titles/new", name="researchprojecttitles_new")
-     * @Route("/research-set-titles/new", name="researchsettitles_new")
-     * @Route("/educational-course-titles/new", name="educationalcoursetitles_new")
-     * @Route("/educational-lesson-titles/new", name="educationallessontitles_new")
-     * @Route("/principal-investigators/new", name="principalinvestigators_new")
-     * @Route("/course-directors/new", name="coursedirectors_new")
-     * @Route("/departments/new", name="departments_new")
-     * @Route("/institutions/new", name="institutions_new")
      * @Route("/accounts/new", name="accounts_new")
      * @Route("/urgency/new", name="urgency_new")
      * @Route("/scanners/new", name="scanners_new")
@@ -318,19 +241,10 @@ class ListController extends Controller
      * @Route("/slide-types/{id}", name="slidetype_show")
      * @Route("/form-types/{id}", name="formtype_show")
      * @Route("/statuses/{id}", name="status_show")
-     * @Route("/roles/{id}", name="role_show")
      * @Route("/return-slide-to-options/{id}", name="returnslideto_show")
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_show")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_show")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_show")
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_show")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_show")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_show")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_show")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_show")
-     * @Route("/course-directors/{id}", name="coursedirectors_show")
-     * @Route("/departments/{id}", name="departments_show")
-     * @Route("/institutions/{id}", name="institutions_show")
      * @Route("/accounts/{id}", name="accounts_show")
      * @Route("/urgency/{id}", name="urgency_show")
      * @Route("/scanners/{id}", name="scanners_show")
@@ -381,19 +295,10 @@ class ListController extends Controller
      * @Route("/slide-types/{id}/edit", name="slidetype_edit")
      * @Route("/form-types/{id}/edit", name="formtype_edit")
      * @Route("/statuses/{id}/edit", name="status_edit")
-     * @Route("/roles/{id}/edit", name="role_edit")
      * @Route("/return-slide-to-options/{id}/edit", name="returnslideto_edit")
      * @Route("/slide-delivery-options/{id}/edit", name="slidedelivery_edit")
      * @Route("/region-to-scan-options/{id}/edit", name="regiontoscan_edit")
      * @Route("/scan-order-processor-comments/{id}/edit", name="processorcomment_edit")
-     * @Route("/research-project-titles/{id}/edit", name="researchprojecttitles_edit")
-     * @Route("/research-set-titles/{id}/edit", name="researchsettitles_edit")
-     * @Route("/educational-course-titles/{id}/edit", name="educationalcoursetitles_edit")
-     * @Route("/educational-lesson-titles/{id}/edit", name="educationallessontitles_edit")
-     * @Route("/principal-investigators/{id}/edit", name="principalinvestigators_edit")
-     * @Route("/course-directors/{id}/edit", name="coursedirectors_edit")
-     * @Route("/departments/{id}/edit", name="departments_edit")
-     * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/accounts/{id}/edit", name="accounts_edit")
      * @Route("/urgency/{id}/edit", name="urgency_edit")
      * @Route("/scanners/{id}/edit", name="scanners_edit")
@@ -490,19 +395,10 @@ class ListController extends Controller
      * @Route("/slide-types/{id}", name="slidetype_update")
      * @Route("/form-types/{id}", name="formtype_update")
      * @Route("/statuses/{id}", name="status_update")
-     * @Route("/roles/{id}", name="role_update")
      * @Route("/return-slide-to-options/{id}", name="returnslideto_update")
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_update")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_update")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_update")
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_update")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_update")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_update")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_update")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_update")
-     * @Route("/course-directors/{id}", name="coursedirectors_update")
-     * @Route("/departments/{id}", name="departments_update")
-     * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/accounts/{id}", name="accounts_update")
      * @Route("/urgency/{id}", name="urgency_update")
      * @Route("/scanners/{id}", name="scanners_update")
@@ -664,10 +560,6 @@ class ListController extends Controller
             $className = "settitlelist";
             $displayName = "Set Titles";
             break;
-        case "educationalcoursetitles":
-            $className = "CourseTitleList";
-            $displayName = "Course Titles";
-            break;
         case "educationallessontitles":
             $className = "LessonTitleList";
             $displayName = "Lesson Titles";
@@ -728,19 +620,10 @@ class ListController extends Controller
      * @Route("/slide-types/{id}", name="slidetype_delete")
      * @Route("/form-types/{id}", name="formtype_delete")
      * @Route("/statuses/{id}", name="status_delete")
-     * @Route("/roles/{id}", name="role_delete")
      * @Route("/return-slide-to-options/{id}", name="returnslideto_delete")
      * @Route("/slide-delivery-options/{id}", name="slidedelivery_delete")
      * @Route("/region-to-scan-options/{id}", name="regiontoscan_delete")
      * @Route("/scan-order-processor-comments/{id}", name="processorcomment_delete")
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_delete")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_delete")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_delete")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_delete")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_delete")
-     * @Route("/course-directors/{id}", name="coursedirectors_delete")
-     * @Route("/departments/{id}", name="departments_delete")
-     * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/accounts/{id}", name="accounts_delete")
      * @Route("/urgency/{id}", name="urgency_delete")
      * @Route("/scanners/{id}", name="scanners_delete")

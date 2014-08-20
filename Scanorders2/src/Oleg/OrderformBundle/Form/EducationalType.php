@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-//use Oleg\OrderformBundle\Helper\FormHelper;
+use Oleg\UserdirectoryBundle\Form\CourseTitleListType;
 
 class EducationalType extends AbstractType
 {
@@ -27,7 +27,7 @@ class EducationalType extends AbstractType
 
         if( $this->params['type'] == 'SingleObject' ) {
 
-            //data review: we need only edit primary pi and link principals to the existing User objects => all of this is inside of "CourseTitleList" entity
+//            //data review: we need only edit primary pi and link principals to the existing User objects => all of this is inside of "CourseTitleList" entity
             $builder->add( 'courseTitle', new CourseTitleListType($this->params,$this->entity), array(
                 'label'=>false
             ));

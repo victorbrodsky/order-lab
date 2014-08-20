@@ -1,0 +1,26 @@
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
+{% import "OlegUserdirectoryBundle::ListForm/listmacros.html.twig" as listmacros %}
+
+{% block title %}
+    {{ displayName }} | New
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">{{ displayName }}: Add New</h3>
+
+    <br />
+
+    {{ listmacros.listNew( form, pathbase ) }}
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/form/js/listForm.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

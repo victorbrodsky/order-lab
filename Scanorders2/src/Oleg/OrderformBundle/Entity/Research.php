@@ -61,7 +61,7 @@ class Research
     protected $projectTitleStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleList", inversedBy="research", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ProjectTitleList", cascade={"persist"})
      * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $projectTitle;
@@ -202,7 +202,7 @@ class Research
     /**
      * Add principalWrappers
      *
-     * @param \Oleg\OrderformBundle\Entity\PIList $principal
+     * @param $principal
      * @return Research
      */
     public function addPrincipalWrapper($principal)
@@ -222,9 +222,9 @@ class Research
     /**
      * Remove principalWrappers
      *
-     * @param \Oleg\OrderformBundle\Entity\PrincipalWrappers $principalWrappers
+     * @param PrincipalWrappers $principalWrappers
      */
-    public function removePrincipalWrapper(\Oleg\OrderformBundle\Entity\PrincipalWrapper $principalWrapper)
+    public function removePrincipalWrapper($principalWrapper)
     {
         $this->principalWrappers->removeElement($principalWrapper);
     }

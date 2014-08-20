@@ -52,7 +52,7 @@ class Educational
     protected $courseTitleStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CourseTitleList", inversedBy="educational", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\CourseTitleList", cascade={"persist"})
      * @ORM\JoinColumn(name="courseTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $courseTitle;
@@ -118,10 +118,10 @@ class Educational
 //        return $this->slide;
 //    }
     /**
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param Slide $slide
      * @return Block
      */
-    public function addSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function addSlide(Slide $slide)
     {
         if( !$this->slides->contains($slide) ) {
             $slide->setEducational($this);
@@ -134,9 +134,9 @@ class Educational
     /**
      * Remove slide
      *
-     * @param \Oleg\OrderformBundle\Entity\Slide $slide
+     * @param Slide $slide
      */
-    public function removeSlide(\Oleg\OrderformBundle\Entity\Slide $slide)
+    public function removeSlide(Slide $slide)
     {
         $this->slides->removeElement($slide);
     }
@@ -211,7 +211,7 @@ class Educational
     /**
      * Add DirectorWrappers
      *
-     * @param \Oleg\OrderformBundle\Entity\DirectorList $director
+     * @param $director
      * @return Educational
      */
     public function addDirectorWrapper($director)
@@ -231,9 +231,9 @@ class Educational
     /**
      * Remove directorWrappers
      *
-     * @param \Oleg\OrderformBundle\Entity\DirectorWrapper $directorWrappers
+     * @param $directorWrappers
      */
-    public function removeDirectorWrapper(\Oleg\OrderformBundle\Entity\DirectorWrapper $directorWrapper)
+    public function removeDirectorWrapper($directorWrapper)
     {
         $this->directorWrappers->removeElement($directorWrapper);
     }

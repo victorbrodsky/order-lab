@@ -1,0 +1,92 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block title %}
+    List Manager
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-info">List Manager</h3>
+
+    <hr>
+
+    <h3 class="text-info">Roles</h3>
+    <p>
+        <a href="{{ path('role-list') }}">List of Roles</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Research Project Titles</h3>
+    <p>
+        <a href="{{ path('researchprojecttitles-list') }}">List of Research Project Titles</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Research Set Titles</h3>
+    <p>
+        <a href="{{ path('researchsettitles-list') }}">List of Research Set Titles</a>
+    </p>
+
+    <h3 class="text-info">Principal Investigators</h3>
+    <p>
+        <a href="{{ path('principalinvestigators-list') }}">List of Principal Investigators</a>
+    </p>
+
+    <hr>
+
+    <h3 class="text-info">Educational Course Titles</h3>
+    <p>
+        <a href="{{ path('educationalcoursetitles-list') }}">List of Educational Course Titles</a>
+    </p>
+
+    <br>
+
+    <h3 class="text-info">Educational Lesson Titles</h3>
+    <p>
+        <a href="{{ path('educationallessontitles-list') }}">List of Educational Lesson Titles</a>
+    </p>
+
+    <h3 class="text-info">Course Directors</h3>
+    <p>
+        <a href="{{ path('coursedirectors-list') }}">List of Course Directors</a>
+    </p>
+
+    <hr>
+
+    {#<h3 class="text-info">Departments</h3>#}
+    {#<p>#}
+        {#<a href="{{ path('departments-list') }}">List of Departments</a>#}
+    {#</p>#}
+
+    <h3 class="text-info">Institutions</h3>
+    <p>
+        <a href="{{ path('institutions-list') }}">List of Institutions</a>
+    </p>
+
+    <h3 class="text-info">Accounts</h3>
+    <p>
+        <a href="{{ path('accounts-list') }}">List of Accounts</a>
+    </p>
+
+    <hr>
+
+    {% if environment is not defined %}
+        {% set environment = 'dev' %}
+    {% endif %}
+
+    <hr>
+    <br />
+
+    <!--show this only for dev. Don't show for live-->
+    {% if (is_granted('ROLE_SCANORDER_ADMIN') or is_granted('ROLE_USERDIRECTORY_ADMIN')) and environment == 'dev' %}
+        <p><a  data-confirm="Are you sure you want to overwrite all data?"
+               href="{{ path('user_generate_all') }}">Generate All</a>
+        </p>
+    {% endif %}
+
+    <br>
+
+{% endblock %}
+
