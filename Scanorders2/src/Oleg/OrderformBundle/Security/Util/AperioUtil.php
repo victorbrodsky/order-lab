@@ -307,16 +307,16 @@ class AperioUtil {
             array('Users')                  //$FilterTables
         );
 
-//        //echo "res count=".count($Users).":";
+//        echo "res count=".count($Users).":";
 //        var_dump($Users);
-//        //echo "<br>";
+//        echo "<br>";
 
         if( count($Users) == 1 ) {
             $User = $Users[0];
             $UserId = $User['Id'];
         }
 
-        //echo "UserId=".$UserId."<br>";
+//        echo "UserId=".$UserId."<br>";
 
         return $UserId;
     }

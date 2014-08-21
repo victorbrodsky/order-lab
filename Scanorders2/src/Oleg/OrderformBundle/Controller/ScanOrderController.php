@@ -427,7 +427,7 @@ class ScanOrderController extends Controller {
         if( $routeName == "my-scan-orders" ) {
 
             $services = array();
-            $userServices = $user->getDivision();
+            $userServices = $user->getServices();
 
             if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $user->getChiefservices();

@@ -77,7 +77,7 @@ class Institution extends ListAbstract
     public function __construct() {
         $this->synonyms = new ArrayCollection();
         $this->departments = new ArrayCollection();
-        $this->users = new ArrayCollection();
+//        $this->users = new ArrayCollection();
 
 //        $this->orderinfos = new ArrayCollection();
 //        $this->patients = new ArrayCollection();

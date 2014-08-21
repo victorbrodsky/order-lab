@@ -5,7 +5,64 @@
     Profile
 {% endblock %}
 
+
+{% macro baseTitle( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.status) }}
+        {{ formmacros.field(formfield.name) }}
+        {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.institution) }}
+        {{ formmacros.field(formfield.department) }}
+        {{ formmacros.field(formfield.division) }}
+        {{ formmacros.field(formfield.service) }}
+
+        {% if cicle != 'show_user' %}
+            <p>
+                <button class="btn btn-default" onClick="removeBaseTitle(this,'{{ classname }}')" type='button'>Remove</button>
+            </p>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+
+{% macro location( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.name) }}
+
+        {% if cicle != 'show_user' %}
+            <p>
+                <button class="btn btn-default" onClick="removeBaseTitle(this,'{{ classname }}')" type='button'>Remove</button>
+            </p>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% import _self as userform %}
+
 {% block content %}
+
+<div id="form-prototype-data"
+     data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
+     data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
+></div>
+
 
 {#<form action="{{ path('user_update',{'id':entity.id}) }}" method="PUT" {{ form_enctype(form) }}>#}
 {{ form_start(form) }}
@@ -52,22 +109,42 @@
     <h3 class="text-info">User Preferences</h3>
     {{ formmacros.field(form.preferences.timezone) }}
     {{ formmacros.checkbox(form.preferences.tooltip) }}
-    <hr>
 
+    {#Administrative Titles#}
     <hr>
     <h3 class="text-info">Administrative Titles</h3>
-    {% for administrativeTitle in form.administrativeTitles %}
-        {{ formmacros.field(administrativeTitle.name) }}
-        {{ formmacros.field(administrativeTitle.startDate) }}
-        {{ formmacros.field(administrativeTitle.endDate) }}
+    <div class="user-administrativeTitles-holder">
+        {% for administrativeTitle in form.administrativeTitles %}
+            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
+        {% endfor %}
+        {% if cicle != 'show_user' %}
+            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add</button>
+        {% endif %}
+    </div>
 
-        {#{{ formmacros.field(administrativeTitle.institution) }}#}
-        {#{{ formmacros.field(administrativeTitle.department) }}#}
-        {#{{ formmacros.field(administrativeTitle.division) }}#}
-        {#{{ formmacros.field(administrativeTitle.service) }}#}
-
-    {% endfor %}
+    {#Appointment Titles#}
     <hr>
+    <h3 class="text-info">Appointment Titles</h3>
+    <div class="user-appointmentTitles-holder">
+        {% for appointmentTitle in form.appointmentTitles %}
+            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
+        {% endfor %}
+        {% if cicle != 'show_user' %}
+            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add</button>
+        {% endif %}
+    </div>
+
+    {#Locations#}
+    <hr>
+    <h3 class="text-info">Locations</h3>
+    <div class="user-locations-holder">
+        {% for appointmentTitle in form.locations %}
+            {{ userform.location(appointmentTitle,cicle,'user-locations','noprototype') }}
+        {% endfor %}
+        {% if cicle != 'show_user' %}
+            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add</button>
+        {% endif %}
+    </div>
 
     <hr>
     <h3 class="text-info">Per Site Settings</h3>
@@ -78,7 +155,6 @@
         {{ formmacros.field(perSiteSetting.chiefServices) }}
         {{ formmacros.field(perSiteSetting.defaultService) }}
     {% endfor %}
-    <hr>
 
     {#{{ formmacros.field(form.phone) }}#}
     {#{{ formmacros.field(form.fax) }}#}

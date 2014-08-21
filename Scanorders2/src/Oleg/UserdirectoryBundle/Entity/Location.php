@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="location")
  */
-class Location
+class Location extends BaseUserAttributes
 {
 
     /**
@@ -95,12 +95,18 @@ class Location
     private $user;
 
 
+
     /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**

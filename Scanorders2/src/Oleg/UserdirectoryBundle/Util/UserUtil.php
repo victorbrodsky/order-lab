@@ -215,7 +215,7 @@ class UserUtil {
             "Where I am the Amendment Author"=>"Where I am the Amendment Author"
         );
         if( is_object($user) && $user instanceof User ) {
-            $services = $user->getDivision();
+            $services = $user->getServices();
             foreach( $services as $service ) {
                 $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
             }
@@ -360,7 +360,7 @@ class UserUtil {
             //show is allowed if the user belongs to the same service
             if( $action == 'show' ) {
                 //echo "action: show <br>";
-                $userServices = $user->getDivision();
+                $userServices = $user->getServices();
                 if( $userServices->contains($service) ) {
                     return true;
                 }

@@ -26,6 +26,7 @@ class PerSiteSettingsType extends AbstractType
         $builder->add( 'siteName', 'text', array(
             'label'=>'Site Name:',
             'required'=>false,
+            'read_only'=>true,
             'attr' => array('class'=>'form-control')
         ));
 

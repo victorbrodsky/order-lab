@@ -175,10 +175,10 @@ class UtilController extends Controller {
         } else {
             //find user's pathservices to include them in the list
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($opt);
-            $getDivisions = $user->getDivision();
+            $getServices = $user->getServices();
 
-            foreach( $getDivisions as $divisionId ) {
-                $whereServicesList = $whereServicesList . " OR list.id=".$divisionId->getId();
+            foreach( $getServices as $serviceId ) {
+                $whereServicesList = $whereServicesList . " OR list.id=".$serviceId->getId();
             }
             //$query->where('list.type = :type OR list.creator = :user_id ' . $whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
             $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user_id) ".$whereServicesList)->setParameter('type', 'default')->setParameter('user_id', $opt);
@@ -513,7 +513,7 @@ class UtilController extends Controller {
         //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find(15);
         if( $user ) {
             //echo "user found!";
-            $services = $user->getDivision();
+            $services = $user->getServices();
             //echo "count=".count($services);
 
             //$count=0;

@@ -39,17 +39,17 @@ class Department extends ListAbstract
      */
     protected $divisions;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="department")
-     **/
-    protected $users;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="User", mappedBy="department")
+//     **/
+//    protected $users;
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
 //        $this->orderinfo = new ArrayCollection();
         $this->divisions = new ArrayCollection();
-        $this->users = new ArrayCollection();
+//        $this->users = new ArrayCollection();
     }
 
     /**
@@ -196,36 +196,36 @@ class Department extends ListAbstract
         return $this->divisions;
     }
 
-    /**
-     * Add user
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-     * @return Department
-     */
-    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-    {
-        if( !$this->users->contains($user) ) {
-            $this->users->add($user);
-        }
-    }
-    /**
-     * Remove user
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-     */
-    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-    {
-        $this->users->removeElement($user);
-    }
-    /**
-     * Get order
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
+//    /**
+//     * Add user
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
+//     * @return Department
+//     */
+//    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+//    {
+//        if( !$this->users->contains($user) ) {
+//            $this->users->add($user);
+//        }
+//    }
+//    /**
+//     * Remove user
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
+//     */
+//    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+//    {
+//        $this->users->removeElement($user);
+//    }
+//    /**
+//     * Get order
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getUsers()
+//    {
+//        return $this->users;
+//    }
 
 
 

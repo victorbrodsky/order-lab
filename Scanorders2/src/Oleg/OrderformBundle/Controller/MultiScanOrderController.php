@@ -368,7 +368,7 @@ class MultiScanOrderController extends Controller {
         //$block->addSlide($slide2);
 
         //get pathology service for this user
-        $service = $user->getDivision();
+        $service = $user->getServices();
 
         //set the first service
         if( count($service) > 0 ) {

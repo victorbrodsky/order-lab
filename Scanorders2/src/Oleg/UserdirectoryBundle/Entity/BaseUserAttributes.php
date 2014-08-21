@@ -22,6 +22,9 @@ abstract class BaseUserAttributes {
     const TYPE_PRIVATE = 1;
     const TYPE_RESTRICTED = 2;
 
+    const STATUS_UNVERIFIED = 0;
+    const STATUS_VERIFIED = 1;
+
     /**
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
@@ -41,10 +44,16 @@ abstract class BaseUserAttributes {
     protected $updateAuthorRoles = array();
 
     /**
-     * type: public, valid, restricted
+     * type: public, private, restricted
      * @ORM\Column(type="integer", options={"default"=0})
      */
     protected $type;
+
+    /**
+     * status: valid, invalid
+     * @ORM\Column(type="string", options={"default"=0})
+     */
+    protected $status;
 
     /**
      * @var \DateTime
@@ -61,6 +70,7 @@ abstract class BaseUserAttributes {
 
     public function __construct() {
         $this->setType(self::TYPE_PUBLIC);
+        $this->setStatus(self::STATUS_UNVERIFIED);
     }
 
     /**
@@ -109,6 +119,22 @@ abstract class BaseUserAttributes {
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

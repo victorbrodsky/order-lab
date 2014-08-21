@@ -27,21 +27,16 @@ use Oleg\OrderformBundle\Entity\SlideDelivery;
 use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Urgency;
+use Oleg\OrderformBundle\Entity\ScannerList;
 
-//TODO: make different admin controller for user site to generate default user fields
 use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Entity\Roles;
-use Oleg\UserdirectoryBundle\Entity\Department;
-use Oleg\UserdirectoryBundle\Entity\Institution;
-
-
-//use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Oleg\UserdirectoryBundle\Controller\AdminController;
 
 
 /**
  * @Route("/admin")
  */
-class AdminController extends Controller
+class ScanAdminController extends AdminController
 {
     /**
      * Admin Page
@@ -86,12 +81,13 @@ class AdminController extends Controller
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $count_institution = $this->generateInstitutions();         //must be first
-        $count_department = $this->generateDepartments();
+        //$count_institution = $this->generateInstitutions();         //must be first
+        //$count_department = $this->generateDepartments();
         //$count_division = $this->generateDivisions();
         //$count_service = $this->generateServices();
-        $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
-        $count_roles = $this->generateRoles();
+        //$count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
+        //$count_roles = $this->generateRoles();
+
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
         $count_formtype = $this->generateFormType();
@@ -99,7 +95,7 @@ class AdminController extends Controller
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
         $count_status = $this->generateStatuses();
-        $count_pathservice = $this->generatePathServices();
+        //$count_pathservice = $this->generatePathServices();
         $count_slidetype = $this->generateSlideType();
         $count_mrntype = $this->generateMrnType();
         $count_returnslide = $this->generateReturnSlideTo();
@@ -114,7 +110,7 @@ class AdminController extends Controller
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
-            'Roles='.$count_roles.', '.
+            //'Roles='.$count_roles.', '.
             'Accession Types='.$count_acctype.', '.
             'Encounter Types='.$count_enctype.', '.
             'Form Types='.$count_formtype.', '.
@@ -122,16 +118,16 @@ class AdminController extends Controller
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
             'Statuses='.$count_status.', '.
-            'Pathology Services='.$count_pathservice.', '.
+            //'Pathology Services='.$count_pathservice.', '.
             'Slide Types='.$count_slidetype.', '.
             'MRN Types='.$count_mrntype.', '.
             'Return Slide To='.$count_returnslide.', '.
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
-            'Site Settings='.$count_siteParameters.' '.
-            'Departments='.$count_department.' '.
-            'Institutions='.$count_institution.' '.
+            //'Site Settings='.$count_siteParameters.' '.
+            //'Departments='.$count_department.' '.
+            //'Institutions='.$count_institution.' '.
             'Urgency='.$count_urgency.' '.
             'Scanners='.$count_scanners.' '.
             'Users='.$count_users.
@@ -249,37 +245,37 @@ class AdminController extends Controller
     }
 
 
-    /**
-     * Populate DB
-     *
-     * @Route("/genpathservice", name="generate_pathservice")
-     * @Method("GET")
-     * @Template()
-     */
-    public function generatePathServiceAction()
-    {
-
-        $count = $this->generatePathServices();
-        if( $count >= 0 ) {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Created '.$count. ' stain records'
-            );
-
-            return $this->redirect($this->generateUrl('stainlist'));
-
-        } else {
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'This table is already exists!'
-            );
-
-            return $this->redirect($this->generateUrl('admin_index'));
-        }
-
-    }
+//    /**
+//     * Populate DB
+//     *
+//     * @Route("/genpathservice", name="generate_pathservice")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function generatePathServiceAction()
+//    {
+//
+//        $count = $this->generatePathServices();
+//        if( $count >= 0 ) {
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'Created '.$count. ' stain records'
+//            );
+//
+//            return $this->redirect($this->generateUrl('stainlist'));
+//
+//        } else {
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                'This table is already exists!'
+//            );
+//
+//            return $this->redirect($this->generateUrl('admin_index'));
+//        }
+//
+//    }
 
     /**
      * Populate DB
@@ -347,17 +343,6 @@ class AdminController extends Controller
 
 
 //////////////////////////////////////////////////////////////////////////////
-
-    public function setDefaultList( $entity, $count, $user, $name=null ) {
-        $entity->setOrderinlist( $count );
-        $entity->setCreator( $user );
-        $entity->setCreatedate( new \DateTime() );
-        $entity->setType('default');
-        if( $name ) {
-            $entity->setName( trim($name) );
-        }
-        return $entity;
-    }
 
 
     //return -1 if failed
@@ -532,48 +517,48 @@ class AdminController extends Controller
         return $count;
     }
 
-    public function generatePathServices() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $helper = new FormHelper();
-        $services = $helper->getPathDivisions();
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $count = 1;
-        foreach( $services as $service ) {
-
-            $pathlogyServices = explode("/",$service);
-
-            foreach( $pathlogyServices as $pathlogyService ) {
-
-                $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
-
-                if( $pathlogyServiceEntity ) {
-                    //
-                } else {
-                    //echo " ".$pathlogyService.", ";
-                    $list = new PathServiceList();
-                    $this->setDefaultList($list,$count,$username,$pathlogyService);
-
-                    $em->persist($list);
-                    $em->flush();
-
-                    $count = $count + 10;
-                }
-
-            }
-            //echo "<br>";
-        }
-
-        return $count;
-    }
+//    public function generatePathServices() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
+//
+//        $helper = new FormHelper();
+//        $services = $helper->getPathDivisions();
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $count = 1;
+//        foreach( $services as $service ) {
+//
+//            $pathlogyServices = explode("/",$service);
+//
+//            foreach( $pathlogyServices as $pathlogyService ) {
+//
+//                $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
+//
+//                if( $pathlogyServiceEntity ) {
+//                    //
+//                } else {
+//                    //echo " ".$pathlogyService.", ";
+//                    $list = new PathServiceList();
+//                    $this->setDefaultList($list,$count,$username,$pathlogyService);
+//
+//                    $em->persist($list);
+//                    $em->flush();
+//
+//                    $count = $count + 10;
+//                }
+//
+//            }
+//            //echo "<br>";
+//        }
+//
+//        return $count;
+//    }
 
     public function generateSlideType() {
 
@@ -759,65 +744,6 @@ class AdminController extends Controller
 
         return $count;
     }
-   
-
-    public function generateRoles() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        //Note: fos user has role ROLE_SCANORDER_SUPER_ADMIN
-
-        $types = array(
-            "ROLE_SCANORDER_ADMIN" => "ScanOrder Administrator",
-            "ROLE_SCANORDER_PROCESSOR" => "ScanOrder Processor",
-
-            "ROLE_SCANORDER_DIVISION_CHIEF" => "ScanOrder Division Chief",  //view or modify all orders of the same division(institution)
-            "ROLE_SCANORDER_SERVICE_CHIEF" => "ScanOrder Service Chief",    //view or modify all orders of the same service
-
-            "ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST" => "ScanOrder Data Quality Assurance Specialist",
-
-            //"ROLE_USER" => "User", //this role must be always assigned to the authenticated user. Required by fos user bundle.
-
-            "ROLE_SCANORDER_SUBMITTER" => "ScanOrder Submitter",
-            "ROLE_SCANORDER_ORDERING_PROVIDER" => "ScanOrder Ordering Provider",
-
-            "ROLE_SCANORDER_PATHOLOGY_RESIDENT" => "ScanOrder Pathology Resident",
-            "ROLE_SCANORDER_PATHOLOGY_FELLOW" => "ScanOrder Pathology Fellow",
-            "ROLE_SCANORDER_PATHOLOGY_FACULTY" => "ScanOrder Pathology Faculty",
-
-            //"ROLE_SCANORDER_BANNED_USER" => "ScanOrder Banned User",  //not required since we have locked
-
-            "ROLE_SCANORDER_COURSE_DIRECTOR" => "ScanOrder Course Director",
-            "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => "ScanOrder Principal Investigator",
-
-            "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => "ScanOrder Unapproved Submitter",
-            "ROLE_SCANORDER_BANNED" => "ScanOrder Banned User"
-        );
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $count = 1;
-        foreach( $types as $role => $alias ) {
-
-            $entity = new Roles();
-            $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($role) );
-            $entity->setAlias( trim($alias) );
-
-            $em->persist($entity);
-            $em->flush();
-
-            $count = $count + 10;
-
-        } //foreach
-
-        return $count;
-    }
 
 
     public function generateReturnSlideTo() {
@@ -926,72 +852,6 @@ class AdminController extends Controller
         return $count;
     }
 
-    public function generateSiteParameters() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $types = array(
-            "maxIdleTime" => "30",
-            "environment" => "dev",
-            "siteEmail" => "slidescan@med.cornell.edu",
-
-            "smtpServerAddress" => "smtp.med.cornell.edu",
-
-            "aDLDAPServerAddress" => "a.wcmc-ad.net",
-            "aDLDAPServerOu" => "a.wcmc-ad.net",
-            "aDLDAPServerAccountUserName" => "svc_aperio_spectrum@a.wcmc-ad.net",
-            "aDLDAPServerAccountPassword" => "Aperi0,123",
-
-            "dbServerAddress" => "127.0.0.1",
-            "dbServerPort" => "null",
-            "dbServerAccountUserName" => "symfony2",
-            "dbServerAccountPassword" => "symfony2",
-            "dbDatabaseName" => "ScanOrder",
-
-            "institutionurl" => "http://weill.cornell.edu",
-            "institutionname" => "Weill Cornell Medical College",
-            "departmenturl" => "http://www.cornellpathology.com",
-            "departmentname" => "Pathology and Laboratory Medicine Department",
-
-            "maintenance" => false,
-            //"maintenanceenddate" => null,
-            "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.
-                                        'The administrators are planning to return this site to a fully functional state on or before [June 10th, 2:00pm].'.
-                                        'If you were in the middle of entering order information, it was saved as an "Unsubmitted" order '.
-                                        'and you should be able to submit that order after the maintenance is complete.',
-            "maintenanceloginmsg" =>    'The scheduled maintenance of this software has begun. The administrators are planning to return this site to a fully '.
-                                        'functional state on or before [June 10th, 2:00pm]. If you were in the middle of entering order information, '.
-                                        'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.'
-        );
-
-        $params = new SiteParameters();
-
-        $count = 0;
-        foreach( $types as $key => $value ) {
-            $method = "set".$key;
-            $params->$method( $value );
-            $count = $count++;
-        }
-
-        //assign Institution
-        $institutionName = 'Weill Cornell Medical College';
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
-        if( !$institution ) {
-            throw new \Exception( 'Institution was not found for name='.$institutionName );
-        }
-        $params->setAutoAssignInstitution($institution);
-
-        $em->persist($params);
-        $em->flush();
-
-        return $count;
-    }
-
 
     public function generateProcessorComments() {
 
@@ -1021,71 +881,6 @@ class AdminController extends Controller
 
             $count = $count + 10;
         }
-
-        return $count;
-    }
-
-
-    public function generateDepartments() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Department')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $types = array(
-            'Department of Pathology and Laboratory Medicine',
-        );
-
-        $count = 1;
-        foreach( $types as $type ) {
-
-            $formType = new Department();
-            $this->setDefaultList($formType,$count,$username,$type);
-
-            $em->persist($formType);
-            $em->flush();
-
-            $count = $count + 10;
-
-        } //foreach
-
-        return $count;
-    }
-
-    public function generateInstitutions() {
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $types = array(
-            'Weill Cornell Medical College'=>'WCMC',
-            "New York Hospital"=>'NYH',
-            "Weill Cornell Medical College Qatar"=>'WCMCQ',
-            "Memorial Sloan Kettering Cancer Center"=>'MSK',
-            "Hospital for Special Surgery"=>'HSS'
-        );
-
-        $count = 1;
-        foreach( $types as $type=>$abbr ) {
-            $formType = new Institution();
-            $this->setDefaultList($formType,$count,$username,$type);
-            $formType->setAbbreviation( trim($abbr) );
-
-            $em->persist($formType);
-            $em->flush();
-            $count = $count + 10;
-        } //foreach
 
         return $count;
     }
@@ -1139,7 +934,7 @@ class AdminController extends Controller
         $count = 1;
         foreach( $types as $type ) {
 
-            $listEntity = new Urgency();
+            $listEntity = new ScannerList();
             $this->setDefaultList($listEntity,$count,$username,$type);
 
             $em->persist($listEntity);

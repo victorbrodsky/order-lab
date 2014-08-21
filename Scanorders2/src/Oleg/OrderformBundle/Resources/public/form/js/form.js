@@ -794,14 +794,15 @@ function initDatetimepicker() {
 
 function initDatepicker() {
 
+    //console.log('init datepicker');
     if( cicle != "show" ) {
 
         //console.log("init Datepicker");
 
-        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.orderinfo-scandeadline-field');
+        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.allow-future-date');
         initSingleDatepicker( regularDatepickers );
 
-        var scandateDatepickers = $('.input-group.date.orderinfo-scandeadline-field');
+        var scandateDatepickers = $('.input-group.date.allow-future-date');
         initSingleDatepicker( scandateDatepickers );
 
         //make sure the masking is clear when input is cleared by datepicker
@@ -861,7 +862,7 @@ function initSingleDatepicker( datepickerElement ) {
 
     var endDate = new Date(); //use current date as default
 
-    if( datepickerElement.hasClass('orderinfo-scandeadline-field') ) {
+    if( datepickerElement.hasClass('allow-future-date') ) {
         endDate = false;//'End of time';
     }
     //console.log('endDate='+endDate);

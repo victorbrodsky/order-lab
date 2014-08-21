@@ -114,32 +114,32 @@ class User extends BaseUser
      */
     private $institution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Department", inversedBy="users")
-     * @ORM\JoinTable(name="fos_user_department",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="department_id", referencedColumnName="id")}
-     * )
-     */
-    private $department;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Division", inversedBy="users")
-     * @ORM\JoinTable(name="fos_user_division",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="division_id", referencedColumnName="id")}
-     * )
-     */
-    private $division;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Service", inversedBy="users")
-     * @ORM\JoinTable(name="fos_user_service",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-     * )
-     */
-    private $service;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Department", inversedBy="users")
+//     * @ORM\JoinTable(name="fos_user_department",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="department_id", referencedColumnName="id")}
+//     * )
+//     */
+//    private $department;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Division", inversedBy="users")
+//     * @ORM\JoinTable(name="fos_user_division",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="division_id", referencedColumnName="id")}
+//     * )
+//     */
+//    private $division;
+//
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Service", inversedBy="users")
+//     * @ORM\JoinTable(name="fos_user_service",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+//     * )
+//     */
+//    private $service;
 
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
@@ -155,9 +155,9 @@ class User extends BaseUser
         $this->appointmentTitles = new ArrayCollection();
 
         $this->institution = new ArrayCollection();
-        $this->department = new ArrayCollection();
-        $this->division = new ArrayCollection();
-        $this->service = new ArrayCollection();
+//        $this->department = new ArrayCollection();
+//        $this->division = new ArrayCollection();
+//        $this->service = new ArrayCollection();
 
         $this->setPreferences(new UserPreferences());
 
@@ -319,24 +319,24 @@ class User extends BaseUser
     }
 
 
-    public function getDivision()
-    {
-        return $this->division;
-    }
-
-    public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
-    {
-        if( !$this->division->contains($division) ) {
-            $this->division->add($division);
-        }
-
-        return $this;
-    }
-
-    public function removeDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
-    {
-        $this->division->removeElement($division);
-    }
+//    public function getDivision()
+//    {
+//        return $this->division;
+//    }
+//
+//    public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
+//    {
+//        if( !$this->division->contains($division) ) {
+//            $this->division->add($division);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
+//    {
+//        $this->division->removeElement($division);
+//    }
 
     /**
      * @param mixed $createdby
@@ -407,22 +407,6 @@ class User extends BaseUser
     {
         return $this->appliedforaccess;
     }
-
-//    /**
-//     * @param mixed $primaryDivision
-//     */
-//    public function setPrimaryDivision($primaryDivision)
-//    {
-//        $this->primaryDivision = $primaryDivision;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getPrimaryDivision()
-//    {
-//        return $this->primaryDivision;
-//    }
 
 
     /**
@@ -505,27 +489,27 @@ class User extends BaseUser
 //    }
 
 
-    /**
-     * @return mixed
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
-
-
-    public function addService(\Oleg\UserdirectoryBundle\Entity\Service $service)
-    {
-        if( !$this->service->contains($service) ) {
-            $this->service->add($service);
-        }
-        return $this;
-    }
-
-    public function removeService(\Oleg\UserdirectoryBundle\Entity\Service $service)
-    {
-        $this->service->removeElement($service);
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getService()
+//    {
+//        return $this->service;
+//    }
+//
+//
+//    public function addService(\Oleg\UserdirectoryBundle\Entity\Service $service)
+//    {
+//        if( !$this->service->contains($service) ) {
+//            $this->service->add($service);
+//        }
+//        return $this;
+//    }
+//
+//    public function removeService(\Oleg\UserdirectoryBundle\Entity\Service $service)
+//    {
+//        $this->service->removeElement($service);
+//    }
 
 
     /**
@@ -545,15 +529,18 @@ class User extends BaseUser
      * @param \Oleg\UserdirectoryBundle\Entity\perSiteSettings $perSiteSettings
      * @return User
      */
-    public function addPerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSetting)
+    public function addPerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
     {
         //$this->locations[] = $location;
-        if( !$this->perSiteSettings->contains($perSiteSetting) ) {
-            $this->perSiteSettings->add($perSiteSetting);
-            $perSiteSetting->setAuthor($this);
+        if( !$this->perSiteSettings->contains($perSiteSettings) ) {
+            $this->perSiteSettings->add($perSiteSettings);
+            $perSiteSettings->setAuthor($this);
         }
 
         return $this;
+    }
+    public function addPerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings) {
+        return $this->addPerSiteSettings($perSiteSettings);
     }
 
     /**
@@ -561,9 +548,13 @@ class User extends BaseUser
      *
      * @param \Oleg\UserdirectoryBundle\Entity\PerSiteSettings $locations
      */
-    public function removePerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSetting)
+    public function removePerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
     {
-        $this->perSiteSettings->removeElement($perSiteSetting);
+        $this->perSiteSettings->removeElement($perSiteSettings);
+    }
+    public function removePerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
+    {
+        $this->removePerSiteSettings($perSiteSettings);
     }
 
     /**
@@ -658,7 +649,10 @@ class User extends BaseUser
      */
     public function addAppointmentTitle(\Oleg\UserdirectoryBundle\Entity\AppointmentTitle $appointmentTitles)
     {
-        $this->appointmentTitles[] = $appointmentTitles;
+        if( !$this->appointmentTitles->contains($appointmentTitles) ) {
+            $this->appointmentTitles->add($appointmentTitles);
+            $appointmentTitles->setUser($this);
+        }
     
         return $this;
     }
@@ -683,37 +677,50 @@ class User extends BaseUser
         return $this->appointmentTitles;
     }
 
-    /**
-     * Add department
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
-     * @return User
-     */
-    public function addDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
-    {
-        $this->department[] = $department;
-    
-        return $this;
+
+    //get all services from administrative and appointment titles.
+    public function getServices() {
+        $services = new ArrayCollection();
+        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            $services->add($adminTitles->getService());
+        }
+        foreach( $this->getAppointmentTitles() as $appTitles ) {
+            $services->add($appTitles->getService());
+        }
+        return $services;
     }
 
-    /**
-     * Remove department
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
-     */
-    public function removeDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
-    {
-        $this->department->removeElement($department);
-    }
-
-    /**
-     * Get department
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getDepartment()
-    {
-        return $this->department;
-    }
+//    /**
+//     * Add department
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
+//     * @return User
+//     */
+//    public function addDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
+//    {
+//        $this->department[] = $department;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove department
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
+//     */
+//    public function removeDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
+//    {
+//        $this->department->removeElement($department);
+//    }
+//
+//    /**
+//     * Get department
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getDepartment()
+//    {
+//        return $this->department;
+//    }
 
 }

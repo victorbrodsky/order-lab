@@ -35,11 +35,52 @@ class BaseTitle extends BaseUserAttributes
     protected $endDate;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    protected $institution;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Department")
+     */
+    protected $department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Division")
+     */
+    protected $division;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Service")
+     */
+    protected $service;
+
+
+    function __construct($flag=false)
+    {
+        parent::__construct();
+
+        if( $flag ) {
+            $institution = new Institution();
+            $department = new Department();
+            $division = new Division();
+            $service = new Service();
+            $division->addService($service);
+            $department->addDivision($division);
+            $institution->addDepartment($department);
+        }
+    }
+
+    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -88,6 +129,70 @@ class BaseTitle extends BaseUserAttributes
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    /**
+     * @param mixed $department
+     */
+    public function setDepartment($department)
+    {
+        $this->department = $department;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartment()
+    {
+        return $this->department;
+    }
+
+    /**
+     * @param mixed $division
+     */
+    public function setDivision($division)
+    {
+        $this->division = $division;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDivision()
+    {
+        return $this->division;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getService()
+    {
+        return $this->service;
     }
 
 

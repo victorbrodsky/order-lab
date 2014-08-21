@@ -36,17 +36,17 @@ class Division extends ListAbstract
      */
     protected $services;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="division")
-     **/
-    protected $users;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="User", mappedBy="division")
+//     **/
+//    protected $users;
 
 
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-        $this->users = new ArrayCollection();
+//        $this->users = new ArrayCollection();
         $this->services = new ArrayCollection();
     }
 
@@ -123,38 +123,38 @@ class Division extends ListAbstract
 
 
 
-    /**
-     * Add user
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-     * @return
-     */
-    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-    {
-        if( !$this->users->contains($user) ) {
-            $this->users->add($user);
-        }
-    }
-
-    /**
-     * Remove user
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-     */
-    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-    {
-        $this->users->removeElement($user);
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
+//    /**
+//     * Add user
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
+//     * @return
+//     */
+//    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+//    {
+//        if( !$this->users->contains($user) ) {
+//            $this->users->add($user);
+//        }
+//    }
+//
+//    /**
+//     * Remove user
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
+//     */
+//    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+//    {
+//        $this->users->removeElement($user);
+//    }
+//
+//    /**
+//     * Get user
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getUsers()
+//    {
+//        return $this->users;
+//    }
 
 
     /**

@@ -243,7 +243,7 @@ class AdminController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
 
         if( $entities ) {
-            //return -1;
+            return -1;
         }
 
         $wcmcDep = array(

@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-//use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Oleg\OrderformBundle\Helper\SessionIdleHandler;
+use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
@@ -243,6 +243,98 @@ class SecurityController extends Controller
 //        $this->get('request')->getSession()->invalidate();
 //        return $this->redirect($this->generateUrl('login'));
 //    }
+
+
+
+    /**
+     * @Route("/admin/load-roles-from-aperio", name="load-roles-from-aperio")
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Security:load-roles-from-aperio.html.twig")
+     */
+    public function loadRolesFromAperioAction()
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You do not have permission to visit this page'
+            );
+            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+        }
+
+        $notfoundusers = array();
+        $results = array();
+        $em = $this->getDoctrine()->getManager();
+
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+
+        //echo "count=".count($users)."<br>";
+
+        foreach( $users as $user ) {
+
+            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
+            $aperioUtil = new AperioUtil();
+
+            $username = $user->getUsername()."";
+
+            //echo "username=".$username. " => ";
+
+            $userid = $aperioUtil->getUserIdByUserName($username);
+
+            //echo "userid=".$userid." => ";
+
+            if( !$userid || $userid == '' ) {
+
+                $userArr = array();
+                $userArr['user'] = $user;
+                //$userArr['stats'] = $stats;
+                $notfoundusers[] = $userArr;
+
+            } else {
+
+                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
+
+                $addedRoles = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+
+                if( count($addedRoles) == 0 ) {
+
+                    $stats = 'No changes';
+
+                } else {
+
+                    $stats = 'Added roles of ';
+                    $count = 1;
+                    foreach( $addedRoles as $addedRole ) {
+                        //echo "role=(".$addedRole.") ";
+                        $stats = $stats . $addedRole;
+                        if( count($addedRoles) > $count ) {
+                            $stats = $stats . ', ';
+                        }
+                        $count++;
+                    }
+
+                    $em->persist($user);
+                    $em->flush();
+                }
+
+                //$url = $this->generateUrl('showuser', array('id' => $user->getId()) );
+                //$userLink = '<a href="'.$url.'">'.$user.'</a>';
+                $userArr = array();
+                $userArr['user'] = $user;
+                $userArr['stats'] = $stats;
+                $results[] = $userArr;
+
+            }
+            //************** end of  Aperio group roles **************//
+
+        }
+
+        return array(
+            'results' => $results,
+            'notfoundusers' => $notfoundusers
+        );
+
+    }
 
 }
 

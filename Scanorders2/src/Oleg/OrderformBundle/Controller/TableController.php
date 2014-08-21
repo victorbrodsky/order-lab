@@ -463,7 +463,7 @@ class TableController extends Controller {
         $res = new Research();
         $entity->setResearch($res);
 
-        $service = $user->getDivision();
+        $service = $user->getServices();
 
         //set the first service
         if( count($service) > 0 ) {

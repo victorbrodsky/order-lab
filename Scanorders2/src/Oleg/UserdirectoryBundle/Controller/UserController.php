@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -23,6 +25,9 @@ use Oleg\UserdirectoryBundle\Form\UserType;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Oleg\OrderformBundle\Entity\PathService;
+
+use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
+use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
 
 
 
@@ -197,6 +202,16 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+//        if( count($entity->getAdministrativeTitles()) == 0 ) {
+//            $administrativeTitle = new AdministrativeTitle(true);
+//            $entity->addAdministrativeTitle($administrativeTitle);
+//        }
+//
+//        if( count($entity->getAppointmentTitles()) == 0 ) {
+//            $appointmentTitle = new AppointmentTitle(true);
+//            $entity->addAppointmentTitle($appointmentTitle);
+//        }
+
         if( count($entity->getPerSiteSettings()) == 0 ) {
             $perSiteSettings = new \Oleg\UserdirectoryBundle\Entity\PerSiteSettings();
             $perSiteSettings->setSiteName('scanorder');
@@ -242,6 +257,23 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+        // Create an ArrayCollection of the current Tag objects in the database
+        $originalAdminTitles = new ArrayCollection();
+        foreach( $entity->getAdministrativeTitles() as $title) {
+            $originalAdminTitles->add($title);
+        }
+
+        $originalAppTitles = new ArrayCollection();
+        foreach( $entity->getAppointmentTitles() as $title) {
+            $originalAppTitles->add($title);
+        }
+
+        $originalLocations = new ArrayCollection();
+        foreach( $entity->getLocations() as $loc) {
+            $originalLocations->add($loc);
+        }
+        echo "count=".count($originalAdminTitles)."<br>";
+
         //Roles
         $rolesArr = $this->getUserRoles();
 
@@ -260,6 +292,12 @@ class UserController extends Controller
         }
 
         if( $form->isValid() ) {
+
+            $this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');
+            $this->removeCollection($entity,$originalAppTitles,'getAppointmentTitles');
+            $this->removeCollection($entity,$originalLocations,'getLocations');
+
+            //$em->persist($entity);
             $em->flush();
             return $this->redirect($this->generateUrl('showuser', array('id' => $id)));
         }
@@ -270,6 +308,27 @@ class UserController extends Controller
             'cicle' => 'edit_user',
             'user_id' => $id
         );
+    }
+
+    public function removeCollection($entity,$originalArr,$getMethod) {
+        $em = $this->getDoctrine()->getManager();
+
+        foreach( $originalArr as $title ) {
+            //echo "title=".$title->getName().", id=".$title->getId()."<br>";
+            $em->persist($title);
+            if( false === $entity->$getMethod()->contains($title) ) {
+                //echo "removed title=".$title->getName()."<br>";
+                // remove the Task from the Tag
+                //$tag->getAdministrativeTitles()->removeElement($task);
+                // if it was a many-to-one relationship, remove the relationship like this
+                //$title->setUser(null);
+                //$em->persist($title);
+                // if you wanted to delete the Tag entirely, you can also do that
+                $em->remove($title);
+                $em->flush();
+            }
+        }
+        //exit();
     }
 
 

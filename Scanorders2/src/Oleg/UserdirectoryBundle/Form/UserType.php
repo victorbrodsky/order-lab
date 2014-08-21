@@ -187,19 +187,39 @@ class UserType extends AbstractType
 
 
         //Administrative Titles
-//        $builder->add('title', null, array(
-//            'label' => 'Primary Job Title:',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
+        $params = array('read_only'=>$read_only,'label'=>'Administrative Title','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype');
         $builder->add('administrativeTitles', 'collection', array(
-            'type' => new AdministrativeTitleType(),
+            'type' => new BaseTitleType($params),
             'label' => false,
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__administrativeTitles__',
+            'prototype_name' => '__administrativetitles__',
+        ));
+
+        $params = array('read_only'=>$read_only,'label'=>'Appointment Title','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype');
+        $builder->add('appointmentTitles', 'collection', array(
+            'type' => new BaseTitleType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__appointmenttitles__',
+        ));
+
+        $builder->add('locations', 'collection', array(
+            'type' => new LocationType(),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__locations__',
         ));
 
         //Main Office Location

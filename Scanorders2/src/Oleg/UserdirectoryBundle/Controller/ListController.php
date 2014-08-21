@@ -31,12 +31,12 @@ class ListController extends Controller
      * @Route("/principal-investigators/", name="principalinvestigators-list")
      * @Route("/course-directors/", name="coursedirectors-list")
      * @Route("/institutions/", name="institutions-list")
+     * @Route("/departments/", name="departments-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $request = $this->container->get('request');
         return $this->getList($request);
     }
     public function getList($request) {
@@ -108,8 +108,9 @@ class ListController extends Controller
      */
     public function createAction(Request $request)
     {
-
-        $request = $this->container->get('request');
+        return $this->createList($request);
+    }
+    public function createList($request) {
         $routeName = $request->get('_route');
         //exit("routeName=".$routeName); //mrntype
 
@@ -122,21 +123,8 @@ class ListController extends Controller
 
         $entity = new $entityClass();
 
-//        $user = $this->get('security.context')->getToken()->getUser();
-//        $entity->setUpdatedby($user);
-//        $entity->setUpdatedon(new \DateTime());
-
         $form = $this->createCreateForm($entity,$mapper,$pathbase,'new');
         $form->handleRequest($request);
-
-//        $errorHelper = new ErrorHelper();
-//        $errors = $errorHelper->getErrorMessages($form);
-//        echo "<br>form errors:<br>";
-//        print_r($errors);
-//        exit();
-//        var_dump($form->getErrorsAsString());
-//        echo "<br>";
-//        var_dump($form->getErrors());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -157,6 +145,7 @@ class ListController extends Controller
             'pathbase' => $pathbase
         );
     }
+
 
     /**
     * Creates a form to create an entity.
@@ -210,10 +199,11 @@ class ListController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
-
-        $request = $this->container->get('request');
+        return $this->newList($request);
+    }
+    public function newList($request) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -264,10 +254,11 @@ class ListController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
-    public function showAction($id)
+    public function showAction(Request $request,$id)
     {
-
-        $request = $this->container->get('request');
+        return $this->showList($request,$id);
+    }
+    public function showList($request,$id) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -310,10 +301,11 @@ class ListController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
-    public function editAction($id)
+    public function editAction(Request $request,$id)
     {
-
-        $request = $this->container->get('request');
+        return $this->editList($request,$id);
+    }
+    function editList($request,$id) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -399,8 +391,9 @@ class ListController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-
-        //$request = $this->container->get('request');
+        return $this->updateList($request, $id);
+    }
+    public function updateList($request, $id) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -423,21 +416,6 @@ class ListController extends Controller
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit');
         $editForm->handleRequest($request);
-
-//        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y h:m:s');
-//        $dateStr = $transformer->transform($entity->getCreatedate());
-//        echo "date=".$dateStr."<br>";
-//        echo "creator=".$entity->getCreator()."<br>";
-//
-//        $errorHelper = new ErrorHelper();
-//        $errors = $errorHelper->getErrorMessages($editForm);
-//        echo "<br>form errors:<br>";
-//        print_r($errors);
-//        echo "<br><br>";
-//        var_dump($editForm->getErrorsAsString());
-//        echo "<br>";
-//        var_dump($editForm->getErrors());
-//        //exit();
 
         if( $editForm->isValid() ) {
 
@@ -516,6 +494,10 @@ class ListController extends Controller
             $className = "Institution";
             $displayName = "Institutions";
             break;
+        case "departments":
+            $className = "Department";
+            $displayName = "Departments";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -549,7 +531,9 @@ class ListController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-
+        return $this->deleteList($request, $id);
+    }
+    public function deleteList($request, $id) {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -581,7 +565,7 @@ class ListController extends Controller
      * @param mixed $id The entity id
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id,$pathbase)
+    protected function createDeleteForm($id,$pathbase)
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl($pathbase.'_delete', array('id' => $id)))
