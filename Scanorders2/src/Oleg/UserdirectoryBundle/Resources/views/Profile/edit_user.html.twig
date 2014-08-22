@@ -45,6 +45,18 @@
     <div class="well {{ classname }}">
         {{ formmacros.field(formfield.id) }}
         {{ formmacros.field(formfield.name) }}
+        {{ formmacros.field(formfield.phone) }}
+        {{ formmacros.field(formfield.pager) }}
+        {{ formmacros.field(formfield.mobile) }}
+        {{ formmacros.field(formfield.fax) }}
+        {{ formmacros.field(formfield.email) }}
+        {{ formmacros.field(formfield.assistant) }}
+        {{ formmacros.field(formfield.room) }}
+        {{ formmacros.field(formfield.street) }}
+        {{ formmacros.field(formfield.city) }}
+        {{ formmacros.field(formfield.state) }}
+        {{ formmacros.field(formfield.zip) }}
+        {{ formmacros.field(formfield.associatedCode) }}
 
         {% if cicle != 'show_user' %}
             <p>
@@ -61,6 +73,7 @@
 <div id="form-prototype-data"
      data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
      data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
+     data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype')|e }}"
 ></div>
 
 
@@ -85,7 +98,7 @@
     {#{{ formmacros.field(form.defaultPathService) }}#}
 
     {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
-        {{ formmacros.field(form.institution) }}
+        {#{{ formmacros.field(form.institution) }}#}
         {#{{ formmacros.field(form.service) }}#}
         {{ formmacros.field(form.roles) }}
     {% endif %}
@@ -96,6 +109,7 @@
     {{ formmacros.field(form.firstName) }}
     {{ formmacros.field(form.middleName) }}
     {{ formmacros.field(form.lastName) }}
+    {{ formmacros.field(form.preferredPhone) }}
 
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         {% if app.security.getToken().getUser().getId() != entity.id %}
@@ -118,7 +132,7 @@
             {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
         {% endfor %}
         {% if cicle != 'show_user' %}
-            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add</button>
+            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
         {% endif %}
     </div>
 
@@ -130,7 +144,7 @@
             {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
         {% endfor %}
         {% if cicle != 'show_user' %}
-            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add</button>
+            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
         {% endif %}
     </div>
 
@@ -138,23 +152,27 @@
     <hr>
     <h3 class="text-info">Locations</h3>
     <div class="user-locations-holder">
-        {% for appointmentTitle in form.locations %}
-            {{ userform.location(appointmentTitle,cicle,'user-locations','noprototype') }}
+        {% for location in form.locations %}
+            {{ userform.location(location,cicle,'user-locations','noprototype') }}
         {% endfor %}
         {% if cicle != 'show_user' %}
-            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add</button>
+            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
         {% endif %}
     </div>
 
-    <hr>
-    <h3 class="text-info">Per Site Settings</h3>
-    {% for perSiteSetting in form.perSiteSettings %}
-        {{ formmacros.field(perSiteSetting.siteName) }}
-        {{ formmacros.field(perSiteSetting.permittedInstitutionalPHIScope) }}
-        {{ formmacros.field(perSiteSetting.scanOrdersServicesScope) }}
-        {{ formmacros.field(perSiteSetting.chiefServices) }}
-        {{ formmacros.field(perSiteSetting.defaultService) }}
-    {% endfor %}
+
+    {% block addcontent %}{% endblock %}
+    {#<hr>#}
+    {#<h3 class="text-info">Per Site Settings</h3>#}
+    {#{% for perSiteSetting in form.perSiteSettings %}#}
+        {#<div class="well">#}
+            {#{{ formmacros.field(perSiteSetting.siteName) }}#}
+            {#{{ formmacros.field(perSiteSetting.permittedInstitutionalPHIScope) }}#}
+            {#{{ formmacros.field(perSiteSetting.scanOrdersServicesScope) }}#}
+            {#{{ formmacros.field(perSiteSetting.chiefServices) }}#}
+            {#{{ formmacros.field(perSiteSetting.defaultService) }}#}
+        {#</div>#}
+    {#{% endfor %}#}
 
     {#{{ formmacros.field(form.phone) }}#}
     {#{{ formmacros.field(form.fax) }}#}
@@ -166,11 +184,17 @@
 
     {#{{ form(form) }}#}
 
+    {% if prefix is defined and prefix != "" %}
+        {% set pathprefix = prefix~"_" %}
+    {% else %}
+        {% set pathprefix = "" %}
+    {% endif %}
+
     {% if cicle != "show_user" %}
         <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
-                <a class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}" type='button'>Cancel</a>
+                <a class="btn btn-info" href="{{ path(pathprefix~'showuser',{id:entity.id}) }}" type='button'>Cancel</a>
             </div>
         </p>
     {% endif %}
@@ -179,13 +203,13 @@
 {#</form>#}
 
     {% if cicle == "show_user" %}
-        <p><a class="btn btn-success" href="{{ path('user_edit',{'id':entity.id}) }}">Edit</a></p>
+        <p><a class="btn btn-success" href="{{ path(pathprefix~'user_edit',{'id':entity.id}) }}">Edit</a></p>
     {% endif %}
 
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         <br>
         <p>
-            <a href="{{ path('listusers') }}">View the list of all users</a>
+            <a href="{{ path(pathprefix~'listusers') }}">View the list of all users</a>
         </p>
     {% endif %}
 

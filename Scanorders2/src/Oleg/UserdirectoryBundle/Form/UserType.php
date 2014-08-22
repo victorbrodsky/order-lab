@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+//use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 
 class UserType extends AbstractType
 {
@@ -73,6 +73,10 @@ class UserType extends AbstractType
             'label' => 'Display Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
+        $builder->add('preferredPhone', null, array(
+            'label' => 'Preferred Phone Number:',
+            'attr' => array('class'=>'form-control form-control-modif phone-mask')
+        ));
 
         //timezone
 //        $tzUtil = new TimeZoneUtil();
@@ -99,15 +103,18 @@ class UserType extends AbstractType
             'multiple' => true,
         ));
 
-        $builder->add('institution', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'label'=>'All Institution(s):',
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'property' => 'name'
-            //'by_reference' => false //force to use setters of User entity
-        ));
+        //hook for extended class
+        $this->addHookFields($builder);
+
+//        $builder->add('institution', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'label'=>'All Institution(s):',
+//            'required' => false,
+//            'multiple' => true,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'property' => 'name'
+//            //'by_reference' => false //force to use setters of User entity
+//        ));
 
 //        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
 //        $builder->add('service', 'custom_selector', array(
@@ -118,16 +125,16 @@ class UserType extends AbstractType
 //        ));
 
 
-        $builder->add('perSiteSettings', 'collection', array(
-            'type' => new PerSiteSettingsType(),
-            'label' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__persitesettings__',
-        ));
+//        $builder->add('perSiteSettings', 'collection', array(
+//            'type' => new PerSiteSettingsType(),
+//            'label' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__persitesettings__',
+//        ));
 
 //        //Roles
 //        $attr = array('class' => 'combobox combobox-width');
@@ -222,20 +229,6 @@ class UserType extends AbstractType
             'prototype_name' => '__locations__',
         ));
 
-        //Main Office Location
-//        $builder->add('phone', null, array(
-//            'label' => 'Preferred Phone Number:',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
-//        $builder->add('fax', null, array(
-//            'label' => 'Fax:',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
-//        $builder->add('office', null, array(
-//            'label' => 'Main Office Room Number:',
-//            'attr' => array('class'=>'form-control form-control-modif')
-//        ));
-
     }
 
     /**
@@ -254,6 +247,10 @@ class UserType extends AbstractType
     public function getName()
     {
         return 'oleg_userdirectorybundle_user';
+    }
+
+    public function addHookFields($builder) {
+        //empty
     }
 
 }

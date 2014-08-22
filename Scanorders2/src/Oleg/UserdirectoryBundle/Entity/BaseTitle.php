@@ -55,20 +55,22 @@ class BaseTitle extends BaseUserAttributes
     protected $service;
 
 
-    function __construct($flag=false)
-    {
-        parent::__construct();
-
-        if( $flag ) {
-            $institution = new Institution();
-            $department = new Department();
-            $division = new Division();
-            $service = new Service();
-            $division->addService($service);
-            $department->addDivision($division);
-            $institution->addDepartment($department);
-        }
-    }
+//    function __construct()
+//    {
+//        parent::__construct();
+//
+////        if( $flag ) {
+////            echo "create tree <br>";
+////            $institution = new Institution();
+////            $department = new Department();
+////            $division = new Division();
+////            $service = new Service();
+////            $division->addService($service);
+////            $department->addDivision($division);
+////            $institution->addDepartment($department);
+////            $this->setInstitution($institution);
+////        }
+//    }
 
     /**
      * @return int

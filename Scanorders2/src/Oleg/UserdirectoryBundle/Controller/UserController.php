@@ -18,7 +18,6 @@ use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\UserEvent;
 
 use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Form\UserType;
 
@@ -41,7 +40,9 @@ class UserController extends Controller
      */
     public function indexUserAction()
     {
-
+        return $this->indexUser();
+    }
+    public function indexUser() {
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
@@ -54,8 +55,10 @@ class UserController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
-        $dql->leftJoin("user.division", "division");
-        $dql->leftJoin("user.institution", "institutions");
+        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("administrativeTitles.institution", "administrativeInstitution");
+        $dql->leftJoin("administrativeTitles.service", "administrativeService");
+        //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
         $dql->orderBy("user.id","ASC");
 
@@ -108,6 +111,9 @@ class UserController extends Controller
      */
     public function createUserAction( Request $request )
     {
+        return createUser($request);
+    }
+    public function createUser($request) {
         //return $this->showUserAction(0);
         $em = $this->getDoctrine()->getManager();
 
@@ -142,7 +148,9 @@ class UserController extends Controller
      */
     public function showUserAction($id)
     {
-
+        return $this->showUser($id);
+    }
+    public function showUser($id, $prefix=null) {
         $em = $this->getDoctrine()->getManager();
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
@@ -162,6 +170,8 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+        $this->addHookFields($entity);
+
         //Roles
         $rolesArr = $this->getUserRoles();
 
@@ -176,7 +186,8 @@ class UserController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'cicle' => 'show_user',
-            'user_id' => $id
+            'user_id' => $id,
+            'prefix' => $prefix
         );
     }
 
@@ -187,7 +198,9 @@ class UserController extends Controller
      */
     public function editUserAction($id)
     {
-
+        return $this->editUser($id);
+    }
+    public function editUser($id,$prefix=null) {
         $em = $this->getDoctrine()->getManager();
 
         $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
@@ -212,12 +225,7 @@ class UserController extends Controller
 //            $entity->addAppointmentTitle($appointmentTitle);
 //        }
 
-        if( count($entity->getPerSiteSettings()) == 0 ) {
-            $perSiteSettings = new \Oleg\UserdirectoryBundle\Entity\PerSiteSettings();
-            $perSiteSettings->setSiteName('scanorder');
-            $perSiteSettings->setAuthor($this->getUser());
-            $entity->addPerSiteSettings($perSiteSettings);
-        }
+        $this->addHookFields($entity);
 
         //Roles
         $rolesArr = $this->getUserRoles();
@@ -232,8 +240,13 @@ class UserController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'cicle' => 'edit_user',
-            'user_id' => $id
+            'user_id' => $id,
+            'prefix' => $prefix
         );
+    }
+
+    public function addHookFields($user) {
+        //empty
     }
 
     /**
@@ -242,6 +255,10 @@ class UserController extends Controller
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
+    {
+        return $this->updateUser($request,$id);
+    }
+    public function updateUser(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -285,7 +302,7 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        if( count($entity->getInstitution()) == 0 && $entity->getUsername() != 'system' ) {
+        if( count($entity->getInstitutions()) == 0 && $entity->getUsername() != 'system' ) {
             $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
             $error = new FormError("Please add at least one institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
             $form->get('institution')->addError($error);
@@ -309,6 +326,7 @@ class UserController extends Controller
             'user_id' => $id
         );
     }
+
 
     public function removeCollection($entity,$originalArr,$getMethod) {
         $em = $this->getDoctrine()->getManager();

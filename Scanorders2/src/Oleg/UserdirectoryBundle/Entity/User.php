@@ -80,10 +80,10 @@ class User extends BaseUser
      */
     private $preferences;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PerSiteSettings", mappedBy="author", cascade={"persist"})
-     */
-    private $perSiteSettings;
+//    /**
+//     * @ORM\OneToMany(targetEntity="PerSiteSettings", mappedBy="author", cascade={"persist"})
+//     */
+//    private $perSiteSettings;
 
     /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
@@ -101,18 +101,16 @@ class User extends BaseUser
     private $appointmentTitles;
 
 
-    /**
-     * Each user must be linked with one or many Institutions. We can link a user with Division and then get Institution by looping trhough all users's divisions:
-     * User->getDivisions() => foreach division: institution=division->getDepartment->getInstitution => institutions[] = institution
-     * However, keep reference to institution for performance gain.
-     *
-     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="users")
-     * @ORM\JoinTable(name="fos_user_institution",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     * )
-     */
-    private $institution;
+//    /**
+//     * Keep reference to institution for performance gain?
+//     *
+//     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="users")
+//     * @ORM\JoinTable(name="fos_user_institution",
+//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+//     * )
+//     */
+//    private $institution;
 
 //    /**
 //     * @ORM\ManyToMany(targetEntity="Department", inversedBy="users")
@@ -149,12 +147,12 @@ class User extends BaseUser
 
     function __construct()
     {
-        $this->perSiteSettings = new ArrayCollection();
+        //$this->perSiteSettings = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
         $this->appointmentTitles = new ArrayCollection();
 
-        $this->institution = new ArrayCollection();
+//        $this->institution = new ArrayCollection();
 //        $this->department = new ArrayCollection();
 //        $this->division = new ArrayCollection();
 //        $this->service = new ArrayCollection();
@@ -172,8 +170,8 @@ class User extends BaseUser
         $homeLocation->setUser($this);
 
         //one default Admnistrative Title
-        $AdministrativeTitle = new AdministrativeTitle();
-        $this->addAdministrativeTitle($AdministrativeTitle);
+        //$AdministrativeTitle = new AdministrativeTitle();
+        //$this->addAdministrativeTitle($AdministrativeTitle);
 
         parent::__construct();
     }
@@ -275,7 +273,14 @@ class User extends BaseUser
      */
     public function setTitle($title)
     {
-        $this->getAdministrativeTitles()->first()->setName($title);
+        if( count($this->getAdministrativeTitles()) == 0 ) {
+            $administrativeTitle = new AdministrativeTitle();
+            $administrativeTitle->setName($title);
+            $this->addAdministrativeTitle($administrativeTitle);
+        } else {
+            $this->getAdministrativeTitles()->first()->setName($title);
+        }
+
     }
 
 //    /**
@@ -425,36 +430,36 @@ class User extends BaseUser
         return $this->preferences;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
-    }
-
-
-    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
-    {
-        if( !$this->institution->contains($institution) ) {
-            $this->institution->add($institution);
-        }
-        return $this;
-    }
-
-    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
-    {
-        $this->institution->removeElement($institution);
-    }
-
-    public function setInstitution( $institutions )
-    {
-        //echo "set institutionsCount=".count($institutions)."<br>";
-        $this->institution->clear();
-        foreach( $institutions as $institution ) {
-            $this->addInstitution($institution);
-        }
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getInstitution()
+//    {
+//        return $this->institution;
+//    }
+//
+//
+//    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+//    {
+//        if( !$this->institution->contains($institution) ) {
+//            $this->institution->add($institution);
+//        }
+//        return $this;
+//    }
+//
+//    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
+//    {
+//        $this->institution->removeElement($institution);
+//    }
+//
+//    public function setInstitution( $institutions )
+//    {
+//        //echo "set institutionsCount=".count($institutions)."<br>";
+//        $this->institution->clear();
+//        foreach( $institutions as $institution ) {
+//            $this->addInstitution($institution);
+//        }
+//    }
 
 
 //    /**
@@ -523,49 +528,49 @@ class User extends BaseUser
     }
 
 
-    /**
-     * Add perSiteSettings
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\perSiteSettings $perSiteSettings
-     * @return User
-     */
-    public function addPerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
-    {
-        //$this->locations[] = $location;
-        if( !$this->perSiteSettings->contains($perSiteSettings) ) {
-            $this->perSiteSettings->add($perSiteSettings);
-            $perSiteSettings->setAuthor($this);
-        }
-
-        return $this;
-    }
-    public function addPerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings) {
-        return $this->addPerSiteSettings($perSiteSettings);
-    }
-
-    /**
-     * Remove locations
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\PerSiteSettings $locations
-     */
-    public function removePerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
-    {
-        $this->perSiteSettings->removeElement($perSiteSettings);
-    }
-    public function removePerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
-    {
-        $this->removePerSiteSettings($perSiteSettings);
-    }
-
-    /**
-     * Get locations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPerSiteSettings()
-    {
-        return $this->perSiteSettings;
-    }
+//    /**
+//     * Add perSiteSettings
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\perSiteSettings $perSiteSettings
+//     * @return User
+//     */
+//    public function addPerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
+//    {
+//        //$this->locations[] = $location;
+//        if( !$this->perSiteSettings->contains($perSiteSettings) ) {
+//            $this->perSiteSettings->add($perSiteSettings);
+//            $perSiteSettings->setAuthor($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function addPerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings) {
+//        return $this->addPerSiteSettings($perSiteSettings);
+//    }
+//
+//    /**
+//     * Remove locations
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\PerSiteSettings $locations
+//     */
+//    public function removePerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
+//    {
+//        $this->perSiteSettings->removeElement($perSiteSettings);
+//    }
+//    public function removePerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
+//    {
+//        $this->removePerSiteSettings($perSiteSettings);
+//    }
+//
+//    /**
+//     * Get locations
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getPerSiteSettings()
+//    {
+//        return $this->perSiteSettings;
+//    }
 
 
     /**
@@ -682,13 +687,42 @@ class User extends BaseUser
     public function getServices() {
         $services = new ArrayCollection();
         foreach( $this->getAdministrativeTitles() as $adminTitles ) {
-            $services->add($adminTitles->getService());
+            if( $adminTitles->getService() && $adminTitles->getService()->getName() != "" )
+                $services->add($adminTitles->getService());
         }
         foreach( $this->getAppointmentTitles() as $appTitles ) {
-            $services->add($appTitles->getService());
+            if( $appTitles->getService() && $appTitles->getService()->getName() != "" )
+                $services->add($appTitles->getService());
         }
         return $services;
     }
+
+    //get all institutions from administrative and appointment titles.
+    public function getInstitutions() {
+        $institutions = new ArrayCollection();
+        foreach( $this->getAdministrativeTitles() as $adminTitles ) {
+            if( $adminTitles->getInstitution() && $adminTitles->getInstitution()->getName() != "" )
+                $institutions->add($adminTitles->getInstitution());
+        }
+        foreach( $this->getAppointmentTitles() as $appTitles ) {
+            if( $appTitles->getInstitution() && $appTitles->getInstitution()->getName() != "" )
+                $institutions->add($appTitles->getInstitution());
+        }
+        //echo "inst count=".count($institutions)."<br>";
+        return $institutions;
+    }
+
+//    public function getPerSiteSettingsValue($sitename,$getMethod) {
+//        foreach( $this->getPerSiteSettings() as $site ) {
+//            if( $site->getSiteName() == $sitename ) {
+//                if( method_exists($site,$getMethod) ) {
+//                    return $site->$getMethod();
+//                }
+//            }
+//        }
+//        return null;
+//    }
+
 
 //    /**
 //     * Add department

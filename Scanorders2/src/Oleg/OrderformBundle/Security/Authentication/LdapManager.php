@@ -55,25 +55,25 @@ class LdapManager extends BaseLdapManager
             $user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
-        //assign Institution
-        if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
-            $params = $this->em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-            //echo "param count=".count($params)."<br>";
-            //exit();
-            if( count($params) == 0 ) {
-                //it is not initialized yet
-                echo "Warning: Site parameters are not initialized.<br>";
-                return;
-            }
-            if( count($params) != 1 ) {
-                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-            }
-            $param = $params[0];
-            $institution = $param->getAutoAssignInstitution();
-            if( $institution ) {
-                $user->addInstitution($institution);
-            }
-        }
+        //assign Institution only for Aperio users !!!
+//        if( $user->getInstitutions() == NULL || count($user->getInstitutions()) == 0 ) {
+//            $params = $this->em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+//            //echo "param count=".count($params)."<br>";
+//            //exit();
+//            if( count($params) == 0 ) {
+//                //it is not initialized yet
+//                echo "Warning: Site parameters are not initialized.<br>";
+//                return;
+//            }
+//            if( count($params) != 1 ) {
+//                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//            }
+//            $param = $params[0];
+//            $institution = $param->getAutoAssignInstitution();
+//            if( $institution ) {
+//                $user->addInstitution($institution);
+//            }
+//        }
 
     }
 

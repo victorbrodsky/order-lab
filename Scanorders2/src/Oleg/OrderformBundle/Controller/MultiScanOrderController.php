@@ -269,7 +269,7 @@ class MultiScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         //check if user has at least one institution
-        if( count($user->getInstitution()) == 0 ) {
+        if( count($user->getInstitutions()) == 0 ) {
 //            $this->get('session')->getFlashBag()->add(
 //                'warning',
 //                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').'.'
@@ -455,8 +455,8 @@ class MultiScanOrderController extends Controller {
             $actions = array('edit');
         }
 
-        $userUtil = new UserUtil();
-        if( $entity && !$userUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
+        $securityUtil = $this->get('order_security_utility');
+        if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -485,7 +485,7 @@ class MultiScanOrderController extends Controller {
                 continue;
             }
             
-            if( !$userUtil->hasPermission($patient, $this->get('security.context')) ) {
+            if( !$securityUtil->hasUserPermission($patient, $user) ) {
                 $entity->removePatient($patient);
                 continue;
             }
@@ -498,7 +498,7 @@ class MultiScanOrderController extends Controller {
                     continue;
                 }
 
-                if( ! $userUtil->hasPermission($procedure, $this->get('security.context')) ) {
+                if( !$securityUtil->hasUserPermission($procedure, $user) ) {
                     $patient->removeChildren($procedure);
                     continue;
                 }
@@ -510,7 +510,7 @@ class MultiScanOrderController extends Controller {
                         continue;
                     }
 
-                    if( ! $userUtil->hasPermission($accession, $this->get('security.context')) ) {
+                    if( !$securityUtil->hasUserPermission($accession, $user) ) {
                         $procedure->removeChildren($accession);
                         continue;
                     }
@@ -522,7 +522,7 @@ class MultiScanOrderController extends Controller {
                             continue;
                         }
 
-                        if( ! $userUtil->hasPermission($part, $this->get('security.context')) ) {
+                        if( !$securityUtil->hasUserPermission($part, $user) ) {
                             $accession->removeChildren($part);
                             continue;
                         }
@@ -534,7 +534,7 @@ class MultiScanOrderController extends Controller {
                                 continue;
                             }
 
-                            if( ! $userUtil->hasPermission($block, $this->get('security.context')) ) {
+                            if( ! $securityUtil->hasUserPermission($block, $user) ) {
                                 $part->removeChildren($block);
                                 continue;
                             }
@@ -544,7 +544,7 @@ class MultiScanOrderController extends Controller {
 
                                 //check if this slides can be viewed by this user
                                 $permission = true;
-                                if( !$userUtil->hasPermission($slide, $this->get('security.context')) ) {
+                                if( !$securityUtil->hasUserPermission($slide, $user) ) {
                                     //echo " (".$slide->getProvider()->getId().") ?= (".$user->getId().") => ";
                                     if( $slide->getProvider()->getId() != $user->getId() ) {
                                         $permission = false;
@@ -630,8 +630,8 @@ class MultiScanOrderController extends Controller {
             'type' => $type,    //form cicle: new, show, amend ...
             'formtype' => $entity->getType(),
             'history' => $history,
-            'amendable' => $userUtil->isUserAllowOrderActions($entity, $user, array('amend')),
-            'changestatus' => $userUtil->isUserAllowOrderActions($entity, $user, array('changestatus'))
+            'amendable' => $securityUtil->isUserAllowOrderActions($entity, $user, array('amend')),
+            'changestatus' => $securityUtil->isUserAllowOrderActions($entity, $user, array('changestatus'))
         );
 
 

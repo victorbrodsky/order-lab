@@ -479,7 +479,7 @@ class OrderUtil {
 
         /////////// institution ///////////
         $instStr = "";
-        foreach( $user->getInstitution() as $inst ) {
+        foreach( $user->getInstitutions() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }

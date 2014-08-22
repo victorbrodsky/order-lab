@@ -39,7 +39,7 @@ class SlideReturnRequestController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         //check if user has at least one institution
-        if( count($user->getInstitution()) == 0 ) {
+        if( count($user->getInstitutions()) == 0 ) {
             $em = $this->getDoctrine()->getManager();
             $orderUtil = new OrderUtil($em);
             $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
@@ -182,8 +182,8 @@ class SlideReturnRequestController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $userUtil = new UserUtil();
-        if( $orderinfo && !$userUtil->isUserAllowOrderActions($orderinfo, $user, array('show')) ) {
+        $securityUtil = $this->get('order_security_utility');
+        if( $orderinfo && !$securityUtil->isUserAllowOrderActions($orderinfo, $user, array('show')) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -333,7 +333,7 @@ class SlideReturnRequestController extends Controller
         /////////// institution ///////////
         $instStr = "";
         $user = $this->get('security.context')->getToken()->getUser();
-        foreach( $user->getInstitution() as $inst ) {
+        foreach( $user->getInstitutions() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
@@ -474,9 +474,10 @@ class SlideReturnRequestController extends Controller
             throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
         $orderinfo = $entity->getOrderInfo();
-        $userUtil = new UserUtil();
-        if( $orderinfo && !$userUtil->hasPermission($orderinfo,$this->get('security.context')) ) {
+        $securityUtil = $this->get('order_security_utility');
+        if( $orderinfo && !$securityUtil->hasUserPermission($orderinfo,$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -489,7 +490,6 @@ class SlideReturnRequestController extends Controller
         $orderinfo = $entity->getOrderinfo();
         if( $orderinfo ) {
 
-            $user = $this->get('security.context')->getToken()->getUser();
             $slides = $entity->getSlide();
             $history = new History();
             $history->setEventtype('Slide Return Request Status Changed');

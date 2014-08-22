@@ -489,7 +489,7 @@ class ScanOrderController extends Controller {
         /////////// institution ///////////
         $user = $this->get('security.context')->getToken()->getUser();
         $instStr = "";
-        foreach( $user->getInstitution() as $inst ) {
+        foreach( $user->getInstitutions() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
@@ -532,7 +532,7 @@ class ScanOrderController extends Controller {
         /////////// institution ///////////
         $user = $this->get('security.context')->getToken()->getUser();
         $instStr = "";
-        foreach( $user->getInstitution() as $inst ) {
+        foreach( $user->getInstitutions() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
@@ -1403,7 +1403,7 @@ class ScanOrderController extends Controller {
 
         /////////// institution ///////////
         $instStr = "";
-        foreach( $user->getInstitution() as $inst ) {
+        foreach( $user->getInstitutions() as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }

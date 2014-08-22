@@ -12,6 +12,8 @@ namespace Oleg\OrderformBundle\Security\Util;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+
 //include_once '..\conf\Spectrum.ini';
 //include_once '\Skeleton.php';
 include_once '\DatabaseRoutines.php';
@@ -54,18 +56,24 @@ class AperioUtil {
                 $user->setCreatedby('aperio');
                 $user->getPreferences()->setTimezone($this->timezone);
 
+                $perSiteSettings = null;
+
                 ////////// assign Institution //////////
-                if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
-                    $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-                    if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
-                        if( count($params) != 1 ) {
-                            throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-                        }
-                        $param = $params[0];
-                        $institution = $param->getAutoAssignInstitution();
-                        if( $institution ) {
-                            $user->addInstitution($institution);
-                        }
+                $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
+                    if( count($params) != 1 ) {
+                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+                    }
+                    $param = $params[0];
+                    $institution = $param->getAutoAssignInstitution();
+                    if( $institution ) {
+                        //set institution to per site settings
+                        $perSiteSettings = new PerSiteSettings();
+                        $perSiteSettings->setSiteName('scanorder');
+                        $systemUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
+                        $perSiteSettings->setAuthor($systemUser);
+                        $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+                        $user->addPerSiteSettings($perSiteSettings);
                     }
                 }
                 ////////// EOF assign Institution //////////
@@ -76,7 +84,12 @@ class AperioUtil {
                     if( $userRequest->getStatus() != 'approved' ) {
                         throw new AuthenticationException('The Aperio authentication failed. User Account Request was not approved, status='.$userRequest->getStatus());
                     } else {
-                        $user->setInstitution($userRequest->getInstitution());
+                        //add institutions to per site settings
+                        if( $perSiteSettings ) {
+                            foreach( $userRequest->getInstitution() as $inst ) {
+                                $perSiteSettings->addPermittedInstitutionalPHIScope($inst);
+                            }
+                        }
                     }
                 }
                 ////////// EOF check if aperio username was set in UserRequest //////////

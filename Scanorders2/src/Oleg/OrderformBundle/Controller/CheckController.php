@@ -130,8 +130,9 @@ class CheckController extends Controller {
         
         $security_content = $this->get('security.context');
         $user = $this->get('security.context')->getToken()->getUser();
-        $userUtil = new UserUtil();
-        if( $entity && !$userUtil->hasPermission($entity,$security_content) ) {
+        //$userUtil = new UserUtil();
+        $securityUtil = $this->get('order_security_utility');
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
             //echo "no permission ";
             //$entity->filterArrayFields($user,true);
 
@@ -290,19 +291,11 @@ class CheckController extends Controller {
         $entity = $em->getRepository('OlegOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$key,"Accession","accession",$validity,true,$extra);
 
         $element = array();
-              
-        $security_content = $this->get('security.context');
-        $userUtil = new UserUtil();
-        //$permission = true;
-        if( $entity && !$userUtil->hasPermission($entity,$security_content) ) {
-            $user = $this->get('security.context')->getToken()->getUser();
-            //$entity->filterArrayFields($user,true);
 
-            //echo "procedure existing count=".$entity->getParent()->obtainExistingFields(true)."<br>";
-            //echo "accession existing count=".$entity->obtainExistingFields(true)."<br>";
+        $securityUtil = $this->get('order_security_utility');
+        if( $entity && !$securityUtil->hasUserPermission($entity,$user) ) {
             if( $entity->obtainExistingFields(true) == 0 && $entity->getParent()->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                 $entity = null;
-                //$permission = true;
             }
         }
 
@@ -527,13 +520,10 @@ class CheckController extends Controller {
             $entity = null;
             $element = -2;
         }
-        
-        $userUtil = new UserUtil();
-        $security_content = $this->get('security.context');
-        if( !$userUtil->hasPermission($entity,$security_content) ) {
-            //$user = $this->get('security.context')->getToken()->getUser();
-            //$entity->filterArrayFields($user,true);
 
+        $user = $this->get('security.context')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        if( !$securityUtil->hasUserPermission($entity,$user) ) {
             if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                 $entity = null;
             }
@@ -666,12 +656,9 @@ class CheckController extends Controller {
                 $element = -2;
             }
 
-            $security_content = $this->get('security.context');
-            $userUtil = new UserUtil();
-            if( !$userUtil->hasPermission($entity,$security_content) ) {
-                //$user = $this->get('security.context')->getToken()->getUser();
-                //$entity->filterArrayFields($user,true);
-
+            $user = $this->get('security.context')->getToken()->getUser();
+            $securityUtil = $this->get('order_security_utility');
+            if( !$securityUtil->hasUserPermission($entity,$user) ) {
                 if( $entity->obtainExistingFields(true) == 0 ) { //if all fields are empty make entity = null
                     $entity = null;
                 }

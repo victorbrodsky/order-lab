@@ -18,21 +18,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class BaseUserAttributes {
 
-    const TYPE_PUBLIC = 0;
-    const TYPE_PRIVATE = 1;
-    const TYPE_RESTRICTED = 2;
+    const TYPE_PUBLIC = 0;          //access by anybody
+    const TYPE_PRIVATE = 1;         //access by user
+    const TYPE_RESTRICTED = 2;      //access by admin
 
-    const STATUS_UNVERIFIED = 0;
-    const STATUS_VERIFIED = 1;
+    const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
+    const STATUS_VERIFIED = 1;      //verified by admin
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
      */
     protected $author;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
      */
     protected $updateAuthor;

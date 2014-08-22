@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,18 +10,8 @@ use Doctrine\ORM\EntityRepository;
 class PerSiteSettingsType extends AbstractType
 {
 
-//    protected $params;
-//    protected $entity;
-//
-//    public function __construct( $params=null, $entity = null )
-//    {
-//        $this->params = $params;
-//        $this->entity = $entity;
-//    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
 
         $builder->add( 'siteName', 'text', array(
             'label'=>'Site Name:',
@@ -63,12 +53,12 @@ class PerSiteSettingsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
+            'data_class' => 'Oleg\OrderformBundle\Entity\PerSiteSettings',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_userdirectorybundle_persitesettings';
+        return 'oleg_orderformbundle_persitesettings';
     }
 }

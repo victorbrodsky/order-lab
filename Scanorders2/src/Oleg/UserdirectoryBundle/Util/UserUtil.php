@@ -11,9 +11,8 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\UserdirectoryBundle\Entity\User;
-use Oleg\UserdirectoryBundle\Entity\Division;
+use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
@@ -90,7 +89,7 @@ class UserUtil {
             //echo "<br>divisions=".$rowData[0][2]." == ";
             //print_r($services);
 
-            //create system user
+            //create excel user
             $user = new User();
             $user->setEmail($email);
             $user->setEmailCanonical($email);
@@ -115,8 +114,9 @@ class UserUtil {
             $mainLocation->setRoom($office);
 
             //title is stored in Administrative Title
-            $administrativeTitle = $user->getAdministrativeTitles()->first();
+            $administrativeTitle = new AdministrativeTitle();
             $administrativeTitle->setName($title);
+            $user->addAdministrativeTitle($administrativeTitle);
 
             //add Roles
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
@@ -143,6 +143,28 @@ class UserUtil {
                 $user->addRole('ROLE_SCANORDER_ADMIN');
             }
 
+//            ////////// when user created by excel file, assign permittedInstitutionalPHIScope to its PerSiteSettings //////////
+//            if( count($user->getPerSiteSettings()) == 0 ) {
+//                $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+//                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
+//                    if( count($params) != 1 ) {
+//                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//                    }
+//                    $param = $params[0];
+//                    $institution = $param->getAutoAssignInstitution();
+//                    if( $institution ) {
+//                        $perSiteSettings = new PerSiteSettings();
+//                        $perSiteSettings->setSiteName('scanorder');
+//                        $perSiteSettings->setAuthor($systemuser);
+//                        $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+//                        $user->addPerSiteSettings($perSiteSettings);
+//                    }
+//                }
+//
+//
+//            }
+//            ////////// EOF assign Institution //////////
+
             foreach( $services as $service ) {
 
                 $service = trim($service);
@@ -152,19 +174,25 @@ class UserUtil {
                     $serviceEntity  = $em->getRepository('OlegUserdirectoryBundle:Service')->findOneByName($service);
 
                     if( $serviceEntity ) {
-                        //
+                        $administrativeTitle->setService($serviceEntity);
+                        $division = $serviceEntity->getDivision();
+                        $administrativeTitle->setDivision($division);
+                        $department = $division->getDepartment();
+                        $administrativeTitle->setDepartment($department);
+                        $institution = $department->getInstitution();
+                        $administrativeTitle->setInstitution($institution);
                     } else {
-                        $serviceEntity = new \Oleg\UserdirectoryBundle\Entity\Service();
-                        $serviceEntity->setOrderinlist( $serviceCount );
-                        $serviceEntity->setCreator( $systemuser );
-                        $serviceEntity->setCreatedate( new \DateTime() );
-                        $serviceEntity->setName( trim($service) );
-                        $serviceEntity->setType('default');
-                        $em->persist($serviceEntity);
-                        $em->flush();
-                        $serviceCount = $serviceCount + 10;
+                        //Don't create service if it is not found in the service list
+//                        $serviceEntity = new \Oleg\UserdirectoryBundle\Entity\Service();
+//                        $serviceEntity->setOrderinlist( $serviceCount );
+//                        $serviceEntity->setCreator( $systemuser );
+//                        $serviceEntity->setCreatedate( new \DateTime() );
+//                        $serviceEntity->setName( trim($service) );
+//                        $serviceEntity->setType('default');
+//                        $em->persist($serviceEntity);
+//                        $em->flush();
+//                        $serviceCount = $serviceCount + 10;
                     }
-                    $user->addService($serviceEntity);
                 } //if
 
             } //foreach
@@ -172,22 +200,6 @@ class UserUtil {
             $user->setEnabled(true);
             $user->setLocked(false);
             $user->setExpired(false);
-
-            ////////// assign default Institution //////////
-            if( $user->getInstitution() == NULL || count($user->getInstitution()) == 0 ) {
-                $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
-                    if( count($params) != 1 ) {
-                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-                    }
-                    $param = $params[0];
-                    $institution = $param->getAutoAssignInstitution();
-                    if( $institution ) {
-                        $user->addInstitution($institution);
-                    }
-                }
-            }
-            ////////// EOF assign Institution //////////
 
             $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
             if( $found_user ) {
@@ -222,153 +234,6 @@ class UserUtil {
         }
 
         return $choicesServ;
-    }
-
-    //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
-    //$entity is object: orderinfo or patient, accession, part ...
-    public function hasUserPermission( $entity, $user ) {
-
-        if( $entity == null ) {
-            return true;
-        }
-
-        if( $user == null ) {
-            return false;
-        }
-
-        if( !$entity->getInstitution() ) {
-            throw new \Exception( 'Entity is not linked to any Institution. Entity:'.$entity );
-        }
-
-        ///////////////// 1) check if the user belongs to the same institution /////////////////
-        $hasInst = false;
-        foreach( $user->getInstitution() as $inst ) {
-            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
-            if( $inst->getId() == $entity->getInstitution()->getId() ) {
-                $hasInst = true;
-            }
-        }
-
-        if( $hasInst == false ) {
-            return false;
-        }
-        ///////////////// EOF 1) /////////////////
-
-
-        ///////////////// 2) check if the user is processor or service, division chief /////////////////
-        if(
-            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
-            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
-            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF') ||
-            $user->hasRole('ROLE_SCANORDER_SERVICE_CHIEF')
-        ){
-            return true;
-        }
-        ///////////////// EOF 2) /////////////////
-
-        ///////////////// 3) submitters  /////////////////
-        if( $user->hasRole('ROLE_SCANORDER_SUBMITTER') ) {
-            return true;
-        }
-        ///////////////// EOF 3) /////////////////
-
-        ///////////////// 4) pathology members  /////////////////
-//        if(
-//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
-//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
-//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FACULTY')
-//        ) {
-//            return true;
-//        }
-        ///////////////// EOF 4) /////////////////
-
-        return false;
-
-    }
-
-    //wrapper for hasUserPermission
-    public function hasPermission( $entity, $security_content ) {
-        return $this->hasUserPermission($entity,$security_content->getToken()->getUser());
-    }
-
-    //check if the given user can perform given actions on the content of the given order
-    public function isUserAllowOrderActions( $order, $user, $actions=null ) {
-
-        if( !$this->hasUserPermission( $order, $user ) ) {
-            return false;
-        }
-
-        //if actions are not specified => allow all actions
-        if( $actions == null ) {
-            return true;
-        }
-
-        //if actions is not array => return false
-        if( !is_array($actions) ) {
-            throw new \Exception('Actions must be an array');
-            //return false;
-        }
-
-        //at this point, actions array has list of actions to performed by this user
-
-        //processor and division chief can perform any actions
-        if(
-            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
-            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
-            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF')
-        ) {
-            return true;
-        }
-
-        //submitter(owner) and ordering provider can perform any actions
-        //echo $order->getProvider()->getId() . " ?= " . $user->getId() . "<br>";
-        if( $order->getProvider()->getId() === $user->getId() || $order->getProxyuser()->getId() === $user->getId() ) {
-            return true;
-        }
-
-        //order's service
-        $service = $order->getPathologyService();
-
-        //service chief can perform any actions
-        $userChiefServices = $user->getChiefservices();
-        if( $userChiefServices->contains($service) ) {
-            return true;
-        }
-
-        //At this point we have only regular users
-
-        //for each action
-        foreach( $actions as $action ) {
-
-            //echo "action=".$action."<br>";
-
-            //status change can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
-            if( $action == 'changestatus' ) {
-                return false;
-            }
-
-            //amend can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
-            if( $action == 'amend' ) {
-                return false;
-            }
-
-            //edit can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
-            if( $action == 'edit' ) {
-                return false;
-            }
-
-            //show is allowed if the user belongs to the same service
-            if( $action == 'show' ) {
-                //echo "action: show <br>";
-                $userServices = $user->getServices();
-                if( $userServices->contains($service) ) {
-                    return true;
-                }
-            }
-        }
-
-        //exit('is User Allow Order Actions: no permission');
-        return false;
     }
 
 

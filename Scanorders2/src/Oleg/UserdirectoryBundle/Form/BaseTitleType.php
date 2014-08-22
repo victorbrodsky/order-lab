@@ -55,11 +55,19 @@ class BaseTitleType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        $builder->add('institution', null, array(
-            'label' => "Institution:",
+//        $builder->add('institution', null, array(
+//            'label' => "Institution:",
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//        ));
+        $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');    //new
+        $builder->add('institution', 'custom_selector', array(
+            'label' => 'Institution(s):',
+            'attr' => $attr,
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'classtype' => 'institution'
         ));
+
         $builder->add('department', null, array(
             'label' => "Department:",
             'required' => false,

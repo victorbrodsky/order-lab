@@ -1,0 +1,37 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    Per Site User Settings
+{% endblock %}
+
+{% block content %}
+
+    {{ form_start(form) }}
+
+        <h3 class="text-info">Per Site User Settings</h3>
+        <div class="well">
+            {{ formmacros.field(form.siteName) }}
+            {{ formmacros.field(form.permittedInstitutionalPHIScope) }}
+            {{ formmacros.field(form.scanOrdersServicesScope) }}
+            {{ formmacros.field(form.chiefServices) }}
+            {{ formmacros.field(form.defaultService) }}
+        </div>
+
+
+        {% if cicle != "show" %}
+            <p>
+            <div>
+                <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
+                <a class="btn btn-info" href="{{ path('scan_order_settings_show',{id:userid}) }}" type='button'>Cancel</a>
+            </div>
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+    {% if cicle == "show" %}
+        <p><a class="btn btn-success" href="{{ path('scan_order_settings_edit',{'id':userid}) }}">Edit</a></p>
+    {% endif %}
+
+{% endblock %}

@@ -403,7 +403,7 @@ class TableController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         //check if user has at least one institution
-        if( count($user->getInstitution()) == 0 ) {
+        if( count($user->getInstitutions()) == 0 ) {
             $em = $this->getDoctrine()->getManager();
             $orderUtil = new OrderUtil($em);
             $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);

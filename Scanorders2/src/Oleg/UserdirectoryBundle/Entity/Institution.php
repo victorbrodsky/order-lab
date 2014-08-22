@@ -68,10 +68,10 @@ class Institution extends ListAbstract
 //     */
 //    protected $slides;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="institution")
-     **/
-    protected $users;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="User", mappedBy="institution")
+//     **/
+//    protected $users;
 
 
     public function __construct() {
@@ -383,36 +383,36 @@ class Institution extends ListAbstract
 //    }
 
 
-    /**
-     * Add user
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-     * @return Institution
-     */
-    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-    {
-        if( !$this->users->contains($user) ) {
-            $this->users->add($user);
-        }
-    }
-    /**
-     * Remove user
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-     */
-    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-    {
-        $this->users->removeElement($user);
-    }
-    /**
-     * Get order
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
+//    /**
+//     * Add user
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
+//     * @return Institution
+//     */
+//    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+//    {
+//        if( !$this->users->contains($user) ) {
+//            $this->users->add($user);
+//        }
+//    }
+//    /**
+//     * Remove user
+//     *
+//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
+//     */
+//    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
+//    {
+//        $this->users->removeElement($user);
+//    }
+//    /**
+//     * Get order
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getUsers()
+//    {
+//        return $this->users;
+//    }
 
 
 

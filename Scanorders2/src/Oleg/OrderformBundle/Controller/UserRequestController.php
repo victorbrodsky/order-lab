@@ -316,26 +316,11 @@ class UserRequestController extends Controller
     {
         //exit("approve User Account Request");
 
-        //$em = $this->getDoctrine()->getManager();
-        //$entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
-        //if (!$entity) {
-        //    throw $this->createNotFoundException('Unable to find UserRequest entity.');
-        //}
         $entity  = new UserRequest();
 
         $form = $this->createForm(new UserRequestApproveType(), $entity);
         $form->handleRequest($request);
 
-//        echo "req id=".$entity->getId()."<br>";
-//        $errorHelper = new ErrorHelper();
-//        $errors = $errorHelper->getErrorMessages($form);
-//        echo "<br>form errors:<br>";
-//        print_r($errors);
-//        $insts = $entity->getInstitution();
-//        $instsCount = count($insts);
-//        echo "instsCount=".$instsCount."<br>";
-
-        //if( $form->isValid() ) {
         if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getInstitution()) != 0 ) {
 
             //echo "form valid!";

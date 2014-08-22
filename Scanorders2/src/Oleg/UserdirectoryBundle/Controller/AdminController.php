@@ -436,7 +436,7 @@ class AdminController extends Controller
                     if( is_numeric($departmentname) ){
                         $departmentname = $infos['departments'][$departmentname];
                     }
-                    echo "departmentname=".$departmentname."<br>";
+                    //echo "departmentname=".$departmentname."<br>";
                     $this->setDefaultList($department,$depCount,$username,$departmentname);
 
                     if( $divisions && is_array($divisions) ) {

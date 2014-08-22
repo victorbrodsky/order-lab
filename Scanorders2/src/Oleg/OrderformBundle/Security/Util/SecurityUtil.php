@@ -12,8 +12,9 @@ namespace Oleg\OrderformBundle\Security\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
-class SecurityUtil {
+class SecurityUtil extends UserSecurityUtil {
 
     protected $em;
     protected $sc;
@@ -25,19 +26,157 @@ class SecurityUtil {
         $this->session = $session;
     }
 
-    public function isCurrentUser( $id ) {
+    //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
+    //$entity is object: orderinfo or patient, accession, part ...
+    public function hasUserPermission( $entity, $user ) {
 
-        $user = $this->sc->getToken()->getUser();
-
-        $entity = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-
-        if( $entity && $entity->getId() === $user->getId() ) {
+        if( $entity == null ) {
             return true;
         }
 
+        if( $user == null ) {
+            return false;
+        }
+
+        if( !$entity->getInstitution() ) {
+            throw new \Exception( 'Entity is not linked to any Institution. Entity:'.$entity );
+        }
+
+        ///////////////// 1) check if the user belongs to the same institution /////////////////
+        $hasInst = false;
+
+        $allowedInstitutions = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
+        if( $allowedInstitutions->contains($entity->getInstitution()) ) {
+            $hasInst = true;
+        }
+//        foreach( $allowedInstitutions as $inst ) {
+//            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
+//            if( $inst->getId() == $entity->getInstitution()->getId() ) {
+//                $hasInst = true;
+//            }
+//        }
+
+        if( $hasInst == false ) {
+            return false;
+        }
+        ///////////////// EOF 1) /////////////////
+
+
+        ///////////////// 2) check if the user is processor or service, division chief /////////////////
+        if(
+            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
+            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
+            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF') ||
+            $user->hasRole('ROLE_SCANORDER_SERVICE_CHIEF')
+        ){
+            return true;
+        }
+        ///////////////// EOF 2) /////////////////
+
+        ///////////////// 3) submitters  /////////////////
+        if( $user->hasRole('ROLE_SCANORDER_SUBMITTER') ) {
+            return true;
+        }
+        ///////////////// EOF 3) /////////////////
+
+        ///////////////// 4) pathology members  /////////////////
+//        if(
+//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
+//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
+//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FACULTY')
+//        ) {
+//            return true;
+//        }
+        ///////////////// EOF 4) /////////////////
+
         return false;
+
     }
 
+    //wrapper for hasUserPermission
+    public function hasPermission( $entity, $security_content ) {
+        return $this->hasUserPermission($entity,$security_content->getToken()->getUser());
+    }
+
+    //check if the given user can perform given actions on the content of the given order
+    public function isUserAllowOrderActions( $order, $user, $actions=null ) {
+
+        if( !$this->hasUserPermission( $order, $user ) ) {
+            return false;
+        }
+
+        //if actions are not specified => allow all actions
+        if( $actions == null ) {
+            return true;
+        }
+
+        //if actions is not array => return false
+        if( !is_array($actions) ) {
+            throw new \Exception('Actions must be an array');
+            //return false;
+        }
+
+        //at this point, actions array has list of actions to performed by this user
+
+        //processor and division chief can perform any actions
+        if(
+            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
+            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
+            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF')
+        ) {
+            return true;
+        }
+
+        //submitter(owner) and ordering provider can perform any actions
+        //echo $order->getProvider()->getId() . " ?= " . $user->getId() . "<br>";
+        if( $order->getProvider()->getId() === $user->getId() || $order->getProxyuser()->getId() === $user->getId() ) {
+            return true;
+        }
+
+        //order's service
+        $service = $order->getPathologyService();
+
+        //service chief can perform any actions
+        $userChiefServices = $user->getChiefservices();
+        if( $userChiefServices->contains($service) ) {
+            return true;
+        }
+
+        //At this point we have only regular users
+
+        //for each action
+        foreach( $actions as $action ) {
+
+            //echo "action=".$action."<br>";
+
+            //status change can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
+            if( $action == 'changestatus' ) {
+                return false;
+            }
+
+            //amend can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
+            if( $action == 'amend' ) {
+                return false;
+            }
+
+            //edit can be done only by submitter(owner), ordering provider, or service chief: it would not get here, so not allowed
+            if( $action == 'edit' ) {
+                return false;
+            }
+
+            //show is allowed if the user belongs to the same service
+            if( $action == 'show' ) {
+                //echo "action: show <br>";
+                $userServices = $user->getServices();
+                if( $userServices->contains($service) ) {
+                    return true;
+                }
+            }
+        }
+
+        //exit('is User Allow Order Actions: no permission');
+        return false;
+    }
 
 
 //    //check if the user can view or edit the content of this orderinfo

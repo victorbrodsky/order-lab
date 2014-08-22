@@ -19,62 +19,63 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class HistoryController extends Controller
 {
 
-    /**
-     * Lists all History entities.
-     *
-     * @Route("/scan-order/progress-and-comments/", name="history")
-     * @Method("GET")
-     * @Template()
-     */
-    public function indexAction()
-    {
+//    /**
+//     * Lists all History entities.
+//     *
+//     * @Route("/scan-order/progress-and-comments/", name="history")
+//     * @Method("GET")
+//     * @Template()
+//     */
+//    public function indexAction()
+//    {
+//
+//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //$entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
+//        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
+//        $dql =  $repository->createQueryBuilder("hist");
+//        $dql->innerJoin("hist.orderinfo", "orderinfo");
+//
+//        /////////// institution ///////////
+//        $instStr = "";
+//        $user = $this->get('security.context')->getToken()->getUser();
+//        foreach( $user->getInstitutions() as $inst ) {
+//            if( $instStr != "" ) {
+//                $instStr = $instStr . " OR ";
+//            }
+//            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+//        }
+//        if( $instStr == "" ) {
+//            $instStr = "1=0";
+//        }
+//        //echo "instStr=".$instStr."<br>";
+//        $dql->where($instStr);
+//        /////////// EOF institution ///////////
+//
+//        //echo "dql=".$dql;
+//        $query = $em->createQuery($dql);
+//        $entities = $query->getResult();
+//
+//        if( count($entities) > 0 ) {
+//            $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
+//            $rolesArr = array();
+//            foreach( $roles as $role ) {
+//                $rolesArr[$role->getName()] = $role->getAlias();
+//            }
+//        } else {
+//            $rolesArr = '';
+//        }
+//
+//        return array(
+//            'entities' => $entities,
+//            'roles' => $rolesArr,
+//        );
+//    }
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        //$entities = $em->getRepository('OlegOrderformBundle:History')->findAll();
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:History');
-        $dql =  $repository->createQueryBuilder("hist");
-        $dql->innerJoin("hist.orderinfo", "orderinfo");
-
-        /////////// institution ///////////
-        $instStr = "";
-        $user = $this->get('security.context')->getToken()->getUser();
-        foreach( $user->getInstitution() as $inst ) {
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR ";
-            }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
-        }
-        if( $instStr == "" ) {
-            $instStr = "1=0";
-        }
-        //echo "instStr=".$instStr."<br>";
-        $dql->where($instStr);
-        /////////// EOF institution ///////////
-
-        //echo "dql=".$dql;
-        $query = $em->createQuery($dql);
-        $entities = $query->getResult();
-
-        if( count($entities) > 0 ) {
-            $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
-            $rolesArr = array();
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
-        } else {
-            $rolesArr = '';
-        }
-
-        return array(
-            'entities' => $entities,
-            'roles' => $rolesArr,
-        );
-    }
     /**
      * Creates a new History entity.
      *
@@ -156,9 +157,9 @@ class HistoryController extends Controller
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
-        $userUtil = new UserUtil();
+        $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
-        if( $entity && !$userUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -187,9 +188,9 @@ class HistoryController extends Controller
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
-        $userUtil = new UserUtil();
+        $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
-        if( $entity && !$userUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -238,9 +239,9 @@ class HistoryController extends Controller
             throw $this->createNotFoundException('Unable to find History entity.');
         }
 
-        $userUtil = new UserUtil();
+        $securityUtil = $this->get('order_security_utility');
         $user = $this->get('security.context')->getToken()->getUser();
-        if( $entity && !$userUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
+        if( $entity && !$securityUtil->hasUserPermission($entity->getOrderInfo(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -330,8 +331,8 @@ class HistoryController extends Controller
         $entities = $em->getRepository('OlegOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
         //echo "hist count=".count($entities)."<br>";
 
-        $userUtil = new UserUtil();
-        if( count($entities)>0 && !$userUtil->hasUserPermission($entities[0]->getOrderInfo(),$user) ) {
+        $securityUtil = $this->get('order_security_utility');
+        if( count($entities)>0 && !$securityUtil->hasUserPermission($entities[0]->getOrderInfo(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 

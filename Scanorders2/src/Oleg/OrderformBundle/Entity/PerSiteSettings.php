@@ -1,10 +1,12 @@
 <?php
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
+
+use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 
 /**
  * @ORM\Entity
@@ -28,7 +30,7 @@ class PerSiteSettings extends BaseUserAttributes
     private $siteName;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Institution")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="perSiteSettings_institution",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
@@ -38,7 +40,7 @@ class PerSiteSettings extends BaseUserAttributes
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Service")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
      * @ORM\JoinTable(name="perSiteSettings_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
@@ -47,7 +49,7 @@ class PerSiteSettings extends BaseUserAttributes
     private $scanOrdersServicesScope;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Service")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
      * @ORM\JoinTable(name="chiefServices_service",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
@@ -56,16 +58,16 @@ class PerSiteSettings extends BaseUserAttributes
     private $chiefServices;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Service")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
      **/
     private $defaultService;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="perSiteSettings")
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $author;
+    protected $user;
 
 
     public function __construct() {
@@ -92,6 +94,22 @@ class PerSiteSettings extends BaseUserAttributes
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**

@@ -57,26 +57,13 @@ services:
         class: Oleg\OrderformBundle\Security\Firewall\AperioListener
         arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
 
-#    #twig listener
-#    twigdate.listener.request:
-#        class: Oleg\OrderformBundle\Services\TwigDateRequestListener
-#        arguments: ["@twig", "@security.context", %default_time_zone%]
-#        tags:
-#              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     scanorder.listener.maintenance:
         class: Oleg\OrderformBundle\Services\MaintenanceListener
         arguments: ["@service_container","@doctrine.orm.entity_manager","@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-#    #set scan order parameters src/Oleg/OrderformBundle/Helper/Parameters.php
-#    scanorder.setparameters:
-#            class: Oleg\OrderformBundle\Helper\Parameters
-#            arguments: [@doctrine.orm.entity_manager,@service_container]
-
-
-#    foo_query_service:
-#            class: Oleg\OrderformBundle\Helper\Parameters
-#            arguments:
-#                - @doctrine.dbal.connections.default
+    #security utility
+    order_security_utility:
+        class: Oleg\OrderformBundle\Security\Util\SecurityUtil
+        arguments: ["@doctrine.orm.entity_manager", "@security.context"]

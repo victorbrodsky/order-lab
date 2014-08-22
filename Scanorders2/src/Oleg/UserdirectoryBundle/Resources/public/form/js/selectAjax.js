@@ -48,7 +48,7 @@ function regularCombobox() {
     $("select.combobox").select2({
         width: combobox_width,
         dropdownAutoWidth: true,
-        placeholder: "Select an option or type in a new value",
+        placeholder: "Select an option",
         allowClear: true,
         selectOnBlur: false
         //readonly: true
@@ -871,7 +871,7 @@ function getComboboxDepartment(ids) {
 //#############  institution  ##############//
 function getComboboxInstitution(ids) {
 
-    var url = getCommonBaseUrl("util/"+"institution"); //urlCommon+"institution";
+    var url = getCommonBaseUrl("util/"+"institution");
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
