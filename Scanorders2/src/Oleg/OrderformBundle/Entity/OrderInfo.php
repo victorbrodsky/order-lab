@@ -19,11 +19,16 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OrderInfo extends OrderAbstract {
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
+//     * @ORM\JoinColumn(name="pathservicelist_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $pathologyService;
     /**
-     * @ORM\ManyToOne(targetEntity="PathServiceList", inversedBy="orderinfo", cascade={"persist"})
-     * @ORM\JoinColumn(name="pathservicelist_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable=true)
      */
-    private $pathologyService;
+    private $service;
 
     /**
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="orderinfo", cascade={"persist"})
@@ -265,6 +270,22 @@ class OrderInfo extends OrderAbstract {
         $this->$addMethod($depend);
     }
 
+    /**
+     * @param mixed $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
 
 //    /**
 //     * Get id
@@ -303,28 +324,31 @@ class OrderInfo extends OrderAbstract {
 //        return $this->orderdate;
 //    }
 
-    /**
-     * Set pathologyService
-     *
-     * @param string $pathologyService
-     * @return OrderInfo
-     */
-    public function setPathologyService($pathologyService)
-    {
-        $this->pathologyService = $pathologyService;
-    
-        return $this;
-    }
+//    /**
+//     * Set pathologyService
+//     *
+//     * @param string $pathologyService
+//     * @return OrderInfo
+//     */
+//    public function setPathologyService($pathologyService)
+//    {
+//        $this->pathologyService = $pathologyService;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get pathologyService
+//     *
+//     * @return string
+//     */
+//    public function getPathologyService()
+//    {
+//        return $this->pathologyService;
+//    }
 
-    /**
-     * Get pathologyService
-     *
-     * @return string 
-     */
-    public function getPathologyService()
-    {
-        return $this->pathologyService;
-    }
+
+
 
     /**
      * Set priority

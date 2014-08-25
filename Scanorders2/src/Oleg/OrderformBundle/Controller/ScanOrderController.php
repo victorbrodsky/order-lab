@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
-use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\UserdirectoryBundle\Entity\Logger;
 
 
@@ -260,14 +259,14 @@ class ScanOrderController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $orderUtil = new OrderUtil($em);
+        $orderUtil = $this->get('scanorder_utility');
 
         //make uppercase: cancel, sumbit, un-cancel (Un-Cancel)
         //$status = str_replace("-"," ",$status);
         $status = ucwords($status);
         //$status = str_replace(" ","-",$status);
 
-        $res = $orderUtil->changeStatus($id, $status, $user, $this->get('router'));
+        $res = $orderUtil->changeStatus($id, $status, $user);
 
         if( $res['result'] == 'conflict' ) {   //redirect to amend
             return $this->redirect( $this->generateUrl( 'order_amend', array('id' => $res['oid']) ) );
@@ -386,12 +385,13 @@ class ScanOrderController extends Controller {
         return $filterType;
     }
     
-    
+
+    //TODO: test to new Service
     public function getServiceFilter() {
         $em = $this->getDoctrine()->getManager();
 
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $statuses = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
+            $statuses = $em->getRepository('OlegUserdirectoryBundle:Service')->findAll();
         } 
 
         //add special cases
@@ -413,7 +413,7 @@ class ScanOrderController extends Controller {
         return $filterType;
     }
 
-    //Pathology Service filter
+    //Service filter
     public function allServiceFilter( $service, $routeName, $user, $criterions ) {
 
         $criteriastr = "";
@@ -427,10 +427,14 @@ class ScanOrderController extends Controller {
         if( $routeName == "my-scan-orders" ) {
 
             $services = array();
-            $userServices = $user->getServices();
+
+            $securityUtil = $this->get('order_security_utility');
+            $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+
+            $userServices = $userSiteSettings->getScanOrdersServicesScope();
 
             if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
-                $chiefServices = $user->getChiefservices();
+                $chiefServices = $userSiteSettings->getChiefServices();
                 if( $userServices && count($userServices)>0 ) {
                     $services = array_merge($userServices, $chiefServices);
                 } else {
@@ -443,7 +447,7 @@ class ScanOrderController extends Controller {
                     if( $criteriastr != "" ) {
                         $criteriastr .= " OR ";
                     }
-                    $criteriastr .= " orderinfo.pathologyService=".$service->getId();
+                    $criteriastr .= " orderinfo.service=".$service->getId();
                 }
             }//foreach
 
@@ -454,13 +458,13 @@ class ScanOrderController extends Controller {
 
             if( is_numeric($service)  ) {
 
-                $pathService = $em->getRepository('OlegOrderformBundle:PathServiceList')->find($service);
+                $siteUserService = $em->getRepository('OlegUserdirectoryBundle:Service')->find($service);
 
-                if( !$pathService ) {
+                if( !$siteUserService ) {
                     throw new \Exception( 'Unable to find Service '.$service );
                 }
 
-                $criteriastr = " orderinfo.pathologyService=".$pathService->getId();
+                $criteriastr = " orderinfo.service=".$siteUserService->getId();
 
             }
 
@@ -1086,13 +1090,13 @@ class ScanOrderController extends Controller {
             switch( $filter ) {
 
                 case "With New Comments":
-                    $orderUtil = new OrderUtil($em);
-                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($securityContext,'new_comments',$commentFlag) . " ) ";
+                    $orderUtil = $this->get('scanorder_utility');
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr('new_comments',$commentFlag) . " ) ";
                     $filterStr = $newCommentsCriteriaStr;
                     break;
                 case "With Comments":
-                    $orderUtil = new OrderUtil($em);
-                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr($securityContext,'all_comments',null,$commentFlag) . " ) ";
+                    $orderUtil = $this->get('scanorder_utility');
+                    $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr('all_comments',$commentFlag) . " ) ";
                     $filterStr = $newCommentsCriteriaStr;
                     break;
                 case "All":
@@ -1246,7 +1250,7 @@ class ScanOrderController extends Controller {
                 if( $crituser != "" ) {
                     $crituser .= " AND ";
                 }
-                $crituser .= "orderinfo.pathologyService=".$service;
+                $crituser .= "orderinfo.service=".$service;
             }
 
             if( $criteriastr != "" && $crituser != "" ) {
@@ -1270,7 +1274,7 @@ class ScanOrderController extends Controller {
             if( is_int($service) ) {
                 //echo "service=".$service."<br>";
                 $showproxyuser = 'true';
-                $critservice = "orderinfo.pathologyService=".$service;
+                $critservice = "orderinfo.service=".$service;
             }
 
             if( $criteriastr != "" && $critservice != "" ) {

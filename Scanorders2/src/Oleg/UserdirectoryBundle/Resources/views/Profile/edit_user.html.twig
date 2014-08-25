@@ -94,9 +94,6 @@
 
     {{ formmacros.field(form.email) }}
 
-    {#{{ formmacros.field(form.pathologyServices) }}#}
-    {#{{ formmacros.field(form.defaultPathService) }}#}
-
     {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
         {#{{ formmacros.field(form.institution) }}#}
         {#{{ formmacros.field(form.service) }}#}
@@ -160,24 +157,6 @@
         {% endif %}
     </div>
 
-
-    {% block addcontent %}{% endblock %}
-    {#<hr>#}
-    {#<h3 class="text-info">Per Site Settings</h3>#}
-    {#{% for perSiteSetting in form.perSiteSettings %}#}
-        {#<div class="well">#}
-            {#{{ formmacros.field(perSiteSetting.siteName) }}#}
-            {#{{ formmacros.field(perSiteSetting.permittedInstitutionalPHIScope) }}#}
-            {#{{ formmacros.field(perSiteSetting.scanOrdersServicesScope) }}#}
-            {#{{ formmacros.field(perSiteSetting.chiefServices) }}#}
-            {#{{ formmacros.field(perSiteSetting.defaultService) }}#}
-        {#</div>#}
-    {#{% endfor %}#}
-
-    {#{{ formmacros.field(form.phone) }}#}
-    {#{{ formmacros.field(form.fax) }}#}
-    {#{{ formmacros.field(form.office) }}#}
-
     <br>
     {#{{ form_rest(form) }}#}
     {#{{ form_widget(form._token) }}#}
@@ -205,6 +184,8 @@
     {% if cicle == "show_user" %}
         <p><a class="btn btn-success" href="{{ path(pathprefix~'user_edit',{'id':entity.id}) }}">Edit</a></p>
     {% endif %}
+
+    {% block addcontent %}{% endblock %}
 
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         <br>

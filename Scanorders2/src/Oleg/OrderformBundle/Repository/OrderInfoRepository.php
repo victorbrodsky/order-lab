@@ -146,8 +146,8 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($this->user->getId());
 
             //clone orderinfo object by id
-            $orderUtil = new OrderUtil($em);
-            $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $this->router, $newId);
+            $orderUtil = $this->get('scanorder_utility');
+            $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $newId);
 
             //now entity is a cloned order object
             //echo "rep: provider 3=".$entity->getProvider()."<br>";
@@ -449,7 +449,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
 //            $user = $em->getRepository('OlegOrderformBundle:User')->findOneById($this->user->getId());
 //
 //            //clone orderinfo object by id
-//            $orderUtil = new OrderUtil($em);
+//            $orderUtil = $this->get('scanorder_utility');
 //            $message = $orderUtil->changeStatus($originalId, 'Supersede', $user, $this->router, $newId);
 //
 //            //now entity is a cloned order object

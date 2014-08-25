@@ -25,7 +25,7 @@
         <tbody data-link="row" class="rowlink">
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path('scan_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>
                     {% for division in entity.division %}
                         "{{ division }}"<br>
@@ -65,7 +65,7 @@
 
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            <li><a href="{{ path('showuser', { 'id': entity.id }) }}">View Details</a></li>
+                            <li><a href="{{ path('scan_showuser', { 'id': entity.id }) }}">View Details</a></li>
 
 
                             {% if app.security.getToken().getUser().getId() != entity.id %}

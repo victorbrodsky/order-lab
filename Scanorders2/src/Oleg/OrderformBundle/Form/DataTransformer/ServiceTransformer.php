@@ -9,27 +9,30 @@
 
 namespace Oleg\OrderformBundle\Form\DataTransformer;
 
-use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Entity\PathServiceList;
 
-class PathServiceTransformer implements DataTransformerInterface
+use Oleg\UserdirectoryBundle\Entity\Service;
+use Oleg\UserdirectoryBundle\Entity\User;
+
+class ServiceTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
      */
     protected $em;
     protected $user;
+    protected $container;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(ObjectManager $em, $container, $user)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->container = $container;
     }
 
     public function getThisEm() {
@@ -72,7 +75,7 @@ class PathServiceTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegOrderformBundle:PathServiceList')->findOneById($text);
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:Service')->findOneById($text);
 
             if( null === $entity ) {
 
@@ -92,10 +95,11 @@ class PathServiceTransformer implements DataTransformerInterface
 
     }
 
+    //TODO: create new service. User can not create new services? How to set parent (division)?
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:Service')->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -106,14 +110,14 @@ class PathServiceTransformer implements DataTransformerInterface
                 $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             }
 
-            $newEntity = new PathServiceList();
+            $newEntity = new Service();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegOrderformBundle:PathServiceList c');           
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:Service c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
             

@@ -12,7 +12,7 @@ namespace Oleg\OrderformBundle\Security\Util;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
+use Oleg\OrderformBundle\Entity\PerSiteSettings;
 
 //include_once '..\conf\Spectrum.ini';
 //include_once '\Skeleton.php';
@@ -72,8 +72,9 @@ class AperioUtil {
                         $perSiteSettings->setSiteName('scanorder');
                         $systemUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
                         $perSiteSettings->setAuthor($systemUser);
+                        $perSiteSettings->setUser($user);
                         $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-                        $user->addPerSiteSettings($perSiteSettings);
+                        //$user->addPerSiteSettings($perSiteSettings);
                     }
                 }
                 ////////// EOF assign Institution //////////

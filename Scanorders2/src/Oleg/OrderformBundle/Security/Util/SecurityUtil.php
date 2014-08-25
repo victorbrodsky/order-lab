@@ -16,16 +16,6 @@ use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 
 class SecurityUtil extends UserSecurityUtil {
 
-    protected $em;
-    protected $sc;
-    protected $session;
-
-    public function __construct( $em, $sc, $session=null ) {
-        $this->em = $em;
-        $this->sc = $sc;
-        $this->session = $session;
-    }
-
     //user has permission to perform the view/edit the valid field, created by someone else, if he/she is submitter or ROLE_SCANORDER_PROCESSOR or service chief or division chief
     //$entity is object: orderinfo or patient, accession, part ...
     public function hasUserPermission( $entity, $user ) {
@@ -45,7 +35,7 @@ class SecurityUtil extends UserSecurityUtil {
         ///////////////// 1) check if the user belongs to the same institution /////////////////
         $hasInst = false;
 
-        $allowedInstitutions = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
+        $allowedInstitutions = $this->getUserPermittedInstitutions($user);
         if( $allowedInstitutions->contains($entity->getInstitution()) ) {
             $hasInst = true;
         }
@@ -93,10 +83,10 @@ class SecurityUtil extends UserSecurityUtil {
 
     }
 
-    //wrapper for hasUserPermission
-    public function hasPermission( $entity, $security_content ) {
-        return $this->hasUserPermission($entity,$security_content->getToken()->getUser());
-    }
+//    //wrapper for hasUserPermission
+//    public function hasPermission( $entity, $security_content ) {
+//        return $this->hasUserPermission($entity,$security_content->getToken()->getUser());
+//    }
 
     //check if the given user can perform given actions on the content of the given order
     public function isUserAllowOrderActions( $order, $user, $actions=null ) {
@@ -134,7 +124,7 @@ class SecurityUtil extends UserSecurityUtil {
         }
 
         //order's service
-        $service = $order->getPathologyService();
+        $service = $order->getService();
 
         //service chief can perform any actions
         $userChiefServices = $user->getChiefservices();
@@ -176,6 +166,43 @@ class SecurityUtil extends UserSecurityUtil {
 
         //exit('is User Allow Order Actions: no permission');
         return false;
+    }
+
+    public function getUserPermittedInstitutions($user) {
+        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
+            array('user' => $user, 'siteName' => 'scanorder')
+        );
+        return $entity->getPermittedInstitutionalPHIScope();
+    }
+
+    public function getUserDefaultService($user) {
+        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
+            array('user' => $user, 'siteName' => 'scanorder')
+        );
+        return $entity->getDefaultService();
+    }
+
+    public function getUserScanorderServices($user) {
+        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
+            array('user' => $user, 'siteName' => 'scanorder')
+        );
+        return $entity->getScanOrdersServicesScope();
+    }
+
+    public function getUserPerSiteSettings($user) {
+        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
+            array('user' => $user, 'siteName' => 'scanorder')
+        );
+
+//        if( !$entity ) {
+//            $orderUtil = $this->container->get('scanorder_utility');
+//            $orderUtil->setWarningMessageNoInstitution($user);
+//            $router = $this->container->get('router');
+//            return new RedirectResponse( $router->generate('scan-order-home') );
+//            //return $router->redirect( $this->generateUrl('scan-order-home') );
+//        }
+
+        return $entity;
     }
 
 

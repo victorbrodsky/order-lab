@@ -17,7 +17,7 @@
         {% if app.security.getToken().getUser.getEmail == "" %}
             <p>
                 If you would like to receive email notifications regarding your orders, please take a moment to update
-                <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                <a href="{{ path('scan_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
                 by adding your email account.
             </p>
         {% endif %}

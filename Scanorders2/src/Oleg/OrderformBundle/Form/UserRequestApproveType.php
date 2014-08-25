@@ -20,7 +20,7 @@ class UserRequestApproveType extends AbstractType
         ));
         
         $builder->add( 'institution', 'entity', array(
-            'class' => 'OlegOrderformBundle:Institution',
+            'class' => 'OlegUserdirectoryBundle:Institution',
             'property' => 'name',
             'label'=>false,
             'required'=> true,

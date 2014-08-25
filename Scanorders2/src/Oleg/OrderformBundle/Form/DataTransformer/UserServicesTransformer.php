@@ -9,13 +9,9 @@
 
 namespace Oleg\OrderformBundle\Form\DataTransformer;
 
-//use Symfony\Component\Form\DataTransformerInterface;
-//use Symfony\Component\Form\Exception\TransformationFailedException;
-//use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\OrderformBundle\Form\DataTransformer\PathServiceTransformer;
 
 //used by user type
-class UserPathServicesTransformer extends PathServiceTransformer
+class UserServicesTransformer extends ServiceTransformer
 {
 
     public function transform( $entities )
@@ -37,7 +33,10 @@ class UserPathServicesTransformer extends PathServiceTransformer
             $idArr = [];
             foreach( $entities as $entity ) {
                 if( $entity ) {
-                    if( $entity->getId()."" == $this->user->getPrimaryDivision()."" ) {
+
+                    $securityUtil = $this->container->get('order_security_utility');
+                    $defaultService = $securityUtil->getUserDefaultService();
+                    if( $entity->getId() == $defaultService->getId() ) {
                         array_unshift($idArr, $entity->getId()); //Prepend to the beginning of an array
                     } else {
                         $idArr[] = $entity->getId();
@@ -45,7 +44,7 @@ class UserPathServicesTransformer extends PathServiceTransformer
                 }
             }
             
-            //return array with primaryDivision as the first element
+            //return array with primaryService as the first element
             return implode(",", $idArr);
         }
 
@@ -66,14 +65,14 @@ class UserPathServicesTransformer extends PathServiceTransformer
 
         $newListArr = new \Doctrine\Common\Collections\ArrayCollection();
 
-        //TODO: this implies that pathology service does not have comma!
+        //TODO: this implies that service does not have comma!
         if( strpos($text,',') !== false ) {
 
             //echo "text array<br>";
             //exit();
             $textArr = explode(",", $text);
-            foreach( $textArr as $pathservice ) {
-                $newListArr = $this->addSingleService( $newListArr, $pathservice );
+            foreach( $textArr as $service ) {
+                $newListArr = $this->addSingleService( $newListArr, $service );
             }
             return $newListArr;
 
@@ -92,7 +91,7 @@ class UserPathServicesTransformer extends PathServiceTransformer
 
             //echo "service=".$service." => numeric => most probably it is id<br>";
 
-            $entity = $this->getThisEm()->getRepository('OlegOrderformBundle:PathServiceList')->findOneById($service);
+            $entity = $this->getThisEm()->getRepository('OlegUserdirectoryBundle:Service')->findOneById($service);
 
             if( null === $entity ) {
 

@@ -129,15 +129,12 @@
     {% import _self as formmacros %}
 
     {{ formmacros.field(form.provider) }}
-    {#Hi {{ app.user.displayname }}#}
 
     {{ formmacros.field(form.proxyuser) }}
 
-    {{ formmacros.field(form.pathologyService) }}
-
-    {#{{ formmacros.field(form.department) }}#}
-
     {{ formmacros.field(form.institution) }}
+
+    {{ formmacros.field(form.service) }}
 
     {{ formmacros.field(form.scanner) }}
 

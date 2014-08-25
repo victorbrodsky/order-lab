@@ -16,7 +16,6 @@ use Oleg\OrderformBundle\Entity\SlideReturnRequest;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\SlideText;
-use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 
@@ -39,13 +38,17 @@ class SlideReturnRequestController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         //check if user has at least one institution
-        if( count($user->getInstitutions()) == 0 ) {
-            $em = $this->getDoctrine()->getManager();
-            $orderUtil = new OrderUtil($em);
-            $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
-            $homeUrl = $this->generateUrl('main_common_home',array(),true);
-            $sysEmail = $this->container->getParameter('default_system_email');
-            $orderUtil->setWarningMessageNoInstitution($user,$userUrl,$this->get('session')->getFlashBag(),$sysEmail,$homeUrl);
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 

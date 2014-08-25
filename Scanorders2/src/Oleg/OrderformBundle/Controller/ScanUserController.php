@@ -10,12 +10,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Form\PerSiteSettingsType;
-
-use Oleg\OrderformBundle\Entity\PathService;
-
 
 use Oleg\UserdirectoryBundle\Controller\UserController;
 
@@ -29,7 +25,7 @@ class ScanUserController extends UserController
     /**
      * @Route("/user-directory", name="scan_listusers")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
+     * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
     public function indexUserAction()
     {
@@ -71,38 +67,63 @@ class ScanUserController extends UserController
 
 
 
-    /**
-     * @Route("/site-settings/create/user/{id}", name="scan_order_settings_create", requirements={"id" = "\d+"})
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:Admin:site-settings.html.twig")
-     */
-    public function createScanSettingsAction( Request $request, $id )
-    {
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect($this->generateUrl('scan-order-nopermission'));
-        }
+//    /**
+//     * @Route("/site-settings/create/user/{id}", name="scan_order_settings_create", requirements={"id" = "\d+"})
+//     * @Method("POST")
+//     * @Template("OlegOrderformBundle:Admin:site-settings.html.twig")
+//     */
+//    public function createScanSettingsAction( Request $request, $id )
+//    {
+//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+//            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = new PerSiteSettings();
+//
+//        $form = $this->createForm(new PerSiteSettingsType(), $entity, array(
+//            'action' => $this->generateUrl('_create'),
+//            'method' => 'POST',
+//        ));
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $em->persist($entity);
+//            $em->flush();
+//            return $this->redirect($this->generateUrl('scan_order_settings_show'),array('id' => $id));
+//        }
+//
+//        return array(
+//            'entity' => $entity,
+//            'form' => $form->createView(),
+//            'cicle' => 'show',
+//            'userid' => $id,
+//        );
+//    }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = new PerSiteSettings();
-
-        $form = $this->createForm(new PerSiteSettingsType());
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-            return $this->redirect($this->generateUrl('scan_order_settings_show'),array('id' => $id));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-            'cicle' => 'show',
-            'userid' => $id,
-        );
-    }
+//    /**
+//     * Creates a form to create an entity.
+//     * @param $entity The entity
+//     * @return \Symfony\Component\Form\Form The form
+//     */
+//    private function createCreateForm()
+//    {
+//
+//        $entity = new PerSiteSettings();
+//
+//        $newForm = new PerSiteSettingsType();
+//
+//        $form = $this->createForm($newForm, $entity, array(
+//            'action' => $this->generateUrl('_create'),
+//            'method' => 'POST',
+//        ));
+//
+//        $form->add('submit', 'submit', array('label' => 'Create','attr'=>array('class'=>'btn btn-warning')));
+//
+//        return $form;
+//    }
 
     /**
      * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", requirements={"id" = "\d+"})
@@ -130,11 +151,17 @@ class ScanUserController extends UserController
     }
     public function getScanSettings($id,$cicle) {
 
+        $secUtil = $this->get('order_security_utility');
+
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         $disabled = true;
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:PerSiteSettings')->findByUser($id);
+        $entity = $secUtil->getUserPerSiteSettings($id);
 
         if( !$entity ) {
 
@@ -157,7 +184,7 @@ class ScanUserController extends UserController
         }
 
         $form = $this->createForm(new PerSiteSettingsType(), $entity, array(
-            'action' => $this->generateUrl('scan_order_settings_edit', array('id' => $id)),
+            'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
             'disabled' => $disabled
         ));
@@ -178,72 +205,67 @@ class ScanUserController extends UserController
     public function updateScanSettingsAction(Request $request, $id)
     {
 
-        exit('update');
+        //exit('update');
 
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $secUtil = $secUtil = $this->get('order_security_utility');
 
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        $entity = $em->getRepository('OlegOrderformBundle:PerSiteSettings')->findByUser($id);
+        $entity = $secUtil->getUserPerSiteSettings($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find PerSiteSettings entity.');
+        if( !$entity ) {
+
+            $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            if (!$subjectuser) {
+                throw $this->createNotFoundException('Unable to find User entity.');
+            }
+            $entity = new PerSiteSettings();
+            $entity->setSiteName('scanorder');
+            $entity->setUser($subjectuser);
+            $entity->setAuthor($user);
+            $entity->setType(PerSiteSettings::TYPE_RESTRICTED);
         }
 
-        // Create an ArrayCollection of the current Tag objects in the database
-        $originalAdminTitles = new ArrayCollection();
-        foreach( $entity->getAdministrativeTitles() as $title) {
-            $originalAdminTitles->add($title);
-        }
+        $entity->setUpdateAuthor($user);
+        $entity->setUpdateAuthorRoles($user->getRoles());
 
-        $originalAppTitles = new ArrayCollection();
-        foreach( $entity->getAppointmentTitles() as $title) {
-            $originalAppTitles->add($title);
-        }
-
-        $originalLocations = new ArrayCollection();
-        foreach( $entity->getLocations() as $loc) {
-            $originalLocations->add($loc);
-        }
-        echo "count=".count($originalAdminTitles)."<br>";
-
-        //Roles
-        $rolesArr = $this->getUserRoles();
-
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
-            'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new PerSiteSettingsType(), $entity, array(
+            'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
         ));
         $form->add('submit', 'submit', array('label' => 'Update'));
 
         $form->handleRequest($request);
 
-        if( count($entity->getInstitutions()) == 0 && $entity->getUsername() != 'system' ) {
+        if( count($entity->getPermittedInstitutionalPHIScope()) == 0 && $entity->getUser()->getUsername() != 'system' ) {
             $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
-            $error = new FormError("Please add at least one institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
-            $form->get('institution')->addError($error);
+            $error = new FormError("Please add at least one permitted institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
+            $form->get('permittedInstitutionalPHIScope')->addError($error);
         }
 
         if( $form->isValid() ) {
+            //exit('update form is valid');
+            //$this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');
+            //$this->removeCollection($entity,$originalAppTitles,'getAppointmentTitles');
+            //$this->removeCollection($entity,$originalLocations,'getLocations');
 
-            $this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');
-            $this->removeCollection($entity,$originalAppTitles,'getAppointmentTitles');
-            $this->removeCollection($entity,$originalLocations,'getLocations');
-
-            //$em->persist($entity);
+            $em->persist($entity);
             $em->flush();
-            return $this->redirect($this->generateUrl('showuser', array('id' => $id)));
+            return $this->redirect($this->generateUrl('scan_order_settings_show', array('id' => $id)));
         }
 
+        //exit('update form invalid');
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'cicle' => 'edit_user',
-            'user_id' => $id
+            'cicle' => 'edit',
+            'userid' => $id
         );
     }
 

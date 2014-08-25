@@ -360,7 +360,6 @@ class User extends BaseUser
     }
 
     public function __toString() {
-//        return "User: ".$this->username.", email=".$this->email.", PathServiceList count=".count($this->division)."<br>";
         if( $this->displayName && $this->displayName != "" ) {
             return $this->username." - ".$this->displayName;
         } else {

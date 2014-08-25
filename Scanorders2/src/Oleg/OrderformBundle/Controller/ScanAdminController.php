@@ -16,7 +16,6 @@ use Oleg\OrderformBundle\Entity\FormType;
 use Oleg\OrderformBundle\Entity\StainList;
 use Oleg\OrderformBundle\Entity\OrganList;
 use Oleg\OrderformBundle\Entity\ProcedureList;
-use Oleg\OrderformBundle\Entity\PathServiceList;
 use Oleg\OrderformBundle\Entity\Status;
 use Oleg\OrderformBundle\Entity\SlideType;
 use Oleg\OrderformBundle\Entity\MrnType;
@@ -516,49 +515,6 @@ class ScanAdminController extends AdminController
 
         return $count;
     }
-
-//    public function generatePathServices() {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:PathServiceList')->findAll();
-//
-//        if( $entities ) {
-//            return -1;
-//        }
-//
-//        $helper = new FormHelper();
-//        $services = $helper->getPathDivisions();
-//
-//        $username = $this->get('security.context')->getToken()->getUser();
-//
-//        $count = 1;
-//        foreach( $services as $service ) {
-//
-//            $pathlogyServices = explode("/",$service);
-//
-//            foreach( $pathlogyServices as $pathlogyService ) {
-//
-//                $pathlogyServiceEntity  = $em->getRepository('OlegOrderformBundle:PathServiceList')->findOneByName($pathlogyService);
-//
-//                if( $pathlogyServiceEntity ) {
-//                    //
-//                } else {
-//                    //echo " ".$pathlogyService.", ";
-//                    $list = new PathServiceList();
-//                    $this->setDefaultList($list,$count,$username,$pathlogyService);
-//
-//                    $em->persist($list);
-//                    $em->flush();
-//
-//                    $count = $count + 10;
-//                }
-//
-//            }
-//            //echo "<br>";
-//        }
-//
-//        return $count;
-//    }
 
     public function generateSlideType() {
 

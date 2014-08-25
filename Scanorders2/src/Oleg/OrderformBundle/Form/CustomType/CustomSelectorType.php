@@ -18,8 +18,8 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\PathServiceTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\UserPathServicesTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\ServiceTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\UserServicesTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\MrnTypeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\StringTransformer;
@@ -73,11 +73,11 @@ class CustomSelectorType extends AbstractType {
             case "sourceOrgan":
                 $transformer = new SourceOrganTransformer($this->om, $username);
                 break;
-            case "pathologyService":
-                $transformer = new PathServiceTransformer($this->om, $username);
+            case "service":
+                $transformer = new ServiceTransformer($this->om, $this->serviceContainer, $username);
                 break;
-            case "userPathologyServices":
-                $transformer = new UserPathServicesTransformer($this->om, $username);
+            case "userServices":
+                $transformer = new UserServicesTransformer($this->om, $this->serviceContainer, $username);
                 break;
             case "accessiontype":
                 $transformer = new AccessionTypeTransformer($this->om, $username);

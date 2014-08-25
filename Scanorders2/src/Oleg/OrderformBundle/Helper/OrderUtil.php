@@ -19,12 +19,16 @@ use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 class OrderUtil {
 
     private $em;
+    private $container;
+    private $sc;
 
-    public function __construct( $em=null ) {
+    public function __construct( $em, $container, $sc ) {
         $this->em = $em;
+        $this->container = $container;
+        $this->sc = $sc;
     }
 
-    public function redirectOrderByStatus($order,$routeName,$router) {
+    public function redirectOrderByStatus($order,$routeName) {
 
         if( $order->getType() == "Table-View Scan Order" ) {
             $edit = "table_edit";
@@ -36,6 +40,8 @@ class OrderUtil {
             $show = "multy_show";
         }
         //echo "show=".$show." <br>";
+
+        $router = $this->container->get('router');
 
         //if order is not submitted with edit url => change url to edit
         if( $order->getStatus()."" == "Not Submitted" && $routeName != $edit ) {
@@ -69,7 +75,7 @@ class OrderUtil {
 
     }
 
-    public function changeStatus( $id, $status, $user, $router=null, $swapId=null ) {
+    public function changeStatus( $id, $status, $user, $swapId=null ) {
 
         $em = $this->em;
 
@@ -159,14 +165,12 @@ class OrderUtil {
             $history->setCurrentid($entity->getOid());
             $history->setCurrentstatus($entity->getStatus());
 
-            if( $router ) {
-                $url = $router->generate( 'multy_show', array('id' => $id) );
-                $link = '<a href="'.$url.'">order '.$id.'</a>';
-                $notemsg = 'This order is an old superseded version of '.$link;
-                $history->setNote($notemsg);
-            } else {
-                throw new \Exception( 'Object does not have a valid router to create a link to an old superseded order.' );
-            }
+            $router = $this->container->get('router');
+            $url = $router->generate( 'multy_show', array('id' => $id) );
+            $link = '<a href="'.$url.'">order '.$id.'</a>';
+            $notemsg = 'This order is an old superseded version of '.$link;
+            $history->setNote($notemsg);
+
 
             $em->persist($entity);
             $em->persist($history);
@@ -400,7 +404,7 @@ class OrderUtil {
 
 
     //$flag = 'admin'-show only comments from users to admin or null-show only comments to the orders belonging to admin
-    public function getNotViewedComments($security_context, $flag=null)
+    public function getNotViewedComments($flag=null)
     {
         $repository = $this->em->getRepository('OlegOrderformBundle:History');
         $dql =  $repository->createQueryBuilder('history');
@@ -412,7 +416,7 @@ class OrderUtil {
         $dql->innerJoin("orderinfo.provider", "provider");
         $dql->leftJoin("orderinfo.proxyuser", "proxyuser");
 
-        $criteriastr = $this->getCommentsCriteriaStr($security_context, null, $flag);
+        $criteriastr = $this->getCommentsCriteriaStr(null, $flag);
 
         if( $criteriastr == "" ) {
             return null;
@@ -438,9 +442,9 @@ class OrderUtil {
 
     //$commentFlag = 'admin'-show only comments from users to admin;
     //$commentFlag = null-show only comments to the orders belonging to admin
-    public function getCommentsCriteriaStr($security_context, $flag = 'new_comments', $commentFlag = null) {
+    public function getCommentsCriteriaStr($flag = 'new_comments', $commentFlag = null) {
 
-        if( !$security_context->getToken() ) {
+        if( !$this->sc->getToken() ) {
             return "";
         }
 
@@ -452,7 +456,7 @@ class OrderUtil {
             return $criteriastr;
         }
 
-        $user = $security_context->getToken()->getUser();
+        $user = $this->sc->getToken()->getUser();
 
         if( !is_object($user) ) {
             return "";
@@ -461,7 +465,6 @@ class OrderUtil {
         $role = "ROLE_SCANORDER_PROCESSOR";
         $role2 = "ROLE_SCANORDER_ADMIN";
 
-//        if( $security_context->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $commentFlag && $commentFlag == 'admin' ) {
             //echo "comments to admin only!, userid=".$user->getId()." =>";
             //processor can see all histories created by user without processor role, but not for orders belonging to this processor
@@ -543,9 +546,13 @@ class OrderUtil {
     }
 
 
-    public function setWarningMessageNoInstitution( $user, $userUrl, $flashBag, $sysemail, $homeUrl ) {
+    public function setWarningMessageNoInstitution( $user ) {
 
-        //$sysemail = 'oli2002@med.cornell.edu';  //testing
+        $router = $this->container->get('router');
+        $userUrl = $router->generate('scan_showuser', array('id' => $user->getId()),true);
+        $homeUrl = $router->generate('main_common_home',array(),true);
+        $sysemail = $this->container->getParameter('default_system_email');
+        $flashBag = $this->container->get('session')->getFlashBag();
 
         $emailUtil = new EmailUtil();
         $emailUtil->initEmail($this->em);
@@ -581,6 +588,27 @@ class OrderUtil {
             $msg
         );
 
+    }
+
+
+    public function generateUserFilterOptions( $user ) {
+        $choicesServ = array(
+            "My Orders"=>"My Orders",
+            "Where I am the Submitter"=>"Where I am the Submitter",
+            "Where I am the Ordering Provider"=>"Where I am the Ordering Provider",
+            "Where I am the Course Director"=>"Where I am the Course Director",
+            "Where I am the Principal Investigator"=>"Where I am the Principal Investigator",
+            "Where I am the Amendment Author"=>"Where I am the Amendment Author"
+        );
+        if( is_object($user) && $user instanceof User ) {
+            $secUtil = $this->container->get('order_security_utility');
+            $services = $secUtil->getUserScanorderServices();
+            foreach( $services as $service ) {
+                $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
+            }
+        }
+
+        return $choicesServ;
     }
 
 

@@ -20,11 +20,6 @@ use FOS\UserBundle\Event\UserEvent;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Form\UserType;
-
-use Oleg\OrderformBundle\Security\Util\SecurityUtil;
-use Oleg\OrderformBundle\Security\Util\AperioUtil;
-use Oleg\OrderformBundle\Entity\PathService;
-
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
 
@@ -153,7 +148,7 @@ class UserController extends Controller
     public function showUser($id, $prefix=null) {
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+        $secUtil = $this->get('user_security_utility');
 
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
@@ -203,7 +198,7 @@ class UserController extends Controller
     public function editUser($id,$prefix=null) {
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+        $secUtil = $this->get('user_security_utility');
 
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
@@ -262,7 +257,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = new SecurityUtil($em,$this->get('security.context'),$this->get('session'));
+        $secUtil = $this->get('user_security_utility');
 
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );

@@ -42,31 +42,12 @@ class FilterType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        
-        if( $this->services ) {
-            
-            $userUtil = new UserUtil();
-
-            $builder->add('service', 'choice', array(
-                'label'     => 'Services',
-                'required'  => true,
-                'choices' => $this->services,
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-            
-        } else {
-            
-            $userUtil = new UserUtil();
-
-            $builder->add('service', 'choice', array(
-                'label'     => 'Services',
-                'required'  => true,
-                'choices' => $userUtil->generateUserPathServices($this->user),
-                'attr' => array('class' => 'combobox combobox-width')
-            ));
-            
-        }
-        
+        $builder->add('service', 'choice', array(
+            'label'     => 'Services',
+            'required'  => true,
+            'choices' => $this->services,
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
         
     }
 

@@ -66,4 +66,9 @@ services:
     #security utility
     order_security_utility:
         class: Oleg\OrderformBundle\Security\Util\SecurityUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
+    #scanorder utility
+    scanorder_utility:
+        class: Oleg\OrderformBundle\Helper\OrderUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@security.context"]

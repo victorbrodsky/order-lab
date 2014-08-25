@@ -91,17 +91,9 @@ class OrderInfoType extends AbstractType
 
         $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
 
-        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');
-        $builder->add('pathologyService', 'custom_selector', array(
-            'label' => 'Service:',
-            'attr' => $attr,
-            'required' => false,
-            'classtype' => 'pathologyService'
-        ));
-
         //priority
         $priorityArr = array(
-            'label' => '* Priority:',
+            'label' => 'Priority:',
             'choices' => $helper->getPriority(),
             'required' => true,
             'multiple' => false,
@@ -116,7 +108,7 @@ class OrderInfoType extends AbstractType
         //slideDelivery
         $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
         $builder->add('slideDelivery', 'custom_selector', array(
-            'label' => '* Slide Delivery:',
+            'label' => 'Slide Delivery:',
             'attr' => $attr,
             'required'=>true,
             'classtype' => 'slideDelivery'
@@ -124,7 +116,7 @@ class OrderInfoType extends AbstractType
 
         $attr = array('class' => 'ajax-combobox-return', 'type' => 'hidden');
         $builder->add('returnSlide', 'custom_selector', array(
-            'label' => '* Return Slides to:',
+            'label' => 'Return Slides to:',
             'attr' => $attr,
             'required'=>true,
             'classtype' => 'returnSlide'
@@ -171,33 +163,6 @@ class OrderInfoType extends AbstractType
             },
         ));
 
-
-        //new fields
-//        $attr = array('class' => 'ajax-combobox-department', 'type' => 'hidden');
-//        $builder->add('department', 'custom_selector', array(
-//            'label' => 'Department:',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'department'
-//        ));
-
-        $builder->add( 'institution', 'entity', array(
-            'class' => 'OlegUserdirectoryBundle:Institution',
-            'property' => 'name',
-            'label'=>'Institution:',
-            'required'=> true,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width combobox-institution'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('i')
-                    ->innerJoin('i.users', 'user')
-                    ->where('user = :user')
-                    ->setParameters( array(
-                        'user' => $this->params['user'],
-                ));
-            },
-        ));
-
         $builder->add( 'scanner', 'entity', array(
             'class' => 'OlegOrderformBundle:ScannerList',
             'property' => 'name',
@@ -228,6 +193,56 @@ class OrderInfoType extends AbstractType
             'required' => false,
             'classtype' => 'account'
         ));
+
+
+
+        //new fields
+//        $attr = array('class' => 'ajax-combobox-department', 'type' => 'hidden');
+//        $builder->add('department', 'custom_selector', array(
+//            'label' => 'Department:',
+//            'attr' => $attr,
+//            'required' => false,
+//            'classtype' => 'department'
+//        ));
+        //allow to select only one service
+//        $attr = array('class' => 'ajax-combobox-service', 'type' => 'hidden');  //ajax-combobox-pathservice
+//        $builder->add('service', 'custom_selector', array(
+//            'label' => 'Service:',
+//            'attr' => $attr,
+//            'required' => false,
+//            'classtype' => 'pathologyService'
+//        ));
+//        $builder->add( 'institution', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:Institution',
+//            'property' => 'name',
+//            'label'=>'Institution:',
+//            'required'=> true,
+//            'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width combobox-institution'),
+//            'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('i')
+//                        ->innerJoin('i.users', 'user')
+//                        ->where('user = :user')
+//                        ->setParameters( array(
+//                            'user' => $this->params['user'],
+//                        ));
+//                },
+//        ));
+
+        $builder->add('institution', 'entity', array(
+            'label' => 'Institution:',
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $this->params['institutions'],
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
+
+        $builder->add('service', 'entity', array(
+            'label' => 'Service:',
+            'class' => 'OlegUserdirectoryBundle:Service',
+            'choices' => $this->params['services'],
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
+
         
     }
 

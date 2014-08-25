@@ -63,7 +63,6 @@ use Oleg\OrderformBundle\Entity\Stain;
 
 use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\OrderformBundle\Entity\Research;
-use Oleg\OrderformBundle\Helper\OrderUtil;
 
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
@@ -120,8 +119,8 @@ class TableController extends Controller {
         }
 
         //redirect by status
-        $orderUtil = new OrderUtil();
-        $redirect = $orderUtil->redirectOrderByStatus($orderinfo,$routeName,$this->get('router'));
+        $orderUtil = $this->get('scanorder_utility');
+        $redirect = $orderUtil->redirectOrderByStatus($orderinfo,$routeName);
         if( $redirect ) {
             return $redirect;
         }
@@ -403,13 +402,17 @@ class TableController extends Controller {
         $user = $this->get('security.context')->getToken()->getUser();
 
         //check if user has at least one institution
-        if( count($user->getInstitutions()) == 0 ) {
-            $em = $this->getDoctrine()->getManager();
-            $orderUtil = new OrderUtil($em);
-            $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
-            $homeUrl = $this->generateUrl('main_common_home',array(),true);
-            $sysEmail = $this->container->getParameter('default_system_email');
-            $orderUtil->setWarningMessageNoInstitution($user,$userUrl,$this->get('session')->getFlashBag(),$sysEmail,$homeUrl);
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
@@ -465,14 +468,14 @@ class TableController extends Controller {
 
         $service = $user->getServices();
 
-        //set the first service
-        if( count($service) > 0 ) {
-            $entity->setPathologyService($service->first());
-        }
+        //set the default service
+        $entity->setService( $userSiteSettings->getDefaultService() );
 
         $type = "Table-View Scan Order";
 
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
+        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+
+        $params = array('type'=>$type, 'cicle'=>'new', 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
@@ -600,7 +603,7 @@ class TableController extends Controller {
 
         //add dataqualities to entity
         $dataqualities = $form->get('conflicts')->getData();
-        $orderUtil = new OrderUtil($em);
+        $orderUtil = $this->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
         $entity = $em->getRepository('OlegOrderformBundle:OrderInfo')->processOrderInfoEntity( $entity, $user, $type, $this->get('router') );

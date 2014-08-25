@@ -76,6 +76,15 @@ class UserRequest
      * @ORM\Column(type="string", nullable=true)
      */
     protected $department;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
+     * @ORM\JoinTable(name="accountrequest_service",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
+     * )
+     */
+    protected $services;
     
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -88,18 +97,9 @@ class UserRequest
     protected $similaruser;
 
     /**
-     * @ORM\ManyToMany(targetEntity="PathServiceList")
-     * @ORM\JoinTable(name="accountrequest_pathservice",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathservice_id", referencedColumnName="id")}
-     * )
-     */
-    protected $pathologyServices;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $primaryPathologyService;
+    protected $primaryService;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -136,7 +136,7 @@ class UserRequest
 
     function __construct()
     {
-        $this->pathologyServices = new ArrayCollection();
+        $this->services = new ArrayCollection();
         $this->institution = new ArrayCollection();
     }
 
@@ -263,46 +263,45 @@ class UserRequest
     }
 
 
-    public function addPathologyServices(\Oleg\OrderformBundle\Entity\PathServiceList $pathologyServices)
+    public function addServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
     {
-        if( !$this->pathologyServices->contains($pathologyServices) ) {
-            $this->pathologyServices->add($pathologyServices);
+        if( !$this->services->contains($service) ) {
+            $this->services->add($service);
         }
 
         return $this;
     }
 
-    public function removePathologyServices(\Oleg\OrderformBundle\Entity\PathServiceList $pathologyServices)
+    public function removeServices(\Oleg\UserdirectoryBundle\Entity\Service $service)
     {
-        $this->pathologyServices->removeElement($pathologyServices);
+        $this->services->removeElement($service);
     }
 
     /**
-     * @param mixed $pathologyServices
+     * @param mixed $services
      */
-    public function setPathologyServices($pathologyServices)
+    public function setServices($services)
     {
-        if( $pathologyServices->first() ) {
-            $this->primaryPathologyService = $pathologyServices->first()->getId();
+        if( $services->first() ) {
+            $this->primaryService = $services->first()->getId();
         } else {
-            $this->primaryPathologyService = NULL;
+            $this->primaryService = NULL;
         }
-        $this->pathologyServices = $pathologyServices;
+        $this->services = $services;
     }
 
     /**
      * @return mixed
      */
-    public function getPathologyServices()
+    public function getServices()
     {
-        //return $this->pathologyServices;
 
         $resArr = new ArrayCollection();
-        foreach( $this->pathologyServices as $service ) {
-            if( $service->getId()."" == $this->getPrimaryPathologyService()."" ) {
+        foreach( $this->services as $service ) {
+            if( $service->getId()."" == $this->getPrimaryService()."" ) {
                 //$resArr->removeElement($service);
                 //$resArr->first();
-                if( count($this->pathologyServices) > 1 ) {
+                if( count($this->services) > 1 ) {
                     $firstEl = $resArr->get(0);
                     $resArr->set(0,$service);
                     $resArr->add($firstEl);
@@ -317,19 +316,19 @@ class UserRequest
     }
 
     /**
-     * @param mixed $primaryPathologyService
+     * @param mixed $primaryService
      */
-    public function setPrimaryPathologyService($primaryPathologyService)
+    public function setPrimaryService($primaryService)
     {
-        $this->primaryPathologyService = $primaryPathologyService;
+        $this->primaryService = $primaryService;
     }
 
     /**
      * @return mixed
      */
-    public function getPrimaryPathologyService()
+    public function getPrimaryService()
     {
-        return $this->primaryPathologyService;
+        return $this->primaryService;
     }
 
     /**

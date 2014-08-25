@@ -30,7 +30,6 @@ use Oleg\OrderformBundle\Entity\Research;
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\OrderUtil;
 use Oleg\OrderformBundle\Helper\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
@@ -68,6 +67,21 @@ class MultiScanOrderController extends Controller {
 
         $user = $this->get('security.context')->getToken()->getUser();
 
+        //check if user has at least one institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName;
@@ -83,7 +97,9 @@ class MultiScanOrderController extends Controller {
             $new_order = "single_new";
         }
 
-        $params = array('type'=>$type, 'cicle'=>'create', 'service'=>null, 'user'=>$user);
+        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+
+        $params = array('type'=>$type, 'cicle'=>'create', 'user'=>$user, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices);
 
         $form = $this->createForm(new OrderInfoType($params,$entity), $entity);
 
@@ -165,7 +181,7 @@ class MultiScanOrderController extends Controller {
 
             //Add dataqualities to entity
             $dataqualities = $form->get('conflicts')->getData();
-            $orderUtil = new OrderUtil($em);
+            $orderUtil = $this->get('scanorder_utility');
             $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
             /////////////////// process and save form //////////////////////////////
@@ -269,17 +285,17 @@ class MultiScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         //check if user has at least one institution
-        if( count($user->getInstitutions()) == 0 ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                'You must be assigned to at least one institution to make an order. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').'.'
-//            );
-            $orderUtil = new OrderUtil($em);
-            $userUrl = $this->generateUrl('showuser', array('id' => $user->getId()),true);
-            $homeUrl = $this->generateUrl('main_common_home',array(),true);
-            $sysEmail = $this->container->getParameter('default_system_email');
-            $orderUtil->setWarningMessageNoInstitution($user,$userUrl,$this->get('session')->getFlashBag(),$sysEmail,$homeUrl);
-
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan-order-home') );
         }
 
@@ -364,18 +380,12 @@ class MultiScanOrderController extends Controller {
             $entity->setProxyuser($user);
         }
 
-        //$slide2 = new Slide();
-        //$block->addSlide($slide2);
+        //set the default service
+        $entity->setService( $userSiteSettings->getDefaultService() );
 
-        //get pathology service for this user
-        $service = $user->getServices();
+        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 
-        //set the first service
-        if( count($service) > 0 ) {
-            $entity->setPathologyService($service->first());
-        }
-
-        $params = array('type'=>$type, 'cicle'=>'new', 'service'=>$service, 'user'=>$user);
+        $params = array('type'=>$type, 'cicle'=>'new', 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params, $entity), $entity );
 
         if( $routeName != "single_new") {
@@ -416,6 +426,21 @@ class MultiScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if user has at least one institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
 
         //INNER JOIN orderinfo.block block
 //        INNER JOIN orderinfo.patient patient
@@ -466,8 +491,8 @@ class MultiScanOrderController extends Controller {
         }
 
         //redirect by status
-        $orderUtil = new OrderUtil();
-        $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName,$this->get('router'));
+        $orderUtil = $this->get('scanorder_utility');
+        $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName);
         if( $redirect != null ) {
             return $redirect;
         }
@@ -598,7 +623,9 @@ class MultiScanOrderController extends Controller {
 
         //echo "route=".$routeName.", type=".$type."<br>";
 
-        $params = array('type'=>$single_multy, 'cicle'=>$type, 'service'=>null, 'user'=>$user);
+        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+
+        $params = array('type'=>$single_multy, 'cicle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
         $form   = $this->createForm( new OrderInfoType($params,$entity), $entity, array('disabled' => $disable) );
 
         //echo "type=".$entity->getType();

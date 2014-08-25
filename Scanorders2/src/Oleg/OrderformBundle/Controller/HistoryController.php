@@ -532,9 +532,8 @@ class HistoryController extends Controller
     {
         $comments = 0;
 
-        $em = $this->getDoctrine()->getManager();
-        $orderUtil = new OrderUtil($em);
-        $histories = $orderUtil->getNotViewedComments($this->get('security.context'));
+        $orderUtil = $this->get('scanorder_utility');
+        $histories = $orderUtil->getNotViewedComments();
 
         if( $histories ) {
             $comments = count($histories);
@@ -560,8 +559,8 @@ class HistoryController extends Controller
         $comments = 0;
 
         $em = $this->getDoctrine()->getManager();
-        $orderUtil = new OrderUtil($em);
-        $histories = $orderUtil->getNotViewedComments($this->get('security.context'),'admin');
+        $orderUtil = $this->get('scanorder_utility');	
+        $histories = $orderUtil->getNotViewedComments('admin');
 
         if( $histories ) {
             $comments = count($histories);

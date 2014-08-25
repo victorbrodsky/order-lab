@@ -31,7 +31,7 @@ var _procedure = new Array();
 var _organ = new Array();
 var _delivery = new Array();
 var _returnslide = new Array();
-var _pathservice = new Array();
+var _service = new Array();
 var _projectTitle = new Array();
 var _courseTitle = new Array();
 
@@ -39,8 +39,6 @@ var _department = new Array();
 var _institution = new Array();
 var _account = new Array();
 var _urgency = new Array();
-
-//var userpathserviceflag = false;
 
 
 function regularCombobox() {
@@ -94,7 +92,7 @@ function customCombobox() {
         getComboboxOrgan(new Array("0","0","0","0","0","0"));
         getComboboxDelivery(new Array("0","0","0","0","0","0"));
         getComboboxReturn(new Array("0","0","0","0","0","0"));
-        getComboboxPathService(new Array("0","0","0","0","0","0"));
+        getComboboxService(new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
         getProjectTitle(new Array("0","0","0","0","0","0"));
         getCourseTitle(new Array("0","0","0","0","0","0"));
@@ -105,7 +103,7 @@ function customCombobox() {
     }
 
     if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
-        getComboboxPathService(new Array("0","0","0","0","0","0"));
+        getComboboxService(new Array("0","0","0","0","0","0"));
     }
 }
 
@@ -554,14 +552,12 @@ function getComboboxReturn(ids) {
 
 }
 
-//#############  pathology service for user and orderinfo  ##############//
-function getComboboxPathService(ids) {
+//#############  service for user and orderinfo  ##############//
+function getComboboxService(ids) {
 
-    //******************* order pathology service *************************//
-    //var uid = 'patient_'+ids[0]+'_procedure_'+ids[1]+'_accession_'+ids[2]+'_part_'+ids[3]+'_block_'+ids[4]+'_slide_'+ids[5];
-    //var id= "#oleg_orderformbundle_orderinfotype_";
-    var targetid = ".ajax-combobox-pathservice";
-    var url = getCommonBaseUrl("util/"+"pathservice");   //urlCommon+"pathservice";
+    //******************* order service *************************//
+    var targetid = ".ajax-combobox-service";
+    var url = getCommonBaseUrl("util/"+"service");
 
     if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" || cicle == "show" ) {
         var optStr = user_id;
@@ -578,24 +574,18 @@ function getComboboxPathService(ids) {
         var multiple = false;
     }
 
-    if( _pathservice.length == 0 ) {
+    if( _service.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).success(function(data) {
-                _pathservice = data;
-            populateSelectCombobox( targetid, _pathservice, "Departmental Division(s) / Service(s)", multiple );
+                _service = data;
+            populateSelectCombobox( targetid, _service, "Departmental Division(s) / Service(s)", multiple );
         });
     } else {
-        populateSelectCombobox( targetid, _pathservice, "Departmental Division(s) / Service(s)", multiple );
+        populateSelectCombobox( targetid, _service, "Departmental Division(s) / Service(s)", multiple );
     }
-
-//    $(targetid).select2("container").find("ul.select2-choices").sortable({
-//        containment: 'parent',
-//        start: function() { $(targetid).select2("onSortStart"); },
-//        update: function() { $(targetid).select2("onSortEnd"); }
-//    });
 
 }
 
@@ -984,7 +974,7 @@ function initComboboxJs(ids, holder) {
         getComboboxSpecialStain(ids,true);
 
         //order
-        getComboboxPathService(ids);
+        getComboboxService(ids);
         getProjectTitle(ids);
         getCourseTitle(ids);
         getComboboxDepartment(ids);

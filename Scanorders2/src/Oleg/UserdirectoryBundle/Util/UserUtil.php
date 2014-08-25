@@ -217,26 +217,6 @@ class UserUtil {
         return $count;
     }
 
-    public function generateUserPathServices( $user ) {
-        $choicesServ = array(
-            "My Orders"=>"My Orders",
-            "Where I am the Submitter"=>"Where I am the Submitter",
-            "Where I am the Ordering Provider"=>"Where I am the Ordering Provider",
-            "Where I am the Course Director"=>"Where I am the Course Director",
-            "Where I am the Principal Investigator"=>"Where I am the Principal Investigator",
-            "Where I am the Amendment Author"=>"Where I am the Amendment Author"
-        );
-        if( is_object($user) && $user instanceof User ) {
-            $services = $user->getServices();
-            foreach( $services as $service ) {
-                $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
-            }
-        }
-
-        return $choicesServ;
-    }
-
-
     public function setLoginAttempt( $request, $security_content, $em, $options ) {
 
         $user = null;

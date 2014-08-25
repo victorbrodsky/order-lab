@@ -99,7 +99,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
                 <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Institution(s)', 'accreq.institution') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Service(s)', 'services.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
@@ -146,9 +146,8 @@
 
                 <td>{{ entity.department }}</td>
                 <td>
-                    {#{{ entity.pathologyServices }}#}
-                    {% for pathologyServices in entity.pathologyServices %}
-                        "{{ pathologyServices }}"
+                    {% for services in entity.services %}
+                        "{{ services }}"
                     {% endfor %}
                 </td>
                 <td>

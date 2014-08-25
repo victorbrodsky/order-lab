@@ -11,6 +11,14 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 
 class UserRequestType extends AbstractType
 {
+
+    protected $params;
+
+    public function __construct( $params )
+    {
+        $this->params = $params;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {     
         $helper = new FormHelper();
@@ -60,7 +68,8 @@ class UserRequestType extends AbstractType
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
-        
+
+        //institutions
         $builder->add( 'institution', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',
@@ -71,19 +80,40 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
         ));
         
-        $builder->add( 'department', 'text', array(
-                'label'=>'Department:',
-                'required'=> false,
-                'data'=>'Department of Pathology and Laboratory Medicine',
-                'attr' => array('class'=>'form-control form-control-modif'),
+//        $builder->add( 'department', 'text', array(
+//                'label'=>'Department:',
+//                'required'=> false,
+//                'data'=>'Pathology and Laboratory Medicine',
+//                'attr' => array('class'=>'form-control form-control-modif'),
+//        ));
+
+        foreach( $this->params['departments'] as $dep ) {
+            echo "dep=".$dep->getName()."<br>";
+        }
+
+
+        $builder->add('department', 'entity', array(
+            'label' => 'Department:',
+            'required'=> true,
+            'class' => 'OlegUserdirectoryBundle:Department',
+            'choices' => $this->params['departments'],
+            'attr' => array('class' => 'combobox combobox-width')
         ));
 
-        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-        $builder->add('pathologyServices', 'custom_selector', array(
-            'label' => 'Departmental Division(s) / Service(s):',
-            'attr' => $attr,
-            'required' => false,
-            'classtype' => 'userPathologyServices'
+        //services
+//        $attr = array('class' => 'ajax-combobox-service', 'type' => 'hidden');    //new
+//        $builder->add('services', 'custom_selector', array(
+//            'label' => 'Departmental Service(s):',
+//            'attr' => $attr,
+//            'required' => false,
+//            'classtype' => 'userServices'
+//        ));
+        $builder->add('services', 'entity', array(
+            'label' => 'Service(s):',
+            'class' => 'OlegUserdirectoryBundle:Service',
+            'choices' => $this->params['services'],
+            'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width')
         ));
         
         $builder->add('request', 'textarea', array(

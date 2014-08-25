@@ -97,6 +97,8 @@ security:
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
+     - { path: ^/scan/site-settings/show/, role: ROLE_USER }
+     - { path: ^/scan/site-settings/edit/, role: ROLE_SCANORDER_ADMIN }
 
      - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }

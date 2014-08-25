@@ -146,11 +146,12 @@ class UtilController extends Controller {
         return $response;
     }
 
+    //TODO: test it according to new Service!
     /**
-     * @Route("/pathservice", name="get-pathservice")
+     * @Route("/service", name="get-service")
      * @Method("GET")
      */
-    public function getPathServiceAction() {
+    public function getServiceAction() {
 
         $whereServicesList = "";
 
@@ -160,7 +161,7 @@ class UtilController extends Controller {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegOrderformBundle:PathServiceList', 'list')
+            ->from('OlegUserdirectoryBundle:Service', 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -492,46 +493,46 @@ class UtilController extends Controller {
         return $response;
     }
 
-
-    /**
-     * @Route("/userpathservice", name="get-userpathservice")
-     * @Method("POST")
-     */
-    public function getUserPathServiceAction() {
-
-        $output = array();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
-        $username   = $request->get('username');
-        //echo "username=".$username."<br>";
-
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername(trim($username));
-        //echo $user;
-
-        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find(15);
-        if( $user ) {
-            //echo "user found!";
-            $services = $user->getServices();
-            //echo "count=".count($services);
-
-            //$count=0;
-            foreach( $services as $service) {
-                $temp = array('id'=>$service->getId(), 'text'=>$service->getName());
-                $output[] = $temp;
-                //$count++;
-            }
-
-        } else {
-            //echo "no user found!";
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
+//    //TODO: test it according to new Service!
+//    /**
+//     * @Route("/userpathservice", name="get-userpathservice")
+//     * @Method("POST")
+//     */
+//    public function getUserPathServiceAction() {
+//
+//        $output = array();
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $request = $this->get('request');
+//        $username   = $request->get('username');
+//        //echo "username=".$username."<br>";
+//
+//        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername(trim($username));
+//        //echo $user;
+//
+//        //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find(15);
+//        if( $user ) {
+//            //echo "user found!";
+//            $services = $user->getServices();
+//            //echo "count=".count($services);
+//
+//            //$count=0;
+//            foreach( $services as $service) {
+//                $temp = array('id'=>$service->getId(), 'text'=>$service->getName());
+//                $output[] = $temp;
+//                //$count++;
+//            }
+//
+//        } else {
+//            //echo "no user found!";
+//        }
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
 
     /**

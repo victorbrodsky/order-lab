@@ -12,6 +12,16 @@ namespace Oleg\UserdirectoryBundle\Security\Util;
 
 class UserSecurityUtil {
 
+    protected $em;
+    protected $sc;
+    protected $container;
+
+    public function __construct( $em, $sc, $container ) {
+        $this->em = $em;
+        $this->sc = $sc;
+        $this->container = $container;
+    }
+
     public function isCurrentUser( $id ) {
 
         $user = $this->sc->getToken()->getUser();

@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -13,8 +14,8 @@ use Oleg\OrderformBundle\Entity\UserRequest;
 use Oleg\OrderformBundle\Form\UserRequestType;
 use Oleg\OrderformBundle\Form\UserRequestApproveType;
 use Oleg\OrderformBundle\Helper\EmailUtil;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
+//use Oleg\UserdirectoryBundle\Util\UserUtil;
+//use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 /**
  * UserRequest controller.
@@ -42,7 +43,7 @@ class UserRequestController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:UserRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        $dql->leftJoin("accreq.division", "division");
+        //$dql->leftJoin("accreq.division", "division");
         $dql->orderBy("accreq.creationdate","DESC");
 
         $limit = 30;
@@ -82,7 +83,11 @@ class UserRequestController extends Controller
         //exit("createAction");
 
         $entity  = new UserRequest();
-        $form = $this->createForm(new UserRequestType(), $entity);
+
+        $params = $this->getParams();
+
+        $form = $this->createForm(new UserRequestType($params), $entity);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -118,7 +123,10 @@ class UserRequestController extends Controller
     public function newAction()
     {
         $entity = new UserRequest();
-        $form   = $this->createForm(new UserRequestType(), $entity);
+
+        $params = $this->getParams();
+
+        $form   = $this->createForm(new UserRequestType($params), $entity);
 
         return array(
             'entity' => $entity,
@@ -177,7 +185,10 @@ class UserRequestController extends Controller
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
         }
 
-        $editForm = $this->createForm(new UserRequestType(), $entity);
+        $params = $this->getParams();
+
+        $editForm = $this->createForm(new UserRequestType($params), $entity);
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -210,7 +221,11 @@ class UserRequestController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new UserRequestType(), $entity);
+
+        $params = $this->getParams();
+
+        $editForm = $this->createForm(new UserRequestType($params), $entity);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -366,6 +381,44 @@ class UserRequestController extends Controller
         return $this->redirect($this->generateUrl('accountrequest'));
     }
 
+    public function getParams() {
+
+        $params = array();
+
+        $em = $this->getDoctrine()->getManager();
+
+        //departments
+        $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+        $departments = new ArrayCollection();
+        $departments->add($department);
+
+        //echo "dep=".$department->getName()."<br>";
+
+        //divisions
+        $divisions = $department->getDivisions();
+
+        //services
+        $services = new ArrayCollection();
+        foreach( $divisions as $division ) {
+
+            foreach( $division->getServices() as $service ) {
+                $services->add($service);
+            }
+
+        }
+        //$services = $em->getRepository('OlegUserdirectoryBundle:Service')->findByDepartment($department);
+
+        //foreach( $departments as $dep ) {
+        //    echo "dep=".$dep->getName()."<br>";
+        //}
+        //exit('exit');
+
+        $params['departments'] = $departments;
+        $params['services'] = $services;
+
+        return $params;
+    }
+
 
 
 
@@ -514,7 +567,7 @@ class UserRequestController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        $dql->leftJoin("accreq.division", "division");
+        //$dql->leftJoin("accreq.division", "division");
         $dql->where("accreq.appliedforaccess = 'active' OR accreq.appliedforaccess = 'declined' OR accreq.appliedforaccess = 'approved'");
         $dql->orderBy("accreq.appliedforaccess","DESC");
 
