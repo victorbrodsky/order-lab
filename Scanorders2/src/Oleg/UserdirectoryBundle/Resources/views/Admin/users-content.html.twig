@@ -1,0 +1,117 @@
+
+<h3 class="text-info">Users</h3>
+<table class="records_list table table-hover table-condensed text-left">
+    <thead>
+    <tr>
+        <th>{{ knp_pagination_sortable(entities, 'ID', 'user.id') }}</th>
+        <th>
+            {{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}
+        </th>
+        <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Title', 'user.administrativeTitles') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
+        <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>
+        <th>
+            {{ knp_pagination_sortable(entities, 'Institution(s)', 'administrativeInstitution.name') }}
+        </th>
+        <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.locked') }}</th>
+
+
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody data-link="row" class="rowlink">
+    {% for entity in entities %}
+        <tr>
+            <td><a href="{{ path( sitename~'showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>
+                {% for service in entity.getServices %}
+                    {% if service is defined and service != "" %}
+                        "{{ service.name }}"<br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ entity.displayName }}</td>
+            <td>
+                {% for administrativeTitle in entity.administrativeTitles %}
+                    {{ administrativeTitle.name }}<br>
+                {% endfor %}
+
+            </td>
+            <td>{{ entity.username }}</td>
+            <td>{{ entity.email }}</td>
+            <td>{{ entity.preferredPhone }}</td>
+            <td>
+                {% for institution in entity.getinstitutions %}
+                    "{{ institution }}"
+                {% endfor %}
+            </td>
+            <td>
+                {% for role in entity.roles %}
+                    {% if role != "ROLE_USER" %}
+                        "{{ attribute(roles, role) }}"
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
+            <td>
+                {% if entity.locked == 1 %}
+                    true
+                {% else %}
+                    false
+                {% endif %}
+            </td>
+
+            <td class="rowlink-skip">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Action <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+                        <li><a href="{{ path(sitename~'showuser', { 'id': entity.id }) }}">View Details</a></li>
+
+
+                        {% if app.security.getToken().getUser().getId() != entity.id %}
+
+                            {% if entity.locked == 0 %}
+                                <li><a data-confirm="Are you sure you want to Lock this user?"
+                                       href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'declined', 'role': 'declined' }) }}">Lock</a>
+                                </li>
+                            {% else %}
+                                <li><a data-confirm="Are you sure you want to Unlock this user?"
+                                       href="{{ path('accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}">Unlock</a>
+                                </li>
+                            {% endif %}
+
+                        {% endif %}
+
+                    </ul>
+
+                </div>
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="navigation">
+    {{ knp_pagination_render(entities) }}
+</div>
+
+
+{#<a href="{{ path('fos_user_registration_register') }}">#}
+    {#Create a new entry#}
+{#</a>#}
+
+{#<a href="{{ path('new_user') }}">#}
+    {#Create a new user#}
+{#</a>#}
+
+<br>

@@ -31,13 +31,31 @@ class PerSiteSettingsType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
-            $builder->add( 'permittedInstitutionalPHIScope', null, array(
-                'label'=>'Permitted Institutional PHI Scope:',
-                'required'=>false,
+//            $builder->add( 'permittedInstitutionalPHIScope', null, array(
+//                'label'=>'Permitted Institutional PHI Scope:',
+//                'required'=>false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width')
+//            ));
+            $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                'property' => 'name',
+                'label'=>'Institution:',
+                'required'=> false,
                 'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width')
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
 
+            //TODO: change scanOrdersServicesScope and chiefServices view accroding to the parent
             $builder->add( 'scanOrdersServicesScope', null, array(
                 'label'=>'Scan Orders Services Scope:',
                 'required'=>false,

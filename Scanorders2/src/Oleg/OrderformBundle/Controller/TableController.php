@@ -466,10 +466,11 @@ class TableController extends Controller {
         $res = new Research();
         $entity->setResearch($res);
 
-        $service = $user->getServices();
-
         //set the default service
-        $entity->setService( $userSiteSettings->getDefaultService() );
+        $entity->setService($userSiteSettings->getDefaultService());
+
+        //set the default institution
+        $entity->setInstitution($permittedInstitutions->first());
 
         $type = "Table-View Scan Order";
 

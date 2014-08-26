@@ -157,11 +157,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //remove original from institution if original is present.
         //That means that original has been replaced by found entity from DB, but we added original to institution and error will be thrown:
         //A new entity was found through the relationship 'Oleg\OrderformBundle\Entity\Institution#parts
-        if( $original ) {
-            echo "remove original from institution:".$original;
-            $removeClassMethod = 'remove'.$className;
-            $orderinfo->getInstitution()->$removeClassMethod($original);
-        }
+        //if( $original ) {
+            //echo "remove original from institution:".$original;
+            //$removeClassMethod = 'remove'.$className;
+            //$orderinfo->getInstitution()->$removeClassMethod($original);
+        //}
 
         //Check if institution of orderinfo and entity are match.
         //Since we set institution of entity from orderinfo on the previous step, the institution of orderinfo and entity must be the same.
@@ -985,7 +985,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entityClass = "Oleg\\OrderformBundle\\Entity\\".$className;
         $entity = new $entityClass($withfields,'valid',$provider);
 
-        $inst = $em->getRepository('OlegOrderformBundle:Institution')->findOneById($institution);
+        $inst = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneById($institution);
         $entity->setInstitution($inst);
         $institutions = array();
         $institutions[] = $institution;

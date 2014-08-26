@@ -5,6 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class UserRequestApproveType extends AbstractType
 {
@@ -25,7 +26,16 @@ class UserRequestApproveType extends AbstractType
             'label'=>false,
             'required'=> true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox institution-combobox'), //combobox-width
+            'attr' => array('class'=>'combobox institution-combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
         ));
 
     }

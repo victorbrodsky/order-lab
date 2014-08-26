@@ -9,6 +9,7 @@
 
 namespace Oleg\OrderformBundle\Security\Util;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -126,8 +127,10 @@ class SecurityUtil extends UserSecurityUtil {
         //order's service
         $service = $order->getService();
 
+        $userSiteSettings = $this->getUserPerSiteSettings($user);
+
         //service chief can perform any actions
-        $userChiefServices = $user->getChiefservices();
+        $userChiefServices = $userSiteSettings->getChiefServices();
         if( $userChiefServices->contains($service) ) {
             return true;
         }
@@ -157,7 +160,7 @@ class SecurityUtil extends UserSecurityUtil {
             //show is allowed if the user belongs to the same service
             if( $action == 'show' ) {
                 //echo "action: show <br>";
-                $userServices = $user->getServices();
+                $userServices = $userSiteSettings->getScanOrdersServicesScope();
                 if( $userServices->contains($service) ) {
                     return true;
                 }
@@ -169,24 +172,54 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getUserPermittedInstitutions($user) {
-        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
-            array('user' => $user, 'siteName' => 'scanorder')
-        );
-        return $entity->getPermittedInstitutionalPHIScope();
+
+        $institutions = new ArrayCollection();
+
+        $entity = $this->getUserPerSiteSettings($user);
+
+        if( !$entity )
+            return $institutions;
+
+        $institutions = $entity->getPermittedInstitutionalPHIScope();
+
+        return $institutions;
     }
 
     public function getUserDefaultService($user) {
-        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
-            array('user' => $user, 'siteName' => 'scanorder')
-        );
+        $entity = $this->getUserPerSiteSettings($user);
+
+        if( !$entity )
+            return null;
+
         return $entity->getDefaultService();
     }
 
     public function getUserScanorderServices($user) {
-        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
-            array('user' => $user, 'siteName' => 'scanorder')
-        );
-        return $entity->getScanOrdersServicesScope();
+
+        $services = new ArrayCollection();
+
+        $entity = $this->getUserPerSiteSettings($user);
+
+        if( !$entity )
+            return $services;
+
+        $services = $entity->getScanOrdersServicesScope();
+
+        return $services;
+    }
+
+    public function getUserChiefServices($user) {
+
+        $services = new ArrayCollection();
+
+        $entity = $this->getUserPerSiteSettings($user);
+
+        if( !$entity )
+            return $services;
+
+        $services = $entity->getChiefServices();
+
+        return $services;
     }
 
     public function getUserPerSiteSettings($user) {
@@ -194,77 +227,8 @@ class SecurityUtil extends UserSecurityUtil {
             array('user' => $user, 'siteName' => 'scanorder')
         );
 
-//        if( !$entity ) {
-//            $orderUtil = $this->container->get('scanorder_utility');
-//            $orderUtil->setWarningMessageNoInstitution($user);
-//            $router = $this->container->get('router');
-//            return new RedirectResponse( $router->generate('scan-order-home') );
-//            //return $router->redirect( $this->generateUrl('scan-order-home') );
-//        }
-
         return $entity;
     }
-
-
-//    //check if the user can view or edit the content of this orderinfo
-//    public function isCurrentUserAllow( $oid ) {
-//
-//        $allow = false;
-//
-//        //allow to processor
-//        if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
-//            return true;
-//        }
-//
-//        $user = $this->sc->getToken()->getUser();
-//
-//        $entity = $this->em->getRepository('OlegOrderformBundle:OrderInfo')->find($oid);
-//
-//        //check if this order has service of this user
-//        if( $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
-//
-//            $services = array();
-//            $userServices = $user->getPathologyServices();
-//            $orderpathservice = $entity->getPathologyService();
-//
-//            if( $orderpathservice ) {
-//
-//                if( $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
-//                    $chiefServices = $user->getChiefservices();
-//                    if( $userServices && count($userServices)>0 ) {
-//                        $services = array_merge($userServices, $chiefServices);
-//                    } else {
-//                        $services = $chiefServices;
-//                    }
-//                }//if
-//
-//                foreach( $services as $service ) {
-//                    if( $orderpathservice->getId() == $service->getId() ) {
-//                        return true;
-//                    }
-//                }//foreach
-//
-//            }//if $orderpathservice
-//
-//        }//if ROLE_SCANORDER_SERVICE_CHIEF
-//
-//        if( $entity ) {
-//
-//            //echo "provider:".$entity->getProvider()->getId()." ?= ".$user->getId()."<br>";
-//
-//            if( $entity->getProvider() && $entity->getProvider()->getId() === $user->getId() ) {
-//                $allow = true;
-//            }
-//
-//            if( $entity->getProxyuser()&& $entity->getProxyuser()->getId() === $user->getId() ) {
-//                //echo "proxy:".$entity->getProxyuser()->getId()." ?= ".$user->getId()."<br>";
-//                $allow = true;
-//            }
-//
-//        }
-//
-//        return $allow;
-//    }
 
 
 }

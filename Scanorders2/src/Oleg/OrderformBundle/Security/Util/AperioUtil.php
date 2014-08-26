@@ -79,7 +79,7 @@ class AperioUtil {
                 }
                 ////////// EOF assign Institution //////////
 
-                ////////// check if aperio username was set in UserRequest for this user (identification by email) //////////
+                ////////// check if aperio username was set in UserRequest for this user (identification by email). //////////
                 $userRequest = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
                 if( $userRequest ) {
                     if( $userRequest->getStatus() != 'approved' ) {

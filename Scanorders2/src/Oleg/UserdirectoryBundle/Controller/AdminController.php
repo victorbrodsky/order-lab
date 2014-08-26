@@ -243,7 +243,7 @@ class AdminController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
 
         if( $entities ) {
-            return -1;
+            //return -1;
         }
 
         $wcmcDep = array(
@@ -416,10 +416,10 @@ class AdminController extends Controller
 
         $institutions = array(
             'Weill Cornell Medical College'=>$wcmc,
-            //"New York Hospital"=>$nyh,
-            //"Weill Cornell Medical College Qatar"=>$wcmcq,
-            //"Memorial Sloan Kettering Cancer Center"=>$msk,
-            //"Hospital for Special Surgery"=>$hss
+            "New York Hospital"=>$nyh,
+            "Weill Cornell Medical College Qatar"=>$wcmcq,
+            "Memorial Sloan Kettering Cancer Center"=>$msk,
+            "Hospital for Special Surgery"=>$hss
         );
 
 
@@ -477,10 +477,10 @@ class AdminController extends Controller
 
             $em->persist($institution);
             $em->flush();
-            $count = $instCount + 10;
+            $instCount = $instCount + 10;
         } //foreach
 
-        return $count;
+        return $instCount;
     }
 
 

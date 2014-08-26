@@ -37,10 +37,6 @@ class Research
      */
     protected $orderinfo;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="Slide", mappedBy="research")
-//     */
-//    protected $slide;
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="research")
      */

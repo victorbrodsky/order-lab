@@ -25,9 +25,9 @@ class ResearchRepository extends ListAbstractRepository {
         );
         $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), $objectParams, $user );
         $research->setProjectTitle($projectTitle);
-        //echo "projectTitle name=".$projectTitle->getName()."<br>";
+        echo "projectTitle name=".$projectTitle->getName()."<br>";
 
-        //echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
+        echo "SetTitleStr=".$research->getSetTitleStr()."<br>";
 
         //process Set Title
         $objectParams = array(

@@ -161,16 +161,16 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
+        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+        if (!$subjectuser) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
         $entity = $secUtil->getUserPerSiteSettings($id);
 
         if( !$entity ) {
 
             $user = $this->get('security.context')->getToken()->getUser();
-
-            $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-            if (!$subjectuser) {
-                throw $this->createNotFoundException('Unable to find User entity.');
-            }
 
             $entity = new PerSiteSettings();
             $entity->setSiteName('scanorder');
@@ -194,6 +194,7 @@ class ScanUserController extends UserController
             'form' => $form->createView(),
             'cicle' => $cicle,
             'userid' => $id,
+            'username' => $subjectuser.""
         );
     }
 

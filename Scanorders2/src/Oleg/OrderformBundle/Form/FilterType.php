@@ -5,47 +5,39 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class FilterType extends AbstractType
 {
 
-    protected $statuses;
-    protected $user;
-    protected $services;
+    private $params;
 
-    public function __construct( $statuses = null, $user = null, $services = null )
+    public function __construct( $params )
     {
-        $this->statuses = $statuses;
-        $this->user = $user;
-        $this->services = $services;
+        $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {                              
 
         $builder->add( 'filter', 'choice', array(  
-                'label' => 'Filter by Order Status:',
-                'max_length'=>50,
-                //'choices' =>$this->statuses,  // $this->statuses->name, //$search,
-                'choices' => $this->statuses,
-                'required' => true,
-                //'multiple' => true,
-                //'expanded' => true,
-                'attr' => array('class' => 'combobox combobox-width order-status-filter')
+            'label' => 'Filter by Order Status:',
+            'max_length'=>50,
+            'choices' => $this->params['statuses'],
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width order-status-filter')
         ));                       
         
         $builder->add('search', 'text', array(
-                'max_length'=>200,
-                'required'=>false,
-                'label'=>'Search:',
-                'attr' => array('class'=>'form-control form-control-modif'),
+            'max_length'=>200,
+            'required'=>false,
+            'label'=>'Search:',
+            'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
         $builder->add('service', 'choice', array(
             'label'     => 'Services',
             'required'  => true,
-            'choices' => $this->services,
+            'choices' => $this->params['services'],
             'attr' => array('class' => 'combobox combobox-width')
         ));
         

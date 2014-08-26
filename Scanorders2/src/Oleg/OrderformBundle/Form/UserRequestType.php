@@ -5,7 +5,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-//use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
@@ -76,8 +76,16 @@ class UserRequestType extends AbstractType
                 'label'=>'Institution:',
                 'required'=> false,
                 'multiple' => true,
-                //'data'=>'Weill Cornell Medical College',
                 'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
         ));
         
 //        $builder->add( 'department', 'text', array(
@@ -87,9 +95,9 @@ class UserRequestType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif'),
 //        ));
 
-        foreach( $this->params['departments'] as $dep ) {
-            echo "dep=".$dep->getName()."<br>";
-        }
+        //foreach( $this->params['departments'] as $dep ) {
+        //    echo "dep=".$dep->getName()."<br>";
+        //}
 
 
         $builder->add('department', 'entity', array(

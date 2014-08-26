@@ -162,7 +162,7 @@ class CheckController extends Controller {
                 'sex'=>$this->getArrayFieldJson( array($entity->obtainValidField('sex')) ),
                 'dob'=>$this->getArrayFieldJson($entity->getDob()),
                 'age'=>$entity->calculateAge(),
-                'clinicalHistory'=>$this->getArrayFieldJson($entity->getAllValidNotEmptyClinicalHistories())
+                'clinicalHistory'=>$this->getArrayFieldJson($entity->obtainAllValidNotEmptyClinicalHistories())
                 //'clinicalHistory'=>$this->getArrayFieldJson( array($entity->obtainValidField('clinicalHistory')) )
             );
         } 

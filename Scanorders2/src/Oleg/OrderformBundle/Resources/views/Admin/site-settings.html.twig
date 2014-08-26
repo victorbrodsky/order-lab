@@ -2,14 +2,14 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
-    Per Site User Settings
+    Per Site User Settings: {{ username }}
 {% endblock %}
 
 {% block content %}
 
     {{ form_start(form) }}
 
-        <h3 class="text-info">Per Site User Settings</h3>
+        <h3 class="text-info">Per Site User Settings: {{ username }}</h3>
         <div class="well">
             {{ formmacros.field(form.siteName) }}
             {{ formmacros.field(form.permittedInstitutionalPHIScope) }}
@@ -19,7 +19,7 @@
         </div>
 
 
-        {% if cicle != "show" %}
+        {% if cicle != "show" and is_granted('ROLE_SCANORDER_ADMIN') %}
             <p>
             <div>
                 <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
@@ -30,12 +30,12 @@
 
     {{ form_end(form) }}
 
-    {% if cicle == "show" %}
+    {% if cicle == "show" and is_granted('ROLE_SCANORDER_ADMIN') %}
         <p><a class="btn btn-success" href="{{ path('scan_order_settings_edit',{'id':userid}) }}">Edit</a></p>
     {% endif %}
 
 
     <br>
-    <p><a href="{{ path('scan_showuser',{'id':userid}) }}">Back to User's Details </a></p>
+    <p><a href="{{ path('scan_showuser',{'id':userid}) }}">Back to the User's Details </a></p>
 
 {% endblock %}

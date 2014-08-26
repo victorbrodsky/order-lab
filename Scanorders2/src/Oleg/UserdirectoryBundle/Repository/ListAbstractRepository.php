@@ -36,7 +36,7 @@ class ListAbstractRepository extends EntityRepository {
         $entity = $this->_em->getRepository($objectParams['fullBundleName'].':'.$objectParams['className'])->findOneBy( $criterions );
 
         if( !$entity ) {
-            //echo $objectParams['className'].': not found <br>';
+            echo $objectParams['className'].': not found <br>';
             //create a new setTitle
             $entity = $this->createNewListEntity($objectParams,$name,$user);
         } else {

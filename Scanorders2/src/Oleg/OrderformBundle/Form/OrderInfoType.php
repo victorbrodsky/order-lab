@@ -231,13 +231,18 @@ class OrderInfoType extends AbstractType
 
         $builder->add('institution', 'entity', array(
             'label' => 'Institution:',
+            'required'=> true,
+            'multiple' => false,
+            'empty_value' => false,
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['institutions'],
-            'attr' => array('class' => 'combobox combobox-width')
+            'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
         $builder->add('service', 'entity', array(
             'label' => 'Service:',
+            'required'=> false,
+            'multiple' => false,
             'class' => 'OlegUserdirectoryBundle:Service',
             'choices' => $this->params['services'],
             'attr' => array('class' => 'combobox combobox-width')

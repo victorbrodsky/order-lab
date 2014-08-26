@@ -4,12 +4,12 @@
 
 {% block addcontent %}
 
-    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
-        <br>
-        <br>
-        <p>
-            <a href="{{ path('scan_order_settings_show',{'id':entity.id}) }}">User's Scan Order Settings</a>
-        </p>
-    {% endif %}
+    <br>
+
+    <br>
+
+    <p>
+        <a href="{{ path('scan_order_settings_show',{'id':entity.id}) }}">User's Scan Order Settings</a>
+    </p>
 
 {% endblock %}

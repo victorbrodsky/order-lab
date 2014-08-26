@@ -381,7 +381,12 @@ class MultiScanOrderController extends Controller {
         }
 
         //set the default service
-        $entity->setService( $userSiteSettings->getDefaultService() );
+        $entity->setService($userSiteSettings->getDefaultService());
+
+        //set the default institution
+        $entity->setInstitution($permittedInstitutions->first());
+
+
 
         $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
 

@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -87,10 +88,9 @@ class ScanOrderController extends Controller {
 
         if( $routeName == "incoming-scan-orders" ) {
             $services = $this->getServiceFilter();
-            $commentFlag = 'admin';
         } else {
-            $services = null;
-            $commentFlag = null;
+            $orderUtil = $this->get('scanorder_utility');
+            $services = $orderUtil->generateUserFilterOptions($user);
         }
 
 //        $adminemail = $this->container->getParameter('scanorder.adminemail');
@@ -101,7 +101,10 @@ class ScanOrderController extends Controller {
         //$this->get('craue_config')->set('ldap_driver_host', 'a.wcmc-ad.net');
 
         //create filters
-        $form = $this->createForm(new FilterType( $this->getFilter($routeName), $user, $services ), null);
+        $params = array();
+        $params['services'] = $services;
+        $params['statuses'] = $this->getFilter($routeName);
+        $form = $this->createForm(new FilterType( $params ), null);
         $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
         $search = $form->get('search')->getData();
@@ -122,8 +125,11 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:OrderInfo');
 
         $withSearch = true;
+
         $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context'), $withSearch );
+
         $dql = $res['dql'];
+
         $criteriastr = $res['criteriastr'];
         $showprovider = $res['showprovider'];
         $showproxyuser = $res['showproxyuser'];
@@ -386,7 +392,6 @@ class ScanOrderController extends Controller {
     }
     
 
-    //TODO: test to new Service
     public function getServiceFilter() {
         $em = $this->getDoctrine()->getManager();
 
@@ -414,7 +419,7 @@ class ScanOrderController extends Controller {
     }
 
     //Service filter
-    public function allServiceFilter( $service, $routeName, $user, $criterions ) {
+    public function addUserServices( $service, $routeName, $user, $criterions ) {
 
         $criteriastr = "";
         $em = $this->getDoctrine()->getManager();
@@ -426,8 +431,6 @@ class ScanOrderController extends Controller {
         //for "My Orders" get all user services and chief services
         if( $routeName == "my-scan-orders" ) {
 
-            $services = array();
-
             $securityUtil = $this->get('order_security_utility');
             $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 
@@ -436,13 +439,14 @@ class ScanOrderController extends Controller {
             if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $userSiteSettings->getChiefServices();
                 if( $userServices && count($userServices)>0 ) {
-                    $services = array_merge($userServices, $chiefServices);
-                } else {
-                    $services = $chiefServices;
+                    //$services = array_merge($userServices, $chiefServices);
+                    foreach( $chiefServices as $serv ) {
+                        $userServices->add($serv);
+                    }
                 }
             }
 
-            foreach( $services as $service ) {
+            foreach( $userServices as $service ) {
                 if( $service && $service != "" ) {
                     if( $criteriastr != "" ) {
                         $criteriastr .= " OR ";
@@ -492,16 +496,18 @@ class ScanOrderController extends Controller {
 
         /////////// institution ///////////
         $user = $this->get('security.context')->getToken()->getUser();
-        $instStr = "";
-        foreach( $user->getInstitutions() as $inst ) {
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR ";
-            }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
-        }
-        if( $instStr == "" ) {
-            $instStr = "1=0";
-        }
+        $orderUtil = $this->get('scanorder_utility');
+        $instStr = $orderUtil->getInstitutionQueryCriterion($user);
+//        $instStr = "";
+//        foreach( $user->getInstitutions() as $inst ) {
+//            if( $instStr != "" ) {
+//                $instStr = $instStr . " OR ";
+//            }
+//            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+//        }
+//        if( $instStr == "" ) {
+//            $instStr = "1=0";
+//        }
         if( $instStr != "" ) {
             $instStr = " AND (" . $instStr . ") ";
         }
@@ -535,16 +541,18 @@ class ScanOrderController extends Controller {
 
         /////////// institution ///////////
         $user = $this->get('security.context')->getToken()->getUser();
-        $instStr = "";
-        foreach( $user->getInstitutions() as $inst ) {
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR ";
-            }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
-        }
-        if( $instStr == "" ) {
-            $instStr = "1=0";
-        }
+        $orderUtil = $this->get('scanorder_utility');
+        $instStr = $orderUtil->getInstitutionQueryCriterion($user);
+//        $instStr = "";
+//        foreach( $user->getInstitutions() as $inst ) {
+//            if( $instStr != "" ) {
+//                $instStr = $instStr . " OR ";
+//            }
+//            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
+//        }
+//        if( $instStr == "" ) {
+//            $instStr = "1=0";
+//        }
         if( $instStr != "" ) {
             $instStr = " AND (" . $instStr . ") ";
         }
@@ -1022,8 +1030,6 @@ class ScanOrderController extends Controller {
 
     public function getDQL( $repository, $service, $filter, $search, $routeName, $securityContext, $withSearch = false ) {
 
-        $em = $this->getDoctrine()->getManager();
-
         $user = $securityContext->getToken()->getUser();
 
         if( $routeName == "incoming-scan-orders" ) {
@@ -1190,16 +1196,15 @@ class ScanOrderController extends Controller {
                 $crituser .= " OR proxyuser.id=".$user->getId();
                 //***************** END of Proxy User Orders *************************//
 
-                $crituser .= " )";
-
-
-                //***************** Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
-                $allservices = $this->allServiceFilter( $service, $routeName, $user, $crituser );
+                //***************** service filter: show all orders with chosen service matched with current user's service *****************//
+                $allservices = $this->addUserServices( $service, $routeName, $user, $crituser );
                 if( $allservices != "" ) {
                     $showprovider = 'true';
                     $crituser .= $allservices;
                 }
-                //***************** EOF: Pathology service filter: show all orders with chosen pathology service matched with current user's service *****************//
+                //***************** EOF: service filter: show all orders with chosen service matched with current user's service *****************//
+
+                $crituser .= " )";
             }
 
             //show all for ROLE_SCANORDER_DIVISION_CHIEF: remove all user's restriction
@@ -1406,21 +1411,8 @@ class ScanOrderController extends Controller {
         //***************** END of Search filetr ***************************//
 
         /////////// institution ///////////
-        $instStr = "";
-        foreach( $user->getInstitutions() as $inst ) {
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR ";
-            }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
-        }
-        if( $instStr == "" ) {
-            $instStr = "1=0";
-        }
-        if( $criteriastr != "" ) {
-            $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
-        } else {
-            $criteriastr = $criteriastr . " (" . $instStr . ") ";
-        }
+        $orderUtil = $this->get('scanorder_utility');
+        $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
         /////////// EOF institution ///////////
 
         //echo "<br>criteriastr=".$criteriastr."<br>";

@@ -333,23 +333,11 @@ class SlideReturnRequestController extends Controller
             $setParameter = true;
         }
 
-        /////////// institution ///////////
-        $instStr = "";
         $user = $this->get('security.context')->getToken()->getUser();
-        foreach( $user->getInstitutions() as $inst ) {
-            if( $instStr != "" ) {
-                $instStr = $instStr . " OR ";
-            }
-            $instStr = $instStr . 'orderinfo.institution='.$inst->getId();
-        }
-        if( $instStr == "" ) {
-            $instStr = "1=0";
-        }
-        if( $criteriastr != "" ) {
-            $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
-        } else {
-            $criteriastr = " (" . $instStr . ") ";
-        }
+
+        /////////// institution ///////////
+        $orderUtil = $this->get('scanorder_utility');
+        $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
         //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 

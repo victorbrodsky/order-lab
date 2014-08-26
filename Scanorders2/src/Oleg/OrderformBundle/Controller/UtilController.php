@@ -174,9 +174,9 @@ class UtilController extends Controller {
                 $query->where('list.type = :type ')->setParameter('type', 'default');
             }
         } else {
-            //find user's pathservices to include them in the list
+            //find user's services to include them in the list
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneById($opt);
-            $getServices = $user->getServices();
+            $getServices = $user->getServices();	//TODO: user's or allowed services?
 
             foreach( $getServices as $serviceId ) {
                 $whereServicesList = $whereServicesList . " OR list.id=".$serviceId->getId();

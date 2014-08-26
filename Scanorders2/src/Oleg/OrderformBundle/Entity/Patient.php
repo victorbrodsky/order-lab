@@ -384,21 +384,6 @@ class Patient extends ObjectAbstract
         return $this->clinicalHistory;
     }
 
-    //get only valid, not empty clinical histories
-    public function getAllValidNotEmptyClinicalHistories()
-    {
-        $res = new ArrayCollection();
-        $clinHists = $this->getClinicalHistory();
-        foreach( $clinHists as $clinHist ) {
-
-            if( $clinHist->getField() != "" && $clinHist->getStatus() == 'valid' ) {
-                $res->add($clinHist);
-            }
-        }
-        return $res;
-    }
-
-
     /**
      * Add lastname
      *
@@ -853,5 +838,18 @@ class Patient extends ObjectAbstract
         return $fieldsArr;
     }
 
+    //obtain only valid, not empty clinical histories
+    public function obtainAllValidNotEmptyClinicalHistories()
+    {
+        $res = new ArrayCollection();
+        $clinHists = $this->getClinicalHistory();
+        foreach( $clinHists as $clinHist ) {
+
+            if( $clinHist->getField() != "" && $clinHist->getStatus() == 'valid' ) {
+                $res->add($clinHist);
+            }
+        }
+        return $res;
+    }
 
 }

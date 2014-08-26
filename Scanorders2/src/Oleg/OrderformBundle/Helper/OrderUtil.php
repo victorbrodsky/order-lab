@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 
+use Oleg\UserdirectoryBundle\Entity\User;
+
 
 class OrderUtil {
 
@@ -481,8 +483,19 @@ class OrderUtil {
         }
 
         /////////// institution ///////////
+        $criteriastr = $this->addInstitutionQueryCriterion($user,$criteriastr);
+        /////////// EOF institution ///////////
+
+        //echo "criteriastr=".$criteriastr."<br>";
+
+        return $criteriastr;
+    }
+
+    public function getInstitutionQueryCriterion($user) {
+        $securityUtil = $this->container->get('order_security_utility');
+        $institutions = $securityUtil->getUserPermittedInstitutions($user);
         $instStr = "";
-        foreach( $user->getInstitutions() as $inst ) {
+        foreach( $institutions as $inst ) {
             if( $instStr != "" ) {
                 $instStr = $instStr . " OR ";
             }
@@ -491,6 +504,11 @@ class OrderUtil {
         if( $instStr == "" ) {
             $instStr = "1=0";
         }
+        return $instStr;
+    }
+
+    public function addInstitutionQueryCriterion($user,$criteriastr) {
+        $instStr = $this->getInstitutionQueryCriterion($user);
         if( $instStr != "" ) {
             if( $criteriastr != "" ) {
                 $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
@@ -498,10 +516,6 @@ class OrderUtil {
                 $criteriastr = $criteriastr . " (" . $instStr . ") ";
             }
         }
-        /////////// EOF institution ///////////
-
-        //echo "criteriastr=".$criteriastr."<br>";
-
         return $criteriastr;
     }
 
@@ -592,6 +606,7 @@ class OrderUtil {
 
 
     public function generateUserFilterOptions( $user ) {
+
         $choicesServ = array(
             "My Orders"=>"My Orders",
             "Where I am the Submitter"=>"Where I am the Submitter",
@@ -600,9 +615,10 @@ class OrderUtil {
             "Where I am the Principal Investigator"=>"Where I am the Principal Investigator",
             "Where I am the Amendment Author"=>"Where I am the Amendment Author"
         );
+
         if( is_object($user) && $user instanceof User ) {
             $secUtil = $this->container->get('order_security_utility');
-            $services = $secUtil->getUserScanorderServices();
+            $services = $secUtil->getUserScanorderServices($user);
             foreach( $services as $service ) {
                 $choicesServ[$service->getId()] = "All ".$service->getName()." Orders";
             }

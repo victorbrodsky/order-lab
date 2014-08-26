@@ -297,12 +297,6 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        if( count($entity->getInstitutions()) == 0 && $entity->getUsername() != 'system' ) {
-            $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
-            $error = new FormError("Please add at least one institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
-            $form->get('institution')->addError($error);
-        }
-
         if( $form->isValid() ) {
 
             $this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');

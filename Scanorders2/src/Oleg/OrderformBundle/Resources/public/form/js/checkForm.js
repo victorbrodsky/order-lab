@@ -319,7 +319,7 @@ function checkForm( btnel, parent ) {
                     resolve("Chaining with parent OK: "+response);
                 },
                 function(error) {
-                    console.error("Failed!", error);
+                    //console.error("Failed!", error);
                     reject(Error("Failed to execute click with parent, error="+error));
                 }
             );
