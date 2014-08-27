@@ -24,12 +24,12 @@ class PerSiteSettingsType extends AbstractType
 
         if( $this->user == null ) {
 
-            $builder->add( 'siteName', 'text', array(
-                'label'=>'Site Name:',
-                'required'=>false,
-                'read_only'=>true,
-                'attr' => array('class'=>'form-control')
-            ));
+//            $builder->add( 'siteName', 'text', array(
+//                'label'=>'Site Name:',
+//                'required'=>false,
+//                'read_only'=>true,
+//                'attr' => array('class'=>'form-control')
+//            ));
 
 //            $builder->add( 'permittedInstitutionalPHIScope', null, array(
 //                'label'=>'Permitted Institutional PHI Scope:',
@@ -40,7 +40,7 @@ class PerSiteSettingsType extends AbstractType
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',
-                'label'=>'Institution:',
+                'label'=>'Institutional PHI Scope:',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -64,14 +64,14 @@ class PerSiteSettingsType extends AbstractType
             ));
 
             $builder->add( 'chiefServices', null, array(
-                'label'=>'Chief Services:',
+                'label'=>'Chief of the following Service(s):',
                 'required'=>false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width')
             ));
 
             $builder->add( 'defaultService', null, array(
-                'label'=>'Default Services:',
+                'label'=>'Default Service:',
                 'required'=>false,
                 'attr' => array('class'=>'combobox combobox-width')
             ));

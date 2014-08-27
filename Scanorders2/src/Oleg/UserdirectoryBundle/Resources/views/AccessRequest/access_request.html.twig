@@ -5,13 +5,13 @@
 <head>
 
     {% stylesheets
-        'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
-        'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-    <title>Slide Order Access Request</title>
+    <title>{{ sitename|capitalize }} Access Request</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,12 +29,12 @@
 
         <div class="text-center">
 
-            <h2 class="alert alert-info well-lg safary-fix" align="center">Scan Order Submission</h2>
+            <h2 class="alert alert-info well-lg safary-fix" align="center">{{ sitename|capitalize }} Submission</h2>
 
             <br>
 
             <p>
-            <h3 class="text-info">Welcome to the Scan Order system!</h3>
+            <h3 class="text-info">Welcome to the {{ sitename|capitalize }} system!</h3>
             </p>
 
             <p>
@@ -43,12 +43,12 @@
 
             <br><br>
 
-            <form action="{{ path('access_request_create', { 'id': userid }) }}" method="post">
+            <form action="{{ path('access_request_create', { 'id':userid, 'sitename':sitename }) }}" method="post">
 
                 <p>
                     <button class="btn btn-info" type="submit">Yes, please!</button>
                     &nbsp;
-                    <a class="btn btn-info" href="{{ path('logout') }}">No, thanks!</a>
+                    <a class="btn btn-info" href="{{ path(sitename~'_logout') }}">No, thanks!</a>
                 </p>
 
             </form>
@@ -58,7 +58,7 @@
                 {#<a href="{{ path('login') }}">Return to Log In page</a>#}
             {#</p>#}
 
-            {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
         </div> <!-- /text-center -->
 

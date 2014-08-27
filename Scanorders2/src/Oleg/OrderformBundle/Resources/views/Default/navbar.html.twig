@@ -102,7 +102,7 @@
                         <ul class="dropdown-menu">
                             {#<li> Logged in as {{ app.security.getToken().getUser().getUsername() }} </li>#}
                             <li><a href="{{ path('scan_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUsername() }})</a></li>
-                            <li><a href="{{ path('logout') }}">Log Out</a></li>
+                            <li><a href="{{ path('scanorder_logout') }}">Log Out</a></li>
                         </ul>
                     </li>
 

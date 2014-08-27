@@ -173,7 +173,6 @@ class ScanUserController extends UserController
             $user = $this->get('security.context')->getToken()->getUser();
 
             $entity = new PerSiteSettings();
-            $entity->setSiteName('scanorder');
             $entity->setUser($subjectuser);
             $entity->setAuthor($user);
             $entity->setType(PerSiteSettings::TYPE_RESTRICTED);
@@ -226,8 +225,7 @@ class ScanUserController extends UserController
             if (!$subjectuser) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
-            $entity = new PerSiteSettings();
-            $entity->setSiteName('scanorder');
+            $entity = new PerSiteSettings();           
             $entity->setUser($subjectuser);
             $entity->setAuthor($user);
             $entity->setType(PerSiteSettings::TYPE_RESTRICTED);

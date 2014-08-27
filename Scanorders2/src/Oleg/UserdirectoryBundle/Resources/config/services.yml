@@ -81,7 +81,12 @@ services:
 #        tags:
 #            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-#
+
+    #Redirect admin to index
+    employees_authentication_handler:
+        class: Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
+        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+
     #twig listener
     twigdate.listener.request:
         class: Oleg\UserdirectoryBundle\Services\TwigDateRequestListener

@@ -223,12 +223,12 @@ class SecurityUtil extends UserSecurityUtil {
     }
 
     public function getUserPerSiteSettings($user) {
-        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
-            array('user' => $user, 'siteName' => 'scanorder')
-        );
+//        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneBy(
+//            array('user' => $user, 'siteName' => 'scanorder')
+//        );
+        $entity = $this->em->getRepository('OlegOrderformBundle:PerSiteSettings')->findOneByUser($user);
 
         return $entity;
     }
-
 
 }

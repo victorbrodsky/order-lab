@@ -3,6 +3,7 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Resources\config\Constant;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,10 +12,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+
 use Oleg\OrderformBundle\Form\FilterType;
 use Oleg\OrderformBundle\Entity\Document;
-use Oleg\UserdirectoryBundle\Entity\Logger;
 
+use Oleg\UserdirectoryBundle\Entity\Logger;
+use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 
 //ScanOrder joins OrderInfo + Scan
 /**
@@ -428,11 +431,15 @@ class ScanOrderController extends Controller {
             return $criteriastr;
         }
 
+        //check if user has Per Site Settings
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            return $criteriastr;
+        }
+
         //for "My Orders" get all user services and chief services
         if( $routeName == "my-scan-orders" ) {
-
-            $securityUtil = $this->get('order_security_utility');
-            $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 
             $userServices = $userSiteSettings->getScanOrdersServicesScope();
 
@@ -586,11 +593,11 @@ class ScanOrderController extends Controller {
 
     //check for active access requests
     public function getActiveAccessReq() {
-        $em = $this->getDoctrine()->getManager();
-        $accessreqs = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $accessreqs = $em->getRepository('OlegUserdirectoryBundle:User')->findByAppliedforaccess('active');
+            return null;
         }
+        $userSecUtil = $this->get('user_security_utility');
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus(Constant::SITE_NAME,AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
 

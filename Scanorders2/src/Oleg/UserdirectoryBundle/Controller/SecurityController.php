@@ -17,7 +17,7 @@ class SecurityController extends Controller
 {
 
     /**
-     * @Route("/login", name="employees-login")
+     * @Route("/login", name="employees_login")
      * @Method("GET")
      * @Template()
      */

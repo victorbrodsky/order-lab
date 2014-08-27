@@ -68,8 +68,7 @@ class AperioUtil {
                     $institution = $param->getAutoAssignInstitution();
                     if( $institution ) {
                         //set institution to per site settings
-                        $perSiteSettings = new PerSiteSettings();
-                        $perSiteSettings->setSiteName('scanorder');
+                        $perSiteSettings = new PerSiteSettings();                        
                         $systemUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
                         $perSiteSettings->setAuthor($systemUser);
                         $perSiteSettings->setUser($user);
@@ -96,10 +95,11 @@ class AperioUtil {
                 ////////// EOF check if aperio username was set in UserRequest //////////
 
                 //set Roles: aperio users can submit order by default.
+                $user->addRole('ROLE_SCANORDER_SUBMITTER');
+
                 if( $this->test ) {
                     $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
-                } else {
-                    $user->addRole('ROLE_SCANORDER_SUBMITTER');           //Submitter
+                    $user->removeRole('ROLE_SCANORDER_SUBMITTER');
                 }
 
                 //TODO: Remove: for testing at home;

@@ -64,16 +64,16 @@ class User extends BaseUser
      */
     private $createdby;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $appliedforaccess;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $appliedforaccessdate;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $appliedforaccess;
+//
+//    /**
+//     * @var \DateTime
+//     * @ORM\Column(type="datetime", nullable=true)
+//     */
+//    private $appliedforaccessdate;
 
     /**
      * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist"})
@@ -380,37 +380,37 @@ class User extends BaseUser
         return in_array(strtoupper($role), $this->roles, true);
     }
 
-    /**
-     * @param \DateTime $appliedforaccessdate
-     */
-    public function setAppliedforaccessdate($appliedforaccessdate)
-    {
-        $this->appliedforaccessdate = $appliedforaccessdate;
-    }
+//    /**
+//     * @param \DateTime $appliedforaccessdate
+//     */
+//    public function setAppliedforaccessdate($appliedforaccessdate)
+//    {
+//        $this->appliedforaccessdate = $appliedforaccessdate;
+//    }
+//
+//    /**
+//     * @return \DateTime
+//     */
+//    public function getAppliedforaccessdate()
+//    {
+//        return $this->appliedforaccessdate;
+//    }
 
-    /**
-     * @return \DateTime
-     */
-    public function getAppliedforaccessdate()
-    {
-        return $this->appliedforaccessdate;
-    }
-
-    /**
-     * @param mixed $appliedforaccess
-     */
-    public function setAppliedforaccess($appliedforaccess)
-    {
-        $this->appliedforaccess = $appliedforaccess;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAppliedforaccess()
-    {
-        return $this->appliedforaccess;
-    }
+//    /**
+//     * @param mixed $appliedforaccess
+//     */
+//    public function setAppliedforaccess($appliedforaccess)
+//    {
+//        $this->appliedforaccess = $appliedforaccess;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getAppliedforaccess()
+//    {
+//        return $this->appliedforaccess;
+//    }
 
 
     /**

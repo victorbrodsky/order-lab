@@ -3,6 +3,8 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Entity\AccessRequest;
+use Oleg\OrderformBundle\Resources\config\Constant;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -447,10 +449,13 @@ class UserRequestController extends Controller
             throw $this->createNotFoundException('Unable to find User.');
         }
 
-        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "active" ) {
+        $secUtil = $this->get('order_security_utility');
+        $userAccessReq = $secUtil->getUserAccessRequest($user,Constant::SITE_NAME);
+
+        if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_ACTIVE ) {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-            $dateStr = $transformer->transform($user->getAppliedforaccessdate());
+            $dateStr = $transformer->transform($userAccessReq->getCreatedate());
 
             $text = "You have requested access on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
@@ -460,10 +465,10 @@ class UserRequestController extends Controller
             return $this->render('OlegOrderformBundle:UserRequest:request_confirmation.html.twig',array('text'=>$text));
         }
 
-        if( $user->getAppliedforaccess() && $user->getAppliedforaccess() == "declined" ) {
+        if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_DECLINED ) {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
-            $dateStr = $transformer->transform($user->getAppliedforaccessdate());
+            $dateStr = $transformer->transform($userAccessReq->getCreatedate());
             $text = 'You have requested access on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
             $this->get('security.context')->setToken(null);
@@ -501,14 +506,35 @@ class UserRequestController extends Controller
             throw $this->createNotFoundException('Unable to find User.');
         }
 
-        $user->setAppliedforaccess('active');
-        $user->setAppliedforaccessdate( new \DateTime() );
+        //$user->setAppliedforaccess('active');
+        //$user->setAppliedforaccessdate( new \DateTime() );
 
-        $em->persist($user);
+        $secUtil = $this->get('order_security_utility');
+        $userAccessReq = $secUtil->getUserAccessRequest($user,Constant::SITE_NAME);
+
+        if( $userAccessReq ) {
+            //throw $this->createNotFoundException('AccessRequest is already created for this user');
+            $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+            $dateStr = $transformer->transform($userAccessReq->getCreatedate());
+
+            $text = "You have requested access on " . $dateStr . ". " .
+                    "The status of your request is " . $userAccessReq->getStatusStr() . "." .
+                    "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
+
+            $this->get('security.context')->setToken(null);
+            //$this->get('request')->getSession()->invalidate();
+
+            return $this->render('OlegOrderformBundle:UserRequest:request_confirmation.html.twig',array('text'=>$text));
+        }
+
+        //Create a new active AccessRequest
+        $accReq = new AccessRequest();
+        $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
+        $accReq->setUser($user);
+
+        $em->persist($accReq);
         $em->flush();
 
-
-        $user = $this->get('security.context')->getToken()->getUser();
         $email = $user->getEmail();
         $emailUtil = new EmailUtil();
 
@@ -554,8 +580,6 @@ class UserRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegUserdirectoryBundle:User')->findByAppliedforaccess('active');
-
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
@@ -564,12 +588,12 @@ class UserRequestController extends Controller
             }
         }
 
-        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:AccessRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        //$dql->leftJoin("accreq.division", "division");
-        $dql->where("accreq.appliedforaccess = 'active' OR accreq.appliedforaccess = 'declined' OR accreq.appliedforaccess = 'approved'");
-        $dql->orderBy("accreq.appliedforaccess","DESC");
+        $dql->innerJoin('accreq.user','user');
+        //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
+        $dql->orderBy("accreq.status","DESC");
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -608,12 +632,14 @@ class UserRequestController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $entity->setAppliedforaccess($status);
+        //$entity->setAppliedforaccess($status);
+        $accReq = $em->getRepository('OlegOrderformBundle:AccessRequest')->findOneByUser($id);
 
         if( $status == "approved" && $role == "submitter" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_SUBMITTER');
             $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+            $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" ) {
@@ -621,13 +647,13 @@ class UserRequestController extends Controller
             //$entity->setRoles($roles);
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_BANNED');
+            $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
-            //$roles[] = "ROLE_SCANORDER_UNAPPROVED_SUBMITTER";
-            //$entity->setRoles($roles);
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+            $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
 
         $em->persist($entity);

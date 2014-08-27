@@ -21,19 +21,24 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Oleg\OrderformBundle\Resources\config\Constant;
 
 
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
-    private $router;
+    private $container;
     private $security;
     private $em;
+    private $router;
+    private $siteName;
 
-    public function __construct( Router $router, SecurityContext $security, $em )
+    public function __construct( $container, SecurityContext $security, $em )
     {
-        $this->router = $router;
+        $this->container = $container;
+        $this->router = $container->get('router');
         $this->security = $security;
         $this->em = $em;
+        $this->siteName = Constant::SITE_NAME;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -44,22 +49,31 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options = array();
         $em = $this->em;
         $userUtil = new UserUtil();
+        $secUtil = $this->container->get('user_security_utility');
 
-        //echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
-        //exit();
+        echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
+        //exit;
 
         if( $this->security->isGranted('ROLE_SCANORDER_BANNED') ) {
             $options = array('event'=>'Banned User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
+            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+        }
+
+        //detect if the user was time logged in by ldap: assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER
+        //all users eneterd by ldap must have approved access request
+        if( $user->getCreatedby() == 'ldap' && !$secUtil->getUserAccessRequest($user, Constant::SITE_NAME)  ) {
+            echo "assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER <br>";
+            //exit;
+            $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
         if( $this->security->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
             $options = array('event'=>'Unapproved User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId())) );
+            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
         //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {

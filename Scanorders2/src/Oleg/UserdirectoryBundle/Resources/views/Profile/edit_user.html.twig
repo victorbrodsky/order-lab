@@ -92,7 +92,13 @@
 
     {{ formmacros.field(form.username) }}
 
+    {{ formmacros.field(form.displayName) }}
+    {{ formmacros.field(form.firstName) }}
+    {{ formmacros.field(form.middleName) }}
+    {{ formmacros.field(form.lastName) }}
+
     {{ formmacros.field(form.email) }}
+    {{ formmacros.field(form.preferredPhone) }}
 
     {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
         {#{{ formmacros.field(form.institution) }}#}
@@ -101,12 +107,6 @@
     {% endif %}
 
     {#{{ formmacros.field(form.chiefservices) }}#}
-
-    {{ formmacros.field(form.displayName) }}
-    {{ formmacros.field(form.firstName) }}
-    {{ formmacros.field(form.middleName) }}
-    {{ formmacros.field(form.lastName) }}
-    {{ formmacros.field(form.preferredPhone) }}
 
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         {% if app.security.getToken().getUser().getId() != entity.id %}
@@ -123,7 +123,7 @@
 
     {#Administrative Titles#}
     <hr>
-    <h3 class="text-info">Administrative Titles</h3>
+    <h3 class="text-info">Administrative Title(s)</h3>
     <div class="user-administrativeTitles-holder">
         {% for administrativeTitle in form.administrativeTitles %}
             {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
@@ -135,7 +135,7 @@
 
     {#Appointment Titles#}
     <hr>
-    <h3 class="text-info">Appointment Titles</h3>
+    <h3 class="text-info">Academic Appointment Title(s)</h3>
     <div class="user-appointmentTitles-holder">
         {% for appointmentTitle in form.appointmentTitles %}
             {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}

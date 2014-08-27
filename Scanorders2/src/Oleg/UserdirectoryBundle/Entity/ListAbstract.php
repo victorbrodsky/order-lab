@@ -28,7 +28,7 @@ abstract class ListAbstract
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="name", type="string")
      * @Assert\NotBlank
      */
     protected $name;

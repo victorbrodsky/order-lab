@@ -10,7 +10,12 @@ use Oleg\UserdirectoryBundle\Entity\BaseUserAttributes;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="perSiteSettings")
+ * @ORM\Table(
+ *  name="perSiteSettings",
+ *  indexes={
+ *      @ORM\Index( name="user_idx", columns={"fosuser"} ),
+ *  }
+ * )
  */
 class PerSiteSettings extends BaseUserAttributes
 {
@@ -24,10 +29,10 @@ class PerSiteSettings extends BaseUserAttributes
      */
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $siteName;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $siteName;
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
@@ -112,21 +117,21 @@ class PerSiteSettings extends BaseUserAttributes
         return $this->user;
     }
 
-    /**
-     * @param mixed $siteName
-     */
-    public function setSiteName($siteName)
-    {
-        $this->siteName = $siteName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSiteName()
-    {
-        return $this->siteName;
-    }
+//    /**
+//     * @param mixed $siteName
+//     */
+//    public function setSiteName($siteName)
+//    {
+//        $this->siteName = $siteName;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSiteName()
+//    {
+//        return $this->siteName;
+//    }
 
     /**
      * @param mixed $defaultService

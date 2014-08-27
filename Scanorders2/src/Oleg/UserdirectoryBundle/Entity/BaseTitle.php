@@ -25,6 +25,13 @@ class BaseTitle extends BaseUserAttributes
     protected $name;
 
     /**
+     * Primary, Secondary
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $priority;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $startDate;
@@ -115,6 +122,22 @@ class BaseTitle extends BaseUserAttributes
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param mixed $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPriority()
+    {
+        return $this->priority;
     }
 
     /**

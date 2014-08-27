@@ -122,6 +122,13 @@ class AdminController extends Controller
         //Note: fos user has role ROLE_SCANORDER_SUPER_ADMIN
 
         $types = array(
+
+            //////////// general roles ////////////
+            "ROLE_BANNED" => "Banned User",                             //general banned user
+            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter",      //general unapproved submitter for all sites
+            "ROLE_SUPER_ADMIN" => "Super Admin",                        //general super admin role for all sites
+
+            //////////// Scanorder roles ////////////
             "ROLE_SCANORDER_ADMIN" => "ScanOrder Administrator",
             "ROLE_SCANORDER_PROCESSOR" => "ScanOrder Processor",
 
@@ -139,13 +146,21 @@ class AdminController extends Controller
             "ROLE_SCANORDER_PATHOLOGY_FELLOW" => "ScanOrder Pathology Fellow",
             "ROLE_SCANORDER_PATHOLOGY_FACULTY" => "ScanOrder Pathology Faculty",
 
-            //"ROLE_SCANORDER_BANNED_USER" => "ScanOrder Banned User",  //not required since we have locked
-
             "ROLE_SCANORDER_COURSE_DIRECTOR" => "ScanOrder Course Director",
             "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR" => "ScanOrder Principal Investigator",
 
             "ROLE_SCANORDER_UNAPPROVED_SUBMITTER" => "ScanOrder Unapproved Submitter",
-            "ROLE_SCANORDER_BANNED" => "ScanOrder Banned User"
+            "ROLE_SCANORDER_BANNED" => "ScanOrder Banned User",
+
+            //////////// EmployeeDirectory roles ////////////
+            "ROLE_USERDIRECTORY_OBSERVER" => "EmployeeDirectory Observer",
+            "ROLE_USERDIRECTORY_SUBMITTER" => "EmployeeDirectory Submitter",    //TODO: remove submitter
+            "ROLE_USERDIRECTORY_EDITOR" => "EmployeeDirectory Editor",
+            "ROLE_USERDIRECTORY_ADMIN" => "EmployeeDirectory Administrator",
+            "ROLE_USERDIRECTORY_BANNED" => "EmployeeDirectory Banned User",
+            "ROLE_USERDIRECTORY_UNAPPROVED_SUBMITTER" => "EmployeeDirectory Unapproved Submitter",
+
+
         );
 
         $username = $this->get('security.context')->getToken()->getUser();

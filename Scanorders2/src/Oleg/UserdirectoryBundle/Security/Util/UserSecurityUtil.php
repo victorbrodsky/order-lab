@@ -35,4 +35,22 @@ class UserSecurityUtil {
         return false;
     }
 
+
+    //used by login success handler to get user has access request
+    public function getUserAccessRequest($user,$sitename) {
+        $accessRequest = $this->em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneBy(
+            array('user' => $user, 'siteName' => $sitename)
+        );
+
+        return $accessRequest;
+    }
+
+    public function getUserAccessRequestsByStatus($sitename, $status) {
+        $accessRequests = $this->em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findBy(
+            array('siteName' => $sitename, 'status' => $status)
+        );
+
+        return $accessRequests;
+    }
+
 }

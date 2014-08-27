@@ -47,12 +47,16 @@ class LdapManager extends BaseLdapManager
         $user->setCreatedby('ldap');
         $user->getPreferences()->setTimezone($this->timezone);
 
-        $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+        //$user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+
+        //assign general role unapproved submitter. It should be changed to submitter role, later on, by access request
+        $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
 
         if( $user->getUsername() == "oli2002" || $user->getUsername() == "vib9020" ) {
-            $user->addRole('ROLE_SCANORDER_ADMIN');
-            $user->addRole('ROLE_SCANORDER_SUBMITTER');
-            $user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+            $user->addRole('ROLE_SUPER_ADMIN');
+            //$user->addRole('ROLE_SCANORDER_ADMIN');
+            //$user->addRole('ROLE_SCANORDER_SUBMITTER');
+            //$user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
 

@@ -118,7 +118,7 @@ class UserUtil {
             $administrativeTitle->setName($title);
             $user->addAdministrativeTitle($administrativeTitle);
 
-            //add Roles
+            //add scanorder Roles
             $user->addRole('ROLE_SCANORDER_SUBMITTER');
 
             //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
@@ -142,28 +142,6 @@ class UserUtil {
             if( $username == "oli2002" || $username == "vib9020" ) {
                 $user->addRole('ROLE_SCANORDER_ADMIN');
             }
-
-//            ////////// when user created by excel file, assign permittedInstitutionalPHIScope to its PerSiteSettings //////////
-//            if( count($user->getPerSiteSettings()) == 0 ) {
-//                $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
-//                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
-//                    if( count($params) != 1 ) {
-//                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-//                    }
-//                    $param = $params[0];
-//                    $institution = $param->getAutoAssignInstitution();
-//                    if( $institution ) {
-//                        $perSiteSettings = new PerSiteSettings();
-//                        $perSiteSettings->setSiteName('scanorder');
-//                        $perSiteSettings->setAuthor($systemuser);
-//                        $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-//                        $user->addPerSiteSettings($perSiteSettings);
-//                    }
-//                }
-//
-//
-//            }
-//            ////////// EOF assign Institution //////////
 
             foreach( $services as $service ) {
 

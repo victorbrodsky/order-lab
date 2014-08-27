@@ -18,6 +18,11 @@ class AppointmentTitle extends BaseTitle
     protected $user;
 
     /**
+     * @ORM\Column(name="position", type="string", nullable=true)
+     */
+    protected $position;
+
+    /**
      * @param mixed $user
      */
     public function setUser($user)
@@ -33,6 +38,21 @@ class AppointmentTitle extends BaseTitle
         return $this->user;
     }
 
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
 
 
 }

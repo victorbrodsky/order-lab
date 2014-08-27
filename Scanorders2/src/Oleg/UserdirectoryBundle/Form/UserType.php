@@ -66,11 +66,11 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('email', 'email', array(
-            'label' => 'Email:',
+            'label' => 'Preferred Email:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('displayName', null, array(
-            'label' => 'Display Name:',
+            'label' => 'Preferred Display Name:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('preferredPhone', null, array(
