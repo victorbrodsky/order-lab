@@ -36,7 +36,7 @@ class ListAbstractRepository extends EntityRepository {
         $entity = $this->_em->getRepository($objectParams['fullBundleName'].':'.$objectParams['className'])->findOneBy( $criterions );
 
         if( !$entity ) {
-            echo $objectParams['className'].': not found <br>';
+            //echo $objectParams['className'].': not found <br>';
             //create a new setTitle
             $entity = $this->createNewListEntity($objectParams,$name,$user);
         } else {
@@ -61,6 +61,7 @@ class ListAbstractRepository extends EntityRepository {
         //get max orderinlist
         $query = $this->_em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$objectParams['fullBundleName'].':'.$objectParams['className'].' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
+
         $newEntity->setOrderinlist($nextorder);
 
         return $newEntity;
