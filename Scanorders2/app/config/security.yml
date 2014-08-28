@@ -5,6 +5,7 @@ security:
 
     role_hierarchy:
 
+        # Scan order roles
         ROLE_SCANORDER_ALL_PATHOLOGY: [ROLE_SCANORDER_PATHOLOGY_RESIDENT, ROLE_SCANORDER_PATHOLOGY_FELLOW, ROLE_SCANORDER_PATHOLOGY_FACULTY]
 
         ROLE_SCANORDER_PATHOLOGY_RESIDENT: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]
@@ -13,15 +14,17 @@ security:
 
         ROLE_SCANORDER_PROCESSOR:   [ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ORDERING_PROVIDER,ROLE_SCANORDER_ALL_PATHOLOGY]
         ROLE_SCANORDER_ADMIN:       [ROLE_ADMIN, ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_SCANORDER_PROCESSOR, ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER, ROLE_SCANORDER_ALL_PATHOLOGY]
-#        ROLE_SCANORDER_SUPER_ADMIN: [ROLE_SUPER_ADMIN, ROLE_USER, ROLE_SCANORDER_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
-        ROLE_USERDIRECTORY_ADMIN:   [ROLE_USER, ROLE_ADMIN]
+        # Userdirectory roles
+        ROLE_USERDIRECTORY_EDITOR: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER]
+        ROLE_USERDIRECTORY_ADMIN: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
 
+        # General roles
+#        ROLE_BANNED: [ROLE_SCANORDER_BANNED,ROLE_USERDIRECTORY_BANNED]
+#        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED_SUBMITTER]
+#        ROLE_EDITOR: [ROLE_SCANORDER_PROCESSOR, ROLE_USERDIRECTORY_EDITOR]  #permission to edit the content of DB such as change access request status
+#        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
         ROLE_ADMIN: [ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN]
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
-
-        ROLE_UNAPPROVED_SUBMITTER: [ROLE_SCANORDER_UNAPPROVED_SUBMITTER,ROLE_USERDIRECTORY_UNAPPROVED_SUBMITTER]
-        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
 
 
     providers:
@@ -61,7 +64,7 @@ security:
                 path:   /scan/logout
                 target: /scan/login
             anonymous:  true
-            access_denied_url: /scan/scan-order/no-permission
+            access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
 
         ldap_employees_firewall:
             pattern: ^/employees
@@ -81,18 +84,20 @@ security:
                 path:   /employees/logout
                 target: /employees/login
             anonymous:  true
+            access_denied_url: /employees/access-requests/new/create
 
           
     access_control:
 
-#     - { path: ^/access-requests/new/^, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/employees/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
      - { path: ^/employees/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/employees/, role: [ROLE_USER] }
-     - { path: ^/employees/admin, role: [ROLE_USER, ROLE_USERDIRECTORY_ADMIN] }
+     - { path: ^/employees/, role: [ROLE_USERDIRECTORY_OBSERVER] }
+     - { path: ^/employees/admin, role: [ROLE_USERDIRECTORY_ADMIN] }
 
      - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/scan/, role: [ROLE_USER] }
+     - { path: ^/scan/, role: [ROLE_SCANORDER_SUBMITTER] }
      - { path: ^/scan/access-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
@@ -100,7 +105,7 @@ security:
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/user-directory, role: ROLE_SCANORDER_PROCESSOR }
-     - { path: ^/scan/site-settings/show/, role: ROLE_USER }
+     - { path: ^/scan/site-settings/show/, role: ROLE_SCANORDER_SUBMITTER }
      - { path: ^/scan/site-settings/edit/, role: ROLE_SCANORDER_ADMIN }
 
      - { path: ^/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
@@ -116,8 +121,8 @@ security:
      - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
      - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
 
-     - { path: ^/scan/users/, role: ROLE_USER }
-     - { path: ^/scan/edit-user-profile/, role: [ROLE_USER] }
+     - { path: ^/scan/users/, role: ROLE_SCANORDER_SUBMITTER }
+     - { path: ^/scan/edit-user-profile/, role: [ROLE_SCANORDER_SUBMITTER] }
 
      - { path: ^/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
      - { path: ^/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}

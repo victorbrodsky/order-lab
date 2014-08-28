@@ -61,7 +61,7 @@
                     <p>{{ entity.currentstatus }}</p>
                 </td>
                 <td>
-                    <a href="{{ path('showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.provider.id }) }}">{{ entity.provider }}</a>
                 </td>
                 <td>
                     {% for role in entity.roles %}

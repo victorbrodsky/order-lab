@@ -40,6 +40,7 @@ class SecurityUtil extends UserSecurityUtil {
         if( $allowedInstitutions->contains($entity->getInstitution()) ) {
             $hasInst = true;
         }
+
 //        foreach( $allowedInstitutions as $inst ) {
 //            //echo "compare: ".$inst->getId()."=?".$entity->getInstitution()->getId()."<br>";
 //            if( $inst->getId() == $entity->getInstitution()->getId() ) {
@@ -55,26 +56,26 @@ class SecurityUtil extends UserSecurityUtil {
 
         ///////////////// 2) check if the user is processor or service, division chief /////////////////
         if(
-            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
-            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
-            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF') ||
-            $user->hasRole('ROLE_SCANORDER_SERVICE_CHIEF')
+            $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ||
+            $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ||
+            $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
+            $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
         ){
             return true;
         }
         ///////////////// EOF 2) /////////////////
 
         ///////////////// 3) submitters  /////////////////
-        if( $user->hasRole('ROLE_SCANORDER_SUBMITTER') ) {
+        if( $this->sc->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return true;
         }
         ///////////////// EOF 3) /////////////////
 
         ///////////////// 4) pathology members  /////////////////
 //        if(
-//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
-//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
-//            true === $user->hasRole('ROLE_SCANORDER_PATHOLOGY_FACULTY')
+//            $this->sc->isGranted('ROLE_SCANORDER_PATHOLOGY_RESIDENT') ||
+//            $this->sc->isGranted('ROLE_SCANORDER_PATHOLOGY_FELLOW') ||
+//            $this->sc->isGranted('ROLE_SCANORDER_PATHOLOGY_FACULTY')
 //        ) {
 //            return true;
 //        }
@@ -111,9 +112,9 @@ class SecurityUtil extends UserSecurityUtil {
 
         //processor and division chief can perform any actions
         if(
-            $user->hasRole('ROLE_SCANORDER_ADMIN') ||
-            $user->hasRole('ROLE_SCANORDER_PROCESSOR') ||
-            $user->hasRole('ROLE_SCANORDER_DIVISION_CHIEF')
+            $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ||
+            $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ||
+            $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
         ) {
             return true;
         }

@@ -123,10 +123,10 @@ class AdminController extends Controller
 
         $types = array(
 
-            //////////// general roles ////////////
-            "ROLE_BANNED" => "Banned User",                             //general banned user
-            "ROLE_UNAPPROVED_SUBMITTER" => "Unapproved Submitter",      //general unapproved submitter for all sites
-            "ROLE_SUPER_ADMIN" => "Super Admin",                        //general super admin role for all sites
+            //////////// general roles are set by security.yml only ////////////
+            "ROLE_ADMIN" => "Administrator for all sites",                //general super admin role for all sites
+            //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
+            //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 
             //////////// Scanorder roles ////////////
             "ROLE_SCANORDER_ADMIN" => "ScanOrder Administrator",
@@ -154,12 +154,10 @@ class AdminController extends Controller
 
             //////////// EmployeeDirectory roles ////////////
             "ROLE_USERDIRECTORY_OBSERVER" => "EmployeeDirectory Observer",
-            "ROLE_USERDIRECTORY_SUBMITTER" => "EmployeeDirectory Submitter",    //TODO: remove submitter
             "ROLE_USERDIRECTORY_EDITOR" => "EmployeeDirectory Editor",
             "ROLE_USERDIRECTORY_ADMIN" => "EmployeeDirectory Administrator",
             "ROLE_USERDIRECTORY_BANNED" => "EmployeeDirectory Banned User",
-            "ROLE_USERDIRECTORY_UNAPPROVED_SUBMITTER" => "EmployeeDirectory Unapproved Submitter",
-
+            "ROLE_USERDIRECTORY_UNAPPROVED" => "EmployeeDirectory Unapproved User",
 
         );
 

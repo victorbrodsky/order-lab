@@ -1,6 +1,7 @@
 <?php
 namespace Oleg\OrderformBundle\Helper;
 
+use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
@@ -8,7 +9,7 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
  *
  * @author Cina
  */
-class EmailUtil {
+class ScanEmailUtil extends EmailUtil {
     
     public function sendEmail( $email, $em, $entity, $orderurl, $text = null, $conflict=null, $submitStatusStr=null ) {
 
@@ -57,15 +58,6 @@ class EmailUtil {
         mail($email, 'Slide Scan Order #'.$entity->getId().' Confirmation', $message);
 
         return true;
-    }
-
-    public function initEmail($em) {
-        $userutil = new UserUtil();
-        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
-        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
-
-        ini_set( 'sendmail_from', $adminemail );
-        ini_set( "SMTP", $smtp );
     }
     
 }

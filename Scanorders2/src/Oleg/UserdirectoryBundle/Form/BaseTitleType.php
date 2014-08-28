@@ -45,13 +45,24 @@ class BaseTitleType extends AbstractType
         ));
 
         $builder->add('status', 'choice', array(
-            'disabled' => $this->params['read_only'],
+            'disabled' => ($this->params['read_only'] ? true : false),
             'choices'   => array(
                 '0'   => 'Unverified',
                 '1' => 'Verified'
             ),
-            'label' => "Type:",
+            'label' => "Status:",
             'required' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
+        ));
+
+        //priority
+        $builder->add('priority', 'choice', array(
+            'choices'   => array(
+                '0'   => 'Primary',
+                '1' => 'Secondary'
+            ),
+            'label' => "Type:",
+            'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 

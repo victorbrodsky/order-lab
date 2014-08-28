@@ -95,13 +95,15 @@ class UserType extends AbstractType
         ));
 
         //Roles
-        $attr = array('class' => 'combobox combobox-width');
-        $builder->add('roles', 'choice', array(
-            'choices' => $this->roles,
-            'label' => 'Role(s):',
-            'attr' => $attr,
-            'multiple' => true,
-        ));
+        if( $this->cicle == "show" || $this->roleAdmin ) {
+            $attr = array('class' => 'combobox combobox-width');
+            $builder->add('roles', 'choice', array(
+                'choices' => $this->roles,
+                'label' => 'Role(s):',
+                'attr' => $attr,
+                'multiple' => true,
+            ));
+        }
 
         //hook for extended class
         $this->addHookFields($builder);

@@ -10,12 +10,14 @@
 namespace Oleg\OrderformBundle\Helper;
 
 
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Util\EmailUtil;
 
 
 class OrderUtil {
@@ -594,7 +596,8 @@ class OrderUtil {
                         "Agent Smith\r\n".
                         "Virtual Keeper of O R D E R: ".$homeUrl."\r\n".
                         "Weill Cornell Medical College";
-            mail($sysemail, $subject, $message);
+
+            $emailUtil->sendEmail($sysemail, $subject, $message);
 
         }
         $flashBag->add(

@@ -44,7 +44,7 @@
         {% if app.security.getToken().getUser.getEmail == null or app.security.getToken().getUser.getEmail == "" %}
             <p><h3>
                 If you would like to receive email notifications regarding this and future orders, please update
-                <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
                 by adding your email account.
             </h3></p>
         {% endif %}

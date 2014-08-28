@@ -1,5 +1,7 @@
 parameters:
 
+  scan.sitename: scan
+
   default_time_zone: America/New_York
   default_system_email:
   institution_url:

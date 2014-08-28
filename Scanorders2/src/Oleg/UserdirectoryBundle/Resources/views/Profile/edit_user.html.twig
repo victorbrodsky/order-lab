@@ -15,8 +15,15 @@
     {% endif %}
 
     <div class="well {{ classname }}">
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
         {{ formmacros.field(formfield.id) }}
         {{ formmacros.field(formfield.status) }}
+        {{ formmacros.field(formfield.priority) }}
         {{ formmacros.field(formfield.name) }}
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
@@ -24,12 +31,6 @@
         {{ formmacros.field(formfield.department) }}
         {{ formmacros.field(formfield.division) }}
         {{ formmacros.field(formfield.service) }}
-
-        {% if cicle != 'show_user' %}
-            <p>
-                <button class="btn btn-default" onClick="removeBaseTitle(this,'{{ classname }}')" type='button'>Remove</button>
-            </p>
-        {% endif %}
     </div>
 {% endmacro %}
 
@@ -43,6 +44,13 @@
     {% endif %}
 
     <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
         {{ formmacros.field(formfield.id) }}
         {{ formmacros.field(formfield.name) }}
         {{ formmacros.field(formfield.phone) }}
@@ -50,7 +58,16 @@
         {{ formmacros.field(formfield.mobile) }}
         {{ formmacros.field(formfield.fax) }}
         {{ formmacros.field(formfield.email) }}
+
         {{ formmacros.field(formfield.assistant) }}
+
+        {% if cicle == 'show_user' %}
+            {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}
+                {{ formfield.vars.value.assistant.preferredPhone }}
+                {{ formfield.vars.value.assistant.email }}
+            {% endif %}
+        {% endif %}
+
         {{ formmacros.field(formfield.room) }}
         {{ formmacros.field(formfield.street) }}
         {{ formmacros.field(formfield.city) }}
@@ -58,11 +75,6 @@
         {{ formmacros.field(formfield.zip) }}
         {{ formmacros.field(formfield.associatedCode) }}
 
-        {% if cicle != 'show_user' %}
-            <p>
-                <button class="btn btn-default" onClick="removeBaseTitle(this,'{{ classname }}')" type='button'>Remove</button>
-            </p>
-        {% endif %}
     </div>
 {% endmacro %}
 
@@ -121,40 +133,88 @@
     {{ formmacros.field(form.preferences.timezone) }}
     {{ formmacros.checkbox(form.preferences.tooltip) }}
 
-    {#Administrative Titles#}
     <hr>
-    <h3 class="text-info">Administrative Title(s)</h3>
-    <div class="user-administrativeTitles-holder">
-        {% for administrativeTitle in form.administrativeTitles %}
-            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
-        {% endfor %}
-        {% if cicle != 'show_user' %}
-            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
-        {% endif %}
-    </div>
+    <br>
 
-    {#Appointment Titles#}
-    <hr>
-    <h3 class="text-info">Academic Appointment Title(s)</h3>
-    <div class="user-appointmentTitles-holder">
-        {% for appointmentTitle in form.appointmentTitles %}
-            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
-        {% endfor %}
-        {% if cicle != 'show_user' %}
-            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
-        {% endif %}
-    </div>
+    <div class="panel-group" id="accordion">
 
-    {#Locations#}
-    <hr>
-    <h3 class="text-info">Locations</h3>
-    <div class="user-locations-holder">
-        {% for location in form.locations %}
-            {{ userform.location(location,cicle,'user-locations','noprototype') }}
-        {% endfor %}
-        {% if cicle != 'show_user' %}
-            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
-        {% endif %}
+        {#Administrative Titles#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#AdministrativeTitles">
+                        Administrative Title(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="AdministrativeTitles" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="user-administrativeTitles-holder">
+                        {% for administrativeTitle in form.administrativeTitles %}
+                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {#Appointment Titles#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#AppointmentTitles">
+                        Academic Appointment Title(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="AppointmentTitles" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="user-appointmentTitles-holder">
+                        {% for appointmentTitle in form.appointmentTitles %}
+                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {#Locations#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#Locations">
+                        Location(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="Locations" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="user-locations-holder">
+                        {% for location in form.locations %}
+                            {{ userform.location(location,cicle,'user-locations','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <br>

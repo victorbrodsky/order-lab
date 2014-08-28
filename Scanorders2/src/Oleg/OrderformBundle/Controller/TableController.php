@@ -67,7 +67,7 @@ use Oleg\OrderformBundle\Entity\Research;
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\EmailUtil;
+use Oleg\OrderformBundle\Helper\ScanEmailUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
@@ -630,7 +630,7 @@ class TableController extends Controller {
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true );    //was $entity->getId()
 
         //email
-        $emailUtil = new EmailUtil();
+        $emailUtil = new ScanEmailUtil();
         $emailUtil->sendEmail( $user->getEmail(), $em, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
         if( isset($_POST['btnSaveOnIdleTimeout']) ) {

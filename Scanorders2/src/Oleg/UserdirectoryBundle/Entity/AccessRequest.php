@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(
- *  name="scanorder_accessrequest",
+ *  name="accessrequest",
  *  indexes={
  *      @ORM\Index( name="user_idx", columns={"user_id"} ),
  *      @ORM\Index( name="status_idx", columns={"status"} ),
@@ -34,7 +34,7 @@ class AccessRequest
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

@@ -3,7 +3,6 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\UserdirectoryBundle\Resources\config\Constant;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -12,8 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
-
-use Oleg\OrderformBundle\Helper\EmailUtil;
+use Oleg\UserdirectoryBundle\Util\EmailUtil;
 
 
 /**
@@ -23,19 +21,42 @@ class AccessRequestController extends Controller
 {
 
     /**
-     * @Route("/access-requests/new/{id}/{sitename}", name="access_request_new", requirements={"id" = "\d+"})
+     * @Route("/access-requests/new/create", name="employees_access_request_new_plain")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
+     */
+    public function accessRequestCreatePlainAction()
+    {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') &&
+            false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_BANNED')
+        ) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('employees.sitename'));
+    }
+
+    /**
+     * @Route("/access-requests/new/{id}/{sitename}", name="employees_access_request_new", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestCreateAction($id,$sitename)
     {
 
-//        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER') &&
-//            false === $this->get('security.context')->isGranted('ROLE_BANNED')
-//        ) {
-//            //return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-//        }
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') &&
+            false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_BANNED')
+        ) {
+            return $this->redirect($this->generateUrl($sitename.'_login'));
+        }
 
+        return $this->accessRequestCreateNew($id,$sitename);
+
+    }
+    public function accessRequestCreateNew($id,$sitename) {
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -46,7 +67,7 @@ class AccessRequestController extends Controller
         }
 
         $secUtil = $this->get('order_security_utility');
-        $userAccessReq = $secUtil->getUserAccessRequest($user,Constant::SITE_NAME);
+        $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_ACTIVE ) {
 
@@ -55,10 +76,10 @@ class AccessRequestController extends Controller
 
             $text = "You have requested access on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
-            $this->get('security.context')->setToken(null);
+            //$this->get('security.context')->setToken(null);
             //$this->get('request')->getSession()->invalidate();
 
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text));
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
 
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_DECLINED ) {
@@ -67,36 +88,33 @@ class AccessRequestController extends Controller
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
             $text = 'You have requested access on '.$dateStr.'. Your request has been declined. Please contact the system administrator by emailing '.$this->container->getParameter('default_system_email').' if you have any questions.';
 
-            $this->get('security.context')->setToken(null);
-            //$this->get('request')->getSession()->invalidate();
-
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text));
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
-
-        //echo "userid=".$id."<br>";
-        //exit();
-
-        //$this->get('security.context')->setToken(null);
 
         return array(
             'userid' => $id,
             'sitename' => $sitename
         );
-
     }
 
+
+
     /**
-     * @Route("/access-requests/new/{id}/{sitename}", name="access_request_create", requirements={"id" = "\d+"})
+     * @Route("/access-requests/new/{id}/{sitename}", name="employees_access_request_create", requirements={"id" = "\d+"})
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
     public function accessRequestAction($id,$sitename)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED_SUBMITTER')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') ) {
+            return $this->redirect( $this->generateUrl($sitename.'_logout') );
         }
 
+        return $this->accessRequestCreate($id,$sitename);
+
+    }
+    public function accessRequestCreate($id,$sitename) {
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -111,19 +129,18 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
+        echo "sitename=".$sitename."<br>";
+
         if( $userAccessReq ) {
             //throw $this->createNotFoundException('AccessRequest is already created for this user');
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
             $dateStr = $transformer->transform($userAccessReq->getCreatedate());
 
             $text = "You have requested access on " . $dateStr . ". " .
-                    "The status of your request is " . $userAccessReq->getStatusStr() . "." .
-                    "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
+                "The status of your request is " . $userAccessReq->getStatusStr() . "." .
+                "Please contact the system administrator by emailing ".$this->container->getParameter('default_system_email')." if you have any questions.";
 
-            $this->get('security.context')->setToken(null);
-            //$this->get('request')->getSession()->invalidate();
-
-            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text));
+            return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
 
         //Create a new active AccessRequest
@@ -138,11 +155,7 @@ class AccessRequestController extends Controller
         $email = $user->getEmail();
         $emailUtil = new EmailUtil();
 
-        $text =
-            "Thank You For Access Request !\r\n"
-            . "Confirmation Email was sent to " . $email . "\r\n";
-
-        $emailUtil->sendEmail( $email, $em, null, $text, null );
+        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitename, $text );
 
         $emailStr = "";
         if( $email && $email != "" ) {
@@ -151,47 +164,40 @@ class AccessRequestController extends Controller
 
         $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
 
-
-//        $this->get('session')->getFlashBag()->add(
-//            'notice',
-//            $text
-//        );
-
-        $this->get('security.context')->setToken(null);
-        //$this->get('request')->getSession()->invalidate();
-
-        return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text));
-
+        return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
     }
 
 
     /**
      * Lists all Access Request.
      *
-     * @Route("/access-requests", name="accessrequest_list")
+     * @Route("/access-requests", name="employees_accessrequest_list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
      */
     public function accessRequestIndexAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            //return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
+
+        return $this->accessRequestIndexList($this->container->getParameter('employees.sitename'));
+    }
+    public function accessRequestIndexList( $sitename ) {
 
         $em = $this->getDoctrine()->getManager();
 
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            foreach( $roles as $role ) {
-                $rolesArr[$role->getName()] = $role->getAlias();
-            }
+        foreach( $roles as $role ) {
+            $rolesArr[$role->getName()] = $role->getAlias();
         }
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:AccessRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->innerJoin('accreq.user','user');
+        $dql->where("accreq.siteName = '" . $sitename . "'" );
         //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
         $dql->orderBy("accreq.status","DESC");
 
@@ -206,21 +212,22 @@ class AccessRequestController extends Controller
 
         return array(
             'entities' => $pagination,
-            'roles' => $rolesArr
+            'roles' => $rolesArr,
+            'sitename' => $sitename
         );
 
     }
 
 
     /**
-     * @Route("/access-requests/{id}/{status}/{role}/status", name="accessrequest_change", requirements={"id" = "\d+"})
+     * @Route("/access-requests/{id}/{status}/{role}/status", name="employees_accessrequest_change", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function accessRequestChangeAction($id, $status, $role)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
+        if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -237,29 +244,26 @@ class AccessRequestController extends Controller
 
         if( $status == "approved" && $role == "submitter" ) {
             $entity->setRoles(array());
-            $entity->addRole('ROLE_SCANORDER_SUBMITTER');
-            $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+            $entity->addRole('ROLE_USERDIRECTORY_OBSERVER');
             $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" ) {
-            //$roles[] = "ROLE_SCANORDER_BANNED";
-            //$entity->setRoles($roles);
             $entity->setRoles(array());
-            $entity->addRole('ROLE_SCANORDER_BANNED');
+            $entity->addRole('ROLE_USERDIRECTORY_BANNED');
             $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
             $entity->setRoles(array());
-            $entity->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+            $entity->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
             $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
 
         $em->persist($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('accessrequest_list'));
+        return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_accessrequest_list'));
     }
     
 }

@@ -35,12 +35,13 @@ class UserController extends Controller
      */
     public function indexUserAction()
     {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect($this->generateUrl('scan-order-nopermission'));
+        }
+
         return $this->indexUser();
     }
     public function indexUser() {
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            return $this->redirect($this->generateUrl('scan-order-nopermission'));
-        }
 
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
@@ -73,86 +74,82 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * @Route("/users/new", name="new_user")
-     * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
-     */
-    public function newUserAction()
-    {
-        //return $this->showUserAction(0);
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = new User();
-
-        //Roles
-        $rolesArr = $this->getUserRoles();
-
-        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
-
-        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-            'cicle' => 'edit_user',
-        );
-    }
+//    /**
+//     * @Route("/users/new", name="new_user")
+//     * @Method("GET")
+//     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
+//     */
+//    public function newUserAction()
+//    {
+//        $entity = new User();
+//
+//        //Roles
+//        $rolesArr = $this->getUserRoles();
+//
+//        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
+//
+//        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+//        return array(
+//            'entity' => $entity,
+//            'form' => $form->createView(),
+//            'cicle' => 'edit_user',
+//        );
+//    }
 
 
-    /**
-     * @Route("/users/new", name="create_user")
-     * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
-     */
-    public function createUserAction( Request $request )
-    {
-        return createUser($request);
-    }
-    public function createUser($request) {
-        //return $this->showUserAction(0);
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = new User();
-
-        //Roles
-        $rolesArr = $this->getUserRoles();
-
-        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-            return $this->redirect($this->generateUrl('listusers'));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-            'cicle' => 'edit_user',
-        );
-    }
+//    /**
+//     * @Route("/users/new", name="create_user")
+//     * @Method("POST")
+//     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
+//     */
+//    public function createUserAction( Request $request )
+//    {
+//        return createUser($request);
+//    }
+//    public function createUser($request) {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entity = new User();
+//
+//        //Roles
+//        $rolesArr = $this->getUserRoles();
+//
+//        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $em->persist($entity);
+//            $em->flush();
+//            return $this->redirect($this->generateUrl('listusers'));
+//        }
+//
+//        return array(
+//            'entity' => $entity,
+//            'form' => $form->createView(),
+//            'cicle' => 'edit_user',
+//        );
+//    }
 
 
 
     /**
-     * @Route("/users/{id}", name="showuser", requirements={"id" = "\d+"})
+     * @Route("/users/{id}", name="employees_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function showUserAction($id)
     {
+        $secUtil = $this->get('user_security_utility');
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         return $this->showUser($id);
     }
     public function showUser($id, $prefix=null) {
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = $this->get('user_security_utility');
-
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
         //echo "id=".$id."<br>";
 
         if( $id == 0 || $id == '' || $id == '' ) {
@@ -170,7 +167,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array('disabled' => true));
+        $form = $this->createForm(new UserType('show',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array('disabled' => true));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -193,16 +190,17 @@ class UserController extends Controller
      */
     public function editUserAction($id)
     {
+        $secUtil = $this->get('user_security_utility');
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
         return $this->editUser($id);
     }
     public function editUser($id,$prefix=null) {
         $em = $this->getDoctrine()->getManager();
 
-        $secUtil = $this->get('user_security_utility');
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
@@ -225,7 +223,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -251,17 +249,16 @@ class UserController extends Controller
      */
     public function updateUserAction(Request $request, $id)
     {
-        return $this->updateUser($request,$id);
-    }
-    public function updateUser(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
         $secUtil = $this->get('user_security_utility');
-
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
+
+        return $this->updateUser( $request, $id, $this->container->getParameter('employees.sitename') );
+    }
+    public function updateUser(Request $request, $id, $sitename)
+    {
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
@@ -289,7 +286,7 @@ class UserController extends Controller
         //Roles
         $rolesArr = $this->getUserRoles();
 
-        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array(
+        $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
@@ -305,7 +302,7 @@ class UserController extends Controller
 
             //$em->persist($entity);
             $em->flush();
-            return $this->redirect($this->generateUrl('showuser', array('id' => $id)));
+            return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
         }
 
         return array(
@@ -395,6 +392,8 @@ class UserController extends Controller
 
 
     /**
+     * Generate users from excel
+     *
      * @Route("/users/generate", name="generate_users")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
@@ -402,7 +401,7 @@ class UserController extends Controller
     public function generateUsersAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You do not have permission to visit this page'

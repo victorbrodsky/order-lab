@@ -29,7 +29,7 @@ framework:
 # Twig Configuration
 twig:
     form:
-      resources: ['form_div_layout.html.twig']
+        resources: ['form_div_layout.html.twig']
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
     globals:
@@ -37,7 +37,8 @@ twig:
         institution_name: %institution_name%
         department_url: %department_url%
         department_name: %department_name%
-#      admin_email: %scanorder.adminemail%
+        employees_sitename: %employees.sitename%
+        scan_sitename: %scan.sitename%
 
 #    form:
 #      resources: ['form_table_layout.html.twig']

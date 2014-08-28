@@ -43,12 +43,12 @@
 
             <br><br>
 
-            <form action="{{ path('access_request_create', { 'id':userid, 'sitename':sitename }) }}" method="post">
+            <form action="{{ path(sitename~'_access_request_create', { 'id':userid, 'sitename':sitename }) }}" method="post">
 
                 <p>
                     <button class="btn btn-info" type="submit">Yes, please!</button>
                     &nbsp;
-                    <a class="btn btn-info" href="{{ path(sitename~'_logout') }}">No, thanks!</a>
+                    <a class="btn btn-info" href="{{ path('main_common_home') }}">No, thanks!</a>
                 </p>
 
             </form>

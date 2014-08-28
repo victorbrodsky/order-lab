@@ -19,14 +19,16 @@ acme_demo:
     prefix:   /demo
 
 
-#login:
-#    pattern:   login
-#    defaults:  { _controller: OlegOrderformBundle:Security:login }
-scanorder_login_check:
-    path:   /scan/login_check
-scanorder_logout:
+#login and logout routes
+
+#logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
+logout:
     path:   /scan/logout
-#    defaults:  { _controller: OlegOrderformBundle:Security:logout }
+
+scan_login_check:
+    path:   /scan/login_check
+scan_logout:
+    path:   /scan/logout
 
 employees_login_check:
     path:   /employees/login_check

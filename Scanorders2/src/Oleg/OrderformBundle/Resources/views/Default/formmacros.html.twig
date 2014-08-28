@@ -259,10 +259,10 @@
                 <p>
                     This order has been originally submitted
                     by
-                    <a href="{{ path('showuser', { 'id': histories|first.orderinfo.provider.id }) }}">{{ histories|first.orderinfo.provider }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.orderinfo.provider.id }) }}">{{ histories|first.orderinfo.provider }}</a>
                     on {{ histories|first.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|first.orderinfo.orderdate|date('h:i a') }}
                     and most recently {{ formstatus }} by
-                    <a href="{{ path('showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
             {% else %}               
@@ -273,7 +273,7 @@
                 {% endif %}
                 <p>
                     This order has been {{ formstatus }} {{performed}}by
-                    <a href="{{ path('showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': histories|first.provider.id }) }}">{{ histories|first.provider }}</a>
                     {#on {{ histories|last.orderinfo.orderdate|date('Y-m-d') }} at {{ histories|last.orderinfo.orderdate|date('h:i a') }}#}
                     on {{ histories|first.changedate|date('Y-m-d') }} at {{ histories|first.changedate|date('h:i a') }}
                 </p>
@@ -290,7 +290,7 @@
                         This order is the older archived version of and has been {{ formstatus }} by
                         <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a> via amendment
                         on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
-                        <a href="{{ path('showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
+                        <a href="{{ path(scan_sitename~'_showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
                         .
                     </p>
                 {% else %}
@@ -299,7 +299,7 @@
                             Older, superseded version of this order:
                             <a href="{{ path('multy_show',{'id':history.orderinfo.id}) }}">Order ID {{ history.orderinfo.id }}</a>
                             {{ history.currentstatus.name|lower }} on {{ history.changedate|date('Y-m-d') }} at {{ history.changedate|date('h:i a') }} by
-                            <a href="{{ path('showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
+                            <a href="{{ path(scan_sitename~'_showuser', { 'id': history.provider.id }) }}">{{ history.provider }}</a>
                         </p>
                     {% endif %}
                 {% endif %}

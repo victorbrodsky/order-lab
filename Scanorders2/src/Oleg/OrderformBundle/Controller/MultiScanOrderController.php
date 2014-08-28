@@ -30,7 +30,7 @@ use Oleg\OrderformBundle\Entity\Research;
 use Oleg\OrderformBundle\Form\SlideMultiType;
 
 use Oleg\OrderformBundle\Helper\ErrorHelper;
-use Oleg\OrderformBundle\Helper\EmailUtil;
+use Oleg\OrderformBundle\Helper\ScanEmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\OrderformBundle\Security\Util\SecurityUtil;
 
@@ -196,7 +196,7 @@ class MultiScanOrderController extends Controller {
 
                 //email
                 $email = $user->getEmail();
-                $emailUtil = new EmailUtil();
+                $emailUtil = new ScanEmailUtil();
 
                 $submitStatusStr = null;
                 if( isset($_POST['btnAmend']) ) {

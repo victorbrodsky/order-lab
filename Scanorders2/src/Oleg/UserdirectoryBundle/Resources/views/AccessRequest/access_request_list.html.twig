@@ -1,115 +1,11 @@
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
 {% block title %}
-    Access Requests
+    Access Requests {{ sitename|capitalize }}
 {% endblock %}
 
-{% block content %} 
+{% block content %}
 
-    <h3 class="text-info">Access Requests</h3>
+    {% include 'OlegUserdirectoryBundle::AccessRequest/access_request_list_content.html.twig' %}
 
-    <table class="table table-hover table-condensed text-left">
-        <thead>
-            <tr>
-                <th>{{ knp_pagination_sortable(entities, 'Request ID', 'accreq.id') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Request Date', 'accreq.createdate') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Request Status', 'accreq.status') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Service(s)', 'pathologyServices.name') }}</th>#}
-                <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.title') }}</th>#}
-                <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.phone') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody data-link="row" class="rowlink">
-        {% for entity in entities %}
-            
-            {% if entity.status == 'active' %}
-                <tr class="order-urgent-status">
-            {% elseif entity.status == 'declined' %}
-                <tr class="order-neutral-status">
-            {% elseif entity.status == 'approved' %}
-                <tr>
-            {% elseif entity.status == 'uncompleted' %}
-                <tr class="order-someattention-status">
-            {% else %}
-                <tr>
-            {% endif %}
-
-                <td><a href="{{ path('scan_showuser', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.createdate|date('Y-m-d H:i') }}</td>
-                <td>{{ entity.status|capitalize }}</td>
-                {#<td>#}
-                    {#{% for pathologyServices in entity.pathologyServices %}#}
-                        {#"{{ pathologyServices }}"#}
-                    {#{% endfor %}#}
-                {#</td>#}
-                <td>{{ entity.user.displayName }}</td>
-                {#<td>{{ entity.title }}</td>#}
-                <td>{{ entity.user.username }}</td>
-                <td>{{ entity.user.email }}</td>
-                <td >{{ entity.user.preferredPhone }}</td>
-                <td>
-                    {% for role in entity.user.roles %}
-                        {% if role != "ROLE_USER" %}
-                            "{{ attribute(roles, role) }}"
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                <td>{{ entity.user.lastLogin|date('Y-m-d H:i') }}</td>
-
-                <td class="rowlink-skip">
-                    
-{#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}
-                   
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                          Action <span class="caret"></span>
-                        </button>
-
-                        <ul class="dropdown-menu dropdown-menu-right">
-
-                            <li><a href="{{ path('scan_showuser', { 'id': entity.user.id }) }}">View User Details</a></li>
-
-                            <li class="divider"></li>
-
-                            {% if entity.status != 'declined' %}
-                                <li><a data-confirm="Are you sure you want to decline?"
-                                       href="{{ path('accessrequest_change', { 'id': entity.user.id, 'status': 'declined', 'role': '#' }) }}">Decline</a>
-                                </li>
-                            {% endif %}
-
-                            {% if entity.status == 'declined' or entity.status == 'active' %}
-                                <li><a data-confirm="Are you sure you want to approve as Submitter?"
-                                       href="{{ path('accessrequest_change', { 'id': entity.user.id, 'status': 'approved', 'role': 'submitter' }) }}">Approve as Submitter</a>
-                                </li>
-                            {% endif %}                                                                
-
-                            {% if entity.status != 'active' %}
-                                <li><a data-confirm="Are you sure you want to Revert status to Active?"
-                                       href="{{ path('accessrequest_change', { 'id': entity.user.id, 'status': 'active', 'role': '#' }) }}">Revert status to Active</a>
-                                </li>
-                            {% endif %}
-
-
-                        </ul>
-
-                    </div>
-
-
-                </td>
-
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="navigation">
-        {{ knp_pagination_render(entities) }}
-    </div>
-        
-    {% endblock %}
+{% endblock %}

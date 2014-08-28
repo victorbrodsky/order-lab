@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\OrderformBundle\Resources\config\Constant;
 
 
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
@@ -38,7 +37,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->router = $container->get('router');
         $this->security = $security;
         $this->em = $em;
-        $this->siteName = Constant::SITE_NAME;
+        $this->siteName = $container->getParameter('scan.sitename');
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -58,14 +57,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options = array('event'=>'Banned User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
-        //detect if the user was time logged in by ldap: assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER
+        //detect if the user was first time logged in by ldap: assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER
         //all users eneterd by ldap must have approved access request
-        if( $user->getCreatedby() == 'ldap' && !$secUtil->getUserAccessRequest($user, Constant::SITE_NAME)  ) {
-            echo "assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER <br>";
-            //exit;
+        if( !$this->security->isGranted('ROLE_SCANORDER_SUBMITTER')  ) {
+            //echo "assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER <br>";
             $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
@@ -73,7 +71,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options = array('event'=>'Unapproved User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
         //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
@@ -130,7 +128,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
             //echo "user role not ok!";
             //exit();
-            $response = new RedirectResponse( $this->router->generate('logout') );
+            $response = new RedirectResponse( $this->router->generate($this->siteName.'_logout') );
             $options['event'] = "Unsuccessful Login Attempt. Wrong Role: user is not processor or submitter/ordering provider submitter";
             
         }
@@ -165,7 +163,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $request->getSession()->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);
 
-        $response = new RedirectResponse( $this->router->generate('login') );
+        $response = new RedirectResponse( $this->router->generate($this->siteName.'_login') );
         return $response;
 
     }

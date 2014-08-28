@@ -20,11 +20,11 @@
 
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
 
-            {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+            {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
 
                 <ul class="nav navbar-nav">
 
-                    <li id="nav-bar-scanorderhome" class="hidden-xs divider-vertical"><a href="{{ path('employees_home') }}">Home</a></li>
+                    <li id="nav-bar-scanorderhome" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_home') }}">Home</a></li>
 
                 </ul>
 
@@ -33,7 +33,7 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-                {% if is_granted('ROLE_SCANORDER_PROCESSOR') %}
+                {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                     {#admincomments - comments addressed to this processor only#}
                     {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
@@ -42,10 +42,10 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
-                            <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(employees_sitename~'_accessrequest_list') }}">Access Requests</a></li>
                             <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
 
-                            {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+                            {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
                                 <li class="divider"></li>
                                 <li><a href="{{ path('listusers') }}">Users</a></li>
                                 <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
@@ -58,14 +58,14 @@
 
                 {% endif %}
 
-                {% if is_granted('ROLE_SCANORDER_SUBMITTER') %}
+                {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
 
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             {#<li> Logged in as {{ app.security.getToken().getUser().getUsername() }} </li>#}
-                            <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUsername() }})</a></li>
-                            <li><a href="{{ path('employees_logout') }}">Log Out</a></li>
+                            <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUsername() }})</a></li>
+                            <li><a href="{{ path(employees_sitename~'_logout') }}">Log Out</a></li>
                         </ul>
                     </li>
 

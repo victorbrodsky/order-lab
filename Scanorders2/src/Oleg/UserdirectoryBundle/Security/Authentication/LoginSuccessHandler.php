@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
-use Oleg\UserdirectoryBundle\Resources\config\Constant;
 
 
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
@@ -37,7 +36,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->router = $container->get('router');
         $this->security = $security;
         $this->em = $em;
-        $this->siteName = Constant::SITE_NAME;
+        $this->siteName = $container->getParameter('employees.sitename');
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -57,21 +56,21 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options = array('event'=>'Banned User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
-        //detect if the user was time logged in by ldap: assign role ROLE_UNAPPROVED_SUBMITTER
-        //all users eneterd by ldap must have approved access request
-        if( $user->getCreatedby() == 'ldap' && !$secUtil->getUserAccessRequest($user,$this->siteName)  ) {
-            //echo "assign role ROLE_UNAPPROVED_SUBMITTER <br>";
-            $user->addRole('ROLE_USERDIRECTORY_UNAPPROVED_SUBMITTER');
+        //detect if the user was first time logged in by ldap: assign role UNAPPROVED user
+        //all users must have at least an OBSERVER role
+        if( !$this->security->isGranted('ROLE_USERDIRECTORY_OBSERVER')  ) {
+            //echo "assign role UNAPPROVED user <br>";
+            $user->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
         }
 
-        if( $this->security->isGranted('ROLE_USERDIRECTORY_UNAPPROVED_SUBMITTER') ) {
+        if( $this->security->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') ) {
             $options = array('event'=>'Unapproved User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate('access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
         $options['event'] = "Successful Login";

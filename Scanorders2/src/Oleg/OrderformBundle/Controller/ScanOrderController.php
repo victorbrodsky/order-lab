@@ -3,7 +3,6 @@
 namespace Oleg\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Resources\config\Constant;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -593,11 +592,11 @@ class ScanOrderController extends Controller {
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( !$this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
-        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus(Constant::SITE_NAME,AccessRequest::STATUS_ACTIVE);
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('scan.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
 

@@ -9,7 +9,7 @@
     <h3 class="text-info">Results of load roles from Aperio eSlideManager for all users:</h3>
 
     {% for result in results %}
-        User <a href="{{ path('showuser', { 'id': result.user.id }) }}">{{ result.user.username }}</a>: {{ result.stats }}<br>
+        User <a href="{{ path(scan_sitename~'_showuser', { 'id': result.user.id }) }}">{{ result.user.username }}</a>: {{ result.stats }}<br>
     {% endfor %}
 
     <br>
@@ -18,7 +18,7 @@
     {% if notfoundusers|length > 0 %}
         <h3 class="text-info">Users present in this system, but not found in Aperio eSlide Manager:</h3>
         {% for notfounduser in notfoundusers %}
-            <a href="{{ path('showuser', { 'id': notfounduser.user.id }) }}">{{ notfounduser.user.username }}</a><br>
+            <a href="{{ path(scan_sitename~'_showuser', { 'id': notfounduser.user.id }) }}">{{ notfounduser.user.username }}</a><br>
         {% endfor %}
     {% endif %}
 

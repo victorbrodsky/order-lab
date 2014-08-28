@@ -49,11 +49,11 @@ class LdapManager extends BaseLdapManager
 
         //$user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
 
-        //assign general role unapproved submitter. It should be changed to submitter role, later on, by access request
-        $user->addRole('ROLE_UNAPPROVED_SUBMITTER');
+        //assign general role unapproved user. It should be changed to higher role, later on, by access request
+        //$user->addRole('ROLE_UNAPPROVED');
 
         if( $user->getUsername() == "oli2002" || $user->getUsername() == "vib9020" ) {
-            $user->addRole('ROLE_SUPER_ADMIN');
+            $user->addRole('ROLE_ADMIN');
             //$user->addRole('ROLE_SCANORDER_ADMIN');
             //$user->addRole('ROLE_SCANORDER_SUBMITTER');
             //$user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');

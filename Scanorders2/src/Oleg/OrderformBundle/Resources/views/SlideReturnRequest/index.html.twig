@@ -139,12 +139,12 @@
 
                 {% if routename == 'incoming-slide-return-requests' %}
                     <td>
-                        <a href="{{ path('showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
+                        <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.provider.id }) }}">{{ sliderequest.provider }}</a>
                     </td>
                 {% endif %}
 
                 <td>
-                    <a href="{{ path('showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
+                    <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
                 </td>
 
                 <td>

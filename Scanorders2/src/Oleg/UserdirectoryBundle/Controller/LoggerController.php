@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\UserdirectoryBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\UserdirectoryBundle\Entity\Logger;
-use Oleg\OrderformBundle\Form\LoggerType;
+use Oleg\UserdirectoryBundle\Form\LoggerType;
 
 /**
  * Logger controller.
@@ -29,9 +29,7 @@ class LoggerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegOrderformBundle:Logger')->findBy(array(), array('creationdate' => 'DESC'));
-
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Logger');
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");
         $dql->select('logger');
         $dql->orderBy("logger.creationdate","DESC");
@@ -46,7 +44,7 @@ class LoggerController extends Controller
         );
 
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('UserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
@@ -64,7 +62,7 @@ class LoggerController extends Controller
      *
      * @Route("/", name="logger_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:Logger:new.html.twig")
+     * @Template("OlegUserdirectoryBundle:Logger:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -134,7 +132,7 @@ class LoggerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Logger')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -159,7 +157,7 @@ class LoggerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Logger')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -198,13 +196,13 @@ class LoggerController extends Controller
      *
      * @Route("/{id}", name="logger_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:Logger:edit.html.twig")
+     * @Template("OlegUserdirectoryBundle:Logger:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:Logger')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -239,7 +237,7 @@ class LoggerController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:Logger')->find($id);
+            $entity = $em->getRepository('OlegUserdirectoryBundle:Logger')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Logger entity.');

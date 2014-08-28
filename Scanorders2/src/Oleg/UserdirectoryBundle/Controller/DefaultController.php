@@ -2,9 +2,13 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+use Oleg\UserdirectoryBundle\Entity\AccessRequest;
+
 
 class DefaultController extends Controller
 {
@@ -23,7 +27,20 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('login') );
         }
 
-        return array();
+        //check for active access requests
+        $accessreqs = $this->getActiveAccessReq();
+
+        return array('accessreqs' => count($accessreqs));
+    }
+
+    //check for active access requests
+    public function getActiveAccessReq() {
+        if( !$this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+            return null;
+        }
+        $userSecUtil = $this->get('user_security_utility');
+        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->container->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
+        return $accessreqs;
     }
 
 

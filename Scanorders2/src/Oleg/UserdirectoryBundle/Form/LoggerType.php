@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,7 +34,7 @@ class LoggerType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Logger'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Logger'
         ));
     }
 
@@ -43,6 +43,6 @@ class LoggerType extends AbstractType
      */
     public function getName()
     {
-        return 'oleg_orderformbundle_logger';
+        return 'oleg_userdirectorybundle_logger';
     }
 }

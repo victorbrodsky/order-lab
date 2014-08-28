@@ -16,16 +16,36 @@
         {% if app.security.getToken().getUser.getEmail == "" %}
             <p>
                 If you would like to receive email notifications regarding your orders, please take a moment to update
-                <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
                 by adding your email account.
             </p>
         {% endif %}
 
 
         <p>
-            Please review and update your <a href="{{ path('showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+            Please review and update your <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
         </p>
 
+
+        <br>
+
+        <p>
+
+            {% if is_granted('ROLE_USERDIRECTORY_ADMIN') %}
+
+                There are:
+
+                <ul>
+
+                    <li>
+                        <a href="{{ path(employees_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
+                    </li>
+
+                </ul>
+
+            {% endif %}
+
+        </p>
 
 
     </div>
