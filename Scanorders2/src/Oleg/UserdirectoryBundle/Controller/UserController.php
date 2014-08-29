@@ -29,7 +29,7 @@ class UserController extends Controller
 {
 
     /**
-     * @Route("/user-directory", name="listusers")
+     * @Route("/user-directory", name="employees_listusers")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
@@ -145,9 +145,9 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        return $this->showUser($id);
+        return $this->showUser($id,$this->container->getParameter('employees.sitename'));
     }
-    public function showUser($id, $prefix=null) {
+    public function showUser($id, $sitename=null) {
         $em = $this->getDoctrine()->getManager();
 
         //echo "id=".$id."<br>";
@@ -179,12 +179,12 @@ class UserController extends Controller
             'form' => $form->createView(),
             'cicle' => 'show_user',
             'user_id' => $id,
-            'prefix' => $prefix
+            'sitename' => $sitename
         );
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="user_edit", requirements={"id" = "\d+"})
+     * @Route("/edit-user-profile/{id}", name="employees_user_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
@@ -195,9 +195,9 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        return $this->editUser($id);
+        return $this->editUser($id, $this->container->getParameter('employees.sitename'));
     }
-    public function editUser($id,$prefix=null) {
+    public function editUser($id,$sitename=null) {
         $em = $this->getDoctrine()->getManager();
 
 
@@ -224,7 +224,7 @@ class UserController extends Controller
         $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
-            'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 //        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
@@ -234,7 +234,7 @@ class UserController extends Controller
             'form' => $form->createView(),
             'cicle' => 'edit_user',
             'user_id' => $id,
-            'prefix' => $prefix
+            'sitename' => $sitename
         );
     }
 
@@ -243,7 +243,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/users/{id}", name="user_update")
+     * @Route("/users/{id}", name="employees_user_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
@@ -281,16 +281,16 @@ class UserController extends Controller
         foreach( $entity->getLocations() as $loc) {
             $originalLocations->add($loc);
         }
-        echo "count=".count($originalAdminTitles)."<br>";
+        //echo "count=".count($originalAdminTitles)."<br>";
 
         //Roles
         $rolesArr = $this->getUserRoles();
 
         $form = $this->createForm(new UserType('edit',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
-            'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        //$form->add('submit', 'submit', array('label' => 'Update'));
 
         $form->handleRequest($request);
 
@@ -302,14 +302,19 @@ class UserController extends Controller
 
             //$em->persist($entity);
             $em->flush();
-            return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
+
+            //redirect only if this was called by the same controller class
+            if( $sitename == $this->container->getParameter('employees.sitename') ) {
+                return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
+            }
         }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'cicle' => 'edit_user',
-            'user_id' => $id
+            'user_id' => $id,
+            'sitename' => $sitename
         );
     }
 
@@ -415,7 +420,7 @@ class UserController extends Controller
         $usersCount = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
         //exit();
-        return $this->redirect($this->generateUrl('listusers'));
+        return $this->redirect($this->generateUrl('employees_listusers'));
     }
 
     public function getUserRoles() {
@@ -441,5 +446,45 @@ class UserController extends Controller
 //        return $servArr;
 //    }
 
+
+
+    /**
+     * @Route("/lockunlock/change/{id}/{status}", name="employees_lockunlock_change", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function lockUnlockChangeAction($id, $status) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $this->lockUnlock($id, $status);
+
+        return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_listusers'));
+    }
+
+    public function lockUnlock($id, $status) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        if( $status == "lock" ) {
+            $user->setLocked(true);
+        }
+
+        if( $status == "unlock" ) {
+            $user->setLocked(false);
+        }
+
+        $em->persist($user);
+        $em->flush();
+
+    }
 
 }

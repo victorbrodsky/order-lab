@@ -1,15 +1,20 @@
+
 {% extends "OlegUserdirectoryBundle::Profile/edit_user.html.twig" %}
 
-
+{% block header %}
+    {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+{% endblock %}
 
 {% block addcontent %}
 
-    <br>
+    <hr>
+        {#<a href="{{ path('scan_order_settings_show',{'id':entity.id}) }}">User's Scan Order Settings</a>#}
 
-    <br>
+    <h3 class="text-info">Per Site User Settings</h3>
+    {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
+    {{ formmacros.field(form_scansettings.scanOrdersServicesScope) }}
+    {{ formmacros.field(form_scansettings.chiefServices) }}
+    {{ formmacros.field(form_scansettings.defaultService) }}
 
-    <p>
-        <a href="{{ path('scan_order_settings_show',{'id':entity.id}) }}">User's Scan Order Settings</a>
-    </p>
 
 {% endblock %}

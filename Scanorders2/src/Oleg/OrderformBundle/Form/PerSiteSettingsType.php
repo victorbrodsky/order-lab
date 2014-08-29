@@ -55,7 +55,6 @@ class PerSiteSettingsType extends AbstractType
                 },
             ));
 
-            //TODO: change scanOrdersServicesScope and chiefServices view accroding to the parent
             $builder->add( 'scanOrdersServicesScope', null, array(
                 'label'=>'Scan Orders Services Scope:',
                 'required'=>false,
@@ -105,6 +104,7 @@ class PerSiteSettingsType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PerSiteSettings',
+            'csrf_protection' => false,
         ));
     }
 

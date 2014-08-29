@@ -47,9 +47,9 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options = array();
         $em = $this->em;
         $userUtil = new UserUtil();
-        $secUtil = $this->container->get('user_security_utility');
+        //$secUtil = $this->container->get('user_security_utility');
 
-        echo "employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
+        //echo "employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
         //exit;
 
         if( $this->security->isGranted('ROLE_USERDIRECTORY_BANNED') ) {

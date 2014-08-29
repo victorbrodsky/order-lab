@@ -72,19 +72,19 @@
 
                         {% if entity.getStatusStr|lower != 'declined' %}
                             <li><a data-confirm="Are you sure you want to decline?"
-                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'declined', 'role': '#' }) }}">Decline</a>
+                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'declined' }) }}">Decline</a>
                             </li>
                         {% endif %}
 
                         {% if entity.getStatusStr|lower == 'declined' or entity.getStatusStr|lower == 'active' %}
-                            <li><a data-confirm="Are you sure you want to approve as Submitter?"
-                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'approved', 'role': 'submitter' }) }}">Approve as Submitter</a>
+                            <li><a data-confirm="Are you sure you want to approve?"
+                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'approved' }) }}">Approve</a>
                             </li>
                         {% endif %}
 
                         {% if entity.getStatusStr|lower != 'active' %}
                             <li><a data-confirm="Are you sure you want to Revert status to Active?"
-                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'active', 'role': '#' }) }}">Revert status to Active</a>
+                                   href="{{ path(sitename~'_accessrequest_change', { 'id': entity.user.id, 'status': 'active' }) }}">Revert status to Active</a>
                             </li>
                         {% endif %}
 

@@ -80,11 +80,11 @@
 
                             {% if entity.locked == 0 %}
                                 <li><a data-confirm="Are you sure you want to Lock this user?"
-                                       href="{{ path(sitename~'_accessrequest_change', { 'id': entity.id, 'status': 'declined', 'role': 'declined' }) }}">Lock</a>
+                                       href="{{ path(sitename~'_lockunlock_change', { 'id': entity.id, 'status': 'lock' }) }}">Lock</a>
                                 </li>
                             {% else %}
                                 <li><a data-confirm="Are you sure you want to Unlock this user?"
-                                       href="{{ path(sitename~'_accessrequest_change', { 'id': entity.id, 'status': 'approved', 'role': 'external' }) }}">Unlock</a>
+                                       href="{{ path(sitename~'_lockunlock_change', { 'id': entity.id, 'status': 'unlock' }) }}">Unlock</a>
                                 </li>
                             {% endif %}
 

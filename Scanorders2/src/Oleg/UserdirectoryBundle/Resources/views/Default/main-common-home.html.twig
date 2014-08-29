@@ -31,7 +31,15 @@
 
         <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
 
-        <br><br>
+        <br>
+
+
+        {% for flashMessage in app.session.flashbag.get('warning') %}
+            <div style="height: 1%;">&nbsp;</div>
+            <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+        {% endfor %}
+
+        <br>
 
         Welcome to the O R D E R platform!
 

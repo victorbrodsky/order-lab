@@ -53,4 +53,30 @@ class UserSecurityUtil {
         return $accessRequests;
     }
 
+
+    //check for the role in security context and in the user DB
+    public function hasGlobalUserRole( $role, $user=null ) {
+
+        if( false === $this->sc->isGranted('IS_AUTHENTICATED_FULLY') )
+            return false;
+
+        if( $this->sc->isGranted($role) )
+            return true;
+
+        if( $user == null )
+            $user = $this->sc->getToken()->getUser();
+
+        if( $this->sc->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') )
+            return false;
+        
+//        if( !is_object($user) ) {
+//            return false;
+//        }
+
+        if( $user && $user->hasRole($role) )
+            return true;
+
+        return false;
+    }
+
 }

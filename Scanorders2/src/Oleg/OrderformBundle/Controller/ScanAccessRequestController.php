@@ -26,13 +26,27 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestCreatePlainAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') &&
-            false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_BANNED')
-        ) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_login'));
-        }
+        $userSecUtil = $this->get('user_security_utility');
 
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
+            $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+        }
+
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$user)) {
+            //return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_login'));
+
+            //exit('nopermission create scan access request for non ldap user');
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have permission to visit Scan Order site."
+            );
+
+            return $this->redirect( $this->generateUrl('main_common_home') );
+        }
 
         return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('scan.sitename'));
     }
@@ -45,9 +59,8 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestCreateAction($id,$sitename)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_BANNED')
-        ) {
+        $userSecUtil = $this->get('user_security_utility');
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
@@ -61,9 +74,9 @@ class ScanAccessRequestController extends AccessRequestController
      */
     public function accessRequestAction($id,$sitename)
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_UNAPPROVED') ) {
-            //return $this->redirect( $this->generateUrl($sitename.'_logout') );
+        $userSecUtil = $this->get('user_security_utility');
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
+            return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
         return $this->accessRequestCreate($id,$sitename);
@@ -88,11 +101,11 @@ class ScanAccessRequestController extends AccessRequestController
 
 
     /**
-     * @Route("/access-requests/{id}/{status}/{role}/status", name="scan_accessrequest_change", requirements={"id" = "\d+"})
+     * @Route("/access-requests/change-status/{id}/{status}", name="scan_accessrequest_change", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestChangeAction($id, $status, $role)
+    public function accessRequestChangeAction($id, $status)
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
@@ -107,26 +120,28 @@ class ScanAccessRequestController extends AccessRequestController
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        //$entity->setAppliedforaccess($status);
         $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
 
-        if( $status == "approved" && $role == "submitter" ) {
+        if( $status == "approved" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_SUBMITTER');
             $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
-            $accReq->setStatus(AccessRequest::STATUS_APPROVED);
+            if( $accReq )
+                $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_BANNED');
-            $accReq->setStatus(AccessRequest::STATUS_DECLINED);
+            if( $accReq )
+                $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
-            $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
+            if( $accReq )
+                $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
 
         $em->persist($entity);

@@ -35,12 +35,6 @@ class UserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        if (class_exists('Symfony\Component\Security\Core\Validator\Constraints\UserPassword')) {
-//            $constraint = new UserPassword();
-//        } else {
-//            // Symfony 2.1 support with the old constraint class
-//            $constraint = new OldUserPassword();
-//        }
 
         $read_only = false;
         if( !$this->roleAdmin ) {
@@ -78,16 +72,6 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif phone-mask')
         ));
 
-        //timezone
-//        $tzUtil = new TimeZoneUtil();
-//        $builder->add( 'timezone', 'choice', array(
-//            'label' => 'Time Zone:',
-//            'choices' => $tzUtil->tz_list(),
-//            'required' => true,
-//            'preferred_choices' => array('America/New_York'),
-//            'attr' => array('class' => 'combobox combobox-width')
-//        ));
-
         $builder->add('preferences', new UserPreferencesType(), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
             'label' => false,
@@ -108,91 +92,13 @@ class UserType extends AbstractType
         //hook for extended class
         $this->addHookFields($builder);
 
-//        $builder->add('institution', 'entity', array(
-//            'class' => 'OlegUserdirectoryBundle:Institution',
-//            'label'=>'All Institution(s):',
-//            'required' => false,
-//            'multiple' => true,
-//            'attr' => array('class' => 'combobox combobox-width'),
-//            'property' => 'name'
-//            //'by_reference' => false //force to use setters of User entity
-//        ));
-
-//        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-//        $builder->add('service', 'custom_selector', array(
-//            'label' => 'All Service(s):',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'userPathologyServices'
-//        ));
-
-
-//        $builder->add('perSiteSettings', 'collection', array(
-//            'type' => new PerSiteSettingsType(),
-//            'label' => false,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__persitesettings__',
-//        ));
-
-//        //Roles
-//        $attr = array('class' => 'combobox combobox-width');
-//
-//        if( $this->cicle == "show" || $this->roleAdmin ) {
-//
-//            $builder->add('roles', 'choice', array(
-//                'choices' => $this->roles,
-//                'label' => 'Role(s):',
-//                'attr' => $attr,
-//                'multiple' => true,
-//            ));
-//
-//            $builder->add('institution', 'entity', array(
-//                'class' => 'OlegUserdirectoryBundle:Institution',
-//                'label'=>'All Institution(s):',
-//                'required' => false,
-//                'multiple' => true,
-//                'attr' => array('class' => 'combobox combobox-width'),
-//                'property' => 'name'
-//                //'by_reference' => false //force to use setters of User entity
-//            ));
-//
-//        }
-
         if( $this->roleAdmin ) {
-//            $builder->add('enabled', null, array(
-//                'label' => 'Enabled',
-//                'attr' => array('class'=>'form-control form-control-modif')
-//            ));
             $builder->add('locked', null, array(
                 'required' => false,
                 'label' => 'Prevent user from logging in (lock):',
                 'attr' => array('class'=>'form-control form-control-modif')
             ));
-//            $builder->add('expired', null, array(
-//                'label' => 'Expired',
-//                'attr' => array('class'=>'form-control form-control-modif')
-//            ));
         }
-
-//        $attr = array('class' => 'ajax-combobox-pathservice', 'type' => 'hidden');    //new
-//        $builder->add('chiefservices', 'custom_selector', array(
-//            'label' => 'Chief of the following service(s):',
-//            'attr' => $attr,
-//            'required' => false,
-//            'classtype' => 'userPathologyServices'
-//        ));
-//
-//        if( $this->cicle == 'create' ) {
-//            $builder->add('password', null, array(
-//                'required' => true,
-//                'label' => 'Password:',
-//                'attr' => array('class'=>'form-control form-control-modif', 'required'=>'required')
-//            ));
-//        }
 
 
         //Administrative Titles
@@ -229,6 +135,13 @@ class UserType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__locations__',
+        ));
+
+
+        $builder->add('credentials', new CredentialsType(), array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+            'label' => false,
+            'required' => false,
         ));
 
     }

@@ -129,10 +129,10 @@ class OrderUtil {
 
             $fieldStatusStr = "deleted-by-canceled-order";
 
-            if( $entity->getProvider() == $user || $user->hasRole("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
+            if( $entity->getProvider() == $user || $this->sc->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             } else
-            if( $user->hasRole("ROLE_SCANORDER_ADMIN") || $user->hasRole("ROLE_SCANORDER_PROCESSOR") ) {
+            if( $this->sc->isGranted("ROLE_SCANORDER_ADMIN") || $this->sc->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
             } else {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
@@ -573,7 +573,7 @@ class OrderUtil {
         $emailUtil = new EmailUtil();
         $emailUtil->initEmail($this->em);
 
-        if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') || $user->hasRole('ROLE_SCANORDER_ADMIN') ) {
+        if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
             $msg =  "Please add at least one institution to your ".$webUserUrl." in order to be able to place orders.";

@@ -64,26 +64,15 @@ class User extends BaseUser
      */
     private $createdby;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $appliedforaccess;
-//
-//    /**
-//     * @var \DateTime
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    private $appliedforaccessdate;
-
     /**
      * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist"})
      */
     private $preferences;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="PerSiteSettings", mappedBy="author", cascade={"persist"})
-//     */
-//    private $perSiteSettings;
+    /**
+     * @ORM\OneToOne(targetEntity="Credentials", inversedBy="user", cascade={"persist"})
+     */
+    private $credentials;
 
     /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist"})
@@ -100,49 +89,6 @@ class User extends BaseUser
      */
     private $appointmentTitles;
 
-
-//    /**
-//     * Keep reference to institution for performance gain?
-//     *
-//     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="users")
-//     * @ORM\JoinTable(name="fos_user_institution",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-//     * )
-//     */
-//    private $institution;
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Department", inversedBy="users")
-//     * @ORM\JoinTable(name="fos_user_department",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="department_id", referencedColumnName="id")}
-//     * )
-//     */
-//    private $department;
-//
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Division", inversedBy="users")
-//     * @ORM\JoinTable(name="fos_user_division",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="division_id", referencedColumnName="id")}
-//     * )
-//     */
-//    private $division;
-//
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Service", inversedBy="users")
-//     * @ORM\JoinTable(name="fos_user_service",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-//     * )
-//     */
-//    private $service;
-
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $primaryDivision;   //$primaryPathologyService;
 
 
     function __construct()
@@ -175,50 +121,6 @@ class User extends BaseUser
 
         parent::__construct();
     }
-
-//    /**
-//     * @param mixed $division
-//     */
-//    public function setDivision($division)
-//    {
-//        if( $division->first() ) {
-//            $this->primaryDivision = $division->first()->getId();
-//        } else {
-//            $this->primaryDivision = NULL;
-//        }
-//        $this->division = $division;
-//    }
-//
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getDivision()
-//    {
-//        //return $this->division;
-//
-//        $resArr = new ArrayCollection();
-//        foreach( $this->division as $service ) {
-//            //echo "service=".$service."<br>";
-//            if( $service->getId()."" == $this->getPrimaryDivision()."" ) {  //this service is a primary path service => put as the first element
-//                //$resArr->removeElement($service);
-//                //$resArr->first();
-//                //$firstEl = $resArr->get(0);
-//                $firstEl = $resArr->first();
-//                if( count($this->division) > 1 && $firstEl ) {
-//                    //echo "firstEl=".$firstEl."<br>";
-//                    $resArr->set(0,$service); //set( mixed $key, mixed $value ) Adds/sets an element in the collection at the index / with the specified key.
-//                    $resArr->add($firstEl);
-//                } else {
-//                    $resArr->add($service);
-//                }
-//            } else {    //this service is not a primary path service
-//                $resArr->add($service);
-//            }
-//        }
-//
-//        return $resArr;
-//    }
 
     /**
      * @param mixed $firstName
@@ -283,14 +185,6 @@ class User extends BaseUser
 
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getTitle()
-//    {
-//        return $this->title;
-//    }
-
     /**
      * @param mixed $displayName
      */
@@ -322,26 +216,6 @@ class User extends BaseUser
     {
         return $this->preferredPhone;
     }
-
-
-//    public function getDivision()
-//    {
-//        return $this->division;
-//    }
-//
-//    public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
-//    {
-//        if( !$this->division->contains($division) ) {
-//            $this->division->add($division);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
-//    {
-//        $this->division->removeElement($division);
-//    }
 
     /**
      * @param mixed $createdby
@@ -380,38 +254,6 @@ class User extends BaseUser
         return in_array(strtoupper($role), $this->roles, true);
     }
 
-//    /**
-//     * @param \DateTime $appliedforaccessdate
-//     */
-//    public function setAppliedforaccessdate($appliedforaccessdate)
-//    {
-//        $this->appliedforaccessdate = $appliedforaccessdate;
-//    }
-//
-//    /**
-//     * @return \DateTime
-//     */
-//    public function getAppliedforaccessdate()
-//    {
-//        return $this->appliedforaccessdate;
-//    }
-
-//    /**
-//     * @param mixed $appliedforaccess
-//     */
-//    public function setAppliedforaccess($appliedforaccess)
-//    {
-//        $this->appliedforaccess = $appliedforaccess;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getAppliedforaccess()
-//    {
-//        return $this->appliedforaccess;
-//    }
-
 
     /**
      * @param mixed $preferences
@@ -429,93 +271,6 @@ class User extends BaseUser
         return $this->preferences;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getInstitution()
-//    {
-//        return $this->institution;
-//    }
-//
-//
-//    public function addInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
-//    {
-//        if( !$this->institution->contains($institution) ) {
-//            $this->institution->add($institution);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeInstitution(\Oleg\UserdirectoryBundle\Entity\Institution $institution)
-//    {
-//        $this->institution->removeElement($institution);
-//    }
-//
-//    public function setInstitution( $institutions )
-//    {
-//        //echo "set institutionsCount=".count($institutions)."<br>";
-//        $this->institution->clear();
-//        foreach( $institutions as $institution ) {
-//            $this->addInstitution($institution);
-//        }
-//    }
-
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getDivision()
-//    {
-//        return $this->division;
-//    }
-//
-//
-//    public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
-//    {
-//        if( !$this->division->contains($division) ) {
-//            $this->division->add($division);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
-//    {
-//        $this->division->removeElement($division);
-//    }
-//
-//    public function setDivision( $division )
-//    {
-//        //echo "set institutionsCount=".count($institutions)."<br>";
-//        $this->division->clear();
-//        foreach( $division as $singledivision ) {
-//            $this->addDivision($singledivision);
-//        }
-//    }
-
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getService()
-//    {
-//        return $this->service;
-//    }
-//
-//
-//    public function addService(\Oleg\UserdirectoryBundle\Entity\Service $service)
-//    {
-//        if( !$this->service->contains($service) ) {
-//            $this->service->add($service);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeService(\Oleg\UserdirectoryBundle\Entity\Service $service)
-//    {
-//        $this->service->removeElement($service);
-//    }
-
-
     /**
      * Get id
      *
@@ -525,52 +280,6 @@ class User extends BaseUser
     {
         return $this->id;
     }
-
-
-//    /**
-//     * Add perSiteSettings
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\perSiteSettings $perSiteSettings
-//     * @return User
-//     */
-//    public function addPerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
-//    {
-//        //$this->locations[] = $location;
-//        if( !$this->perSiteSettings->contains($perSiteSettings) ) {
-//            $this->perSiteSettings->add($perSiteSettings);
-//            $perSiteSettings->setAuthor($this);
-//        }
-//
-//        return $this;
-//    }
-//    public function addPerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings) {
-//        return $this->addPerSiteSettings($perSiteSettings);
-//    }
-//
-//    /**
-//     * Remove locations
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\PerSiteSettings $locations
-//     */
-//    public function removePerSiteSettings(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
-//    {
-//        $this->perSiteSettings->removeElement($perSiteSettings);
-//    }
-//    public function removePerSiteSetting(\Oleg\UserdirectoryBundle\Entity\PerSiteSettings $perSiteSettings)
-//    {
-//        $this->removePerSiteSettings($perSiteSettings);
-//    }
-//
-//    /**
-//     * Get locations
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getPerSiteSettings()
-//    {
-//        return $this->perSiteSettings;
-//    }
-
 
     /**
      * Add locations
@@ -681,6 +390,22 @@ class User extends BaseUser
         return $this->appointmentTitles;
     }
 
+    /**
+     * @param mixed $credentials
+     */
+    public function setCredentials($credentials)
+    {
+        $this->credentials = $credentials;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCredentials()
+    {
+        return $this->credentials;
+    }
+
 
     //get all services from administrative and appointment titles.
     public function getServices() {
@@ -727,50 +452,5 @@ class User extends BaseUser
 
         return $roles;
     }
-
-//    public function getPerSiteSettingsValue($sitename,$getMethod) {
-//        foreach( $this->getPerSiteSettings() as $site ) {
-//            if( $site->getSiteName() == $sitename ) {
-//                if( method_exists($site,$getMethod) ) {
-//                    return $site->$getMethod();
-//                }
-//            }
-//        }
-//        return null;
-//    }
-
-
-//    /**
-//     * Add department
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
-//     * @return User
-//     */
-//    public function addDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
-//    {
-//        $this->department[] = $department;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove department
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\Department $department
-//     */
-//    public function removeDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
-//    {
-//        $this->department->removeElement($department);
-//    }
-//
-//    /**
-//     * Get department
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getDepartment()
-//    {
-//        return $this->department;
-//    }
 
 }

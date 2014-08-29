@@ -48,31 +48,41 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options = array();
         $em = $this->em;
         $userUtil = new UserUtil();
-        $secUtil = $this->container->get('user_security_utility');
+        //$secUtil = $this->container->get('user_security_utility');
 
-        echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
+        //echo "onAuthenticationSuccess: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
         //exit;
 
         if( $this->security->isGranted('ROLE_SCANORDER_BANNED') ) {
             $options = array('event'=>'Banned User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            //return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You are banned to visit Scan Order site."
+            );
+
+            return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
         //detect if the user was first time logged in by ldap: assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER
-        //all users eneterd by ldap must have approved access request
-        if( !$this->security->isGranted('ROLE_SCANORDER_SUBMITTER')  ) {
+        //If the user does not have lowest role => assign unapproved role to trigger access request
+        if( $this->security->isGranted('ROLE_SCANORDER_SUBMITTER') === false ) {
             //echo "assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER <br>";
             $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
         if( $this->security->isGranted('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
+
             $options = array('event'=>'Unapproved User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
+            //exit("onAuthenticationSuccess: Success: redirect to _access_request_new");
+
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
+        //exit('ok');
 
         //if( $user->hasRole('ROLE_SCANORDER_PROCESSOR') ) {
         if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') ) {

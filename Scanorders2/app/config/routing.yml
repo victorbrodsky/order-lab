@@ -1,7 +1,7 @@
 
 main_common_home:
     path:      /
-    defaults:  { _controller: OlegOrderformBundle:Home:mainCommonHome }
+    defaults:  { _controller: OlegUserdirectoryBundle:Home:mainCommonHome }
 
 oleg_orderform:
     resource: "@OlegOrderformBundle/Controller/"
@@ -23,7 +23,9 @@ acme_demo:
 
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
 logout:
-    path:   /scan/logout
+    path:   /employees/logout
+login:
+    path:   /employees/login
 
 scan_login_check:
     path:   /scan/login_check

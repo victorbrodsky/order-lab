@@ -1,4 +1,5 @@
 {% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
+
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
@@ -82,175 +83,203 @@
 
 {% block content %}
 
-<div id="form-prototype-data"
-     data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
-     data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
-     data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype')|e }}"
-></div>
+    <div id="form-prototype-data"
+         data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
+         data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
+         data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype')|e }}"
+    ></div>
 
 
-{#<form action="{{ path('user_update',{'id':entity.id}) }}" method="PUT" {{ form_enctype(form) }}>#}
-{{ form_start(form) }}
+    {{ form_start(form) }}
 
-    <input type="hidden" id="user_id" value="{{ user_id }}" />
-    <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
-    <input type="hidden" id="formcicle" value="edit_user" />
-    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+        <input type="hidden" id="user_id" value="{{ user_id }}" />
+        <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
+        <input type="hidden" id="formcicle" value="edit_user" />
+        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-    <h3 class="text-info">User Info</h3>
+        <h3 class="text-info">User Info</h3>
 
-    {#{{ form_widget(form) }}#}
-    {{ form_errors(form) }}
+        {#{{ form_widget(form) }}#}
+        {{ form_errors(form) }}
 
-    {{ formmacros.field(form.username) }}
+        {{ formmacros.field(form.username) }}
 
-    {{ formmacros.field(form.displayName) }}
-    {{ formmacros.field(form.firstName) }}
-    {{ formmacros.field(form.middleName) }}
-    {{ formmacros.field(form.lastName) }}
+        {{ formmacros.field(form.displayName) }}
+        {{ formmacros.field(form.firstName) }}
+        {{ formmacros.field(form.middleName) }}
+        {{ formmacros.field(form.lastName) }}
 
-    {{ formmacros.field(form.email) }}
-    {{ formmacros.field(form.preferredPhone) }}
+        {{ formmacros.field(form.email) }}
+        {{ formmacros.field(form.preferredPhone) }}
 
-    {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
-        {#{{ formmacros.field(form.institution) }}#}
-        {#{{ formmacros.field(form.service) }}#}
-        {{ formmacros.field(form.roles) }}
-    {% endif %}
-
-    {#{{ formmacros.field(form.chiefservices) }}#}
-
-    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
-        {% if app.security.getToken().getUser().getId() != entity.id %}
-            {{ formmacros.checkbox(form.locked) }}
-        {% else %}
-            {% do form.locked.setRendered %}
+        {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
+            {#{{ formmacros.field(form.institution) }}#}
+            {#{{ formmacros.field(form.service) }}#}
+            {{ formmacros.field(form.roles) }}
         {% endif %}
-    {% endif %}
 
-    <hr>
-    <h3 class="text-info">User Preferences</h3>
-    {{ formmacros.field(form.preferences.timezone) }}
-    {{ formmacros.checkbox(form.preferences.tooltip) }}
+        {#{{ formmacros.field(form.chiefservices) }}#}
 
-    <hr>
-    <br>
+        {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+            {% if app.security.getToken().getUser().getId() != entity.id %}
+                {{ formmacros.checkbox(form.locked) }}
+            {% else %}
+                {% do form.locked.setRendered %}
+            {% endif %}
+        {% endif %}
 
-    <div class="panel-group" id="accordion">
+        <hr>
+        <h3 class="text-info">User Preferences</h3>
+        {{ formmacros.field(form.preferences.timezone) }}
+        {{ formmacros.checkbox(form.preferences.tooltip) }}
 
-        {#Administrative Titles#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#AdministrativeTitles">
-                        Administrative Title(s)
-                    </a>
-                </h4>
-            </div>
-            <div id="AdministrativeTitles" class="panel-collapse collapse">
-                <div class="panel-body">
+        {% block addcontent %}{% endblock %}
 
-                    <div class="user-administrativeTitles-holder">
-                        {% for administrativeTitle in form.administrativeTitles %}
-                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
-                        {% endfor %}
-                        {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
-                        {% endif %}
+        <hr>
+        <br>
+
+        <div class="panel-group" id="accordion">
+
+            {#Administrative Titles#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#AdministrativeTitles">
+                            Administrative Title(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="AdministrativeTitles" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="user-administrativeTitles-holder">
+                            {% for administrativeTitle in form.administrativeTitles %}
+                                {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
+                            {% endfor %}
+                            {% if cicle != 'show_user' %}
+                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
+                            {% endif %}
+                        </div>
+
                     </div>
-
                 </div>
             </div>
+
+
+            {#Appointment Titles#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#AppointmentTitles">
+                            Academic Appointment Title(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="AppointmentTitles" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="user-appointmentTitles-holder">
+                            {% for appointmentTitle in form.appointmentTitles %}
+                                {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
+                            {% endfor %}
+                            {% if cicle != 'show_user' %}
+                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            {#Locations#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#Locations">
+                            Location(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="Locations" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="user-locations-holder">
+                            {% for location in form.locations %}
+                                {{ userform.location(location,cicle,'user-locations','noprototype') }}
+                            {% endfor %}
+                            {% if cicle != 'show_user' %}
+                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {#Credentials#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#Credentials">
+                            Credentials
+                        </a>
+                    </h4>
+                </div>
+                <div id="Credentials" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="user-locations-holder">
+
+                            {{ formmacros.field(form.credentials.employeeId) }}
+                            {{ formmacros.fieldDateLabel(form.credentials.dob) }}
+                            {{ formmacros.field(form.credentials.codeNYPH) }}
+                            {{ formmacros.field(form.credentials.nationalProviderIdentifier) }}
+                            {{ formmacros.field(form.credentials.numberCLIA) }}
+                            {{ formmacros.fieldDateLabel(form.credentials.cliaExpirationDate,'allow-future-date') }}
+                            {{ formmacros.field(form.credentials.numberPFI) }}
+                            {{ formmacros.field(form.credentials.numberCOQ) }}
+                            {{ formmacros.fieldDateLabel(form.credentials.coqExpirationDate,'allow-future-date') }}
+                            {{ formmacros.field(form.credentials.stateLicense) }}
+                            {{ formmacros.fieldDateLabel(form.credentials.stateLicenseExpirationDate,'allow-future-date') }}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 
-        {#Appointment Titles#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#AppointmentTitles">
-                        Academic Appointment Title(s)
-                    </a>
-                </h4>
-            </div>
-            <div id="AppointmentTitles" class="panel-collapse collapse">
-                <div class="panel-body">
+        <hr>
+        <br>
 
-                    <div class="user-appointmentTitles-holder">
-                        {% for appointmentTitle in form.appointmentTitles %}
-                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
-                        {% endfor %}
-                        {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
-                        {% endif %}
-                    </div>
+        {#{{ form_rest(form) }}#}
+        {#{{ form_widget(form._token) }}#}
 
+        {#{{ form(form) }}#}
+
+        {% if cicle != "show_user" %}
+            <p>
+                <div>
+                    <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
+                    <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
                 </div>
-            </div>
-        </div>
+            </p>
+        {% endif %}
 
+    {{ form_end(form) }}
 
-        {#Locations#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#Locations">
-                        Location(s)
-                    </a>
-                </h4>
-            </div>
-            <div id="Locations" class="panel-collapse collapse">
-                <div class="panel-body">
-
-                    <div class="user-locations-holder">
-                        {% for location in form.locations %}
-                            {{ userform.location(location,cicle,'user-locations','noprototype') }}
-                        {% endfor %}
-                        {% if cicle != 'show_user' %}
-                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
-                        {% endif %}
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <br>
-    {#{{ form_rest(form) }}#}
-    {#{{ form_widget(form._token) }}#}
-
-    {#{{ form(form) }}#}
-
-    {% if prefix is defined and prefix != "" %}
-        {% set pathprefix = prefix~"_" %}
-    {% else %}
-        {% set pathprefix = "" %}
-    {% endif %}
-
-    {% if cicle != "show_user" %}
-        <p>
-            <div>
-                <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
-                <a class="btn btn-info" href="{{ path(pathprefix~'showuser',{id:entity.id}) }}" type='button'>Cancel</a>
-            </div>
-        </p>
-    {% endif %}
-
-{{ form_end(form) }}
-{#</form>#}
 
     {% if cicle == "show_user" %}
-        <p><a class="btn btn-success" href="{{ path(pathprefix~'user_edit',{'id':entity.id}) }}">Edit</a></p>
+        <p><a class="btn btn-success" href="{{ path(sitename~'_user_edit',{'id':entity.id}) }}">Edit</a></p>
     {% endif %}
-
-    {% block addcontent %}{% endblock %}
 
     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
         <br>
         <p>
-            <a href="{{ path(pathprefix~'listusers') }}">View the list of all users</a>
+            <a href="{{ path(sitename~'_listusers') }}">View the list of all users</a>
         </p>
     {% endif %}
 

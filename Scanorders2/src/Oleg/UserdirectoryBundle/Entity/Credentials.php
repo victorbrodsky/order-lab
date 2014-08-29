@@ -44,7 +44,7 @@ class Credentials extends BaseUserAttributes
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $ntionalProviderIdentifier;
+    private $nationalProviderIdentifier;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -75,6 +75,16 @@ class Credentials extends BaseUserAttributes
      * @ORM\OneToMany(targetEntity="StateLicense", mappedBy="credentials", cascade={"persist"})
      */
     private $stateLicense;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $stateLicenseExpirationDate;
+
+    /**
+     * @ORM\OneToOne(targetEntity="User", mappedBy="credentials")
+     */
+    protected $user;
 
 
     public function __construct() {
@@ -190,19 +200,19 @@ class Credentials extends BaseUserAttributes
     }
 
     /**
-     * @param mixed $ntionalProviderIdentifier
+     * @param mixed $nationalProviderIdentifier
      */
-    public function setNtionalProviderIdentifier($ntionalProviderIdentifier)
+    public function setNationalProviderIdentifier($nationalProviderIdentifier)
     {
-        $this->ntionalProviderIdentifier = $ntionalProviderIdentifier;
+        $this->nationalProviderIdentifier = $nationalProviderIdentifier;
     }
 
     /**
      * @return mixed
      */
-    public function getNtionalProviderIdentifier()
+    public function getNationalProviderIdentifier()
     {
-        return $this->ntionalProviderIdentifier;
+        return $this->nationalProviderIdentifier;
     }
 
     /**
@@ -273,6 +283,38 @@ class Credentials extends BaseUserAttributes
     public function removeStateLicense($stateLicense)
     {
         $this->stateLicense->removeElement($stateLicense);
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $stateLicenseExpirationDate
+     */
+    public function setStateLicenseExpirationDate($stateLicenseExpirationDate)
+    {
+        $this->stateLicenseExpirationDate = $stateLicenseExpirationDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStateLicenseExpirationDate()
+    {
+        return $this->stateLicenseExpirationDate;
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\UserdirectoryBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class HomeController extends Controller {
 
     public function mainCommonHomeAction() {
-        return $this->render('OlegOrderformBundle:Default:main-common-home.html.twig');
+        return $this->render('OlegUserdirectoryBundle:Default:main-common-home.html.twig');
     }
 
     /**
@@ -37,7 +37,7 @@ class HomeController extends Controller {
         //$maintenance = $param->getMaintenance();
         //echo "maintenance=".$maintenance."<br>";
 
-        return $this->render('OlegOrderformBundle:Default:maintenance.html.twig',
+        return $this->render('OlegUserdirectoryBundle:Default:maintenance.html.twig',
             array(
                 'param'=>$param
             )

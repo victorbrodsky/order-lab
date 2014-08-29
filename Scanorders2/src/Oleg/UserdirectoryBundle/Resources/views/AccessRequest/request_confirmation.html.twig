@@ -4,13 +4,13 @@
 <head>
 
     {% stylesheets
-        '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
-        '@OlegOrderformBundle/Resources/public/form/css/form.css'
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
+        '@OlegUserdirectoryBundle/Resources/public/form/css/form.css'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-    <title>Slide Order Access Request Confirmation</title>
+    <title>Access Request Confirmation</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
 <div class="container">
     <div class="text-center">
 
-        <h2 class="alert alert-info well-lg safary-fix" align="center">Scan Order Submission</h2>
+        <h2 class="alert alert-info well-lg safary-fix" align="center">{{ app.security.getToken().getUser().getUsername() }}: Access Request Confirmation</h2>
 
         <br>
 
@@ -42,7 +42,15 @@
         </p>
 
 
-        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+        {% if app.security.getToken() and is_granted('IS_AUTHENTICATED_FULLY') %}
+            <br>
+            <p>
+                <a href="{{ path('logout') }}">Change User</a>
+            </p>
+        {% endif %}
+
+
+        {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
     </div> <!-- /text-center -->
 </div> <!-- /container -->

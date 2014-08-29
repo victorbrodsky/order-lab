@@ -47,7 +47,15 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        return $this->showUser($id,$this->container->getParameter('scan.sitename'));
+
+        $userViewArr = $this->showUser($id,$this->container->getParameter('scan.sitename'));
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($id,'show');
+        $form = $res['form'];
+        $userViewArr['form_scansettings'] = $form->createView();
+
+        return $userViewArr;
     }
 
     /**
@@ -62,7 +70,14 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        return $this->editUser($id,$this->container->getParameter('scan.sitename'));
+        $userViewArr = $this->editUser($id,$this->container->getParameter('scan.sitename'));
+
+        //add scan user site setting form
+        $res = $this->getScanSettingsForm($id,'edit');
+        $form = $res['form'];
+        $userViewArr['form_scansettings'] = $form->createView();
+
+        return $userViewArr;
     }
 
     /**
@@ -77,12 +92,59 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        return $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+        $userViewArr = $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
+
+        //get scan user site setting form
+        $res = $this->getScanSettingsForm($id,'edit');
+        $form = $res['form'];
+        $entity = $res['entity'];
+
+        $form->handleRequest($request);
+
+        if( count($entity->getPermittedInstitutionalPHIScope()) == 0 && $entity->getUser()->getUsername() != 'system' ) {
+            //exit('no inst');
+            $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
+            $error = new FormError("Please add at least one permitted institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
+            $form->get('permittedInstitutionalPHIScope')->addError($error);
+        }
+
+        var_dump( $form->getErrors() );
+
+        if( $form->isValid() ) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('scan_showuser', array('id' => $id)));
+        }
+
+        $userViewArr['form_scansettings'] = $form->createView();
+
+        return $userViewArr;
+    }
+
+
+    /**
+     * @Route("/lockunlock/change/{id}/{status}", name="scan_lockunlock_change", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function lockUnlockChangeAction($id, $status) {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $this->lockUnlock($id, $status);
+
+        return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_listusers'));
     }
 
 
 
 
+
+
+////////////////////////// Below Controller methods for scan site-settings only. Currently not used. ///////////////////////////////////////
 
 //    /**
 //     * @Route("/site-settings/create/user/{id}", name="scan_order_settings_create", requirements={"id" = "\d+"})
@@ -172,6 +234,20 @@ class ScanUserController extends UserController
     }
     public function getScanSettings($id,$cicle) {
 
+        $res = $this->getScanSettingsForm($id,$cicle);
+        $entity = $res['entity'];
+        $form = $res['form'];
+        $subjectuser = $res['subjectuser'];
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'cicle' => $cicle,
+            'userid' => $id,
+            'username' => $subjectuser.""
+        );
+    }
+    public function getScanSettingsForm($id,$cicle) {
         $secUtil = $this->get('order_security_utility');
 
         $disabled = true;
@@ -205,13 +281,12 @@ class ScanUserController extends UserController
             'disabled' => $disabled
         ));
 
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-            'cicle' => $cicle,
-            'userid' => $id,
-            'username' => $subjectuser.""
-        );
+        $res = array();
+        $res['entity'] = $entity;
+        $res['form'] = $form;
+        $res['subjectuser'] = $subjectuser;
+
+        return $res;
     }
 
     /**
@@ -226,6 +301,11 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        $updateArr = $this->updateScanSettings($request, $id);
+
+        return $updateArr;
+    }
+    public function updateScanSettings(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -244,7 +324,7 @@ class ScanUserController extends UserController
             if (!$subjectuser) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
-            $entity = new PerSiteSettings();           
+            $entity = new PerSiteSettings();
             $entity->setUser($subjectuser);
             $entity->setAuthor($user);
             $entity->setType(PerSiteSettings::TYPE_RESTRICTED);
@@ -257,7 +337,7 @@ class ScanUserController extends UserController
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
         ));
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        //$form->add('submit', 'submit', array('label' => 'Update'));
 
         $form->handleRequest($request);
 

@@ -9,6 +9,8 @@
 
 namespace Oleg\OrderformBundle\Security\Util;
 
+//All user roles are checked by security context, not $user->hasRole() function. hasRole function will not work for global roles set by security.uml
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;

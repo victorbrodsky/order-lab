@@ -28,13 +28,26 @@ class AccessRequestController extends Controller
     public function accessRequestCreatePlainAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') &&
-            false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_BANNED')
-        ) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
-        }
+        $userSecUtil = $this->get('user_security_utility');
 
         $user = $this->get('security.context')->getToken()->getUser();
+
+        //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_OBSERVER',$user) ) {
+            $user->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
+        }
+
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
+            //exit('nopermission create employee access request for non ldap user');
+            //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have permission to visit Employee Directory site."
+            );
+
+            return $this->redirect( $this->generateUrl('main_common_home') );
+        }
 
         return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('employees.sitename'));
     }
@@ -47,9 +60,8 @@ class AccessRequestController extends Controller
     public function accessRequestCreateAction($id,$sitename)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') &&
-            false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_BANNED')
-        ) {
+        $userSecUtil = $this->get('user_security_utility');
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED') ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
@@ -106,8 +118,8 @@ class AccessRequestController extends Controller
      */
     public function accessRequestAction($id,$sitename)
     {
-
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') ) {
+        $userSecUtil = $this->get('user_security_utility');
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED') ) {
             return $this->redirect( $this->generateUrl($sitename.'_logout') );
         }
 
@@ -115,6 +127,7 @@ class AccessRequestController extends Controller
 
     }
     public function accessRequestCreate($id,$sitename) {
+
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -129,7 +142,7 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
-        echo "sitename=".$sitename."<br>";
+        //echo "sitename=".$sitename."<br>";
 
         if( $userAccessReq ) {
             //throw $this->createNotFoundException('AccessRequest is already created for this user');
@@ -153,16 +166,15 @@ class AccessRequestController extends Controller
         $em->flush();
 
         $email = $user->getEmail();
-        $emailUtil = new EmailUtil();
-
-        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitename, $text );
-
         $emailStr = "";
         if( $email && $email != "" ) {
             $emailStr = "\r\nConfirmation email was sent to ".$email;
         }
 
         $text = 'Your access request was successfully submitted and and will be reviewed.'.$emailStr;
+
+        $emailUtil = new EmailUtil();
+        $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitename, $text );
 
         return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
     }
@@ -220,11 +232,11 @@ class AccessRequestController extends Controller
 
 
     /**
-     * @Route("/access-requests/{id}/{status}/{role}/status", name="employees_accessrequest_change", requirements={"id" = "\d+"})
+     * @Route("/access-requests/change-status/{id}/{status}", name="employees_accessrequest_change", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
-    public function accessRequestChangeAction($id, $status, $role)
+    public function accessRequestChangeAction($id, $status)
     {
 
         if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
@@ -239,25 +251,27 @@ class AccessRequestController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        //$entity->setAppliedforaccess($status);
         $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
 
-        if( $status == "approved" && $role == "submitter" ) {
+        if( $status == "approved" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_USERDIRECTORY_OBSERVER');
-            $accReq->setStatus(AccessRequest::STATUS_APPROVED);
+            if( $accReq )
+                $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_USERDIRECTORY_BANNED');
-            $accReq->setStatus(AccessRequest::STATUS_DECLINED);
+            if( $accReq )
+                $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
             $entity->setRoles(array());
             $entity->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
-            $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
+            if( $accReq )
+                $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
 
         $em->persist($entity);
@@ -265,5 +279,8 @@ class AccessRequestController extends Controller
 
         return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_accessrequest_list'));
     }
-    
+
+
+
+
 }
