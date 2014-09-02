@@ -322,6 +322,7 @@ class Credentials extends BaseUserAttributes
     public function addCodeNYPH( $codeNYPH )
     {
         if( !$this->codeNYPH->contains($codeNYPH) ) {
+            $codeNYPH->setCredentials($this);
             $this->codeNYPH->add($codeNYPH);
         }
 

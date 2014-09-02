@@ -312,7 +312,7 @@
 
                         {#{{ formmacros.field(form.credentials.codeNYPH) }}#}
                         {% for codeNYPH in form.credentials.codeNYPH %}
-                            {{ formmacros.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
+                            {#{{ formmacros.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}#}
                             {#{{ formmacros.fieldCollectionInput(codeNYPH,cycle,prototype,widget,nobtn,btntype) }}#}
                         {% endfor %}
 
