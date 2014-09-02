@@ -74,7 +74,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
 
         $options['event'] = "Successful Login";
-        $response = new RedirectResponse($this->router->generate('employees_home'));
+        $response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
@@ -98,7 +98,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $request->getSession()->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);
 
-        $response = new RedirectResponse( $this->router->generate('employees-login') );
+        $response = new RedirectResponse( $this->router->generate($this->siteName.'_login') );
         return $response;
 
     }

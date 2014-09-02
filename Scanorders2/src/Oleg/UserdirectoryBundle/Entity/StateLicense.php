@@ -22,8 +22,9 @@ class StateLicense
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="States")
+     * @ORM\JoinColumn(name="state_id", referencedColumnName="id")
+     **/
     private $state;
 
     /**
@@ -42,6 +43,7 @@ class StateLicense
      * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $credentials;
+
 
     /**
      * @param mixed $credentials

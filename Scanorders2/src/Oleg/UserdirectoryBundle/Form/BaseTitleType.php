@@ -66,29 +66,31 @@ class BaseTitleType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-//        $builder->add('institution', null, array(
-//            'label' => "Institution:",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width'),
-//        ));
+
+        //institution. User should be able to add institution to administrative or appointment titles
         $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');    //new
         $builder->add('institution', 'custom_selector', array(
-            'label' => 'Institution(s):',
+            'label' => 'Institution:',
             'attr' => $attr,
             'required' => false,
             'classtype' => 'institution'
         ));
 
+        //department. User should be able to add institution to administrative or appointment titles
         $builder->add('department', null, array(
             'label' => "Department:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
         ));
+
+        //division. User should be able to add institution to administrative or appointment titles
         $builder->add('division', null, array(
             'label' => "Division:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),
         ));
+
+        //service. User should be able to add institution to administrative or appointment titles
         $builder->add('service', null, array(
             'label' => "Service:",
             'required' => false,

@@ -869,7 +869,12 @@ function getComboboxDepartment(ids) {
 }
 
 //#############  institution  ##############//
-function getComboboxInstitution(ids) {
+function getComboboxInstitution(holder) {
+
+    var targetid = ".ajax-combobox-institution";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     var url = getCommonBaseUrl("util/"+"institution");
 
@@ -884,15 +889,15 @@ function getComboboxInstitution(ids) {
             async: asyncflag
         }).success(function(data) {
             _institution = data;
-            populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
+            populateSelectCombobox( targetid, _institution, "Select an option or type in a new value" );
             if( cicle == "new"  ) {
-                setElementToId( ".ajax-combobox-institution", _institution );
+                setElementToId( targetid, _institution );
             }
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
+        populateSelectCombobox( targetid, _institution, "Select an option or type in a new value" );
         if( cicle == "new"  ) {
-            setElementToId( ".ajax-combobox-institution", _institution );
+            setElementToId( targetid, _institution );
         }
     }
 

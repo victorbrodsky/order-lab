@@ -19,6 +19,8 @@ use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\Department;
 use Oleg\UserdirectoryBundle\Entity\Division;
 use Oleg\UserdirectoryBundle\Entity\Service;
+use Oleg\UserdirectoryBundle\Entity\States;
+use Oleg\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
 
 
 /**
@@ -76,13 +78,19 @@ class AdminController extends Controller
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
 
+        $count_states = $this->generateStates();
+
+        $count_boardSpecialties = $this->generateBoardSpecialties();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Generated Tables: '.
             'Roles='.$count_roles.', '.
-            'Site Settings='.$count_siteParameters.' '.
-            'Institutions='.$count_institution.' '.
-            'Users='.$count_users.
+            'Site Settings='.$count_siteParameters.', '.
+            'Institutions='.$count_institution.', '.
+            'Users='.$count_users.', '.
+            'States='.$count_states.', '.
+            'Board Specialties='.$count_boardSpecialties.', ',
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -178,7 +186,7 @@ class AdminController extends Controller
 
         } //foreach
 
-        return $count;
+        return round($count/10);
     }
 
     public function generateSiteParameters() {
@@ -230,7 +238,7 @@ class AdminController extends Controller
         foreach( $types as $key => $value ) {
             $method = "set".$key;
             $params->$method( $value );
-            $count = $count++;
+            $count = $count + 10;
         }
 
         //assign Institution
@@ -244,7 +252,7 @@ class AdminController extends Controller
         $em->persist($params);
         $em->flush();
 
-        return $count;
+        return round($count/10);
     }
 
 
@@ -256,7 +264,7 @@ class AdminController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll();
 
         if( $entities ) {
-            //return -1;
+            return -1;
         }
 
         $wcmcDep = array(
@@ -493,8 +501,136 @@ class AdminController extends Controller
             $instCount = $instCount + 10;
         } //foreach
 
-        return $instCount;
+        return round($instCount/10);
     }
 
+
+    public function generateStates() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:States')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $states = array('AL'=>"Alabama",
+            'AK'=>"Alaska",
+            'AZ'=>"Arizona",
+            'AR'=>"Arkansas",
+            'CA'=>"California",
+            'CO'=>"Colorado",
+            'CT'=>"Connecticut",
+            'DE'=>"Delaware",
+            'DC'=>"District Of Columbia",
+            'FL'=>"Florida",
+            'GA'=>"Georgia",
+            'HI'=>"Hawaii",
+            'ID'=>"Idaho",
+            'IL'=>"Illinois",
+            'IN'=>"Indiana",
+            'IA'=>"Iowa",
+            'KS'=>"Kansas",
+            'KY'=>"Kentucky",
+            'LA'=>"Louisiana",
+            'ME'=>"Maine",
+            'MD'=>"Maryland",
+            'MA'=>"Massachusetts",
+            'MI'=>"Michigan",
+            'MN'=>"Minnesota",
+            'MS'=>"Mississippi",
+            'MO'=>"Missouri",
+            'MT'=>"Montana",
+            'NE'=>"Nebraska",
+            'NV'=>"Nevada",
+            'NH'=>"New Hampshire",
+            'NJ'=>"New Jersey",
+            'NM'=>"New Mexico",
+            'NY'=>"New York",
+            'NC'=>"North Carolina",
+            'ND'=>"North Dakota",
+            'OH'=>"Ohio",
+            'OK'=>"Oklahoma",
+            'OR'=>"Oregon",
+            'PA'=>"Pennsylvania",
+            'RI'=>"Rhode Island",
+            'SC'=>"South Carolina",
+            'SD'=>"South Dakota",
+            'TN'=>"Tennessee",
+            'TX'=>"Texas",
+            'UT'=>"Utah",
+            'VT'=>"Vermont",
+            'VA'=>"Virginia",
+            'WA'=>"Washington",
+            'WV'=>"West Virginia",
+            'WI'=>"Wisconsin",
+            'WY'=>"Wyoming");
+
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $states as $key => $value ) {
+
+            $entity = new States();
+            $this->setDefaultList($entity,$count,$username,null);
+            $entity->setName( trim($value) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+
+    public function generateBoardSpecialties() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:BoardCertifiedSpecialties')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'AP',
+            'CP',
+            'Hematology',
+            'Cytopathology',
+            'Molecular Genetic Pathology',
+            'Immunopathology',
+            'Pediatric Pathology',
+            'Neuropathology',
+            'Dermatopathology',
+            'Medical Microbiology',
+            'Blood Banking/Transfusion Medicine',
+            'Forensic Pathology',
+            'Chemical Pathology'
+        );
+
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new BoardCertifiedSpecialties();
+            $this->setDefaultList($entity,$count,$username,null);
+            $entity->setName( trim($value) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
 }

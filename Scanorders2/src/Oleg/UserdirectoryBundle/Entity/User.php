@@ -103,7 +103,13 @@ class User extends BaseUser
 //        $this->division = new ArrayCollection();
 //        $this->service = new ArrayCollection();
 
+        //create preferences
         $this->setPreferences(new UserPreferences());
+
+        //create credentials
+        $this->setCredentials(new Credentials());
+
+        //two default locations: "main office" and "home"
 
         //two default locations: "main office" and "home"
         $mainLocation = new Location();

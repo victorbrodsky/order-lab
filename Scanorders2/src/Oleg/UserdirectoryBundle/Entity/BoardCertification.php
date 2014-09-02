@@ -3,78 +3,112 @@
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="boardCertification")
+ * @ORM\Table(name="user_boardCertification")
  */
-class BoardCertification extends BaseTitle
+class BoardCertification
 {
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Specialty", cascade={"persist"})
-     * @ORM\JoinColumn(name="specialty_id", referencedColumnName="id", nullable=true)
-     */
+     * @ORM\ManyToOne(targetEntity="BoardCertifiedSpecialties")
+     * @ORM\JoinColumn(name="boardSpecialty_id", referencedColumnName="id")
+     **/
     private $specialty;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
-    private $issuedDate;
+    private $issueDate;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * Recertification Date
+     *
+     * @ORM\Column(type="date", nullable=true)
      */
-    private $recertificationDate;
-
-
-
-    public function __construct() {
-        parent::__construct();
-        $this->setType(self::TYPE_RESTRICTED);
-    }
-
-    //overwrite set type: this object is restricted => can not change type
-    public function setType($type)
-    {
-        if( $this->getType() == self::TYPE_RESTRICTED ) {
-            throw new \Exception( 'Can not change type for restricted entity' );
-        }
-    }
-
+    private $expirationDate;
 
 
     /**
-     * @param mixed $issuedDate
+     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="boardCertification")
+     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    public function setIssuedDate($issuedDate)
+    protected $credentials;
+
+
+    /**
+     * @param mixed $credentials
+     */
+    public function setCredentials($credentials)
     {
-        $this->issuedDate = $issuedDate;
+        $this->credentials = $credentials;
     }
 
     /**
      * @return mixed
      */
-    public function getIssuedDate()
+    public function getCredentials()
     {
-        return $this->issuedDate;
+        return $this->credentials;
     }
 
     /**
-     * @param mixed $recertificationDate
+     * @param int $id
      */
-    public function setRecertificationDate($recertificationDate)
+    public function setId($id)
     {
-        $this->recertificationDate = $recertificationDate;
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $expirationDate
+     */
+    public function setExpirationDate($expirationDate)
+    {
+        $this->expirationDate = $expirationDate;
     }
 
     /**
      * @return mixed
      */
-    public function getRecertificationDate()
+    public function getExpirationDate()
     {
-        return $this->recertificationDate;
+        return $this->expirationDate;
+    }
+
+    /**
+     * @param mixed $issueDate
+     */
+    public function setIssueDate($issueDate)
+    {
+        $this->issueDate = $issueDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIssueDate()
+    {
+        return $this->issueDate;
     }
 
     /**
@@ -92,8 +126,6 @@ class BoardCertification extends BaseTitle
     {
         return $this->specialty;
     }
-
-
 
 
 

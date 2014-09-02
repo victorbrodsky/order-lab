@@ -26,6 +26,15 @@ abstract class BaseUserAttributes {
     const STATUS_VERIFIED = 1;      //verified by admin
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
      */
@@ -45,13 +54,13 @@ abstract class BaseUserAttributes {
 
     /**
      * type: public, private, restricted
-     * @ORM\Column(type="integer", options={"default"=0})
+     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
     protected $type;
 
     /**
      * status: valid, invalid
-     * @ORM\Column(type="string", options={"default"=0})
+     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
     protected $status;
 
@@ -71,6 +80,24 @@ abstract class BaseUserAttributes {
     public function __construct() {
         $this->setType(self::TYPE_PUBLIC);
         $this->setStatus(self::STATUS_UNVERIFIED);
+        //echo "constr. type=".$this->getType()."<br>";
+    }
+
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -110,7 +137,18 @@ abstract class BaseUserAttributes {
      */
     public function setType($type)
     {
-        $this->type = $type;
+        //echo "before set type=".$this->getType()."<br>";
+
+        if( $type == $this->getType() ) {
+            //echo "return set type=".$this->getType()."<br>";
+            return;
+        }
+
+        if( $this->getType() == self::TYPE_RESTRICTED ) {
+            throw new \Exception( 'Can not change type for restricted entity. type='.$type );
+        } else {
+            $this->type = $type;
+        }
     }
 
     /**

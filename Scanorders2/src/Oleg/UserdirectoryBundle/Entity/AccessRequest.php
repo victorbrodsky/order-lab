@@ -40,12 +40,12 @@ class AccessRequest
     private $user;
 
     /**
-     * @ORM\Column(name="siteName", type="string", options={"default"=0})
+     * @ORM\Column(name="siteName", type="string")
      */
     private $siteName;
 
     /**
-     * @ORM\Column(name="status", type="integer", options={"default"=0})
+     * @ORM\Column(name="status", type="integer", options={"default" = 0})
      */
     private $status;
 
@@ -60,6 +60,11 @@ class AccessRequest
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedate;
+
+
+    public function __construct() {
+        $this->setStatus(self::STATUS_ACTIVE);
+    }
 
     /**
      * @param mixed $id

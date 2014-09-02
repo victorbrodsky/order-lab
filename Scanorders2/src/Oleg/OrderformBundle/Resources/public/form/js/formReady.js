@@ -15,6 +15,8 @@ $(document).ready(function() {
 
     initAdd();
 
+    expandTextarea();
+
     fieldInputMask();
 
     setResearchEducational();   //init research and educational

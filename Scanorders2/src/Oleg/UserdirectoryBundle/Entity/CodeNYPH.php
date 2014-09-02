@@ -7,76 +7,77 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="codeNYPH")
+ * @ORM\Table(name="user_codeNYPH")
  */
-class CodeNYPH extends ListAbstract
+class CodeNYPH
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="CodeNYPH", mappedBy="original")
-     **/
-    protected $synonyms;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="CodeNYPH", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
-    protected $original;
-
-    public function __construct() {
-        $this->synonyms = new ArrayCollection();
-    }
-
-
-    /**
-     * Add synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\CodeNYPH $synonyms
-     * @return CodeNYPH
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\CodeNYPH $synonyms)
-    {
-        if( !$this->synonyms->contains($synonyms) ) {
-            $this->synonyms->add($synonyms);
-        }
-
-        return $this;
-    }
+    private $id;
 
     /**
-     * Remove synonyms
-     *
-     * @param \Oleg\UserdirectoryBundle\Entity\CodeNYPH $synonyms
+     * @ORM\Column(type="string", nullable=true)
      */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\CodeNYPH $synonyms)
-    {
-        $this->synonyms->removeElement($synonyms);
-    }
+    protected $field;
 
     /**
-     * Get synonyms
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="codeNYPH")
+     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    public function getSynonyms()
-    {
-        return $this->synonyms;
-    }
+    protected $credentials;
 
     /**
-     * @param mixed $original
+     * @param mixed $id
      */
-    public function setOriginal($original)
+    public function setId($id)
     {
-        $this->original = $original;
+        $this->id = $id;
     }
 
     /**
      * @return mixed
      */
-    public function getOriginal()
+    public function getId()
     {
-        return $this->original;
+        return $this->id;
     }
+
+    /**
+     * @param mixed $field
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+
+    /**
+     * @param mixed $credentials
+     */
+    public function setCredentials($credentials)
+    {
+        $this->credentials = $credentials;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCredentials()
+    {
+        return $this->credentials;
+    }
+
 
 }

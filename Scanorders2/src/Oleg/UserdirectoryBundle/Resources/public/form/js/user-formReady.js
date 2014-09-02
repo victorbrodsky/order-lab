@@ -34,7 +34,11 @@ $(document).ready(function() {
 
     regularCombobox();
 
-    getComboboxInstitution(new Array("0","0","0","0","0","0"));
+    getComboboxInstitution();
+
+    initDatepicker();
+
+    expandTextarea();
 
 });
 

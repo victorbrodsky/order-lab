@@ -12,15 +12,6 @@ class Location extends BaseUserAttributes
 {
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $name;
@@ -94,20 +85,6 @@ class Location extends BaseUserAttributes
      */
     private $user;
 
-
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
 
     /**
      * @param mixed $assistant

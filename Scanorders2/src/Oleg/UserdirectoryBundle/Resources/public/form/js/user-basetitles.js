@@ -6,20 +6,31 @@
 function addBaseTitle(btn,classname) {
 //    var btnEl = $(btn);
 
-    var titles = $('.'+classname+'-holder').find('.'+classname);
+    var holder = $('.'+classname+'-holder');
+
+    var titles = holder.find('.'+classname);
     //console.log('titles='+titles.length);
 
     var newForm = getBaseTitleForm( classname );
 
+    newForm = $(newForm);
+
     var lastcollHolder = titles.last();
 
     if( titles.length == 0 ) {
-        $('.'+classname+'-holder').prepend(newForm);
+        var addedInst = $('.'+classname+'-holder').prepend(newForm);
     } else {
-        lastcollHolder.after(newForm);
+        var addedInst = lastcollHolder.after(newForm);
     }
 
+    //printF(newForm,"added el:");
+    //console.log(newForm);
+
     initAdd();
+
+    //init institution for administrative and appointnment titles
+    getComboboxInstitution(newForm);
+
 }
 
 

@@ -32,6 +32,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
+            //exit('adding unapproved');
             $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
@@ -108,7 +109,7 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestChangeAction($id, $status)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
+        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 

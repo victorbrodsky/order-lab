@@ -84,23 +84,16 @@
 
 /*input-group-reg to make input and button aligned horizontally*/
 /*http://stackoverflow.com/questions/18077945/twitter-bootstrap-input-group-addon-and-btn-group-not-aligning-nicely*/
-.input-group-reg > .form-control {
-    height: 38px;       /*38px*/
-    /*padding: 8px 13px;*/
-    /*font-size: 14px;*/
-    /*line-height: 1.44;*/
-    /*border-radius: 4px;*/
-    /*border-top-left-radius: 0;*/
-    /*border-bottom-left-radius: 0;*/
-}
+/*.input-group-reg > .form-control {*/
+    /*height: 38px;*/
+/*}*/
 /* Sizing the button */
-.input-group-reg > .input-group-btn > .btn, .input-group-btn > .input-group-addon, .input-group-reg > .input-group-btn:last-child > .dropdown-toggle{
-    height: 38px;
-    /*padding: 8px 13px;*/
-    /*font-size: 14px;*/
-    /*line-height: 1.44;*/
-    /*border-radius: 6px;*/
-}
+/*.input-group-reg > .input-group-btn > .btn, .input-group-btn > .input-group-addon, .input-group-reg > .input-group-btn:last-child > .dropdown-toggle{*/
+    /*height: 38px;*/
+/*}*/
+/*.input-group-reg > .input-group-addon {*/
+    /*height: 38px;*/
+/*}*/
 /*EOF input-group-reg to make input and button aligned horizontally*/
 
 

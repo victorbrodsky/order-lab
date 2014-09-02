@@ -79,6 +79,81 @@
     </div>
 {% endmacro %}
 
+
+{% macro stateLicenses( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.state) }}
+        {{ formmacros.field(formfield.licenseNumber) }}
+        {{ formmacros.fieldDateLabel(formfield.licenseExpirationDate,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+
+{% macro boardCertifications( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.specialty) }}
+        {{ formmacros.fieldDateLabel(formfield.issueDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.expirationDate,'allow-future-date') }}
+
+    </div>
+{% endmacro %}
+
+
+{% macro codenyphs( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield) }}
+
+    </div>
+{% endmacro %}
+
+
+
 {% import _self as userform %}
 
 {% block content %}
@@ -87,6 +162,9 @@
          data-prototype-user-administrativetitles = "{{ userform.baseTitle(form.administrativeTitles,cicle,'user-administrativeTitles','prototype')|e }}"
          data-prototype-user-appointmenttitles = "{{ userform.baseTitle(form.appointmentTitles,cicle,'user-appointmentTitles','prototype')|e }}"
          data-prototype-user-locations = "{{ userform.location(form.locations,cicle,'user-locations','prototype')|e }}"
+         data-prototype-user-statelicense = "{{ userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype')|e }}"
+         data-prototype-user-boardcertification = "{{ userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype')|e }}"
+         data-prototype-user-codenyph = "{{ userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype')|e }}"
     ></div>
 
 
@@ -99,7 +177,6 @@
 
         <h3 class="text-info">User Info</h3>
 
-        {#{{ form_widget(form) }}#}
         {{ form_errors(form) }}
 
         {{ formmacros.field(form.username) }}
@@ -138,118 +215,176 @@
         <hr>
         <br>
 
-        <div class="panel-group" id="accordion">
 
-            {#Administrative Titles#}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#AdministrativeTitles">
-                            Administrative Title(s)
-                        </a>
-                    </h4>
-                </div>
-                <div id="AdministrativeTitles" class="panel-collapse collapse">
-                    <div class="panel-body">
+        {#Administrative Titles#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#AdministrativeTitles">
+                        Administrative Title(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="AdministrativeTitles" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                        <div class="user-administrativeTitles-holder">
-                            {% for administrativeTitle in form.administrativeTitles %}
-                                {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
-                            {% endfor %}
-                            {% if cicle != 'show_user' %}
-                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
-                            {% endif %}
-                        </div>
-
+                    <div class="user-administrativeTitles-holder">
+                        {% for administrativeTitle in form.administrativeTitles %}
+                            {{ userform.baseTitle(administrativeTitle,cicle,'user-administrativeTitles','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-administrativeTitles')" type='button'>Add Administrative Title</button>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
+        </div>
 
 
-            {#Appointment Titles#}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#AppointmentTitles">
-                            Academic Appointment Title(s)
-                        </a>
-                    </h4>
-                </div>
-                <div id="AppointmentTitles" class="panel-collapse collapse">
-                    <div class="panel-body">
+        {#Appointment Titles#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#AppointmentTitles">
+                        Academic Appointment Title(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="AppointmentTitles" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                        <div class="user-appointmentTitles-holder">
-                            {% for appointmentTitle in form.appointmentTitles %}
-                                {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
-                            {% endfor %}
-                            {% if cicle != 'show_user' %}
-                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
-                            {% endif %}
-                        </div>
-
+                    <div class="user-appointmentTitles-holder">
+                        {% for appointmentTitle in form.appointmentTitles %}
+                            {{ userform.baseTitle(appointmentTitle,cicle,'user-appointmentTitles','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-appointmentTitles')" type='button'>Add Appointment Title</button>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
+        </div>
 
 
-            {#Locations#}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#Locations">
-                            Location(s)
-                        </a>
-                    </h4>
-                </div>
-                <div id="Locations" class="panel-collapse collapse">
-                    <div class="panel-body">
+        {#Locations#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Locations">
+                        Location(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="Locations" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                        <div class="user-locations-holder">
-                            {% for location in form.locations %}
-                                {{ userform.location(location,cicle,'user-locations','noprototype') }}
-                            {% endfor %}
-                            {% if cicle != 'show_user' %}
-                                <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
-                            {% endif %}
-                        </div>
-
+                    <div class="user-locations-holder">
+                        {% for location in form.locations %}
+                            {{ userform.location(location,cicle,'user-locations','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-locations')" type='button'>Add Location</button>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            {#Credentials#}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#Credentials">
-                            Credentials
-                        </a>
-                    </h4>
-                </div>
-                <div id="Credentials" class="panel-collapse collapse">
-                    <div class="panel-body">
+        {#Credentials#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#Credentials">
+                        Credentials
+                    </a>
+                </h4>
+            </div>
+            <div id="Credentials" class="panel-collapse collapse in">
+                <div class="panel-body">
 
-                        <div class="user-locations-holder">
+                    <div class="user-credentials-holder">
 
-                            {{ formmacros.field(form.credentials.employeeId) }}
-                            {{ formmacros.fieldDateLabel(form.credentials.dob) }}
-                            {{ formmacros.field(form.credentials.codeNYPH) }}
-                            {{ formmacros.field(form.credentials.nationalProviderIdentifier) }}
-                            {{ formmacros.field(form.credentials.numberCLIA) }}
-                            {{ formmacros.fieldDateLabel(form.credentials.cliaExpirationDate,'allow-future-date') }}
-                            {{ formmacros.field(form.credentials.numberPFI) }}
-                            {{ formmacros.field(form.credentials.numberCOQ) }}
-                            {{ formmacros.fieldDateLabel(form.credentials.coqExpirationDate,'allow-future-date') }}
-                            {{ formmacros.field(form.credentials.stateLicense) }}
-                            {{ formmacros.fieldDateLabel(form.credentials.stateLicenseExpirationDate,'allow-future-date') }}
+                        {{ formmacros.field(form.credentials.employeeId) }}
+                        {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
 
+                        {#{{ formmacros.field(form.credentials.codeNYPH) }}#}
+                        {% for codeNYPH in form.credentials.codeNYPH %}
+                            {{ formmacros.codenyphs(codeNYPH,cicle,'user-codenyph','noprototype') }}
+                            {#{{ formmacros.fieldCollectionInput(codeNYPH,cycle,prototype,widget,nobtn,btntype) }}#}
+                        {% endfor %}
+
+                        {{ formmacros.field(form.credentials.nationalProviderIdentifier) }}
+                        {{ formmacros.field(form.credentials.numberCLIA) }}
+                        {{ formmacros.fieldDateLabel(form.credentials.cliaExpirationDate,'allow-future-date') }}
+                        {{ formmacros.field(form.credentials.numberPFI) }}
+                        {{ formmacros.field(form.credentials.numberCOQ) }}
+                        {{ formmacros.fieldDateLabel(form.credentials.coqExpirationDate,'allow-future-date') }}
+                        {{ formmacros.field(form.credentials.emergencyContactInfo) }}
+
+                        {#State Licenses#}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#stateLicense">
+                                        State License(s)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="stateLicense" class="panel-collapse collapse in">
+                                <div class="panel-body">
+
+                                    <div class="user-statelicense-holder">
+
+                                        {% for stateLicense in form.credentials.stateLicense %}
+                                            {{ userform.stateLicenses(stateLicense,cicle,'user-statelicense','noprototype') }}
+                                        {% endfor %}
+                                        {% if cicle != 'show_user' %}
+                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-statelicense')" type='button'>Add State License</button>
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {#Board Certification#}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#boardCertification">
+                                        Board Certification(s)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="boardCertification" class="panel-collapse collapse in">
+                                <div class="panel-body">
+
+                                    <div class="user-boardcertification-holder">
+
+                                        {% for boardCertification in form.credentials.boardCertification %}
+                                            {{ userform.boardCertifications(boardCertification,cicle,'user-boardcertification','noprototype') }}
+                                        {% endfor %}
+                                        {% if cicle != 'show_user' %}
+                                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-boardcertification')" type='button'>Add Board Certification</button>
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
 
                     </div>
+
                 </div>
             </div>
 
         </div>
+
 
 
         <hr>

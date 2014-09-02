@@ -21,20 +21,6 @@ class PerSiteSettings extends BaseUserAttributes
 {
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $siteName;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      * @ORM\JoinTable(name="perSiteSettings_institution",
      *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
@@ -76,30 +62,17 @@ class PerSiteSettings extends BaseUserAttributes
 
 
     public function __construct() {
+
         parent::__construct();
+
         $this->permittedInstitutionalPHIScope = new ArrayCollection();
         $this->scanOrdersServicesScope = new ArrayCollection();
         $this->chiefServices = new ArrayCollection();
         $this->setType(self::TYPE_RESTRICTED);
+
     }
 
 
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @param mixed $user
@@ -116,22 +89,6 @@ class PerSiteSettings extends BaseUserAttributes
     {
         return $this->user;
     }
-
-//    /**
-//     * @param mixed $siteName
-//     */
-//    public function setSiteName($siteName)
-//    {
-//        $this->siteName = $siteName;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getSiteName()
-//    {
-//        return $this->siteName;
-//    }
 
     /**
      * @param mixed $defaultService

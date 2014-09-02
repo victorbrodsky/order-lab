@@ -268,7 +268,7 @@ class ScanUserController extends UserController
             $entity = new PerSiteSettings();
             $entity->setUser($subjectuser);
             $entity->setAuthor($user);
-            $entity->setType(PerSiteSettings::TYPE_RESTRICTED);
+            //$entity->setType(PerSiteSettings::TYPE_RESTRICTED);
         }
 
         if( $cicle == 'edit' ) {
@@ -327,7 +327,7 @@ class ScanUserController extends UserController
             $entity = new PerSiteSettings();
             $entity->setUser($subjectuser);
             $entity->setAuthor($user);
-            $entity->setType(PerSiteSettings::TYPE_RESTRICTED);
+            //$entity->setType(PerSiteSettings::TYPE_RESTRICTED);
         }
 
         $entity->setUpdateAuthor($user);

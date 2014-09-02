@@ -22,6 +22,9 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Form\UserType;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
+use Oleg\UserdirectoryBundle\Entity\StateLicense;
+use Oleg\UserdirectoryBundle\Entity\BoardCertification;
+use Oleg\UserdirectoryBundle\Entity\CodeNYPH;
 
 
 
@@ -162,6 +165,8 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+        $this->addEmptyCollections($entity);
+
         $this->addHookFields($entity);
 
         //Roles
@@ -197,10 +202,10 @@ class UserController extends Controller
 
         return $this->editUser($id, $this->container->getParameter('employees.sitename'));
     }
+
     public function editUser($id,$sitename=null) {
+
         $em = $this->getDoctrine()->getManager();
-
-
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
@@ -208,15 +213,7 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-//        if( count($entity->getAdministrativeTitles()) == 0 ) {
-//            $administrativeTitle = new AdministrativeTitle(true);
-//            $entity->addAdministrativeTitle($administrativeTitle);
-//        }
-//
-//        if( count($entity->getAppointmentTitles()) == 0 ) {
-//            $appointmentTitle = new AppointmentTitle(true);
-//            $entity->addAppointmentTitle($appointmentTitle);
-//        }
+        $this->addEmptyCollections($entity);
 
         $this->addHookFields($entity);
 
@@ -237,6 +234,36 @@ class UserController extends Controller
             'sitename' => $sitename
         );
     }
+
+    //create empty collections
+    public function addEmptyCollections($entity) {
+
+        if( count($entity->getAdministrativeTitles()) == 0 ) {
+            $administrativeTitle = new AdministrativeTitle();
+            $entity->addAdministrativeTitle($administrativeTitle);
+        }
+
+        if( count($entity->getAppointmentTitles()) == 0 ) {
+            $appointmentTitle = new AppointmentTitle();
+            $entity->addAppointmentTitle($appointmentTitle);
+            //echo "app added, type=".$appointmentTitle->getType()."<br>";
+        }
+
+        if( count($entity->getCredentials()->getStateLicense()) == 0 ) {
+            $entity->getCredentials()->addStateLicense( new StateLicense() );
+        }
+
+        if( count($entity->getCredentials()->getBoardCertification()) == 0 ) {
+            $entity->getCredentials()->addBoardCertification( new BoardCertification() );
+        }
+
+        //if( count($entity->getCredentials()->getCodeNYPH()) == 0 ) {
+            //$entity->getCredentials()->addCodeNYPH( new CodeNYPH() );
+        //}
+
+    }
+
+
 
     public function addHookFields($user) {
         //empty

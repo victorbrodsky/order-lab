@@ -14,15 +14,6 @@ class Credentials extends BaseUserAttributes
 {
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $employeeId;
@@ -32,13 +23,16 @@ class Credentials extends BaseUserAttributes
      */
     private $dob;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="CodeNYPH")
+//     * @ORM\JoinTable(name="credentials_codeNYPH",
+//     *      joinColumns={@ORM\JoinColumn(name="credentials_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="codeNYPH_id", referencedColumnName="id")}
+//     *      )
+//     **/
     /**
-     * @ORM\ManyToMany(targetEntity="CodeNYPH")
-     * @ORM\JoinTable(name="credentials_codeNYPH",
-     *      joinColumns={@ORM\JoinColumn(name="credentials_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="codeNYPH_id", referencedColumnName="id")}
-     *      )
-     **/
+     * @ORM\OneToMany(targetEntity="CodeNYPH", mappedBy="credentials", cascade={"persist"})
+     */
     private $codeNYPH;
 
     /**
@@ -77,9 +71,14 @@ class Credentials extends BaseUserAttributes
     private $stateLicense;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\OneToMany(targetEntity="BoardCertification", mappedBy="credentials", cascade={"persist"})
      */
-    private $stateLicenseExpirationDate;
+    private $boardCertification;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $emergencyContactInfo;
 
     /**
      * @ORM\OneToOne(targetEntity="User", mappedBy="credentials")
@@ -88,20 +87,24 @@ class Credentials extends BaseUserAttributes
 
 
     public function __construct() {
+
         parent::__construct();
+
         $this->stateLicense = new ArrayCollection();
+        $this->boardCertification = new ArrayCollection();
+        $this->codeNYPH = new ArrayCollection();
+
         $this->setType(self::TYPE_RESTRICTED);
+
+        //create new state License
+        $this->addStateLicense( new StateLicense() );
+
+        //create new board Certification
+        $this->addBoardCertification( new BoardCertification() );
+
+        //create new Code NYPH
+        $this->addCodeNYPH( new CodeNYPH() );
     }
-
-
-    //overwrite set type: this object is restricted => can not change type
-    public function setType($type)
-    {
-        if( $this->getType() == self::TYPE_RESTRICTED ) {
-            throw new \Exception( 'Can not change type for restricted entity' );
-        }
-    }
-
 
     /**
      * @param mixed $cliaExpirationDate
@@ -117,22 +120,6 @@ class Credentials extends BaseUserAttributes
     public function getCliaExpirationDate()
     {
         return $this->cliaExpirationDate;
-    }
-
-    /**
-     * @param mixed $codeNYPH
-     */
-    public function setCodeNYPH($codeNYPH)
-    {
-        $this->codeNYPH = $codeNYPH;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodeNYPH()
-    {
-        return $this->codeNYPH;
     }
 
     /**
@@ -181,22 +168,6 @@ class Credentials extends BaseUserAttributes
     public function getEmployeeId()
     {
         return $this->employeeId;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -286,6 +257,45 @@ class Credentials extends BaseUserAttributes
     }
 
     /**
+     * @return mixed
+     */
+    public function getBoardCertification()
+    {
+        return $this->boardCertification;
+    }
+
+    public function addBoardCertification( $boardCertification )
+    {
+        if( !$this->boardCertification->contains($boardCertification) ) {
+            $boardCertification->setCredentials($this);
+            $this->boardCertification->add($boardCertification);
+        }
+
+    }
+
+    public function removeBoardCertification($boardCertification)
+    {
+        $this->boardCertification->removeElement($boardCertification);
+    }
+
+    /**
+     * @param mixed $emergencyContactInfo
+     */
+    public function setEmergencyContactInfo($emergencyContactInfo)
+    {
+        $this->emergencyContactInfo = $emergencyContactInfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmergencyContactInfo()
+    {
+        return $this->emergencyContactInfo;
+    }
+
+
+    /**
      * @param mixed $user
      */
     public function setUser($user)
@@ -301,23 +311,24 @@ class Credentials extends BaseUserAttributes
         return $this->user;
     }
 
-    /**
-     * @param mixed $stateLicenseExpirationDate
-     */
-    public function setStateLicenseExpirationDate($stateLicenseExpirationDate)
-    {
-        $this->stateLicenseExpirationDate = $stateLicenseExpirationDate;
-    }
 
     /**
      * @return mixed
      */
-    public function getStateLicenseExpirationDate()
+    public function getCodeNYPH()
     {
-        return $this->stateLicenseExpirationDate;
+        return $this->codeNYPH;
     }
+    public function addCodeNYPH( $codeNYPH )
+    {
+        if( !$this->codeNYPH->contains($codeNYPH) ) {
+            $this->codeNYPH->add($codeNYPH);
+        }
 
-
-
+    }
+    public function removeCodeNYPH($codeNYPH)
+    {
+        $this->codeNYPH->removeElement($codeNYPH);
+    }
 
 }
