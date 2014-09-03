@@ -5,30 +5,6 @@
  */
 
 
-//convert enter to tab behavior: pressing enter will focus the next input field
-function initConvertEnterToTab() {
-    $('body').on('keydown', 'input, select', function(e) {
-        var self = $(this)
-            , form = self.parents('form:eq(0)')
-            , focusable
-            , next
-            ;
-        if (e.keyCode == 13) {
-            //focusable = form.find('input,a,select,button,textarea').filter(':visible');
-            focusable = form.find('input,select').filter(':visible').not("[readonly]").not("[disabled]");
-            next = focusable.eq(focusable.index(this)+1);
-            //console.log('next.length='+next.length);
-            if( next.length ) {
-                //printF(next,'go next:');
-                next.focus();
-            } else {
-                //form.submit();
-            }
-            return false;
-        }
-    });
-}
-
 
 //get a block holder by button; this element should contain all form input fields belonging to this button
 function getButtonElementParent( btn ) {
@@ -175,21 +151,6 @@ function isKey(element, field) {
 
 }
 
-
-function trimWithCheck(val) {
-
-    if(typeof String.prototype.trim !== 'function') {
-        String.prototype.trim = function() {
-            return this.replace(/^\s+|\s+$/g, '');
-        }
-    }
-
-    if( val && typeof val != 'undefined' && val != "" ) {
-        val = val.toString();
-        val = val.trim();
-    }
-    return val;
-}
 
 function invertButton(btn) {
     //console.log("invert Button: glyphicon class="+btn.find("i").attr("class"));

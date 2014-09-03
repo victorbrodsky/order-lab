@@ -5,8 +5,8 @@
 <head>
 
     {% stylesheets
-    'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
-    'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
+    'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+    'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -23,7 +23,6 @@
 
 <body>
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
 
 <div class="container">
 
@@ -56,7 +55,7 @@
 
 
 
-        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+        {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
     </div> <!-- /text-center -->
 

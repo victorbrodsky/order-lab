@@ -45,7 +45,7 @@ class CredentialsType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
         $builder->add('nationalProviderIdentifier', null, array(
@@ -63,7 +63,7 @@ class CredentialsType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
         $builder->add('numberPFI', null, array(
@@ -81,7 +81,7 @@ class CredentialsType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
         $builder->add('emergencyContactInfo', null, array(

@@ -58,7 +58,10 @@ class SlideReturnRequestController extends Controller
         $slideReturnRequest->setProxyuser($user);
         $slideReturnRequest->setReturnoption(true);
 
-        $params = array('user'=>$user,'type'=>'table');
+        $securityUtil = $this->get('order_security_utility');
+        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
+
+        $params = array('user'=>$user,'type'=>'table','institutions'=>$permittedInst);
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
@@ -86,7 +89,10 @@ class SlideReturnRequestController extends Controller
 
         $slideReturnRequest->setType($formtype);
 
-        $params = array('user'=>$user,'type'=>'table');
+        $securityUtil = $this->get('order_security_utility');
+        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
+
+        $params = array('user'=>$user,'type'=>'table', 'institutions'=>$permittedInst);
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         $form->handleRequest($request);
@@ -195,7 +201,10 @@ class SlideReturnRequestController extends Controller
         $slideReturnRequest->setProvider($user);
         $slideReturnRequest->setProxyuser($user);
 
-        $params = array('user'=>$user);
+        $securityUtil = $this->get('order_security_utility');
+        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
+
+        $params = array('user'=>$user,'institutions'=>$permittedInst);
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         return array(
@@ -227,7 +236,10 @@ class SlideReturnRequestController extends Controller
         $formtype = $em->getRepository('OlegOrderformBundle:FormType')->findOneByName("Slide Return Request");
         $slideReturnRequest->setType($formtype);
 
-        $params = array('user'=>$user);
+        $securityUtil = $this->get('order_security_utility');
+        $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
+
+        $params = array('user'=>$user, 'institutions'=>$permittedInst);
         $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
 
         $form->handleRequest($request);
@@ -315,9 +327,11 @@ class SlideReturnRequestController extends Controller
         $dql->addGroupBy('provider.username');
         $dql->addGroupBy('proxyuser.username');
         $dql->addGroupBy('orderinfo.id');
+        $dql->addGroupBy('institution.name');
 
         $dql->leftJoin("list.slide", "slides");
         $dql->innerJoin('list.provider','provider');
+        $dql->innerJoin('list.institution','institution');
         $dql->leftJoin('list.orderinfo','orderinfo');
 
         $dql->leftJoin('list.proxyuser','proxyuser');
@@ -336,8 +350,7 @@ class SlideReturnRequestController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         /////////// institution ///////////
-        $orderUtil = $this->get('scanorder_utility');
-        $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
+        $criteriastr = $this->addSlideReturnRequestInstitutionQueryCriterion($user,$criteriastr);
         //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 
@@ -364,6 +377,34 @@ class SlideReturnRequestController extends Controller
             'route' => $request->get('_route'),
             'routename' => $request->get('_route')
         );
+    }
+
+    //local function used only in Slide Return Request Controller
+    public function getSlideReturnRequestInstitutionQueryCriterion($user) {
+        $securityUtil = $this->container->get('order_security_utility');
+        $institutions = $securityUtil->getUserPermittedInstitutions($user);
+        $instStr = "";
+        foreach( $institutions as $inst ) {
+            if( $instStr != "" ) {
+                $instStr = $instStr . " OR ";
+            }
+            $instStr = $instStr . 'institution='.$inst->getId();
+        }
+        if( $instStr == "" ) {
+            $instStr = "1=0";
+        }
+        return $instStr;
+    }
+    public function addSlideReturnRequestInstitutionQueryCriterion($user,$criteriastr) {
+        $instStr = $this->getSlideReturnRequestInstitutionQueryCriterion($user);
+        if( $instStr != "" ) {
+            if( $criteriastr != "" ) {
+                $criteriastr = $criteriastr . " AND (" . $instStr . ") ";
+            } else {
+                $criteriastr = $criteriastr . " (" . $instStr . ") ";
+            }
+        }
+        return $criteriastr;
     }
 
 

@@ -95,11 +95,26 @@ class TableController extends Controller {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        //check if user has at least one institution
+        $securityUtil = $this->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( !$userSiteSettings ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        if( count($permittedInstitutions) == 0 ) {
+            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil->setWarningMessageNoInstitution($user);
+            return $this->redirect( $this->generateUrl('scan-order-home') );
+        }
+
         $routeName = $request->get('_route');
 
         $em = $this->getDoctrine()->getManager();
-
-        $user = $this->get('security.context')->getToken()->getUser();
 
         $orderinfo = $em->getRepository('OlegOrderformBundle:OrderInfo')->findOneByOid($id);
 
@@ -113,8 +128,8 @@ class TableController extends Controller {
             $actions = array('edit');
         }
 
-        $userUtil = new UserUtil();
-        if( $orderinfo && !$userUtil->isUserAllowOrderActions($orderinfo, $user, $actions) ) {
+        $secUtil = $this->get('order_security_utility');
+        if( $orderinfo && !$secUtil->isUserAllowOrderActions($orderinfo, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
@@ -155,7 +170,9 @@ class TableController extends Controller {
             $fieldstatus = null;
         }
 
-        $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'service'=>null, 'user'=>$user);
+        $permittedServices = $userSiteSettings->getScanOrdersServicesScope();
+
+        $params = array('type'=>$orderinfo->getType(), 'cicle'=>$type, 'institutions'=>$permittedInstitutions, 'services'=>$permittedServices, 'user'=>$user);
         $form = $this->createForm( new OrderInfoType($params,$orderinfo), $orderinfo, array('disabled' => $disable) );
 
         //$slides = $orderinfo->getSlide();
@@ -381,8 +398,8 @@ class TableController extends Controller {
             'type' => $type,
             'formtype' => $orderinfo->getType(),
             'history' => $history,
-            'amendable' => $userUtil->isUserAllowOrderActions($orderinfo, $user, array('amend')),
-            'changestatus' => $userUtil->isUserAllowOrderActions($orderinfo, $user, array('changestatus'))
+            'amendable' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('amend')),
+            'changestatus' => $secUtil->isUserAllowOrderActions($orderinfo, $user, array('changestatus'))
         ));
 
     }

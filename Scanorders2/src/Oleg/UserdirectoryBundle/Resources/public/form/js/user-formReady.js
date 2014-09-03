@@ -34,11 +34,11 @@ $(document).ready(function() {
 
     regularCombobox();
 
-    getComboboxInstitution();
-
     initDatepicker();
 
     expandTextarea();
+
+    getComboboxInstitution();
 
 });
 

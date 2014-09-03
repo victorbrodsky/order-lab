@@ -29,7 +29,14 @@
 
         <div class="text-center">
 
+            {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
+
             <h2 class="alert alert-info well-lg safary-fix" align="center">{{ sitename|capitalize }} Submission</h2>
+
+            {#<br>#}
+            {#<p>#}
+                {#{{ app.security.getToken().getUser().getUsername() }} | <a href="{{ path(sitename~'_logout') }}">Logout</a>#}
+            {#</p>#}
 
             <br>
 
@@ -53,16 +60,20 @@
 
             </form>
 
-            {#<br>#}
-            {#<p>#}
-                {#<a href="{{ path('login') }}">Return to Log In page</a>#}
-            {#</p>#}
-
             {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
         </div> <!-- /text-center -->
 
     </div> <!-- /container -->
+
+
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
 
 </body>
 

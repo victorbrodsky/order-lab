@@ -346,9 +346,14 @@
     <div class="{{ classname }}">
     {% for field in fields|reverse %}
 
-        {#( field.vars.value.status == 'valid' and is_granted('ROLE_SCANORDER_SUBMITTER') ) or#}
+        {% if field.vars.value.status is defined %}
+            {%  set fieldstatus = field.vars.value.status %}
+        {% else %}
+            {%  set fieldstatus = 'valid' %}
+        {% endif %}
+
         {#get correct field: valid for submitter#}
-        {% if is_granted('ROLE_SCANORDER_SUBMITTER') and field.vars.value.status == 'valid' %}
+        {% if is_granted('ROLE_SCANORDER_SUBMITTER') and fieldstatus == 'valid' %}
             {%  set show = 1 %}
         {% else %}
             {%  set show = 0 %}
@@ -356,7 +361,7 @@
         {% endif %}
 
         {#to see all data: ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST#}
-        {% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') and field.vars.value.status == 'invalid' %}
+        {% if is_granted('ROLE_SCANORDER_DATA_QUALITY_ASSURANCE_SPECIALIST') and fieldstatus == 'invalid' %}
             {%  set show = 1 %}
         {% endif %}
 

@@ -2,8 +2,6 @@
 
 {% block navbar %}
 
-    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
-
     <nav class="navbar navbar-default" role="navigation">
 
     <div class="container-fluid">
@@ -15,7 +13,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand visible-xs" href="{{ path('scan-order-home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+            {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
+                <a class="navbar-brand visible-xs" href="{{ path(employees_sitename~'_home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+            {% endif %}
         </div>
 
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
@@ -34,9 +34,6 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
-
-                    {#admincomments - comments addressed to this processor only#}
-                    {% set admincomments = render(controller("OlegOrderformBundle:History:notViewedAdminComments")) %}
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
@@ -58,13 +55,15 @@
 
                 {% endif %}
 
-                {% if is_granted('ROLE_USERDIRECTORY_OBSERVER') %}
+                {% if is_granted('ROLE_USER') %}
 
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            {#<li> Logged in as {{ app.security.getToken().getUser().getUsername() }} </li>#}
-                            <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUsername() }})</a></li>
+                            {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
+                                {#<li> Logged in as {{ app.security.getToken().getUser().getUsername() }} </li>#}
+                                <li><a href="{{ path(employees_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUsername() }})</a></li>
+                            {% endif %}
                             <li><a href="{{ path(employees_sitename~'_logout') }}">Log Out</a></li>
                         </ul>
                     </li>

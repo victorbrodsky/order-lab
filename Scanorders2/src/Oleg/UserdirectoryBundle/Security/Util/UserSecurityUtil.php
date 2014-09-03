@@ -66,12 +66,16 @@ class UserSecurityUtil {
         if( $user == null )
             $user = $this->sc->getToken()->getUser();
 
-        if( $this->sc->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') )
-            return false;
-        
-//        if( !is_object($user) ) {
+//        if( $this->sc->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') )
 //            return false;
-//        }
+
+        if( !is_object($user) ) {
+            //echo "user is not object: return false <br>";
+            return false;
+        } else {
+            //echo "user is object <br>";
+        }
+        //exit();
 
         if( $user && $user->hasRole($role) )
             return true;

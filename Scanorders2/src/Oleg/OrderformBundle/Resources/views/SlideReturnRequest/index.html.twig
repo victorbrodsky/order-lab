@@ -20,7 +20,7 @@
 {% block maincss %}
 
     {% stylesheets
-    'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
     'bundles/olegorderform/form/css/action.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
@@ -32,11 +32,11 @@
 {% block mainjs %}
 
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
-    '@OlegOrderformBundle/Resources/public/select2/select2.js'
-    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
     '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
     '@OlegOrderformBundle/Resources/public/form/js/modal.js'
@@ -98,6 +98,7 @@
                     <th>{{ knp_pagination_sortable(sliderequests, 'Submitter', 'provider.username') }}</th>
                 {% endif %}
                 <th>{{ knp_pagination_sortable(sliderequests, 'Ordering Provider', 'proxyuser.username') }}</th>
+                <th>{{ knp_pagination_sortable(sliderequests, 'Institution', 'institution.name') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Status', 'list.status') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Return Slides to', 'list.returnSlide') }}</th>
                 <th>{{ knp_pagination_sortable(sliderequests, 'Urgency', 'list.urgency') }}</th>
@@ -145,6 +146,10 @@
 
                 <td>
                     <a href="{{ path(scan_sitename~'_showuser', { 'id': sliderequest.proxyuser.id }) }}">{{ sliderequest.proxyuser }}</a>
+                </td>
+
+                <td>
+                    {{ sliderequest.institution }}
                 </td>
 
                 <td>

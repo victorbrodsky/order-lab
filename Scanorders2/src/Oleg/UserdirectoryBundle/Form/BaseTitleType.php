@@ -33,7 +33,7 @@ class BaseTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask allow-future-date'),
+            'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
         $builder->add('endDate', 'date', array(
@@ -41,7 +41,7 @@ class BaseTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask allow-future-date'),
+            'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
         $builder->add('status', 'choice', array(

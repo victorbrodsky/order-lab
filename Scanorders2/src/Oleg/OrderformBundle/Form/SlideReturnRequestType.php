@@ -66,6 +66,16 @@ class SlideReturnRequestType extends AbstractType
                 },
         ));
 
+        $builder->add('institution', 'entity', array(
+            'label' => 'Institution:',
+            'required'=> true,
+            'multiple' => false,
+            'empty_value' => false,
+            'class' => 'OlegUserdirectoryBundle:Institution',
+            'choices' => $this->params['institutions'],
+            'attr' => array('class' => 'combobox combobox-width combobox-institution')
+        ));
+
         if( array_key_exists('type', $this->params) &&  $this->params['type'] == 'table' ) {
             $builder->add('returnoption', 'checkbox', array(
                 'label'     => 'Return all slides that belong to listed accession numbers:',

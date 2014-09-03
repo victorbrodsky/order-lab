@@ -132,7 +132,7 @@ class AdminController extends Controller
         $types = array(
 
             //////////// general roles are set by security.yml only ////////////
-            "ROLE_ADMIN" => "Administrator for all sites",                //general super admin role for all sites
+            "ROLE_ADMIN" => "OrderPlatform Administrator",                //general super admin role for all sites
             //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
             //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 

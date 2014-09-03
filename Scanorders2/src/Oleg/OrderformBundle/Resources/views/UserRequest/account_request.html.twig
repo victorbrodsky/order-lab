@@ -5,15 +5,15 @@
 <head>
 
     {% stylesheets
-        'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
-        'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
         'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {% stylesheets
-        'bundles/olegorderform/datepicker/css/datepicker3.css' filter='cssrewrite'
+        'bundles/oleguserdirectory/datepicker/css/datepicker3.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -22,7 +22,7 @@
 
     {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'
+    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -30,8 +30,8 @@
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
-    '@OlegOrderformBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -152,22 +152,22 @@
             <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
         </form>
 
-        {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+        {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
     </div> <!-- /container -->
 
-    {#'@OlegOrderformBundle/Resources/public/form/js/checkForm.js'#}
-    {#'@OlegOrderformBundle/Resources/public/q-1/q.js'#}
-
     <!-- send width and height info to the server -->
     {% javascripts
-        '@OlegOrderformBundle/Resources/public/form/js/errorwatch.js'
-        '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-        '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
-        '@OlegOrderformBundle/Resources/public/select2/select2.js'
-        '@OlegOrderformBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-        '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+        '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+        '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+        '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+        '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+        '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+		
+		'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
         '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+        '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
         '@OlegOrderformBundle/Resources/public/form/js/form.js'
         '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
         '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'

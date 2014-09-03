@@ -5,8 +5,8 @@
     <head>
 
         {% stylesheets
-            '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
-            '@OlegOrderformBundle/Resources/public/form/css/form.css'
+            'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+            'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
         %}
             <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -33,27 +33,31 @@
 
             {% include 'OlegOrderformBundle::Security/login_content.html.twig' %}
 
-            {% include 'OlegOrderformBundle::Default/footer.html.twig' %}
+            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
         </div> <!-- /container -->
 
 
         <!-- send width and height info to the server -->
         {% javascripts
-            '@OlegOrderformBundle/Resources/public/form/js/errorwatch.js'
-            '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+            '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+            '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
+            '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
         %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
+            <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
 
         <script language="Javascript">
             var _ajaxTimeout = 15000;  //15000 => 15 sec
-            //var urlBase = $("#baseurl").val();
-            var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
-            //console.log("url="+url);
 
             $(document).ready(function() {
+
+                var sitename = "{{ employees_sitename|escape('js') }}";
+                //console.log("sitename="+sitename);
+
+                var url = getCommonBaseUrl("setloginvisit/",sitename);
+                //console.log("url="+url);
 
                 $.ajax({
                     url: url,

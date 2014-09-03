@@ -9,7 +9,7 @@
 {% block maincss %}
 
     {% stylesheets
-    'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -20,11 +20,14 @@
 {% block mainjs %}
 
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-    '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
-    '@OlegOrderformBundle/Resources/public/select2/select2.js'
-    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
-    '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+	
+	'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
     '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
     '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
@@ -179,6 +182,7 @@
             <div class="panel-body collapse in">
                 {{ formmacros.field(form.provider) }}
                 {{ formmacros.field(form.proxyuser) }}
+                {{ formmacros.field(form.institution) }}
                 {{ formmacros.field(form.returnSlide) }}
                 {{ formmacros.field(form.urgency) }}
 

@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\OrderformBundle\Form\GenericListType;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 
 use Oleg\UserdirectoryBundle\Controller\ListController;
@@ -42,7 +41,7 @@ class ScanListController extends ListController
      * @Route("/urgency/", name="urgency-list")
      * @Route("/scanners/", name="scanners-list")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:index.html.twig")
+     * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -70,7 +69,7 @@ class ScanListController extends ListController
      * @Route("/urgency/", name="urgency_create")
      * @Route("/scanners/", name="scanners_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:ListForm:new.html.twig")
+     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -98,7 +97,7 @@ class ScanListController extends ListController
      * @Route("/urgency/new", name="urgency_new")
      * @Route("/scanners/new", name="scanners_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:new.html.twig")
+     * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function newAction(Request $request)
     {
@@ -126,7 +125,7 @@ class ScanListController extends ListController
      * @Route("/urgency/{id}", name="urgency_show")
      * @Route("/scanners/{id}", name="scanners_show")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:show.html.twig")
+     * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
@@ -154,7 +153,7 @@ class ScanListController extends ListController
      * @Route("/urgency/{id}/edit", name="urgency_edit")
      * @Route("/scanners/{id}/edit", name="scanners_edit")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
+     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
@@ -182,7 +181,7 @@ class ScanListController extends ListController
      * @Route("/urgency/{id}", name="urgency_update")
      * @Route("/scanners/{id}", name="scanners_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
+     * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

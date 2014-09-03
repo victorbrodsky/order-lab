@@ -4,8 +4,8 @@
 <head>
 
     {% stylesheets
-        '@OlegUserdirectoryBundle/Resources/public/bootstrap/css/*' filter='cssrewrite'
-        '@OlegUserdirectoryBundle/Resources/public/form/css/form.css'
+        'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
+        'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
     %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -21,40 +21,50 @@
 
 <body>
 
-<div class="container">
-    <div class="text-center">
+    <div class="container">
 
-        <h2 class="alert alert-info well-lg safary-fix" align="center">{{ app.security.getToken().getUser().getUsername() }}: Access Request Confirmation</h2>
+        <div class="text-center">
 
-        <br>
+            {% include 'OlegUserdirectoryBundle:Default:navbar.html.twig' %}
 
-        <br><br><br>
+            <h2 class="alert alert-info well-lg safary-fix" align="center">{{ app.security.getToken().getUser().getUsername() }}: Access Request Confirmation</h2>
 
-        <p>
-            <h3 class="text-info text-center">{{ text }}</h3>
-        </p>
+            <br>
 
-        <br><br><br>
+            <br><br><br>
 
-        <br>
-        <p>
-        <a href="{{ path('main_common_home') }}">Return to Main Home Page</a>
-        </p>
+            <p>
+                <h3 class="text-info text-center">{{ text }}</h3>
+            </p>
 
+            <br><br><br>
 
-        {% if app.security.getToken() and is_granted('IS_AUTHENTICATED_FULLY') %}
             <br>
             <p>
-                <a href="{{ path('logout') }}">Change User</a>
+            <a href="{{ path('main_common_home') }}">Return to Main Home Page</a>
             </p>
-        {% endif %}
 
 
-        {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+            {#{% if app.security.getToken() and is_granted('IS_AUTHENTICATED_FULLY') %}#}
+                {#<br>#}
+                {#<p>#}
+                    {#<a href="{{ path('logout') }}">Change User</a>#}
+                {#</p>#}
+            {#{% endif %}#}
 
-    </div> <!-- /text-center -->
-</div> <!-- /container -->
 
+            {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
+
+        </div> <!-- /text-center -->
+    </div> <!-- /container -->
+
+
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
 </body>
 

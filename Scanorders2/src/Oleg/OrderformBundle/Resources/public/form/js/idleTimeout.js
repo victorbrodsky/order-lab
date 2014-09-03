@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//TODO: rewrite: extend it from userdirectory idleTimeout
+
 var _idleAfter = 0;
 var _ajaxTimeout = 20000;  //15000 => 15 sec
 
@@ -14,7 +16,7 @@ function idleTimeout() {
 
     //get max idle time from server by ajax
     $.ajax({
-        url: getCommonBaseUrl("getmaxidletime/"),	//urlBase+"getmaxidletime/",
+        url: getCommonBaseUrl("getmaxidletime/","employees"),
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',
@@ -38,7 +40,7 @@ function idleTimeout() {
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     var $countdown = $("#dialog-countdown");
 
-    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive");
+    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive","employees");
 
     //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
     //idleAfter: 1800 sec => 30min*60sec =
@@ -74,6 +76,27 @@ function idleTimeout() {
     });
 }
 
+function keepWorking() {
+    //console.log("keep working");
+    $('#idle-timeout').modal('hide');
+}
+
+function logoff() {
+    //console.log("logoff");
+    window.onbeforeunload = null;
+    var urlRegularLogout = getCommonBaseUrl("idlelogout","employees");	//urlBase+"logout";
+    window.location = urlRegularLogout;
+}
+
+//redirect to /idlelogout controller => logout with message of inactivity
+function idlelogout() {
+    //console.log("idlelogout");
+    window.onbeforeunload = null;
+    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout","employees");	//urlBase+"idlelogout";
+    window.location = urlIdleTimeoutLogout;
+}
+
+
 function tryToSubmitForm() {
     $('#save_order_onidletimeout_btn').show();
     //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
@@ -88,26 +111,6 @@ function tryToSubmitForm() {
     } else {
         idlelogout();
     }
-}
-
-function keepWorking() {
-    //console.log("keep working");
-    $('#idle-timeout').modal('hide');
-}
-
-function logoff() {
-    //console.log("logoff");
-    window.onbeforeunload = null;
-    var urlRegularLogout = getCommonBaseUrl("idlelogout");	//urlBase+"logout";
-    window.location = urlRegularLogout;
-}
-
-//redirect to /idlelogout controller => logout with message of inactivity
-function idlelogout() {
-    //console.log("idlelogout");
-    window.onbeforeunload = null;
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
-    window.location = urlIdleTimeoutLogout;
 }
 
 //check if the order is empty:

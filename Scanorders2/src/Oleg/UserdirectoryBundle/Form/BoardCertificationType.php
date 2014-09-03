@@ -36,7 +36,7 @@ class BoardCertificationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
         $builder->add('expirationDate', null, array(
@@ -44,7 +44,7 @@ class BoardCertificationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM-dd-yyyy',
-            'attr' => array('class' => 'datepicker form-control patientdob-mask'),
+            'attr' => array('class' => 'datepicker form-control'),
         ));
 
 
