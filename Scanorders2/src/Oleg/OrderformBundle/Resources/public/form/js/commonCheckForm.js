@@ -6,6 +6,8 @@
 
 
 
+
+
 //get a block holder by button; this element should contain all form input fields belonging to this button
 function getButtonElementParent( btn ) {
 
@@ -650,11 +652,6 @@ function getAgeByDiff(dob,date) {
         age--;
     }
     return age;
-}
-
-function getAjaxTimeoutMsg() {
-    alert("Could not communicate with server: no answer after 15 seconds.");
-    return false;
 }
 
 /////////////////////// validtion related functions /////////////////////////

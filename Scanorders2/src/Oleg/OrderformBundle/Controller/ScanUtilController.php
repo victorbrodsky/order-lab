@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oleg\OrderformBundle\Helper\FormHelper;
 
-
 //TODO: optimise by removing foreach loops
 
 /**
@@ -19,7 +18,7 @@ use Oleg\OrderformBundle\Helper\FormHelper;
  *
  * @Route("/util")
  */
-class UtilController extends Controller {
+class ScanUtilController extends Controller {
       
     /**
      * @Route("/stain", name="get-stain")
@@ -1012,7 +1011,7 @@ class UtilController extends Controller {
     }
 
     /**
-     * @Route("/institution", name="get-institution")
+     * @Route("/institution", name="scan_get_institution")
      * @Method("GET")
      */
     public function getInstitutionAction() {

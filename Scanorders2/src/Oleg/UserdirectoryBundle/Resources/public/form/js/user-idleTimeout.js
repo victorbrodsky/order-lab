@@ -9,12 +9,32 @@
 var _idleAfter = 0;
 var _ajaxTimeout = 20000;  //15000 => 15 sec
 
-//https://github.com/ehynds/jquery-idle-timeout
-function idleTimeout() {
+_countdownDialog = $("#dialog-countdown");
 
+
+$(document).ready(function() {
+
+    var idleTimeout = new idleTimeoutClass();
+
+    idleTimeout.init();
+    idleTimeout.setMaxIdletime();
+    idleTimeout.checkIdleTimeout();
+
+});
+
+function idleTimeoutClass() { }
+
+idleTimeoutClass.prototype.init = function () {
+    this.employees_sitename = "employees";   //"{{ employees_sitename|escape('js') }}";
+    // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
+    //this.countdownDialog = $("#dialog-countdown");
+    this.urlCommonIdleTimeout = getCommonBaseUrl("keepalive",this.employees_sitename);
+};
+
+idleTimeoutClass.prototype.setMaxIdletime = function () {
     //get max idle time from server by ajax
     $.ajax({
-        url: getCommonBaseUrl("getmaxidletime/"),	//urlBase+"getmaxidletime/",
+        url: getCommonBaseUrl("getmaxidletime/",this.employees_sitename),
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',
@@ -25,7 +45,9 @@ function idleTimeout() {
             //console.debug("idletime="+data.maxIdleTime);
             //console.debug("maint="+data.maintenance);
             _idleAfter = data.maxIdleTime;
+            //idleTimeoutClass.prototype.testfunc();
         },
+        //success: this.maxIdleTimeMethod,
         error: function ( x, t, m ) {
             if( t === "timeout" ) {
                 getAjaxTimeoutMsg();
@@ -34,16 +56,10 @@ function idleTimeout() {
             _idleAfter = 0;
         }
     });
+};
 
-    // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
-    var $countdown = $("#dialog-countdown");
-
-    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive");
-
-    //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
-    //idleAfter: 1800 sec => 30min*60sec =
-    //failedRequests: 1     //if return will no equal 'OK', then failed requests counter will increment to one and compare to failedRequests. If more, then page will forward to urlIdleTimeoutLogout
-
+idleTimeoutClass.prototype.checkIdleTimeout = function () {
+    //console.log( "############# checkIdleTimeout, testvar="+this.testvar );
     // start the idle timer plugin
     $.idleTimeout('#idle-timeout', '#idle-timeout-keepworking', {
         AJAXTimeout: null,
@@ -51,12 +67,11 @@ function idleTimeout() {
         idleAfter: _idleAfter,
         warningLength: 30,
         pollingInterval: _idleAfter-50,
-        keepAliveURL: urlCommonIdleTimeout,
+        keepAliveURL: this.urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
         onTimeout: function(){
             //console.log("onTimeout: logout");
-            keepWorking();
-            //tryToSubmitForm();
+            idleTimeoutClass.prototype.onTimeout();
         },
         onIdle: function(){
             //console.log("on idle");
@@ -64,14 +79,40 @@ function idleTimeout() {
         },
         onCountdown: function(counter){
             //console.log("on Countdown");
-            $countdown.html(counter); // update the counter
+            //$("#dialog-countdown").html(counter); // update the counter
+            _countdownDialog.html(counter); // update the counter
+            //this.countdownDialog.html(counter); // update the counter
         },
         onAbort: function(){
             //console.log("onAbort: logout");
-            //tryToSubmitForm();
-            idlelogout();
+            idleTimeoutClass.prototype.onAbort();
         }
     });
+};
+
+idleTimeoutClass.prototype.onTimeout = function () {
+    //console.log("onTimeout: user");
+    idlelogout();
+};
+
+idleTimeoutClass.prototype.onAbort = function () {
+    //console.log("onAbort: user");
+    idlelogout();
+};
+
+//idleTimeoutClass.prototype.testfunc = function() {
+//    //console.log("testfunc: user test!");
+//    //alert("testfunc: user test!");
+//}
+
+
+
+
+//////////////////////////////////////////////
+
+function getAjaxTimeoutMsg() {
+    alert("Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds.");
+    return false;
 }
 
 function keepWorking() {
@@ -82,14 +123,16 @@ function keepWorking() {
 function logoff() {
     //console.log("logoff");
     window.onbeforeunload = null;
-    var urlRegularLogout = getCommonBaseUrl("idlelogout");	//urlBase+"logout";
+    var urlRegularLogout = getCommonBaseUrl("idlelogout");
     window.location = urlRegularLogout;
 }
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    //console.log("idlelogout");
+    console.log("idlelogout");
+    //return;
+
     window.onbeforeunload = null;
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");	//urlBase+"idlelogout";
+    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");
     window.location = urlIdleTimeoutLogout;
 }

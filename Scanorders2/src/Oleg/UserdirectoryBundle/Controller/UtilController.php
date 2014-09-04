@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\UserdirectoryBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,14 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
-
 
 //TODO: optimise by removing foreach loops
 
 /**
- * OrderInfo controller.
- *
  * @Route("/util")
  */
 class UtilController extends Controller {
@@ -362,7 +358,7 @@ class UtilController extends Controller {
     }
 
     /**
-     * @Route("/institution", name="get-institution")
+     * @Route("/institution", name="employees_get_institution")
      * @Method("GET")
      */
     public function getInstitutionAction() {

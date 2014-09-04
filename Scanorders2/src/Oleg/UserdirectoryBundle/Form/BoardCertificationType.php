@@ -16,7 +16,7 @@ class BoardCertificationType extends AbstractType
         $builder->add( 'specialty', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:BoardCertifiedSpecialties',
             'property' => 'name',
-            'label'=>'State:',
+            'label'=>'Specialty:',
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),

@@ -58,7 +58,17 @@ class SecurityController extends Controller
     }
 
 
-
+    /**
+     * @Route("/idlelogout", name="scan_idlelogout")
+     * @Route("/idlelogout/{flag}", name="scan_idlelogout-saveorder")
+     * @Template()
+     */
+    public function idlelogoutAction( Request $request, $flag = null )
+    {
+        $userSecUtil = $this->get('user_security_utility');
+        $sitename = $this->container->getParameter('scan.sitename');
+        return $userSecUtil->idleLogout( $request, $sitename, $flag );
+    }
 
 
     /**

@@ -121,31 +121,49 @@ class ScanAccessRequestController extends AccessRequestController
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
+        //$accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
+        $userSecUtil = $this->get('user_security_utility');
+        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('scan.sitename'));
+
+        if( !$accReq ) {
+            throw new \Exception( 'AccessRequest is not found by id=' . $id );
+        }
 
         if( $status == "approved" ) {
-            $entity->setRoles(array());
+
+            $entity->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+            $entity->removeRole('ROLE_SCANORDER_BANNED');
+
             $entity->addRole('ROLE_SCANORDER_SUBMITTER');
             $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" ) {
-            $entity->setRoles(array());
+
+            $entity->removeRole('ROLE_SCANORDER_SUBMITTER');
+            $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+
             $entity->addRole('ROLE_SCANORDER_BANNED');
+
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
-            $entity->setRoles(array());
+
+            $entity->removeRole('ROLE_SCANORDER_SUBMITTER');
+            $entity->removeRole('ROLE_SCANORDER_ORDERING_PROVIDER');
+
             $entity->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_ACTIVE);
         }
 
         $em->persist($entity);
+        $em->persist($accReq);
         $em->flush();
 
         return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_accessrequest_list'));

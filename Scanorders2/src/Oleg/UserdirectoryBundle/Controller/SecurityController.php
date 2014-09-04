@@ -105,51 +105,15 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/idlelogout", name="idlelogout")
-     * @Route("/idlelogout/{flag}", name="idlelogout-saveorder")
+     * @Route("/idlelogout", name="employees_idlelogout")
+     * @Route("/idlelogout/{flag}", name="employees_idlelogout-saveorder")
      * @Template()
      */
     public function idlelogoutAction( Request $request, $flag = null )
     {
-        //echo "logout Action! <br>";
-        //exit();
-
-        //$userUtil = new UserUtil();
-        //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
-
-        $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager());
-        $maxIdleTime = $res['maxIdleTime'];
-        $maintenance = $res['maintenance'];
-
-
-//        if( !$flag || $flag == '' ) {
-//            //$request = $this->get('request');
-//            $flag = trim( $request->get('opt') );
-//        }
-
-        if( $maintenance ) {
-
-            $msg = $userUtil->getSiteSetting($this->getDoctrine()->getManager(),'maintenancelogoutmsg');
-
-        } else {
-
-            if( $flag && $flag == 'saveorder' ) {
-                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
-            } else {
-                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
-            }
-
-        }
-
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $msg
-        );
-
-        $this->get('security.context')->setToken(null);
-        //$this->get('request')->getSession()->invalidate();
-        return $this->redirect($this->generateUrl('login'));
+        $userSecUtil = $this->get('user_security_utility');
+        $sitename = $this->container->getParameter('employees.sitename');
+        return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 
     /**

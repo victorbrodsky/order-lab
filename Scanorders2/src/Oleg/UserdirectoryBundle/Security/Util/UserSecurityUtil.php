@@ -9,6 +9,10 @@
 
 namespace Oleg\UserdirectoryBundle\Security\Util;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Oleg\UserdirectoryBundle\Util\UserUtil;
+
 
 class UserSecurityUtil {
 
@@ -81,6 +85,43 @@ class UserSecurityUtil {
             return true;
 
         return false;
+    }
+
+
+    function idleLogout( $request, $flag = null ) {
+
+        $userUtil = new UserUtil();
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em);
+        $maxIdleTime = $res['maxIdleTime'];
+        $maintenance = $res['maintenance'];
+
+        if( $maintenance ) {
+
+            $msg = $userUtil->getSiteSetting($this->em,'maintenancelogoutmsg');
+
+        } else {
+
+            if( $flag && $flag == 'saveorder' ) {
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+            } else {
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
+            }
+
+        }
+
+        $this->container->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        $this->container->get('security.context')->setToken(null);
+        //$this->get('request')->getSession()->invalidate();
+
+
+        //return $this->redirect($this->generateUrl('login'));
+
+        return new RedirectResponse( $this->container->get('router')->generate($this->container->getParameter('scan.sitename').'_login') );
+
     }
 
 }

@@ -251,7 +251,12 @@ class AccessRequestController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $accReq = $em->getRepository('OlegUserdirectoryBundle:AccessRequest')->findOneByUser($id);
+        $userSecUtil = $this->get('user_security_utility');
+        $accReq = $userSecUtil->getUserAccessRequest($id,$this->container->getParameter('employees.sitename'));
+
+        if( !$accReq ) {
+            throw new \Exception( 'AccessRequest is not found by id=' . $id );
+        }
 
         if( $status == "approved" ) {
             $entity->setRoles(array());
@@ -275,6 +280,7 @@ class AccessRequestController extends Controller
         }
 
         $em->persist($entity);
+        $em->persist($accReq);
         $em->flush();
 
         return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_accessrequest_list'));

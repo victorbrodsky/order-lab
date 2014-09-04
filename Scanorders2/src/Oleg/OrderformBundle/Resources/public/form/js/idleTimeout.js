@@ -8,104 +8,77 @@
 
 //TODO: rewrite: extend it from userdirectory idleTimeout
 
-var _idleAfter = 0;
-var _ajaxTimeout = 20000;  //15000 => 15 sec
+$(document).ready(function() {
 
-//https://github.com/ehynds/jquery-idle-timeout
-function idleTimeout() {
+    //overwrite
+    idleTimeoutClass.prototype.onTimeout = function() {
+        //console.log("onTimeout: scan");
+        keepWorking();
+        tryToSubmitForm();
+    }
 
-    //get max idle time from server by ajax
-    $.ajax({
-        url: getCommonBaseUrl("getmaxidletime/","employees"),
-        type: 'GET',
-        //contentType: 'application/json',
-        dataType: 'json',
-        async: false,
-        timeout: _ajaxTimeout,
-        success: function (data) {
-            //console.debug("data="+data);
-            //console.debug("idletime="+data.maxIdleTime);
-            //console.debug("maint="+data.maintenance);
-            _idleAfter = data.maxIdleTime;
-        },
-        error: function ( x, t, m ) {
-            if( t === "timeout" ) {
-                getAjaxTimeoutMsg();
-            }
-            //console.debug("get max idletime: error data="+data);
-            _idleAfter = 0;
-        }
-    });
+    //overwrite
+    idleTimeoutClass.prototype.onAbort = function() {
+        //console.log("onAbort: scan");
+        tryToSubmitForm();
+        idlelogout();
+        var par = 'par!!!';
+    }
 
-    // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
-    var $countdown = $("#dialog-countdown");
+//    idleTimeoutClass.prototype.testfunc = function() {
+//        console.log("testfunc: scan test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        //alert("testfunc: scan test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//    }
 
-    var urlCommonIdleTimeout = getCommonBaseUrl("keepalive","employees");
 
-    //pollingInterval: 7200 sec, //how often to call keepalive. If set to some big number (i.e. 2 hours) then we will not notify kernel to update session getLastUsed()
-    //idleAfter: 1800 sec => 30min*60sec =
-    //failedRequests: 1     //if return will no equal 'OK', then failed requests counter will increment to one and compare to failedRequests. If more, then page will forward to urlIdleTimeoutLogout
+    var idleTimeout = new idleTimeoutClass();
 
-    // start the idle timer plugin
-    $.idleTimeout('#idle-timeout', '#idle-timeout-keepworking', {
-        AJAXTimeout: null,
-        failedRequests: 1,
-        idleAfter: _idleAfter,
-        warningLength: 30,
-        pollingInterval: _idleAfter-50,
-        keepAliveURL: urlCommonIdleTimeout,
-        serverResponseEquals: 'OK',
-        onTimeout: function(){
-            //console.log("onTimeout: logout");
-            keepWorking();
-            tryToSubmitForm();
-        },
-        onIdle: function(){
-            //console.log("on idle");
-            $('#idle-timeout').modal('show');
-        },
-        onCountdown: function(counter){
-            //console.log("on Countdown");
-            $countdown.html(counter); // update the counter
-        },
-        onAbort: function(){
-            //console.log("onAbort: logout");
-            tryToSubmitForm();
-            idlelogout();
-        }
-    });
-}
+    idleTimeout.init();
+    idleTimeout.setMaxIdletime();
+    idleTimeout.checkIdleTimeout();
 
-function keepWorking() {
-    //console.log("keep working");
-    $('#idle-timeout').modal('hide');
-}
+//    idleTimeout.prototype.testfunc = function() {
+//        console.log("testfunc: scan test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//    }
 
-function logoff() {
-    //console.log("logoff");
-    window.onbeforeunload = null;
-    var urlRegularLogout = getCommonBaseUrl("idlelogout","employees");	//urlBase+"logout";
-    window.location = urlRegularLogout;
-}
+    //idleTimeout.prototype.testpar = "replacedbyscan!";
 
-//redirect to /idlelogout controller => logout with message of inactivity
-function idlelogout() {
-    //console.log("idlelogout");
-    window.onbeforeunload = null;
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout","employees");	//urlBase+"idlelogout";
-    window.location = urlIdleTimeoutLogout;
-}
+    //var thisIdleTimeout = new idleTimeout();
+
+    //console.log( "testfunc="+idleTimeout.testfunc );
+    //console.log( "testpar="+thisIdleTimeout.testpar );
+
+    //idleTimeout.getMaxIdletime();
+    //idleTimeout.checkIdleTimeout();
+
+
+    //thisIdleTimeout.testfunc();
+
+//    thisIdleTimeout.x.testfunc = function() {
+//        console.log("testfunc: scan test!");
+//    }
+
+    //thisIdleTimeout.x.testfunc();
+
+    //idleTimeout();
+
+    //console.log( "testpar="+thisIdleTimeout.testpar );
+    //console.log( "par="+thisIdleTimeout.onAbort.par );
+
+    //console.log( thisIdleTimeout );
+
+});
 
 
 function tryToSubmitForm() {
     $('#save_order_onidletimeout_btn').show();
-    //console.log("on timeout. len="+$('#save_order_onidletimeout_btn').length);
+    console.log("try To Submit Form: on timeout. len="+$('#save_order_onidletimeout_btn').length);
 
     if( $('#save_order_onidletimeout_btn').length > 0 &&
         ( cicle == "new" || cicle == "edit" || cicle == "amend" ) &&
         checkIfOrderWasModified()
         ) {
-        //console.log("save!!!!!!!!!!!");
+        console.log("try To Submit Form: save!!!!!!!!!!!");
         //save if all fields are not empty; don't validate
         $('#save_order_onidletimeout_btn').trigger('click');
     } else {
