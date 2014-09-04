@@ -14,6 +14,8 @@ use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
 
 
+//When admin approves acc req, the user must logout and login.
+
 /**
  * AccessRequest controller.
  */
@@ -38,15 +40,14 @@ class AccessRequestController extends Controller
         }
 
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
-            //exit('nopermission create employee access request for non ldap user');
-            //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
+            //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
 
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have permission to visit Employee Directory site."
-            );
-
-            return $this->redirect( $this->generateUrl('main_common_home') );
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have permission to visit Employee Directory site."
+//            );
+//            return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
         return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('employees.sitename'));
@@ -69,6 +70,9 @@ class AccessRequestController extends Controller
 
     }
     public function accessRequestCreateNew($id,$sitename) {
+
+        echo "create new accreq <br>";
+
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -103,6 +107,8 @@ class AccessRequestController extends Controller
             return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
 
+        echo "create new accreq, exit??? <br>";
+
         return array(
             'userid' => $id,
             'sitename' => $sitename
@@ -118,15 +124,17 @@ class AccessRequestController extends Controller
      */
     public function accessRequestAction($id,$sitename)
     {
-        $userSecUtil = $this->get('user_security_utility');
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED') ) {
-            return $this->redirect( $this->generateUrl($sitename.'_logout') );
-        }
+//        $userSecUtil = $this->get('user_security_utility');
+//        if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED') ) {
+//            return $this->redirect( $this->generateUrl($sitename.'_logout') );
+//        }
 
         return $this->accessRequestCreate($id,$sitename);
 
     }
     public function accessRequestCreate($id,$sitename) {
+
+        echo "create new accreq, post <br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -259,21 +267,28 @@ class AccessRequestController extends Controller
         }
 
         if( $status == "approved" ) {
-            $entity->setRoles(array());
+            //$entity->setRoles(array());
+            $entity->removeRole('ROLE_USERDIRECTORY_UNAPPROVED');
+            $entity->removeRole('ROLE_USERDIRECTORY_BANNED');
+
             $entity->addRole('ROLE_USERDIRECTORY_OBSERVER');
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_APPROVED);
         }
 
         if( $status == "declined" ) {
-            $entity->setRoles(array());
+            //$entity->setRoles(array());
+            $entity->removeRole('ROLE_USERDIRECTORY_OBSERVER');
+
             $entity->addRole('ROLE_USERDIRECTORY_BANNED');
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_DECLINED);
         }
 
         if( $status == "active" ) {
-            $entity->setRoles(array());
+            //$entity->setRoles(array());
+            $entity->removeRole('ROLE_USERDIRECTORY_OBSERVER');
+
             $entity->addRole('ROLE_USERDIRECTORY_UNAPPROVED');
             if( $accReq )
                 $accReq->setStatus(AccessRequest::STATUS_ACTIVE);

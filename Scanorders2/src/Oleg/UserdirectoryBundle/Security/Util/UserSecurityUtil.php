@@ -67,6 +67,8 @@ class UserSecurityUtil {
         if( $this->sc->isGranted($role) )
             return true;
 
+        //get user from DB?
+
         if( $user == null )
             $user = $this->sc->getToken()->getUser();
 
@@ -75,20 +77,25 @@ class UserSecurityUtil {
 
         if( !is_object($user) ) {
             //echo "user is not object: return false <br>";
+            //exit();
             return false;
         } else {
             //echo "user is object <br>";
         }
         //exit();
 
-        if( $user && $user->hasRole($role) )
+        if( $user && $user->hasRole($role) ) {
             return true;
+        }
+
+        echo "no role=".$role." => return false <br>";
+        //exit();
 
         return false;
     }
 
 
-    function idleLogout( $request, $flag = null ) {
+    function idleLogout( $request, $sitename, $flag = null ) {
 
         $userUtil = new UserUtil();
         $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em);
@@ -120,7 +127,7 @@ class UserSecurityUtil {
 
         //return $this->redirect($this->generateUrl('login'));
 
-        return new RedirectResponse( $this->container->get('router')->generate($this->container->getParameter('scan.sitename').'_login') );
+        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
 
     }
 

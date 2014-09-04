@@ -30,42 +30,11 @@ $(document).ready(function() {
 //        //alert("testfunc: scan test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //    }
 
-
     var idleTimeout = new idleTimeoutClass();
 
     idleTimeout.init();
     idleTimeout.setMaxIdletime();
     idleTimeout.checkIdleTimeout();
-
-//    idleTimeout.prototype.testfunc = function() {
-//        console.log("testfunc: scan test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//    }
-
-    //idleTimeout.prototype.testpar = "replacedbyscan!";
-
-    //var thisIdleTimeout = new idleTimeout();
-
-    //console.log( "testfunc="+idleTimeout.testfunc );
-    //console.log( "testpar="+thisIdleTimeout.testpar );
-
-    //idleTimeout.getMaxIdletime();
-    //idleTimeout.checkIdleTimeout();
-
-
-    //thisIdleTimeout.testfunc();
-
-//    thisIdleTimeout.x.testfunc = function() {
-//        console.log("testfunc: scan test!");
-//    }
-
-    //thisIdleTimeout.x.testfunc();
-
-    //idleTimeout();
-
-    //console.log( "testpar="+thisIdleTimeout.testpar );
-    //console.log( "par="+thisIdleTimeout.onAbort.par );
-
-    //console.log( thisIdleTimeout );
 
 });
 

@@ -34,19 +34,25 @@ class ScanAccessRequestController extends AccessRequestController
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
             //exit('adding unapproved');
             $user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
+
+            //save user role in DB
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($user);
+//            $em->flush();
         }
 
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$user)) {
-            //return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_login'));
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$user) ) {
+
+            //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context
+            return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_login'));
 
             //exit('nopermission create scan access request for non ldap user');
 
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have permission to visit Scan Order site."
-            );
-
-            return $this->redirect( $this->generateUrl('main_common_home') );
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have permission to visit Scan Order site."
+//            );
+//            return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
         return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('scan.sitename'));
@@ -61,7 +67,7 @@ class ScanAccessRequestController extends AccessRequestController
     {
 
         $userSecUtil = $this->get('user_security_utility');
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
+        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$id) ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
@@ -75,10 +81,13 @@ class ScanAccessRequestController extends AccessRequestController
      */
     public function accessRequestAction($id,$sitename)
     {
-        $userSecUtil = $this->get('user_security_utility');
-        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') ) {
-            return $this->redirect($this->generateUrl($sitename.'_login'));
-        }
+
+        echo "create new accreq, scan post <br>";
+
+//        $userSecUtil = $this->get('user_security_utility');
+//        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$id) ) {
+//            return $this->redirect($this->generateUrl($sitename.'_login'));
+//        }
 
         return $this->accessRequestCreate($id,$sitename);
     }

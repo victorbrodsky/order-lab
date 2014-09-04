@@ -117,7 +117,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/getmaxidletime/", name="getmaxidletime")
+     * @Route("/getmaxidletime", name="getmaxidletime")
      * @Method("GET")
      */
     public function getmaxidletimeAction( Request $request )

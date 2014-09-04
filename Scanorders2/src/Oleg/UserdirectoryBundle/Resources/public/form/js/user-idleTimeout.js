@@ -34,7 +34,7 @@ idleTimeoutClass.prototype.init = function () {
 idleTimeoutClass.prototype.setMaxIdletime = function () {
     //get max idle time from server by ajax
     $.ajax({
-        url: getCommonBaseUrl("getmaxidletime/",this.employees_sitename),
+        url: getCommonBaseUrl("getmaxidletime",this.employees_sitename),
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',
@@ -129,8 +129,7 @@ function logoff() {
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    console.log("idlelogout");
-    //return;
+    return;
 
     window.onbeforeunload = null;
     var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");
