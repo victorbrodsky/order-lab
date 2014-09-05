@@ -52,7 +52,7 @@ class Educational
     protected $courseTitleStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\CourseTitleList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="CourseTitleList", cascade={"persist"})
      * @ORM\JoinColumn(name="courseTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $courseTitle;

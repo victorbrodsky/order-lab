@@ -22,6 +22,7 @@ $(document).ready(function() {
 
 });
 
+
 function idleTimeoutClass() { }
 
 idleTimeoutClass.prototype.init = function () {
@@ -108,7 +109,7 @@ idleTimeoutClass.prototype.onAbort = function () {
 
 
 
-//////////////////////////////////////////////
+//////////////////// Common Timeout Function //////////////////////////
 
 function getAjaxTimeoutMsg() {
     alert("Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds.");
@@ -129,9 +130,9 @@ function logoff() {
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    return;
-
     window.onbeforeunload = null;
     var urlIdleTimeoutLogout = getCommonBaseUrl("idlelogout");
     window.location = urlIdleTimeoutLogout;
 }
+
+//////////////////// EOF Common Timeout Function //////////////////////////

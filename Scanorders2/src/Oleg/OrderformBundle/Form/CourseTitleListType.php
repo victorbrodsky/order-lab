@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ProjectTitleListType extends AbstractType
+class CourseTitleListType extends AbstractType
 {
 
     protected $entity;
@@ -25,22 +25,20 @@ class ProjectTitleListType extends AbstractType
 
     public function __construct( $params=null, $entity=null )
     {
-        $this->params = $params;
-        $this->entity = $entity;
+        if( $params ) $this->params = $params;
+        if( $entity ) $this->entity = $entity;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
 
-        //echo "id=".$this->entity->getId()."<br>";
-        //echo $this->entity;
-        //echo "projectTitle id=".$this->entity->getProjectTitle()->getId()."<br>";
-        $principals = $this->entity->getProjectTitle()->getPrincipals();
+        $directors = $this->entity->getCourseTitle()->getDirectors();
 
         //create array of choices: 'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
-        $principalArr = array();
-        foreach( $principals as $principal ) {
-            //echo $principal."<br>";
-            $principalArr[$principal->getId()] = $principal->getName();
+        $directorArr = array();
+        foreach( $directors as $director ) {
+            //echo $director."<br>";
+            $directorArr[$director->getId()] = $director->getName();
         }
 
         $comment = '';
@@ -48,15 +46,15 @@ class ProjectTitleListType extends AbstractType
             $comment = ' for this order';
         }
 
-        $builder->add('primaryPrincipal', 'choice', array(
+        $builder->add('primaryDirector', 'choice', array(
             'required' => true,
-            'label'=>'Primary Principal Investigator (as entered by user'.$comment.'):',
+            'label'=>'Primary Course Director (as entered by user'.$comment.'):',
             'attr' => array('class' => 'combobox combobox-width'),
-            'choices' => $principalArr,
+            'choices' => $directorArr,
         ));
 
-        $builder->add('principals', 'collection', array(
-            'type' => new PrincipalType($this->params,$this->entity),
+        $builder->add('directors', 'collection', array(
+            'type' => new DirectorType($this->params,$this->entity),
             'required' => false,
         ));
 
@@ -65,12 +63,12 @@ class ProjectTitleListType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ProjectTitleList'
+            'data_class' => 'Oleg\OrderformBundle\Entity\CourseTitleList'
         ));
     }
 
     public function getName()
     {
-        return 'oleg_userdirectorybundle_projecttitlelisttype';
+        return 'oleg_orderformbundle_coursetitlelisttype';
     }
 }

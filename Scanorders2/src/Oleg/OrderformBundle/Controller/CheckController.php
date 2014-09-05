@@ -160,7 +160,7 @@ class CheckController extends Controller {
                 'mrn'=>$this->getArrayFieldJson($entity->getMrn(),array('keytype')),
                 'fullname'=>$entity->getFullPatientName(),
                 'sex'=>$this->getArrayFieldJson( array($entity->obtainValidField('sex')) ),
-                'dob'=>$this->getArrayFieldJson($entity->getDob()),
+                'dob'=>$this->getArrayFieldJson( array($entity->obtainValidField('dob')) ), //$this->getArrayFieldJson($entity->getDob()),
                 'age'=>$entity->calculateAge(),
                 'clinicalHistory'=>$this->getArrayFieldJson($entity->obtainAllValidNotEmptyClinicalHistories())
                 //'clinicalHistory'=>$this->getArrayFieldJson( array($entity->obtainValidField('clinicalHistory')) )

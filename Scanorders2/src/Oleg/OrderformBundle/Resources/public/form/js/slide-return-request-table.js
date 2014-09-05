@@ -144,8 +144,7 @@ var _columnData_scanorder = [
 ];
 
 $(document).ready(function() {
-
-    idleTimeout();
+    
     setNavBar();
     $(".element-with-tooltip").tooltip();
     attachResearchEducationalTooltip();

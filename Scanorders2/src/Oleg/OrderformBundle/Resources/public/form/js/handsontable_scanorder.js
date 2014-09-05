@@ -446,9 +446,6 @@ function handsonTableInit() {
     //console.log(columnsType);
 
 
-
-
-
     $(_htableid).handsontable({
         data: data,
         colHeaders: _colHeader,
@@ -524,17 +521,21 @@ function handsonTableInit() {
                 cellProperties.readOnly = true;
             }
 
-            var headerTitle = _columnData_scanorder[c]['header'];
-            if( typeof headerTitle != 'undefined' && headerTitle != '' &&
-                typeof _orderDataArr != 'undefined' && typeof _orderDataArr[r] != 'undefined' &&
-                typeof _orderDataArr[r][headerTitle] != 'undefined' &&
-                _orderDataArr[r][headerTitle] != null
-                //_orderDataArr[r] != null && _orderDataArr[r] != "" &&
-                //(r<_orderDataArr.length) && headerTitle in _orderDataArr[r]
-            ) {
-                var cellId = _orderDataArr[r][headerTitle]["id"];
-                cellProperties.id = cellId;
-                //console.log(cellProperties);
+            //console.log("c="+c);
+            //console.log(_columnData_scanorder[c]);
+            if( c > 0 ) {
+                var headerTitle = _columnData_scanorder[c]['header'];
+                if( typeof headerTitle != 'undefined' && headerTitle != '' &&
+                    typeof _orderDataArr != 'undefined' && typeof _orderDataArr[r] != 'undefined' &&
+                    typeof _orderDataArr[r][headerTitle] != 'undefined' &&
+                    _orderDataArr[r][headerTitle] != null
+                    //_orderDataArr[r] != null && _orderDataArr[r] != "" &&
+                    //(r<_orderDataArr.length) && headerTitle in _orderDataArr[r]
+                ) {
+                    var cellId = _orderDataArr[r][headerTitle]["id"];
+                    cellProperties.id = cellId;
+                    //console.log(cellProperties);
+                }
             }
             return cellProperties;
         }
@@ -569,9 +570,8 @@ function processKeyTypes( row, col, value, oldvalue ) {
                     break;
                 }
 
-
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"patient/generate"+"?inst="+_institution),   //urlCheck+"patient/generate",
+                    url: getCommonBaseUrl("check/"+"patient/generate"+"?inst="+_institution),
                     timeout: _ajaxTimeout,
                     async: asyncflag
                 }).success( function(data) {
@@ -591,6 +591,17 @@ function processKeyTypes( row, col, value, oldvalue ) {
                 cleanHTableCell( row, col+1, true )
             }
 
+            ////////////// set validator ///////////////
+            //if( !value || value == '' ) {
+            if( isValueEmpty(value) ) {
+                break;
+            }
+            var mrnNum = _sotable.getDataAtCell(row,col+1);
+            _sotable.getCellMeta(row,col+1).validator = general_validator_fn;
+            _sotable.getCellMeta(row,col+1).valid = general_validator(mrnNum);
+
+            ////////////// EOF set validator ///////////////
+
             break;
         case 'Accession Type':
 
@@ -603,7 +614,7 @@ function processKeyTypes( row, col, value, oldvalue ) {
                 }
 
                 $.ajax({
-                    url: getCommonBaseUrl("check/"+"accession/generate"+"?inst="+_institution),  //urlCheck+"accession/generate",
+                    url: getCommonBaseUrl("check/"+"accession/generate"+"?inst="+_institution),
                     timeout: _ajaxTimeout,
                     async: asyncflag
                 }).success( function(data) {

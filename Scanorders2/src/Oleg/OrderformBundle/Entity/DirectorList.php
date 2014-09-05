@@ -1,11 +1,13 @@
 <?php
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace Oleg\OrderformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Oleg\UserdirectoryBundle\Entity\ListAbstract;
+use Oleg\UserdirectoryBundle\Entity\User;
 
 /**
  * @ORM\Entity
@@ -26,7 +28,7 @@ class DirectorList extends ListAbstract
     protected $original;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="director_id", referencedColumnName="id")
      */
     protected $director;

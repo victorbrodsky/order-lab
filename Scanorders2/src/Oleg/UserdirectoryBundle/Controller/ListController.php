@@ -24,12 +24,6 @@ class ListController extends Controller
      * Lists all entities.
      *
      * @Route("/roles/", name="role-list")
-     * @Route("/research-project-titles/", name="researchprojecttitles-list")
-     * @Route("/research-set-titles/", name="researchsettitles-list")
-     * @Route("/educational-course-titles/", name="educationalcoursetitles-list")
-     * @Route("/educational-lesson-titles/", name="educationallessontitles-list")
-     * @Route("/principal-investigators/", name="principalinvestigators-list")
-     * @Route("/course-directors/", name="coursedirectors-list")
      * @Route("/institutions/", name="institutions-list")
      * @Route("/departments/", name="departments-list")
      * @Route("/states/", name="states-list")
@@ -97,12 +91,6 @@ class ListController extends Controller
      * Creates a new entity.
      *
      * @Route("/roles/", name="role_create")
-     * @Route("/research-project-titles/", name="researchprojecttitles_create")
-     * @Route("/research-set-titles/", name="researchsettitles_create")
-     * @Route("/educational-course-titles/", name="educationalcoursetitles_create")
-     * @Route("/educational-lesson-titles/", name="educationallessontitles_create")
-     * @Route("/principal-investigators/", name="principalinvestigators_create")
-     * @Route("/course-directors/", name="coursedirectors_create")
      * @Route("/institutions/", name="institutions_create")
      * @Route("/departments/", name="departments_create")
      * @Route("/states/", name="states_create")
@@ -192,12 +180,6 @@ class ListController extends Controller
      * Displays a form to create a new entity.
      *
      * @Route("/roles/new", name="role_new")
-     * @Route("/research-project-titles/new", name="researchprojecttitles_new")
-     * @Route("/research-set-titles/new", name="researchsettitles_new")
-     * @Route("/educational-course-titles/new", name="educationalcoursetitles_new")
-     * @Route("/educational-lesson-titles/new", name="educationallessontitles_new")
-     * @Route("/principal-investigators/new", name="principalinvestigators_new")
-     * @Route("/course-directors/new", name="coursedirectors_new")
      * @Route("/departments/new", name="departments_new")
      * @Route("/institutions/new", name="institutions_new")
      * @Route("/states/new", name="states_new")
@@ -249,12 +231,6 @@ class ListController extends Controller
      * Finds and displays a entity.
      *
      * @Route("/roles/{id}", name="role_show")
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_show")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_show")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_show")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_show")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_show")
-     * @Route("/course-directors/{id}", name="coursedirectors_show")
      * @Route("/departments/{id}", name="departments_show")
      * @Route("/institutions/{id}", name="institutions_show")
      * @Route("/states/{id}", name="states_show")
@@ -298,12 +274,6 @@ class ListController extends Controller
      * Displays a form to edit an existing entity.
      *
      * @Route("/roles/{id}/edit", name="role_edit")
-     * @Route("/research-project-titles/{id}/edit", name="researchprojecttitles_edit")
-     * @Route("/research-set-titles/{id}/edit", name="researchsettitles_edit")
-     * @Route("/educational-course-titles/{id}/edit", name="educationalcoursetitles_edit")
-     * @Route("/educational-lesson-titles/{id}/edit", name="educationallessontitles_edit")
-     * @Route("/principal-investigators/{id}/edit", name="principalinvestigators_edit")
-     * @Route("/course-directors/{id}/edit", name="coursedirectors_edit")
      * @Route("/departments/{id}/edit", name="departments_edit")
      * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/states/{id}/edit", name="states_edit")
@@ -388,12 +358,6 @@ class ListController extends Controller
      * Edits an existing entity.
      *
      * @Route("/roles/{id}", name="role_update")
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_update")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_update")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_update")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_update")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_update")
-     * @Route("/course-directors/{id}", name="coursedirectors_update")
      * @Route("/departments/{id}", name="departments_update")
      * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/states/{id}", name="states_update")
@@ -478,30 +442,6 @@ class ListController extends Controller
             $className = "roles";
             $displayName = "Roles";
             break;
-        case "researchprojecttitles":
-            $className = "projecttitlelist";
-            $displayName = "Project Titles";
-            break;
-        case "researchsettitles":
-            $className = "settitlelist";
-            $displayName = "Set Titles";
-            break;
-        case "educationalcoursetitles":
-            $className = "CourseTitleList";
-            $displayName = "Course Titles";
-            break;
-        case "educationallessontitles":
-            $className = "LessonTitleList";
-            $displayName = "Lesson Titles";
-            break;
-        case "principalinvestigators":
-            $className = "PIList";
-            $displayName = "Principal Investigators";
-            break;
-        case "coursedirectors":
-            $className = "DirectorList";
-            $displayName = "Course Directors";
-            break;
         case "institutions":
             $className = "Institution";
             $displayName = "Institutions";
@@ -539,12 +479,6 @@ class ListController extends Controller
      * Deletes a entity.
      *
      * @Route("/roles/{id}", name="role_delete")
-     * @Route("/research-project-titles/{id}", name="researchprojecttitles_delete")
-     * @Route("/research-set-titles/{id}", name="researchsettitles_delete")
-     * @Route("/educational-course-titles/{id}", name="educationalcoursetitles_delete")
-     * @Route("/educational-lesson-titles/{id}", name="educationallessontitles_delete")
-     * @Route("/principal-investigators/{id}", name="principalinvestigators_delete")
-     * @Route("/course-directors/{id}", name="coursedirectors_delete")
      * @Route("/departments/{id}", name="departments_delete")
      * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/states/{id}", name="states_delete")

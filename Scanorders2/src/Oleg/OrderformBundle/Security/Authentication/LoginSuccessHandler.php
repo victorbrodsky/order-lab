@@ -57,13 +57,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $options = array('event'=>'Banned User Login Attempt');
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
-            //return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You are banned to visit Scan Order site."
-            );
-
-            return $this->redirect( $this->generateUrl('main_common_home') );
+            return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
         }
 
         //detect if the user was first time logged in by ldap: assign role ROLE_SCANORDER_UNAPPROVED_SUBMITTER

@@ -88,7 +88,7 @@ class UserSecurityUtil {
             return true;
         }
 
-        echo "no role=".$role." => return false <br>";
+        //echo "no role=".$role." => return false <br>";
         //exit();
 
         return false;

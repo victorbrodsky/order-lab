@@ -118,6 +118,7 @@ class OrderInfoRepository extends ArrayFieldAbstractRepository {
         //echo "<br>patient:".$entity->getPatient()->first()."<br>";
         //echo "part's acc:".$entity->getPart()->first()->getAccession()."<br>";
         //echo "projectTitle name=".$entity->getResearch()."<br>";
+        //echo "projectTitle setTitleStr=".$entity->getResearch()->getSetTitleStr()."<br>";
 
         //throw new \Exception('TESTING');
         //exit('orderinfo repoexit testing');

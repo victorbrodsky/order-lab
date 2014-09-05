@@ -426,7 +426,7 @@ function checkPrevGenAndConflictTable(row) {
                 _processedRowCount++;
             },
             function(error) {
-                //console.error("Failed! error=", error);
+                console.error("Failed! error=", error);
                 $('.tableview-submit-btn').button('reset');
             }
         ).
@@ -594,7 +594,7 @@ function mrnDobDBEqual( mrnDB, mrn, mrntypeDB, mrnTypeCorrect, dobDB, dob ) {
 
     //console.log("mrnDobDB Equal: ("+mrnDB + ") ?= (" + mrn + ") | (" + mrntypeDB + ") ?= (" + mrnTypeCorrect + ")" + "; dobDB="+dobDB+", dob="+dob);
 
-    if( !mrnDB || !mrntypeDB || !mrn || !mrnTypeCorrect || !dob ) {
+    if( !mrnDB || !mrntypeDB || !mrn || !mrnTypeCorrect || !dobDB || !dob ) {
         //console.log("Do not compare: DB's mrn and/or mrntype are null");
         return true;
     }
@@ -669,9 +669,16 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
                         } else
                         if( "mrn" in data ) {
                             var res = new Array();
+                            //console.log("dob="+data['dob'][0].text);
                             res['mrn'] = data['mrn'][0].text;
                             res['mrntypeID'] = data['mrn'][0].keytype;
-                            res['dob'] = data['dob'][0].text;
+
+                            if( data['dob'] && data['dob'][0] ) {
+                                res['dob'] = data['dob'][0].text;
+                            } else {
+                                res['dob'] = null;
+                            }
+
                             resolve(res);
                         } else {
                             resolve(true);
@@ -679,7 +686,7 @@ function checkPrevGenKeyTable(name,keyvalue,keytype,keytypeCorrect,force) {
                     }
                 },
                 error: function ( x, t, m ) {
-                    //console.debug("validation: get object ajax error "+name);
+                    console.debug("validation: get object ajax error "+name);
                     if( t === "timeout" ) {
                         getAjaxTimeoutMsg();
                     }

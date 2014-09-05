@@ -40,17 +40,24 @@ class AccessRequestController extends Controller
         }
 
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_USERDIRECTORY_UNAPPROVED',$user) ) {
-            //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
-            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
 
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have permission to visit Employee Directory site."
-//            );
-//            return $this->redirect( $this->generateUrl('main_common_home') );
+            //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
+            //return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_login'));
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have permission to visit Employee Directory site."."<br>".
+                "If you already applied for an access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+            );
+            return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
-        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('employees.sitename'));
+        $roles = array(
+            "unnaproved" => "ROLE_USERDIRECTORY_UNAPPROVED",
+            "banned" => "ROLE_USERDIRECTORY_BANNED",
+        );
+
+        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('employees.sitename'),$roles);
     }
 
     /**
@@ -66,12 +73,23 @@ class AccessRequestController extends Controller
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
-        return $this->accessRequestCreateNew($id,$sitename);
+        $roles = array(
+            "unnaproved" => "ROLE_USERDIRECTORY_UNAPPROVED",
+            "banned" => "ROLE_USERDIRECTORY_BANNED",
+        );
+
+        return $this->accessRequestCreateNew($id,$sitename,$roles);
 
     }
-    public function accessRequestCreateNew($id,$sitename) {
 
-        echo "create new accreq <br>";
+    // check for cases:
+    // 1) user has active accreq
+    // 2) user has accreq but it was declined
+    // 3) user has role banned
+    // 4) user has approved accreq, but user has ROLE_UNAPPROVED
+    public function accessRequestCreateNew($id,$sitename,$roles) {
+
+        //echo "create new accreq <br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -85,6 +103,7 @@ class AccessRequestController extends Controller
         $secUtil = $this->get('order_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
+        // Case 1: user has active accreq
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_ACTIVE ) {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
@@ -98,6 +117,7 @@ class AccessRequestController extends Controller
             return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
 
+        // Case 2: user has accreq but it was declined
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_DECLINED ) {
 
             $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
@@ -107,7 +127,31 @@ class AccessRequestController extends Controller
             return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename));
         }
 
-        echo "create new accreq, exit??? <br>";
+        // Case 3: user has role banned
+        $userSecUtil = $this->get('user_security_utility');
+        if( $userSecUtil->hasGlobalUserRole($roles['banned'],$user) ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You were banned to visit this site."."<br>".
+                "You can try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+            );
+            return $this->redirect( $this->generateUrl('main_common_home') );
+        }
+
+        // Case 4: user has approved accreq, but user has ROLE_UNAPPROVED
+        if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_APPROVED && $userSecUtil->hasGlobalUserRole($roles['unnaproved'],$user) ) {
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have permission to visit this site because you have UNAPPROVED role."."<br>".
+                "Please contact site system administrator ".$this->container->getParameter('default_system_email')."<br>".
+                "You can try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+            );
+            return $this->redirect( $this->generateUrl('main_common_home') );
+        }
+
+        //echo "create new accreq, exit??? <br>";
 
         return array(
             'userid' => $id,
@@ -134,7 +178,7 @@ class AccessRequestController extends Controller
     }
     public function accessRequestCreate($id,$sitename) {
 
-        echo "create new accreq, post <br>";
+        //echo "create new accreq, post <br>";
 
         $em = $this->getDoctrine()->getManager();
 

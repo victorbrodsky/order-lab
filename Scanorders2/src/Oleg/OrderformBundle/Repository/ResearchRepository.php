@@ -20,8 +20,8 @@ class ResearchRepository extends ListAbstractRepository {
         //process Project Title
         $objectParams = array(
             'className' => 'ProjectTitleList',
-            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."ProjectTitleList",
-            'fullBundleName' => 'OlegUserdirectoryBundle'
+            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."ProjectTitleList",
+            'fullBundleName' => 'OlegOrderformBundle'
         );
         $projectTitle = $this->convertStrToObject( $research->getProjectTitleStr(), $objectParams, $user );
         $research->setProjectTitle($projectTitle);
@@ -32,8 +32,8 @@ class ResearchRepository extends ListAbstractRepository {
         //process Set Title
         $objectParams = array(
             'className' => 'SetTitleList',
-            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."SetTitleList",
-            'fullBundleName' => 'OlegUserdirectoryBundle'
+            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."SetTitleList",
+            'fullBundleName' => 'OlegOrderformBundle'
         );
         $setTitle = $this->convertStrToObject( $research->getSetTitleStr(), $objectParams, $user, 'projectTitle', $projectTitle->getId() );
 
@@ -64,7 +64,7 @@ class ResearchRepository extends ListAbstractRepository {
 
             $principalstr = $principalWrapper->getPrincipalStr();
             //echo "principalstr=".$principalstr."<br>";
-            $foundPrincipal = $this->_em->getRepository('OlegUserdirectoryBundle:PIList')->findOneByName($principalstr);
+            $foundPrincipal = $this->_em->getRepository('OlegOrderformBundle:PIList')->findOneByName($principalstr);
 
             if( !$foundPrincipal ) {
                 throw new \Exception( 'Principal was not found with name '.$principalstr );

@@ -92,12 +92,12 @@ function customCombobox() {
         getComboboxOrgan(new Array("0","0","0","0","0","0"));
         getComboboxDelivery(new Array("0","0","0","0","0","0"));
         getComboboxReturn(new Array("0","0","0","0","0","0"));
-        getComboboxService(new Array("0","0","0","0","0","0"));
         slideType(new Array("0","0","0","0","0","0"));
         getProjectTitle(new Array("0","0","0","0","0","0"));
         getCourseTitle(new Array("0","0","0","0","0","0"));
 
-        getComboboxDepartment(new Array("0","0","0","0","0","0"));
+        //getComboboxService(new Array("0","0","0","0","0","0"));
+        //getComboboxDepartment(new Array("0","0","0","0","0","0"));
         //getComboboxInstitution(new Array("0","0","0","0","0","0"));
         getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
@@ -974,10 +974,10 @@ function initComboboxJs(ids, holder) {
         getComboboxSpecialStain(ids,true);
 
         //order
-        getComboboxService(ids);
+        //getComboboxService(ids);
         getProjectTitle(ids);
         getCourseTitle(ids);
-        getComboboxDepartment(ids);
+        //getComboboxDepartment(ids);
         getComboboxAccount(ids);
     }
 }

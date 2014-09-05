@@ -20,7 +20,7 @@ security:
         ROLE_USERDIRECTORY_ADMIN: [ROLE_USER, ROLE_USERDIRECTORY_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
 
         # General roles
-#        ROLE_BANNED: [ROLE_SCANORDER_BANNED,ROLE_USERDIRECTORY_BANNED]
+#        ROLE_BANNED: [ROLE_SCANORDER_BANNED, ROLE_USERDIRECTORY_BANNED]
 #        ROLE_UNAPPROVED: [ROLE_USERDIRECTORY_UNAPPROVED, ROLE_SCANORDER_UNAPPROVED_SUBMITTER]
         ROLE_EDITOR: [ROLE_SCANORDER_PROCESSOR, ROLE_USERDIRECTORY_EDITOR]  #permission to edit the content of DB such as change access request status
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
@@ -97,15 +97,18 @@ security:
 
      - { path: ^/employees/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/employees/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/employees/, role: [ROLE_USERDIRECTORY_OBSERVER] }
+
+     #make all /employees accessible only limited special roles
+     - { path: ^/employees/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+#     - { path: ^/employees/, role: [ROLE_USERDIRECTORY_OBSERVER] }
 #     - { path: ^/employees/admin, role: [ROLE_USERDIRECTORY_ADMIN] }
 
      - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-     - { path: ^/scan/, role: [ROLE_SCANORDER_SUBMITTER] }
 
-     #make sure /scan is protected from accessing the users with not sufficient roles
+     #make all sure /scan is protected from accessing the users with not sufficient roles
+     #     - { path: ^/scan/, role: [ROLE_SCANORDER_SUBMITTER] }
      - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
 
 

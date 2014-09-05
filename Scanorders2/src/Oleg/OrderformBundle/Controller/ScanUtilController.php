@@ -730,7 +730,7 @@ class ScanUtilController extends Controller {
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:ProjectTitleList', 'list')
+            ->from('OlegOrderformBundle:ProjectTitleList', 'list')
             ->select("list.name as id, list.name as text")
             //->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
@@ -777,7 +777,7 @@ class ScanUtilController extends Controller {
         //echo 'opt='.$opt.' => ';
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:SetTitleList', 'list')
+            ->from('OlegOrderformBundle:SetTitleList', 'list')
             ->select("list.name as id, list.name as text")
             ->leftJoin("list.projectTitle","parent")
             ->where("parent.name = :pname AND list.type = :type")
@@ -822,7 +822,7 @@ class ScanUtilController extends Controller {
         //$type = trim( $request->get('type') );
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:CourseTitleList', 'list')
+            ->from('OlegOrderformBundle:CourseTitleList', 'list')
             ->select("list.name as id, list.name as text")
             ->where("list.type = 'default'")
             ->orderBy("list.orderinlist","ASC");
@@ -870,7 +870,7 @@ class ScanUtilController extends Controller {
         //echo 'opt='.$opt.' => ';
 
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:LessonTitleList', 'list')
+            ->from('OlegOrderformBundle:LessonTitleList', 'list')
             ->select("list.name as id, list.name as text")
             ->leftJoin("list.courseTitle","parent")
             ->where("parent.name = :pname AND list.type = :type")
@@ -928,7 +928,7 @@ class ScanUtilController extends Controller {
 
         if(0) {
             echo "opt=".$opt." => ";
-            $project = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:CourseTitleList')->findOneById($opt);
+            $project = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleList')->findOneById($opt);
             $pis = $project->getDirectors();
             echo "countpis=".count($pis)." => ";
             foreach( $project->getDirectors() as $pi ) {
@@ -938,7 +938,7 @@ class ScanUtilController extends Controller {
 
         //1) add PIList with parent name = $opt
         $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:'.$className, 'list')
+            ->from('OlegOrderformBundle:'.$className, 'list')
             ->select("list.name as id, list.name as text")
             ->leftJoin("list.".$pname,"parents")
             ->where("parents.name = :pname AND (list.type = :type OR list.type = :type2)")

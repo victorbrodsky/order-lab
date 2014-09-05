@@ -8,9 +8,6 @@
 
 $(document).ready(function() {
 
-    //idle timeout
-    //idleTimeout();
-
     setNavBar();
 
     initAdd();

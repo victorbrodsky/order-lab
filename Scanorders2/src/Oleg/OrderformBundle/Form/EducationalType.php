@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\UserdirectoryBundle\Form\CourseTitleListType;
+use Oleg\OrderformBundle\Form\CourseTitleListType;
 
 class EducationalType extends AbstractType
 {

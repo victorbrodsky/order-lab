@@ -20,8 +20,8 @@ class EducationalRepository extends ListAbstractRepository {
         //process Course Title
         $objectParams = array(
             'className' => 'CourseTitleList',
-            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."CourseTitleList",
-            'fullBundleName' => 'OlegUserdirectoryBundle'
+            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."CourseTitleList",
+            'fullBundleName' => 'OlegOrderformBundle'
         );
         $courseTitle = $this->convertStrToObject( $educational->getCourseTitleStr(), $objectParams, $user );
         $educational->setCourseTitle($courseTitle);
@@ -32,8 +32,8 @@ class EducationalRepository extends ListAbstractRepository {
         //process Set Title
         $objectParams = array(
             'className' => 'LessonTitleList',
-            'fullClassName' => "Oleg\\UserdirectoryBundle\\Entity\\"."LessonTitleList",
-            'fullBundleName' => 'OlegUserdirectoryBundle'
+            'fullClassName' => "Oleg\\OrderformBundle\\Entity\\"."LessonTitleList",
+            'fullBundleName' => 'OlegOrderformBundle'
         );
         $lessonTitle = $this->convertStrToObject( $educational->getLessonTitleStr(), $objectParams, $user, 'courseTitle', $courseTitle->getId() );
 
@@ -57,7 +57,7 @@ class EducationalRepository extends ListAbstractRepository {
 
             $directorstr = $directorWrapper->getDirectorStr();
             //echo "directorstr=".$directorstr."<br>";
-            $foundDirector = $this->_em->getRepository('OlegUserdirectoryBundle:DirectorList')->findOneByName($directorstr);
+            $foundDirector = $this->_em->getRepository('OlegOrderformBundle:DirectorList')->findOneByName($directorstr);
 
             if( !$foundDirector ) {
                 throw new \Exception( 'Director was not found with name '.$directorstr );

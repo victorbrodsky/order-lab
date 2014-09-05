@@ -57,7 +57,7 @@ class Research
     protected $projectTitleStr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\ProjectTitleList", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ProjectTitleList", cascade={"persist"})
      * @ORM\JoinColumn(name="projectTitle_id", referencedColumnName="id", nullable=true)
      */
     protected $projectTitle;

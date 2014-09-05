@@ -44,18 +44,24 @@ class ScanAccessRequestController extends AccessRequestController
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$user) ) {
 
             //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context
-            return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_login'));
+            //return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_login'));
 
             //exit('nopermission create scan access request for non ldap user');
 
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have permission to visit Scan Order site."
-//            );
-//            return $this->redirect( $this->generateUrl('main_common_home') );
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have permission to visit Scan Order site."."<br>".
+                "If you already applied for an access, then try to " . "<a href=".$this->generateUrl($this->container->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"
+            );
+            return $this->redirect( $this->generateUrl('main_common_home') );
         }
 
-        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('scan.sitename'));
+        $roles = array(
+            "unnaproved" => "ROLE_SCANORDER_UNAPPROVED_SUBMITTER",
+            "banned" => "ROLE_SCANORDER_BANNED",
+        );
+
+        return $this->accessRequestCreateNew($user->getId(),$this->container->getParameter('scan.sitename'),$roles);
     }
 
     /**
@@ -71,7 +77,12 @@ class ScanAccessRequestController extends AccessRequestController
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
-        return $this->accessRequestCreateNew($id,$sitename);
+        $roles = array(
+            "unnaproved" => "ROLE_SCANORDER_UNAPPROVED_SUBMITTER",
+            "banned" => "ROLE_SCANORDER_BANNED",
+        );
+
+        return $this->accessRequestCreateNew($id,$sitename,$roles);
     }
 
     /**
@@ -82,7 +93,7 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestAction($id,$sitename)
     {
 
-        echo "create new accreq, scan post <br>";
+        //echo "create new accreq, scan post <br>";
 
 //        $userSecUtil = $this->get('user_security_utility');
 //        if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER',$id) ) {
