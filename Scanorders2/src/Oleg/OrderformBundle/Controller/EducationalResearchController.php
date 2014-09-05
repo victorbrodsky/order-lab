@@ -108,7 +108,7 @@ class EducationalResearchController extends Controller {
                 foreach( $directors as $director ) {
                     $directorsArr[] = $director->getName();
                 }
-                $msg = "Values saved for Order ".$orderoid.": Course Director(s) = ".implode(",", $directorsArr)."; Primary Course Director = ".$directorsArr[0];
+                $msg = "Values saved for Order ".$orderoid.": User Associations for Course Director(s) = ".implode(", ", $directorsArr)."; Primary Course Director = ".$directorsArr[0];
                 $url = $this->generateUrl( 'educational_edit', array('id' => $id) );
                 $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
@@ -118,7 +118,7 @@ class EducationalResearchController extends Controller {
                 foreach( $principals as $principal ) {
                     $principalsArr[] = $principal->getName();
                 }
-                $msg = "Values saved for Order ".$orderoid.": Principal Investigator(s) = ".implode(",", $principalsArr)."; Primary Principal Investigator = ".$principalsArr[0];
+                $msg = "Values saved for Order ".$orderoid.": User Associations for Principal Investigator(s) = ".implode(", ", $principalsArr)."; Primary Principal Investigator = ".$principalsArr[0];
                 $url = $this->generateUrl( 'scan-order-data-review-full', array('id' => $orderoid) );
                 $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
@@ -169,11 +169,13 @@ class EducationalResearchController extends Controller {
         if( $entity instanceof Educational ) {
             $typeform = new EducationalType($params,$entity);
             $type = "educational";
+            $btnMsg = "Course Director";
         }
 
         if( $entity instanceof Research ) {
             $typeform = new ResearchType($params,$entity);
             $type = "research";
+            $btnMsg = "Principal Investigator";
         }
 
         $form = $this->createForm( $typeform, $entity, array(
@@ -183,7 +185,7 @@ class EducationalResearchController extends Controller {
         ));
 
         if( $cicle != 'show' ) {
-            $form->add('submit', 'submit', array('label' => 'Save '.$type, 'attr' => array('class' => 'btn btn-primary')));
+            $form->add('submit', 'submit', array('label' => 'Save '.$btnMsg.' Information', 'attr' => array('class' => 'btn btn-primary')));
         }
 
         return $form;

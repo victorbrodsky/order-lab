@@ -56,14 +56,14 @@ class PerSiteSettingsType extends AbstractType
             ));
 
             $builder->add( 'scanOrdersServicesScope', null, array(
-                'label'=>'Scan Orders Services Scope:',
+                'label'=>'Service(s) Scope:',
                 'required'=>false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width')
             ));
 
             $builder->add( 'chiefServices', null, array(
-                'label'=>'Chief of the following Service(s):',
+                'label'=>'Chief of the following Service(s) for Scope:',
                 'required'=>false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width')

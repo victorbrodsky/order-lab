@@ -201,7 +201,7 @@ class AdminController extends Controller
         $types = array(
             "maxIdleTime" => "30",
             "environment" => "dev",
-            "siteEmail" => "slidescan@med.cornell.edu",
+            "siteEmail" => "oli2002@med.cornell.edu", //"slidescan@med.cornell.edu",
 
             "smtpServerAddress" => "smtp.med.cornell.edu",
 

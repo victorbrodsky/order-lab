@@ -80,13 +80,6 @@ class ScanAdminController extends AdminController
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        //$count_institution = $this->generateInstitutions();         //must be first
-        //$count_department = $this->generateDepartments();
-        //$count_division = $this->generateDivisions();
-        //$count_service = $this->generateServices();
-        //$count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
-        //$count_roles = $this->generateRoles();
-
         $count_acctype = $this->generateAccessionType();
         $count_enctype = $this->generateEncounterType();
         $count_formtype = $this->generateFormType();
@@ -124,9 +117,6 @@ class ScanAdminController extends AdminController
             'Slide Delivery='.$count_SlideDelivery.', '.
             'Region To Scan='.$count_RegionToScan.', '.
             'Processor Comments='.$count_comments.', '.
-            //'Site Settings='.$count_siteParameters.' '.
-            //'Departments='.$count_department.' '.
-            //'Institutions='.$count_institution.' '.
             'Urgency='.$count_urgency.' '.
             'Scanners='.$count_scanners.' '.
             'Users='.$count_users.

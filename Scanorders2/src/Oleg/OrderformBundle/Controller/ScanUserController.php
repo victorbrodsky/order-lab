@@ -55,6 +55,16 @@ class ScanUserController extends UserController
         $form = $res['form'];
         $userViewArr['form_scansettings'] = $form->createView();
 
+        //add research projects
+        $res = $this->getResearchProjects($id);
+        //$form = $res['form'];
+        //$userViewArr['form_researchprojects'] = $form->createView();
+
+        //add educational courses
+        //$res = $this->getEducationalCourses($id);
+        //$form = $res['form'];
+        //$userViewArr['form_educationalcourses'] = $form->createView();
+
         return $userViewArr;
     }
 
@@ -365,6 +375,16 @@ class ScanUserController extends UserController
             'cicle' => 'edit',
             'userid' => $id
         );
+    }
+
+
+    public function getResearchProjects($userid) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+
+
     }
 
 

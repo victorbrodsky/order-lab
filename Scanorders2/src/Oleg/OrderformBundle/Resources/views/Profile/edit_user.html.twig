@@ -7,14 +7,84 @@
 
 {% block addcontent %}
 
-    <hr>
-        {#<a href="{{ path('scan_order_settings_show',{'id':entity.id}) }}">User's Scan Order Settings</a>#}
+    {#Per Site User Settings by User#}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#persiteusersettings">
+                    Per Site User Settings Editable by User
+                </a>
+            </h4>
+        </div>
+        <div id="persiteusersettings" class="panel-collapse collapse in">
+            <div class="panel-body">
 
-    <h3 class="text-info">Per Site User Settings</h3>
-    {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
-    {{ formmacros.field(form_scansettings.scanOrdersServicesScope) }}
-    {{ formmacros.field(form_scansettings.chiefServices) }}
-    {{ formmacros.field(form_scansettings.defaultService) }}
+                {{ formmacros.field(form_scansettings.defaultService) }}
+
+                {#add default institution, department, division#}
+
+            </div>
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_SCANORDER_ADMIN') %}
+        {#Per Site User Settings by Admin#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#persiteadminsettings">
+                        Per Site User Settings Editable by Admin
+                    </a>
+                </h4>
+            </div>
+            <div id="persiteadminsettings" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form_scansettings.permittedInstitutionalPHIScope) }}
+                    {{ formmacros.field(form_scansettings.scanOrdersServicesScope) }}
+                    {{ formmacros.field(form_scansettings.chiefServices) }}
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    {#Research Projects#}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#researchprojects">
+                    Research Projects
+                </a>
+            </h4>
+        </div>
+        <div id="researchprojects" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+
+
+            </div>
+        </div>
+    </div>
+
+    {#Educational Courses#}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#educationalcourses">
+                    Educational Courses
+                </a>
+            </h4>
+        </div>
+        <div id="educationalcourses" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+
+
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}

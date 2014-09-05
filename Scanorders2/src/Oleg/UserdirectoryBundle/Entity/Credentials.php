@@ -23,13 +23,6 @@ class Credentials extends BaseUserAttributes
      */
     private $dob;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="CodeNYPH")
-//     * @ORM\JoinTable(name="credentials_codeNYPH",
-//     *      joinColumns={@ORM\JoinColumn(name="credentials_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="codeNYPH_id", referencedColumnName="id")}
-//     *      )
-//     **/
     /**
      * @ORM\OneToMany(targetEntity="CodeNYPH", mappedBy="credentials", cascade={"persist"})
      */
