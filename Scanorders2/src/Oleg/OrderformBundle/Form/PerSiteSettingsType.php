@@ -11,32 +11,19 @@ class PerSiteSettingsType extends AbstractType
 {
 
     protected $user;
-    protected $services;
+    protected $roleAdmin;
 
-    public function __construct( $user = null, $services = null )
+    public function __construct( $user, $roleAdmin )
     {
         $this->user = $user;
-        $this->services = $services;
+        $this->roleAdmin = $roleAdmin;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        if( $this->user == null ) {
+        if( $this->roleAdmin ) {
 
-//            $builder->add( 'siteName', 'text', array(
-//                'label'=>'Site Name:',
-//                'required'=>false,
-//                'read_only'=>true,
-//                'attr' => array('class'=>'form-control')
-//            ));
-
-//            $builder->add( 'permittedInstitutionalPHIScope', null, array(
-//                'label'=>'Permitted Institutional PHI Scope:',
-//                'required'=>false,
-//                'multiple' => true,
-//                'attr' => array('class'=>'combobox combobox-width')
-//            ));
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 'property' => 'name',
@@ -69,33 +56,15 @@ class PerSiteSettingsType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width')
             ));
 
-            $builder->add( 'defaultService', null, array(
-                'label'=>'Default Service:',
-                'required'=>false,
-                'attr' => array('class'=>'combobox combobox-width')
-            ));
 
-        } else {
-
-//            $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
-//                'class' => 'OlegOrderformBundle:PerSiteSettings',
-//                //'property' => 'permittedInstitutionalPHIScope',
-//                'label'=>'Institution:',
-//                'required'=> true,
-//                'multiple' => false,
-//                'attr' => array('class'=>'combobox combobox-width'), //combobox-institution
-//                'query_builder' => function(EntityRepository $er) {
-//                        return $er->createQueryBuilder('i')
-//                            ->innerJoin('i.user', 'user')
-//                            ->where("user = :user AND i.siteName = :sitename")
-//                            ->setParameters( array(
-//                                'user' => $this->user,
-//                                'sitename' => 'scanorder',
-//                            ));
-//                    },
-//            ));
 
         }
+
+        $builder->add( 'defaultService', null, array(
+            'label'=>'Default Service:',
+            'required'=>false,
+            'attr' => array('class'=>'combobox combobox-width')
+        ));
 
 
     }

@@ -25,7 +25,7 @@ class ScanUserType extends UserType
     public function addHookFields($builder) {
 
         $builder->add('perSiteSettings', 'collection', array(
-            'type' => new PerSiteSettingsType(),
+            'type' => new PerSiteSettingsType($this->user,$this->roleAdmin),
             'label' => false,
             'allow_add' => true,
             'allow_delete' => true,

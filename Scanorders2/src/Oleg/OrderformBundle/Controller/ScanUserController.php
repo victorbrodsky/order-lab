@@ -89,7 +89,7 @@ class ScanUserController extends UserController
     }
 
     /**
-     * @Route("/users/{id}", name="scan_user_update")
+     * @Route("/edit-user-profile/{id}", name="scan_user_update")
      * @Method("PUT")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */
@@ -107,21 +107,38 @@ class ScanUserController extends UserController
         $form = $res['form'];
         $entity = $res['entity'];
 
+        $originalInsts = $entity->getpermittedInstitutionalPHIScope();
+
         $form->handleRequest($request);
 
-        if( count($entity->getPermittedInstitutionalPHIScope()) == 0 && $entity->getUser()->getUsername() != 'system' ) {
+        if( count($entity->getPermittedInstitutionalPHIScope()) == 0 && $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')) { //&& $entity->getUser()->getUsername() != 'system'
             //exit('no inst');
             $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
             $error = new FormError("Please add at least one permitted institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
             $form->get('permittedInstitutionalPHIScope')->addError($error);
         }
 
-        var_dump( $form->getErrors() );
+        //var_dump( $form->getErrors() );
 
         if( $form->isValid() ) {
+
+            //check if insts were changed and user is not admin
+            if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+                $currentInsts = $entity->getpermittedInstitutionalPHIScope();
+                if( count($currentInsts) != count($originalInsts) ) {
+                    return $this->redirect( $this->generateUrl('logout') );
+                }
+                foreach( $currentInsts as $inst ) {
+                    if( !$originalInsts->contains($inst) ) {
+                        return $this->redirect( $this->generateUrl('logout') );
+                    }
+                }
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+
             return $this->redirect($this->generateUrl('scan_showuser', array('id' => $id)));
         }
 
@@ -269,9 +286,9 @@ class ScanUserController extends UserController
 
         $entity = $secUtil->getUserPerSiteSettings($id);
 
-        if( !$entity ) {
+        $user = $this->get('security.context')->getToken()->getUser();
 
-            $user = $this->get('security.context')->getToken()->getUser();
+        if( !$entity ) {
 
             $entity = new PerSiteSettings();
             $entity->setUser($subjectuser);
@@ -283,7 +300,7 @@ class ScanUserController extends UserController
             $disabled = false;
         }
 
-        $form = $this->createForm(new PerSiteSettingsType(), $entity, array(
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
             'disabled' => $disabled
@@ -341,7 +358,7 @@ class ScanUserController extends UserController
         $entity->setUpdateAuthor($user);
         $entity->setUpdateAuthorRoles($user->getRoles());
 
-        $form = $this->createForm(new PerSiteSettingsType(), $entity, array(
+        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.context')->isGranted('ROLE_ADMIN')), $entity, array(
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
         ));

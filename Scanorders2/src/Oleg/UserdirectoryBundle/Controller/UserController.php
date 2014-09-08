@@ -270,7 +270,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/users/{id}", name="employees_user_update")
+     * @Route("/edit-user-profile/{id}", name="employees_user_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
