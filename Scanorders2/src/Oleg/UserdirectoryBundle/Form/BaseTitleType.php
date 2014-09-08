@@ -2,10 +2,12 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+
 
 class BaseTitleType extends AbstractType
 {
@@ -44,11 +46,12 @@ class BaseTitleType extends AbstractType
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
+        $baseUserAttr = new $this->params['fullClassName']();
         $builder->add('status', 'choice', array(
             'disabled' => ($this->params['read_only'] ? true : false),
             'choices'   => array(
-                '0'   => 'Unverified',
-                '1' => 'Verified'
+                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
             ),
             'label' => "Status:",
             'required' => true,

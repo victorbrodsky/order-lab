@@ -56,14 +56,12 @@ class ScanUserController extends UserController
         $userViewArr['form_scansettings'] = $form->createView();
 
         //add research projects
-        $res = $this->getResearchProjects($id);
-        //$form = $res['form'];
-        //$userViewArr['form_researchprojects'] = $form->createView();
+        $projects = $this->getResearchProjects($id);
+        $userViewArr['projects'] = $projects;
 
         //add educational courses
-        //$res = $this->getEducationalCourses($id);
-        //$form = $res['form'];
-        //$userViewArr['form_educationalcourses'] = $form->createView();
+        $courses = $this->getEducationalCourses($id);
+        $userViewArr['courses'] = $courses;
 
         return $userViewArr;
     }
@@ -382,9 +380,37 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $subjectuser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:ProjectTitleList');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+        $dql->groupBy("project");
+        $dql->innerJoin("project.principals", "principal");
+        $dql->where("principal.principal = :userid");
+
+        $query = $em->createQuery($dql)->setParameters( array( 'userid'=>$userid ) );
+
+        $projects = $query->getResult();
+
+        return $projects;
+    }
 
 
+    public function getEducationalCourses($userid) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:CourseTitleList');
+        $dql =  $repository->createQueryBuilder("course");
+        $dql->select('course');
+        $dql->groupBy("course");
+        $dql->innerJoin("course.directors", "director");
+        $dql->where("director.director = :userid");
+
+        $query = $em->createQuery($dql)->setParameters( array( 'userid'=>$userid ) );
+
+        $courses = $query->getResult();
+
+        return $courses;
     }
 
 

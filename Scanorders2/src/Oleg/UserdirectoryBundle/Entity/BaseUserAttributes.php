@@ -230,4 +230,22 @@ abstract class BaseUserAttributes {
     }
 
 
+    public function getStatusStr()
+    {
+        return $this->getStatusStrByStatus($this->getStatus());
+    }
+
+    public function getStatusStrByStatus($status)
+    {
+        $str = $status;
+
+        if( $status == self::STATUS_UNVERIFIED )
+            $str = "Pending Administrative Review";
+
+        if( $status == self::STATUS_VERIFIED )
+            $str = "Verified by Administration";
+
+        return $str;
+    }
+
 }

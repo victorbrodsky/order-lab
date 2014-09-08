@@ -101,4 +101,9 @@ class PrincipalWrapper {
         return "PrincipalWrapper: id=".$this->getPrincipal()->getId().", principalStr=".$this->principalStr."<br>";
     }
 
+    public function getProjectInfo() {
+        $info = $this->getResearch()->getProjectTitleStr();
+        return $info;
+    }
+
 }

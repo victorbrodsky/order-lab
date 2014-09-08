@@ -293,6 +293,16 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+//        $entity->setPreferredPhone('111222333');
+//        $uow = $em->getUnitOfWork();
+//        $uow->computeChangeSets(); // do not compute changes if inside a listener
+//        $changeset = $uow->getEntityChangeSet($entity);
+//        print_r($changeset);
+//        exit();
+
+        $oldEntity = clone $entity;
+        $oldUserArr = get_object_vars($oldEntity);
+
         // Create an ArrayCollection of the current Tag objects in the database
         $originalAdminTitles = new ArrayCollection();
         foreach( $entity->getAdministrativeTitles() as $title) {
@@ -321,11 +331,14 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
+
         if( $form->isValid() ) {
 
             $this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');
             $this->removeCollection($entity,$originalAppTitles,'getAppointmentTitles');
             $this->removeCollection($entity,$originalLocations,'getLocations');
+
+            //$this->setEventLogChanges($entity,$request);
 
             //$em->persist($entity);
             $em->flush();
@@ -512,6 +525,55 @@ class UserController extends Controller
         $em->persist($user);
         $em->flush();
 
+    }
+
+
+
+    //Log user changes as in Issue #360
+    //TODO: separate event log for scan and user. User log should record all changes in user: subjectUser, Author, field, old value, new value.
+    public function setEventLogChanges($entity,$request) {
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $uow = $em->getUnitOfWork();
+        $uow->computeChangeSets(); // do not compute changes if inside a listener
+
+        $userSecUtil = $this->get('user_security_utility');
+        $eventLog = $userSecUtil->constractEventLog($entity,$request);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
+        $eventLog->setEvent($event);
+
+        //log simple fields
+        $changeset = $uow->getEntityChangeSet($entity);
+        $eventLog = $this->addToEventLog( $eventLog, $entity, $changeset );
+
+        //log credentials
+        $changeset = $uow->getEntityChangeSet($entity->getCredentials());
+        $eventLog = $this->addToEventLog( $eventLog, $entity, $changeset );
+
+        echo "event=".$eventLog->getEvent()."<br>";
+
+        //exit();
+
+        $em->persist($eventLog);
+        $em->flush();
+    }
+
+    public function addToEventLog( $eventLog, $subjectUser, $changeset ) {
+
+        //process $changeset: author, subjectuser, oldvalue, newvalue
+        $changeArr = array();
+        foreach( $changeset as $key => $value ) {
+            $changeArr[] = $key.": "."old value=".$value[0].", new value=".$value[1];
+        }
+        $event = implode("<br>", $changeArr);
+
+        //echo "event=".$event."<br>";
+
+        $eventLog->addEvent( $event );
+
+        return $eventLog;
     }
 
 }

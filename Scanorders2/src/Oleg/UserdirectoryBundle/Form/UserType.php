@@ -126,8 +126,9 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
+        $params = array('read_only'=>$read_only);
         $builder->add('locations', 'collection', array(
-            'type' => new LocationType(),
+            'type' => new LocationType($params),
             'label' => false,
             'required' => false,
             'allow_add' => true,

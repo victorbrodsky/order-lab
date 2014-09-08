@@ -79,3 +79,11 @@ function getSitename() {
     return sitename;
 }
 
+function collpaseAll() {
+    $('.panel-collapse').collapse('hide');
+}
+
+function extendAll() {
+    $('.panel-collapse').collapse('show');
+}
+

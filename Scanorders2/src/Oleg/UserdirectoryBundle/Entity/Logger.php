@@ -244,4 +244,14 @@ class Logger
     }
 
 
+    public function addEvent( $newEvent ) {
+
+        $event = $this->getEvent();
+
+        $event = $event . $newEvent;
+
+        $this->setEvent( $event );
+    }
+
+
 }

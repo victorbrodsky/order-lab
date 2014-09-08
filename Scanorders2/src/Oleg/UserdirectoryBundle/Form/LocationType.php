@@ -2,22 +2,26 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
+use Oleg\UserdirectoryBundle\Entity\Location;
+
 class LocationType extends AbstractType
 {
 
-//    protected $params;
-//    protected $entity;
-//
-//    public function __construct( $params=null, $entity = null )
-//    {
-//        $this->params = $params;
-//        $this->entity = $entity;
-//    }
+    protected $params;
+    protected $entity;
+
+    public function __construct( $params=null, $entity = null )
+    {
+        $this->params = $params;
+        $this->entity = $entity;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -93,6 +97,19 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width'),
             'required' => false,
             //'empty_value' => false,
+        ));
+
+
+        $baseUserAttr = new Location();
+        $builder->add('status', 'choice', array(
+            'disabled' => ($this->params['read_only'] ? true : false),
+            'choices'   => array(
+                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+            ),
+            'label' => "Status:",
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
         ));
 
 

@@ -15,7 +15,13 @@
         {% set formfield = field %}
     {% endif %}
 
-    <div class="well {{ classname }}">
+    {% if formfield.vars.value and formfield.vars.value.status == 0 %}
+        {% set wellclass = "alert-danger" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    <div class="alert {{ classname }} {{ wellclass }}">
         {% if cicle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
@@ -44,7 +50,13 @@
         {% set formfield = field %}
     {% endif %}
 
-    <div class="well {{ classname }}">
+    {% if formfield.vars.value and formfield.vars.value.status == 0 %}
+        {% set wellclass = "alert-danger" %}
+    {% else %}
+        {% set wellclass = "" %}
+    {% endif %}
+
+    <div class="alert {{ classname }} {{ wellclass }}">
 
         {% if cicle != 'show_user' %}
             <div class="text-right">
@@ -53,6 +65,7 @@
         {% endif %}
 
         {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.status) }}
         {{ formmacros.field(formfield.name) }}
         {{ formmacros.field(formfield.phone) }}
         {{ formmacros.field(formfield.pager) }}
@@ -158,6 +171,11 @@
 
 {% block content %}
 
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Extend All</button>
+    </p>
 
 
     {{ form_start(form) }}

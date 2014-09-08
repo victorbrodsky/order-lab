@@ -9,10 +9,11 @@
 
 namespace Oleg\UserdirectoryBundle\Security\Util;
 
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
-
+use Oleg\UserdirectoryBundle\Entity\Logger;
 
 class UserSecurityUtil {
 
@@ -129,6 +130,20 @@ class UserSecurityUtil {
 
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
 
+    }
+
+    function constractEventLog( $user, $request ) {
+
+        $logger = new Logger();
+        $logger->setUser($user);
+        $logger->setRoles($user->getRoles());
+        $logger->setUsername($user."");
+        $logger->setIp($request->getClientIp());
+        $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+        $logger->setWidth($request->get('display_width'));
+        $logger->setHeight($request->get('display_height'));
+
+        return $logger;
     }
 
 }

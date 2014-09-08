@@ -101,4 +101,9 @@ class DirectorWrapper {
         return "DirectorWrapper: id=".$this->getDirector()->getId().", directorStr=".$this->directorStr."<br>";
     }
 
+    public function getCourseInfo() {
+        $info = $this->getEducational()->getCourseTitleStr();
+        return $info;
+    }
+
 }
