@@ -12,18 +12,18 @@ $(document).ready(function() {
 
     fieldInputMask();
 
-    setResearchEducational();   //init research and educational
+    //setResearchEducational();   //init research and educational
 
-    setResearch();  //set research listener
+    //setResearch();  //set research listener
 
-    setEducational(); //set educational listener
+    //setEducational(); //set educational listener
 
     //tooltip
     $(".element-with-tooltip").tooltip();
 
-    attachResearchEducationalTooltip();
+    //attachResearchEducationalTooltip();
 
-    windowCloseAlert();
+    //windowCloseAlert();
 
     initConvertEnterToTab();
 
@@ -36,6 +36,8 @@ $(document).ready(function() {
     expandTextarea();
 
     getComboboxInstitution();
+
+    $('.panel-collapse').collapse({'toggle': false});
 
 });
 

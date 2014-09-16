@@ -26,14 +26,20 @@ function addBaseTitle(btn,classname) {
     //printF(newForm,"added el:");
     //console.log(newForm);
 
-    initAdd();
+    initBaseAdd();
 
     //init institution for administrative and appointnment titles
     getComboboxInstitution(newForm);
 
 }
 
-
+function initBaseAdd() {
+    expandTextarea();
+    regularCombobox();
+    initDatepicker();
+    //tooltip
+    $(".element-with-tooltip").tooltip();
+}
 
 //get input field only
 function getBaseTitleForm( elclass ) {

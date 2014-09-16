@@ -85,6 +85,16 @@ class Location extends BaseUserAttributes
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default" = 1}, nullable=true)
+     */
+    private $removable;
+
+
+    public function __construct() {
+        $this->setRemovable(true);
+        parent::__construct();
+    }
 
     /**
      * @param mixed $assistant
@@ -308,6 +318,22 @@ class Location extends BaseUserAttributes
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param mixed $removable
+     */
+    public function setRemovable($removable)
+    {
+        $this->removable = $removable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemovable()
+    {
+        return $this->removable;
     }
 
 

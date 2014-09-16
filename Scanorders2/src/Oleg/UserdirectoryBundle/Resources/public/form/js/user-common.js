@@ -79,11 +79,183 @@ function getSitename() {
     return sitename;
 }
 
-function collpaseAll() {
-    $('.panel-collapse').collapse('hide');
+function collpaseAll(holder) {
+    if( typeof holder === 'undefined' ) {
+        $('.panel-collapse').collapse('hide');
+    } else {
+        $(holder).find('.panel-collapse').collapse('hide');
+    }
+
 }
 
-function extendAll() {
-    $('.panel-collapse').collapse('show');
+function extendAll(holder) {
+    if( typeof holder === 'undefined' ) {
+        $('.panel-collapse').collapse('show');
+    } else {
+        $(holder).find('.panel-collapse').collapse('show');
+    }
 }
 
+
+function initDatepicker() {
+
+    if( cicle != "show" ) {
+
+        //console.log("init Datepicker");
+
+        var regularDatepickers = $('.input-group.date.regular-datepicker').not('.allow-future-date');
+        initSingleDatepicker( regularDatepickers );
+
+        var scandateDatepickers = $('.input-group.date.allow-future-date');
+        initSingleDatepicker( scandateDatepickers );
+
+        //make sure the masking is clear when input is cleared by datepicker
+        regularDatepickers.datepicker().on("clearDate", function(e){
+            var inputField = $(this).find('input');
+            //printF(inputField,"clearDate input:");
+            clearErrorField( inputField );
+        });
+
+    }
+
+}
+
+function initSingleDatepicker( datepickerElement ) {
+
+    //printF(datepickerElement,'datepicker element:');
+
+    var endDate = new Date(); //use current date as default
+
+    if( datepickerElement.hasClass('allow-future-date') ) {
+        endDate = false;//'End of time';
+    }
+    //console.log('endDate='+endDate);
+
+    //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
+    datepickerElement.datepicker({
+        autoclose: true,
+        clearBtn: true,
+        todayBtn: "linked",
+        todayHighlight: true,
+        endDate: endDate
+    });
+}
+
+function expandTextarea() {
+    //var elements = document.getElementsByClassName('textarea');
+    var elements = $('.textarea');
+
+    for (var i = 0; i < elements.length; ++i) {
+        var element = elements[i];
+        //element.addEventListener('keyup', function() {
+        addEvent('keyup', element, function() {
+            this.style.overflow = 'hidden';
+            this.style.height = 0;
+            var newH = this.scrollHeight + 10;
+            //console.log("cur h="+this.style.height+", newH="+newH);
+            this.style.height = newH + 'px';
+        }, false);
+    }
+}
+
+//Internet Explorer (up to version 8) used an alternate attachEvent method.
+// The following should be an attempt to write a cross-browser addEvent function.
+function addEvent(event, elem, func) {
+    if (elem.addEventListener)  // W3C DOM
+        elem.addEventListener(event,func,false);
+    else if (elem.attachEvent) { // IE DOM
+        //elem.attachEvent("on"+event, func);
+        elem.attachEvent("on" + event, function() {return(func.call(elem, window.event));});
+    }
+    else { // No much to do
+        elem[event] = func;
+    }
+}
+
+function setNavBar() {
+
+    $('ul.li').removeClass('active');
+
+    var full = window.location.pathname;
+
+    var id = 'userhome';
+
+    //Admin
+    if( full.indexOf("/user/listusers") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/admin/") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/access-requests") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/account-requests") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/listusers") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/users/") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/event-log") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/settings") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/user-directory") !== -1 ) {
+        id = 'admin';
+    }
+
+    if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
+        if( $('#nav-bar-admin').length > 0 ) {
+            id = 'admin';
+        } else {
+            id = 'user';
+        }
+    }
+
+    //console.log("id="+id);
+    //console.info("full="+window.location.pathname+", id="+id + " ?="+full.indexOf("multi/clinical"));
+
+    $('#nav-bar-'+id).addClass('active');
+}
+
+
+
+
+//Helpers
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function printF(element,text) {
+    var str = "id="+element.attr("id") + ", class=" + element.attr("class")
+    if( text ) {
+        str = text + " : " + str;
+    }
+    console.log(str);
+}
+
+function inArrayCheck( arr, needle ) {
+    //console.log('len='+arr.length+", needle: "+needle+"?="+parseInt(needle));
+
+    if( needle == '' ) {
+        return -1;
+    }
+
+    if( needle == parseInt(needle) ) {
+        return needle;
+    }
+
+    for( var i = 0; i < arr.length; i++ ) {
+        //console.log(arr[i]['text']+'?='+needle);
+        if( arr[i]['text'] === needle ) {
+            return arr[i]['id'];
+        }
+    }
+    return -1;
+}

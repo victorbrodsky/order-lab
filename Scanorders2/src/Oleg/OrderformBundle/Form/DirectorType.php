@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Oleg\UserdirectoryBundle\Form;
+namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,12 +58,12 @@ class DirectorType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\DirectorList'
+            'data_class' => 'Oleg\OrderformBundle\Entity\DirectorList'
         ));
     }
 
     public function getName()
     {
-        return 'oleg_userdirectorybundle_directortype';
+        return 'oleg_orderformbundle_directortype';
     }
 }

@@ -118,8 +118,10 @@ class User extends BaseUser
         $homeLocation->setName('Home');
         $this->locations->set(0,$mainLocation);  //main has index 0
         $mainLocation->setUser($this);
+        $mainLocation->setRemovable(false);
         $this->locations->set(1,$homeLocation);  //home hsa index 1
         $homeLocation->setUser($this);
+        $homeLocation->setRemovable(false);
 
         //one default Admnistrative Title
         //$AdministrativeTitle = new AdministrativeTitle();

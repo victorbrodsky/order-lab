@@ -1152,10 +1152,10 @@ class ScanOrderController extends Controller {
                     $filterStr = " orderinfo.priority = 'Stat' AND status.name LIKE '%Filled%'";
                     break;
                 case "No Course Director Link":
-                    $filterStr = " director.director IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " orderinfo.educational IS NOT NULL AND director.director IS NULL AND status.name != 'Superseded'";
                     break;
                 case "No Principal Investigator Link":
-                    $filterStr = " principal.principal IS NULL AND status.name != 'Superseded'";
+                    $filterStr = " orderinfo.research IS NOT NULL AND principal.principal IS NULL AND status.name != 'Superseded'";
                     break;
                 default:
                     ;

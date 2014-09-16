@@ -300,8 +300,8 @@ class UserController extends Controller
 //        print_r($changeset);
 //        exit();
 
-        $oldEntity = clone $entity;
-        $oldUserArr = get_object_vars($oldEntity);
+        //$oldEntity = clone $entity;
+        //$oldUserArr = get_object_vars($oldEntity);
 
         // Create an ArrayCollection of the current Tag objects in the database
         $originalAdminTitles = new ArrayCollection();
@@ -336,7 +336,7 @@ class UserController extends Controller
 
             $this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');
             $this->removeCollection($entity,$originalAppTitles,'getAppointmentTitles');
-            $this->removeCollection($entity,$originalLocations,'getLocations');
+            $this->removeLocationCollection($entity,$originalLocations,'getLocations');
 
             //$this->setEventLogChanges($entity,$request);
 
@@ -372,6 +372,27 @@ class UserController extends Controller
                 // if it was a many-to-one relationship, remove the relationship like this
                 //$title->setUser(null);
                 //$em->persist($title);
+                // if you wanted to delete the Tag entirely, you can also do that
+                $em->remove($title);
+                $em->flush();
+            }
+        }
+        //exit();
+    }
+
+    public function removeLocationCollection($entity,$originalArr,$getMethod) {
+        $em = $this->getDoctrine()->getManager();
+
+        foreach( $originalArr as $title ) {
+
+            //check if location is not home and main
+            if( $title->getRemovable() == false ) {
+                continue;
+            }
+
+            //echo "title=".$title->getName().", id=".$title->getId()."<br>";
+            $em->persist($title);
+            if( false === $entity->$getMethod()->contains($title) ) {
                 // if you wanted to delete the Tag entirely, you can also do that
                 $em->remove($title);
                 $em->flush();

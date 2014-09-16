@@ -16,7 +16,7 @@
     {% endif %}
 
     {% if formfield.vars.value and formfield.vars.value.status == 0 %}
-        {% set wellclass = "alert-danger" %}
+        {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
     {% endif %}
@@ -51,14 +51,14 @@
     {% endif %}
 
     {% if formfield.vars.value and formfield.vars.value.status == 0 %}
-        {% set wellclass = "alert-danger" %}
+        {% set wellclass = "user-alert-warning" %}
     {% else %}
         {% set wellclass = "" %}
     {% endif %}
 
     <div class="alert {{ classname }} {{ wellclass }}">
 
-        {% if cicle != 'show_user' %}
+        {% if cicle != 'show_user' and formfield.vars.value.removable == true %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -174,7 +174,7 @@
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll()" >Collapse All</button>
-        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Extend All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
 
 
@@ -350,6 +350,12 @@
             </div>
             <div id="Credentials" class="panel-collapse collapse in">
                 <div class="panel-body">
+
+                    <p>
+                        <button type="button" class="btn btn-default btn-sm" onClick="collpaseAll(document.getElementById('Credentials'))" >Collapse All</button>
+                        <button type="button" class="btn btn-default btn-sm" onClick="extendAll(document.getElementById('Credentials'))" >Expand All</button>
+                    </p>
+
 
                     <div class="user-credentials-holder">
 
