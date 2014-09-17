@@ -71,33 +71,33 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         keepAliveURL: this.urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
         onTimeout: function(){
-            //console.log("onTimeout: logout");
+            console.log("onTimeout: logout");
             idleTimeoutClass.prototype.onTimeout();
         },
         onIdle: function(){
-            //console.log("on idle");
+            console.log("on idle");
             $('#idle-timeout').modal('show');
         },
         onCountdown: function(counter){
-            //console.log("on Countdown");
+            console.log("on Countdown");
             //$("#dialog-countdown").html(counter); // update the counter
             _countdownDialog.html(counter); // update the counter
             //this.countdownDialog.html(counter); // update the counter
         },
         onAbort: function(){
-            //console.log("onAbort: logout");
+            console.log("onAbort: logout");
             idleTimeoutClass.prototype.onAbort();
         }
     });
 };
 
 idleTimeoutClass.prototype.onTimeout = function () {
-    //console.log("onTimeout: user");
+    console.log("onTimeout: user");
     idlelogout();
 };
 
 idleTimeoutClass.prototype.onAbort = function () {
-    //console.log("onAbort: user");
+    console.log("onAbort: user");
     idlelogout();
 };
 

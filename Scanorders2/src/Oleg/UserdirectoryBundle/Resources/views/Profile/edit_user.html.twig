@@ -21,7 +21,7 @@
         {% set wellclass = "" %}
     {% endif %}
 
-    <div class="alert {{ classname }} {{ wellclass }}">
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
         {% if cicle != 'show_user' %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
@@ -32,6 +32,12 @@
         {{ formmacros.field(formfield.status) }}
         {{ formmacros.field(formfield.priority) }}
         {{ formmacros.field(formfield.name) }}
+
+        {#position type#}
+        {% if formfield.position is defined %}
+            {{ formmacros.field(formfield.position) }}
+        {% endif %}
+
         {{ formmacros.fieldDateLabel(formfield.startDate,'allow-future-date') }}
         {{ formmacros.fieldDateLabel(formfield.endDate,'allow-future-date') }}
         {{ formmacros.field(formfield.institution) }}
@@ -58,7 +64,7 @@
 
     <div class="alert {{ classname }} {{ wellclass }}">
 
-        {% if cicle != 'show_user' and formfield.vars.value.removable == true %}
+        {% if cicle != 'show_user' and prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -66,20 +72,31 @@
 
         {{ formmacros.field(formfield.id) }}
         {{ formmacros.field(formfield.status) }}
-        {{ formmacros.field(formfield.name) }}
+
+        {% if prototype == "prototype" or formfield.vars.value and formfield.vars.value.removable == true %}
+            {{ formmacros.field(formfield.name) }}
+        {% else %}
+            {{ formmacros.field(formfield.name,"","readonly") }}
+        {% endif %}
+
         {{ formmacros.field(formfield.phone) }}
         {{ formmacros.field(formfield.pager) }}
         {{ formmacros.field(formfield.mobile) }}
         {{ formmacros.field(formfield.fax) }}
         {{ formmacros.field(formfield.email) }}
 
-        {{ formmacros.field(formfield.assistant) }}
-
-        {% if cicle == 'show_user' %}
-            {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}
-                {{ formfield.vars.value.assistant.preferredPhone }}
-                {{ formfield.vars.value.assistant.email }}
+        {% if prototype == "prototype" or formfield.vars.value and
+            (formfield.vars.value.removable == true or formfield.vars.value.removable != true and formfield.vars.value.name != "Home")
+        %}
+            {{ formmacros.field(formfield.assistant) }}
+            {% if cicle == 'show_user' %}
+                {% if formfield.vars.value.assistant is defined and formfield.vars.value.assistant != NULL %}
+                    {{ formmacros.simplefield( "Assistant's Preferred Phone Number:", formfield.vars.value.assistant.preferredPhone, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Assistant's Preferred Email:", formfield.vars.value.assistant.email, "", "disabled" ) }}
+                {% endif %}
             {% endif %}
+        {% else %}
+            {% do formfield.assistant.setRendered %}
         {% endif %}
 
         {{ formmacros.field(formfield.room) }}

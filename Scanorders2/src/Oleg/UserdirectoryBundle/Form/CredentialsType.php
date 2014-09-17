@@ -23,20 +23,20 @@ class CredentialsType extends AbstractType
 //    protected $roleAdmin;
 //    protected $user;
 //    protected $roles;
-
-    public function __construct()
-    {
+//
+//    public function __construct()
+//    {
 //        $this->cicle = $cicle;
 //        $this->user = $user;
 //        $this->roleAdmin = $roleAdmin;
 //        $this->roles = $roles;
-    }
+//    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add('employeeId', null, array(
-            'label' => 'Employee Identification Number (EIN):',
+            'label' => 'WCMC Employee Identification Number (EIN):',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 

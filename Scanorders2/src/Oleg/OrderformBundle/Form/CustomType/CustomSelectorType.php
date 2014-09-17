@@ -27,8 +27,8 @@ use Oleg\OrderformBundle\Form\DataTransformer\ResearchTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SetTitleTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\PrincipalTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\DepartmentTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\InstitutionTransformer;
+//use Oleg\OrderformBundle\Form\DataTransformer\DepartmentTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\GenericListTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -121,11 +121,17 @@ class CustomSelectorType extends AbstractType {
             case "optionalUserResearch":
                 $transformer = new PrincipalTransformer($this->om, $username, 'PIList');
                 break;
-            case "department":
-                $transformer = new DepartmentTransformer($this->om, $username);
-                break;
             case "institution":
-                $transformer = new InstitutionTransformer($this->om, $username);
+                $transformer = new GenericListTransformer($this->om, $username, 'Institution');
+                break;
+            case "department":
+                $transformer = new GenericListTransformer($this->om, $username, 'Department');
+                break;
+            case "division":
+                $transformer = new GenericListTransformer($this->om, $username, 'Division');
+                break;
+            case "service":
+                $transformer = new GenericListTransformer($this->om, $username, 'Service');
                 break;
             case "account":
                 $transformer = new AccountTransformer($this->om, $username);

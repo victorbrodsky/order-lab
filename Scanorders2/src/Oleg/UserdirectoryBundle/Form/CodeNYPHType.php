@@ -15,7 +15,7 @@ class CodeNYPHType extends AbstractType
 
 
         $builder->add('field', null, array(
-            'label' => 'NYPH Code:',
+            'label' => 'Preferred NYPH Code:',
             'attr' => array('class'=>'form-control')
         ));
 

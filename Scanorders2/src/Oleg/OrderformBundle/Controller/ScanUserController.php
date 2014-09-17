@@ -85,6 +85,14 @@ class ScanUserController extends UserController
         $form = $res['form'];
         $userViewArr['form_scansettings'] = $form->createView();
 
+        //add research projects
+        $projects = $this->getResearchProjects($id);
+        $userViewArr['projects'] = $projects;
+
+        //add educational courses
+        $courses = $this->getEducationalCourses($id);
+        $userViewArr['courses'] = $courses;
+
         return $userViewArr;
     }
 
@@ -143,6 +151,14 @@ class ScanUserController extends UserController
         }
 
         $userViewArr['form_scansettings'] = $form->createView();
+
+        //add research projects
+        $projects = $this->getResearchProjects($id);
+        $userViewArr['projects'] = $projects;
+
+        //add educational courses
+        $courses = $this->getEducationalCourses($id);
+        $userViewArr['courses'] = $courses;
 
         return $userViewArr;
     }

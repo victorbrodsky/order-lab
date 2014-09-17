@@ -34,7 +34,7 @@ class Institution extends ListAbstract
     protected $abbreviation;
 
     /**
-     * @ORM\OneToMany(targetEntity="Department", mappedBy="institution", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Department", mappedBy="parent", cascade={"persist"})
      */
     protected $departments;
 

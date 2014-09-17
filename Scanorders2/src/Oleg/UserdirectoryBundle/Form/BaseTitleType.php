@@ -71,35 +71,51 @@ class BaseTitleType extends AbstractType
 
 
         //institution. User should be able to add institution to administrative or appointment titles
-        $attr = array('class' => 'ajax-combobox-institution', 'type' => 'hidden');    //new
         $builder->add('institution', 'custom_selector', array(
             'label' => 'Institution:',
-            'attr' => $attr,
+            'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'institution'
         ));
 
         //department. User should be able to add institution to administrative or appointment titles
-        $builder->add('department', null, array(
+        $builder->add('department', 'custom_selector', array(
             'label' => "Department:",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-department', 'type' => 'hidden'),
+            'classtype' => 'department'
         ));
 
         //division. User should be able to add institution to administrative or appointment titles
-        $builder->add('division', null, array(
+        $builder->add('division', 'custom_selector', array(
             'label' => "Division:",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-division', 'type' => 'hidden'),
+            'classtype' => 'division'
         ));
 
         //service. User should be able to add institution to administrative or appointment titles
-        $builder->add('service', null, array(
+        $builder->add('service', 'custom_selector', array(
             'label' => "Service:",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-service', 'type' => 'hidden'),
+            'classtype' => 'service'
         ));
 
+        //position for AppointmentTitle (Academic Appointment Title)
+        if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle" ) {
+            $builder->add('position', 'choice', array(
+                'choices'   => array(
+                    'Resident'   => 'Resident',
+                    'Fellow' => 'Fellow',
+                    'Clinical Faculty' => 'Clinical Faculty',
+                    'Research Faculty' => 'Research Faculty'
+                ),
+                'label' => "Position Type:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
 
     }
 

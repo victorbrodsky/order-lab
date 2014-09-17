@@ -13,23 +13,24 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oleg\UserdirectoryBundle\Entity\Institution;
 
-class InstitutionTransformer implements DataTransformerInterface
+class GenericListTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager
      */
     protected $em;
     protected $user;
+    protected $className;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(ObjectManager $em=null, $user=null, $className)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->className = $className;
     }
 
     public function getThisEm() {
@@ -72,7 +73,7 @@ class InstitutionTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneById($text);
+            $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -95,7 +96,7 @@ class InstitutionTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($name);
+        $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -106,14 +107,15 @@ class InstitutionTransformer implements DataTransformerInterface
                 $this->user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername('system');
             }
 
-            $newEntity = new Institution();
+            $fullClassName = "Oleg\\UserdirectoryBundle\\Entity\\".$this->className;
+            $newEntity = new $fullClassName();
             $newEntity->setName($name);
             $newEntity->setCreatedate(new \DateTime());
             $newEntity->setType('user-added');
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:Institution c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM OlegUserdirectoryBundle:'.$this->className.' c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
             

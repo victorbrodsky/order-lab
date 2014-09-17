@@ -28,25 +28,19 @@ class Division extends ListAbstract
      * @ORM\ManyToOne(targetEntity="Department", inversedBy="divisions")
      * @ORM\JoinColumn(name="department", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $department;
+    protected $parent;
 
     /**
      * Children
-     * @ORM\OneToMany(targetEntity="Service", mappedBy="division", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Service", mappedBy="parent", cascade={"persist"})
      */
     protected $services;
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="User", mappedBy="division")
-//     **/
-//    protected $users;
 
 
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-//        $this->users = new ArrayCollection();
         $this->services = new ArrayCollection();
     }
 
@@ -106,55 +100,21 @@ class Division extends ListAbstract
     }
 
     /**
-     * @param mixed $department
+     * @param mixed $parent
      */
-    public function setDepartment($department)
+    public function setParent($parent)
     {
-        $this->department = $department;
+        $this->parent = $parent;
     }
 
     /**
      * @return mixed
      */
-    public function getDepartment()
+    public function getParent()
     {
-        return $this->department;
+        return $this->parent;
     }
 
-
-
-//    /**
-//     * Add user
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-//     * @return
-//     */
-//    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-//    {
-//        if( !$this->users->contains($user) ) {
-//            $this->users->add($user);
-//        }
-//    }
-//
-//    /**
-//     * Remove user
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-//     */
-//    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-//    {
-//        $this->users->removeElement($user);
-//    }
-//
-//    /**
-//     * Get user
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getUsers()
-//    {
-//        return $this->users;
-//    }
 
 
     /**

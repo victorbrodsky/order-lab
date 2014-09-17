@@ -39,6 +39,7 @@ function initBaseAdd() {
     initDatepicker();
     //tooltip
     $(".element-with-tooltip").tooltip();
+    initTreeSelect();
 }
 
 //get input field only

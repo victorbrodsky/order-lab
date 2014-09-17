@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
 use Oleg\UserdirectoryBundle\Entity\Location;
 
 class LocationType extends AbstractType
@@ -91,14 +94,13 @@ class LocationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        //assistant
         $builder->add('assistant','entity',array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=>"Assistant's Name:",
             'attr' => array('class'=>'combobox combobox-width'),
-            'required' => false,
-            //'empty_value' => false,
+            'required' => false
         ));
-
 
         $baseUserAttr = new Location();
         $builder->add('status', 'choice', array(

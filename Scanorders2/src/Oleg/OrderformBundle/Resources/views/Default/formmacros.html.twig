@@ -35,7 +35,7 @@
     </p>
 {% endmacro %}
 
-{#attr is not used, because readonly it is not working#}
+
 {% macro field( field, label, attr ) %}
     {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
     <p>
@@ -46,10 +46,10 @@
         </div>
         <div class="col-xs-6" align="left">
             {% if attr == "disabled" %}
-                {#value of disabled field will be ignored, but readonly does not work#}
+                {#value of disabled field will be ignored#}
                 {{ form_widget(field,{ 'disabled':'disabled' }) }}
             {% elseif attr == "readonly" %}
-                {{ form_widget(field,{ 'readonly':'readonly' }) }}
+                {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
             {% else %}
                 {{ form_widget(field) }}
             {% endif %}
@@ -70,8 +70,10 @@
 
             <div class="input-group input-group-reg date {{ classname }}">
                 {% if attr == "disabled" %}
-                    {#value of disabled field will be ignored, but readonly does not work#}
+                    {#value of disabled field will be ignored#}
                     {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% elseif attr == "readonly" %}
+                    {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
                 {% else %}
                     {{ form_widget(field) }}
                 {% endif %}
@@ -87,8 +89,10 @@
 {% macro fielddate( field, classname, attr ) %}
     <div class="input-group input-group-reg date {{ classname }}">
         {% if attr == "disabled" %}
-            {#value of disabled field will be ignored, but readonly does not work#}
+            {#value of disabled field will be ignored#}
             {{ form_widget(field,{ 'disabled':'disabled' }) }}
+        {% elseif attr == "readonly" %}
+            {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
         {% else %}
             {{ form_widget(field) }}
         {% endif %}

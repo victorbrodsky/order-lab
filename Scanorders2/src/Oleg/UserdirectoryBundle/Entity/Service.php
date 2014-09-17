@@ -28,18 +28,12 @@ class Service extends ListAbstract
      * @ORM\ManyToOne(targetEntity="Division", inversedBy="services")
      * @ORM\JoinColumn(name="division", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $division;
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="User", mappedBy="service")
-//     **/
-//    protected $users;
+    protected $parent;
 
 
 
     public function __construct() {
         $this->synonyms = new ArrayCollection();
-//        $this->users = new ArrayCollection();
     }
 
     /**
@@ -97,56 +91,21 @@ class Service extends ListAbstract
         return $this->original;
     }
 
-
-//    /**
-//     * Add user
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-//     * @return
-//     */
-//    public function addUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-//    {
-//        if( !$this->users->contains($user) ) {
-//            $this->users->add($user);
-//        }
-//    }
-//
-//    /**
-//     * Remove user
-//     *
-//     * @param \Oleg\UserdirectoryBundle\Entity\User $user
-//     */
-//    public function removeUser(\Oleg\UserdirectoryBundle\Entity\User $user)
-//    {
-//        $this->users->removeElement($user);
-//    }
-//
-//    /**
-//     * Get user
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getUsers()
-//    {
-//        return $this->users;
-//    }
-
     /**
-     * @param mixed $division
+     * @param mixed $parent
      */
-    public function setDivision($division)
+    public function setParent($parent)
     {
-        $this->division = $division;
+        $this->parent = $parent;
     }
 
     /**
      * @return mixed
      */
-    public function getDivision()
+    public function getParent()
     {
-        return $this->division;
+        return $this->parent;
     }
-
 
 
 }

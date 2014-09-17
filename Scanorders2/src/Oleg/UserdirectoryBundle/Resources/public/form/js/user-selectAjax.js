@@ -17,14 +17,14 @@ var orderinfoid = $(".orderinfo-id").val();
 var _projectTitle = new Array();
 var _courseTitle = new Array();
 
-var _department = new Array();
+//var _department = new Array();
 var _institution = new Array();
 
 //var userpathserviceflag = false;
 
 
 function regularCombobox() {
-    //resolve
+    //select.combobox
     $("select.combobox").select2({
         width: combobox_width,
         dropdownAutoWidth: true,
@@ -319,35 +319,35 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 //#############  EOF Research Educational Utils  ##############//
 
 
-//#############  department  ##############//
-function getComboboxDepartment(ids) {
-
-    var url = getCommonBaseUrl("util/"+"department");  //urlCommon+"department";
-
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
-    }
-
-    if( _department.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _department = data;
-            populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
-            if( cicle == "new"  ) {
-                setElementToId( ".ajax-combobox-department", _department );
-            }
-        });
-    } else {
-        populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
-        if( cicle == "new"  ) {
-            setElementToId( ".ajax-combobox-department", _department );
-        }
-    }
-
-}
+////#############  department  ##############//
+//function getComboboxDepartment(ids) {
+//
+//    var url = getCommonBaseUrl("util/"+"department");  //urlCommon+"department";
+//
+//    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+//        url = url + "?opt="+orderinfoid;
+//    }
+//
+//    if( _department.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _department = data;
+//            populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
+//            if( cicle == "new"  ) {
+//                setElementToId( ".ajax-combobox-department", _department );
+//            }
+//        });
+//    } else {
+//        populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
+//        if( cicle == "new"  ) {
+//            setElementToId( ".ajax-combobox-department", _department );
+//        }
+//    }
+//
+//}
 
 //#############  institution  ##############//
 function getComboboxInstitution(holder) {
