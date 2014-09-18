@@ -24,7 +24,7 @@ parameters:
 services:
 
     #Custom selector fields
-    order_form.type.stain_selector:
+    order_form.type.custom_selector:
         class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
         arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
         tags:

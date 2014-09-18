@@ -340,6 +340,9 @@ class UserController extends Controller
 
             //$this->setEventLogChanges($entity,$request);
 
+            //set parents for institution tree for Administrative and Academical Titles
+            $this->setParentsForInstitutionTree($entity);
+
             //$em->persist($entity);
             $em->flush();
 
@@ -358,6 +361,32 @@ class UserController extends Controller
         );
     }
 
+    public function setParentsForInstitutionTree($entity) {
+
+        foreach( $entity->getAdministrativeTitles() as $title) {
+            $this->processTitle($title);
+        }
+
+        foreach( $entity->getAppointmentTitles() as $title) {
+            $this->processTitle($title);
+        }
+
+    }
+    public function processTitle($title) {
+        $institution = $title->getInstitution();
+        $department = $title->getDepartment();
+        $division = $title->getDivision();
+        $service = $title->getService();
+
+        if( $division && $service )
+            $division->addService($service);
+
+        if( $department && $division )
+            $department->addDivision($division);
+
+        if( $institution && $department )
+            $institution->addDepartment($department);
+    }
 
     public function removeCollection($entity,$originalArr,$getMethod) {
         $em = $this->getDoctrine()->getManager();

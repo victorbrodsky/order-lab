@@ -79,6 +79,8 @@ class UtilController extends Controller {
 
         $routeName = $request->get('_route');
 
+        $className = "";
+
         if( $routeName == "get-departments-by-parent") {
             $className = 'Department';
         }
@@ -89,17 +91,22 @@ class UtilController extends Controller {
             $className = 'Service';
         }
 
-        $query = $em->createQueryBuilder()
-            ->from('OlegUserdirectoryBundle:'.$className, 'list')
-            ->innerJoin("list.parent", "pid")
-            ->select("list.id as id, list.name as text")
-            ->orderBy("list.orderinlist","ASC");
+        if( $className != "" && is_numeric($pid) ) {
+            //echo "className=".$className."<br>";
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:'.$className, 'list')
+                ->innerJoin("list.parent", "parent")
+                ->select("list.id as id, list.name as text")
+                ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.context')->getToken()->getUser();
 
-        $query->where("pid = :pid AND (list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user))")->setParameters(array('user'=>$user,'pid'=>$pid));
+            $query->where("parent = :pid AND (list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user))")->setParameters(array('user'=>$user,'pid'=>$pid));
 
-        $output = $query->getQuery()->getResult();
+            $output = $query->getQuery()->getResult();
+        } else {
+            $output = array();
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

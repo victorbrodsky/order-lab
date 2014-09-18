@@ -31,12 +31,8 @@ var _procedure = new Array();
 var _organ = new Array();
 var _delivery = new Array();
 var _returnslide = new Array();
-var _service = new Array();
 var _projectTitle = new Array();
 var _courseTitle = new Array();
-
-var _department = new Array();
-var _institution = new Array();
 var _account = new Array();
 var _urgency = new Array();
 
@@ -102,52 +98,52 @@ function customCombobox() {
         getComboboxAccount(new Array("0","0","0","0","0","0"));
     }
 
-    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
-        getComboboxService(new Array("0","0","0","0","0","0"));
-    }
+//    if( cicle && urlBase && ( cicle == 'edit_user' || cicle == 'accountreq' )  ) {
+//        getComboboxService(new Array("0","0","0","0","0","0"));
+//    }
 }
 
-function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
-
-    //console.log("target="+target);
-
-    //clear the value
-    $(target).select2('val','');
-
-    if( placeholder ) {
-        var allowClear = true;
-    } else {
-        var allowClear = false;
-    }
-
-    if( multipleFlag ) {
-        var multiple = true;
-    } else {
-        var multiple = false;
-    }
-
-    if( !data ) {
-        data = new Array();
-    }
-
-    $(target).select2({
-        placeholder: placeholder,
-        allowClear: allowClear,
-        width: combobox_width,
-        dropdownAutoWidth: true,
-        selectOnBlur: false,
-        dataType: 'json',
-        quietMillis: 100,
-        multiple: multiple,
-        data: data,
-        createSearchChoice:function(term, data) {
-            //if( term.match(/^[0-9]+$/) != null ) {
-            //    //console.log("term is digit");
-            //}
-            return {id:term, text:term};
-        }
-    });
-}
+//function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
+//
+//    //console.log("target="+target);
+//
+//    //clear the value
+//    $(target).select2('val','');
+//
+//    if( placeholder ) {
+//        var allowClear = true;
+//    } else {
+//        var allowClear = false;
+//    }
+//
+//    if( multipleFlag ) {
+//        var multiple = true;
+//    } else {
+//        var multiple = false;
+//    }
+//
+//    if( !data ) {
+//        data = new Array();
+//    }
+//
+//    $(target).select2({
+//        placeholder: placeholder,
+//        allowClear: allowClear,
+//        width: combobox_width,
+//        dropdownAutoWidth: true,
+//        selectOnBlur: false,
+//        dataType: 'json',
+//        quietMillis: 100,
+//        multiple: multiple,
+//        data: data,
+//        createSearchChoice:function(term, data) {
+//            //if( term.match(/^[0-9]+$/) != null ) {
+//            //    //console.log("term is digit");
+//            //}
+//            return {id:term, text:term};
+//        }
+//    });
+//}
 
 
 //#############  stains  ##############//
@@ -552,42 +548,6 @@ function getComboboxReturn(ids) {
 
 }
 
-//#############  service for user and orderinfo  ##############//
-function getComboboxService(ids) {
-
-    //******************* order service *************************//
-    var targetid = ".ajax-combobox-service";
-    var url = getCommonBaseUrl("util/"+"service");
-
-    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" || cicle == "show" ) {
-        var optStr = user_id;
-        if( !optStr || typeof optStr === 'undefined' ) {
-            optStr = "default";
-        }
-        url = url + "?opt=" + optStr;
-    }
-
-    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
-    if( cicle == "accountreq" || cicle == "edit_user" ) {
-        var multiple = true;
-    } else {
-        var multiple = false;
-    }
-
-    if( _service.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-                _service = data;
-            populateSelectCombobox( targetid, _service, "Departmental Division(s) / Service(s)", multiple );
-        });
-    } else {
-        populateSelectCombobox( targetid, _service, "Departmental Division(s) / Service(s)", multiple );
-    }
-
-}
 
 //#############  Research Project  ##############//
 function getProjectTitle(ids) {
@@ -828,65 +788,100 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 //#############  EOF Research Educational Utils  ##############//
 
 
-//#############  department  ##############//
-function getComboboxDepartment(ids) {
-
-    var url = getCommonBaseUrl("util/"+"department");  //urlCommon+"department";
-
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
-    }
-
-    if( _department.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _department = data;
-            populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
-            if( cicle == "new"  ) {
-                setElementToId( ".ajax-combobox-department", _department );
-            }
-        });
-    } else {
-        populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
-        if( cicle == "new"  ) {
-            setElementToId( ".ajax-combobox-department", _department );
-        }
-    }
-
-}
-
-//#############  institution  ##############//
-function getComboboxInstitution(ids) {
-
-    var url = getCommonBaseUrl("util/"+"institution"); //urlCommon+"institution";
-
-    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
-        url = url + "?opt="+orderinfoid;
-    }
-
-    if( _institution.length == 0 ) {
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            async: asyncflag
-        }).success(function(data) {
-            _institution = data;
-            populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
-            if( cicle == "new"  ) {
-                setElementToId( ".ajax-combobox-institution", _institution );
-            }
-        });
-    } else {
-        populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
-        if( cicle == "new"  ) {
-            setElementToId( ".ajax-combobox-institution", _institution );
-        }
-    }
-
-}
+////#############  department  ##############//
+//function getComboboxDepartment(ids) {
+//
+//    var url = getCommonBaseUrl("util/"+"department");  //urlCommon+"department";
+//
+//    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+//        url = url + "?opt="+orderinfoid;
+//    }
+//
+//    if( _department.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _department = data;
+//            populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
+//            if( cicle == "new"  ) {
+//                setElementToId( ".ajax-combobox-department", _department );
+//            }
+//        });
+//    } else {
+//        populateSelectCombobox( ".ajax-combobox-department", _department, "Select an option or type in a new value" );
+//        if( cicle == "new"  ) {
+//            setElementToId( ".ajax-combobox-department", _department );
+//        }
+//    }
+//
+//}
+////#############  institution  ##############//
+//function getComboboxInstitution(ids) {
+//
+//    var url = getCommonBaseUrl("util/"+"institution"); //urlCommon+"institution";
+//
+//    if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
+//        url = url + "?opt="+orderinfoid;
+//    }
+//
+//    if( _institution.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _institution = data;
+//            populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
+//            if( cicle == "new"  ) {
+//                setElementToId( ".ajax-combobox-institution", _institution );
+//            }
+//        });
+//    } else {
+//        populateSelectCombobox( ".ajax-combobox-institution", _institution, "Select an option or type in a new value" );
+//        if( cicle == "new"  ) {
+//            setElementToId( ".ajax-combobox-institution", _institution );
+//        }
+//    }
+//
+//}
+////#############  service for user and orderinfo  ##############//
+//function getComboboxService(ids) {
+//
+//    //******************* order service *************************//
+//    var targetid = ".ajax-combobox-service";
+//    var url = getCommonBaseUrl("util/"+"scan-service");
+//
+//    if( cicle == "new" || cicle == "create" || cicle == "accountreq" || cicle == "edit_user" || cicle == "amend" || cicle == "show" ) {
+//        var optStr = user_id;
+//        if( !optStr || typeof optStr === 'undefined' ) {
+//            optStr = "default";
+//        }
+//        url = url + "?opt=" + optStr;
+//    }
+//
+//    //console.log("cicle="+cicle+", url="+url+", targetid="+targetid+", user_id="+user_id);
+//    if( cicle == "accountreq" || cicle == "edit_user" ) {
+//        var multiple = true;
+//    } else {
+//        var multiple = false;
+//    }
+//
+//    if( _service.length == 0 ) {
+//        $.ajax({
+//            url: url,
+//            timeout: _ajaxTimeout,
+//            async: asyncflag
+//        }).success(function(data) {
+//            _service = data;
+//            populateSelectCombobox( targetid, _service, "Departmental Division(s) / Service(s)", multiple );
+//        });
+//    } else {
+//        populateSelectCombobox( targetid, _service, "Departmental Division(s) / Service(s)", multiple );
+//    }
+//
+//}
 
 //#############  account  ##############//
 function getComboboxAccount(ids) {

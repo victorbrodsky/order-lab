@@ -5,6 +5,52 @@
 
 var _sitename = "";
 
+
+
+
+function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
+
+    //console.log("target="+target);
+
+    //clear the value
+    $(target).select2('val','');
+
+    if( placeholder ) {
+        var allowClear = true;
+    } else {
+        var allowClear = false;
+    }
+
+    if( multipleFlag ) {
+        var multiple = true;
+    } else {
+        var multiple = false;
+    }
+
+    if( !data ) {
+        data = new Array();
+    }
+
+    $(target).select2({
+        placeholder: placeholder,
+        allowClear: allowClear,
+        width: combobox_width,
+        dropdownAutoWidth: true,
+        selectOnBlur: false,
+        dataType: 'json',
+        quietMillis: 100,
+        multiple: multiple,
+        data: data,
+        createSearchChoice:function(term, data) {
+            //if( term.match(/^[0-9]+$/) != null ) {
+            //    //console.log("term is digit");
+            //}
+            return {id:term, text:term};
+        }
+    });
+}
+
+
 function trimWithCheck(val) {
 
     if(typeof String.prototype.trim !== 'function') {
@@ -76,6 +122,7 @@ function getSitename() {
 
     _sitename = sitename;
 
+    //scan or employees
     return sitename;
 }
 

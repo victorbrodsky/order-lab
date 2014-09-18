@@ -14,7 +14,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class GenericListTransformer implements DataTransformerInterface
+class GenericTreeTransformer implements DataTransformerInterface
 {
     /**
      * @var ObjectManager

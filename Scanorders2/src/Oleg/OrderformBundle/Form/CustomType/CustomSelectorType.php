@@ -28,7 +28,7 @@ use Oleg\OrderformBundle\Form\DataTransformer\SetTitleTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\PrincipalTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\UserTransformer;
 //use Oleg\OrderformBundle\Form\DataTransformer\DepartmentTransformer;
-use Oleg\OrderformBundle\Form\DataTransformer\GenericListTransformer;
+use Oleg\OrderformBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\AccountTransformer;
 
 class CustomSelectorType extends AbstractType {
@@ -73,12 +73,12 @@ class CustomSelectorType extends AbstractType {
             case "sourceOrgan":
                 $transformer = new SourceOrganTransformer($this->om, $username);
                 break;
-            case "service":
-                $transformer = new ServiceTransformer($this->om, $this->serviceContainer, $username);
-                break;
-            case "userServices":
-                $transformer = new UserServicesTransformer($this->om, $this->serviceContainer, $username);
-                break;
+//            case "service":
+//                $transformer = new ServiceTransformer($this->om, $this->serviceContainer, $username);
+//                break;
+//            case "userServices":
+//                $transformer = new UserServicesTransformer($this->om, $this->serviceContainer, $username);
+//                break;
             case "accessiontype":
                 $transformer = new AccessionTypeTransformer($this->om, $username);
                 break;
@@ -121,20 +121,20 @@ class CustomSelectorType extends AbstractType {
             case "optionalUserResearch":
                 $transformer = new PrincipalTransformer($this->om, $username, 'PIList');
                 break;
-            case "institution":
-                $transformer = new GenericListTransformer($this->om, $username, 'Institution');
-                break;
-            case "department":
-                $transformer = new GenericListTransformer($this->om, $username, 'Department');
-                break;
-            case "division":
-                $transformer = new GenericListTransformer($this->om, $username, 'Division');
-                break;
-            case "service":
-                $transformer = new GenericListTransformer($this->om, $username, 'Service');
-                break;
             case "account":
                 $transformer = new AccountTransformer($this->om, $username);
+                break;
+            case "institution":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Institution');
+                break;
+            case "department":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Department');
+                break;
+            case "division":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Division');
+                break;
+            case "service":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'Service');
                 break;
             default:
                 $transformer = new StringTransformer($this->om, $username);

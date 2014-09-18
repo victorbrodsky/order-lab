@@ -126,7 +126,7 @@ class Division extends ListAbstract
     public function addService(\Oleg\UserdirectoryBundle\Entity\Service $service)
     {
         if( !$this->services->contains($service) ) {
-            $service->setDivision($this);
+            $service->setParent($this);
             $this->services->add($service);
         }
     }

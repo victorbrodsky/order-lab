@@ -73,7 +73,7 @@ class UserRequestController extends Controller
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/create/", name="accountrequest_create")
+     * @Route("/account-requests/new", name="accountrequest_create")
      * @Method("POST")
      * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
      */
@@ -103,7 +103,7 @@ class UserRequestController extends Controller
                 'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
 
-            return $this->redirect( $this->generateUrl('login') );
+            return $this->redirect( $this->generateUrl('scan_login') );
         }
 
         return array(
@@ -162,6 +162,151 @@ class UserRequestController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
+
+    
+    
+    /**
+     * @Route("/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
+     */
+    public function statusAction($id, $status)
+    {
+        
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find UserRequest entity.');
+        }
+      
+        $entity->setStatus($status);
+        $em->persist($entity);
+        $em->flush();
+        
+        
+        return $this->redirect($this->generateUrl('accountrequest'));
+            
+    }
+
+    /**
+     * Update (Approve) a new UserRequest entity.
+     *
+     * @Route("/account-requests-approve", name="accountrequest_approve")
+     * @Method("POST")
+     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
+     */
+    public function approveUserAccountRequestAction(Request $request)
+    {
+
+        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $entity  = new UserRequest();
+
+        $form = $this->createForm(new UserRequestApproveType(), $entity);
+        $form->handleRequest($request);
+
+        if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getInstitution()) != 0 ) {
+
+            //echo "form valid!";
+            //exit();
+            $em = $this->getDoctrine()->getManager();
+
+            $entityDb = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneById($entity->getId());
+            if (!$entityDb) {
+                throw $this->createNotFoundException('Unable to find UserRequest entity with ID:'.$entity->getId());
+            }
+
+            $entityDb->setStatus('approved');
+            $entityDb->setUsername($entity->getUsername());
+            $entityDb->setInstitution($entity->getInstitution());
+
+            $em->persist($entityDb);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "User with username ".$entityDb->getUsername()." has been successfully approved. You can lock this user or change institutions later on using the user's profile."
+            );
+
+        } else {
+
+            $failedArr = array();
+
+            if( $entity->getUsername() && $entity->getUsername() == "" ) {
+                $failedArr[] = "username is empty";
+            }
+
+            if( count($entity->getInstitution()) == 0 ) {
+                $failedArr[] = "Institution list is empty";
+            }
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Approve user with username ".$entity->getUsername()." failed."." ".implode(",", $failedArr)
+            );
+
+        }
+
+        return $this->redirect($this->generateUrl('accountrequest'));
+    }
+
+    public function getParams() {
+
+        $params = array();
+
+        $em = $this->getDoctrine()->getManager();
+
+        //departments
+        $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+        $departments = new ArrayCollection();
+        $departments->add($department);
+
+        //echo "dep=".$department->getName()."<br>";
+
+        //divisions
+        $divisions = $department->getDivisions();
+
+        //services
+        $services = new ArrayCollection();
+        foreach( $divisions as $division ) {
+
+            foreach( $division->getServices() as $service ) {
+                $services->add($service);
+            }
+
+        }
+        //$services = $em->getRepository('OlegUserdirectoryBundle:Service')->findByDepartment($department);
+
+        //foreach( $departments as $dep ) {
+        //    echo "dep=".$dep->getName()."<br>";
+        //}
+        //exit('exit');
+
+        $params['departments'] = $departments;
+        $params['services'] = $services;
+
+        return $params;
+    }
+
+
+
+
+
+
+
+
+
+
+    ///// NOT USED: edit, delete account request ///////
 
     /**
      * Displays a form to edit an existing UserRequest entity.
@@ -286,137 +431,7 @@ class UserRequestController extends Controller
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
             ->getForm()
-        ;
+            ;
     }
-    
-    
-    /**
-     * @Route("/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
-     * @Method("GET")
-     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
-     */
-    public function statusAction($id, $status)
-    {
-        
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find UserRequest entity.');
-        }
-      
-        $entity->setStatus($status);
-        $em->persist($entity);
-        $em->flush();
-        
-        
-        return $this->redirect($this->generateUrl('accountrequest'));
-            
-    }
-
-    /**
-     * Update (Approve) a new UserRequest entity.
-     *
-     * @Route("/account-requests-approve", name="accountrequest_approve")
-     * @Method("POST")
-     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
-     */
-    public function approveUserAccountRequestAction(Request $request)
-    {
-        //exit("approve User Account Request");
-
-        $entity  = new UserRequest();
-
-        $form = $this->createForm(new UserRequestApproveType(), $entity);
-        $form->handleRequest($request);
-
-        if( $entity->getId() && $entity->getId() != "" && $entity->getUsername() && $entity->getUsername() != "" && count($entity->getInstitution()) != 0 ) {
-
-            //echo "form valid!";
-            //exit();
-            $em = $this->getDoctrine()->getManager();
-
-            $entityDb = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneById($entity->getId());
-            if (!$entityDb) {
-                throw $this->createNotFoundException('Unable to find UserRequest entity with ID:'.$entity->getId());
-            }
-
-            $entityDb->setStatus('approved');
-            $entityDb->setUsername($entity->getUsername());
-            $entityDb->setInstitution($entity->getInstitution());
-
-            $em->persist($entityDb);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                "User with username ".$entityDb->getUsername()." has been successfully approved. You can lock this user or change institutions later on using the user's profile."
-            );
-
-        } else {
-
-            $failedArr = array();
-
-            if( $entity->getUsername() && $entity->getUsername() == "" ) {
-                $failedArr[] = "username is empty";
-            }
-
-            if( count($entity->getInstitution()) == 0 ) {
-                $failedArr[] = "Institution list is empty";
-            }
-
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                "Approve user with username ".$entity->getUsername()." failed."." ".implode(",", $failedArr)
-            );
-
-        }
-
-        return $this->redirect($this->generateUrl('accountrequest'));
-    }
-
-    public function getParams() {
-
-        $params = array();
-
-        $em = $this->getDoctrine()->getManager();
-
-        //departments
-        $department = $em->getRepository('OlegUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
-        $departments = new ArrayCollection();
-        $departments->add($department);
-
-        //echo "dep=".$department->getName()."<br>";
-
-        //divisions
-        $divisions = $department->getDivisions();
-
-        //services
-        $services = new ArrayCollection();
-        foreach( $divisions as $division ) {
-
-            foreach( $division->getServices() as $service ) {
-                $services->add($service);
-            }
-
-        }
-        //$services = $em->getRepository('OlegUserdirectoryBundle:Service')->findByDepartment($department);
-
-        //foreach( $departments as $dep ) {
-        //    echo "dep=".$dep->getName()."<br>";
-        //}
-        //exit('exit');
-
-        $params['departments'] = $departments;
-        $params['services'] = $services;
-
-        return $params;
-    }
-
     
 }

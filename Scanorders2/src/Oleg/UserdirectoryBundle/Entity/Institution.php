@@ -108,7 +108,7 @@ class Institution extends ListAbstract
     public function addDepartment(\Oleg\UserdirectoryBundle\Entity\Department $department)
     {
         if( !$this->departments->contains($department) ) {
-            $department->setInstitution($this);
+            $department->setParent($this);
             $this->departments->add($department);
         }
     }

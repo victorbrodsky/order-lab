@@ -123,7 +123,7 @@ class Department extends ListAbstract
     public function addDivision(\Oleg\UserdirectoryBundle\Entity\Division $division)
     {
         if( !$this->divisions->contains($division) ) {
-            $division->setDepartment($this);
+            $division->setParent($this);
             $this->divisions->add($division);
         }
     }

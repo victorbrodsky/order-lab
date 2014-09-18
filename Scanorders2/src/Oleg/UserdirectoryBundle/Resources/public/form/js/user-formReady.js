@@ -17,17 +17,17 @@ $(document).ready(function() {
 
     initConvertEnterToTab();
 
-    regularCombobox();
-
     initDatepicker();
 
     expandTextarea();
 
-    getComboboxInstitution();
-
     $('.panel-collapse').collapse({'toggle': false});
 
+    regularCombobox();
+
     initTreeSelect();
+
+    getComboboxInstitution();
 
 });
 

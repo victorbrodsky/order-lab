@@ -139,13 +139,13 @@
 
             <br>
             <p>
-                <a href="{{ path('login') }}">Return to Log In page</a>
+                <a href="{{ path(scan_sitename~'_login') }}">Return to Log In page</a>
             </p>
 
         </form>
 
         {#dummy login form with style="display:none"#}
-        <form id="loginform" action="{{ path('login_check') }}" method="post" style="display:none">
+        <form id="loginform" action="{{ path(scan_sitename~'_login_check') }}" method="post" style="display:none">
             <input type="hidden" name="display_height" id="display_height" value="" />
             <input type="hidden" name="display_width" id="display_width" value="" />
             <input type="text" id="username" name="_username" value="" class="form-control" placeholder="Username" autofocus>
