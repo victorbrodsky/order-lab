@@ -398,7 +398,7 @@ class UserController extends Controller
                 $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
-                $this->createUserEditEvent($event,$user,$request);
+                $this->createUserEditEvent($sitename,$event,$user,$request);
             }
 
             //set parents for institution tree for Administrative and Academical Titles
@@ -422,9 +422,9 @@ class UserController extends Controller
         );
     }
 
-    public function createUserEditEvent($event,$user,$request) {
+    public function createUserEditEvent($sitename,$event,$user,$request) {
         $userSecUtil = $this->get('user_security_utility');
-        $eventLog = $userSecUtil->constractEventLog($this->container->getParameter('employees.sitename'),$user,$request);
+        $eventLog = $userSecUtil->constractEventLog($sitename,$user,$request);
         $eventLog->setEvent($event);
 
         $em = $this->getDoctrine()->getManager();
@@ -607,12 +607,12 @@ class UserController extends Controller
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        $this->lockUnlock($id, $status);
+        $this->lockUnlock($id, $status, $this->container->getParameter('employees.sitename'));
 
         return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_listusers'));
     }
 
-    public function lockUnlock($id, $status) {
+    public function lockUnlock($id, $status, $sitename) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -635,7 +635,7 @@ class UserController extends Controller
         $userAdmin = $this->get('security.context')->getToken()->getUser();
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
-        $this->createUserEditEvent($event,$user,$request);
+        $this->createUserEditEvent($sitename,$event,$user,$request);
 
         $em->persist($user);
         $em->flush();

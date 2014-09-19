@@ -2,6 +2,7 @@
 
 namespace Oleg\OrderformBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -108,14 +109,32 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
+        $scanSecUtil = $this->get('order_security_utility');
+        $scanSiteSettings = $scanSecUtil->getUserPerSiteSettings($id);
+
+        //get originals collections
+        $originalInsts = new ArrayCollection();
+        foreach( $scanSiteSettings->getPermittedInstitutionalPHIScope() as $item) {
+            $originalInsts->add($item);
+        }
+
+        $originalServices = new ArrayCollection();
+        foreach( $scanSiteSettings->getScanOrdersServicesScope() as $item) {
+            $originalServices->add($item);
+        }
+
+        $originalChiefServices = new ArrayCollection();
+        foreach( $scanSiteSettings->getChiefServices() as $item) {
+            $originalChiefServices->add($item);
+        }
+
+
         $userViewArr = $this->updateUser( $request, $id, $this->container->getParameter('scan.sitename') );
 
         //get scan user site setting form
         $res = $this->getScanSettingsForm($id,'edit');
         $form = $res['form'];
         $entity = $res['entity'];
-
-        $originalInsts = $entity->getpermittedInstitutionalPHIScope();
 
         $form->handleRequest($request);
 
@@ -142,6 +161,47 @@ class ScanUserController extends UserController
                     }
                 }
             }
+
+
+            ////////////////////// set Edit event log for Scan Settings //////////////////////
+            $em = $this->getDoctrine()->getManager();
+            $uow = $em->getUnitOfWork();
+            $uow->computeChangeSets(); // do not compute changes if inside a listener
+
+            $eventArr = array();
+
+            //log simple fields
+            $changeset = $uow->getEntityChangeSet($entity);
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
+
+            //log permittedInstitutionalPHIScope
+            $collDiffStr = $this->getDiffCollectionStr($originalInsts,$entity->getPermittedInstitutionalPHIScope());
+            if( $collDiffStr ) {
+                $eventArr[] = $collDiffStr;
+            }
+
+            //log scanOrdersServicesScope
+            $collDiffStr = $this->getDiffCollectionStr($originalServices,$entity->getScanOrdersServicesScope());
+            if( $collDiffStr ) {
+                $eventArr[] = $collDiffStr;
+            }
+
+            //log chiefServices
+            $collDiffStr = $this->getDiffCollectionStr($originalChiefServices,$entity->getChiefServices());
+            if( $collDiffStr ) {
+                $eventArr[] = $collDiffStr;
+            }
+
+
+            if( count($eventArr) > 0 ) {
+                $subjectuser = $userViewArr['entity'];
+                $user = $this->get('security.context')->getToken()->getUser();
+                $event = "User information of ".$subjectuser." has been changed by ".$user.":"."<br>";
+                $event = $event . implode("<br>", $eventArr);
+                $this->createUserEditEvent($this->container->getParameter('scan.sitename'),$event,$user,$request);
+            }
+            ////////////////////// EOF set Edit event log for Scan Settings //////////////////////
+
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
@@ -175,13 +235,21 @@ class ScanUserController extends UserController
             return $this->redirect( $this->generateUrl('scan-order-nopermission') );
         }
 
-        $this->lockUnlock($id, $status);
+        $this->lockUnlock($id, $status, $this->container->getParameter('scan.sitename'));
 
         return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_listusers'));
     }
 
 
-
+    public function getDiffCollectionStr($origColl,$currColl) {
+        $removeArr = array();
+        foreach( $origColl as $col ) {
+            if( false === $currColl->contains($col) ) {
+                $removeArr[] = "<strong>"."Removed: ".$col." ".$this->getEntityId($col)."</strong>";
+            }
+        }
+        return implode("<br>", $removeArr);
+    }
 
 
 
