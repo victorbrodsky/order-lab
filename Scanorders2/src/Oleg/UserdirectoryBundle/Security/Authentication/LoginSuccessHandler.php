@@ -49,11 +49,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $userUtil = new UserUtil();
         //$secUtil = $this->container->get('user_security_utility');
 
+        $options['sitename'] = $this->siteName;
+
         //echo "employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
         //exit;
 
         if( $this->security->isGranted('ROLE_USERDIRECTORY_BANNED') ) {
-            $options = array('event'=>'Banned User Login Attempt');
+            $options['event'] = 'Banned User Login Attempt';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
@@ -67,7 +69,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
 
         if( $this->security->isGranted('ROLE_USERDIRECTORY_UNAPPROVED') ) {
-            $options = array('event'=>'Unapproved User Login Attempt');
+            $options['event'] = 'Unapproved User Login Attempt';
             $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new',array('id'=>$user->getId(),'sitename'=>$this->siteName)) );
@@ -91,6 +93,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $em = $this->em;
         $userUtil = new UserUtil();
 
+        $options['sitename'] = $this->siteName;
         $options['event'] = "Bad Credentials";
         $options['serverresponse'] = $exception->getMessage();
 

@@ -91,20 +91,32 @@ security:
 
      - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
-     #common idle time out logic
+     ############################## common idle time out logic ##############################
      - { path: ^/employees/keepalive, role: ROLE_USER }
-     - { path: ^/employees/getmaxidletime, role: ROLE_USER }
 
+     ############################## EMPLOYEES SITE SETTINGS ##############################
      - { path: ^/employees/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/employees/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/employees/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
      #make all /employees accessible only limited special roles
      - { path: ^/employees/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
 #     - { path: ^/employees/, role: [ROLE_USERDIRECTORY_OBSERVER] }
 #     - { path: ^/employees/admin, role: [ROLE_USERDIRECTORY_ADMIN] }
 
+     - { path: ^/employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/employees/user-directory, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/employees/admin/list, role: ROLE_USERDIRECTORY_EDITOR }
+     - { path: ^/employees/admin/genall, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/employees/users/generate, role: ROLE_USERDIRECTORY_ADMIN }
+     - { path: ^/employees/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+
+
+
+     ############################## SCAN SITE SETTINGS ##############################
      - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
      #make all sure /scan is protected from accessing the users with not sufficient roles

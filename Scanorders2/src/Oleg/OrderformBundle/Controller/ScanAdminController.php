@@ -23,13 +23,13 @@ use Oleg\OrderformBundle\Helper\FormHelper;
 use Oleg\OrderformBundle\Entity\ReturnSlideTo;
 use Oleg\OrderformBundle\Entity\RegionToScan;
 use Oleg\OrderformBundle\Entity\SlideDelivery;
-use Oleg\OrderformBundle\Entity\SiteParameters;
 use Oleg\OrderformBundle\Entity\ProcessorComments;
 use Oleg\OrderformBundle\Entity\Urgency;
 use Oleg\OrderformBundle\Entity\ScannerList;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Controller\AdminController;
+use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 
 
 /**
@@ -50,7 +50,7 @@ class ScanAdminController extends AdminController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );

@@ -248,4 +248,5 @@ abstract class BaseUserAttributes {
         return $str;
     }
 
+
 }

@@ -79,5 +79,8 @@ class CodeNYPH
         return $this->credentials;
     }
 
+    public function __toString() {
+        return "Code NYPH";
+    }
 
 }

@@ -127,6 +127,8 @@ class BoardCertification
         return $this->specialty;
     }
 
-
+    public function __toString() {
+        return "Board Certification";
+    }
 
 }

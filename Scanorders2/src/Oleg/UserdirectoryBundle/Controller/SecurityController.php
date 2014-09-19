@@ -150,7 +150,7 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/setloginvisit/", name="setloginvisit")
+     * @Route("/setloginvisit/", name="employees_setloginvisit")
      * @Method("GET")
      */
     public function setAjaxLoginVisit( Request $request )
@@ -159,6 +159,7 @@ class SecurityController extends Controller
         $options = array();
         $em = $this->getDoctrine()->getManager();
         $userUtil = new UserUtil();
+        $options['sitename'] = $this->container->getParameter('employees.sitename');
         $options['event'] = "Login Page Visit";
         $options['serverresponse'] = "";
         $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
@@ -167,6 +168,7 @@ class SecurityController extends Controller
         $response->setContent('OK');
         return $response;
     }
+
 
 
 

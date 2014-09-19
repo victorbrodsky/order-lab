@@ -10,9 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-//TODO: move site parameters to userdirectory bundle
-use Oleg\OrderformBundle\Entity\SiteParameters;
 
+use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Entity\Roles;
 use Oleg\UserdirectoryBundle\Entity\Institution;
@@ -41,7 +40,7 @@ class AdminController extends Controller
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -192,7 +191,7 @@ class AdminController extends Controller
     public function generateSiteParameters() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( $entities ) {
             return -1;

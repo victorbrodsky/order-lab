@@ -54,5 +54,7 @@ class AppointmentTitle extends BaseTitle
         return $this->position;
     }
 
-
+    public function __toString() {
+        return "Academic Appointment Title";
+    }
 }

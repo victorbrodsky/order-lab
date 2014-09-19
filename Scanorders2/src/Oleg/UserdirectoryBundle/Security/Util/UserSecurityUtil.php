@@ -132,9 +132,9 @@ class UserSecurityUtil {
 
     }
 
-    function constractEventLog( $user, $request ) {
+    function constractEventLog( $sitename, $user, $request ) {
 
-        $logger = new Logger();
+        $logger = new Logger($sitename);
         $logger->setUser($user);
         $logger->setRoles($user->getRoles());
         $logger->setUsername($user."");

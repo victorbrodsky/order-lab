@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -249,7 +249,7 @@ class SiteParametersType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\SiteParameters'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SiteParameters'
         ));
     }
 
@@ -258,6 +258,6 @@ class SiteParametersType extends AbstractType
      */
     public function getName()
     {
-        return 'oleg_orderformbundle_siteparameters';
+        return 'oleg_userdirectorybundle_siteparameters';
     }
 }

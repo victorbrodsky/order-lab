@@ -125,7 +125,9 @@ class StateLicense
         return $this->state;
     }
 
-
+    public function __toString() {
+        return "State License";
+    }
 
 
 }

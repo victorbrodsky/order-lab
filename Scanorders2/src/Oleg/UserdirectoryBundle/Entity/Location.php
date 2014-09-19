@@ -337,7 +337,9 @@ class Location extends BaseUserAttributes
     }
 
 
-
+    public function __toString() {
+        return "Location";
+    }
 
 
 }

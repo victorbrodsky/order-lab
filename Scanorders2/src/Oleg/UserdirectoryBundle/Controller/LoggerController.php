@@ -21,17 +21,23 @@ class LoggerController extends Controller
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="logger")
+     * @Route("/", name="employees_logger")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
      */
     public function indexAction()
     {
+        return $this->listLogger($this->container->getParameter('employees.sitename'));
+    }
+
+    protected function listLogger( $sitename ) {
+
         $em = $this->getDoctrine()->getManager();
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $dql =  $repository->createQueryBuilder("logger");
         $dql->select('logger');
+        $dql->where("logger.siteName = '".$sitename."'");
         $dql->orderBy("logger.creationdate","DESC");
 
         $limit = 30;
@@ -54,20 +60,37 @@ class LoggerController extends Controller
 
         return array(
             'pagination' => $pagination,
-            'roles' => $rolesArr
+            'roles' => $rolesArr,
+            'sitename' => $sitename
         );
     }
+
+
+
+
+
+
+
+
+
+
+
+    //////////////// Currently not used ////////////////////
     /**
      * Creates a new Logger entity.
      *
-     * @Route("/", name="logger_create")
+     * @Route("/", name="employees_logger_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:Logger:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new Logger();
-        $form = $this->createCreateForm($entity);
+        return $this->createLogger($request,$this->container->getParameter('employees.sitename'));
+    }
+
+    protected function createLogger(Request $request, $sitename) {
+        $entity = new Logger($sitename);
+        $form = $this->createCreateForm($entity, $sitename);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -78,23 +101,29 @@ class LoggerController extends Controller
             return $this->redirect($this->generateUrl('logger_show', array('id' => $entity->getId())));
         }
 
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Failed to create log'
+        );
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'sitename' => $sitename
         );
     }
 
     /**
-    * Creates a form to create a Logger entity.
-    *
-    * @param Logger $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createCreateForm(Logger $entity)
+     * Creates a form to create a Logger entity.
+     *
+     * @param Logger $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    protected function createCreateForm(Logger $entity, $sitename)
     {
         $form = $this->createForm(new LoggerType(), $entity, array(
-            'action' => $this->generateUrl('logger_create'),
+            'action' => $this->generateUrl($sitename.'_logger_create'),
             'method' => 'POST',
         ));
 
@@ -102,6 +131,7 @@ class LoggerController extends Controller
 
         return $form;
     }
+
 
     /**
      * Displays a form to create a new Logger entity.
@@ -112,8 +142,8 @@ class LoggerController extends Controller
      */
     public function newAction()
     {
-        $entity = new Logger();
-        $form   = $this->createCreateForm($entity);
+        $entity = new Logger($this->container->getParameter('employees.sitename'));
+        $form   = $this->createCreateForm($entity,$this->container->getParameter('employees.sitename'));
 
         return array(
             'entity' => $entity,

@@ -59,7 +59,7 @@ class AperioUtil {
                 $perSiteSettings = null;
 
                 ////////// assign Institution //////////
-                $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
                 if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
                     if( count($params) != 1 ) {
                         throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );

@@ -33,7 +33,9 @@ class AdministrativeTitle extends BaseTitle
         return $this->user;
     }
 
-
+    public function __toString() {
+        return "Administrative Title";
+    }
 
 
 }

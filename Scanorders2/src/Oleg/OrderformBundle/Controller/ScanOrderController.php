@@ -682,7 +682,7 @@ class ScanOrderController extends Controller {
                 $count = $count . "+";
             }
 
-            $logger = new Logger();
+            $logger = new Logger($this->container->getParameter('scan.sitename'));           
             $logger->setUser($user);
             $logger->setRoles($roles);
             $logger->setUsername($user."");
@@ -731,7 +731,7 @@ class ScanOrderController extends Controller {
                 $count = $count . "+";
             }
 
-            $logger = new Logger();
+            $logger = new Logger($this->container->getParameter('scan.sitename'));            
             $logger->setUser($user);
             $logger->setRoles($roles);
             $logger->setUsername($user."");

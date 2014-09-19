@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -318,6 +319,23 @@ class UserController extends Controller
         foreach( $entity->getLocations() as $loc) {
             $originalLocations->add($loc);
         }
+
+        //Credentials collections
+        $originalStateLicense = new ArrayCollection();
+        foreach( $entity->getCredentials()->getStateLicense() as $subitem) {
+            $originalStateLicense->add($subitem);
+        }
+
+        $originalBoardCertification = new ArrayCollection();
+        foreach( $entity->getCredentials()->getBoardCertification() as $subitem) {
+            $originalBoardCertification->add($subitem);
+        }
+
+        $originalCodeNYPH = new ArrayCollection();
+        foreach( $entity->getCredentials()->getCodeNYPH() as $subitem) {
+            $originalCodeNYPH->add($subitem);
+        }
+
         //echo "count=".count($originalAdminTitles)."<br>";
 
         //Roles
@@ -334,11 +352,54 @@ class UserController extends Controller
 
         if( $form->isValid() ) {
 
-            $this->removeCollection($entity,$originalAdminTitles,'getAdministrativeTitles');
-            $this->removeCollection($entity,$originalAppTitles,'getAppointmentTitles');
-            $this->removeLocationCollection($entity,$originalLocations,'getLocations');
+            /////////////// Add event log on edit (edit or add collection) ///////////////
+            /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+            $changedInfoArr = $this->setEventLogChanges($entity);
 
-            //$this->setEventLogChanges($entity,$request);
+            /////////////// Process Removed Collections ///////////////
+            $removedCollections = array();
+
+            $removedInfo = $this->removeCollection($originalAdminTitles,$entity->getAdministrativeTitles());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalAppTitles,$entity->getAppointmentTitles());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalLocations,$entity->getLocations());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            //check for removed collection for Credentials: stateLicense, boardCertification, codeNYPH
+            $removedInfo = $this->removeCollection($originalStateLicense,$entity->getCredentials()->getStateLicense());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalBoardCertification,$entity->getCredentials()->getBoardCertification());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalCodeNYPH,$entity->getCredentials()->getCodeNYPH());
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            /////////////// EOF Process Removed Collections ///////////////
+
+
+            //set Edit event log for removed collection and changed fields or added collection
+            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
+                $user = $this->get('security.context')->getToken()->getUser();
+                $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
+                $event = $event . implode("<br>", $changedInfoArr);
+                $event = $event . "<br>" . implode("<br>", $removedCollections);
+                $this->createUserEditEvent($event,$user,$request);
+            }
 
             //set parents for institution tree for Administrative and Academical Titles
             $this->setParentsForInstitutionTree($entity);
@@ -359,6 +420,16 @@ class UserController extends Controller
             'user_id' => $id,
             'sitename' => $sitename
         );
+    }
+
+    public function createUserEditEvent($event,$user,$request) {
+        $userSecUtil = $this->get('user_security_utility');
+        $eventLog = $userSecUtil->constractEventLog($this->container->getParameter('employees.sitename'),$user,$request);
+        $eventLog->setEvent($event);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($eventLog);
+        $em->flush();
     }
 
     public function setParentsForInstitutionTree($entity) {
@@ -388,47 +459,34 @@ class UserController extends Controller
             $institution->addDepartment($department);
     }
 
-    public function removeCollection($entity,$originalArr,$getMethod) {
-        $em = $this->getDoctrine()->getManager();
 
-        foreach( $originalArr as $title ) {
-            //echo "title=".$title->getName().", id=".$title->getId()."<br>";
-            $em->persist($title);
-            if( false === $entity->$getMethod()->contains($title) ) {
-                //echo "removed title=".$title->getName()."<br>";
-                // remove the Task from the Tag
-                //$tag->getAdministrativeTitles()->removeElement($task);
-                // if it was a many-to-one relationship, remove the relationship like this
-                //$title->setUser(null);
-                //$em->persist($title);
-                // if you wanted to delete the Tag entirely, you can also do that
-                $em->remove($title);
-                $em->flush();
-            }
-        }
-        //exit();
-    }
-
-    public function removeLocationCollection($entity,$originalArr,$getMethod) {
+    public function removeCollection($originalArr,$currentlArr) {
         $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
 
         foreach( $originalArr as $title ) {
 
             //check if location is not home and main
-            if( $title->getRemovable() == false ) {
-                continue;
+            if( method_exists($title,'getRemovable') ) {
+                if( $title->getRemovable() == false ) {
+                    continue;
+                }
             }
 
             //echo "title=".$title->getName().", id=".$title->getId()."<br>";
             $em->persist($title);
-            if( false === $entity->$getMethod()->contains($title) ) {
+            if( false === $currentlArr->contains($title) ) {
+                $removeArr[] = "<strong>"."Removed: ".$title." ".$this->getEntityId($title)."</strong>";
                 // if you wanted to delete the Tag entirely, you can also do that
                 $em->remove($title);
                 $em->flush();
             }
         }
-        //exit();
+
+        return implode("<br>", $removeArr);
     }
+
+
 
 
 //    /**
@@ -572,58 +630,152 @@ class UserController extends Controller
             $user->setLocked(false);
         }
 
+        //record edit user to Event Log
+        $request = $this->container->get('request');
+        $userAdmin = $this->get('security.context')->getToken()->getUser();
+        $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
+        $event = $event . "User status changed to ".$status;
+        $this->createUserEditEvent($event,$user,$request);
+
         $em->persist($user);
         $em->flush();
 
     }
 
 
-
-    //Log user changes as in Issue #360
-    //TODO: separate event log for scan and user. User log should record all changes in user: subjectUser, Author, field, old value, new value.
-    public function setEventLogChanges($entity,$request) {
+    //User log should record all changes in user: subjectUser, Author, field, old value, new value.
+    public function setEventLogChanges($subjectuser) {
         
         $em = $this->getDoctrine()->getManager();
 
         $uow = $em->getUnitOfWork();
         $uow->computeChangeSets(); // do not compute changes if inside a listener
 
-        $userSecUtil = $this->get('user_security_utility');
-        $eventLog = $userSecUtil->constractEventLog($entity,$request);
-        $user = $this->get('security.context')->getToken()->getUser();
-        $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
-        $eventLog->setEvent($event);
+        $eventArr = array();
 
         //log simple fields
-        $changeset = $uow->getEntityChangeSet($entity);
-        $eventLog = $this->addToEventLog( $eventLog, $entity, $changeset );
+        $changeset = $uow->getEntityChangeSet($subjectuser);
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
+
+        //log user roles
+        $changeset = $uow->getEntityChangeSet($subjectuser->getRoles());
+        $text = "(Roles)";
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+
+        //log preferences
+        $changeset = $uow->getEntityChangeSet($subjectuser->getPreferences());
+        $text = "("."Preferences ".$this->getEntityId($subjectuser->getPreferences()).")";
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
 
         //log credentials
-        $changeset = $uow->getEntityChangeSet($entity->getCredentials());
-        $eventLog = $this->addToEventLog( $eventLog, $entity, $changeset );
+        $credentials = $subjectuser->getCredentials();
+        $changeset = $uow->getEntityChangeSet($credentials);
+        $text = "("."Credentials ".$this->getEntityId($credentials).")";
+        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        //credentials: codeNYPH
+        foreach( $credentials->getCodeNYPH() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."codeNYPH ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+        //credentials: stateLicense
+        foreach( $credentials->getStateLicense() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."stateLicense ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+        //credentials: boardCertification
+        foreach( $credentials->getBoardCertification() as $subentity ) {
+            $changeset = $uow->getEntityChangeSet($subentity);
+            $text = "("."boardCertification ".$this->getEntityId($subentity).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
 
-        echo "event=".$eventLog->getEvent()."<br>";
+        //log Location(s)
+        foreach( $subjectuser->getLocations() as $loc ) {
+            $changeset = $uow->getEntityChangeSet($loc);
+            $text = "("."Location ".$this->getEntityId($loc).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
 
-        //exit();
+        //log Administrative Title(s)
+        foreach( $subjectuser->getAdministrativeTitles() as $title ) {
+            $changeset = $uow->getEntityChangeSet($title);
+            $text = "("."Administrative Title ".$this->getEntityId($title).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
 
-        $em->persist($eventLog);
-        $em->flush();
+        //log Academic Appointment Title(s)
+        foreach( $subjectuser->getAppointmentTitles() as $title ) {
+            $changeset = $uow->getEntityChangeSet($title);
+            $text = "("."Academic Appointment Title ".$this->getEntityId($title).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        return $eventArr;
+
     }
 
-    public function addToEventLog( $eventLog, $subjectUser, $changeset ) {
+    public function addChangesToEventLog( $eventArr, $changeset, $text="" ) {
+
+        $changeArr = array();
 
         //process $changeset: author, subjectuser, oldvalue, newvalue
-        $changeArr = array();
         foreach( $changeset as $key => $value ) {
-            $changeArr[] = $key.": "."old value=".$value[0].", new value=".$value[1];
+            if( $value[0] != $value[1] ) {
+
+                if( is_object($key) ) {
+                    //if $key is object then skip it, because we don't want to have non-informative record such as: credentials(stateLicense New): old value=, new value=Credentials
+                    continue;
+                }
+
+                $field = $key;
+
+                $oldValue = $value[0];
+                $newValue = $value[1];
+
+                if( $oldValue instanceof \DateTime ) {
+                    $oldValue = $this->convertDateTimeToStr($value[0]);
+                }
+                if( $newValue instanceof \DateTime ) {
+                    $newValue = $this->convertDateTimeToStr($value[1]);
+                }
+
+                if( is_array($oldValue) ) {
+                    $oldValue = implode(",",$oldValue);
+                }
+                if( is_array($newValue) ) {
+                    $newValue = implode(",",$newValue);
+                }
+
+                $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
+                //echo "event=".$event."<br>";
+                //exit();
+
+                $changeArr[] = $event;
+            }
         }
-        $event = implode("<br>", $changeArr);
 
-        //echo "event=".$event."<br>";
+        if( count($changeArr) > 0 ) {
+            $eventArr[] = implode("<br>", $changeArr);
+        }
 
-        $eventLog->addEvent( $event );
+        return $eventArr;
 
-        return $eventLog;
+    }
+
+    public function convertDateTimeToStr($datetime) {
+        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        $dateStr = $transformer->transform($datetime);
+        return $dateStr;
+    }
+
+    public function getEntityId($entity) {
+        if( $entity->getId() ) {
+            return "ID=".$entity->getId();
+        }
+
+        return "New";
     }
 
 }

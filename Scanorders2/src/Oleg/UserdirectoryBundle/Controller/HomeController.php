@@ -25,7 +25,7 @@ class HomeController extends Controller {
         //exit('maint controller');
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($params) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );

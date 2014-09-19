@@ -62,7 +62,7 @@ class LdapManager extends BaseLdapManager
 
 //        //assign Institution
 //        if( $user->getInstitutions() == NULL || count($user->getInstitutions()) == 0 ) {
-//            $params = $this->em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+//            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 //            if( count($params) == 0 && $user->hasRole('ROLE_SCANORDER_ADMIN') ) {
 //                //it is not initialized yet
 //                //echo "Warning: Site parameters are not initialized.<br>";

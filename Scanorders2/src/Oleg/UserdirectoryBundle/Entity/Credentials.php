@@ -24,11 +24,6 @@ class Credentials extends BaseUserAttributes
     private $dob;
 
     /**
-     * @ORM\OneToMany(targetEntity="CodeNYPH", mappedBy="credentials", cascade={"persist"})
-     */
-    private $codeNYPH;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $nationalProviderIdentifier;
@@ -59,6 +54,17 @@ class Credentials extends BaseUserAttributes
     private $coqExpirationDate;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $emergencyContactInfo;
+
+    /**
+     * @ORM\OneToOne(targetEntity="User", mappedBy="credentials")
+     */
+    private $user;
+
+    ///// Collections //////
+    /**
      * @ORM\OneToMany(targetEntity="StateLicense", mappedBy="credentials", cascade={"persist"})
      */
     private $stateLicense;
@@ -69,14 +75,10 @@ class Credentials extends BaseUserAttributes
     private $boardCertification;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\OneToMany(targetEntity="CodeNYPH", mappedBy="credentials", cascade={"persist"})
      */
-    private $emergencyContactInfo;
+    private $codeNYPH;
 
-    /**
-     * @ORM\OneToOne(targetEntity="User", mappedBy="credentials")
-     */
-    protected $user;
 
 
     public function __construct() {
@@ -237,6 +239,9 @@ class Credentials extends BaseUserAttributes
 
     public function addStateLicense( $stateLicense )
     {
+        if( !$stateLicense )
+            return;
+
         if( !$this->stateLicense->contains($stateLicense) ) {
             $stateLicense->setCredentials($this);
             $this->stateLicense->add($stateLicense);
@@ -259,6 +264,9 @@ class Credentials extends BaseUserAttributes
 
     public function addBoardCertification( $boardCertification )
     {
+        if( !$boardCertification )
+            return;
+
         if( !$this->boardCertification->contains($boardCertification) ) {
             $boardCertification->setCredentials($this);
             $this->boardCertification->add($boardCertification);
@@ -314,6 +322,9 @@ class Credentials extends BaseUserAttributes
     }
     public function addCodeNYPH( $codeNYPH )
     {
+        if( !$codeNYPH )
+            return;
+
         if( !$this->codeNYPH->contains($codeNYPH) ) {
             $codeNYPH->setCredentials($this);
             $this->codeNYPH->add($codeNYPH);
@@ -323,6 +334,10 @@ class Credentials extends BaseUserAttributes
     public function removeCodeNYPH($codeNYPH)
     {
         $this->codeNYPH->removeElement($codeNYPH);
+    }
+
+    public function __toString() {
+        return "Credentials";
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\UserdirectoryBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,10 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Oleg\OrderformBundle\Entity\SiteParameters;
-use Oleg\OrderformBundle\Form\SiteParametersType;
-use Oleg\OrderformBundle\Helper\ErrorHelper;
 
+use Oleg\UserdirectoryBundle\Entity\SiteParameters;
+use Oleg\UserdirectoryBundle\Form\SiteParametersType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
@@ -27,14 +26,14 @@ class SiteParametersController extends Controller
      *
      * @Route("/", name="siteparameters")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SiteParameters:index.html.twig")
+     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
      */
     public function indexAction()
     {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -75,7 +74,7 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}/edit", name="siteparameters_edit")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:SiteParameters:edit.html.twig")
+     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function editAction($id)
     {
@@ -84,7 +83,7 @@ class SiteParametersController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -107,13 +106,13 @@ class SiteParametersController extends Controller
      *
      * @Route("/{id}", name="siteparameters_update")
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:SiteParameters:edit.html.twig")
+     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');

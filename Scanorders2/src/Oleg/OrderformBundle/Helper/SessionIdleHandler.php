@@ -106,7 +106,8 @@ class SessionIdleHandler
             //$thisRoute == $routeData['name'] ||
             $routeName == 'login' ||
             //$routeName == 'scan-order-nopermission' ||
-            $routeName == 'setloginvisit' ||
+            $routeName == 'scan_setloginvisit' ||
+            $routeName == 'employees_setloginvisit' ||
             $routeName == 'logout' ||
             $routeName == 'getmaxidletime' ||
             $routeName == '_wdt'

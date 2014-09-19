@@ -72,6 +72,27 @@ class SecurityController extends Controller
 
 
     /**
+     * @Route("/setloginvisit/", name="scan_setloginvisit")
+     * @Method("GET")
+     */
+    public function setAjaxLoginVisit( Request $request )
+    {
+        //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
+        $options = array();
+        $em = $this->getDoctrine()->getManager();
+        $userUtil = new UserUtil();
+        $options['sitename'] = $this->container->getParameter('scan.sitename');
+        $options['event'] = "Login Page Visit";
+        $options['serverresponse'] = "";
+        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+
+        $response = new Response();
+        $response->setContent('OK');
+        return $response;
+    }
+
+
+    /**
      * @Route("/scan-order/no-permission", name="scan-order-nopermission")
      * @Method("GET")
      * @Template("OlegOrderformBundle:Security:nopermission.html.twig")

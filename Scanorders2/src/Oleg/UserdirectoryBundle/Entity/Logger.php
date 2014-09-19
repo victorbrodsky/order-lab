@@ -22,6 +22,11 @@ class Logger
     private $id;
 
     /**
+     * @ORM\Column(name="siteName", type="string")
+     */
+    private $siteName;
+
+    /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -31,7 +36,7 @@ class Logger
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $user;
+    private $user;
 
     /**
      * @var array
@@ -75,9 +80,60 @@ class Logger
     private $serverresponse;
 
 
+//    /////////// event type "edit" /////////////////
+//
+//    //Which user's information was edited
+//    /**
+//     * @ORM\ManyToOne(targetEntity="User")
+//     * @ORM\JoinColumn(name="subjectuser_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $subjectuser;
+//
+//    //Which field value(s) changed
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $editfieldname;
+//
+//    //What was the old value
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $editfieldoldvalue;
+//
+//    //What was the new value
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $editfieldnewvalue;
+//
+//    /////////// EOF event type "edit" /////////////////
+
+
+    public function __construct($siteName) {
+        $this->siteName = $siteName;
+    }
+
+
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $siteName
+     */
+    public function setSiteName($siteName)
+    {
+        $this->siteName = $siteName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteName()
+    {
+        return $this->siteName;
     }
 
     /**
@@ -252,6 +308,75 @@ class Logger
 
         $this->setEvent( $event );
     }
+
+
+//    //Edit events
+//
+//    /**
+//     * @param mixed $editfieldname
+//     */
+//    public function setEditfieldname($editfieldname)
+//    {
+//        $this->editfieldname = $editfieldname;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEditfieldname()
+//    {
+//        return $this->editfieldname;
+//    }
+//
+//    /**
+//     * @param mixed $editfieldnewvalue
+//     */
+//    public function setEditfieldnewvalue($editfieldnewvalue)
+//    {
+//        $this->editfieldnewvalue = $editfieldnewvalue;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEditfieldnewvalue()
+//    {
+//        return $this->editfieldnewvalue;
+//    }
+//
+//    /**
+//     * @param mixed $editfieldoldvalue
+//     */
+//    public function setEditfieldoldvalue($editfieldoldvalue)
+//    {
+//        $this->editfieldoldvalue = $editfieldoldvalue;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEditfieldoldvalue()
+//    {
+//        return $this->editfieldoldvalue;
+//    }
+//
+//    /**
+//     * @param mixed $subjectuser
+//     */
+//    public function setSubjectuser($subjectuser)
+//    {
+//        $this->subjectuser = $subjectuser;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSubjectuser()
+//    {
+//        return $this->subjectuser;
+//    }
+
+
 
 
 }

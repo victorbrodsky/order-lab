@@ -153,11 +153,11 @@ class UserUtil {
 
                     if( $serviceEntity ) {
                         $administrativeTitle->setService($serviceEntity);
-                        $division = $serviceEntity->getDivision();
+                        $division = $serviceEntity->getParent();
                         $administrativeTitle->setDivision($division);
-                        $department = $division->getDepartment();
+                        $department = $division->getParent();
                         $administrativeTitle->setDepartment($department);
-                        $institution = $department->getInstitution();
+                        $institution = $department->getParent();
                         $administrativeTitle->setInstitution($institution);
                     } else {
                         //Don't create service if it is not found in the service list
@@ -221,7 +221,7 @@ class UserUtil {
             $username = $request->get('_username');
         }
 
-        $logger = new Logger();
+        $logger = new Logger($options['sitename']);
         $logger->setUser($user);
         $logger->setRoles($roles);
         $logger->setUsername($username);
@@ -241,7 +241,7 @@ class UserUtil {
 
     public function getMaxIdleTime($em) {
 
-        $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( !$params ) {
             //new DB does not have SiteParameters object
@@ -264,7 +264,7 @@ class UserUtil {
 
     public function getMaxIdleTimeAndMaintenance($em) {
 
-        $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( !$params ) {
             //new DB does not have SiteParameters object
@@ -298,7 +298,7 @@ class UserUtil {
     //return parameter specified by $setting. If the first time login when site parameter does not exist yet, return -1.
     public function getSiteSetting($em,$setting) {
 
-        $params = $em->getRepository('OlegOrderformBundle:SiteParameters')->findAll();
+        $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
 //        if( !$params ) {
 //            //throw new \Exception( 'Parameter object is not found' );

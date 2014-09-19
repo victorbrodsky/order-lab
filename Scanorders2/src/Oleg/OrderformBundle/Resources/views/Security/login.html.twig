@@ -53,10 +53,10 @@
 
             $(document).ready(function() {
 
-                var sitename = "{{ employees_sitename|escape('js') }}";
+                //var sitename = "{{ employees_sitename|escape('js') }}";
                 //console.log("sitename="+sitename);
 
-                var url = getCommonBaseUrl("setloginvisit/",sitename);
+                var url = getCommonBaseUrl("setloginvisit/");
                 //console.log("url="+url);
 
                 $.ajax({
