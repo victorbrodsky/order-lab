@@ -252,8 +252,12 @@ function setNavBar() {
     if( full.indexOf("/settings") !== -1 ) {
         id = 'admin';
     }
+//    if( full.indexOf("/user-directory") !== -1 ) {
+//        id = 'admin';
+//    }
+
     if( full.indexOf("/user-directory") !== -1 ) {
-        id = 'admin';
+        id = 'userlist';
     }
 
     if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {

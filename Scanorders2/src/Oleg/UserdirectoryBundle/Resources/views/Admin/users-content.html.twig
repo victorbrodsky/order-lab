@@ -1,5 +1,10 @@
 
-<h3 class="text-info">Users</h3>
+{% if filter is not defined or filter == "" %}
+    {% set filter = "All" %}
+{% endif %}
+
+<h3 class="text-info">Users: {{ filter }}</h3>
+<br>
 <table class="records_list table table-hover table-condensed text-left">
     <thead>
     <tr>
@@ -7,10 +12,10 @@
         <th>
             {{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}
         </th>
-        <th>{{ knp_pagination_sortable(entities, 'Full Name', 'user.displayName') }}</th>
-        <th>{{ knp_pagination_sortable(entities, 'Title', 'user.administrativeTitles') }}</th>
-        <th>{{ knp_pagination_sortable(entities, 'User Name', 'user.username') }}</th>
-        <th>{{ knp_pagination_sortable(entities, 'Email', 'user.email') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Display Name', 'user.displayName') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'user.administrativeTitles') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'User Name (CWID)', 'user.username') }}</th>
+        <th>{{ knp_pagination_sortable(entities, 'Preferred Email', 'user.email') }}</th>
         <th style="min-width: 120px">{{ knp_pagination_sortable(entities, 'Preferred Phone Number', 'user.preferredPhone') }}</th>
         <th>
             {{ knp_pagination_sortable(entities, 'Institution(s)', 'administrativeInstitution.name') }}

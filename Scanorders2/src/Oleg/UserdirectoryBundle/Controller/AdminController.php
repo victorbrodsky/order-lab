@@ -398,9 +398,33 @@ class AdminController extends Controller
             'Allergy, Immunology and Pulmonology' => null,
             'Anesthesiology' => null,
             'Cancer (Oncology)' => null,
-            'Cancer Screening and Awareness' => null
-            //continue
+            'Cancer Screening and Awareness' => null,
+            'Cardiology' => null,
+			'Complementary, Alternative, and Integrative Medicine' => null,
+            'Dermatology' => null,
+            'Diabetes and Endocrinology' => null,
+            'Digestive Diseases' => null,
+            'Ear, Nose, and Throat (Otorhinolaryngology)' => null,
+            'Geriatrics' => null,
+            'Hematology (Blood Disorders)' => null,
+            'Infectious Diseases/International Medicine' => null,
+            'Internal Medicine' => null,
+            'Nephrology (Kidney Disease)' => null,
+            'Neurology and Neuroscience' => null,
+            'Obstetrics and Gynecology' => null,
+            'Ophthalmology' => null,
+            'Pain Medicine' => null,
+            'Pathology' => null,
+            'Pediatrics' => null,
+            'Preventive Medicine and Nutrition' => null,
+            'Psychiatry and Mental Health' => null,
+            'Radiation Oncology' => null,
+            'Radiology' => null,
+            'Rehabilitation Medicine' => null,
+            'Rheumatology' => null,
+            "Women's Health" => null
         );
+
         $nyh = array(
             'abbreviation'=>'NYH',
             'departments'=>$nyhDep

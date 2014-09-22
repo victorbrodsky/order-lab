@@ -209,7 +209,7 @@
 
         <input type="hidden" id="user_id" value="{{ user_id }}" />
         <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
-        <input type="hidden" id="formcicle" value="edit_user" />
+        <input type="hidden" id="formcicle" value="{{ cicle }}" />
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
         {{ form_errors(form) }}
@@ -575,7 +575,7 @@
 
         {#{{ form(form) }}#}
 
-        {% if cicle != "show_user" %}
+        {% if cicle != "show_user" and cicle != "create_user" %}
             <p>
                 <div>
                     <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
@@ -584,10 +584,17 @@
             </p>
         {% endif %}
 
+        {% if cicle == "create_user" %}
+            <p>
+                <button class="btn btn-success" name="btnSubmit" type="submit">Add Employee</button>
+                {#<button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>#}
+            </p>
+        {% endif %}
+
     {{ form_end(form) }}
 
 
-    {% if cicle == "show_user" %}
+    {% if cicle == "show_user" and cicle != "create_user" %}
         <p><a class="btn btn-success" href="{{ path(sitename~'_user_edit',{'id':entity.id}) }}">Edit</a></p>
     {% endif %}
 

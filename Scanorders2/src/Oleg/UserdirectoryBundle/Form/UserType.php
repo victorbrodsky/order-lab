@@ -43,7 +43,7 @@ class UserType extends AbstractType
 
         $builder->add('username', null, array(
             'required' => true,
-            'label' => 'User Name:',
+            'label' => 'User Name (CWID):',
             'read_only' => $read_only,
             'attr' => array('class'=>'form-control form-control-modif', 'required'=>'required')
         ));

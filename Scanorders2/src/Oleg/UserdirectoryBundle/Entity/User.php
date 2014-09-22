@@ -104,7 +104,11 @@ class User extends BaseUser
 //        $this->service = new ArrayCollection();
 
         //create preferences
-        $this->setPreferences(new UserPreferences());
+        $userPref = new UserPreferences();
+        $userPref->setTooltip(true);
+        $userPref->setTimezone('America/New_York');
+        $userPref->setUser($this);
+        $this->setPreferences($userPref);
 
         //create credentials
         $this->setCredentials(new Credentials());

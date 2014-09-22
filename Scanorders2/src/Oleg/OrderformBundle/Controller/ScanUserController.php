@@ -27,7 +27,7 @@ class ScanUserController extends UserController
      * @Method("GET")
      * @Template("OlegOrderformBundle:Admin:users.html.twig")
      */
-    public function indexUserAction()
+    public function indexUserAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect($this->generateUrl('scan-order-nopermission'));

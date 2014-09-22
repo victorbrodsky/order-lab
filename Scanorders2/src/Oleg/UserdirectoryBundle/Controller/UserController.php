@@ -34,20 +34,27 @@ use Oleg\UserdirectoryBundle\Entity\CodeNYPH;
 class UserController extends Controller
 {
 
+
     /**
      * @Route("/user-directory", name="employees_listusers")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
-    public function indexUserAction()
+    public function indexUserAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
         }
 
-        return $this->indexUser();
+        $filter = trim( $request->get('filter') );
+
+        $res = $this->indexUser($filter);
+        $res['filter'] = $filter;
+
+        return $res;
     }
-    public function indexUser() {
+
+    public function indexUser( $filter=null ) {
 
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
@@ -57,12 +64,126 @@ class UserController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
+
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
         $dql->leftJoin("administrativeTitles.institution", "administrativeInstitution");
+        $dql->leftJoin("administrativeTitles.department", "administrativeDepartment");
+        $dql->leftJoin("administrativeTitles.division", "administrativeDivision");
         $dql->leftJoin("administrativeTitles.service", "administrativeService");
+
+        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $dql->leftJoin("appointmentTitles.institution", "appointmentInstitution");
+        $dql->leftJoin("appointmentTitles.department", "appointmentDepartment");
+        $dql->leftJoin("appointmentTitles.division", "appointmentDivision");
+        $dql->leftJoin("appointmentTitles.service", "appointmentService");
+
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
         $dql->orderBy("user.id","ASC");
+
+        $criteriastr = "";
+
+        //WCMC + Pathology
+        if( $filter && $filter == "All WCMC Pathology Employees" ) {
+            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College' OR appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeDepartment.name = 'Pathology and Laboratory Medicine' OR appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+        }
+
+        //Academic Appointment Title exists + Clinical Faculty + Research Faculty
+        if( $filter && $filter == "All WCMC Pathology Faculty" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty' OR appointmentTitles.position = 'Research Faculty')";
+        }
+
+        //Academic Appointment Title exists + Clinical Faculty
+        if( $filter && $filter == "All WCMC Pathology Clinical Faculty" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Clinical Faculty')";
+        }
+
+        //Academic Appointment Title exists + Research Faculty
+        if( $filter && $filter == "All WCMC Pathology Research Faculty" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Research Faculty')";
+        }
+
+        //Academic Appointment Title not exists + Admin Title exists
+        if( $filter && $filter == "All WCMC Pathology Staff" ) {
+            $criteriastr .= "(appointmentInstitution IS NULL AND appointmentDepartment IS NULL)";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeDepartment.name = 'Pathology and Laboratory Medicine')";
+        }
+
+        //Academic Appointment Title not exists + Admin Title exists
+        if( $filter && $filter == "All NYP Pathology Staff" ) {
+            $criteriastr .= "(appointmentInstitution IS NULL AND appointmentDepartment IS NULL)";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeInstitution.name = 'New York Hospital')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(administrativeDepartment.name = 'Pathology')";
+        }
+
+        //Academic Appointment Title exists + division=Anatomic Pathology
+        if( $filter && $filter == "All WCMC Anatomic Pathology Faculty" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDivision.name = 'Anatomic Pathology')";
+        }
+
+        //Academic Appointment Title exists + division=Laboratory Medicine
+        if( $filter && $filter == "All WCMC Laboratory Medicine Faculty" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDivision.name = 'Laboratory Medicine')";
+        }
+
+        //As Faculty + Residents == Academic Appointment Title exists + position=Resident
+        if( $filter && $filter == "All WCMC Pathology Residents" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Resident')";
+        }
+
+        //As Faculty + Residents == Academic Appointment Title exists + position=Fellow
+        if( $filter && $filter == "All WCMC Pathology Fellows" ) {
+            $criteriastr .= "(appointmentInstitution.name = 'Weill Cornell Medical College')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentDepartment.name = 'Pathology and Laboratory Medicine')";
+            $criteriastr .= " AND ";
+            $criteriastr .= "(appointmentTitles.position = 'Fellow')";
+        }
+
+        if( $filter && $filter != "" && $criteriastr == "" ) {
+            $criteriastr = "1 = 0";
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Filter not found: ".$filter
+            );
+        }
+
+        if( $criteriastr != "" ) {
+            $dql->where($criteriastr);
+        }
+
+        //echo "dql=".$dql."<br>";
 
         $limit = 1000;
         $em = $this->getDoctrine()->getManager();
@@ -80,62 +201,98 @@ class UserController extends Controller
         );
     }
 
-//    /**
-//     * @Route("/users/new", name="new_user")
-//     * @Method("GET")
-//     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
-//     */
-//    public function newUserAction()
-//    {
-//        $entity = new User();
-//
-//        //Roles
-//        $rolesArr = $this->getUserRoles();
-//
-//        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
-//
-//        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
-//        return array(
-//            'entity' => $entity,
-//            'form' => $form->createView(),
-//            'cicle' => 'edit_user',
-//        );
-//    }
 
 
-//    /**
-//     * @Route("/users/new", name="create_user")
-//     * @Method("POST")
-//     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
-//     */
-//    public function createUserAction( Request $request )
-//    {
-//        return createUser($request);
-//    }
-//    public function createUser($request) {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entity = new User();
-//
-//        //Roles
-//        $rolesArr = $this->getUserRoles();
-//
-//        $form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity);
-//
-//        $form->handleRequest($request);
-//
-//        if ($form->isValid()) {
-//            $em->persist($entity);
-//            $em->flush();
-//            return $this->redirect($this->generateUrl('listusers'));
-//        }
-//
-//        return array(
-//            'entity' => $entity,
-//            'form' => $form->createView(),
-//            'cicle' => 'edit_user',
-//        );
-//    }
+
+    ////////////////////// Create New User //////////////////////
+    /**
+     * @Route("/users/new", name="employees_new_user")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
+     */
+    public function newUserAction(Request $request)
+    {
+
+        //$user = new User();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+
+        $user->setEnabled(true);
+        $user->setCreatedby('manual');
+
+        $this->addEmptyCollections($user);
+
+        //Roles
+        $rolesArr = $this->getUserRoles();
+
+        //$form = $this->createForm(new UserType('create',$entity,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $entity, array('disabled' => false));
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_ADMIN')), $user, array('disabled' => false));
+
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        return array(
+            'entity' => $user,
+            'form' => $form->createView(),
+            'cicle' => 'create_user',
+            'user_id' => '',
+            'sitename' => $this->container->getParameter('employees.sitename')
+        );
+
+    }
+
+
+    /**
+     * @Route("/users/new", name="employees_create_user")
+     * @Method("POST")
+     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
+     */
+    public function createUserAction( Request $request )
+    {
+        return $this->createUser($request);
+    }
+    public function createUser($request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$user = new User();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+
+        $user->setPassword("");
+        $user->setCreatedby('manual');
+
+        $this->addEmptyCollections($user);
+
+        //Roles
+        $rolesArr = $this->getUserRoles();
+
+        $form = $this->createForm(new UserType('create',$user,$rolesArr,$this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')), $user, array('disabled' => false));
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_showuser',array('id' => $user->getId())));
+        }
+
+        return array(
+            'entity' => $user,
+            'form' => $form->createView(),
+            'cicle' => 'create_user',
+            'user_id' => '',
+            'sitename' => $this->container->getParameter('employees.sitename')
+        );
+    }
+
+    protected function getEngine()
+    {
+        return $this->container->getParameter('fos_user.template.engine');
+    }
+    ////////////////////// EOF Create New User //////////////////////
+
+
 
 
 
