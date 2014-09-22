@@ -29,13 +29,13 @@ idleTimeoutClass.prototype.init = function () {
     this.employees_sitename = "employees";   //"{{ employees_sitename|escape('js') }}";
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     //this.countdownDialog = $("#dialog-countdown");
-    this.urlCommonIdleTimeout = getCommonBaseUrl("keepalive",this.employees_sitename);
+    this.urlCommonIdleTimeout = getCommonBaseUrl("common/keepalive",this.employees_sitename);
 };
 
 idleTimeoutClass.prototype.setMaxIdletime = function () {
     //get max idle time from server by ajax
     $.ajax({
-        url: getCommonBaseUrl("getmaxidletime",this.employees_sitename),
+        url: getCommonBaseUrl("common/getmaxidletime",this.employees_sitename),
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',

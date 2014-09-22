@@ -214,12 +214,12 @@
 
         {{ form_errors(form) }}
 
-        {#User Info#}
+        {#Name and Preferred Contact Info#}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#userinfo">
-                        User Info
+                        Name and Preferred Contact Info
                     </a>
                 </h4>
             </div>
@@ -235,14 +235,6 @@
 
                     {{ formmacros.field(form.email) }}
                     {{ formmacros.field(form.preferredPhone) }}
-
-                    {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
-                        {#{{ formmacros.field(form.institution) }}#}
-                        {#{{ formmacros.field(form.service) }}#}
-                        {{ formmacros.field(form.roles) }}
-                    {% endif %}
-
-                    {#{{ formmacros.field(form.chiefservices) }}#}
 
                     {% if is_granted('ROLE_SCANORDER_ADMIN') %}
                         {% if app.security.getToken().getUser().getId() != entity.id %}
@@ -268,6 +260,10 @@
             </div>
             <div id="userprefrences" class="panel-collapse collapse in">
                 <div class="panel-body">
+
+                    {% if cicle == "show_user" or is_granted('ROLE_SCANORDER_ADMIN') %}
+                        {{ formmacros.field(form.roles) }}
+                    {% endif %}
 
                     {{ formmacros.field(form.preferences.timezone) }}
                     {{ formmacros.checkbox(form.preferences.tooltip) }}

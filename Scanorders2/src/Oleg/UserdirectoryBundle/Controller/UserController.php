@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -294,6 +296,10 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
+        $this->addEmptyCollections($entity);
+
+        $this->addHookFields($entity);
+
 //        $entity->setPreferredPhone('111222333');
 //        $uow = $em->getUnitOfWork();
 //        $uow->computeChangeSets(); // do not compute changes if inside a listener
@@ -303,6 +309,12 @@ class UserController extends Controller
 
         //$oldEntity = clone $entity;
         //$oldUserArr = get_object_vars($oldEntity);
+
+        //Create original roles
+        $originalRoles = array();
+        foreach( $entity->getRoles() as $role) {
+            $originalRoles[] = $role;
+        }
 
         // Create an ArrayCollection of the current Tag objects in the database
         $originalAdminTitles = new ArrayCollection();
@@ -349,8 +361,22 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-
         if( $form->isValid() ) {
+
+            //check if roles were changed and user is not admin
+            if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+                $currRoles = $entity->getRoles();
+                if( count($originalRoles) != count($currRoles) ) {
+                    $this->setSessionForbiddenNote("Change Roles");
+                    throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Roles");
+                }
+                foreach( $currRoles as $role ) {
+                    if( !in_array($role, $originalRoles) ) {
+                        $this->setSessionForbiddenNote("Change Roles");
+                        throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Roles");
+                    }
+                }
+            }
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
             /////////////// Must run before removeCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
@@ -390,7 +416,6 @@ class UserController extends Controller
                 $removedCollections[] = $removedInfo;
             }
             /////////////// EOF Process Removed Collections ///////////////
-
 
             //set Edit event log for removed collection and changed fields or added collection
             if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
@@ -657,11 +682,6 @@ class UserController extends Controller
         $changeset = $uow->getEntityChangeSet($subjectuser);
         $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
 
-        //log user roles
-        $changeset = $uow->getEntityChangeSet($subjectuser->getRoles());
-        $text = "(Roles)";
-        $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
-
         //log preferences
         $changeset = $uow->getEntityChangeSet($subjectuser->getPreferences());
         $text = "("."Preferences ".$this->getEntityId($subjectuser->getPreferences()).")";
@@ -776,6 +796,13 @@ class UserController extends Controller
         }
 
         return "New";
+    }
+
+    public function setSessionForbiddenNote($msg) {
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            "You do not have permission to perform this operation: ".$msg
+        );
     }
 
 }

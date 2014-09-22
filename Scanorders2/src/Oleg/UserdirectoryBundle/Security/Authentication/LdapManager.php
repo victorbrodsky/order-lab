@@ -47,36 +47,10 @@ class LdapManager extends BaseLdapManager
         $user->setCreatedby('ldap');
         $user->getPreferences()->setTimezone($this->timezone);
 
-        //$user->addRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
-
-        //assign general role unapproved user. It should be changed to higher role, later on, by access request
-        //$user->addRole('ROLE_UNAPPROVED');
-
         if( $user->getUsername() == "oli2002" || $user->getUsername() == "vib9020" ) {
             $user->addRole('ROLE_ADMIN');
-            //$user->addRole('ROLE_SCANORDER_ADMIN');
-            //$user->addRole('ROLE_SCANORDER_SUBMITTER');
-            //$user->removeRole('ROLE_SCANORDER_UNAPPROVED_SUBMITTER');
         }
 
-
-//        //assign Institution
-//        if( $user->getInstitutions() == NULL || count($user->getInstitutions()) == 0 ) {
-//            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-//            if( count($params) == 0 && $user->hasRole('ROLE_SCANORDER_ADMIN') ) {
-//                //it is not initialized yet
-//                //echo "Warning: Site parameters are not initialized.<br>";
-//                return;
-//            }
-//            if( count($params) != 1 ) {
-//                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-//            }
-//            $param = $params[0];
-//            $institution = $param->getAutoAssignInstitution();
-//            if( $institution ) {
-//                $user->addInstitution($institution);
-//            }
-//        }
 
     }
 

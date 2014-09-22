@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
 use Oleg\OrderformBundle\Entity\PerSiteSettings;
 use Oleg\OrderformBundle\Form\PerSiteSettingsType;
@@ -114,18 +115,21 @@ class ScanUserController extends UserController
 
         //get originals collections
         $originalInsts = new ArrayCollection();
-        foreach( $scanSiteSettings->getPermittedInstitutionalPHIScope() as $item) {
-            $originalInsts->add($item);
-        }
-
         $originalServices = new ArrayCollection();
-        foreach( $scanSiteSettings->getScanOrdersServicesScope() as $item) {
-            $originalServices->add($item);
-        }
-
         $originalChiefServices = new ArrayCollection();
-        foreach( $scanSiteSettings->getChiefServices() as $item) {
-            $originalChiefServices->add($item);
+
+        if( $scanSiteSettings ) {
+            foreach( $scanSiteSettings->getPermittedInstitutionalPHIScope() as $item) {
+                $originalInsts->add($item);
+            }
+
+            foreach( $scanSiteSettings->getScanOrdersServicesScope() as $item) {
+                $originalServices->add($item);
+            }
+
+            foreach( $scanSiteSettings->getChiefServices() as $item) {
+                $originalChiefServices->add($item);
+            }
         }
 
 
@@ -153,11 +157,15 @@ class ScanUserController extends UserController
             if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') ) {
                 $currentInsts = $entity->getpermittedInstitutionalPHIScope();
                 if( count($currentInsts) != count($originalInsts) ) {
-                    return $this->redirect( $this->generateUrl('logout') );
+                    $this->setSessionForbiddenNote("Change Institutions");
+                    throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");
+                    //return $this->redirect( $this->generateUrl('logout') );
                 }
                 foreach( $currentInsts as $inst ) {
                     if( !$originalInsts->contains($inst) ) {
-                        return $this->redirect( $this->generateUrl('logout') );
+                        $this->setSessionForbiddenNote("Change Institutions");
+                        throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Institutions");
+                        //return $this->redirect( $this->generateUrl('logout') );
                     }
                 }
             }

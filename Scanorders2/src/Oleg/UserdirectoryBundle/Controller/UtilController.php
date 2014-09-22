@@ -65,9 +65,9 @@ class UtilController extends Controller {
 //    }
 
     /**
-     * @Route("/department", name="get-departments-by-parent")
-     * @Route("/division", name="get-divisions-by-parent")
-     * @Route("/service", name="get-services-by-parent")
+     * @Route("/common/department", name="get-departments-by-parent")
+     * @Route("/common/division", name="get-divisions-by-parent")
+     * @Route("/common/service", name="get-services-by-parent")
      * @Method("GET")
      */
     public function getDepartmentAction() {
@@ -115,7 +115,7 @@ class UtilController extends Controller {
     }
 
     /**
-     * @Route("/institution", name="employees_get_institution")
+     * @Route("/common/institution", name="employees_get_institution")
      * @Method("GET")
      */
     public function getInstitutionAction() {

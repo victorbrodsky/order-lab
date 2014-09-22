@@ -55,10 +55,44 @@ class SecurityController extends Controller
     }
 
 
-    //////////////// Idle Time Out ////////////////////
+    /**
+     * @Route("/idlelogout", name="employees_idlelogout")
+     * @Route("/idlelogout/{flag}", name="employees_idlelogout-saveorder")
+     * @Template()
+     */
+    public function idlelogoutAction( Request $request, $flag = null )
+    {
+        $userSecUtil = $this->get('user_security_utility');
+        $sitename = $this->container->getParameter('employees.sitename');
+        return $userSecUtil->idleLogout( $request, $sitename, $flag );
+    }
 
     /**
-     * @Route("/keepalive/", name="keepalive")
+     * @Route("/setloginvisit/", name="employees_setloginvisit")
+     * @Method("GET")
+     */
+    public function setAjaxLoginVisit( Request $request )
+    {
+        //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
+        $options = array();
+        $em = $this->getDoctrine()->getManager();
+        $userUtil = new UserUtil();
+        $options['sitename'] = $this->container->getParameter('employees.sitename');
+        $options['event'] = "Login Page Visit";
+        $options['serverresponse'] = "";
+        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+
+        $response = new Response();
+        $response->setContent('OK');
+        return $response;
+    }
+
+
+
+    //////////////// Idle Time Out - Common Functions ////////////////////
+
+    /**
+     * @Route("/common/keepalive/", name="keepalive")
      * @Method("GET")
      */
     public function keepAliveAction( Request $request )
@@ -104,20 +138,10 @@ class SecurityController extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/idlelogout", name="employees_idlelogout")
-     * @Route("/idlelogout/{flag}", name="employees_idlelogout-saveorder")
-     * @Template()
-     */
-    public function idlelogoutAction( Request $request, $flag = null )
-    {
-        $userSecUtil = $this->get('user_security_utility');
-        $sitename = $this->container->getParameter('employees.sitename');
-        return $userSecUtil->idleLogout( $request, $sitename, $flag );
-    }
+
 
     /**
-     * @Route("/getmaxidletime", name="getmaxidletime")
+     * @Route("/common/getmaxidletime", name="getmaxidletime")
      * @Method("GET")
      */
     public function getmaxidletimeAction( Request $request )
@@ -147,27 +171,6 @@ class SecurityController extends Controller
         return $response;
     }
     //////////////// EOF Idle Time Out ////////////////////
-
-
-    /**
-     * @Route("/setloginvisit/", name="employees_setloginvisit")
-     * @Method("GET")
-     */
-    public function setAjaxLoginVisit( Request $request )
-    {
-        //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
-        $options = array();
-        $em = $this->getDoctrine()->getManager();
-        $userUtil = new UserUtil();
-        $options['sitename'] = $this->container->getParameter('employees.sitename');
-        $options['event'] = "Login Page Visit";
-        $options['serverresponse'] = "";
-        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
-
-        $response = new Response();
-        $response->setContent('OK');
-        return $response;
-    }
 
 
 

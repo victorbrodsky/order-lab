@@ -550,9 +550,14 @@ function getComboboxReturn(ids) {
 
 
 //#############  Research Project  ##############//
-function getProjectTitle(ids) {
+function getProjectTitle(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"projecttitle");  //urlCommon+"projecttitle";
+
+    var targetid = ".combobox-research-projectTitle";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -565,10 +570,10 @@ function getProjectTitle(ids) {
             async: asyncflag
         }).success(function(data) {
                 _projectTitle = data;
-                populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, "Research Project Title", false );
+                populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
 
                 //get id if set
-                var projectTitleVal = $(".combobox-research-projectTitle").select2('val');
+                var projectTitleVal = $(targetid).select2('val');
                 //console.log("finished: projectTitleVal="+projectTitleVal);
                 if( projectTitleVal != "" ) {
                     getSetTitle();
@@ -577,7 +582,7 @@ function getProjectTitle(ids) {
 
             });
     } else {
-        populateSelectCombobox( ".combobox-research-projectTitle", _projectTitle, "Research Project Title", false );
+        populateSelectCombobox( targetid, _projectTitle, "Research Project Title", false );
     }
 
 }
@@ -618,9 +623,14 @@ function getSetTitle() {
 
 
 //#############  Educational Course  ##############//
-function getCourseTitle(ids) {
+function getCourseTitle(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"coursetitle"); //urlCommon+"coursetitle";
+
+    var targetid = ".combobox-educational-courseTitle";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -633,10 +643,10 @@ function getCourseTitle(ids) {
             async: asyncflag
         }).success(function(data) {
                 _courseTitle = data;
-                populateSelectCombobox( ".combobox-educational-courseTitle", _courseTitle, "Course Title", false );
+                populateSelectCombobox( targetid, _courseTitle, "Course Title", false );
 
                 //get id if set
-                var courseTitleVal = $(".combobox-educational-courseTitle").select2('val');
+                var courseTitleVal = $(targetid).select2('val');
                 if( courseTitleVal != "" ) {
                     getLessonTitle();
                     getOptionalUserEducational();
@@ -644,7 +654,7 @@ function getCourseTitle(ids) {
 
             });
     } else {
-        populateSelectCombobox( ".combobox-educational-courseTitle", _courseTitle, "Course Title", false );
+        populateSelectCombobox( targetid, _courseTitle, "Course Title", false );
     }
 
 }
@@ -884,9 +894,14 @@ function getParentSelectId( ptarget, pArr, target, multiple ) {
 //}
 
 //#############  account  ##############//
-function getComboboxAccount(ids) {
+function getComboboxAccount(ids,holder) {
 
     var url = getCommonBaseUrl("util/"+"account");  //urlCommon+"account";
+
+    var targetid = ".ajax-combobox-account";
+    if( typeof holder !== 'undefined' && holder.length > 0 ) {
+        targetid = holder.find(targetid);
+    }
 
     if( cicle == "edit" || cicle == "show" || cicle == "amend" ) {
         url = url + "?opt="+orderinfoid;
@@ -899,16 +914,10 @@ function getComboboxAccount(ids) {
             async: asyncflag
         }).success(function(data) {
             _account = data;
-            populateSelectCombobox( ".ajax-combobox-account", _account, "Select an option or type in a new value" );
-            if( cicle == "new"  ) {
-                //setElementToId( ".ajax-combobox-account", _account );
-            }
+            populateSelectCombobox( targetid, _account, "Select an option or type in a new value" );
         });
     } else {
-        populateSelectCombobox( ".ajax-combobox-account", _account, "Select an option or type in a new value" );
-        if( cicle == "new"  ) {
-            //setElementToId( ".ajax-combobox-account", _account );
-        }
+        populateSelectCombobox( targetid, _account, "Select an option or type in a new value" );
     }
 
 }
@@ -969,11 +978,9 @@ function initComboboxJs(ids, holder) {
         getComboboxSpecialStain(ids,true);
 
         //order
-        //getComboboxService(ids);
-        getProjectTitle(ids);
-        getCourseTitle(ids);
-        //getComboboxDepartment(ids);
-        getComboboxAccount(ids);
+        getProjectTitle(ids,holder);
+        getCourseTitle(ids,holder);
+        getComboboxAccount(ids,holder);
     }
 }
 

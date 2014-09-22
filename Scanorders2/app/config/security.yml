@@ -92,7 +92,9 @@ security:
      - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
      ############################## common idle time out logic ##############################
-     - { path: ^/employees/keepalive, role: ROLE_USER }
+     - { path: ^/employees/common/, role: ROLE_USER }
+     ############################## common institution tree ##############################
+     - { path: ^/employees/util/common/, role: ROLE_USER }
 
      ############################## EMPLOYEES SITE SETTINGS ##############################
      - { path: ^/employees/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -101,7 +103,6 @@ security:
 
      #make all /employees accessible only limited special roles
      - { path: ^/employees/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
-#     - { path: ^/employees/, role: [ROLE_USERDIRECTORY_OBSERVER] }
 #     - { path: ^/employees/admin, role: [ROLE_USERDIRECTORY_ADMIN] }
 
      - { path: ^/employees/event-log, role: ROLE_USERDIRECTORY_EDITOR }
@@ -120,9 +121,7 @@ security:
      - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
      #make all sure /scan is protected from accessing the users with not sufficient roles
-     #     - { path: ^/scan/, role: [ROLE_SCANORDER_SUBMITTER] }
      - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED_SUBMITTER') and !has_role('ROLE_SCANORDER_BANNED')" }
-
 
      - { path: ^/scan/admin/genall, role: ROLE_SCANORDER_ADMIN }
      - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
@@ -139,7 +138,6 @@ security:
      - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
      - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
 
-     - { path: ^/scan/util/pathservice, role: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
      - { path: ^/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
 

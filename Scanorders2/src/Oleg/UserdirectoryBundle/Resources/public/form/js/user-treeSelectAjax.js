@@ -42,7 +42,7 @@ function getComboboxTreeByPid( parentElement, fieldClass, parentId ) {
 
         var fieldName = fieldClass.replace("ajax-combobox-", "");
         //console.log( "fieldName="+fieldName+", parentid="+parentId );
-        var url = getCommonBaseUrl("util/"+fieldName,"employees"); //always use "employees" to get department, division and service
+        var url = getCommonBaseUrl("util/common/"+fieldName,"employees"); //always use "employees" to get department, division and service
         url = url + "?pid="+parentId;
         $.ajax({
             url: url,

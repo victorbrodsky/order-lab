@@ -51,7 +51,7 @@ function getComboboxInstitution(holder) {
         targetid = holder.find(targetid);
     }
 
-    var url = getCommonBaseUrl("util/"+"institution","employees"); //always use "employees" to get institution
+    var url = getCommonBaseUrl("util/common/"+"institution","employees"); //always use "employees" to get institution
 
     //console.log('cicle='+cicle);
 

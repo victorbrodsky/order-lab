@@ -88,6 +88,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //error_log('You are out!');
         //echo "user is not ok!. Exception=<br>".$exception."<br>";
         //exit("user is not ok!");
+        //throw new \Exception( 'user is not ok!' );
 
         $options = array();
         $em = $this->em;
