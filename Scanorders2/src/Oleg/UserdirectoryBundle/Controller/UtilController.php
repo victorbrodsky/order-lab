@@ -155,6 +155,8 @@ class UtilController extends Controller {
     }
 
 
+
+
     /**
      * @Route("/cwid", name="employees_check_cwid")
      * @Method("GET")
@@ -170,15 +172,15 @@ class UtilController extends Controller {
 
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($cwid);
 
+        $output = array();
         if( $user ) {
-            $res = $user->getId();
-        } else {
-            $res = "";
+            $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
+            $output[] = $element;
         }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
+        $response->setContent(json_encode($output));
         return $response;
     }
 
@@ -210,15 +212,15 @@ class UtilController extends Controller {
             $user = $query->getSingleResult();
         }
 
+        $output = array();
         if( $user ) {
-            $res = $user->getId();
-        } else {
-            $res = "";
+            $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
+            $output[] = $element;
         }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
+        $response->setContent(json_encode($output));
         return $response;
     }
 
@@ -249,15 +251,15 @@ class UtilController extends Controller {
             $user = $query->getSingleResult();
         }
 
+        $output = array();
         if( $user ) {
-            $res = $user->getId();
-        } else {
-            $res = "";
+            $element = array('id'=>$user->getId(), 'firstName'=>$user->getFirstName(), 'lastName'=>$user->getLastName() );
+            $output[] = $element;
         }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
+        $response->setContent(json_encode($output));
         return $response;
     }
 
