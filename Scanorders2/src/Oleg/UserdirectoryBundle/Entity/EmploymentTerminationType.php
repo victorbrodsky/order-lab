@@ -9,18 +9,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_specialty")
+ * @ORM\Table(name="user_employmentTerminationType")
  */
-class Specialty extends ListAbstract
+class EmploymentTerminationType extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="Specialty", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="EmploymentTerminationType", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Specialty", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="EmploymentTerminationType", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
@@ -36,10 +36,10 @@ class Specialty extends ListAbstract
     /**
      * Add synonyms
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\Specialty $synonyms
-     * @return Specialty
+     * @param \Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType $synonyms
+     * @return EmploymentTerminationType
      */
-    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\Specialty $synonyms)
+    public function addSynonym(\Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType $synonyms)
     {
         $this->synonyms->add($synonyms);
 
@@ -49,9 +49,9 @@ class Specialty extends ListAbstract
     /**
      * Remove synonyms
      *
-     * @param \Oleg\UserdirectoryBundle\Entity\Specialty $synonyms
+     * @param \Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType $synonyms
      */
-    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\Specialty $synonyms)
+    public function removeSynonym(\Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType $synonyms)
     {
         $this->synonyms->removeElement($synonyms);
     }

@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="siteParameters")
+ * @ORM\Table(name="user_siteParameters")
  */
 class SiteParameters {
 

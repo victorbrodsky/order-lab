@@ -42,14 +42,13 @@ class UserType extends AbstractType
         }
 
         $builder->add('username', null, array(
-            'required' => true,
             'label' => 'User Name (CWID):',
             'read_only' => $read_only,
-            'attr' => array('class'=>'form-control form-control-modif', 'required'=>'required')
+            'attr' => array('class'=>'form-control form-control-modif')
         ));
         $builder->add('firstName', null, array(
             'label' => 'First Name:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
         ));
         $builder->add('middleName', null, array(
             'label' => 'Middle Name:',
@@ -57,7 +56,7 @@ class UserType extends AbstractType
         ));
         $builder->add('lastName', null, array(
             'label' => 'Last Name:',
-            'attr' => array('class'=>'form-control form-control-modif')
+            'attr' => array('class'=>'form-control form-control-modif') //'required'=>'required'
         ));
         $builder->add('email', 'email', array(
             'label' => 'Preferred Email:',
@@ -137,6 +136,19 @@ class UserType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__locations__',
         ));
+
+        $params = array('read_only'=>$read_only);
+        $builder->add('employmentStatus', 'collection', array(
+            'type' => new EmploymentStatusType($params),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__employmentstatus__',
+        ));
+
 
 
         $builder->add('credentials', new CredentialsType(), array(

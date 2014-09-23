@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="location")
+ * @ORM\Table(name="user_location")
  */
 class Location extends BaseUserAttributes
 {
@@ -91,9 +91,9 @@ class Location extends BaseUserAttributes
     private $removable;
 
 
-    public function __construct() {
+    public function __construct($author=null) {
         $this->setRemovable(true);
-        parent::__construct();
+        parent::__construct($author);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Oleg\UserdirectoryBundle\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -9,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-
 
 use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -20,6 +20,7 @@ use Oleg\UserdirectoryBundle\Entity\Division;
 use Oleg\UserdirectoryBundle\Entity\Service;
 use Oleg\UserdirectoryBundle\Entity\States;
 use Oleg\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
+use Oleg\UserdirectoryBundle\Entity\EmploymentTerminationType;
 
 
 /**
@@ -73,6 +74,7 @@ class AdminController extends Controller
         $count_institution = $this->generateInstitutions();         //must be first
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
         $count_roles = $this->generateRoles();
+        $count_terminationTypes = $this->generateTerminationTypes();
 
         $userutil = new UserUtil();
         $count_users = $userutil->generateUsersExcel($this->getDoctrine()->getManager(),$default_time_zone);
@@ -89,7 +91,8 @@ class AdminController extends Controller
             'Institutions='.$count_institution.', '.
             'Users='.$count_users.', '.
             'States='.$count_states.', '.
-            'Board Specialties='.$count_boardSpecialties.', ',
+            'Board Specialties='.$count_boardSpecialties.', '.
+            'Employment Types of Termination='.$count_terminationTypes.'. '.
             ' (Note: -1 means that this table is already exists)'
         );
 
@@ -642,6 +645,44 @@ class AdminController extends Controller
         foreach( $elements as $value ) {
 
             $entity = new BoardCertifiedSpecialties();
+            $this->setDefaultList($entity,$count,$username,null);
+            $entity->setName( trim($value) );
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+
+
+    public function generateTerminationTypes() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:EmploymentTerminationType')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            'Graduated',
+            'Quit',
+            'Retired',
+            'Fired'
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 1;
+        foreach( $elements as $value ) {
+
+            $entity = new EmploymentTerminationType();
             $this->setDefaultList($entity,$count,$username,null);
             $entity->setName( trim($value) );
 

@@ -1,5 +1,23 @@
 {#   navigation menu   #}
 
+{% macro listUsers(pathlink) %}
+    <ul class="dropdown-menu">
+        <li><a href="{{ path(pathlink) }}">All Employees</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Employees'}) }}">All WCMC Pathology Employees</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Faculty'}) }}">All WCMC Pathology Faculty</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Clinical Faculty'}) }}">All WCMC Pathology Clinical Faculty</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Research Faculty'}) }}">All WCMC Pathology Research Faculty</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Staff'}) }}">All WCMC Pathology Staff</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All NYP Pathology Staff'}) }}">All NYP Pathology Staff</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Anatomic Pathology Faculty'}) }}">All WCMC Anatomic Pathology Faculty</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Laboratory Medicine Faculty'}) }}">All WCMC Laboratory Medicine Faculty</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Residents'}) }}">All WCMC Pathology Residents</a></li>
+        <li><a href="{{ path(pathlink,{'filter': 'All WCMC Pathology Fellows'}) }}">All WCMC Pathology Fellows</a></li>
+    </ul>
+{% endmacro %}
+
+{% import _self as usernavbar %}
+
 {% block navbar %}
 
     <nav class="navbar navbar-default" role="navigation">
@@ -29,20 +47,13 @@
                     {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                         <li id="nav-bar-userlist" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">List<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ path(employees_sitename~'_listusers') }}">All Employees</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Employees'}) }}">All WCMC Pathology Employees</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Faculty'}) }}">All WCMC Pathology Faculty</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Clinical Faculty'}) }}">All WCMC Pathology Clinical Faculty</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Research Faculty'}) }}">All WCMC Pathology Research Faculty</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Staff'}) }}">All WCMC Pathology Staff</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All NYP Pathology Staff'}) }}">All NYP Pathology Staff</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Anatomic Pathology'}) }}">All WCMC Anatomic Pathology Faculty</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Laboratory Medicine'}) }}">All WCMC Laboratory Medicine Faculty</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Residents'}) }}">All WCMC Pathology Residents</a></li>
-                                    <li><a href="{{ path(employees_sitename~'_listusers',{'filter': 'All WCMC Pathology Fellows'}) }}">All WCMC Pathology Fellows</a></li>
-                                </ul>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a>
+                            {{ usernavbar.listUsers(employees_sitename~'_listusers') }}
+                        </li>
+
+                        <li id="nav-bar-userlist-previous" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Previous<b class="caret"></b></a>
+                            {{ usernavbar.listUsers(employees_sitename~'_listusers_previous') }}
                         </li>
 
                         <li id="nav-bar-adduser" class="hidden-xs divider-vertical"><a href="{{ path(employees_sitename~'_new_user') }}">Add Employee</a></li>

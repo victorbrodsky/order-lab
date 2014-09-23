@@ -154,4 +154,112 @@ class UtilController extends Controller {
         return false;
     }
 
+
+    /**
+     * @Route("/cwid", name="employees_check_cwid")
+     * @Method("GET")
+     */
+    public function checkCwidAction(Request $request) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $cwid = trim( $request->get('number') );
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($cwid);
+
+        if( $user ) {
+            $res = $user->getId();
+        } else {
+            $res = "";
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
+
+    /**
+     * @Route("/ssn", name="employees_check_ssn")
+     * @Method("GET")
+     */
+    public function checkSsnAction(Request $request) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $ssn = trim( $request->get('number') );
+        $em = $this->getDoctrine()->getManager();
+
+        $user = null;
+
+        if( $ssn != "" ) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:User', 'user')
+                ->select("user")
+                ->leftJoin("user.credentials", "credentials")
+                ->where("credentials.ssn = :ssn")
+                ->setParameter('ssn', $ssn)
+                ->getQuery();
+
+            $user = $query->getSingleResult();
+        }
+
+        if( $user ) {
+            $res = $user->getId();
+        } else {
+            $res = "";
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
+    /**
+     * @Route("/ein", name="employees_check_ein")
+     * @Method("GET")
+     */
+    public function checkEinAction(Request $request) {
+
+        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('scan-order-nopermission') );
+        }
+
+        $ein = trim( $request->get('number') );
+        $em = $this->getDoctrine()->getManager();
+
+        $user = null;
+
+        if( $ein != "" ) {
+            $query = $em->createQueryBuilder()
+                ->from('OlegUserdirectoryBundle:User', 'user')
+                ->select("user")
+                ->leftJoin("user.credentials", "credentials")
+                ->where("credentials.employeeId = :employeeId")
+                ->setParameter('employeeId', $ein)
+                ->getQuery();
+
+            $user = $query->getSingleResult();
+        }
+
+        if( $user ) {
+            $res = $user->getId();
+        } else {
+            $res = "";
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
+
 }

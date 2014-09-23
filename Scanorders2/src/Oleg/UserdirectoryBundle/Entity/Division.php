@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="division")
+ * @ORM\Table(name="user_division")
  */
 class Division extends ListAbstract
 {

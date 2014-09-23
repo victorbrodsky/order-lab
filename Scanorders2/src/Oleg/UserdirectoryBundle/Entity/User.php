@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\AttributeOverride;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user",
+ * @ORM\Table(name="user_fosuser",
  *  indexes={
  *      @ORM\Index( name="username_idx", columns={"username"} ),
  *      @ORM\Index( name="displayName_idx", columns={"displayName"} )
@@ -89,19 +89,19 @@ class User extends BaseUser
      */
     private $appointmentTitles;
 
+    /**
+     * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist"})
+     */
+    private $employmentStatus;
+
 
 
     function __construct()
     {
-        //$this->perSiteSettings = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->administrativeTitles = new ArrayCollection();
         $this->appointmentTitles = new ArrayCollection();
-
-//        $this->institution = new ArrayCollection();
-//        $this->department = new ArrayCollection();
-//        $this->division = new ArrayCollection();
-//        $this->service = new ArrayCollection();
+        $this->employmentStatus = new ArrayCollection();
 
         //create preferences
         $userPref = new UserPreferences();
@@ -111,13 +111,11 @@ class User extends BaseUser
         $this->setPreferences($userPref);
 
         //create credentials
-        $this->setCredentials(new Credentials());
+        $this->setCredentials(new Credentials($this));
 
         //two default locations: "main office" and "home"
-
-        //two default locations: "main office" and "home"
-        $mainLocation = new Location();
-        $homeLocation = new Location();
+        $mainLocation = new Location($this);
+        $homeLocation = new Location($this);
         $mainLocation->setName('Main Office');
         $homeLocation->setName('Home');
         $this->locations->set(0,$mainLocation);  //main has index 0
@@ -126,10 +124,6 @@ class User extends BaseUser
         $this->locations->set(1,$homeLocation);  //home hsa index 1
         $homeLocation->setUser($this);
         $homeLocation->setRemovable(false);
-
-        //one default Admnistrative Title
-        //$AdministrativeTitle = new AdministrativeTitle();
-        //$this->addAdministrativeTitle($AdministrativeTitle);
 
         parent::__construct();
     }
@@ -188,7 +182,7 @@ class User extends BaseUser
     public function setTitle($title)
     {
         if( count($this->getAdministrativeTitles()) == 0 ) {
-            $administrativeTitle = new AdministrativeTitle();
+            $administrativeTitle = new AdministrativeTitle($this);
             $administrativeTitle->setName($title);
             $this->addAdministrativeTitle($administrativeTitle);
         } else {
@@ -417,6 +411,53 @@ class User extends BaseUser
     {
         return $this->credentials;
     }
+
+    /**
+     * Add employmentStatus
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus
+     * @return User
+     */
+    public function addEmploymentStatus(\Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus)
+    {
+        if( !$this->employmentStatus->contains($employmentStatus) ) {
+            $this->employmentStatus->add($employmentStatus);
+            $employmentStatus->setUser($this);
+        }
+
+        return $this;
+    }
+    public function addEmploymentStatu($employmentStatus) {
+        $this->addEmploymentStatus($employmentStatus);
+        return $this;
+    }
+
+    /**
+     * Remove employmentStatus
+     *
+     * @param \Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus
+     */
+    public function removeEmploymentStatus(\Oleg\UserdirectoryBundle\Entity\EmploymentStatus $employmentStatus)
+    {
+        $this->employmentStatus->removeElement($employmentStatus);
+    }
+    public function removeEmploymentStatu($employmentStatus)
+    {
+        $this->removeEmploymentStatus($employmentStatus);
+    }
+
+    /**
+     * Get employmentStatus
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEmploymentStatus()
+    {
+        return $this->employmentStatus;
+    }
+
+
+
 
 
     //get all services from administrative and appointment titles.

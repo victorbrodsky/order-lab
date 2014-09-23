@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="stateLicense")
+ * @ORM\Table(name="user_stateLicense")
  */
 class StateLicense
 {

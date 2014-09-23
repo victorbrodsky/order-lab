@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="roles")
+ * @ORM\Table(name="user_roles")
  */
 class Roles extends ListAbstract {
 

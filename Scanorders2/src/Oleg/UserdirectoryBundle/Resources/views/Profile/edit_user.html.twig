@@ -182,7 +182,34 @@
     </div>
 {% endmacro %}
 
+{% macro employmentStatuses( field, cicle, classname, prototype ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if cicle != 'show_user' %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeBaseTitle(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(formfield.terminationDate,'allow-future-date') }}
+        {{ formmacros.field(formfield.terminationType) }}
+        {{ formmacros.field(formfield.terminationReason) }}
+
+    </div>
+{% endmacro %}
+
+{% macro userUrlLink() %}
+    <a href="{{ path('employees_showuser_notstrict', { 'id': 'user_replacement_id' }) }}">{{ 'user_replacement_username' }}</a><br>
+{% endmacro %}
 
 {% import _self as userform %}
 
@@ -205,6 +232,8 @@
          data-prototype-user-statelicense = "{{ userform.stateLicenses(form.credentials.stateLicense,cicle,'user-statelicense','prototype')|e }}"
          data-prototype-user-boardcertification = "{{ userform.boardCertifications(form.credentials.boardCertification,cicle,'user-boardcertification','prototype')|e }}"
          data-prototype-user-codenyph = "{{ userform.codenyphs(form.credentials.codeNYPH,cicle,'user-codenyph','prototype')|e }}"
+         data-prototype-user-employmentstatus = "{{ userform.employmentStatuses(form.employmentStatus,cicle,'user-employmentStatus','prototype')|e }}"
+         data-userurllink = "{{ userform.userUrlLink()|e }}"
     ></div>
 
         <input type="hidden" id="user_id" value="{{ user_id }}" />
@@ -274,6 +303,32 @@
 
 
         {% block addcontent %}{% endblock %}
+
+        {#Employment Status#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#EmploymentStatus">
+                        Employment Status
+                    </a>
+                </h4>
+            </div>
+            <div id="EmploymentStatus" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="user-employmentStatus-holder">
+                        {% for employmentStatus in form.employmentStatus %}
+                            {{ userform.employmentStatuses(employmentStatus,cicle,'user-employmentStatus','noprototype') }}
+                        {% endfor %}
+                        {% if cicle != 'show_user' %}
+                            <button class="btn btn-default" onClick="addBaseTitle(this,'user-employmentStatus')" type='button'>Add Employment Status</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
         {#Administrative Titles#}
         <div class="panel panel-primary">
@@ -408,6 +463,7 @@
                                     <div class="user-personalinfo-holder">
 
                                         {{ formmacros.fieldDateLabel(form.credentials.dob,'regular-datepicker') }}
+                                        {{ formmacros.field(form.credentials.ssn) }}
                                         {{ formmacros.field(form.credentials.emergencyContactInfo) }}
 
                                     </div>
@@ -575,10 +631,15 @@
 
         {#{{ form(form) }}#}
 
+        <p>
+            <div id="user-errors"></div>
+        </p>
+
+
         {% if cicle != "show_user" and cicle != "create_user" %}
             <p>
                 <div>
-                    <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
+                    <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUpdateUser({{entity.id}})">Update</button>
                     <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
                 </div>
             </p>
@@ -586,8 +647,8 @@
 
         {% if cicle == "create_user" %}
             <p>
-                <button class="btn btn-success" name="btnSubmit" type="submit">Add Employee</button>
-                {#<button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>#}
+                <button class="btn btn-success" name="btnSubmit" type="button" onclick="validateNewUser()">Add Employee</button>
+                {#<button class="btn btn-success" name="btnSubmit" type="submit">Add Employee</button>#}
             </p>
         {% endif %}
 

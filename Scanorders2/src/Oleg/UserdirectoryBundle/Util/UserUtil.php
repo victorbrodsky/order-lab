@@ -115,7 +115,7 @@ class UserUtil {
             $mainLocation->setRoom($office);
 
             //title is stored in Administrative Title
-            $administrativeTitle = new AdministrativeTitle();
+            $administrativeTitle = new AdministrativeTitle($systemuser);
             $administrativeTitle->setName($title);
             $user->addAdministrativeTitle($administrativeTitle);
 

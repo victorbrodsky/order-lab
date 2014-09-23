@@ -260,6 +260,10 @@ function setNavBar() {
         id = 'userlist';
     }
 
+    if( full.indexOf("/user-directory/previous") !== -1 ) {
+        id = 'userlist-previous';
+    }
+
     if( full.indexOf("/users/") !== -1 || full.indexOf("/edit-user-profile/") !== -1 ) {
         if( $('#nav-bar-admin').length > 0 ) {
             id = 'admin';

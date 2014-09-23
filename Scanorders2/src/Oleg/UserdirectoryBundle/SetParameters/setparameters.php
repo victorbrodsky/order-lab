@@ -26,7 +26,7 @@ $connectionParams = array(
 
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
-$table = 'siteParameters';
+$table = 'user_siteParameters';
 
 $schemaManager = $conn->getSchemaManager();
 
@@ -78,7 +78,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //            $maintenanceenddate = $row['maintenanceenddate'];
 //            $maintenanceloginmsg = $row['maintenanceloginmsg'];
 //            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
-            //echo $aDLDAPServerAddress."<br>";
+            //echo "department_url=".$department_url."<br>";
         }
 
         //echo "aDLDAPServerAddress=".$aDLDAPServerAddress."<br>";

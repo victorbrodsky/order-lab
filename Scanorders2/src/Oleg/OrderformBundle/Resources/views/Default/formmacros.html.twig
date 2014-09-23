@@ -50,6 +50,8 @@
                 {{ form_widget(field,{ 'disabled':'disabled' }) }}
             {% elseif attr == "readonly" %}
                 {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+            {% elseif attr == "required" %}
+                {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
             {% else %}
                 {{ form_widget(field) }}
             {% endif %}

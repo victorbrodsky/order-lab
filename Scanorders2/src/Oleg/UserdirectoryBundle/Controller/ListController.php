@@ -28,6 +28,7 @@ class ListController extends Controller
      * @Route("/departments/", name="departments-list")
      * @Route("/states/", name="states-list")
      * @Route("/board-certifications/", name="boardcertifications-list")
+     * @Route("/employment_terminations/", name="employmentterminations-list")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
@@ -95,6 +96,7 @@ class ListController extends Controller
      * @Route("/departments/", name="departments_create")
      * @Route("/states/", name="states_create")
      * @Route("/board-certifications/", name="boardcertifications_create")
+     * @Route("/employment_terminations/", name="employmentterminations_create")
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -184,6 +186,7 @@ class ListController extends Controller
      * @Route("/institutions/new", name="institutions_new")
      * @Route("/states/new", name="states_new")
      * @Route("/board-certifications/new", name="boardcertifications_new")
+     * @Route("/employment_terminations/new", name="employmentterminations_new")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
@@ -235,6 +238,7 @@ class ListController extends Controller
      * @Route("/institutions/{id}", name="institutions_show")
      * @Route("/states/{id}", name="states_show")
      * @Route("/board-certifications/{id}", name="boardcertifications_show")
+     * @Route("/employment_terminations/{id}", name="employmentterminations_show")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
@@ -278,6 +282,7 @@ class ListController extends Controller
      * @Route("/institutions/{id}/edit", name="institutions_edit")
      * @Route("/states/{id}/edit", name="states_edit")
      * @Route("/board-certifications/{id}/edit", name="boardcertifications_edit")
+     * @Route("/employment_terminations/{id}/edit", name="employmentterminations_edit")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -362,6 +367,7 @@ class ListController extends Controller
      * @Route("/institutions/{id}", name="institutions_update")
      * @Route("/states/{id}", name="states_update")
      * @Route("/board-certifications/{id}", name="boardcertifications_update")
+     * @Route("/employment_terminations/{id}", name="employmentterminations_update")
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
@@ -458,6 +464,10 @@ class ListController extends Controller
             $className = "BoardCertifiedSpecialties";
             $displayName = "Pathology Board Certified Specialties";
             break;
+        case "employmentterminations":
+            $className = "EmploymentTerminationType";
+            $displayName = "Employment Types of Termination";
+            break;
         default:
             $className = null;
             $displayName = null;
@@ -483,6 +493,7 @@ class ListController extends Controller
      * @Route("/institutions/{id}", name="institutions_delete")
      * @Route("/states/{id}", name="states_delete")
      * @Route("/board-certifications/{id}", name="boardcertifications_delete")
+     * @Route("/employment_terminations/{id}", name="employmentterminations_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

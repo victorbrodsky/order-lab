@@ -48,6 +48,11 @@ class CredentialsType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
+        $builder->add('ssn', null, array(
+            'label' => 'Social Security Number:',
+            'attr' => array('class'=>'form-control form-control-modif')
+        ));
+
         $builder->add('nationalProviderIdentifier', null, array(
             'label' => 'National Provider Identifier (NPI):',
             'attr' => array('class'=>'form-control form-control-modif')

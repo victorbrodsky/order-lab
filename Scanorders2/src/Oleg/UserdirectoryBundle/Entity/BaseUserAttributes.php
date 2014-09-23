@@ -77,10 +77,10 @@ abstract class BaseUserAttributes {
     protected $updatedate;
 
 
-    public function __construct() {
+    public function __construct($author=null) {
+        $this->setAuthor($author);
         $this->setType(self::TYPE_PUBLIC);
         $this->setStatus(self::STATUS_UNVERIFIED);
-        //echo "constr. type=".$this->getType()."<br>";
     }
 
 

@@ -27,20 +27,20 @@ use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\BoardCertification;
-use Oleg\UserdirectoryBundle\Entity\CodeNYPH;
+use Oleg\UserdirectoryBundle\Entity\EmploymentStatus;
 
 
 
 class UserController extends Controller
 {
 
-
     /**
      * @Route("/user-directory", name="employees_listusers")
+     * @Route("/user-directory/previous", name="employees_listusers_previous")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Admin:users.html.twig")
      */
-    public function indexUserAction(Request $request)
+    public function indexUserPreviousAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('scan-order-nopermission'));
@@ -48,13 +48,20 @@ class UserController extends Controller
 
         $filter = trim( $request->get('filter') );
 
-        $res = $this->indexUser($filter);
+        $current = true;
+        $routeName = $request->get('_route');
+        if( $routeName == "employees_listusers_previous" ) {
+            $current = false;
+        }
+
+        $res = $this->indexUser($filter,$current);
         $res['filter'] = $filter;
 
         return $res;
     }
 
-    public function indexUser( $filter=null ) {
+
+    public function indexUser( $filter=null, $current = true ) {
 
         //$userManager = $this->container->get('fos_user.user_manager');
         //$users = $userManager->findUsers();
@@ -64,6 +71,8 @@ class UserController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
+
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
 
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
         $dql->leftJoin("administrativeTitles.institution", "administrativeInstitution");
@@ -79,9 +88,35 @@ class UserController extends Controller
 
         //$dql->leftJoin("user.institutions", "institutions");
         //$dql->where("user.appliedforaccess = 'active'");
-        $dql->orderBy("user.id","ASC");
+
+        if( $current == true ) {
+            $dql->orderBy("user.id","ASC");
+        } else {
+            $dql->orderBy("employmentStatus.terminationDate","DESC");
+            $dql->addOrderBy("user.lastName","ASC");
+        }
 
         $criteriastr = "";
+
+        //employmentStatus
+        $timecriteriastr = "";
+        $curdate = date("Y-m-d", time());
+        if( $current ) {
+            //Employment Status should have at least one group where Date of Termination is empty
+            $timecriteriastr .= "(employmentStatus IS NULL)";
+            $timecriteriastr .= " OR ";
+            $timecriteriastr .= "(employmentStatus.terminationDate IS NULL)";
+            $timecriteriastr .= " OR ";
+            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."') )";
+        } else {
+            //Each group of fields in the employment status should have a non-empty Date of Termination.
+            //TODO: should the serach result display only users with all employment status have a non-empty Date of Termination?
+            $timecriteriastr .= "(employmentStatus IS NOT NULL)";
+            $timecriteriastr .= " AND ";
+            $timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < '".$curdate."')";
+            //$timecriteriastr .= " AND ";
+            //$timecriteriastr .= "(employmentStatus.hireDate IS NOT NULL AND employmentStatus.terminationDate IS NOT NULL)";
+        }
 
         //WCMC + Pathology
         if( $filter && $filter == "All WCMC Pathology Employees" ) {
@@ -179,15 +214,19 @@ class UserController extends Controller
             );
         }
 
+        $totalcriteriastr = $timecriteriastr;
+
         if( $criteriastr != "" ) {
-            $dql->where($criteriastr);
+            $totalcriteriastr = "(" . $totalcriteriastr . ") AND " .  $criteriastr;
         }
+
+        $dql->where($totalcriteriastr);
 
         //echo "dql=".$dql."<br>";
 
         $limit = 1000;
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -269,7 +308,19 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
+        if( $user->getFirstName() == "" ) {
+            $error = new FormError("First Name is empty");
+            $form->get('firstName')->addError($error);
+        }
+
+        if( $user->getLastName() == "" ) {
+            $error = new FormError("Last Name is empty");
+            $form->get('lastName')->addError($error);
+        }
+
         if ($form->isValid()) {
+
+            $user->setUsername( "AUTOGENERATED" . "_" + "TEMPORARY" . "_" . $user->getLastName() . "_" . $user->getFirstName() );
 
             $em->persist($user);
             $em->flush();
@@ -297,6 +348,7 @@ class UserController extends Controller
 
 
     /**
+     * @Route("/users/show/{id}", name="employees_showuser_notstrict")
      * @Route("/users/{id}", name="employees_showuser", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
@@ -398,13 +450,15 @@ class UserController extends Controller
     //create empty collections
     public function addEmptyCollections($entity) {
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         if( count($entity->getAdministrativeTitles()) == 0 ) {
-            $administrativeTitle = new AdministrativeTitle();
+            $administrativeTitle = new AdministrativeTitle($user);
             $entity->addAdministrativeTitle($administrativeTitle);
         }
 
         if( count($entity->getAppointmentTitles()) == 0 ) {
-            $appointmentTitle = new AppointmentTitle();
+            $appointmentTitle = new AppointmentTitle($user);
             $entity->addAppointmentTitle($appointmentTitle);
             //echo "app added, type=".$appointmentTitle->getType()."<br>";
         }
@@ -417,9 +471,10 @@ class UserController extends Controller
             $entity->getCredentials()->addBoardCertification( new BoardCertification() );
         }
 
-        //if( count($entity->getCredentials()->getCodeNYPH()) == 0 ) {
-            //$entity->getCredentials()->addCodeNYPH( new CodeNYPH() );
-        //}
+        if( count($entity->getEmploymentStatus()) == 0 ) {
+            $employmentStatus = new EmploymentStatus($user);
+            $entity->addEmploymentStatus($employmentStatus);
+        }
 
     }
 
@@ -505,6 +560,11 @@ class UserController extends Controller
             $originalCodeNYPH->add($subitem);
         }
 
+        $originalEmplStatus = new ArrayCollection();
+        foreach( $entity->getEmploymentStatus() as $item) {
+            $originalEmplStatus->add($item);
+        }
+
         //echo "count=".count($originalAdminTitles)."<br>";
 
         //Roles
@@ -571,6 +631,11 @@ class UserController extends Controller
             $removedInfo = $this->removeCollection($originalCodeNYPH,$entity->getCredentials()->getCodeNYPH());
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
+            }
+
+            $removedEmplStatus = $this->removeCollection($originalEmplStatus,$entity->getEmploymentStatus());
+            if( $removedEmplStatus ) {
+                $removedCollections[] = $removedEmplStatus;
             }
             /////////////// EOF Process Removed Collections ///////////////
 
@@ -886,6 +951,13 @@ class UserController extends Controller
         foreach( $subjectuser->getAppointmentTitles() as $title ) {
             $changeset = $uow->getEntityChangeSet($title);
             $text = "("."Academic Appointment Title ".$this->getEntityId($title).")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
+        //log Employment Status
+        foreach( $subjectuser->getEmploymentStatus() as $item ) {
+            $changeset = $uow->getEntityChangeSet($item);
+            $text = "("."Employment Status ".$this->getEntityId($item).")";
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 

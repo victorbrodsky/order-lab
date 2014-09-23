@@ -2,12 +2,12 @@ parameters:
 
   employees.sitename: employees
 
-#  default_time_zone: America/New_York
-#  default_system_email:
-#  institution_url:
-#  institution_name:
-#  department_url:
-#  department_name:
+  default_time_zone: America/New_York
+  default_system_email:
+  institution_url:
+  institution_name:
+  department_url:
+  department_name:
 
 #  maintenance:
 #  maintenanceenddate:

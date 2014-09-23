@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(
- *  name="accessrequest",
+ *  name="user_accessrequest",
  *  indexes={
  *      @ORM\Index( name="user_idx", columns={"user_id"} ),
  *      @ORM\Index( name="status_idx", columns={"status"} ),

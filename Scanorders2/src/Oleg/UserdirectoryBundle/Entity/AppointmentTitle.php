@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="appointmentTitle")
+ * @ORM\Table(name="user_appointmentTitle")
  */
 class AppointmentTitle extends BaseTitle
 {

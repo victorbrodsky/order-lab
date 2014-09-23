@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="userPreferences")
+ * @ORM\Table(name="user_preferences")
  */
 class UserPreferences {
 

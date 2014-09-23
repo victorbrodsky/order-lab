@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="credentials")
+ * @ORM\Table(name="user_credentials")
  */
 class Credentials extends BaseUserAttributes
 {
@@ -22,6 +22,11 @@ class Credentials extends BaseUserAttributes
      * @ORM\Column(type="date", nullable=true)
      */
     private $dob;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ssn;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -310,6 +315,22 @@ class Credentials extends BaseUserAttributes
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param mixed $ssn
+     */
+    public function setSsn($ssn)
+    {
+        $this->ssn = $ssn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSsn()
+    {
+        return $this->ssn;
     }
 
 
